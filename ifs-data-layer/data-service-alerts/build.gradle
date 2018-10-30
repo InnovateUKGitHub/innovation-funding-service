@@ -33,7 +33,7 @@ tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":late
 
 
 def enabled = project.hasProperty('ifs.alert-service.enabled') ? project.property('ifs.alert-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, deploy, wait, osStageRemote, osDeployRemote].each { task ->
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
 deploy.dependsOn ":docker:ifs-mysql:ifs-database:wait"

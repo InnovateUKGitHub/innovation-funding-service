@@ -28,7 +28,7 @@ bootRun {
 }
 
 def enabled = project.hasProperty('ifs.prototypes.enabled') ? project.property('ifs.prototypes.enabled').toBoolean() : false
-[stop, removeContainer, buildDocker, createContainer, deploy, wait, osStageRemote, osDeployRemote].each { task ->
+[stop, removeContainer, buildDocker, createContainer, deploy, wait, osStageRemote].each { task ->
     task.enabled = enabled
 }
 

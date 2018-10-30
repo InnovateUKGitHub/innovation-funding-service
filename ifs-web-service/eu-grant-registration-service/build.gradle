@@ -28,7 +28,7 @@ version project.version
 apply plugin: 'idea'
 
 def enabled = project.hasProperty('ifs.eu-grant-registration-service.enabled') ? project.property('ifs.eu-grant-registration-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, deploy, wait, osStageRemote, osDeployRemote].each { task ->
+[stop, removeContainer, createContainer, deploy, wait, osStageRemote].each { task ->
     task.enabled = enabled
 }
 ext.EUGrantDataServiceRestBaseURL="http://eu-grant-registration-data-service:8080"

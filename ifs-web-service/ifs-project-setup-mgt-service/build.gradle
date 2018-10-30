@@ -35,7 +35,7 @@ createContainer.containerId="project-setup-mgt-svc"
 createContainer.portBindings = ['9004:8000']
 
 def enabled = project.hasProperty('ifs.project-setup-mgt-service.enabled') ? project.property('ifs.project-setup-mgt-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, buildDocker, deploy, wait, osStageRemote, osDeployRemote].each { task ->
+[stop, removeContainer, createContainer, buildDocker, deploy, wait, osStageRemote].each { task ->
     task.enabled = enabled
 }
 

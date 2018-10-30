@@ -23,7 +23,7 @@ tagDockerLocal.tag = financeDataServiceVersion
 osStageLocal.tag = financeDataServiceVersion
 
 def enabled = project.hasProperty('ifs.finance-data-service.enabled') ? project.property('ifs.finance-data-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, deploy, wait, flywayClean, flywayMigrate, osStageRemote, osDeployRemote].each { task ->
+[stop, removeContainer, createContainer, deploy, wait, flywayClean, flywayMigrate, osStageRemote].each { task ->
     task.enabled = enabled
 }
 createContainer.portBindings = ['9012:8000']
