@@ -15,7 +15,8 @@ buildscript {
     repositories { jcenter() }
 }
 
-def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+def enabled = (project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false) &&
+    (project.hasProperty('ifs.mail-sink.enabled') ? project.property('ifs.mail-sink.enabled').toBoolean() : true)
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }

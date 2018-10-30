@@ -65,7 +65,8 @@ createContainer.containerName = "sil-stub"
 createContainer.containerId = "sil-stub"
 createContainer.portBindings = ['8091:8080']
 
-def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+def enabled = (project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false) &&
+    (project.hasProperty('ifs.sil-stub.enabled') ? project.property('ifs.sil-stub.enabled').toBoolean() : true)
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
