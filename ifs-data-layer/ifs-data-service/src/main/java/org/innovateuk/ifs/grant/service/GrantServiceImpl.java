@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,35 +44,48 @@ public class GrantServiceImpl implements GrantService {
         Project project = projectRepository.findOneByApplicationId(applicationId);
         Grant grant = new Grant();
         grant.setId(project.getId());
+        grant.setCompetitionCode(project.getApplication().getCompetition().getCode());
+        grant.setTitle(project.getName());
+        grant.setGrantOfferLetterDate(project.getOfferSubmittedDate());
+        grant.setStartDate(project.getTargetStartDate());
+        grant.setDuration(project.getDurationInMonths());
+        Context context = new Context()
+                .withProjectId(project.getId())
+                .withStartDate(project.getTargetStartDate());
         grant.setParticipants(
                 project.getOrganisations().stream()
-                        .map(o -> toParticipant(project.getId(), o))
+                        .map(o -> toParticipant(context, o))
                         .collect(Collectors.toSet())
         );
         grantEndpoint.send(grant);
         return serviceSuccess();
     }
 
-    private Participant toParticipant(long projectId, Organisation organisation) {
+    private Participant toParticipant(Context context, Organisation organisation) {
         Participant participant = new Participant();
         participant.setId(organisation.getId());
+        participant.setType(organisation.getOrganisationType().getName());
+        participant.setSize(organisation.getUsers().size());
         Optional<SpendProfile> spendProfile = spendProfileRepository
-                .findOneByProjectIdAndOrganisationId(projectId, organisation.getId());
+                .findOneByProjectIdAndOrganisationId(context.getProjectId(), organisation.getId());
         if (!spendProfile.isPresent()) {
-            throw new IllegalStateException("Project " + projectId + " and organisation "
+            throw new IllegalStateException("Project " + context.getProjectId() + " and organisation "
                     + organisation.getId() + " does not have a spend profile.  All organisations MUST "
                     + "have a spend profile to send grant");
         }
         participant.setForecasts(
                 spendProfile.get().getSpendProfileFigures().getCosts().stream()
-                .map(this::toForecast).collect(Collectors.toSet())
+                .map(c -> toForecast(context, c)).collect(Collectors.toSet())
         );
         return participant;
     }
 
-    private Forecast toForecast(Cost c) {
+    private Forecast toForecast(Context context, Cost c) {
         Forecast forecast = new Forecast();
         forecast.setValue(c.getValue());
+        forecast.setCostCategory(c.getCostCategory().getName());
+        forecast.setStart(c.getCostTimePeriod().getStartDate(context.getStartDate()));
+        forecast.setEnd(c.getCostTimePeriod().getEndDate(context.getStartDate()));
         return forecast;
     }
 
@@ -82,5 +96,28 @@ public class GrantServiceImpl implements GrantService {
         LOG.info("Sending " + readyProjects.size() + " projects");
         readyProjects.forEach(it -> sendProject(it.getApplication().getId()));
         return serviceSuccess();
+    }
+
+    private static class Context {
+        private long projectId;
+        private LocalDate startDate;
+
+        Context withProjectId(long projectId) {
+            this.projectId = projectId;
+            return this;
+        }
+
+        Context withStartDate(LocalDate startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+
+        long getProjectId() {
+            return projectId;
+        }
+
+        LocalDate getStartDate() {
+            return startDate;
+        }
     }
 }

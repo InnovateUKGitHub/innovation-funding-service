@@ -6,6 +6,7 @@ import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.resource.Participant;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,18 +33,19 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
     private Grant createGrant() {
         Grant project = new Grant();
         Set<Participant> participants = new HashSet<>(Arrays.asList(createParticipant(), createParticipant()));
-        project.setParticipant(participants);
+        project.setParticipants(participants);
         return project;
     }
 
     private Participant createParticipant() {
         Participant participant = new Participant();
-        participant.setForecasts(createForecasts(LocalDate.of(2018, 10,1 ),12, 50_000));
+        participant.setForecasts(createForecasts(LocalDate.of(2018, 10,1 ),12,
+                BigDecimal.valueOf(50_000)));
         return participant;
     }
 
-    private Set<Forecast> createForecasts(LocalDate start, int durationInMonths, double total) {
-        double value = total / durationInMonths;
+    private Set<Forecast> createForecasts(LocalDate start, int durationInMonths, BigDecimal total) {
+        BigDecimal value = total.divide(BigDecimal.valueOf(durationInMonths), 6, BigDecimal.ROUND_UP);
         return Stream.iterate(0L, i -> i + 1).limit(durationInMonths)
                 .map(i -> new Forecast().start(start).end(start.plus(i + 1, MONTHS)).value(value))
                 .collect(Collectors.toSet());

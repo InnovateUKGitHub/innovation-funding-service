@@ -7,7 +7,7 @@ public class Participant {
     private String type;
     private String role;
     private String contactEmail;
-    private String size;
+    private int size;
     private String capLimit;
     private String awardRate;
     private String overheadRate;
@@ -46,11 +46,11 @@ public class Participant {
         this.contactEmail = contactEmail;
     }
 
-    public String getSize() {
+    public int getSize() {
         return size;
     }
 
-    public void setSize(String size) {
+    public void setSize(int size) {
         this.size = size;
     }
 
