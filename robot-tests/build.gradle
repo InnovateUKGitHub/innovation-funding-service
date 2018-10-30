@@ -67,7 +67,7 @@ task deployHub(type: DockerStartContainer, dependsOn: createHub) {
 
 task pullChrome(type: Exec) {
     doFirst {
-        commandLine 'docker', 'pull', 'davidrums/node-chrome-debug-proxy:latest'
+        commandLine 'docker', 'pull', 'davidrums/node-chrome-debug-proxy:3.0.1-dysprosium'
     }
 }
 
@@ -86,7 +86,7 @@ task removeChrome(type: DockerRemoveContainer, dependsOn: stopChrome) {
 }
 
 task createChrome(type: DockerCreateContainer, dependsOn: [pullChrome, removeChrome, createHub]) {
-    imageId = "davidrums/node-chrome-debug-proxy:latest"
+    imageId = "davidrums/node-chrome-debug-proxy:3.0.1-dysprosium"
     hostName = "chrome"
     containerName = "chrome"
     containerId = "chrome"
