@@ -127,7 +127,7 @@ public class AssessorRegistrationController {
     }
 
     @PostMapping(value = "/{inviteHash}/register", params = FORM_ACTION_PARAMETER)
-    public String manualAddress(Model model,
+    public String addressFormAction(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
                                 BindingResult bindingResult,
                                 ValidationHandler validationHandler,

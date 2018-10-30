@@ -89,7 +89,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-address", params = FORM_ACTION_PARAMETER)
-    public String searchAddress(@PathVariable("projectId") Long projectId,
+    public String addressFormAction(@PathVariable("projectId") Long projectId,
                                 Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 BindingResult bindingResult,

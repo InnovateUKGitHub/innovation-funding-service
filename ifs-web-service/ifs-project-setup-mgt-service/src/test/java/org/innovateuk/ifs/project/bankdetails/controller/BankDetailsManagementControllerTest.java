@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.project.bankdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.address.form.AddressForm;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.populator.BankDetailsReviewModelPopulator;
@@ -26,7 +27,6 @@ import java.util.Map;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
@@ -73,25 +73,23 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         super.setUp();
         organisationResource = newOrganisationResource().withName("Vitruvius Stonework Limited").withCompaniesHouseNumber("60674010").build();
         updatedOrganisationResource = newOrganisationResource().withId(organisationResource.getId()).withName("Vitruvius Stonework").withCompaniesHouseNumber("60674010").build();
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withOrganisation(organisationResource.getId()).withAddress(newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build()).build();
+        AddressResource address = newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build();
         project = newProjectResource().build();
 
-        bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withOrganisation(organisationResource.getId()).withOrganiationAddress(organisationAddressResource).withAccountNumber("51406795").withSortCode("404745").withCompanyName(organisationResource.getName()).withRegistrationNumber(organisationResource.getCompaniesHouseNumber()).build();
+        bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withOrganisation(organisationResource.getId()).withAddress(address).withAccountNumber("51406795").withSortCode("404745").withCompanyName(organisationResource.getName()).withRegistrationNumber(organisationResource.getCompaniesHouseNumber()).build();
 
         AddressTypeResource addressTypeResource = new AddressTypeResource(BANK_DETAILS.getOrdinal(), BANK_DETAILS.name());
 
-        OrganisationAddressResource unmodifiedOrganisationAddressResource = newOrganisationAddressResource().withOrganisation(organisationResource.getId()).withAddressType(addressTypeResource).withAddress(newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build()).build();
-        unmodifiedOrganisationAddressResource.setId(null);
-        unmodifiedOrganisationAddressResource.getAddress().setId(null);
+        AddressResource unmodifiedAddressResource = newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build();
+        unmodifiedAddressResource.setId(null);
 
-        updatedBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withOrganiationAddress(unmodifiedOrganisationAddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode("404746").withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
+        updatedBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withAddress(unmodifiedAddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode("404746").withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
 
-        notUpdatedBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withOrganiationAddress(unmodifiedOrganisationAddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode(bankDetailsResource.getSortCode()).withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
+        notUpdatedBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withAddress(unmodifiedAddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode(bankDetailsResource.getSortCode()).withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
 
-        OrganisationAddressResource updatedLine1OrganisationAddressResource = newOrganisationAddressResource().withOrganisation(organisationResource.getId()).withAddressType(addressTypeResource).withAddress(newAddressResource().withAddressLine1("Montrose House 2").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build()).build();
-        updatedLine1OrganisationAddressResource.setId(null);
-        updatedLine1OrganisationAddressResource.getAddress().setId(null);
-        updatedAddressBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withOrganiationAddress(updatedLine1OrganisationAddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode(bankDetailsResource.getSortCode()).withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
+        AddressResource updatedLine1AddressResource = newAddressResource().withAddressLine1("Montrose House 2").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build();
+        updatedLine1AddressResource.setId(null);
+        updatedAddressBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withAddress(updatedLine1AddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode(bankDetailsResource.getSortCode()).withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
 
         projectUsers = newProjectUserResource().build(3);
         projectUsers.get(0).setRoleName(FINANCE_CONTACT.getName());
@@ -115,7 +113,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 organisation.getCompaniesHouseNumber(),
                 bankDetails.getAccountNumber(),
                 bankDetails.getSortCode(),
-                bankDetails.getOrganisationAddress().getAddress().getAsSingleLine(),
+                bankDetails.getAddress().getAsSingleLine(),
                 bankDetails.isVerified(),
                 bankDetails.getCompanyNameScore(),
                 bankDetails.getRegistrationNumberMatched(),
@@ -201,12 +199,13 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("registrationNumber", "60674010").
                 param("accountNumber", "51406795").
                 param("sortCode", "404746").
-                param("addressForm.selectedPostcode.addressLine1", "Montrose House 1").
-                param("addressForm.selectedPostcode.addressLine2", "Clayhill Park").
-                param("addressForm.selectedPostcode.addressLine3", "Cheshire West and Chester").
-                param("addressForm.selectedPostcode.town", "Neston").
-                param("addressForm.selectedPostcode.county", "Cheshire").
-                param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
+                param("addressForm.addressType", AddressForm.AddressType.MANUAL_ENTRY.name()).
+                param("addressForm.manualAddress.addressLine1", "Montrose House 1").
+                param("addressForm.manualAddress.addressLine2", "Clayhill Park").
+                param("addressForm.manualAddress.addressLine3", "Cheshire West and Chester").
+                param("addressForm.manualAddress.town", "Neston").
+                param("addressForm.manualAddress.county", "Cheshire").
+                param("addressForm.manualAddress.postcode", "CH64 3RU")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details"));
 
@@ -229,12 +228,13 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("registrationNumber", "60674010").
                 param("accountNumber", "51406795").
                 param("sortCode", "404745").
-                param("addressForm.selectedPostcode.addressLine1", "Montrose House 2").
-                param("addressForm.selectedPostcode.addressLine2", "Clayhill Park").
-                param("addressForm.selectedPostcode.addressLine3", "Cheshire West and Chester").
-                param("addressForm.selectedPostcode.town", "Neston").
-                param("addressForm.selectedPostcode.county", "Cheshire").
-                param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
+                param("addressForm.addressType", AddressForm.AddressType.MANUAL_ENTRY.name()).
+                param("addressForm.manualAddress.addressLine1", "Montrose House 2").
+                param("addressForm.manualAddress.addressLine2", "Clayhill Park").
+                param("addressForm.manualAddress.addressLine3", "Cheshire West and Chester").
+                param("addressForm.manualAddress.town", "Neston").
+                param("addressForm.manualAddress.county", "Cheshire").
+                param("addressForm.manualAddress.postcode", "CH64 3RU")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details"));
 
@@ -257,12 +257,13 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("registrationNumber", "60674010").
                 param("accountNumber", "51406795").
                 param("sortCode", "404745").
-                param("addressForm.selectedPostcode.addressLine1", "Montrose House 1").
-                param("addressForm.selectedPostcode.addressLine2", "Clayhill Park").
-                param("addressForm.selectedPostcode.addressLine3", "Cheshire West and Chester").
-                param("addressForm.selectedPostcode.town", "Neston").
-                param("addressForm.selectedPostcode.county", "Cheshire").
-                param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
+                param("addressForm.addressType", AddressForm.AddressType.MANUAL_ENTRY.name()).
+                param("addressForm.manualAddress.addressLine1", "Montrose House 1").
+                param("addressForm.manualAddress.addressLine2", "Clayhill Park").
+                param("addressForm.manualAddress.addressLine3", "Cheshire West and Chester").
+                param("addressForm.manualAddress.town", "Neston").
+                param("addressForm.manualAddress.county", "Cheshire").
+                param("addressForm.manualAddress.postcode", "CH64 3RU")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details"));
 

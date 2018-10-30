@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.form.BankDetailsForm;
@@ -45,9 +44,6 @@ public class BankDetailsController extends AddressLookupBaseController {
 
     @Autowired
     private BankDetailsRestService bankDetailsRestService;
-
-    @Autowired
-    private OrganisationAddressRestService organisationAddressRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @GetMapping
@@ -131,7 +127,7 @@ public class BankDetailsController extends AddressLookupBaseController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @PostMapping(params = FORM_ACTION_PARAMETER)
-    public String searchAddress(Model model,
+    public String addressFormAction(Model model,
                                 @P("projectId")@PathVariable("projectId") Long projectId,
                                 @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                 BindingResult bindingResult,
