@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 
 /**
@@ -129,10 +130,10 @@ public class BankDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
-    @PostMapping(params = "addressForm.action")
+    @PostMapping(params = FORM_ACTION_PARAMETER)
     public String searchAddress(Model model,
                                 @P("projectId")@PathVariable("projectId") Long projectId,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
+                                @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                 BindingResult bindingResult,
                                 ValidationHandler validationHandler,
                                 UserResource loggedInUser) {
@@ -140,13 +141,13 @@ public class BankDetailsController extends AddressLookupBaseController {
         OrganisationResource organisationResource = projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess();
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
 
-        if (validationHandler.hasErrors(e -> e.getField().contains("addressForm"))) {
+        form.getAddressForm().validateAction(bindingResult);
+        if (validationHandler.hasErrors()) {
             return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser, false);
         }
 
         AddressForm addressForm = form.getAddressForm();
         addressForm.handleAction(this::searchPostcode);
-        addressForm.setPostcodeResults(searchPostcode(form.getAddressForm().getPostcodeInput()));
 
         return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser, false);
     }

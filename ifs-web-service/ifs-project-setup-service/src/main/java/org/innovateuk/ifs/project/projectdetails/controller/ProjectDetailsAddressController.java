@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 
 /**
@@ -87,7 +88,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @PostMapping(value = "/{projectId}/details/project-address", params = "addressForm.action")
+    @PostMapping(value = "/{projectId}/details/project-address", params = FORM_ACTION_PARAMETER)
     public String searchAddress(@PathVariable("projectId") Long projectId,
                                 Model model,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
@@ -95,13 +96,13 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
                                 ValidationHandler validationHandler) {
 
         ProjectResource project = projectService.getById(projectId);
+        form.getAddressForm().validateAction(bindingResult);
         if (validationHandler.hasErrors()) {
             return viewCurrentAddressForm(model, form, project);
         }
 
         AddressForm addressForm = form.getAddressForm();
         addressForm.handleAction(this::searchPostcode);
-        addressForm.setPostcodeResults(searchPostcode(form.getAddressForm().getPostcodeInput()));
 
         return viewCurrentAddressForm(model, form, project);
     }

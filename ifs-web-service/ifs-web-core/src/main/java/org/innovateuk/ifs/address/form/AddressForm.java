@@ -2,12 +2,16 @@ package org.innovateuk.ifs.address.form;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.validation.ValidAddressForm;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.function.Function;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 @ValidAddressForm
 public class AddressForm {
+    public static final String FORM_ACTION_PARAMETER = "addressForm.action";
 
     public enum Action {
         SEARCH_POSTCODE,
@@ -23,8 +27,6 @@ public class AddressForm {
 
     private Action action = Action.SAVE;
     private AddressType addressType;
-
-
     private String postcodeInput;
     private Integer selectedPostcodeIndex;
     private AddressResource manualAddress;
@@ -78,7 +80,6 @@ public class AddressForm {
         this.postcodeResults = postcodeResults;
     }
 
-    //methods
     public AddressResource getSelectedAddress(Function<String, List<AddressResource>> resultsSupplier) {
         if (AddressType.MANUAL_ENTRY.equals(addressType)) {
             return manualAddress;
@@ -100,10 +101,6 @@ public class AddressForm {
         }
     }
 
-    public boolean isDisplayPostcodeResults() {
-        return !AddressType.MANUAL_ENTRY.equals(addressType) && postcodeResults != null && !postcodeResults.isEmpty();
-    }
-
     public boolean isManualAddressEntry() {
         return addressType == AddressType.MANUAL_ENTRY;
     }
@@ -111,6 +108,16 @@ public class AddressForm {
     public boolean isPostcodeAddressEntry() {
         return addressType == AddressType.POSTCODE_LOOKUP;
     }
+
+
+    public void validateAction(BindingResult bindingResult) {
+        if (action == Action.SEARCH_POSTCODE) {
+            if (isNullOrEmpty(postcodeInput)) {
+                bindingResult.rejectValue("postcodeInput", "validation.field.must.not.be.blank");
+            }
+        }
+    }
+
 
 
 }
