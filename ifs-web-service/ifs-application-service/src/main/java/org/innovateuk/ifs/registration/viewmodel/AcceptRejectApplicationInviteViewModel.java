@@ -2,22 +2,29 @@ package org.innovateuk.ifs.registration.viewmodel;
 
 public class AcceptRejectApplicationInviteViewModel {
 
+    private long competitionId;
+    private String competitionName;
     private String leadOrganisationName;
     private String leadApplicantName;
     private String inviteOrganisationName;
     private String leadApplicantEmail;
-    private String competitionName;
-    private Long competitionId;
     private boolean inviteOrganisationExists;
+    private boolean leadOrganisation;
 
-    public AcceptRejectApplicationInviteViewModel(String leadApplicantName, String leadApplicantEmail, String leadOrganisationName, String inviteOrganisationName, String competitionName, Long competitionId, boolean inviteOrganisationExists) {
+    public AcceptRejectApplicationInviteViewModel(final long competitionId, final String competitionName,
+                                                  final String leadOrganisationName, final String leadApplicantName,
+                                                  final String inviteOrganisationName,
+                                                  final String leadApplicantEmail,
+                                                  final boolean inviteOrganisationExists,
+                                                  final boolean leadOrganisation) {
+        this.competitionId = competitionId;
+        this.competitionName = competitionName;
         this.leadOrganisationName = leadOrganisationName;
         this.leadApplicantName = leadApplicantName;
         this.inviteOrganisationName = inviteOrganisationName;
         this.leadApplicantEmail = leadApplicantEmail;
-        this.competitionName = competitionName;
-        this.competitionId = competitionId;
         this.inviteOrganisationExists = inviteOrganisationExists;
+        this.leadOrganisation = leadOrganisation;
     }
 
     public String getLeadOrganisationName() {
@@ -40,12 +47,16 @@ public class AcceptRejectApplicationInviteViewModel {
         return competitionName;
     }
 
-    public Long getCompetitionId() {
+    public long getCompetitionId() {
         return competitionId;
     }
 
     public boolean isInviteOrganisationExists() {
         return inviteOrganisationExists;
+    }
+
+    public boolean isLeadOrganisation() {
+        return leadOrganisation;
     }
 }
 
