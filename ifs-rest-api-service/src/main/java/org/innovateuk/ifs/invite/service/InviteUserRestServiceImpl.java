@@ -38,7 +38,7 @@ public class InviteUserRestServiceImpl extends BaseRestService implements Invite
 
     @Override
     public RestResult<RoleInviteResource> getInvite(String inviteHash) {
-        return getWithRestResultAnonymous(format("%s/%s/%s", INVITE_REST_URL, "getStakeholderInvite", inviteHash), RoleInviteResource.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", INVITE_REST_URL, "getInvite", inviteHash), RoleInviteResource.class);
     }
 
     @Override
