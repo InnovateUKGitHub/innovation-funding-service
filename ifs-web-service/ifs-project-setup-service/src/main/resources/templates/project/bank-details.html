@@ -112,11 +112,11 @@
                            th:field="*{sortCode}"/>
                 </div>
 
-                <h2 class="govuk-heading-m">Billing address</h2>
-                <p class="govuk-hint">This is the billing address connected to this bank account. This is not the
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Billing address</h2>
+                <p class="govuk-hint govuk-!-margin-top-0">This is the billing address connected to this bank account. This is not the
                     address of the bank.</p>
                 <div id="custom-postcode" class="govuk-body">
-                    <th:block th:insert="fragments/addresses :: address-details" th:with="form=${form}"/>
+                    <th:block th:insert="fragments/addresses :: address-details" th:with="form=${form},legend=${'Find UK address'}"/>
                 </div>
 
                 <th:block th:insert="fragments/modals :: modal-bank-details"/>
