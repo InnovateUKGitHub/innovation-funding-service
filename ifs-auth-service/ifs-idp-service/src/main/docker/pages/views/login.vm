@@ -35,11 +35,11 @@
     	<title>Sign in - Innovation Funding Service</title>
 
     	<link rel="shortcut icon" href="$resourcesDomain/images/favicon.ico" type="image/x-icon" />
-        <link rel="mask-icon" href="$resourcesDomain/images/govuk-mask-icon.svg$timestamp" color="blue">
-        <link rel="apple-touch-icon" sizes="180x180" href="$resourcesDomain/images/govuk-apple-touch-icon-180x180.png$timestamp">
-        <link rel="apple-touch-icon" sizes="167x167" href="$resourcesDomain/images/govuk-apple-touch-icon-167x167.png$timestamp">
-        <link rel="apple-touch-icon" sizes="152x152" href="$resourcesDomain/images/govuk-apple-touch-icon-152x152.png$timestamp">
-        <link rel="apple-touch-icon" href="$resourcesDomain/images/govuk-apple-touch-icon.png$timestamp">
+        <link rel="mask-icon" href="$resourcesDomain/images/govuk-mask-icon.svg?$timestamp" color="blue">
+        <link rel="apple-touch-icon" sizes="180x180" href="$resourcesDomain/images/govuk-apple-touch-icon-180x180.png?$timestamp">
+        <link rel="apple-touch-icon" sizes="167x167" href="$resourcesDomain/images/govuk-apple-touch-icon-167x167.png?$timestamp">
+        <link rel="apple-touch-icon" sizes="152x152" href="$resourcesDomain/images/govuk-apple-touch-icon-152x152.png?$timestamp">
+        <link rel="apple-touch-icon" href="$resourcesDomain/images/govuk-apple-touch-icon.png?$timestamp">
 
         <!--[if !IE 8]><!-->
         <link href="$resourcesDomain/css/screen.css?$timestamp" rel="stylesheet"  media="all" />
@@ -58,7 +58,7 @@
         <!--<![endif]-->
 
         <!--[if lt IE 9]>
-        <script src="$resourcesDomain/js/vendor/html5shiv/html5shiv.js$timestamp"></script>
+        <script src="$resourcesDomain/js/vendor/html5shiv/html5shiv.js?$timestamp"></script>
         <![endif]-->
 
         <meta property="og:image" content="$resourcesDomain/images/govuk-opengraph-image.png">
