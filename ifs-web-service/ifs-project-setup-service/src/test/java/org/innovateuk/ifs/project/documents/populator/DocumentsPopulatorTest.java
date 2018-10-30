@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.core.populator.BasicDetailsPopulator;
-import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder;
 import org.innovateuk.ifs.project.documents.viewmodel.AllDocumentsViewModel;
@@ -21,15 +20,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UNSET;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
 import static org.junit.Assert.assertEquals;
@@ -65,16 +58,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     public void setup() {
 
         super.setup();
-
-        projectId = 1L;
-        projectName = "Project 12";
         Long competitionId = 12L;
-
-        documentConfigId1 = 11L;
-        documentConfigId2 = 12L;
-        documentConfigTitle1 = "Risk Register";
-        documentConfigTitle2 = "Plan Document";
-
 
         user = UserResourceBuilder.newUserResource().build();
 

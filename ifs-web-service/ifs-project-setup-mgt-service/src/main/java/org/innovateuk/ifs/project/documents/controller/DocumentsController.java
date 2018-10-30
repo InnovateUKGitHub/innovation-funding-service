@@ -36,8 +36,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/project/{projectId}/document")
-//TODO - XXX - Rename this class back to normal
-public class ManagementDocumentsController {
+public class DocumentsController {
 
     private static final String FORM_ATTR = "form";
 
