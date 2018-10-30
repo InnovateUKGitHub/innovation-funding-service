@@ -48,6 +48,6 @@ public interface RegistrationService {
     ServiceResult<Void> editInternalUser(UserResource userToEdit, Role userRoleType);
 
     @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "CREATE", securedType = StakeholderRegistrationResource.class, description = "A System Registration User can create new internal Users on behalf of non-logged in users with invite hash")
+    @SecuredBySpring(value = "CREATE", securedType = StakeholderRegistrationResource.class, description = "A System Registration User can create new Stakeholders on behalf of non-logged in users with invite hash")
     ServiceResult<Void> createStakeholder(String hash, StakeholderRegistrationResource stakeholderRegistrationResource);
 }
