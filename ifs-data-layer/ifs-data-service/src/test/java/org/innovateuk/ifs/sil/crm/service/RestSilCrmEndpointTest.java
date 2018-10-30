@@ -56,4 +56,5 @@ public class RestSilCrmEndpointTest extends BaseUnitTestMocksTest {
 
         assertTrue(sendMailResult.isSuccess());
     }
+    
 }
