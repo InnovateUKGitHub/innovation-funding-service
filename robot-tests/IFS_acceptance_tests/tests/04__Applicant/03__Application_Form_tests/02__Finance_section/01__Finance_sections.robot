@@ -144,7 +144,7 @@ File upload mandatory for Academic partner to mark section as complete
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page    ${applicationName}
     And the user clicks the button/link               link = Your project costs
-    And the element should be disabled                id = mark-all-as-complete
+    #And the element should be disabled                id = mark-all-as-complete
     And the user clicks the button/link               jQuery = button:contains("Remove")
     When the user selects the checkbox                termsAgreed
     And the user clicks the button/link               jQuery = button:contains("Mark as complete")

@@ -20,7 +20,7 @@ Other funding validation message
     Given the user clicks the button/link               link = Your funding
     And the user selects the checkbox                   termsAgreed
     When The user clicks the button/link                jQuery = button:contains("Mark as complete")
-    Then The user should see a field and summary error  Please tell us if you have received any other funding for this project.
+    Then The user should see a field and summary error  Select if there has been any other public sector funding.
 
 Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
