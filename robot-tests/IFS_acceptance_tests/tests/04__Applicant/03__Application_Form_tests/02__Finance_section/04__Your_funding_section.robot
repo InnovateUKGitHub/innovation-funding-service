@@ -27,10 +27,10 @@ Applicant has options to enter funding level and details of any other funding
     [Tags]
     #Given the user selects the radio button    other_funding-otherPublicFunding-    Yes   #Remove if not needed, update the elements
     Given the user selects the radio button    otherFunding  true
-    Then the user should see the element       css = [name^="grantClaimPercentage"]
-    And the user should see the element        id = otherFundingRows[1853].source
-    And the user should see the element        id = otherFundingRows[1853].date
-    And the user should see the element        id = otherFundingRows[1853].fundingAmount
+    #Then the user should see the element       css = [name^="grantClaimPercentage"]
+    And the user should see the element        css = [name*=source]
+    And the user should see the element        css = [name*=date]
+    And the user should see the element        css = [name*=fundingAmount]
     #And the user should see the element        id = other_funding-otherPublicFunding- ~ label
 
 #Remove if not needed...
@@ -40,16 +40,16 @@ Applicant has options to enter funding level and details of any other funding
     #And the user should see the element        css = [name*=other_funding-fundingAmount]
     #And the user should see the element        css = [name^="other_funding-otherPublicFunding-"] ~ label
 
-Applicant can see maximum funding size available to them
-    [Documentation]    INFUND-6794
-    [Tags]
-    The user should see the text in the page    Enter your funding level (maximum 50%)
-
+#Applicant can see maximum funding size available to them
+#    [Documentation]    INFUND-6794
+#    [Tags]
+#    The user should see the text in the page    Enter your funding level (maximum 50%)
+#
 Funding level validations
     [Documentation]    INFUND-6794
     [Tags]
-    When the user provides invalid value as percentage then he should see the error  This field should be 50% or lower.  60
-    When the user provides invalid value as percentage then he should see the error  This field should be 0% or higher.  -14
+    When the user provides invalid value as percentage then he should see the error  Funding level must be 50% or lower.  60
+    When the user provides invalid value as percentage then he should see the error  Funding level must be above 0%.  -14
     When the user provides invalid value as percentage then he should see the error  This field can only accept whole numbers.  15.35
     #TODO add server side validation for the percentage field when double number is provided IFS-3066
     And the user selects the radio button         requestingFunding   true
@@ -59,15 +59,15 @@ Funding level validations
 Other funding validations
     [Documentation]    INFUND-6794
     [Tags]
-    Given the user enters text to a text field          css = [name*=other_funding-securedDate]    20
-    And the user enters text to a text field            css = [name*=other_funding-fundingAmount]    txt
+    Given the user enters text to a text field          css = [name*=date]    20
+    And the user enters text to a text field            css = [name*=fundingAmount]    txt
     And the user clicks the button/link                 jQuery = button:contains("Mark as complete")
-    And The user should see a field and summary error   Invalid secured date
-    And The user should see a field and summary error   Funding source cannot be blank.
-    And The user should see a field and summary error   This field cannot be left blank.
-    When the user enters text to a text field           css = [name*=other_funding-securedDate]    12-${nextyear}
-    And the user enters text to a text field            css = [name*=other_funding-fundingSource]  Lottery funding
-    And the user enters text to a text field            css = [name*=other_funding-fundingAmount]    20000
+    And The user should see a field and summary error   Enter date secured.
+    And The user should see a field and summary error   Enter funding amount.
+    And The user should see a field and summary error   Enter a funding source.
+    When the user enters text to a text field           css = [name*=date]    12-${nextyear}
+    And the user enters text to a text field            css = [name*=source]  Lottery funding
+    And the user enters text to a text field            css = [name*=fundingAmount]    20000
     Then the user cannot see a validation error in the page
     And the user selects the checkbox                   termsAgreed
     And the user clicks the button/link                 jQuery = button:contains("Mark as complete")
@@ -96,18 +96,18 @@ Funding level has been reset
     [Tags]
     When the user clicks the button/link    link = Your funding
     Then the user should see the element    jQuery = button:contains("Mark as complete")
-    And the user should not see the text in the element    css = [name*=other_funding-fundingSource]    Lottery funding
-    And the user should not see the text in the element    css = [name*=other_funding-securedDate]    12-${nextyear}
-    And the user should not see the text in the element    css = [name*=other_funding-fundingAmount]    20000
+    And the user should not see the text in the element    css = [name*=source]    Lottery funding
+    And the user should not see the text in the element    css = [name*=date]    12-${nextyear}
+    And the user should not see the text in the element    css = [name*=fundingAmount]    20000
 
 Funding level can be re-entered, and this saves correctly
     [Documentation]  INFUND-6895
     [Tags]
     Given the user selects the radio button         requestingFunding   true
     And the user enters text to a text field        css = [name^="grantClaimPercentage"]    43
-    When the user enters text to a text field       css = [name*=other_funding-fundingSource]  Lottery funding
-    Then the user enters text to a text field       css = [name*=other_funding-securedDate]  12-${nextyear}
-    And the user enters text to a text field        css = [name*=other_funding-fundingAmount]  20000
+    When the user enters text to a text field       css = [name*=source]  Lottery funding
+    Then the user enters text to a text field       css = [name*=date]  12-${nextyear}
+    And the user enters text to a text field        css = [name*=fundingAmount]  20000
 
 Adding more funding rows
     [Documentation]    INFUND-6895, INFUND-8044
@@ -167,22 +167,23 @@ Complete the org size section
     run keyword and ignore error without screenshots    the user clicks the button/link    link = Your finances
 
 the user adds more rows in other funding
-    the user enters text to a text field    css = [name*=other_funding-fundingSource]  Lottery funding
-    the user enters text to a text field    css = [name*=other_funding-securedDate]  12-${nextyear}
-    the user enters text to a text field    css = [name*=other_funding-fundingAmount]  20000
+    the user clicks the button/link         jQuery = button:contains("Add another source of funding")
+    the user enters text to a text field    css = [name*=source]  Lottery funding
+    the user enters text to a text field    css = [name*=date]  12-${nextyear}
+    the user enters text to a text field    css = [name*=fundingAmount]  20000
     the user moves focus to the element     jQuery = button:contains("Mark as complete")
     wait for autosave
     the user clicks the button/link         jQuery = button:contains("Add another source of funding")
-    The user should see the element         css = tr:nth-of-type(2) input[name*=fundingSource]
-    the user enters text to a text field    css = tr:nth-of-type(2) input[name*=fundingSource]  wealthy uncle
-    the user enters text to a text field    css = tr:nth-of-type(2) input[name*=securedDate]  02-${nextyear}
+    The user should see the element         css = tr:nth-of-type(2) input[name*=source]
+    the user enters text to a text field    css = tr:nth-of-type(2) input[name*=source]  wealthy uncle
+    the user enters text to a text field    css = tr:nth-of-type(2) input[name*=date]  02-${nextyear}
     the user enters text to a text field    css = tr:nth-of-type(2) input[name*=fundingAmount]  15000
     the user moves focus to the element     jQuery = button:contains("Mark as complete")
     wait for autosave
     the user clicks the button/link         jQuery = button:contains("Add another source of funding")
-    The user should see the element         css = tr:nth-of-type(3) input[name*=fundingSource]
-    the user enters text to a text field    css = tr:nth-of-type(3) input[name*=fundingSource]  wealthy grandma
-    the user enters text to a text field    css = tr:nth-of-type(3) input[name*=securedDate]  11-${nextyear}
+    The user should see the element         css = tr:nth-of-type(3) input[name*=source]
+    the user enters text to a text field    css = tr:nth-of-type(3) input[name*=source]  wealthy grandma
+    the user enters text to a text field    css = tr:nth-of-type(3) input[name*=date]  11-${nextyear}
     the user enters text to a text field    css = tr:nth-of-type(3) input[name*=fundingAmount]  200000
     the user moves focus to the element     jQuery = button:contains("Mark as complete")
     wait for autosave
