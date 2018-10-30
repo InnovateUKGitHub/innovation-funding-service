@@ -456,7 +456,8 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
-                mock -> mock.isOtherDocumentsApproved()
+                mock -> mock.isOtherDocumentsApproved(),
+                mock -> mock.isDocumentsApproved()
         );
     }
 
