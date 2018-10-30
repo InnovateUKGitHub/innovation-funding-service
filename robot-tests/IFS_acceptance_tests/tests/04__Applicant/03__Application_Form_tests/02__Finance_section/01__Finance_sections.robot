@@ -27,7 +27,7 @@ ${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}
 *** Test Cases ***
 Finance sub-sections
     [Documentation]    INFUND-192
-    [Tags]
+    [Tags]  HappyPath
     Then the user should see all the Your-Finances Sections
 
 Not requesting funding guidance
@@ -41,7 +41,7 @@ Not requesting funding guidance
 
 Not requesting funding button
     [Documentation]    INFUND-7093
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link                jQuery = summary span:contains("Not requesting funding")
     And the user clicks the button/link                 jQuery = button:contains("Not requesting funding")
     Then the user should see the funding guidance
@@ -51,7 +51,7 @@ Not requesting funding button
 
 Requesting funding button
     [Documentation]    INFUND-7093
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link                jQuery = button:contains("Requesting funding")
     Then the user should see the element                jQuery = li:nth-of-type(2) > .task-status-incomplete
     And the user should not see the element             jQuery = li:nth-of-type(3) span:contains("No action required")
@@ -62,12 +62,12 @@ Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
     When the user clicks the button/link    link = Your project costs
-    Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'org2'")          #text in the page    Provide the project costs for '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}'
-    And the user should see the element     jQuery = label:contains("'org2' Total project costs")          #text in the page     '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}' Total project costs
+    Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'org2'")
+    And the user should see the element     jQuery = label:contains("'org2' Total project costs")
 
 Guidance in the your project costs
     [Documentation]    INFUND-192
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link   link = Your project costs
     When the user clicks the button/link    jQuery = button:contains("Labour")
@@ -81,7 +81,7 @@ Working days per year should be 232
 
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
-    [Tags]
+    [Tags]  HappyPathh
     [Setup]  Applicant navigates to the finances of the Robot application
     And the user clicks the button/link     link = Your project costs
     Given The user adds three material rows
@@ -92,7 +92,7 @@ User pressing back button should get the correct version of the page
 
 Non-academic partner finance section
     [Documentation]    INFUND-7522
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
     And The user should see the element     jQuery = .govuk-details__summary:contains("Not requesting funding")
@@ -103,7 +103,7 @@ Non-academic partner finance section
 
 Academic partner finance section
     [Documentation]    INFUND-7522
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Log in as a different user             &{collaborator2_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
     Then The user should not see the element        link = Not requesting funding
@@ -114,7 +114,7 @@ Academic partner finance section
 
 Academic partner can upload file for field J-es PDF
     [Documentation]    INFUND-7522
-    [Tags]
+    [Tags]  happyPath
     Given the user navigates to Your-finances page  ${applicationName}
     And the user clicks the button/link             link = Your project costs
     # Note the Jes form is already uploaded
@@ -126,7 +126,7 @@ Academic partner can upload file for field J-es PDF
 
 Compadmin can open the jes-file in applications
     [Documentation]     IFS-102
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page   ${openCompetitionManagementRTO}
     And the user clicks the button/link    link = Applications: All, submitted, ineligible
@@ -138,7 +138,7 @@ Compadmin can open the jes-file in applications
 
 File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469  IFS-2879
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Log in as a different user               &{collaborator2_credentials}
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page    ${applicationName}
@@ -151,7 +151,7 @@ File upload mandatory for Academic partner to mark section as complete
 
 Applicant chooses Calculate overheads option
     [Documentation]     INFUND-6788  INFUND-8191  INFUND-7405  INFUND-8355
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user                     &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     When the user navigates to Your-finances page           ${applicationName}

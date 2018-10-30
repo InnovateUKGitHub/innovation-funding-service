@@ -17,7 +17,7 @@ Not in Companies House: Enter details manually link
 
 Companies House: Valid company name
     [Documentation]    INFUND-887
-    [Tags]
+    [Tags]  HappyPath
     When the user enters text to a text field    id = organisationSearchName    Hive IT
     And the user clicks the button/link          id = org-search
     Then the user should see the element         Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
@@ -25,7 +25,7 @@ Companies House: Valid company name
 
 Companies House: User can choose the organisation address
     [Documentation]    INFUND-887
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link    Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user should see the element     jQuery = h3:contains("Registered name")
     And the user should see the element     jQuery = h3:contains("Registered Address")
@@ -41,7 +41,7 @@ Companies House: Invalid company name
 
 Companies House: Valid registration number
     [Documentation]    INFUND-887
-    [Tags]
+    [Tags]  HappyPath
     When the user enters text to a text field    id = organisationSearchName    05493105
     And the user clicks the button/link          id = org-search
     Then the user should see the element         Link = INNOVATE LTD
@@ -57,7 +57,7 @@ Companies House: Empty company name field
 
 Manually add the details and pass to the confirmation page
     [Documentation]    INFUND-888
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user expands enter details manually
     Given the user enters text to a text field    name = organisationName    Top of the Popps
     When the user clicks the button/link          jQuery = button:contains("Continue")
