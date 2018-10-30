@@ -18,6 +18,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,10 +29,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
@@ -44,12 +46,8 @@ import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestio
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
-/**
- * Tests for {@link YourProjectCostsSectionPopulator}
- */
 @RunWith(MockitoJUnitRunner.class)
 public class YourProjectCostsSectionPopulatorTest {
 
@@ -71,8 +69,14 @@ public class YourProjectCostsSectionPopulatorTest {
     @Mock
     private MessageSource messageSource;
 
+    @Before
+    public void setUp() {
+        when(messageSource.getMessage("ifs.question.yourProjectCosts.description", null, Locale.ENGLISH))
+                .thenReturn("Your project costs question description");
+    }
+
     @Test
-    public void testPopulateBusiness() {
+    public void populateBusiness() {
         QuestionResource costQuestion = newQuestionResource().withType(QuestionType.COST).build();
         ApplicantSectionResource costSection = newApplicantSectionResource()
                 .withApplicantQuestions(
@@ -101,21 +105,23 @@ public class YourProjectCostsSectionPopulatorTest {
         when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
         StandardYourProjectCostsSectionViewModel viewModel = (StandardYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
 
-        assertThat(viewModel.isSection(), equalTo(true));
-        assertThat(viewModel.isComplete(), equalTo(false));
-        assertThat(viewModel.getDefaultProjectCostSections().size(), equalTo(1));
-        assertThat(viewModel.isIncludeVat(), equalTo(true));
+        assertThat(viewModel.isSection()).isTrue();
+        assertThat(viewModel.isComplete()).isFalse();
+        assertThat(viewModel.getDefaultProjectCostSections().size()).isEqualTo(1);
+        assertThat(viewModel.isIncludeVat()).isTrue();
         DefaultProjectCostSection costSectionViewModel = viewModel.getDefaultProjectCostSections().get(0);
-        assertThat(costSectionViewModel.getApplicantResource(), equalTo(section));
-        assertThat(costSectionViewModel.getApplicantSection(), equalTo(costSection));
-        assertThat(costSectionViewModel.getCostViews(), equalTo(asList(formInputViewModel)));
+        assertThat(costSectionViewModel.getApplicantResource()).isEqualTo(section);
+        assertThat(costSectionViewModel.getApplicantSection()).isEqualTo(costSection);
+        assertThat(costSectionViewModel.getCostViews()).isEqualTo(asList(formInputViewModel));
+        assertThat(viewModel.getQuestion().getDescription()).isEqualTo("Your project costs question description");
 
-
+        verify(messageSource, only()).getMessage("ifs.question.yourProjectCosts.description", null, Locale.ENGLISH);
         verify(financeModelManager).addOrganisationFinanceDetails(model, section.getApplication().getId(), asList(costQuestion), section.getCurrentUser().getId(), form, section.getCurrentApplicant().getOrganisation().getId());
     }
 
+
     @Test
-    public void testPopulateResearch() {
+    public void populateResearch() {
         QuestionResource costQuestion = newQuestionResource().withType(QuestionType.COST).build();
         FormInputResource fileUpload = newFormInputResource().withType(FormInputType.FINANCE_UPLOAD).build();
         ApplicantQuestionResource costApplicantQuestion = newApplicantQuestionResource()
@@ -151,11 +157,13 @@ public class YourProjectCostsSectionPopulatorTest {
         when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
         JesYourProjectCostsSectionViewModel viewModel = (JesYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, true, Optional.empty(), true);
 
-        assertThat(viewModel.isSection(), equalTo(true));
-        assertThat(viewModel.isComplete(), equalTo(false));
-        assertThat(viewModel.getFinanceUploadFormInput(), equalTo(fileUpload));
-        assertThat(viewModel.getFinanceUploadQuestion(), equalTo(costQuestion));
+        assertThat(viewModel.isSection()).isTrue();
+        assertThat(viewModel.isComplete()).isFalse();
+        assertThat(viewModel.getFinanceUploadFormInput()).isEqualTo(fileUpload);
+        assertThat(viewModel.getFinanceUploadQuestion()).isEqualTo(costQuestion);
+        assertThat(viewModel.getQuestion().getDescription()).isEqualTo("Your project costs question description");
 
+        verify(messageSource, only()).getMessage("ifs.question.yourProjectCosts.description", null, Locale.ENGLISH);
         verify(financeModelManager).addOrganisationFinanceDetails(model, section.getApplication().getId(), asList(costQuestion), section.getCurrentUser().getId(), form, section.getCurrentApplicant().getOrganisation().getId());
     }
 }
