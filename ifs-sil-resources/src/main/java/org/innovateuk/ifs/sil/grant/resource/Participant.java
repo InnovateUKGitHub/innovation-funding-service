@@ -3,7 +3,7 @@ package org.innovateuk.ifs.sil.grant.resource;
 import java.util.Set;
 
 public class Participant {
-    private String id;
+    private long id;
     private String type;
     private String role;
     private String contactEmail;
@@ -14,11 +14,11 @@ public class Participant {
     private String status;
     private Set<Forecast> forecasts;
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

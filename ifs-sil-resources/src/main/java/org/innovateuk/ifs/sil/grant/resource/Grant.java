@@ -83,11 +83,11 @@ public class Grant {
         this.duration = duration;
     }
 
-    public Set<Participant> getParticipant() {
+    public Set<Participant> getParticipants() {
         return participants;
     }
 
-    public void setParticipant(Set<Participant> participants) {
+    public void setParticipants(Set<Participant> participants) {
         this.participants = participants;
     }
 }

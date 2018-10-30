@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.sil.grant.resource;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Forecast {
     private String costCategory;
     private LocalDate start;
     private LocalDate end;
-    private double value;
+    private BigDecimal value;
 
     public String getCostCategory() {
         return costCategory;
@@ -42,15 +43,15 @@ public class Forecast {
         return this;
     }
 
-    public double getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public void setValue(double value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 
-    public Forecast value(double value) {
+    public Forecast value(BigDecimal value) {
         setValue(value);
         return this;
     }

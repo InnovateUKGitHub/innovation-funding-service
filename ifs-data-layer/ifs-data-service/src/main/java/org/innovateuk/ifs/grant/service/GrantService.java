@@ -7,6 +7,7 @@ public interface GrantService {
     @NotSecured(value = "Anyone can send grant data", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> sendProject(final Long applicationId);
 
+    @NotSecured(value = "Anyone can send grant data", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> sendReadyProjects();
 
 }
