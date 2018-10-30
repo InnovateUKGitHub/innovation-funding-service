@@ -145,8 +145,7 @@
                        th:id="__${path}__.date"
                        placeholder="MM-YYYY"
                        pattern="(0[1-9]|1[012])-[0-9]{4}"
-                       th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid},
-                                data-required-errormessage=#{validation.finance.funding.date.invalid}"
+                       th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
                        maxlength="7"
                        th:errorclass="govuk-input--error"
                        required="required" />
