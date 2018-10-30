@@ -46,6 +46,7 @@ public class OverheadFileDownloadControllerTest extends BaseControllerMockMVCTes
                 .andExpect(status().isOk())
                 .andReturn();
         verify(overheadFileRestServiceMock).getOverheadFileDetails(projectId);
+        verify(overheadFileRestServiceMock).getOverheadFile(projectId);
         assertThat(fileName).isEqualTo(result.getResponse().getContentAsString());
     }
 
