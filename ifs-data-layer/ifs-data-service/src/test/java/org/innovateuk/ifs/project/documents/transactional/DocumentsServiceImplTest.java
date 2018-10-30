@@ -11,11 +11,9 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
@@ -26,20 +24,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_HAS_SOLE_PARTNER;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED;
@@ -101,7 +94,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
                 .build();
 
         configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
-                .newProjectDocument()
+                .newCompetitionProjectDocument()
                 .withId(documentConfigId)
                 .withTitle("Risk Register")
                 .withGuidance("Guidance for Risk Register")
