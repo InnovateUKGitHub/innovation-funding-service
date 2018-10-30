@@ -237,11 +237,11 @@ the table header matches correctly
     Run Keyword If    ${pagination} == 'FAIL'    check applications on one page
 
 check both pages of applications
-    ${row_count_second_page} =     get matching xpath count    //*[td]
+    ${row_count_second_page} =     Get Element Count    //*[td]
     convert to integer    ${row_count_second_page}
     log    ${row_count_second_page}
     the user navigates to the page    ${applicationsForRTOComp}
-    ${row_count_first_page} =     get matching xpath count    //*[td]
+    ${row_count_first_page} =     Get Element Count    //*[td]
     convert to integer    ${row_count_first_page}
     log    ${row_count_first_page}
     ${total_application_count} =     evaluate    ${row_count_first_page}+${row_count_second_page}
@@ -250,31 +250,31 @@ check both pages of applications
     the user should see the text in the page    ${apps_string}
 
 check applications on one page
-    ${total_row_count} =     get matching xpath count    //*[td]
+    ${total_row_count} =     Get Element Count    //*[td]
     convert to integer    ${total_row_count}
     log    ${total_row_count}
     ${apps_string} =     Catenate    ${total_application_count}    applications
     the user should see the text in the page    ${apps_string}
 
 The calculation for the submited applications should be correct
-    ${submitted_count} =     Get matching xpath count    //*[text()="submitted"]
+    ${submitted_count} =     Get Element Count    //*[text()="submitted"]
     Run keyword if    ${submitted_count} ! =  0    submitted application calculations are correct
 
 The calculation of the open applications should be correct
-    ${open_count} =     Get matching xpath count    //*[text()="open"]
+    ${open_count} =     Get Element Count    //*[text()="open"]
     Run keyword if    ${open_count} ! =  0    open application calculations are correct
 
 The totals in the Key statistics should be correct
     #Calculation of the total number of Applications
-    ${TOTAL_APPLICATIONS} =     Get matching xpath count    //table/tbody/tr
+    ${TOTAL_APPLICATIONS} =     Get Element Count    //table/tbody/tr
     ${TOTAL_COUNT} =     Get text    css = li:nth-child(1) > div > span
     Should Be Equal As Integers    ${TOTAL_APPLICATIONS}    ${TOTAL_COUNT}
     #Calculation of the Started Applications
-    ${STARTED_APPLICATIONS} =     Get matching xpath count    //*[text()="Started"]
+    ${STARTED_APPLICATIONS} =     Get Element Count    //*[text()="Started"]
     ${STARTED_COUNT} =     Get text    css = li:nth-child(2) > div > span
     Should Be Equal As Integers    ${STARTED_APPLICATIONS}    ${STARTED_COUNT}
     #Calculation of the Submitted Applications
-    ${SUBMITTED_APPLICATIONS} =     Get matching xpath count    //*[text()="Submitted"]
+    ${SUBMITTED_APPLICATIONS} =     Get Element Count    //*[text()="Submitted"]
     ${SUBMITTED_COUNT} =     Get text    css = li:nth-child(4) > div > span
     Should Be Equal As Integers    ${SUBMITTED_APPLICATIONS}    ${SUBMITTED_COUNT}
     #TODO ADD Check for the beyond 50% counts when we will have test data

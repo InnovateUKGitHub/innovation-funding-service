@@ -58,7 +58,7 @@ Companies House: Empty company name field
 Manually add the details and pass to the confirmation page
     [Documentation]    INFUND-888
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link      jQuery = .govuk-details span:contains("Enter details manually")
+    [Setup]  the user expands enter details manually
     Given the user enters text to a text field    name = organisationName    Top of the Popps
     When the user clicks the button/link          jQuery = button:contains("Continue")
     Then the user should see the element          jQuery = h3:contains("Organisation type")~ p:contains("Business")
@@ -79,5 +79,5 @@ the backslash doesnt give errors
     Run Keyword If    '${status}' == 'FAIL'    Wait Until Page Contains Without Screenshots    No results were found
 
 the user expands enter details manually
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = summary:contains("Enter details manually")[aria-expanded="false"]
-    run keyword if  '${status}' == 'PASS'  the user clicks the button/link  jQuery = summary:contains("Enter details manually")[aria-expanded="false"]
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   css = .govuk-details__summary[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link                                       css = .govuk-details__summary[aria-expanded="false"]
