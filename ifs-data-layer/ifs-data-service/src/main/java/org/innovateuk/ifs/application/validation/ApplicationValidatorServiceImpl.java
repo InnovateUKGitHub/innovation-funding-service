@@ -124,7 +124,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         FormInput formInput = formInputRepository.findOne(formInputId);
 
         if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser(application.getId())) {
-            if (financeFileIsEmpty(application)) {
+            if (financeFileisNotPresent(application)) {
                 Error error = fieldError("jesFileUpload", null, "validation.application.jes.upload.required");
                 return new ValidationMessages(error);
             }
@@ -145,7 +145,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         return false;
     }
 
-    private boolean financeFileIsEmpty(Application application) {
+    private boolean financeFileisNotPresent(Application application) {
         List<ApplicationFinance> applicationFinances = application.getApplicationFinances();
         Optional<OrganisationResource> organisation = organisationService.getByUserAndApplicationId(loggedInUserSupplier.get().getId(), application.getId()).getOptionalSuccessObject();
 

@@ -70,6 +70,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
         ValidationMessages validationMessages = new ValidationMessages();
         Enumeration<String> parameterNames = request.getParameterNames();
+
         while (parameterNames.hasMoreElements()) {
             String parameter = parameterNames.nextElement();
             String[] parameterValues = request.getParameterValues(parameter);
