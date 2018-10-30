@@ -85,7 +85,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     public void getInvite() throws Exception {
         CompetitionInviteResource expected = new CompetitionInviteResource();
         expected.setCompetitionName("my competition");
-        setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "getInvite", "hash"), CompetitionInviteResource.class, expected);
+        setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "getStakeholderInvite", "hash"), CompetitionInviteResource.class, expected);
         CompetitionInviteResource actual = service.getInvite("hash").getSuccess();
         assertEquals(expected, actual);
     }

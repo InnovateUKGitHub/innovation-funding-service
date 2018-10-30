@@ -41,7 +41,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
     @Test
     public void getInvite() {
         RoleInviteResource roleInviteResource = new RoleInviteResource();
-        String url = inviteRestBaseUrl + "/getInvite/";
+        String url = inviteRestBaseUrl + "/getStakeholderInvite/";
         String inviteHash = "hash";
         setupGetWithRestResultAnonymousExpectations(url + inviteHash, RoleInviteResource.class, roleInviteResource);
         RestResult<RoleInviteResource> result = service.getInvite(inviteHash);

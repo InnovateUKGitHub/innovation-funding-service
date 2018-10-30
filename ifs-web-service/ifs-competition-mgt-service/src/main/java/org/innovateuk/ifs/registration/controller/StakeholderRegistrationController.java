@@ -52,7 +52,7 @@ public class StakeholderRegistrationController {
 
     @GetMapping("/{inviteHash}/register")
     public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @ModelAttribute("form") StakeholderRegistrationForm stakeholderRegistrationForm) {
-        StakeholderInviteResource stakeholderInviteResource = competitionSetupStakeholderRestService.getInvite(inviteHash).getSuccess();
+        StakeholderInviteResource stakeholderInviteResource = competitionSetupStakeholderRestService.getStakeholderInvite(inviteHash).getSuccess();
         model.addAttribute("model", stakeholderRegistrationModelPopulator.populateModel(stakeholderInviteResource.getEmail()));
         return "stakeholders/create-account";
     }
@@ -96,7 +96,7 @@ public class StakeholderRegistrationController {
             return "redirect:/";
         }
 
-        return competitionSetupStakeholderRestService.getInvite(inviteHash).andOnSuccessReturn(invite -> {
+        return competitionSetupStakeholderRestService.getStakeholderInvite(inviteHash).andOnSuccessReturn(invite -> {
             if (InviteStatus.OPENED != invite.getStatus()) {
                 return format("redirect:/stakeholder/%s/register", inviteHash);
             } else {
@@ -109,7 +109,7 @@ public class StakeholderRegistrationController {
         if(loggedInUser != null) {
             return "registration/error";
         } else {
-            StakeholderInviteResource stakeholderInviteResource = competitionSetupStakeholderRestService.getInvite(inviteHash).getSuccess();
+            StakeholderInviteResource stakeholderInviteResource = competitionSetupStakeholderRestService.getStakeholderInvite(inviteHash).getSuccess();
             model.addAttribute("model", stakeholderRegistrationModelPopulator.populateModel(stakeholderInviteResource.getEmail()));
             return "stakeholders/create-account";
         }

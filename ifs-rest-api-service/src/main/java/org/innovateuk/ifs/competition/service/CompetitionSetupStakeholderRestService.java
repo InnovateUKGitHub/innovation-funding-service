@@ -17,7 +17,7 @@ public interface CompetitionSetupStakeholderRestService {
 
     RestResult<List<UserResource>> findStakeholders(long competitionId);
 
-    RestResult<StakeholderInviteResource> getInvite(String inviteHash);
+    RestResult<StakeholderInviteResource> getStakeholderInvite(String inviteHash);
 
     RestResult<Void> createStakeholder(String inviteHash, StakeholderRegistrationResource stakeholderRegistrationResource);
 

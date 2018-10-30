@@ -53,7 +53,7 @@ public class StakeholderRegistrationControllerTest extends BaseControllerMockMVC
                 .build();
 
         when(stakeholderRegistrationModelPopulatorMock.populateModel("tyler@hiveit.co.uk")).thenReturn(new StakeholderRegistrationViewModel("test@test.com", "Stakeholder"));
-        when(competitionSetupStakeholderRestServiceMock.getInvite("hash")).thenReturn(RestResult.restSuccess(inviteResource));
+        when(competitionSetupStakeholderRestServiceMock.getStakeholderInvite("hash")).thenReturn(RestResult.restSuccess(inviteResource));
         mockMvc.perform(get(URL_PREFIX + "/hash/register"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("stakeholders/create-account"));
@@ -69,7 +69,7 @@ public class StakeholderRegistrationControllerTest extends BaseControllerMockMVC
                 .build();
 
         when(stakeholderServiceMock.createStakeholder("hash", registrationForm)).thenReturn(ServiceResult.serviceSuccess());
-        when(competitionSetupStakeholderRestServiceMock.getInvite("hash")).thenReturn(RestResult.restSuccess(inviteResource));
+        when(competitionSetupStakeholderRestServiceMock.getStakeholderInvite("hash")).thenReturn(RestResult.restSuccess(inviteResource));
         mockMvc.perform(post(URL_PREFIX + "/hash/register")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .param("firstName", registrationForm.getFirstName())
@@ -86,7 +86,7 @@ public class StakeholderRegistrationControllerTest extends BaseControllerMockMVC
                 .withStatus(InviteStatus.OPENED)
                 .build();
 
-        when(competitionSetupStakeholderRestServiceMock.getInvite("hash")).thenReturn(RestResult.restSuccess(inviteResource));
+        when(competitionSetupStakeholderRestServiceMock.getStakeholderInvite("hash")).thenReturn(RestResult.restSuccess(inviteResource));
         mockMvc.perform(get(URL_PREFIX + "/hash/register/account-created"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("registration/account-created"));

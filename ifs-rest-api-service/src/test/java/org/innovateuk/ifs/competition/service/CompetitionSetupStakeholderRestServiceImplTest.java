@@ -62,7 +62,7 @@ public class CompetitionSetupStakeholderRestServiceImplTest extends BaseRestServ
         String url = competitionSetupStakeholderRestURL + "get-invite/" + hash;
         setupGetWithRestResultAnonymousExpectations(url, StakeholderInviteResource.class, invite);
 
-        StakeholderInviteResource response = service.getInvite(hash).getSuccess();
+        StakeholderInviteResource response = service.getStakeholderInvite(hash).getSuccess();
         assertEquals(invite, response);
     }
 

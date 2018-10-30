@@ -43,7 +43,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<CompetitionInviteResource> getInvite(String inviteHash) {
-        return getWithRestResultAnonymous(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getInvite", inviteHash), CompetitionInviteResource.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", COMPETITION_INVITE_REST_URL, "getStakeholderInvite", inviteHash), CompetitionInviteResource.class);
     }
 
     @Override
