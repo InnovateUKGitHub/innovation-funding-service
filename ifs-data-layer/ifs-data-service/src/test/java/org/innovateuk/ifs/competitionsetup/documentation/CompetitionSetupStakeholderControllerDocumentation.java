@@ -122,7 +122,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
 
         when(competitionSetupStakeholderService.getInviteByHash(TEST_HASH)).thenReturn(serviceSuccess(invite));
 
-        mockMvc.perform(get("/competition/setup/get-invite/{inviteHash}", TEST_HASH))
+        mockMvc.perform(get("/competition/setup/get-stakeholder-invite/{inviteHash}", TEST_HASH))
                 .andExpect(status().isOk())
                 .andDo(document("competition/setup/{method-name}",
                                 pathParameters(

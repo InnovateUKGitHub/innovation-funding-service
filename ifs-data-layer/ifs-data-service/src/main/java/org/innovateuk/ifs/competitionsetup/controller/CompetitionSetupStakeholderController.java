@@ -40,7 +40,7 @@ public class CompetitionSetupStakeholderController {
         return competitionSetupStakeholderService.findStakeholders(competitionId).toGetResponse();
     }
 
-    @GetMapping("/get-invite/{inviteHash}")
+    @GetMapping("/get-stakeholder-invite/{inviteHash}")
     public RestResult<StakeholderInviteResource> getInvite(@PathVariable("inviteHash") String inviteHash) {
         return competitionSetupStakeholderService.getInviteByHash(inviteHash).toGetResponse();
     }
