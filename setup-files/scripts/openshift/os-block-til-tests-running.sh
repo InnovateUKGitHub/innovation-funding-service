@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -e
 
 PROJECT=$1
@@ -13,12 +14,11 @@ HOST=$(getHost $TARGET)
 ROUTE_DOMAIN=$(getRouteDomain $TARGET $HOST)
 SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 
-echo "Stopping tests on project ($PROJECT)"
+PODNAME=$(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep ^robot-framework | grep -v deploy | awk '{ print $1 }')
 
-function stopTests() {
-    oc delete dc chrome ${SVC_ACCOUNT_CLAUSE}
-    oc delete dc robot-framework ${SVC_ACCOUNT_CLAUSE}
-    oc delete svc chrome ${SVC_ACCOUNT_CLAUSE}
-}
+echo "Waiting tests to be ready on $PODNAME"
 
-stopTests
+until oc logs $PODNAME ${SVC_ACCOUNT_CLAUSE} | grep "/robot-tests/target/.*/report.html"; do
+    echo "Tests are not done yet.."
+    sleep 60
+done

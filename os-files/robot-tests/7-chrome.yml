@@ -19,7 +19,7 @@ items:
           emptyDir:
             medium: Memory
         containers:
-        - image: selenium/standalone-chrome:3.0.1-dysprosium
+        - image: selenium/standalone-chrome:3.14.0-arsenic
           name: chrome
           imagePullPolicy: IfNotPresent
           volumeMounts:
@@ -30,8 +30,8 @@ items:
           - containerPort: 3000
           resources:
             limits:
+              cpu: 3000m
               memory: 3000M
-              cpu: 900m
             requests:
               cpu: 400m
               memory: 400M
@@ -70,4 +70,3 @@ items:
       deploymentconfig: chrome
   status:
     loadBalancer: {}
-
