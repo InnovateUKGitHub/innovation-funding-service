@@ -61,8 +61,9 @@ public class BankDetailsReviewModelPopulator {
         populateAddress(form.getAddressForm(), bankDetails);
     }
 
-    private void populateAddress(AddressForm addressForm, BankDetailsResource bankDetails){
-        addressForm.setPostcodeInput(bankDetails.getAddress().getPostcode());
+    private void populateAddress(AddressForm addressForm, BankDetailsResource bankDetails) {
+        addressForm.setAddressType(AddressForm.AddressType.MANUAL_ENTRY);
+        addressForm.setManualAddress(bankDetails.getAddress());
     }
 
 }
