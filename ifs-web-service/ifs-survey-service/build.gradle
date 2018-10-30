@@ -28,7 +28,7 @@ version project.version
 apply plugin: 'idea'
 
 def enabled = project.hasProperty('ifs.survey-service.enabled') ? project.property('ifs.survey-service.enabled').toBoolean() : false
-[stop, removeContainer, createContainer, buildDocker, deploy, wait, osStageRemote].each { task ->
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
 

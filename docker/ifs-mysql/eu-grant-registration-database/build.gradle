@@ -8,7 +8,7 @@ buildscript {
 }
 
 def enabled = project.hasProperty('ifs.eu-grant-registration-data-service.enabled') ? project.property('ifs.eu-grant-registration-data-service.enabled').toBoolean() : false
-[stop, removeContainer, buildDocker, createContainer, deploy, wait].each { task ->
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
 

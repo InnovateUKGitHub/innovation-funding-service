@@ -25,7 +25,7 @@ tagDockerLocal.tag = euGrantRegistrationDataServiceVersion
 osStageLocal.tag = euGrantRegistrationDataServiceVersion
 
 def enabled = project.hasProperty('ifs.eu-grant-registration-data-service.enabled') ? project.property('ifs.eu-grant-registration-data-service.enabled').toBoolean() : false
-[stop, removeContainer, createContainer, deploy, wait, flywayClean, flywayMigrate, osStageRemote].each { task ->
+[stop, removeContainer, createContainer, deploy, wait, flywayClean, flywayMigrate].each { task ->
     task.enabled = enabled
 }
 createContainer.portBindings = ['9014:8000', '8088:8080']
