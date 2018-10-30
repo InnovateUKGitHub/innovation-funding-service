@@ -114,21 +114,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 andOnSuccess(createdUser -> sendUserVerificationEmail(competitionId, organisationId, createdUser));
     }
 
-    private ServiceResult<UserResource> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, UserResource createdUser) {
-
-        return registrationEmailService.sendUserVerificationEmail(createdUser, competitionId, organisationId).
-                andOnSuccessReturn(() -> createdUser);
-    }
-
-    private ServiceResult<User> markLatestSiteTermsAndConditionsAgreedToIfApplicant(User userWithRole) {
-        return userWithRole.hasRole(Role.APPLICANT) ?
-                        agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole);
-    }
-
-    private ServiceResult<User> addApplicantRoleToUserIfNoRolesAssigned(UserResource userResource, User user) {
-        return userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user);
-    }
-
     private ServiceResult<UserResource> validateUser(UserResource userResource) {
         return passwordPolicyValidator.validatePassword(userResource.getPassword(), userResource)
                 .handleSuccessOrFailure(
@@ -140,6 +125,51 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                         ),
                         success -> serviceSuccess(userResource)
                 );
+    }
+
+    private User assembleUserFromResource(UserResource userResource) {
+        User newUser = new User();
+        newUser.setFirstName(userResource.getFirstName());
+        newUser.setLastName(userResource.getLastName());
+        newUser.setEmail(userResource.getEmail());
+        newUser.setTitle(userResource.getTitle());
+        newUser.setPhoneNumber(userResource.getPhoneNumber());
+        newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
+        newUser.setRoles(new HashSet<>(userResource.getRoles()));
+
+        return newUser;
+    }
+
+    private ServiceResult<User> addApplicantRoleToUserIfNoRolesAssigned(UserResource userResource, User user) {
+        return userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user);
+    }
+
+    private ServiceResult<User> markLatestSiteTermsAndConditionsAgreedToIfApplicant(User userWithRole) {
+        return userWithRole.hasRole(Role.APPLICANT) ?
+                agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole);
+    }
+
+    private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {
+
+        ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
+
+        return uidFromIdpResult.andOnSuccessReturn(uidFromIdp -> {
+            user.setUid(uidFromIdp);
+            user.setStatus(UserStatus.INACTIVE);
+            Profile profile = new Profile();
+            if (addressResource != null) profile.setAddress(addressMapper.mapToDomain(addressResource));
+            Profile savedProfile = profileRepository.save(profile);
+            user.setProfileId(savedProfile.getId());
+            User savedUser = userRepository.save(user);
+
+            return userMapper.mapToResource(savedUser);
+        });
+    }
+
+    private ServiceResult<UserResource> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, UserResource createdUser) {
+
+        return registrationEmailService.sendUserVerificationEmail(createdUser, competitionId, organisationId).
+                andOnSuccessReturn(() -> createdUser);
     }
 
     @Override
@@ -196,41 +226,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return userSurveyService.sendAssessorDiversitySurvey(user);
     }
 
-    private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {
-
-        ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
-
-        return uidFromIdpResult.andOnSuccessReturn(uidFromIdp -> {
-            user.setUid(uidFromIdp);
-            user.setStatus(UserStatus.INACTIVE);
-            Profile profile = new Profile();
-            if (addressResource != null) profile.setAddress(addressMapper.mapToDomain(addressResource));
-            Profile savedProfile = profileRepository.save(profile);
-            user.setProfileId(savedProfile.getId());
-            User savedUser = userRepository.save(user);
-
-            return userMapper.mapToResource(savedUser);
-        });
-    }
-
     private ServiceResult<User> addRoleToUser(User user, Role role) {
         if (!user.hasRole(role)) {
             user.addRole(role);
         }
         return serviceSuccess(user);
-    }
-
-    private User assembleUserFromResource(UserResource userResource) {
-        User newUser = new User();
-        newUser.setFirstName(userResource.getFirstName());
-        newUser.setLastName(userResource.getLastName());
-        newUser.setEmail(userResource.getEmail());
-        newUser.setTitle(userResource.getTitle());
-        newUser.setPhoneNumber(userResource.getPhoneNumber());
-        newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
-        newUser.setRoles(new HashSet<>(userResource.getRoles()));
-
-        return newUser;
     }
 
     private ServiceResult<User> agreeLatestSiteTermsAndConditionsForUser(User user) {
