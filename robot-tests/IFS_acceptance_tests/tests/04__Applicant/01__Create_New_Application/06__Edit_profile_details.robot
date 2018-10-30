@@ -29,7 +29,7 @@ View and edit profile link redirects to the Your profile page
 
 Edit the profile and verify if the changes are saved
     [Documentation]    INFUND-1042, INFUND-6387, INFUND-9245, IFS-41
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page                   ${DASHBOARD_URL}
     When the user clicks the button/link                   link = Profile
     And the user clicks the button/link                    link = Edit your details
@@ -44,7 +44,7 @@ Edit the profile and verify if the changes are saved
 
 Verify that the applicant's name has been changed on other parts of the site
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page           ${DASHBOARD_URL}
     And the user clicks the button/link            link = Profile
     And the user clicks the button/link            link = Edit your details
