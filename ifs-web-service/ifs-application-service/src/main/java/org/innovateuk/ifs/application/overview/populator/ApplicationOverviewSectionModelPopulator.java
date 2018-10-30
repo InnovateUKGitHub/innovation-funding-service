@@ -99,11 +99,11 @@ public class ApplicationOverviewSectionModelPopulator {
     }
 
     private boolean isFinancesSection(SectionResource sectionResource) {
-        return GENERAL.equals(sectionResource.getType())
+        return sectionResource.getType() == GENERAL
                 && FINANCES.getName().equals(sectionResource.getName());
     }
 
     private boolean isYourFinancesSection(SectionResource sectionResource) {
-        return FINANCE.equals(sectionResource.getType());
+        return FINANCE == sectionResource.getType();
     }
 }

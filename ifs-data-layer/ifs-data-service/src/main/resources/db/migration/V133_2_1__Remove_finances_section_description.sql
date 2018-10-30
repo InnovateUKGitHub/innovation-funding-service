@@ -1,2 +1,0 @@
--- IFS-2681 Remove the finances section description from the Competition data model. It will be determined in code now.
-UPDATE section set description = NULL WHERE section_type = 'GENERAL' and name = 'Finances';
