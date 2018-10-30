@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 
 import javax.validation.constraints.Digits;
 import java.time.LocalDate;
@@ -30,6 +31,7 @@ public class ProjectResource {
     private String grantOfferLetterRejectionReason;
     private ZonedDateTime spendProfileSubmittedDate;
     private ProjectState projectState;
+    private List<ProjectDocumentResource> projectDocuments;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -191,6 +193,14 @@ public class ProjectResource {
         this.projectState = projectState;
     }
 
+    public List<ProjectDocumentResource> getProjectDocuments() {
+        return projectDocuments;
+    }
+
+    public void setProjectDocuments(List<ProjectDocumentResource> projectDocuments) {
+        this.projectDocuments = projectDocuments;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -218,6 +228,7 @@ public class ProjectResource {
                 .append(spendProfileSubmittedDate, that.spendProfileSubmittedDate)
                 .append(durationInMonths, that.durationInMonths)
                 .append(projectState, that.projectState)
+                .append(projectDocuments, that.projectDocuments)
                 .isEquals();
     }
 
@@ -242,6 +253,7 @@ public class ProjectResource {
                 .append(spendProfileSubmittedDate)
                 .append(durationInMonths)
                 .append(projectState)
+                .append(projectDocuments)
                 .toHashCode();
     }
 }

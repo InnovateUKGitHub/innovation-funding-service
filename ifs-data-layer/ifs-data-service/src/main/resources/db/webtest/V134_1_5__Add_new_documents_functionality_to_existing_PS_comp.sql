@@ -1,4 +1,4 @@
--- IFS 4629 Add new documents fucntionality to an existing webtest competition to aid with acceptance tests
+-- IFS 4629 Add new documents functionality to an existing webtest competition to aid with acceptance tests
 
 INSERT INTO `document_config`
 (`competition_id`, `title`, `guidance`, `editable`, `enabled`, `type`)

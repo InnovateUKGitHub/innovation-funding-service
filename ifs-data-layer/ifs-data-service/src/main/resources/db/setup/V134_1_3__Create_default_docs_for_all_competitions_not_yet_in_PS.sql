@@ -34,3 +34,11 @@ WHERE c.id NOT IN (
 	AND ct.name != 'The Prince''s Trust'
 );
 
+INSERT INTO document_config_file_type
+(document_config_id, file_type_id)
+SELECT id AS document_config_id,
+(SELECT id FROM file_type WHERE name = 'PDF') AS file_type_id
+FROM document_config;
+
+
+

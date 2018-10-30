@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
@@ -89,6 +90,9 @@ public class Project implements ProcessActivity {
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SpendProfile> spendProfiles;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = {CascadeType.REMOVE})
+    private List<ProjectDocument> projectDocuments;
 
     public Project() {}
 
@@ -296,6 +300,14 @@ public class Project implements ProcessActivity {
 
     public void setSpendProfiles(List<SpendProfile> spendProfiles) {
         this.spendProfiles = spendProfiles;
+    }
+
+    public List<ProjectDocument> getProjectDocuments() {
+        return projectDocuments;
+    }
+
+    public void setProjectDocuments(List<ProjectDocument> projectDocuments) {
+        this.projectDocuments = projectDocuments;
     }
 
     public boolean isPartner(User user) {
