@@ -54,7 +54,7 @@ Should see the Sign in link when not logged in
 
 Reset password
     [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath
+    [Tags]  HappyPath
     Given the user navigates to the page           ${LOGIN_URL}
     When the user clicks the forgot psw link
     And the user enters text to a text field       id=email  ${test_mailbox_one}+changepsw@gmail.com

@@ -76,7 +76,7 @@ If funding is complete. application details has a warning message
     [Documentation]    INFUND-6895
     ...
     ...    INFUND-6823
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page   ${DASHBOARD_URL}
     And the user clicks the button/link    link = ${applicationName}
     When the user clicks the button/link   link = Research category
@@ -85,7 +85,7 @@ If funding is complete. application details has a warning message
 
 Changing application details sets funding level to incomplete
     [Documentation]    INFUND-6895
-    [Tags]
+    [Tags]  HappyPath
     Given the user clicks the button twice    css = label[for="researchCategory2"]
     And the user clicks the button/link       id = application-question-complete
     And the user navigates to Your-finances page  ${applicationName}

@@ -27,7 +27,7 @@ Academic finances should be editable when lead marks them as complete
 
 Academic finance validations
     [Documentation]    INFUND-2399  IFS-2879
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    Log in as a different user            ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to Your-finances page    Academic robot test application
     And the user clicks the button/link              link = Your project costs
@@ -38,7 +38,7 @@ Academic finance validations
 
 Academic finance calculations
     [Documentation]    INFUND-917, INFUND-2399
-    [Tags]
+    [Tags]  HappyPath
     When the academic fills in the project costs
     And the user clicks the button/link  link = Your project costs
     Then the subtotals should be correctly updated
@@ -60,7 +60,7 @@ Non pdf uploads not allowed
 
 Lead applicant can't upload a JeS file
     [Documentation]    INFUND-2720
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user     &{lead_applicant_credentials}
     Given the user navigates to Your-finances page  Academic robot test application
     When the user clicks the button/link      link = Your project costs

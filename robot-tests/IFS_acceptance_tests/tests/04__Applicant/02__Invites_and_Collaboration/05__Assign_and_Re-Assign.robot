@@ -31,7 +31,7 @@ Resource          ../Applicant_Commons.robot
 Lead applicant can assign a question
     [Documentation]  INFUND-275, INFUND-280, IFS-265
     ...  This test depends on the previous test suite to run first
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user logs-in in new browser   ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the applicant changes the name of the application
     And the user clicks the button/link        link = Public description
@@ -54,7 +54,7 @@ Lead applicant can assign question multiple times
 The question is enabled for the assignee
     [Documentation]  INFUND-275
     ...  This test depends on the previous test suite to run first
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user   ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link = Assign test  #Application Title
@@ -78,7 +78,7 @@ Collaborator should see the terms and conditions from the overview page
 Collaborator should see the review button instead of the review and submit
     [Documentation]  INFUND-2451
     ...  This test depends on the previous test suite to run first
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link = Assign test
     Then the user should not see the element      jQuery = .govuk-button:contains("Review and submit")
@@ -99,7 +99,7 @@ Last update message is correctly updating
 Collaborators cannot assign a question
     [Documentation]  INFUND-839
     ...  This test depends on the previous test suite to run first
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link = Assign test
     And the user clicks the button/link   link = Public description
@@ -122,7 +122,7 @@ Collaborator cannot edit after marking ready for review
 Collaborators should not be able to edit application details
     [Documentation]  INFUND-2298
     ...  This test depends on the previous test suite to run first
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page      ${DASHBOARD_URL}
     And the user clicks the button/link       link = Assign test
     And the user clicks the button/link       link = Application details
@@ -232,7 +232,7 @@ The question is disabled on the summary page for other collaborators
 
 Lead applicant should be able to remove the partner organisation
     [Documentation]  INFUND-8590
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link  link = Assign test
     And the user clicks the button/link    link = Application team
