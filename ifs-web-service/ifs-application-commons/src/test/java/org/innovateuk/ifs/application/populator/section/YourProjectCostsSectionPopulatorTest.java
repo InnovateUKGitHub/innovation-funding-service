@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
@@ -67,6 +68,8 @@ public class YourProjectCostsSectionPopulatorTest {
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
+    @Mock
+    private MessageSource messageSource;
 
     @Test
     public void testPopulateBusiness() {
