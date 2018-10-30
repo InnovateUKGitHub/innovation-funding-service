@@ -35,7 +35,7 @@
                     <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${model.summaryViewModel.currentApplication.competition},applicationId=${model.summaryViewModel.currentApplication.id})}"
                        class="button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
                 </div>
-                <div class="modal-reinstate" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+                <div class="modal-reinstate" role="dialog" aria-hidden="true">
                     <form th:action="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication(competitionId=${model.summaryViewModel.currentApplication.competition},applicationId=${model.summaryViewModel.currentApplication.id})}" method="post">
                         <th:block th:insert="fragments/modals :: close-button" />
                         <div>

@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+/**
+ * Component to populate the basic details such as Project, Application and Competition
+ */
 public class BasicDetailsPopulator {
 
     @Autowired
@@ -31,7 +34,5 @@ public class BasicDetailsPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         return new BasicDetails(project, application, competition);
-
     }
-
 }

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -82,6 +83,10 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     private UserResource stakeholderUser(){
         return newUserResource().withRolesGlobal(singletonList(STAKEHOLDER)).build();
+    }
+
+    private UserResource compAdmin(){
+        return newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build();
     }
 
     @Test
@@ -379,6 +384,53 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     }
 
     @Test
+    public void internalAdminCanAccessDocumentsSectionIrrespectiveOfDocumentStatus() {
+        when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(false);
+        assertEquals(ACCESSIBLE, internalUser.canAccessDocumentsSection(compAdmin()));
+    }
+
+    @Test
+    public void supportCannotAccessDocumentsSectionWhenAllDocumentsNotYetApproved() {
+        assertEquals(NOT_ACCESSIBLE, doTestDocumentsAccess(false, getSupportUser()));
+    }
+
+    @Test
+    public void supportCanAccessDocumentsSectionWhenAllDocumentsAreApproved() {
+        assertEquals(ACCESSIBLE, doTestDocumentsAccess(true, getSupportUser()));
+    }
+
+    @Test
+    public void innovationLeadCannotAccessDocumentsSectionWhenAllDocumentsNotYetApproved() {
+        assertEquals(NOT_ACCESSIBLE, doTestDocumentsAccess(false, getInnovationLeadUser()));
+    }
+
+    @Test
+    public void innovationLeadCanAccessDocumentsSectionWhenAllDocumentsAreApproved() {
+        assertEquals(ACCESSIBLE, doTestDocumentsAccess(true, getInnovationLeadUser()));
+    }
+
+    @Test
+    public void stakeholderCannotAccessDocumentsSectionWhenAllDocumentsNotYetApproved() {
+        assertEquals(NOT_ACCESSIBLE, doTestDocumentsAccess(false, stakeholderUser()));
+    }
+
+    @Test
+    public void stakeholderCanAccessDocumentsSectionWhenAllDocumentsAreApproved() {
+        assertEquals(ACCESSIBLE, doTestDocumentsAccess(true, stakeholderUser()));
+    }
+
+    private SectionAccess doTestDocumentsAccess(boolean allDocumentsApproved, UserResource user) {
+        when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(allDocumentsApproved);
+        SectionAccess sectionAccess = internalUser.canAccessDocumentsSection(user);
+
+        verifyInteractions(
+                SetupProgressChecker::allDocumentsApproved
+        );
+
+        return sectionAccess;
+    }
+
+    @Test
     public void testCheckAccessToGrantOfferLetterSectionHappyPath() {
         when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(true);
 
@@ -411,6 +463,28 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
                 SetupProgressChecker::getRoleSpecificActivityState);
     }
 
+    //OD = Other Documents
+    @Test
+    public void checkAccessToGrantOfferLetterSendSectionWhenODNotApprovedButDocumentsApproved() {
+        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
+        when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+
+        Map<Role, ProjectActivityStates> roleSpecificActivityStates = new HashMap<>();
+        roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
+        when(setupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
+
+        List<Role> roles = singletonList(COMP_ADMIN);
+        UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
+        assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
+        assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(compAdmin));
+
+        verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
+                SetupProgressChecker::allDocumentsApproved,
+                SetupProgressChecker::isSpendProfileApproved,
+                SetupProgressChecker::getRoleSpecificActivityState);
+    }
+
 
     @Test
     public void testCheckSupportAccessToGrantOfferLetterSendSectionHappyPath() {
@@ -421,6 +495,22 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getSupportUser()));
 
         verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
+                SetupProgressChecker::isSpendProfileApproved,
+                SetupProgressChecker::isGrantOfferLetterApproved);
+    }
+
+    //OD = Other Documents
+    @Test
+    public void checkSupportAccessToGrantOfferLetterSendSectionWhenODNotApprovedButDocumentsApproved() {
+        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
+        when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(true);
+
+        assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getSupportUser()));
+
+        verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
+                SetupProgressChecker::allDocumentsApproved,
                 SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved);
     }

@@ -107,7 +107,7 @@
                            th:text="${option ? 'Yes' : 'No'}"
                            class="govuk-label govuk-radios__label">Yes/No</label>
                 </div>
-                <input th:id="in-scope-none" th:field="*{formInput[__${field.id}__]}" value="none" type="radio" style="display:none"/>
+                <input th:id="in-scope-none" th:field="*{formInput[__${field.id}__]}" value="none" type="radio" aria-hidden="true" />
             </div>
         </fieldset>
     </div>
