@@ -2,14 +2,12 @@ package org.innovateuk.ifs.sil.grant.controller;
 
 import org.innovateuk.ifs.sil.AbstractEndpointControllerMockMvcTest;
 import org.innovateuk.ifs.sil.grant.resource.Forecast;
+import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.resource.Participant;
-import org.innovateuk.ifs.sil.grant.resource.Project;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,8 +29,8 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
         return new GrantEndpointController();
     }
 
-    private Project createProject() {
-        Project project = new Project();
+    private Grant createGrant() {
+        Grant project = new Grant();
         Set<Participant> participants = new HashSet<>(Arrays.asList(createParticipant(), createParticipant()));
         project.setParticipant(participants);
         return project;
@@ -53,7 +51,7 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
 
     @Test
     public void testSendProject() throws Exception {
-        String requestBody = objectMapper.writeValueAsString(createProject());
+        String requestBody = objectMapper.writeValueAsString(createGrant());
 
         mockMvc.
                 perform(

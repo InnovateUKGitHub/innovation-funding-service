@@ -3,8 +3,8 @@ package org.innovateuk.ifs.sil.grant.resource;
 import java.time.LocalDate;
 import java.util.Set;
 
-public class Project {
-    private String id;
+public class Grant {
+    private long id;
     private String competitionCode;
     private String title;
     private String summary;
@@ -14,11 +14,11 @@ public class Project {
     private int duration;
     private Set<Participant> participants;
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

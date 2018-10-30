@@ -4,9 +4,7 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.config.rest.RestTemplateAdaptorFactory;
-import org.innovateuk.ifs.sil.crm.resource.SilContact;
-import org.innovateuk.ifs.sil.crm.service.RestSilCrmEndpoint;
-import org.innovateuk.ifs.sil.grant.resource.Project;
+import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -41,21 +39,21 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
         adaptor = factory.silAdaptor();
         ReflectionTestUtils.setField(service, "adaptor", adaptor);
         ReflectionTestUtils.setField(service, "silRestServiceUrl", "http://sil.com");
-        ReflectionTestUtils.setField(service, "grantSendProject", "/silstub/sendproject");
+        ReflectionTestUtils.setField(service, "path", "/silstub/sendproject");
         adaptor.setAsyncRestTemplate(mockAsyncRestTemplate);
         adaptor.setRestTemplate(mockRestTemplate);
     }
 
     @Test
-    public void testSendProject() {
-        Project project = new Project();
+    public void testSend() {
+        Grant grant = new Grant();
         String expectedUrl = "http://sil.com/silstub/sendproject";
         ResponseEntity<String> returnedEntity = new ResponseEntity<>(ACCEPTED);
 
-        when(mockRestTemplate.postForEntity(expectedUrl, adaptor.jsonEntity(project), String.class))
+        when(mockRestTemplate.postForEntity(expectedUrl, adaptor.jsonEntity(grant), String.class))
                 .thenReturn(returnedEntity);
 
-        ServiceResult<Void> sendProjectResult = service.sendProject(project);
+        ServiceResult<Void> sendProjectResult = service.send(grant);
 
         assertTrue(sendProjectResult.isSuccess());
     }

@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.sil.grant.resource.Project;
+import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,19 +29,19 @@ public class RestGrantEndpoint implements GrantEndpoint {
     @Value("${sil.rest.baseURL}")
     private String silRestServiceUrl;
 
-    @Value("${sil.rest.grantSendProject:sendProject}")
-    private String grantSendProject;
+    @Value("${sil.rest.grantSend:send}")
+    private String path;
 
     @Override
-    public ServiceResult<Void> sendProject(Project project) {
+    public ServiceResult<Void> send(Grant grant) {
         final Either<ResponseEntity<Void>, ResponseEntity<Void>> response =
-                adaptor.restPostWithEntity(silRestServiceUrl + grantSendProject, project,
+                adaptor.restPostWithEntity(silRestServiceUrl + path, grant,
                         Void.class, Void.class, HttpStatus.OK, HttpStatus.ACCEPTED);
-        if(response.isLeft()){
-            LOG.debug("Sent project NOK : " + project);
+        if (response.isLeft()){
+            LOG.debug("Sent grant NOK : " + grant);
             return serviceFailure(new Error(CONTACT_NOT_UPDATED));
         } else {
-            LOG.debug("Sent project OK : " + project);
+            LOG.debug("Sent grant OK : " + grant);
             return serviceSuccess();
         }
     }
