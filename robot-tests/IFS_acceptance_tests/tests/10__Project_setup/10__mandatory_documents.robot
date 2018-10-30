@@ -298,7 +298,6 @@ CompAdmin can see uploaded files
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page     ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link     link = ${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element    link = All projects
     When the user navigates to the page     ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     And the user clicks the button/link     jQuery = h2:contains("Collaboration agreement") + p a:contains("testing.pdf")
     Then the user should see the file without error
