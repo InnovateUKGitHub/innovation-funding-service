@@ -881,7 +881,7 @@
          <li>they won’t have a residual/resale value at the end of your project. If they do you can claim the costs minus this value</li>
         </ul>
         <p><a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Please refer to our guide to project costs for further information.</a></p></div>
-        <details class="govuk-details" th:if="${viewmode == 'edit'}">
+        <details class="govuk-details" th:if="${costViewModel.viewmode == 'edit'}">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">
                   Materials costs guidance
@@ -1059,7 +1059,7 @@
         <div class="govuk-body">
           <p>You can claim the usage costs of capital assets you will buy for, or use on, your project.</p>
         </div>
-        <details class="govuk-details" th:if="${viewmode == 'edit'}">
+        <details class="govuk-details" th:if="${costViewModel.viewmode == 'edit'}">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">
                   Capital usage guidance
@@ -1301,7 +1301,7 @@
         <div class="govuk-body">
           <p>You can subcontract work if you don’t have the expertise in your project team. You can also subcontract if it is cheaper than developing your skills in-house.</p>
         </div>
-        <details class="govuk-details" th:if="${viewmode == 'edit'}">
+        <details class="govuk-details" th:if="${costViewModel.viewmode == 'edit'}">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">
                   Subcontracting costs guidance
@@ -1633,7 +1633,7 @@
         <div class="govuk-body">
           <p>Please provide details of any project costs which cannot be covered by the other cost categories.</p>
         </div>
-        <details class="govuk-details" th:if="${viewmode == 'edit'}">
+        <details class="govuk-details" th:if="${costViewModel.viewmode == 'edit'}">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">
                   Other costs guidance
