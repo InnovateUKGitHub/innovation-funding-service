@@ -74,12 +74,13 @@ Maximum funding level available for RTO lead
     And the user fills in the project costs                                 labour costs  n/a
     When the user clicks the button/link                                    link = Your funding
     #Then the user should see the text in the page                          Enter your funding level (maximum 100%).
-    And the user selects the radio button                                   requestingFunding   true
-    And the user should see the text in the page                            Select a funding level
-    And the user enters text to a text field                                css = [name^="grantClaimPercentage"]  24
-    And the user selects the radio button                                   otherFunding  false
-    And the user selects the checkbox                                       agree-terms-page
-    And the user clicks the button/link                                     jQuery = button:contains("Mark as complete")
+    #And the user selects the radio button                                   requestingFunding   true
+    #And the user should see the text in the page                            Select a funding level
+    the user marks your funding section as complete
+    #And the user enters text to a text field                                css = [name^="grantClaimPercentage"]  24
+    #And the user selects the radio button                                   otherFunding  false
+    #And the user selects the checkbox                                       agree-terms-page
+    #And the user clicks the button/link                                     jQuery = button:contains("Mark as complete")
     #And the user clicks the button/link                                    jQuery = a:contains("Your finances")
     #Navigate to the correct page?
 
@@ -104,7 +105,8 @@ Lead RTO applicant invites a Charity member
     When the user clicks the button/link                link = ${Application_name_RTO}
     And the user fills in the organisation information  ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs             labour costs  n/a
-    Then the funding displayed is as expected
+    #Then the funding displayed is as expected
+    When the user clicks the button/link                link = Your funding
     And the user marks your funding section as complete
 
 Invite existing academic collaborator for RTO lead
@@ -236,7 +238,7 @@ the correct funding is displayed to academic user
     Run Keyword If   '${status}' == 'PASS'    Run Keywords   the user clicks the button twice      jQuery = label:contains("Bath Spa")
     ...                              AND                     the user clicks the button/link       jQuery = .govuk-button:contains("Save and continue")
     the user clicks the button/link   link = Your finances
-    the user should see the element   jQuery = td:contains("100%")
+    #the user should see the element   jQuery = td:contains("100%")
 
 the academic user marks your project costs as complete
     the user clicks the button/link        link = Your project costs
@@ -255,6 +257,7 @@ the correct funding displayed for lead applicant
 the user marks your funding section as complete
     the user selects the radio button     requestingFunding   true
     the user enters text to a text field  css = [name^="grantClaimPercentage"]  30
-    the user clicks the button twice      jQuery = label[for$="otherPublicFunding-no"]:contains("No")
+    the user selects the radio button                    otherFunding  false
+    #the user clicks the button twice      jQuery = label[for$="otherPublicFunding-no"]:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
