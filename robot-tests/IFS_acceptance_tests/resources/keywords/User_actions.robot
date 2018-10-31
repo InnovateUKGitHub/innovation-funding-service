@@ -5,7 +5,8 @@ Resource          ../defaultResources.robot
 The user clicks the button/link
     [Arguments]    ${BUTTON}
     Wait Until Element Is Visible Without Screenshots    ${BUTTON}
-    Focus    ${BUTTON}
+    Wait Until Element Is Enabled  ${BUTTON}
+    Set Focus To Element    ${BUTTON}
     wait for autosave
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
 
@@ -57,7 +58,7 @@ The user should see the notification
 
 The applicant assigns the question to the collaborator
     [Arguments]  ${name}
-    focus  jQuery=.assign-container
+    Set Focus To Element  jQuery=.assign-container
     the user clicks the button/link  jQuery=button:contains("Assign this question to someone else")
     the user clicks the button/link  jQuery=li button:contains("${name}")
 

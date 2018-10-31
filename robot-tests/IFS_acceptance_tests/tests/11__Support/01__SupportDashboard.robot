@@ -59,7 +59,7 @@ Support user is able to search active external users
     When the user is searching for external users  dustin  Email
     Then the user should see the element           jQuery = td:contains("Kazio") ~ td:contains("worth.email.test+dustin@gmail.com") + td:contains("Verified")
     And the user clicks the button/link            link = Clear
-    When the user is searching for external users  Empire  ORGANISATION_NAME
+    When the user is searching for external users  Empire  Organisation name
     Then the user should see the element           jQuery = td:contains("${EMPIRE_LTD_NAME}") + td:contains("Business") + td:contains("${EMPIRE_LTD_ID}") + td:contains("${lead_applicant_credentials["email"]}")
     And the user clicks the button/link            link = Clear
 
@@ -101,7 +101,7 @@ the support user should be able to see him as
     the user logs out if they are logged in
 
 the invitee has accepted the invitation but has not yet verified his account
-    the user reads his email and clicks the link    ${invitedCollaborator}  Invitation to collaborate in ${openCompetitionRTO_name}  to participate in an application  2
+    the user reads his email and clicks the link    ${invitedCollaborator}  Invitation to contribute in ${openCompetitionRTO_name}  to participate in an application  2
     the user clicks the button/link                 link = Yes, accept invitation
     the user clicks the button/link                 link = Confirm and continue
     the invited user fills the create account form  Stuart  Minions
