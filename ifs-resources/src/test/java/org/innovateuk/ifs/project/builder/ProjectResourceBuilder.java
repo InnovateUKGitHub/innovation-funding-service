@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -82,6 +83,7 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with (project -> project.setAdditionalContractFile(additionalContractFile));
     }
 
+    @OtherDocsWindDown
     public ProjectResourceBuilder withOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
         return with(project -> project.setOtherDocumentsApproved(otherDocumentsApproved));
     }

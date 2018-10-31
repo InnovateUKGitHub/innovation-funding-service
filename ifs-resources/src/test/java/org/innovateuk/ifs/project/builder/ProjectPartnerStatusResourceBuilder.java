@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
@@ -46,6 +47,7 @@ public class ProjectPartnerStatusResourceBuilder extends BaseBuilder<ProjectPart
         return withArray((monitoringOfficerStatus, partnerStatus) -> partnerStatus.setMonitoringOfficerStatus(monitoringOfficerStatus), monitoringOfficerStatuses);
     }
 
+    @OtherDocsWindDown
     public ProjectPartnerStatusResourceBuilder withOtherDocumentsStatus(ProjectActivityStates... otherDocumentsStatuses){
         return withArray((otherDocumentsStatus, partnerStatus) -> partnerStatus.setOtherDocumentsStatus(otherDocumentsStatus), otherDocumentsStatuses);
     }

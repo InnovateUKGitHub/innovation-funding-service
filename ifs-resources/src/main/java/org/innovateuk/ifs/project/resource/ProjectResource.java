@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 
 import javax.validation.constraints.Digits;
@@ -28,6 +29,7 @@ public class ProjectResource {
     private Long signedGrantOfferLetter;
     private Long grantOfferLetter;
     private Long additionalContractFile;
+    @OtherDocsWindDown
     private ApprovalType otherDocumentsApproved;
     private String grantOfferLetterRejectionReason;
     private ZonedDateTime spendProfileSubmittedDate;
@@ -162,10 +164,12 @@ public class ProjectResource {
         this.grantOfferLetter = grantOfferLetter;
     }
 
+    @OtherDocsWindDown
     public ApprovalType getOtherDocumentsApproved() {
         return otherDocumentsApproved;
     }
 
+    @OtherDocsWindDown
     public void setOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
         this.otherDocumentsApproved = otherDocumentsApproved;
     }
