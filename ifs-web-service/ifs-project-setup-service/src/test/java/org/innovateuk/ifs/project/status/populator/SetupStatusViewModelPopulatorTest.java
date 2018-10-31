@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -60,6 +61,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
