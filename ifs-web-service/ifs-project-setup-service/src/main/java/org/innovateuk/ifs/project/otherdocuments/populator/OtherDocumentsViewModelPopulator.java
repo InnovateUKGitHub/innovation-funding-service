@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.otherdocuments.populator;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -19,6 +20,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
+@OtherDocsWindDown
 public class OtherDocumentsViewModelPopulator {
 
     @Autowired

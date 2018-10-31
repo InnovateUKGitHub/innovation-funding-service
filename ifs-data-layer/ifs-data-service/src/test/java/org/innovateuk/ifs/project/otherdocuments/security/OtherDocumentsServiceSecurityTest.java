@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 /**
  * Testing how the secured methods in ProjectOtherDocumentsService interact with Spring Security
  */
-@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
+@OtherDocsWindDown
 public class OtherDocumentsServiceSecurityTest extends BaseServiceSecurityTest<OtherDocumentsService> {
 
     private OtherDocumentsPermissionRules projectPermissionRules;
