@@ -72,7 +72,7 @@ public class YourProjectCostsSectionPopulatorTest {
 
     @Before
     public void setUp() {
-        when(messageSource.getMessage("ifs.question.yourProjectCosts.description", null, Locale.ENGLISH))
+        when(messageSource.getMessage("ifs.question.yourProjectCosts.description", null, Locale.getDefault()))
                 .thenReturn("Your project costs question description");
     }
 
@@ -117,7 +117,7 @@ public class YourProjectCostsSectionPopulatorTest {
         assertThat(costSectionViewModel.getCostViews()).isEqualTo(asList(formInputViewModel));
         assertThat(viewModel.getQuestion().getDescription()).isEqualTo("Your project costs question description");
 
-        verify(messageSource, only()).getMessage("ifs.question.yourProjectCosts.description", null, Locale.ENGLISH);
+        verify(messageSource, only()).getMessage("ifs.question.yourProjectCosts.description", null, Locale.getDefault());
         verify(financeModelManager).addOrganisationFinanceDetails(model, section.getApplication().getId(), asList(costQuestion), section.getCurrentUser().getId(), form, section.getCurrentApplicant().getOrganisation().getId());
     }
 
@@ -167,7 +167,7 @@ public class YourProjectCostsSectionPopulatorTest {
         assertThat(viewModel.getFinanceUploadQuestion()).isEqualTo(costQuestion);
         assertThat(viewModel.getQuestion().getDescription()).isEqualTo("Your project costs question description");
 
-        verify(messageSource, only()).getMessage("ifs.question.yourProjectCosts.description", null, Locale.ENGLISH);
+        verify(messageSource, only()).getMessage("ifs.question.yourProjectCosts.description", null, Locale.getDefault());
         verify(financeModelManager).addOrganisationFinanceDetails(model, section.getApplication().getId(), asList(costQuestion), section.getCurrentUser().getId(), form, section.getCurrentApplicant().getOrganisation().getId());
     }
 }

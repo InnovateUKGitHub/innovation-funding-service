@@ -141,7 +141,7 @@ public class ApplicationOverviewSectionModelPopulatorTest extends BaseServiceUni
 
     @Test
     public void populate() {
-        when(messageSource.getMessage("ifs.section.finances.description", null, Locale.ENGLISH))
+        when(messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault()))
                 .thenReturn("Finances description");
 
         ApplicationOverviewSectionViewModel result = service.populate(competition, application, userId);
@@ -180,20 +180,20 @@ public class ApplicationOverviewSectionModelPopulatorTest extends BaseServiceUni
         verify(assignButtonsPopulator,
                 times(applicantQuestionsSection1.size() + applicantQuestionsSection2.size() + applicantQuestionsSection3.size()))
                 .populate(isA(ApplicantSectionResource.class), isA(ApplicantQuestionResource.class), eq(false));
-        verify(messageSource, only()).getMessage("ifs.section.finances.description", null, Locale.ENGLISH);
+        verify(messageSource, only()).getMessage("ifs.section.finances.description", null, Locale.getDefault());
     }
 
     @Test
     public void populate_collaborativeCompetition() {
         competition.setCollaborationLevel(COLLABORATIVE);
 
-        when(messageSource.getMessage("ifs.section.finances.collaborative.description", null, Locale.ENGLISH))
+        when(messageSource.getMessage("ifs.section.finances.collaborative.description", null, Locale.getDefault()))
                 .thenReturn("Finances collaborative description");
 
         ApplicationOverviewSectionViewModel result = service.populate(competition, application, userId);
 
         assertEquals("Finances collaborative description", result.getSections().get(1).getDescription());
         verify(messageSource, only()).getMessage("ifs.section.finances.collaborative.description", null,
-                Locale.ENGLISH);
+                Locale.getDefault());
     }
 }

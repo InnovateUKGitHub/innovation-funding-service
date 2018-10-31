@@ -78,8 +78,8 @@ public class ApplicationOverviewSectionModelPopulator {
     private SectionResource updateFinancesSectionDescription(CompetitionResource competition,
                                                              List<SectionResource> sections) {
         String description = competition.getCollaborationLevel() == SINGLE ?
-                messageSource.getMessage("ifs.section.finances.description", null, Locale.ENGLISH) :
-                messageSource.getMessage("ifs.section.finances.collaborative.description", null, Locale.ENGLISH);
+                messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault()) :
+                messageSource.getMessage("ifs.section.finances.collaborative.description", null, Locale.getDefault());
 
         return simpleFindFirst(sections, this::isFinancesSection).map(sectionResource -> {
             sectionResource.setDescription(description);

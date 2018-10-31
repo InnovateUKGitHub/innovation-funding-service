@@ -72,14 +72,14 @@ public class FinanceOverviewSectionPopulatorTest {
         FinanceOverviewSectionViewModel financeOverviewSectionViewModel = mock(FinanceOverviewSectionViewModel.class);
         Model model = mock(Model.class);
 
-        when(messageSource.getMessage("ifs.section.financesOverview.description", null, Locale.ENGLISH))
+        when(messageSource.getMessage("ifs.section.financesOverview.description", null, Locale.getDefault()))
                 .thenReturn("Finances overview description");
         when(openSectionModelPopulator.populateModel(form, model, bindingResult, applicantSection)).thenReturn(openSectionViewModel);
 
         financeOverviewSectionPopulator.populateNoReturn(applicantSection, form, financeOverviewSectionViewModel,
                 model, bindingResult, readOnly, Optional.of(applicantOrganisationId));
 
-        verify(messageSource, only()).getMessage("ifs.section.financesOverview.description", null, Locale.ENGLISH);
+        verify(messageSource, only()).getMessage("ifs.section.financesOverview.description", null, Locale.getDefault());
         verify(openSectionModelPopulator, only()).populateModel(form, model, bindingResult, applicantSection);
         verify(financeOverviewSectionViewModel, only()).setOpenSectionViewModel(openSectionViewModel);
     }
@@ -102,7 +102,7 @@ public class FinanceOverviewSectionPopulatorTest {
         Model model = mock(Model.class);
 
         when(messageSource.getMessage("ifs.section.financesOverview.collaborative.description", null,
-                Locale.ENGLISH))
+                Locale.getDefault()))
                 .thenReturn("Finances overview collaborative description");
         when(openSectionModelPopulator.populateModel(form, model, bindingResult, applicantSection)).thenReturn(openSectionViewModel);
 
@@ -110,7 +110,7 @@ public class FinanceOverviewSectionPopulatorTest {
                 model, bindingResult, readOnly, Optional.of(applicantOrganisationId));
 
         verify(messageSource, only()).getMessage("ifs.section.financesOverview.collaborative.description",
-                null, Locale.ENGLISH);
+                null, Locale.getDefault());
         verify(openSectionModelPopulator, only()).populateModel(form, model, bindingResult, applicantSection);
         verify(financeOverviewSectionViewModel, only()).setOpenSectionViewModel(openSectionViewModel);
     }

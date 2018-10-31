@@ -121,9 +121,9 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
                                                                        QuestionResource question) {
         String description = competition.getCollaborationLevel() == SINGLE ?
                 messageSource.getMessage("ifs.question.yourProjectCosts.description", null,
-                        Locale.ENGLISH) :
+                        Locale.getDefault()) :
                 messageSource.getMessage("ifs.question.yourProjectCosts.collaborative.description", null,
-                        Locale.ENGLISH);
+                        Locale.getDefault());
 
         question.setDescription(description);
         return question;
