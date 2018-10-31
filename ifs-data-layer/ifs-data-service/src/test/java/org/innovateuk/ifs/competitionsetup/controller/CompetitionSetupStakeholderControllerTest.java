@@ -95,7 +95,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
 
         when(competitionSetupStakeholderService.getInviteByHash(TEST_HASH)).thenReturn(serviceSuccess(invite));
 
-        mockMvc.perform(get("/competition/setup/get-invite/" + TEST_HASH))
+        mockMvc.perform(get("/competition/setup/get-stakeholder-invite/" + TEST_HASH))
                 .andExpect(status().isOk());
 
         verify(competitionSetupStakeholderService).getInviteByHash(TEST_HASH);
