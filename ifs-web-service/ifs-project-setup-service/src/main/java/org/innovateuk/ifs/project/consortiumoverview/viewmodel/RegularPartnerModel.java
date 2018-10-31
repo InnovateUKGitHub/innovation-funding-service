@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.project.consortiumoverview.viewmodel;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
+
 import static org.innovateuk.ifs.project.consortiumoverview.viewmodel.ConsortiumPartnerStatus.NOT_REQUIRED;
 
 public class RegularPartnerModel extends ConsortiumMemberStatusModel {
 
+    @OtherDocsWindDown(additionalComments = "Remove refrences from other documents to base class")
     public RegularPartnerModel(
         final String partnerName,
         final ConsortiumPartnerStatus projectDetailsStatus,
