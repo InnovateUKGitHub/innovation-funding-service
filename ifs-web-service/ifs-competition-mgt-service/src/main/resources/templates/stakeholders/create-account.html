@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create account'"/>
 </head>
-<body class="govuk-template__body competition-management">
+<body class="govuk-template__body">
 
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
@@ -19,16 +19,16 @@
 
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"  novalidate="novalidate">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create account',size='govuk-heading-l'"/>
-            <h2 class="govuk-heading-m">Your details</h2>
+            <h2 class="govuk-heading-m">Confirm your details</h2>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" th:for="${#ids.next('firstName')}">
+                <label class="govuk-label govuk-label--s" th:for="${#ids.next('firstName')}">
                     First name
                 </label>
                 <th:block th:if="${#fields.hasErrors('firstName')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input"
+                <input class="govuk-input govuk-!-width-one-half"
                        type="text"
                        th:errorclass="govuk-input--error"
                        th:field="*{firstName}"
@@ -42,13 +42,13 @@
                                 data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" th:for="${#ids.next('lastName')}">
+                <label class="govuk-label govuk-label--s" th:for="${#ids.next('lastName')}">
                     Last name
                 </label>
                 <th:block th:if="${#fields.hasErrors('lastName')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input"
+                <input class="govuk-input govuk-!-width-one-half"
                        type="text"
                        th:errorclass="govuk-input--error"
                        th:field="*{lastName}"
@@ -62,13 +62,8 @@
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
 
-            <h3 class="govuk-heading-s">Role</h3>
-            <p class="govuk-body" th:text="${model.roleName}">Customer support</p>
             <h3 class="govuk-heading-s">Email</h3>
-            <p class="govuk-body">
-                <span class="govuk-hint">You will need this to sign into your account.</span>
-                <th:block th:text="${model.email}">robertplant@innovateuk.org</th:block>
-            </p>
+            <p class="govuk-body" th:text="${model.email}">name@domain.com</p>
             
             <th:block th:insert="fragments/passwords :: password (fieldName='password', label='Create password')" />
 
