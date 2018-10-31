@@ -5,6 +5,7 @@ import com.bmuschko.gradle.docker.tasks.container.extras.*
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
 
+openshiftEnv = openshiftEnv.replaceAll('/', '-')
 
 buildscript {
     repositories {
@@ -120,9 +121,8 @@ def getRemoteOCCredentials() {
         // Get the docker repository for the remote OS cluster
         dockerRegistryCredentials.url = project.dockerRegistry
         dockerRegistryCredentials.username = "unused"
-        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.password = System.env.bamboo_openshift_svc_account_token
         dockerRegistryCredentials.email = "unused"
-
     }
     catch (ignored) {
         println("Exception thrown creating the OpenShift docker registry credentials. " +
