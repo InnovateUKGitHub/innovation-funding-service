@@ -5,12 +5,12 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.DefaultProjectCostSection;
 import org.innovateuk.ifs.application.viewmodel.section.StandardYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.JesYourProjectCostsSectionViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -62,7 +63,7 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
             Boolean readOnly,
             Optional<Long> applicantOrganisationId
     ) {
-        updateYourProjectCostsQuestionDescription(section.getApplication(), section.getApplicantQuestions().get(0).getQuestion());
+        updateYourProjectCostsQuestionDescription(section.getCompetition(), section.getApplicantQuestions().get(0).getQuestion());
 
         List<ApplicantQuestionResource> costQuestions =
                 section.allQuestions()
@@ -116,12 +117,13 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
         }
     }
 
-    private QuestionResource updateYourProjectCostsQuestionDescription(ApplicationResource application,
+    private QuestionResource updateYourProjectCostsQuestionDescription(CompetitionResource competition,
                                                                        QuestionResource question) {
-        String description = application.isCollaborativeProject() ?
-                messageSource.getMessage("ifs.question.yourProjectCosts.collaborativeProject.description", null,
+        String description = competition.getCollaborationLevel() == SINGLE ?
+                messageSource.getMessage("ifs.question.yourProjectCosts.description", null,
                         Locale.ENGLISH) :
-                messageSource.getMessage("ifs.question.yourProjectCosts.description", null, Locale.ENGLISH);
+                messageSource.getMessage("ifs.question.yourProjectCosts.collaborative.description", null,
+                        Locale.ENGLISH);
 
         question.setDescription(description);
         return question;

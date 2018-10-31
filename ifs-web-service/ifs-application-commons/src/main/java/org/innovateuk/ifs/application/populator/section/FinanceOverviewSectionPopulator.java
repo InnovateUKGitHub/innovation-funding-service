@@ -56,7 +56,7 @@ public class FinanceOverviewSectionPopulator extends AbstractSectionPopulator<Fi
     private SectionResource updateFinancesOverviewSectionDescription(ApplicationResource application,
                                                                      SectionResource section) {
         String description = application.isCollaborativeProject() ?
-                messageSource.getMessage("ifs.section.financesOverview.collaborativeProject.description", null,
+                messageSource.getMessage("ifs.section.financesOverview.collaborative.description", null,
                         Locale.ENGLISH) :
                 messageSource.getMessage("ifs.section.financesOverview.description", null, Locale.ENGLISH);
 

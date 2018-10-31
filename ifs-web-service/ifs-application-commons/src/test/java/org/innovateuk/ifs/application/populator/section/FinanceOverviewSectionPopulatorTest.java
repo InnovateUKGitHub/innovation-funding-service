@@ -101,7 +101,7 @@ public class FinanceOverviewSectionPopulatorTest {
         FinanceOverviewSectionViewModel financeOverviewSectionViewModel = mock(FinanceOverviewSectionViewModel.class);
         Model model = mock(Model.class);
 
-        when(messageSource.getMessage("ifs.section.financesOverview.collaborativeProject.description", null,
+        when(messageSource.getMessage("ifs.section.financesOverview.collaborative.description", null,
                 Locale.ENGLISH))
                 .thenReturn("Finances overview collaborative description");
         when(openSectionModelPopulator.populateModel(form, model, bindingResult, applicantSection)).thenReturn(openSectionViewModel);
@@ -109,7 +109,7 @@ public class FinanceOverviewSectionPopulatorTest {
         financeOverviewSectionPopulator.populateNoReturn(applicantSection, form, financeOverviewSectionViewModel,
                 model, bindingResult, readOnly, Optional.of(applicantOrganisationId));
 
-        verify(messageSource, only()).getMessage("ifs.section.financesOverview.collaborativeProject.description",
+        verify(messageSource, only()).getMessage("ifs.section.financesOverview.collaborative.description",
                 null, Locale.ENGLISH);
         verify(openSectionModelPopulator, only()).populateModel(form, model, bindingResult, applicantSection);
         verify(financeOverviewSectionViewModel, only()).setOpenSectionViewModel(openSectionViewModel);

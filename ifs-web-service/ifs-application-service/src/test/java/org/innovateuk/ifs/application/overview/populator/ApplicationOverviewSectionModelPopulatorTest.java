@@ -29,6 +29,8 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuil
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
@@ -79,7 +81,9 @@ public class ApplicationOverviewSectionModelPopulatorTest extends BaseServiceUni
 
     @Before
     public void setUp() {
-        competition = newCompetitionResource().build();
+        competition = newCompetitionResource()
+                .withCollaborationLevel(SINGLE)
+                .build();
         application = newApplicationResource().build();
 
         questionsSection1 = newQuestionResource().build(2);
@@ -133,16 +137,13 @@ public class ApplicationOverviewSectionModelPopulatorTest extends BaseServiceUni
         applicantSectionResources.forEach(applicantSectionResource -> when(assignButtonsPopulator.populate(
                 eq(applicantSectionResource), isA(ApplicantQuestionResource.class), eq(false)))
                 .thenReturn(new AssignButtonsViewModel()));
-
-        when(messageSource.getMessage("ifs.section.finances.description", null, Locale.ENGLISH))
-                .thenReturn("Finances description");
-
-        when(messageSource.getMessage("ifs.section.finances.collaborativeProject.description", null, Locale.ENGLISH))
-                .thenReturn("Finances collaborative description");
     }
 
     @Test
     public void populate() {
+        when(messageSource.getMessage("ifs.section.finances.description", null, Locale.ENGLISH))
+                .thenReturn("Finances description");
+
         ApplicationOverviewSectionViewModel result = service.populate(competition, application, userId);
 
         Map<Long, List<SectionResource>> expectedSubSections = asMap(parentSections.get(0).getId(),
@@ -183,13 +184,16 @@ public class ApplicationOverviewSectionModelPopulatorTest extends BaseServiceUni
     }
 
     @Test
-    public void populate_collaborativeProject() {
-        application.setCollaborativeProject(true);
+    public void populate_collaborativeCompetition() {
+        competition.setCollaborationLevel(COLLABORATIVE);
+
+        when(messageSource.getMessage("ifs.section.finances.collaborative.description", null, Locale.ENGLISH))
+                .thenReturn("Finances collaborative description");
 
         ApplicationOverviewSectionViewModel result = service.populate(competition, application, userId);
 
         assertEquals("Finances collaborative description", result.getSections().get(1).getDescription());
-        verify(messageSource, only()).getMessage("ifs.section.finances.collaborativeProject.description", null,
+        verify(messageSource, only()).getMessage("ifs.section.finances.collaborative.description", null,
                 Locale.ENGLISH);
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.form.resource.SectionType.GENERAL;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.FINANCES;
@@ -58,7 +59,7 @@ public class ApplicationOverviewSectionModelPopulator {
         final Long yourFinancesSectionId = getYourFinancesSectionId(parentSections);
         final boolean hasYourFinancesSection = yourFinancesSectionId != null;
 
-        updateFinancesSectionDescription(application, parentSections);
+        updateFinancesSectionDescription(competition, parentSections);
 
         Map<Long, AssignButtonsViewModel> assignButtonViewModels = new HashMap<>();
         parentApplicantSections.forEach(applicantSectionResource ->
@@ -74,11 +75,11 @@ public class ApplicationOverviewSectionModelPopulator {
                 yourFinancesSectionId, assignButtonViewModels);
     }
 
-    private SectionResource updateFinancesSectionDescription(ApplicationResource application,
+    private SectionResource updateFinancesSectionDescription(CompetitionResource competition,
                                                              List<SectionResource> sections) {
-        String description = application.isCollaborativeProject() ?
-                messageSource.getMessage("ifs.section.finances.collaborativeProject.description", null, Locale.ENGLISH) :
-                messageSource.getMessage("ifs.section.finances.description", null, Locale.ENGLISH);
+        String description = competition.getCollaborationLevel() == SINGLE ?
+                messageSource.getMessage("ifs.section.finances.description", null, Locale.ENGLISH) :
+                messageSource.getMessage("ifs.section.finances.collaborative.description", null, Locale.ENGLISH);
 
         return simpleFindFirst(sections, this::isFinancesSection).map(sectionResource -> {
             sectionResource.setDescription(description);

@@ -41,6 +41,7 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuild
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -88,6 +89,7 @@ public class YourProjectCostsSectionPopulatorTest {
                 .withCurrentUser(newUserResource().build())
                 .withCompetition(newCompetitionResource()
                         .withApplicationFinanceType(STANDARD_WITH_VAT)
+                        .withCollaborationLevel(SINGLE)
                         .build())
                 .withApplication(newApplicationResource().build())
                 .withApplicantQuestions(newApplicantQuestionResource().withQuestion(newQuestionResource().withType(QuestionType.GENERAL).build()).build(1))
@@ -140,7 +142,9 @@ public class YourProjectCostsSectionPopulatorTest {
         ApplicantSectionResource section = newApplicantSectionResource()
                 .withCurrentApplicant(newApplicantResource().withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build()).build())
                 .withCurrentUser(newUserResource().build())
-                .withCompetition(newCompetitionResource().build())
+                .withCompetition(newCompetitionResource()
+                        .withCollaborationLevel(SINGLE)
+                        .build())
                 .withApplication(newApplicationResource().build())
                 .withApplicantQuestions(newApplicantQuestionResource().withQuestion(newQuestionResource().withType(QuestionType.GENERAL).build()).withApplicantFormInputs(Collections.emptyList()).build(1))
                 .withApplicantChildrenSections(asList(costSection))
