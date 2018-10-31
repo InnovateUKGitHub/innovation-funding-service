@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.otherdocuments.viewmodel;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * View model backing the Other Documents page
  */
+@OtherDocsWindDown
 public class OtherDocumentsViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;

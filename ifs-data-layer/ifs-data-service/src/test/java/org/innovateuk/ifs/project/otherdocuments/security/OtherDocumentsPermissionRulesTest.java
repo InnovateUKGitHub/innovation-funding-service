@@ -18,7 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
+@OtherDocsWindDown
 public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<OtherDocumentsPermissionRules> {
     private ProjectProcess projectProcess;
 

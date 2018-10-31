@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.otherdocuments.controller;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/project")
+@OtherDocsWindDown
 public class OtherDocumentsController {
 
     @Value("${ifs.data.service.file.storage.projectsetupotherdocuments.max.filesize.bytes}")

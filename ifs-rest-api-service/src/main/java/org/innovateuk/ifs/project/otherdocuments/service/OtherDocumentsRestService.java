@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.project.otherdocuments.service;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
 
+@OtherDocsWindDown
 public interface OtherDocumentsRestService {
 
     RestResult<Optional<ByteArrayResource>> getCollaborationAgreementFile(Long projectId);

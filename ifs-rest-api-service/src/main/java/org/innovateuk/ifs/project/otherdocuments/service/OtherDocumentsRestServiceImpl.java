@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.otherdocuments.service;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@OtherDocsWindDown
 public class OtherDocumentsRestServiceImpl extends BaseRestService implements OtherDocumentsRestService {
 
     private String projectRestURL = "/project";

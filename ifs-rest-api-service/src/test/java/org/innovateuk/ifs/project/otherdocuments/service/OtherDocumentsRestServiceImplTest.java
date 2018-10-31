@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.*;
 
+@OtherDocsWindDown
 public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<OtherDocumentsRestServiceImpl> {
     private static final String projectRestURL = "/project";
 

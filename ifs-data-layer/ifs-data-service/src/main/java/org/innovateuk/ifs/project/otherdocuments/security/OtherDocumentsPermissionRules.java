@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.otherdocuments.security;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -11,6 +12,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 @PermissionRules
 @Component
+@OtherDocsWindDown
 public class OtherDocumentsPermissionRules extends BasePermissionRules {
 
     @PermissionRule(

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.otherdocuments;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.core.io.ByteArrayResource;
@@ -9,6 +10,7 @@ import java.util.Optional;
 /**
  * A service for dealing with Project Other Documents via the appropriate Rest services
  */
+@OtherDocsWindDown
 public interface OtherDocumentsService {
 
 

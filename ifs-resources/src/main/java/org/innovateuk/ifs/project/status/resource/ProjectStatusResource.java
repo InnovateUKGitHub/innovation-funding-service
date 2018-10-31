@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.status.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.user.resource.Role;
 
@@ -22,6 +23,7 @@ public class ProjectStatusResource {
     private ProjectActivityStates financeChecksStatus;
     private ProjectActivityStates spendProfileStatus;
     private ProjectActivityStates monitoringOfficerStatus;
+    @OtherDocsWindDown
     private ProjectActivityStates otherDocumentsStatus;
     private ProjectActivityStates documentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
@@ -127,10 +129,12 @@ public class ProjectStatusResource {
         this.monitoringOfficerStatus = monitoringOfficerStatus;
     }
 
+    @OtherDocsWindDown
     public ProjectActivityStates getOtherDocumentsStatus() {
         return otherDocumentsStatus;
     }
 
+    @OtherDocsWindDown
     public void setOtherDocumentsStatus(ProjectActivityStates otherDocumentsStatus) {
         this.otherDocumentsStatus = otherDocumentsStatus;
     }
