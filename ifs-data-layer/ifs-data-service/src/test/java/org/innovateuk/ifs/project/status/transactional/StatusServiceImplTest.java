@@ -29,6 +29,8 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -75,7 +77,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder.newProjectDocument;
+import static org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder.newCompetitionProjectDocument;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -92,6 +94,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -103,6 +106,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
@@ -216,7 +220,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 build();
 
         competition = newCompetition()
-                .withProjectDocuments(singletonList(newProjectDocument().build()))
+                .withProjectDocuments(singletonList(newCompetitionProjectDocument().build()))
                 .build();
 
         Long applicationId = 456L;
@@ -863,6 +867,92 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
         assertTrue(resultFailure.isFailure());
+    }
+
+    @Test
+    public void getProjectStatusProjectDocumentsNotFullyApproved() {
+        Long projectId = 2345L;
+        List<ProjectDocument> docs = newProjectDocument()
+                .withStatus(DocumentStatus.SUBMITTED, DocumentStatus.APPROVED)
+                .build(2);
+
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.REJECTED, Boolean.FALSE,
+                                                      Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now(), false);
+        project.setProjectDocuments(docs);
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        verify(financeServiceMock).organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class));
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(ProjectActivityStates.ACTION_REQUIRED, returnedProjectStatusResource.getDocumentsStatus());
+    }
+
+    @Test
+    public void getProjectStatusProjectDocumentsApproved() {
+        Long projectId = 2345L;
+        List<ProjectDocument> docs = newProjectDocument()
+                .withStatus(DocumentStatus.APPROVED, DocumentStatus.APPROVED)
+                .build(2);
+
+        competition.setProjectDocuments(newCompetitionProjectDocument().build(2));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.REJECTED, Boolean.FALSE,
+                                                      Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now(), false);
+        project.setProjectDocuments(docs);
+        project.setApplication(application);
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        verify(financeServiceMock).organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class));
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(ProjectActivityStates.COMPLETE, returnedProjectStatusResource.getDocumentsStatus());
+    }
+
+    @Test
+    public void getProjectStatusProjectDocumentsRejected() {
+        Long projectId = 2345L;
+        List<ProjectDocument> docs = newProjectDocument()
+                .withStatus(DocumentStatus.REJECTED, DocumentStatus.REJECTED)
+                .build(2);
+
+        competition.setProjectDocuments(newCompetitionProjectDocument().build(2));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.REJECTED, Boolean.FALSE,
+                                                      Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now(), false);
+        project.setProjectDocuments(docs);
+        project.setApplication(application);
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        verify(financeServiceMock).organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class));
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(ProjectActivityStates.REJECTED, returnedProjectStatusResource.getDocumentsStatus());
+    }
+
+    @Test
+    public void getProjectStatusProjectDocumentsPending() {
+        Long projectId = 2345L;
+        List<ProjectDocument> docs = newProjectDocument()
+                .withStatus(DocumentStatus.APPROVED)
+                .build(1);
+
+        competition.setProjectDocuments(newCompetitionProjectDocument().build(2));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.REJECTED, Boolean.FALSE,
+                                                      Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now(), false);
+        project.setProjectDocuments(docs);
+        project.setApplication(application);
+        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        verify(financeServiceMock).organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class));
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(ProjectActivityStates.PENDING, returnedProjectStatusResource.getDocumentsStatus());
     }
 
     @Test
@@ -1659,5 +1749,4 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
         assertTrue(project.getSpendProfileSubmittedDate() == null);
     }
-
 }

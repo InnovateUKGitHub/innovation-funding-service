@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
  */
 public class ProjectDocumentBuilder extends BaseBuilder<ProjectDocument, ProjectDocumentBuilder> {
 
-    public static ProjectDocumentBuilder newProjectDocument() {
+    public static ProjectDocumentBuilder newCompetitionProjectDocument() {
         return new ProjectDocumentBuilder(emptyList()).with(uniqueIds());
     }
 
