@@ -57,7 +57,7 @@ The external user is alerted that the upload must be a .pdf file
     [Documentation]  IFS-4567
     [Tags]
     When the user uploads the file          name = document  ${text_file}
-    Then the user should see the element    jQuery = span:contains("Your upload must be a PDF.")
+    Then the user should see the element    jQuery = span:contains("Unsupported file type.")
 
 The external user uploads a valid Collaboration Agreement
     [Documentation]  IFS-4567
