@@ -3,6 +3,6 @@
 SET @none_sector_id = 60;
 SET @none_area_id = 61;
 
-INSERT INTO category (id, name, type, description, priority)
-  VALUES (@none_sector_id,  'None', 'INNOVATION_SECTOR',  NULL, -1),
-         (@none_area_id,    'None', 'INNOVATION_AREA',    'Not applicable', -1);
+INSERT INTO category (id, name, type, parent_id, description, priority)
+  VALUES (@none_sector_id,  'None', 'INNOVATION_SECTOR',  NULL,             NULL, -1),
+         (@none_area_id,    'None', 'INNOVATION_AREA',    @none_sector_id,  'Not applicable', -1);
