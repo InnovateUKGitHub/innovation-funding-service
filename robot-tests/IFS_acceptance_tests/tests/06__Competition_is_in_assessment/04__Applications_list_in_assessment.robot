@@ -127,7 +127,7 @@ Page list pagination on all applications
 *** Keywords ***
 The calculations should be correct
     [Arguments]    ${SUMMARY_LOCATOR}
-    ${ELEMENT} =     get matching xpath count    //*[td]
+    ${ELEMENT} =     Get Element Count    //*[td]
     log    ${ELEMENT}
     ${LENGTH_SUMMARY} =     Get text    ${SUMMARY_LOCATOR}
     log    ${LENGTH_SUMMARY}
