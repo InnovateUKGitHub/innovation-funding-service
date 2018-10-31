@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.sections.SectionAccess;
 
 /**
  * A convenient container for multiple Project Setup sections' access levels
  */
+@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class SectionAccessList {
 
     private SectionAccess companiesHouseSection;

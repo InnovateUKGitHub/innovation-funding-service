@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -14,6 +15,7 @@ import static org.innovateuk.ifs.sections.SectionAccess.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
     @Mock

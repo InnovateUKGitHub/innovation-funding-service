@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.populator;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
@@ -79,6 +80,7 @@ public class SetupSectionStatus {
         }
     }
 
+    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     public SectionStatus otherDocumentsSectionStatus(final ProjectResource project,
                                                      final boolean isProjectManager) {
         if (project.isPartnerDocumentsSubmitted() && APPROVED.equals(project.getOtherDocumentsApproved())) {
@@ -108,7 +110,6 @@ public class SetupSectionStatus {
                                                     || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
             return isProjectManager ? FLAG : EMPTY;
         }
-
 
         return HOURGLASS;
     }

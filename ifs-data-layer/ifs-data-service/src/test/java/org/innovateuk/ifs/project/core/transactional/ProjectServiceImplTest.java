@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -147,6 +148,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private Project p;
 
     @Before
+    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     public void setUp() {
 
         organisation = newOrganisation().

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -44,6 +45,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@OtherDocsWindDown
 public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
 
     @Spy

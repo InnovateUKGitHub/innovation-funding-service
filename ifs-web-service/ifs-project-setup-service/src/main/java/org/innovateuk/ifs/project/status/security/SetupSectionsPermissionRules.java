@@ -35,6 +35,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @PermissionRules
 @Component
+@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class SetupSectionsPermissionRules {
 
     private static final Log LOG = LogFactory.getLog(SetupSectionsPermissionRules.class);

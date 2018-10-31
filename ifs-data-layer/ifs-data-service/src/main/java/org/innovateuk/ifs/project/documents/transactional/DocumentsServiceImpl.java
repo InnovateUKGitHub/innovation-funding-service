@@ -212,10 +212,8 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     private ServiceResult<Void> validateProjectDocumentDecision(ProjectDocumentDecision decision) {
 
-        if (null == decision.getApproved()) {
+        if (null == decision.getApproved() || (!decision.getApproved() && StringUtils.isBlank(decision.getRejectionReason()))) {
             return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION);
-        } else if (!decision.getApproved()) {
-            return StringUtils.isBlank(decision.getRejectionReason()) ? serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION) : serviceSuccess();
         }
 
         return serviceSuccess();

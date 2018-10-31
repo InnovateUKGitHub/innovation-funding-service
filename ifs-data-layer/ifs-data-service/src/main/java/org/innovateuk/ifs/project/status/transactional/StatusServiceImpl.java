@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.status.transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -285,6 +286,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
+    @OtherDocsWindDown
     private ProjectActivityStates getOtherDocumentsStatus(Project project) {
 
         if (ApprovalType.REJECTED.equals(project.getOtherDocumentsApproved())) {

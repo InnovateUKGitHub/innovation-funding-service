@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.security;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 
 /**
@@ -12,6 +13,7 @@ public class StatusPermission {
     private Boolean canAccessBankDetails;
     private Boolean canAccessFinanceChecks;
     private Boolean canAccessSpendProfile;
+    @OtherDocsWindDown
     private Boolean canAccessOtherDocuments;
     private Boolean canAccessDocuments;
     private Boolean canAccessGrantOfferLetter;
@@ -61,6 +63,7 @@ public class StatusPermission {
         return canAccessSpendProfile;
     }
 
+    @OtherDocsWindDown
     public Boolean getCanAccessOtherDocuments() {
         return canAccessOtherDocuments;
     }

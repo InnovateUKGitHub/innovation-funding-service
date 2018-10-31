@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsServiceImpl;
@@ -14,6 +15,7 @@ import static org.mockito.Mockito.*;
 /**
  * Testing how the secured methods in ProjectOtherDocumentsService interact with Spring Security
  */
+@OtherDocsWindDown
 public class OtherDocumentsServiceSecurityTest extends BaseServiceSecurityTest<OtherDocumentsService> {
 
     private OtherDocumentsPermissionRules projectPermissionRules;

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.otherdocuments.transactional;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -12,6 +13,7 @@ import java.util.function.Supplier;
 /**
  * Transactional and secure service for Project Other Documents processing work
  */
+@OtherDocsWindDown
 public interface OtherDocumentsService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'SUBMIT_OTHER_DOCUMENTS')")

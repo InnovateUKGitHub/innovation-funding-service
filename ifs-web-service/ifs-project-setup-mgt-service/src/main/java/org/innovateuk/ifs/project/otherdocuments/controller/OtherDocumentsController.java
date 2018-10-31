@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.otherdocuments.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -36,6 +37,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Controller
 @RequestMapping("/project/{projectId}/partner/documents")
+@OtherDocsWindDown
 public class OtherDocumentsController {
 
     private static final String FORM_ATTR = "form";
