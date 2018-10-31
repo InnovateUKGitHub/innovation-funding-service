@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.project.otherdocuments.form;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Form backing the Other Documents page
  */
+@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class OtherDocumentsForm extends BaseBindingResultTarget {
 
     private MultipartFile collaborationAgreement;

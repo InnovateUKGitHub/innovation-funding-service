@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.sections.SectionStatus;
 
 import static org.innovateuk.ifs.sections.SectionStatus.TICK;
@@ -7,6 +8,8 @@ import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 /**
  * A convenient container for multiple Project Setup sections' current statuses
  */
+
+@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class SectionStatusList {
 
     private SectionStatus projectDetailsStatus;
