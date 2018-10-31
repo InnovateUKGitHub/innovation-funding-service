@@ -109,7 +109,6 @@ public class SetupSectionStatus {
             return isProjectManager ? FLAG : EMPTY;
         }
 
-
         return HOURGLASS;
     }
 

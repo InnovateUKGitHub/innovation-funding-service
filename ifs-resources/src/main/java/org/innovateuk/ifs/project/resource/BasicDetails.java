@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
+/**
+ * Class to hold the basic details such as project, application etc.
+ */
 public class BasicDetails {
 
     private ProjectResource project;
