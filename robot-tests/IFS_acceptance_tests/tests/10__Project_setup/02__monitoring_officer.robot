@@ -115,13 +115,11 @@ MO client-side validation
     And the user should see an error                     Please enter a valid phone number between 8 and 20 digits.
     When the user enters text to a text field            id = phoneNumber    07438620303
     Then the user should not see the validation error    Please enter a valid phone number between 8 and 20 digits.
-    [Teardown]  the user navigates to the page           link = Projects in setup
 
 MO details can be added
     [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
     [Tags]  HappyPath
-    Given the user navigates to the page                 ${Successful_Monitoring_Officer_Page}
-    And the user clicks the button/link                  jQuery = .govuk-button:contains("Assign Monitoring Officer")
+    When the user clicks the button/link                 jQuery = .govuk-button:contains("Assign Monitoring Officer")
     And the user clicks the button/link                  jQuery = .modal-assign-mo button:contains("Cancel")
     Then the user should not see the text in the page    A Monitoring Officer has been assigned.
     And the user clicks the button/link                  jQuery = .govuk-button:contains("Assign Monitoring Officer")
