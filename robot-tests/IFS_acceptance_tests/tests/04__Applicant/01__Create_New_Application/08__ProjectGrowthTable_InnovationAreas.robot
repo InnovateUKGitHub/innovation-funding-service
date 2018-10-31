@@ -392,9 +392,9 @@ the user should see an error message in the field
     [Arguments]  ${field}  ${errmsg}
     the user should see the element  jQuery = span:contains("${field}") + *:contains("${errmsg}")
 
-the user selects medium organisation size
-    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
-    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+#the user selects medium organisation size
+#    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+#    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
 
 the user populates the project growth table
     the user enters value to field    Annual turnover    65000

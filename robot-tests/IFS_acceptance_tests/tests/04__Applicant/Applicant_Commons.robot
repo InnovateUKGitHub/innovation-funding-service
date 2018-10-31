@@ -441,3 +441,15 @@ the user fills in the address info
    the user clicks the button/link        jQuery = a:contains("Continue and create an account")
    the user selects the radio button      organisationTypeId  ${organisationType}
    the user clicks the button/link        jQuery = button:contains("Save and continue")
+
+the user marks your funding section as complete
+    the user selects the radio button     requestingFunding   true
+    the user enters text to a text field  css = [name^="grantClaimPercentage"]  30
+    the user selects the radio button                    otherFunding  false
+    #the user clicks the button twice      jQuery = label[for$="otherPublicFunding-no"]:contains("No")
+    the user selects the checkbox         agree-terms-page
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+
+the user selects medium organisation size
+    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
