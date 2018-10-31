@@ -10,7 +10,9 @@ build.enabled = false
 
 apply from: rootProject.file("gradle-support/openshift-util.gradle")
 
-openshiftEnv = openshiftEnv.replaceAll('/', '-')
+if (project.hasProperty('openshiftEnv')) {
+    ext.openshiftEnv = openshiftEnv.replaceAll('/', '-')
+}
 
 if (!isNamedEnv()) {
     apply from: rootProject.file("gradle-support/non-named-env-properties.gradle")
