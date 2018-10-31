@@ -5,10 +5,10 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.populator.AcceptRejectApplicationInviteModelPopulator;
+import org.innovateuk.ifs.registration.populator.ConfirmOrganisationInviteModelPopulator;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,17 +32,23 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 @PreAuthorize("permitAll")
 public class AcceptInviteController extends AbstractAcceptInviteController {
 
-    @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
     private InviteRestService inviteRestService;
-
-    @Autowired
     private AcceptRejectApplicationInviteModelPopulator acceptRejectApplicationInviteModelPopulator;
+    private ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator;
 
     private static final String ACCEPT_INVITE_NEW_USER_VIEW = "registration/accept-invite-new-user";
     private static final String ACCEPT_INVITE_EXISTING_USER_VIEW = "registration/accept-invite-existing-user";
+
+    public AcceptInviteController(final OrganisationRestService organisationRestService,
+                                  final InviteRestService inviteRestService,
+                                  final AcceptRejectApplicationInviteModelPopulator acceptRejectApplicationInviteModelPopulator,
+                                  final ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator) {
+        this.organisationRestService = organisationRestService;
+        this.inviteRestService = inviteRestService;
+        this.acceptRejectApplicationInviteModelPopulator = acceptRejectApplicationInviteModelPopulator;
+        this.confirmOrganisationInviteModelPopulator = confirmOrganisationInviteModelPopulator;
+    }
 
     @GetMapping("/accept-invite/{hash}")
     public String inviteEntryPage(
@@ -79,21 +85,23 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
         String hash = registrationCookieService.getInviteHashCookieValue(request).orElse(null);
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccess(invite ->
                 inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
-                            if (!SENT.equals(invite.getStatus())) {
+                    if (!SENT.equals(invite.getStatus())) {
                                 return alreadyAcceptedView(response);
                             }
                             if (loggedInAsNonInviteUser(invite, loggedInUser)) {
                                 return LOGGED_IN_WITH_ANOTHER_USER_VIEW;
                             }
-                            OrganisationResource organisation = organisationRestService.getOrganisationByIdForAnonymousUserFlow(
+                            OrganisationResource organisation =
+                                    organisationRestService.getOrganisationByIdForAnonymousUserFlow(
                                     inviteOrganisation.getOrganisation()).getSuccess();
-                            registrationCookieService.saveToOrganisationIdCookie(inviteOrganisation.getOrganisation(), response);
-                            model.addAttribute("model",
-                                    new ConfirmOrganisationInviteOrganisationViewModel(invite, organisation,
-                                            RegistrationController.BASE_URL));
+                            registrationCookieService.saveToOrganisationIdCookie(inviteOrganisation.getOrganisation()
+                                    , response);
+                    ConfirmOrganisationInviteOrganisationViewModel viewModel =
+                            confirmOrganisationInviteModelPopulator.populate(invite, organisation,
+                            RegistrationController.BASE_URL);
+                    model.addAttribute("model", viewModel);
                             return "registration/confirm-invited-organisation";
-                        }
-                )
+                })
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
         return view.getSuccess();
     }

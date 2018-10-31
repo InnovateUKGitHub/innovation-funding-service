@@ -69,7 +69,14 @@ function deploy() {
 }
 
 function shibInit() {
-     oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
+    echo "Shib init.."
+    LDAP_POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }')
+    echo "Ldap pod: ${LDAP_POD}"
+
+    while RESULT=$(oc rsh ${SVC_ACCOUNT_CLAUSE} $LDAP_POD /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database 2>&1); echo $RESULT; echo $RESULT | grep "ERROR"; do
+        echo "Shibinit failed. Retrying.."
+        sleep 10
+    done
 }
 
 # Entry point
@@ -95,5 +102,6 @@ then
     scaleDataService
     scaleFinanceDataService
     scaleSurveyDataService
+    scaleEuDataService
 fi
 
