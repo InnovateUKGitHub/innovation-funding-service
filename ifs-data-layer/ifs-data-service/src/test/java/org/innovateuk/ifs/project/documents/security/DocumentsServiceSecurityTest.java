@@ -30,7 +30,7 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.createDocumentFileEntry(1L, 2L, null, null), () -> {
+        assertAccessDenied(() -> classUnderTest.createDocumentFileEntry(123L, 2L, null, null), () -> {
             verify(documentPermissionRules).projectManagerCanUploadDocument(project, getLoggedInUser());
             verifyNoMoreInteractions(documentPermissionRules);
         });
@@ -43,7 +43,7 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.getFileContents(1L, 2L), () -> {
+        assertAccessDenied(() -> classUnderTest.getFileContents(123L, 2L), () -> {
             verify(documentPermissionRules).partnersCanDownloadDocument(project, getLoggedInUser());
             verify(documentPermissionRules).internalUserCanDownloadDocument(project, getLoggedInUser());
             verifyNoMoreInteractions(documentPermissionRules);
@@ -57,7 +57,7 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.getFileEntryDetails(1L, 2L), () -> {
+        assertAccessDenied(() -> classUnderTest.getFileEntryDetails(123L, 2L), () -> {
             verify(documentPermissionRules).partnersCanDownloadDocument(project, getLoggedInUser());
             verify(documentPermissionRules).internalUserCanDownloadDocument(project, getLoggedInUser());
             verifyNoMoreInteractions(documentPermissionRules);
@@ -71,7 +71,7 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.deleteDocument(1L, 2L), () -> {
+        assertAccessDenied(() -> classUnderTest.deleteDocument(123L, 2L), () -> {
             verify(documentPermissionRules).projectManagerCanDeleteDocument(project, getLoggedInUser());
             verifyNoMoreInteractions(documentPermissionRules);
         });
@@ -85,7 +85,7 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.submitDocument(1L, 2L), () -> {
+        assertAccessDenied(() -> classUnderTest.submitDocument(123L, 2L), () -> {
             verify(documentPermissionRules).projectManagerCanSubmitDocument(project, getLoggedInUser());
             verifyNoMoreInteractions(documentPermissionRules);
         });
@@ -98,7 +98,7 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.documentDecision(1L, 2L, null), () -> {
+        assertAccessDenied(() -> classUnderTest.documentDecision(123L, 2L, null), () -> {
             verify(documentPermissionRules).internalAdminCanApproveDocument(project, getLoggedInUser());
             verifyNoMoreInteractions(documentPermissionRules);
         });
