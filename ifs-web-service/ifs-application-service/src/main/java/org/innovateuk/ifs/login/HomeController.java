@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.login.form.RoleSelectionForm;
 import org.innovateuk.ifs.login.model.RoleSelectionModelPopulator;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class HomeController {
         }
 
         UserResource user = (UserResource) authentication.getDetails();
-        if (user.getRoles().size() > 1) {
+        if (user.hasMultipleRoles() && !user.hasRole(Role.IFS_ADMINISTRATOR)) {
             return "redirect:/roleSelection";
         }
 
@@ -71,7 +72,7 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (unauthenticated(authentication) || user.getRoles().size() <= 1) {
+        if (unauthenticated(authentication) || !user.hasMultipleRoles()) {
             return "redirect:/";
         }
 

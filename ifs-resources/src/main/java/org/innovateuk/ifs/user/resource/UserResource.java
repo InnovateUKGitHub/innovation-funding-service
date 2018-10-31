@@ -181,6 +181,10 @@ public class UserResource {
         return !disjoint(roles, newHashSet(testRoles));
     }
 
+    public boolean hasMultipleRoles(){
+        return getRoles().size() > 1;
+    }
+
     public Long getProfileId() {
         return profileId;
     }
