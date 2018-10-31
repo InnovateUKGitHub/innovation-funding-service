@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -127,16 +128,52 @@ public class FieldRequiredIfValidatorTest {
                 .andExpect(model().attributeHasFieldErrors("form", "catQuantity"))
                 .andExpect(view().name("failure"));
     }
-
     @Test
-    public void isValid_integerFieldIsRequiredAndNull() throws Exception {
+    public void isValid_bigDecimalFieldIsRequiredAndNotEmpty() throws Exception {
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("hasCats", "true"))
+                .param("hasMoney", "true")
+                .param("cost", "10"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasNoErrors())
+                .andExpect(view().name("success"));
+    }
+
+    @Test
+    public void isValid_bigDecimalFieldIsRequiredAndEmpty() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasMoney", "true")
+                .param("cost", ""))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().errorCount(1))
-                .andExpect(model().attributeHasFieldErrors("form", "catQuantity"))
+                .andExpect(model().attributeHasFieldErrors("form", "cost"))
+                .andExpect(view().name("failure"));
+    }
+
+    @Test
+    public void isValid_bigDecimalFieldIsRequiredAndWhitespace() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasMoney", "true")
+                .param("cost", "  "))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrors("form", "cost"))
+                .andExpect(view().name("failure"));
+    }
+
+    @Test
+    public void isValid_bigDecimalFieldIsRequiredAndNull() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasMoney", "true"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrors("form", "cost"))
                 .andExpect(view().name("failure"));
     }
 
@@ -266,6 +303,8 @@ public class FieldRequiredIfValidatorTest {
             message="{validation.testform.hasCats.required}")
     @FieldRequiredIf(required = "catQuantity", argument = "hasCats", predicate = true,
             message="{validation.testform.catQuantity.required}")
+    @FieldRequiredIf(required = "cost", argument = "hasMoney", predicate = true,
+            message="{validation.testform.cost.required}")
     public static class TestForm {
 
         private Boolean hasFoodAllergies;
@@ -278,6 +317,9 @@ public class FieldRequiredIfValidatorTest {
 
         private Boolean hasCats;
         private Integer catQuantity;
+
+        private Boolean hasMoney;
+        private BigDecimal cost;
 
 
         public TestForm() {
@@ -337,6 +379,22 @@ public class FieldRequiredIfValidatorTest {
 
         public void setCatQuantity(Integer catQuantity) {
             this.catQuantity = catQuantity;
+        }
+
+        public Boolean getHasMoney() {
+            return hasMoney;
+        }
+
+        public void setHasMoney(Boolean hasMoney) {
+            this.hasMoney = hasMoney;
+        }
+
+        public BigDecimal getCost() {
+            return cost;
+        }
+
+        public void setCost(BigDecimal cost) {
+            this.cost = cost;
         }
     }
 

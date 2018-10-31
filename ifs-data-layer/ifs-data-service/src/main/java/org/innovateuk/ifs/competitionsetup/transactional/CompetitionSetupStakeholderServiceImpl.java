@@ -78,11 +78,12 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.gov.uk";
+    private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.ukri.org";
     private static final String WEB_CONTEXT = "/management/competition/setup/stakeholder";
 
     enum Notifications {
-        STAKEHOLDER_INVITE
+        STAKEHOLDER_INVITE,
+        ADD_STAKEHOLDER
     }
 
     @Override
@@ -95,7 +96,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
                 .andOnSuccess(() -> getCompetition(competitionId))
                 .andOnSuccess(competition -> saveInvite(invitedUser, competition)
-                                    .andOnSuccess(stakeholderInvite -> sendNotification(stakeholderInvite, competition))
+                                    .andOnSuccess(stakeholderInvite -> sendStakeholderInviteNotification(stakeholderInvite, competition))
                              );
     }
 
@@ -144,7 +145,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return serviceSuccess(savedStakeholderInvite);
     }
 
-    private ServiceResult<Void> sendNotification(StakeholderInvite stakeholderInvite, Competition competition) {
+    private ServiceResult<Void> sendStakeholderInviteNotification(StakeholderInvite stakeholderInvite, Competition competition) {
 
         Map<String, Object> globalArgs = createGlobalArgsForStakeholderInvite(stakeholderInvite, competition);
 
@@ -205,10 +206,32 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
                         find(userRepository.findOne(stakeholderUserId),
                                 notFoundError(User.class, stakeholderUserId))
                         .andOnSuccess(stakeholder -> {
-                            stakeholderRepository.save(new Stakeholder(competition, stakeholder));
-                            return serviceSuccess();
+                            Stakeholder savedStakeholder = stakeholderRepository.save(new Stakeholder(competition, stakeholder));
+                            return sendAddStakeholderNotification(savedStakeholder, competition);
                         })
                 );
+    }
+
+    private ServiceResult<Void> sendAddStakeholderNotification(Stakeholder stakeholder, Competition competition) {
+
+        Map<String, Object> globalArgs = createGlobalArgsForAddStakeholder(competition);
+
+        Notification notification = new Notification(systemNotificationSource,
+                singletonList(createAddStakeholderNotificationTarget(stakeholder)),
+                Notifications.ADD_STAKEHOLDER, globalArgs);
+
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
+    }
+
+    private Map<String, Object> createGlobalArgsForAddStakeholder(Competition competition) {
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("competitionName", competition.getName());
+        globalArguments.put("dashboardUrl", webBaseUrl + "/management/dashboard/live");
+        return globalArguments;
+    }
+
+    private NotificationTarget createAddStakeholderNotificationTarget(Stakeholder stakeholder) {
+        return new UserNotificationTarget(stakeholder.getUser().getName(), stakeholder.getUser().getEmail());
     }
 
     @Override

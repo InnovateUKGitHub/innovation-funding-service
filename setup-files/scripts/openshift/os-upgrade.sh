@@ -26,19 +26,35 @@ function upgradeServices {
 
     # data-service
     oc apply -f $(getBuildLocation)/ifs-services/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+
     rolloutStatus "data-service"
 
     # services
     oc apply -f $(getBuildLocation)/ifs-services/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/ifs-services/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/ifs-services/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/ifs-services/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/ifs-services/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus application-svc
+    rolloutStatus competition-mgt-svc
+    rolloutStatus project-setup-mgt-svc
+
+    oc apply -f $(getBuildLocation)/ifs-services/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus front-door-svc
+    rolloutStatus assessment-svc
+
     oc apply -f $(getBuildLocation)/ifs-services/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/ifs-services/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
 
+    rolloutStatus project-setup-svc
+    rolloutStatus registration-svc
+
     oc apply -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus shib
+    rolloutStatus idp
 
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
@@ -56,7 +72,7 @@ function upgradeServices {
         oc apply -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    watchStatus
+    watchSilStubAndPrototypesStatus
 
     upgradeSurvey
 
@@ -101,14 +117,30 @@ function forceReload {
     rolloutStatus data-service
 
     oc rollout latest dc/application-svc ${SVC_ACCOUNT_CLAUSE}
-    oc rollout latest dc/front-door-svc ${SVC_ACCOUNT_CLAUSE}
-    oc rollout latest dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus application-svc
+    rolloutStatus competition-mgt-svc
+    rolloutStatus project-setup-mgt-svc
+
+    oc rollout latest dc/front-door-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus front-door-svc
+    rolloutStatus assessment-svc
+
     oc rollout latest dc/project-setup-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/registration-svc ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus project-setup-svc
+    rolloutStatus registration-svc
+
     oc rollout latest dc/idp ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/shib ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus idp
+    rolloutStatus shib
 
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
@@ -120,23 +152,14 @@ function forceReload {
         oc rollout latest dc/prototypes-svc ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    watchStatus
+    watchSilStubAndPrototypesStatus
 
     forceReloadSurvey
 
     forceReloadEuGrantRegistration
 }
 
-function watchStatus {
-    rolloutStatus application-svc
-    rolloutStatus front-door-svc
-    rolloutStatus assessment-svc
-    rolloutStatus competition-mgt-svc
-    rolloutStatus project-setup-mgt-svc
-    rolloutStatus project-setup-svc
-    rolloutStatus registration-svc
-    rolloutStatus idp
-    rolloutStatus shib
+function watchSilStubAndPrototypesStatus {
 
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
@@ -188,4 +211,5 @@ then
     scaleDataService
     scaleFinanceDataService
     scaleSurveyDataService
+    scaleEuDataService
 fi

@@ -1,13 +1,42 @@
-You have successfully created an Atlassian Plugin!
+# Prerequisites
 
-Here are the SDK commands you'll use immediately:
+Install SDK as per https://developer.atlassian.com/server/framework/atlassian-sdk/downloads/
 
-* atlas-run   -- installs this plugin into the product and starts it on localhost
-* atlas-debug -- same as atlas-run, but allows a debugger to attach at port 5005
-* atlas-cli   -- after atlas-run or atlas-debug, opens a Maven command line window:
-                 - 'pi' reinstalls the plugin into the running product instance
-* atlas-help  -- prints description for all commands in the SDK
+Note that you will need to set appropriate environments for your Atlassian SDK home, for example appropriate
+variation of:
+
+    JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home
+    export JAVA_HOME
+    export PATH=$PATH:$JAVA_HOME/bin
+    export ATLAS_HOME=/usr/local/Cellar/atlassian-plugin-sdk/6.3.10/libexec
+
+Then check installed OK
+
+    atlas-version
+
+# Releases
+
+When validating changes deploy the plugin with a SNAPSHOT release number.   When work is done, then remove the
+SNAPSHOT label from the version number in the maven pom.xml, and then build and deploy to Bitbucket so that
+a known version is deployed.  After release increase the version to the next SNAPSHOT version.
+
+# Installation
+
+Build the plugin :
+
+    cd ifs-bitbucket-plugin
+    atlas-mvn install
+
+Then log in to Bitbucket with account with admin access and click settings gear icon -> admin -> Manage add-ons ->
+Upload add-on.
+
+# Background Reading
+
+Here are the SDK commands you may use:
+
+ * atlas-run   -- installs this plugin into the product and starts it on localhost
+ * atlas-debug -- same as atlas-run, but allows a debugger to attach at port 5005
+ * atlas-help  -- prints description for all commands in the SDK
 
 Full documentation is always available at:
-
 https://developer.atlassian.com/display/DOCS/Introduction+to+the+Atlassian+Plugin+SDK

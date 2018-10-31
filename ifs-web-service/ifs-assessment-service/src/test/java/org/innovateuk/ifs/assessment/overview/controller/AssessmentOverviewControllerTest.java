@@ -375,6 +375,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .withApplication(applicationResource.getId())
                 .withApplicationName("Application name")
                 .withCompetition(competitionResource.getId())
+                .withCollaborativeProject(true)
                 .build();
 
         ProcessRoleResource assessorRole = newProcessRoleResource().withUser(assessor).build();
@@ -394,7 +395,12 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
 
 
         AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
-                assessmentResource.getId(), applicationResource.getId(), "Application name", 3, 50);
+                assessmentResource.getId(),
+                applicationResource.getId(),
+                "Application name",
+                3,
+                50,
+                true);
 
         mockMvc.perform(get("/{assessmentId}/finances", assessmentResource.getId()))
                 .andExpect(status().isOk())

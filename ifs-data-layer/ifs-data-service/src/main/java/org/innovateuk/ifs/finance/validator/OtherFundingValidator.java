@@ -74,18 +74,18 @@ public class OtherFundingValidator implements Validator {
 
     private void validateFundingAmount(BigDecimal fundingAmount, Errors errors) {
         if (fundingAmount == null) {
-            rejectValue(errors, "fundingAmount", "validation.field.must.not.be.blank");
+            rejectValue(errors, "fundingAmount", "validation.finance.funding.amount");
         } else if (fundingAmount.compareTo(BigDecimal.ZERO) < 1) {
-            rejectValue(errors, "fundingAmount", "validation.field.max.value.or.higher", 1);
+            rejectValue(errors, "fundingAmount", "validation.finance.funding.amount");
         }
     }
 
     private void validateDate(OtherFunding otherFunding, Errors errors){
         String securedDate = otherFunding.getSecuredDate();
         if(StringUtils.isBlank(securedDate)){
-            rejectValue(errors, "securedDate", "validation.field.must.not.be.blank");
+            rejectValue(errors, "securedDate", "validation.finance.funding.date.invalid");
         }else if(!isValidDate(securedDate)) {
-            rejectValue(errors, "securedDate", "validation.finance.secured.date.invalid");
+            rejectValue(errors, "securedDate", "validation.finance.funding.date.invalid");
         }
     }
 

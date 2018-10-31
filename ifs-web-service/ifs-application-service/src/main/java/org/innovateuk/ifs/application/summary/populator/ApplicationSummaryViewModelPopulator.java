@@ -70,7 +70,8 @@ public class ApplicationSummaryViewModelPopulator {
                 researchCategorySummaryViewModel,
                 userService.isLeadApplicant(user.getId(), application),
                 isProjectWithdrawn(applicationId),
-                isSupport);
+                isSupport,
+                application.isCollaborativeProject());
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {

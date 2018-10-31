@@ -12,6 +12,8 @@ Documentation     INFUND-885: As an applicant I want to be able to submit a user
 ...               INFUND-2497: As a new user I would like to have an indication that my password is correct straight after typing...
 ...
 ...               IFS-4298 Registration redirect doesn't check results of verification
+...
+...               IFS-4048 Server side validation on password does not disappear on registration page
 Suite Setup       the guest user opens the browser
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
@@ -55,6 +57,19 @@ Your details: client-side password hint validation
     Then the user should see the element       css = .govuk-list.status [data-minlength-validationstatus][data-valid="false"]
     And the user should see the element        css = .govuk-list.status [data-containsnumber-validationstatus][data-valid="false"]
 
+Your details: server-side password validation
+    [Documentation]  IFS-4048
+    [Tags]
+    Given the user navigates to the page       ${ACCOUNT_CREATION_FORM_URL}
+    And the user enters text to a text field   id = firstName   Brian
+    And the user enters text to a text field   id = lastName    Test
+    And the user enters text to a text field   id = phoneNumber    123456789
+    And the user enters text to a text field   id = email    test@test.com
+    And the user selects the checkbox          termsAndConditions
+    When the user enters text to a text field  id = password    Brian123
+    And the user clicks the button/link        css = [name="create-account"]
+    Then the user should see a field and summary error  Password should not contain either your first or last name.
+
 Your details: client-side validation
     [Documentation]    -INFUND-885
     [Tags]
@@ -63,13 +78,13 @@ Your details: client-side validation
     Then the user should not see an error in the page
 
 User can not login with the invalid email
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    the user navigates to the page          ${SERVER}
     Then the user cannot login with the invalid email  ${invalid_email_no_at}
 
 Email duplication check
     [Documentation]    INFUND-886
-    [Tags]
+    [Tags]  HappyPath
     Given Applicant goes to the registration form
     When the user enters the details and clicks the create account  John  Smith  ${lead_applicant}  ${correct_password}
     Then the user should see an error          The email address is already registered with us. Please sign into your account

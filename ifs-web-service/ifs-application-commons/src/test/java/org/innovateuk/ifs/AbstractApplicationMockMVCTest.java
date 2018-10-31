@@ -26,7 +26,6 @@ import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
@@ -142,9 +141,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     public OrganisationTypeResource businessOrganisationType;
     public OrganisationTypeResource researchOrganisationType;
     public OrganisationTypeResource academicOrganisationType;
-    public ApplicationInviteResource invite;
-    public ApplicationInviteResource acceptedInvite;
-    public ApplicationInviteResource existingUserInvite;
 
     public static final String INVITE_HASH =
             "b157879c18511630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
@@ -188,8 +184,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withStartDate(ZonedDateTime.now().minusDays(2))
                 .withEndDate(ZonedDateTime.now().plusDays(5))
                 .withCompetitionStatus(CompetitionStatus.OPEN)
-                .withMinProjectDuraction(1)
-                .withMaxProjectDuraction(36)
+                .withMinProjectDuration(1)
+                .withMaxProjectDuration(36)
                 .withIncludeJesForm(true)
                 .build();
 
@@ -278,6 +274,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withPriority(9).withType(SectionType.ORGANISATION_FINANCES).withParentSection(sectionResource7.getId()).build();
         SectionResource sectionResource10 = sectionResourceBuilder.with(id(10L)).with(name("Your funding")).withPriority(10).withType
                 (SectionType.FUNDING_FINANCES).withParentSection(sectionResource7.getId()).build();
+        SectionResource sectionResource11 = sectionResourceBuilder.with(id(11L)).with(name("Finances overview")).withPriority(11)
+                .withType(SectionType.OVERVIEW_FINANCES).build();
 
         sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
         sectionResource7.setChildSections(Arrays.asList(sectionResource8.getId(), sectionResource9.getId(),
@@ -285,7 +283,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         sectionResources = asList(sectionResource1, sectionResource2, sectionResource3, sectionResource4,
                 sectionResource5, sectionResource6, sectionResource7, sectionResource8, sectionResource9,
-                sectionResource10);
+                sectionResource10, sectionResource11);
         sectionResources.forEach(s -> {
                     s.setQuestionGroup(false);
                     s.setChildSections(new ArrayList<>());
@@ -299,6 +297,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .asList(sectionResource9));
         when(sectionService.getSectionsForCompetitionByType(1L, SectionType.FUNDING_FINANCES)).thenReturn(Arrays
                 .asList(sectionResource10));
+        when(sectionService.getSectionsForCompetitionByType(1L, SectionType.OVERVIEW_FINANCES)).thenReturn(Arrays
+                .asList(sectionResource11));
 
         when(questionRestService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(restSuccess(Arrays.asList
                 (q21Resource, q22Resource, q23Resource)));

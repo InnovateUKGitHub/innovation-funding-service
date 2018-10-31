@@ -154,6 +154,7 @@ public abstract class BaseFinanceFormHandler<FinanceRowRestServiceType extends F
 
     FinanceFormField getCostFormField(String costTypeKey, String value) {
         String[] keyParts = costTypeKey.split("-");
+
         if (keyParts.length > 3) {
             return new FinanceFormField(keyParts[0] + "-" + keyParts[2] + "-" + keyParts[3], value, keyParts[3], keyParts[2], keyParts[1], keyParts[0]);
         } else if (keyParts.length == 3) {

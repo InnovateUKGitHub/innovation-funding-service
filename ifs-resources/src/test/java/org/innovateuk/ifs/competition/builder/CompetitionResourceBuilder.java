@@ -39,11 +39,11 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> competition.setResearchCategories(categories));
     }
 
-    public CompetitionResourceBuilder withMinProjectDuraction(Integer minProjectDuration) {
+    public CompetitionResourceBuilder withMinProjectDuration(Integer minProjectDuration) {
         return with(competition -> competition.setMinProjectDuration(minProjectDuration));
     }
 
-    public CompetitionResourceBuilder withMaxProjectDuraction(Integer maxProjectDuration) {
+    public CompetitionResourceBuilder withMaxProjectDuration(Integer maxProjectDuration) {
         return with(competition -> competition.setMaxProjectDuration(maxProjectDuration));
     }
 
@@ -241,6 +241,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withIncludeJesForm(Boolean... includeJesForms) {
         return withArray((includeJesForm, competitionSetupFinance) -> setField("includeJesForm", includeJesForm, competitionSetupFinance), includeJesForms);
+    }
+
+    public CompetitionResourceBuilder withIncludeProjectGrowthTable(Boolean... includeProjectGrowthTable) {
+        return withArraySetFieldByReflection("includeProjectGrowthTable", includeProjectGrowthTable);
     }
 
     public CompetitionResourceBuilder withCreatedBy(String... users) {

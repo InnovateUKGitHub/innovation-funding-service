@@ -8,7 +8,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Academic organisations search
     [Documentation]    INFUND-1231
-    [Tags]
+    [Tags]  HappyPath
     Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com  ${BUSINESS_TYPE_ID}
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
@@ -27,9 +27,9 @@ Academic organisations search
 
 Accept invitation as academic
     [Documentation]    INFUND-1166, INFUND-917, INFUND-2450, INFUND-2256
-    [Tags]
+    [Tags]  HappyPath
 #    The search results are specific to Research Organisation type
-    Given the research user finds org in companies house
+    Given the research user finds org in companies house    Warwick  University of Warwick
     And the invited user fills the create account form  Steven  Gerrard
     And If the user goes to the previous page he should redirect to the login page
     And the user reads his email and clicks the link    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account  1
@@ -39,7 +39,7 @@ Accept invitation as academic
     And the user clicks the button/link                 link = Your finances
     Then the user should see the element                link = Your project costs
     And the user should not see the element             link = Your organisation
-    And the user should not see the element             jQuery = h3:contains("Your funding")
+    #And the user should not see the element             jQuery = h3:contains("Your funding")  #Manually checking this should be displayed as the comp is business???
     When the user clicks the button/link                link = Your project costs
     Then the user should not see the text in the page   Labour
     And the user should not see an error in the page

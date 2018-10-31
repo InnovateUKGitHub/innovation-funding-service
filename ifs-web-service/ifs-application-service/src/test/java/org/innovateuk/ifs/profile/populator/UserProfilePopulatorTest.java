@@ -48,7 +48,7 @@ public class UserProfilePopulatorTest extends BaseUnitTest {
         assertEquals(actual.getOrganisations().iterator().next().getName(),
                 organisations.get(0).getName());
         assertEquals(actual.getOrganisations().iterator().next().getRegistrationNumber(),
-                organisations.get(0).getCompanyHouseNumber());
+                organisations.get(0).getCompaniesHouseNumber());
         assertEquals(actual.getOrganisations().iterator().next().getType(),
                 organisations.get(0).getOrganisationTypeName());
 

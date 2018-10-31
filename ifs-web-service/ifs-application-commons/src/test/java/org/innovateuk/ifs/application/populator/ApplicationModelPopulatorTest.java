@@ -187,7 +187,6 @@ public class ApplicationModelPopulatorTest {
         when(questionRestService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(restSuccess(costsQuestions));
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
 
-        when(organisationRestService.getPrimaryForUser(user.getId())).thenReturn(restSuccess(userOrganisation));
         when(competitionRestService.getCompetitionById(competitionId).getSuccess()).thenReturn(competition);
         when(financeViewHandlerProvider.getFinanceModelManager(competition, organisationType)).thenReturn(financeModelManager);
 

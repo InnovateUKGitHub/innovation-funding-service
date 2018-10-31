@@ -77,13 +77,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
 
         ValidationMessages errors = new ValidationMessages();
 
-        if (isFundingRequest(params)) {
-            financeSaver.handleRequestFundingRequests(params, applicationId, competitionId, processRole.getId());
-        }
-
         if (!isMarkSectionAsIncompleteRequest(params)) {
-
-
             List<QuestionResource> questions = selectedSection.getQuestions()
                     .stream()
                     .map(questionId -> questionRestService.findById(questionId).getSuccess())

@@ -23,7 +23,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +38,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * Tests {@link ApplicationSectionSaver}
@@ -110,28 +110,6 @@ public class ApplicationSectionSaverTest {
     }
 
     @Test
-    public void saveApplicationForm_isFundingRequest_request() {
-        Map<String, String[]> params = asMap(REQUESTING_FUNDING, new String[]{});
-        when(request.getParameterMap()).thenReturn(params);
-
-        ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
-
-        assertFalse(result.hasErrors());
-        verify(financeSaver, times(1)).handleRequestFundingRequests(params, application.getId(), competitionId, processRoleId);
-    }
-
-    @Test
-    public void saveApplicationForm_isFundingRequest_notRequesting() {
-        Map<String, String[]> params = asMap(NOT_REQUESTING_FUNDING, new String[]{});
-        when(request.getParameterMap()).thenReturn(params);
-
-        ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
-
-        assertFalse(result.hasErrors());
-        verify(financeSaver, times(1)).handleRequestFundingRequests(params, application.getId(), competitionId, processRoleId);
-    }
-
-    @Test
     public void saveApplicationForm_SaveSection() {
         Map<String, String[]> params = asMap();
         when(request.getParameterMap()).thenReturn(params);
@@ -141,7 +119,6 @@ public class ApplicationSectionSaverTest {
         assertFalse(result.hasErrors());
         verify(financeSaver, times(1)).handleMarkAcademicFinancesAsNotRequired(anyLong(), any(SectionResource.class), anyLong(), anyLong(), anyLong());
         verify(organisationService, times(1)).getOrganisationType(userId, application.getId());
-        verify(financeSaver, never()).handleRequestFundingRequests(params, application.getId(), competitionId, processRoleId);
     }
 
     @Test
@@ -155,7 +132,6 @@ public class ApplicationSectionSaverTest {
 
         assertFalse(result.hasErrors());
         verify(overheadFileSaver, times(1)).handleOverheadFileRequest(request);
-        verify(financeSaver, never()).handleRequestFundingRequests(params, application.getId(), competitionId, processRoleId);
     }
 
     @Test
@@ -165,14 +141,13 @@ public class ApplicationSectionSaverTest {
         when(overheadFileSaver.isOverheadFileRequest(request)).thenReturn(true);
 
         ValidationMessages messages = new ValidationMessages();
-        messages.addError(new Error("Some error", HttpStatus.BAD_REQUEST));
+        messages.addError(new Error("Some error", BAD_REQUEST));
         when(overheadFileSaver.handleOverheadFileRequest(request)).thenReturn(messages);
 
         ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
 
         assertTrue(result.hasErrors());
         verify(overheadFileSaver, times(1)).handleOverheadFileRequest(request);
-        verify(financeSaver, never()).handleRequestFundingRequests(params, application.getId(), competitionId, processRoleId);
     }
 
     @Test

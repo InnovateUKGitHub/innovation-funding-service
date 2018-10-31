@@ -71,6 +71,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("projectDocuments").description("List of documents required during the project setup phase"),
             fieldWithPath("nonFinanceType").description("Does the competition have finance questions"),
             fieldWithPath("includeJesForm").description("Does the competition include the Je-S form for academics"),
+            fieldWithPath("includeProjectGrowthTable").description("Indicate if the competition has a project growth table"),
             fieldWithPath("createdBy").description("user who created this competition"),
             fieldWithPath("createdOn").description("when the competition was created"),
             fieldWithPath("modifiedBy").description("user who modified this competition"),

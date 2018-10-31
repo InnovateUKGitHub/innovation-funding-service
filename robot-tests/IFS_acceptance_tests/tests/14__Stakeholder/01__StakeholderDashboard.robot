@@ -2,6 +2,8 @@
 Documentation   IFS-4189 Add/Remove Stakeholders
 ...
 ...             IFS-4190 Create a new user in stakeholder role
+...
+...             IFS-4314 Stakeholder invite email
 Resource        ../../resources/defaultResources.robot
 Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
 
@@ -38,12 +40,14 @@ The internal user invites a Stakeholder
     Then the user should see the element    jQuery = td:contains("Stake Holder") ~ td:contains("stakeHolder@test.com") ~ td:contains("Invite pending")
 
 The internal user adds a Stakeholder to the competition
-    [Documentation]  IFS-4189
+    [Documentation]  IFS-4189  IFS-4314
     [Tags]
-    Given the user clicks the button/link    css = a[href="?tab=add"]
-    When the user clicks the button/link     jQuery = td:contains("Rayon Kevin") button[type="submit"]
-    And the user clicks the button/link      jQuery = a:contains("Added to competition")
-    Then the user should see the element     jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
+    Given the user clicks the button/link     css = a[href="?tab=add"]
+    When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
+    And the user clicks the button/link       jQuery = a:contains("Added to competition")
+    Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
+    When the user reads his email             ${stakeholder_user["email"]}    Invite to view a competition: ${openProgrammeCompetitionName}    You have been invited to view
+    Then the user navigates to the page       ${LOGIN_URL}
 
 The Stakeholder can see their dashboard and the competitions they were added to
     [Documentation]  IFS-4189
@@ -95,7 +99,7 @@ the user triggers the email validation
 the user enters an Innovate UK email
     the user enters text to a text field    id = firstName     Stake
     the user enters text to a text field    id = lastName      Holder
-    the user enters text to a text field    id = emailAddress  stakeHolder@innovateuk.test
+    the user enters text to a text field    id = emailAddress  stakeHolder@innovateuk.ukri.test
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
 
 the user enters the correct details of a Stakeholder

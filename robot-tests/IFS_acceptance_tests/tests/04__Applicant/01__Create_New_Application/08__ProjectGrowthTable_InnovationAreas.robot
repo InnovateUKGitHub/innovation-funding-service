@@ -33,18 +33,18 @@ ${ineligibleMessage}         Your organisation type does not match our eligibili
 *** Test Cases ***
 Comp Admin starts a new Competition
     [Documentation]    INFUND-6393
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user logs-in in new browser       &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page           ${CA_UpcomingComp}
     When the user clicks the button/link           jQuery = .govuk-button:contains("Create competition")
-    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
+    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true     # 1 means 30%
+    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
-    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    # TODO IFS-4609 Uncomment when this functionality is enabled.
     #And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
@@ -58,7 +58,7 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
 
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393
-    [Tags]
+    [Tags]  HappyPath
     Given the user should see the element        jQuery = h1:contains("Competition setup")
     Then the user marks the Application as done  no  Programme
     And the user fills in the CS Assessors
@@ -73,17 +73,17 @@ Comp admin completes ths competition setup
 
 Competition is Open to Applications
     [Documentation]    INFUND-6393
-    [Tags]  MySQL
+    [Tags]  MySQL  HappyPath
     The competitions date changes so it is now Open  ${compWithoutGrowth}
 
 Create new Application for this Competition
-    [Tags]
+    [Tags]  HappyPath
     Given Log in as a different user              &{lead_applicant_credentials}
     Then logged in user applies to competition    ${compWithoutGrowth}  1
 
 Applicant visits his Finances
     [Documentation]    INFUND-6393  IFS-3938
-    [Tags]
+    [Tags]  HappyPath
     Given the user should see the element          jQuery = h1:contains("Application overview")
     When the user clicks the button/link           link = Your finances
     Then the user should see the element           jQuery = li:contains("Your project costs") > .task-status-incomplete
@@ -94,14 +94,14 @@ Applicant visits his Finances
 
 Applicant fills in the Application Details
     [Documentation]  INFUND-6895  INFUND-9151
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link             link = Application details
     Then The user fills in the Application details   ${applicationWithoutGrowth}  ${tomorrowday}  ${month}  ${nextyear}
     And the user selects Research category           Feasibility studies
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
-    [Tags]
+    [Tags]  HappyPath
     Given the user clicks the button/link         link = Your finances
     Then the user clicks the button/link          link = Your organisation
     And the user should see the text in the page  Turnover (£)
@@ -110,7 +110,7 @@ Turnover and Staff count fields
 
 Once the project growth table is selected
     [Documentation]    INFUND-6393 IFS-40
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user                &{Comp_admin1_credentials}
     Given the user navigates to the page                 ${CA_UpcomingComp}
     When the user clicks the button/link                 jQuery = .govuk-button:contains("Create competition")
@@ -118,11 +118,11 @@ Once the project growth table is selected
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  true     # 1 means 30%
+    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user fills in the CS Milestones              ${month}  ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
-    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    # TODO IFS-4609 Uncomment when this functionality is enabled.
     #And the user fills in the CS Documents in other projects
     When the user clicks the button/link                 link = Public content
     Then the user fills in the Public content and publishes  GrowthTable
@@ -136,7 +136,7 @@ Once the project growth table is selected
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
-    [Tags]
+    [Tags]  HappyPath
     Given Log in as a different user                             &{lead_applicant_credentials}
     And logged in user applies to competition                    ${compWithGrowth}  1
     When the user clicks the button/link                         link = Your finances
@@ -151,6 +151,7 @@ Organisation server side validation when no
     [Setup]    log in as a different user                 &{lead_applicant_credentials}
     Given the user navigates to Your-finances page        ${applicationWithoutGrowth}
     Then the user clicks the button/link                  link = Your organisation
+    And the user selects the checkbox                     agree-state-aid
     When the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error    Enter your organisation size.
     And the user should see a field and summary error     This field cannot be left blank.
@@ -175,10 +176,13 @@ Organisation client side validation when no
 
 Mark Organisation as complete when no
     [Documentation]    INFUND-6393
-    [Tags]
-    Given the user enters text to a text field    jQuery = .govuk-hint:contains("employees") + input    42
+    [Tags]  HappyPath
+    [Setup]  the user navigates to Your-finances page        ${applicationWithoutGrowth}
+    Given the user clicks the button/link                  link = Your organisation
+    And the user enters text to a text field    jQuery = .govuk-hint:contains("employees") + input    42
     And the user enters text to a text field      jQuery = .govuk-hint:contains("turnover") + input    17506
     And the user selects medium organisation size
+    And the user selects the checkbox             agree-state-aid
     When the user clicks the button/link          jQuery = button:contains("Mark as complete")
     Then the user should see the element          jQuery = li:contains("Your organisation") > .task-status-complete
     When the user clicks the button/link          link = Your organisation
@@ -206,6 +210,7 @@ Organisation server side validation when yes
     [Tags]
     [Setup]  the user navigates to the growth table finances
     Given the user clicks the button/link  link = Your organisation
+    And the user selects the checkbox      agree-state-aid
     When the user clicks the button/link   jQuery = button:contains("Mark as complete")
     And the user should see the element    jQuery = .govuk-error-summary__list li:contains("This field cannot be left blank.")
     And the user should see the element    jQuery = .govuk-error-message:contains("This field cannot be left blank.")
@@ -241,7 +246,7 @@ Organisation client side validation when yes
 
 Mark Organisation as complete when yes
     [Documentation]    INFUND-6393
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    the user navigates to the growth table finances
     Given the user clicks the button/link        link = Your organisation
     And the user selects medium organisation size
@@ -252,6 +257,7 @@ Mark Organisation as complete when yes
     And the user clicks the button/link          jQuery = button:contains("Save and return to finances")
     And the user clicks the button/link          link = Your organisation
     Then the user should see the element         jQuery = td:contains("Research and development spend") + td input[value = "15000"]
+    And the user selects the checkbox            agree-state-aid
     When the user clicks the button/link         jQuery = button:contains("Mark as complete")
     Then the user should see the element         jQuery = li:contains("Your organisation") > .task-status-complete
 
@@ -286,7 +292,8 @@ Applicant can view and edit project growth table
     Then the user should view the project growth table
     And the user can edit the project growth table
     And the user populates the project growth table
-    and the user clicks the button/link                 jQuery = button:contains("Mark as complete")
+    And the user selects the checkbox                   agree-state-aid
+    And the user clicks the button/link                 jQuery = button:contains("Mark as complete")
 
 The Lead Applicant fills in the Application Details for App with Growth
     [Documentation]  This step is required for following test cases
@@ -305,6 +312,7 @@ Newly created collaborator can view and edit project Growth table
     Then the user enters text to a text field       css = input[name$="month"]    12
     And the user enters text to a text field        css = input[name$="year"]    2016
     And the user populates the project growth table
+    And the user selects the checkbox                agree-state-aid
     And the user clicks the button/link             jQuery = button:contains("Mark as complete")
     And the user should not see an error in the page
 
@@ -328,6 +336,7 @@ Non-lead can mark Organisation as complete
     And the user enters text to a text field        css = input[name$="year"]    2016
     Then the user populates the project growth table
     And the user enters text to a text field        jQuery = .govuk-hint:contains("employees") + input    42
+    And the user selects the checkbox               agree-state-aid
     When the user clicks the button/link            jQuery = button:contains("Mark as complete")
     Then the user should see the element            jQuery = li:contains("Your organisation") > .task-status-complete
 
@@ -338,14 +347,14 @@ Non-lead can can edit and remark Organisation as Complete
 
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
     [Documentation]  IFS-1015
-    [Tags]
+    [Tags]  HappyPath
     Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}  3
     When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
     Then the user should see the text in the page  ${ineligibleMessage}
 
 Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
     [Documentation]  IFS-1015
-    [Tags]
+    [Tags]  HappyPath
     Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${openCompetitionRTO_name}  1
     When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
     Then the user should see the text in the page  ${ineligibleMessage}
@@ -362,9 +371,8 @@ the user should see that the funding depends on the research area
     the user should see the element  jQuery = li:contains("mark the") a:contains("research category")
     the user clicks the button/link  link = Your finances
 
-
 the user should see his finances empty
-    the user should see the element  jQuery = thead:contains("Total project costs") ~ *:contains("£0")
+    the user should see the element  jQuery = thead:contains("Total project") ~ *:contains("0")
 
 the user decides about the growth table
     [Arguments]  ${edit}  ${read}
@@ -417,7 +425,7 @@ the applicant enters valid inputs
     The user enters text to a text field    name = organisations[1].organisationName  ${organisationLudlowName}
     The user enters text to a text field    name = organisations[1].invites[0].personName    Jessica Doe
     The user enters text to a text field    name = organisations[1].invites[0].email    ${collaborator1_credentials["email"]}
-    focus                                   jquery = button:contains("Save changes")
+    Set Focus To Element                                     jquery = button:contains("Save changes")
     The user clicks the button/link         jquery = button:contains("Save changes")
 
 the user can edit resubmit and read only of the organisation
@@ -425,6 +433,7 @@ the user can edit resubmit and read only of the organisation
     the user clicks the button/link         link = Your organisation
     the user clicks the button/link         jQuery = button:contains("Edit")
     the user enters text to a text field    jQuery = .govuk-hint:contains("employees") + input    2
+    the user selects the checkbox           agree-state-aid
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
     the user should not see an error in the page
     the user should see the element         jQuery = li:contains("Your organisation") > .task-status-complete
@@ -462,12 +471,12 @@ the user fills in the Open-All Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
     the user selects the option from the drop-down menu  Sector  id = competitionTypeId
     the user selects the option from the drop-down menu  Open  id = innovationSectorCategoryId
-    the user selects the option from the drop-down menu  All  css = select[id^=innovationAreaCategory]
+    the user selects the value from the drop-down menu   -1  id = innovationAreaCategoryIds
     the user enters text to a text field                 css = #openingDateDay  1
     the user enters text to a text field                 css = #openingDateMonth  ${month}
     the user enters text to a text field                 css = #openingDateYear  ${nextyear}
-    the user selects the option from the drop-down menu  Ian Cooper  id = innovationLeadUserId
-    the user selects the option from the drop-down menu  Robert Johnson  id = executiveUserId
+    the user selects the value from the drop-down menu   24  id = innovationLeadUserId
+    the user selects the value from the drop-down menu   21  id = executiveUserId
     the user clicks the button twice                     css = label[for="stateAid2"]
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Competition setup

@@ -92,11 +92,9 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
     public void getForCompetition_standardFinanceType() {
         Competition competition = newCompetition()
                 .withApplicationFinanceType(STANDARD)
+                .withIncludeProjectGrowthTable(true)
                 .build();
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-
-        when(competitionSetupTransactionalServiceMock.isIncludeGrowthTable(competition.getId())).thenReturn
-                (serviceSuccess(true));
 
         CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 
@@ -108,23 +106,37 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
     public void getForCompetition_noFinanceType() {
         Competition competition = newCompetition()
                 .withApplicationFinanceType(NO_FINANCES)
+                .withIncludeProjectGrowthTable(true)
                 .build();
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
         CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 
         assertEquals(NO_FINANCES, result.getApplicationFinanceType());
-        assertFalse(result.getIncludeGrowthTable());
+        assertTrue(result.getIncludeGrowthTable());
     }
 
     @Test
     public void getForCompetition_nullFinanceType() {
+        Competition competition = newCompetition()
+                .withIncludeProjectGrowthTable(true)
+                .build();
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+
+        CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
+
+        assertNull(result.getApplicationFinanceType());
+        assertTrue(result.getIncludeGrowthTable());
+    }
+
+    @Test
+    public void getForCompetition_nullIncludeProjectGrowthTable() {
         Competition competition = newCompetition().build();
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
         CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 
         assertNull(result.getApplicationFinanceType());
-        assertFalse(result.getIncludeGrowthTable());
+        assertNull(result.getIncludeGrowthTable());
     }
 }

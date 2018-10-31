@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
@@ -38,7 +37,6 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverv
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageApplicationViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligibleApplicationViewModel;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -65,7 +63,6 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
@@ -82,7 +79,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -634,12 +630,6 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         ApplicationTeamResource teamResource = new ApplicationTeamResource();
         ApplicationTeamOrganisationResource leadOrg = new ApplicationTeamOrganisationResource();
         leadOrg.setOrganisationName("lead");
-        AddressResource regAddress = newAddressResource().withAddressLine1("1").withAddressLine2("Floor 1").withAddressLine3("Polaris House").withCounty("Wilts").withPostcode("SN1 1AB").withTown("Swindon").build();
-        AddressResource opAddress = newAddressResource().withAddressLine1("A").withAddressLine2("Floor G").withAddressLine3("North Star House").withCounty("Somerset").withPostcode("TN1 1ZZ").withTown("Taunton").build();
-        OrganisationAddressResource regAddressResource = newOrganisationAddressResource().withAddress(regAddress).build();
-        OrganisationAddressResource opAddressResource = newOrganisationAddressResource().withAddress(opAddress).build();
-        leadOrg.setOperatingAddress(opAddressResource);
-        leadOrg.setRegisteredAddress(regAddressResource);
         ApplicationTeamUserResource leaderUser = new ApplicationTeamUserResource();
         leaderUser.setEmail("lee.der@email.com");
         leaderUser.setName("Lee Der");
@@ -648,8 +638,6 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         leadOrg.setUsers(Collections.singletonList(leaderUser));
         ApplicationTeamOrganisationResource partnerOrg = new ApplicationTeamOrganisationResource();
         partnerOrg.setOrganisationName("Partner");
-        partnerOrg.setOperatingAddress(regAddressResource);
-        partnerOrg.setRegisteredAddress(opAddressResource);
         ApplicationTeamUserResource partnerUser = new ApplicationTeamUserResource();
         partnerUser.setEmail("pard.ner@email.com");
         partnerUser.setName("Pard Ner");
@@ -670,10 +658,6 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         assertEquals(applications.get(0).getCompetition().longValue(), resultModel.getCompetitionId());
         assertEquals(applications.get(0).getName(), resultModel.getApplicationName());
         assertEquals("lead", resultModel.getTeam().getLeadOrganisation().getOrganisationName());
-        assertEquals("TN1 1ZZ", resultModel.getTeam().getLeadOrganisation().getOperatingAddress().getAddress().getPostcode());
-        assertEquals("SN1 1AB", resultModel.getTeam().getLeadOrganisation().getRegisteredAddress().getAddress().getPostcode());
-        assertEquals("TN1 1ZZ", resultModel.getTeam().getPartnerOrganisations().get(0).getRegisteredAddress().getAddress().getPostcode());
-        assertEquals("SN1 1AB", resultModel.getTeam().getPartnerOrganisations().get(0).getOperatingAddress().getAddress().getPostcode());
         assertEquals("lee.der@email.com", resultModel.getTeam().getLeadOrganisation().getUsers().get(0).getEmail());
         assertEquals("pard.ner@email.com", resultModel.getTeam().getPartnerOrganisations().get(0).getUsers().get(0).getEmail());
         verify(applicationRestService).getApplicationById(applications.get(0).getId());
