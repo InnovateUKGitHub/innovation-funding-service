@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import javax.validation.constraints.Digits;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectResource {
@@ -31,7 +32,7 @@ public class ProjectResource {
     private String grantOfferLetterRejectionReason;
     private ZonedDateTime spendProfileSubmittedDate;
     private ProjectState projectState;
-    private List<ProjectDocumentResource> projectDocuments;
+    private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;

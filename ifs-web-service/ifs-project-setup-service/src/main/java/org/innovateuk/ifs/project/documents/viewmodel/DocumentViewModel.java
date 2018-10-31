@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 
+/**
+ * View model for viewing/actions on each document
+ */
 public class DocumentViewModel {
 
     private Long projectId;
@@ -93,7 +96,7 @@ public class DocumentViewModel {
     }
 
     public boolean isEditable() {
-        return projectManager && status != DocumentStatus.APPROVED;
+        return projectManager && status != DocumentStatus.APPROVED && status != DocumentStatus.SUBMITTED;
     }
 
     public boolean isShowSubmitDocumentsButton() {

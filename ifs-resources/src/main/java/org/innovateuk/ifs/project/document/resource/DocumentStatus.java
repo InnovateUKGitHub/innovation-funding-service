@@ -10,5 +10,3 @@ public enum DocumentStatus {
     APPROVED,
     REJECTED
 }
-
-

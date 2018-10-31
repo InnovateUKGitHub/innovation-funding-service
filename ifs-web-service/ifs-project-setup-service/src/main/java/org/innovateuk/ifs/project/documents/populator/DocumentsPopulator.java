@@ -30,7 +30,7 @@ public class DocumentsPopulator {
     @Autowired
     private ProjectService projectService;
 
-    public AllDocumentsViewModel populateAllDocuments(long projectId) {
+    public AllDocumentsViewModel populateAllDocuments(long projectId, UserResource loggedInUser) {
 
         BasicDetails basicDetails = basicDetailsPopulator.populate(projectId);
         ProjectResource project = basicDetails.getProject();
@@ -41,13 +41,15 @@ public class DocumentsPopulator {
 
         List<ProjectDocumentStatus> documents = new ArrayList<>();
 
+        boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
+
         for (org.innovateuk.ifs.competition.resource.ProjectDocumentResource configuredDocument : configuredProjectDocuments) {
             documents.add(new ProjectDocumentStatus(configuredDocument.getId(),
                     configuredDocument.getTitle(),
                     getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
         }
 
-        return new AllDocumentsViewModel(projectId, project.getName(), documents);
+        return new AllDocumentsViewModel(projectId, project.getName(), documents, isProjectManager);
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {

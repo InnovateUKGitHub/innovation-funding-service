@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
@@ -231,6 +232,7 @@ public class SetupSectionAccessibilityHelper {
         return userOrganisation.getId().equals(organisationIdFromUrl);
     }
 
+    @OtherDocsWindDown
     public SectionAccess canAccessOtherDocumentsSection(OrganisationResource organisation) {
 
         if (setupProgressChecker.isLeadPartnerOrganisation(organisation)) {
@@ -253,7 +255,7 @@ public class SetupSectionAccessibilityHelper {
         }
 
         if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Non-lead Partners are unable to access Other Documents section until their Companies House information " +
+                "Non-lead Partners are unable to access Documents section until their Companies House information " +
                         "is complete")) {
             return ACCESSIBLE;
         }
@@ -263,12 +265,16 @@ public class SetupSectionAccessibilityHelper {
 
     public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
 
-        if (setupProgressChecker.isSpendProfileApproved() && setupProgressChecker.isOtherDocumentsApproved()
+        if (setupProgressChecker.isSpendProfileApproved() && documentsApproved()
                 && setupProgressChecker.isGrantOfferLetterAvailable() && setupProgressChecker.isGrantOfferLetterSent()) {
             return ACCESSIBLE;
         }
 
         return NOT_ACCESSIBLE;
+    }
+
+    private boolean documentsApproved() {
+       return setupProgressChecker.isOtherDocumentsApproved() || setupProgressChecker.isDocumentsApproved();
     }
 
     public boolean isSpendProfileGenerated() {

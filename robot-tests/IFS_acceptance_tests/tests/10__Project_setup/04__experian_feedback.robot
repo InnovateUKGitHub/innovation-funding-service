@@ -31,10 +31,7 @@ Project Finance can see Bank details requiring action
     [Setup]  log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/management/dashboard/project-setup
     When the user clicks the button/link  link = ${PS_EF_Competition_Name}
-    Then the user should see the element  css = #table-project-status tr:nth-child(3) td:nth-child(2).status.ok
-    And the user should see the element   css = #table-project-status tr:nth-child(3) td:nth-child(3).status.action
-    And the user should see the element   css = #table-project-status tr:nth-child(3) td:nth-child(4).status.action
-    Then the user clicks the button/link  css = #table-project-status tr:nth-child(3) td:nth-child(4).status.action a
+    Then the user clicks the button/link  css = #table-project-status > tbody > tr:nth-child(3) > td:nth-child(5)  # Complete Bank details
     And the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
 
 Project Finance can see the company name with score

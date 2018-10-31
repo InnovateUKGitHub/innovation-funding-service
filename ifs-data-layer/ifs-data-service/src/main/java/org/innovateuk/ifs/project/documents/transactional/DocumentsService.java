@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.InputStream;
@@ -15,40 +16,26 @@ import java.util.function.Supplier;
  */
 public interface DocumentsService {
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_OTHER_DOCUMENTS_DETAILS')")
-    @SecuredBySpring(value = "XXX", description = "XXX")
+    @SecuredBySpring(value = "GET_VALID_MEDIA_TYPES", description = "Any authenticated user can get valid media types for a document")
     @PreAuthorize("isAuthenticated()")
     ServiceResult<List<String>> getValidMediaTypesForDocument(long documentConfigId);
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
-    @SecuredBySpring(value = "XXX", description = "XXX")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPLOAD_DOCUMENT')")
     ServiceResult<FileEntryResource> createDocumentFileEntry(long projectId, long documentConfigId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_OTHER_DOCUMENTS')")
-    @SecuredBySpring(value = "XXX", description = "XXX")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_DOCUMENT')")
     ServiceResult<FileAndContents> getFileContents(long projectId, long documentConfigId);
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_OTHER_DOCUMENTS_DETAILS')")
-    @SecuredBySpring(value = "XXX", description = "XXX")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_DOCUMENT')")
     ServiceResult<FileEntryResource> getFileEntryDetails(long projectId, long documentConfigId);
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
-    @SecuredBySpring(value = "XXX", description = "XXX")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DELETE_DOCUMENT')")
     ServiceResult<Void> deleteDocument(long projectId, long documentConfigId);
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
-    @SecuredBySpring(value = "XXX", description = "XXX")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'SUBMIT_DOCUMENT')")
     ServiceResult<Void> submitDocument(long projectId, long documentConfigId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'APPROVE_DOCUMENT')")
+    ServiceResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision);
 
 }

@@ -6,7 +6,7 @@
 <body class="govuk-template__body project-other-documents">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
-<th:block th:insert="fragments/modals :: modal-partner-document" />
+<th:block th:insert="fragments/modals :: modal-configured-partner-document" />
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <div class="govuk-width-container">
@@ -16,27 +16,19 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-        <div th:if="${model.status == 'APPROVED'}" class="success-alert">
-            <h2 class="govuk-heading-s govuk-!-margin-0">This document has been approved by Innovate UK.</h2>
+        <div th:if="${model.status.name() == 'APPROVED'}" class="success-alert">
+            <h2 class="govuk-heading-s govuk-!-margin-0">This document has been approved by us.</h2>
         </div>
 
-        <div th:if="${model.status == 'REJECTED'}" class="warning-alert">
-            <h2 class="govuk-heading-s govuk-!-margin-0">We are unable to approve your document and have returned it to you. A member of Innovate UK will be in touch to discuss our requirements.</h2>
+        <div th:if="${model.status.name() == 'REJECTED'}" class="warning-alert">
+            <h2 class="govuk-heading-s govuk-!-margin-0">We will contact you to discuss this document.</h2>
         </div>
 
-<!--    <div th:if="${model.isShowRejectionMessages()}" class="warning-alert">
-            <h2 class="govuk-heading-s">This document has been returned to the project team, the following reason was
-                    given;</h2>
-            <ul class="govuk-list govuk-list--bullet">
-                <li th:each="reason : ${model.rejectionReasons}" th:text="${reason}"/>
-            </ul>
-        </div> -->
-
-        <div th:if="${model.status == 'SUBMITTED'}" class="message-alert">
-            <h2 class="govuk-heading-s">The document submitted below is now being reviewed. We will contact the Project Manager if we need any further information.</h2>
+        <div th:if="${model.status.name() == 'SUBMITTED'}" class="message-alert">
+            <h2 class="govuk-heading-s">This document has been submitted and is being reviewed by us.</h2>
         </div>
 
-        <th:block th:if="${model.status == 'UNSET'}">
+        <th:block th:if="${model.status.name() == 'UNSET'}">
             <th:block th:if="${model.projectManager}">
                 <p class="govuk-body">You must upload and submit the document to be reviewed by us.</p>
             </th:block>
@@ -96,12 +88,15 @@
         </div>
 
         <th:block th:if="${model.isShowSubmitDocumentsButton()}">
-            <a id="submitDocument" name="submitDocument" th:href="@{/project/{id}/document/config/{documentConfigId}/submit(documentConfigId=${model.documentConfigId}, id=${model.projectId})}" class="govuk-button govuk-!-margin-top-6"
-               data-js-modal="modal-partner-document">Submit document</a>
+            <form th:action="@{/project/{id}/document/config/{documentConfigId}(documentConfigId=${model.documentConfigId}, id=${model.projectId})}" method="post">
+              <div>
+                <button data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit">Submit</button>
+              </div>
+            </form>
         </th:block>
 
          <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
-             <button disabled="disabled" class="govuk-button govuk-!-margin-top-6">Submit document</button>
+             <button disabled="disabled" class="govuk-button govuk-!-margin-top-6">Submit</button>
          </th:block>
 
          <th:block th:if="${!model.isShowSubmitDocumentsButton() && !model.isShowDisabledSubmitDocumentsButton()}">

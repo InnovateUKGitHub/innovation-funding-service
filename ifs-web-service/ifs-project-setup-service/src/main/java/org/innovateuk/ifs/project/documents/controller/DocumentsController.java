@@ -8,12 +8,10 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
-import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +30,6 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
@@ -51,17 +48,16 @@ public class DocumentsController {
     @Autowired
     private DocumentsRestService documentsRestService;
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DOCUMENTS_SECTION')")
     @GetMapping("/all")
     public String viewAllDocuments(@PathVariable("projectId") long projectId, Model model,
                                    UserResource loggedInUser) {
 
-        model.addAttribute("model", populator.populateAllDocuments(projectId));
+        model.addAttribute("model", populator.populateAllDocuments(projectId, loggedInUser));
         return "project/documents-all";
     }
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DOCUMENTS_SECTION')")
     @GetMapping("/config/{documentConfigId}")
     public String viewDocument(@PathVariable("projectId") long projectId,
                                @PathVariable("documentConfigId") long documentConfigId,
@@ -78,8 +74,7 @@ public class DocumentsController {
         return "project/document";
     }
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'EDIT_DOCUMENTS_SECTION')")
     @PostMapping(value = "/config/{documentConfigId}", params = "uploadDocument")
     public String uploadDocument(@PathVariable("projectId") long projectId,
                                  @PathVariable("documentConfigId") long documentConfigId,
@@ -112,8 +107,7 @@ public class DocumentsController {
         return format("redirect:/project/%s/document/config/%s", projectId, documentConfigId);
     }
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DOCUMENTS_SECTION')")
     @GetMapping("/config/{documentConfigId}/download")
     @ResponseBody
     public ResponseEntity<ByteArrayResource> downloadDocument(@PathVariable("projectId") long projectId,
@@ -133,8 +127,7 @@ public class DocumentsController {
         }
     }
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'EDIT_DOCUMENTS_SECTION')")
     @PostMapping(value = "/config/{documentConfigId}", params = "deleteDocument")
     public String deleteDocument(@PathVariable("projectId") long projectId,
                                  @PathVariable("documentConfigId") long documentConfigId,
@@ -148,10 +141,8 @@ public class DocumentsController {
                 () -> documentsRestService.deleteDocument(projectId, documentConfigId));
     }
 
-    //TODO - XXX - Permissions
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @PostMapping(value = "/config/{documentConfigId}/submit") // TODO - XXX - Revert back to the below to use param
-    //@PostMapping(value = "/config/{documentConfigId}", params = "submitDocument")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'EDIT_DOCUMENTS_SECTION')")
+    @PostMapping(value = "/config/{documentConfigId}", params = "submitDocument")
     public String submitDocument(@PathVariable("projectId") long projectId,
                                  @PathVariable("documentConfigId") long documentConfigId,
                                  @ModelAttribute(FORM_ATTR) DocumentForm form,
