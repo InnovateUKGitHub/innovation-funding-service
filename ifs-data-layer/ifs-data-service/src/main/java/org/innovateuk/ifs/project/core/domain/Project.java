@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -86,6 +87,7 @@ public class Project implements ProcessActivity {
     //TODO IFS-471 use workflow for approving other documents
     @NotNull
     @Enumerated(STRING)
+    @OtherDocsWindDown
     private ApprovalType otherDocumentsApproved = ApprovalType.UNSET;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -278,10 +280,12 @@ public class Project implements ProcessActivity {
         this.grantOfferLetter = grantOfferLetter;
     }
 
+    @OtherDocsWindDown
     public ApprovalType getOtherDocumentsApproved() {
         return otherDocumentsApproved;
     }
 
+    @OtherDocsWindDown
     public void setOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
         this.otherDocumentsApproved = otherDocumentsApproved;
     }

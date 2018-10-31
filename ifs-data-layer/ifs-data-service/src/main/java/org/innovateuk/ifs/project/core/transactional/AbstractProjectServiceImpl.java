@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.core.transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
@@ -95,6 +96,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         return projectUserRepository.findByProjectId(projectId);
     }
 
+    @OtherDocsWindDown
     protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
         if (APPROVED.equals(project.getOtherDocumentsApproved())) {
             return COMPLETE;

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.status.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
@@ -120,6 +121,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 originQuery);
     }
 
+    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     private SectionStatusList getSectionStatuses(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean isProjectManager) {
 
         CompetitionResource competition = basicDetails.getCompetition();

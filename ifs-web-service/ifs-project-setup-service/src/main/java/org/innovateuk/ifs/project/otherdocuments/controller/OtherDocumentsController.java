@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.otherdocuments.controller;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -34,6 +35,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/project/{projectId}/partner/documents")
+@OtherDocsWindDown
 public class OtherDocumentsController {
 
     private static final String FORM_ATTR = "form";

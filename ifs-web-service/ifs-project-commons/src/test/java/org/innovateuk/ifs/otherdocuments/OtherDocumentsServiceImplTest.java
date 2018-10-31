@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.otherdocuments;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.otherdocuments.service.OtherDocumentsRestService;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
+@OtherDocsWindDown
 public class OtherDocumentsServiceImplTest {
 
     @InjectMocks

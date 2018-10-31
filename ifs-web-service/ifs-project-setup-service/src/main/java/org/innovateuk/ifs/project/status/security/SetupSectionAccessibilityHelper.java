@@ -273,6 +273,7 @@ public class SetupSectionAccessibilityHelper {
         return NOT_ACCESSIBLE;
     }
 
+    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     private boolean documentsApproved() {
        return setupProgressChecker.isOtherDocumentsApproved() || setupProgressChecker.isDocumentsApproved();
     }

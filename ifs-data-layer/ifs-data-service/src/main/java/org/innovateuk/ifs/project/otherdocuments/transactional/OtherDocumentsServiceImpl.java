@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -40,6 +41,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 /**
  * Transactional and secure service for Project Other Documents processing work
  */
+@OtherDocsWindDown
 public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implements OtherDocumentsService {
 
     @Autowired

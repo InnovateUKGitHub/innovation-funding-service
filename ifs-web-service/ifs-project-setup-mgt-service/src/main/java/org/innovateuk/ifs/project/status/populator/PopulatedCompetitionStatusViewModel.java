@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.populator;
 
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
@@ -42,6 +43,7 @@ public class PopulatedCompetitionStatusViewModel {
                 projectStatus -> projectStatusPermission(new SetupSectionInternalUser(projectStatus), user));
     }
 
+    @OtherDocsWindDown(additionalComments = "Remove reference to otherDocuments")
     private StatusPermission projectStatusPermission(SetupSectionInternalUser internalUser, UserResource userResource) {
         return new StatusPermission(
                 internalUser.canAccessCompaniesHouseSection().isAccessibleOrNotRequired(),

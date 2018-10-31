@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.documentation;
 
 import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.project.otherdocuments.controller.OtherDocumentsController;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
@@ -25,6 +26,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@OtherDocsWindDown
 public class OtherDocumentsControllerDocumentation extends BaseFileControllerMockMVCTest<OtherDocumentsController> {
 
     @Mock

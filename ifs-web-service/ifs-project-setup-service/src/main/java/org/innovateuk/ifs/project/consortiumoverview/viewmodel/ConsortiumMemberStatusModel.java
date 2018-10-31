@@ -3,7 +3,9 @@ package org.innovateuk.ifs.project.consortiumoverview.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 
+@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public abstract class ConsortiumMemberStatusModel {
     String name;
     ConsortiumPartnerStatus projectDetailsStatus;
