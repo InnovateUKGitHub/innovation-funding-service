@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<OtherDocumentsPermissionRules> {
     private ProjectProcess projectProcess;
 

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.status.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -109,6 +110,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     private Application application;

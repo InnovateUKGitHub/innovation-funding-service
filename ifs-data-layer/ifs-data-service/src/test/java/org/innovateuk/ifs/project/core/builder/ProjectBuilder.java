@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.core.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -95,6 +96,7 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((orgs, project) -> project.setPartnerOrganisations(orgs), partnerOrganisations);
     }
 
+    @OtherDocsWindDown
     public ProjectBuilder withOtherDocumentsApproved(ApprovalType... approved){
         return withArray((approval, project) -> project.setOtherDocumentsApproved(approval), approved);
     }
@@ -103,6 +105,7 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray ((date, project) -> project.setOfferSubmittedDate(date), dates);
     }
 
+    @OtherDocsWindDown
     public ProjectBuilder withOtherDocumentsSubmittedDate(ZonedDateTime date) {
         return with (project -> project.setDocumentsSubmittedDate(date));
     }

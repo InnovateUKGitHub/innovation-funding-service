@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.status.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.status.controller.StatusController;
@@ -38,6 +39,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
     private StatusService statusServiceMock;
 
     @Test
+    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     public void getCompetitionStatus() throws Exception {
         Long competitionId = 1L;
         String applicationSearchString = "12";
@@ -128,6 +130,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                 ));
     }
 
+    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     private ProjectTeamStatusResource buildTeamStatus() {
         ProjectPartnerStatusResource projectLeadStatusResource = newProjectPartnerStatusResource().withIsLeadPartner(true).build();
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);
