@@ -15,7 +15,7 @@ ${lead_rto_email}                      oscarRTO@innovateuk.com
 *** Test Cases ***
 Maximum funding level available for lead business
     [Documentation]    IFS-338
-    [Tags]
+    [Tags]  HappyPath
     Given we create a new user                               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  Oscar  business  ${lead_business_email}  ${BUSINESS_TYPE_ID}
     When the user clicks the button/link                     link = Untitled application (start here)
     And the user clicks the button/link                      jQuery = button:contains("Save and return to application overview")
@@ -53,11 +53,11 @@ Invite existing academic collaborator
     And logout as user
     And the user accepts the invite to collaborate            ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     Then the correct funding is displayed to academic user
-    [Teardown]  logout as user
 
 Maximum funding level available for RTO lead
     [Documentation]  IFS-338
-    [Tags]
+    [Tags]  HappyPath
+    [Setup]  logout as user
     Given we create a new user                                              ${openCompetitionRTO}  Smith  rto  ${lead_rto_email}    ${RTO_TYPE_ID}
     When the user clicks the button/link                                    link = Untitled application (start here)
     And the user clicks the button/link                                     jQuery = button:contains("Save and return to application overview")
@@ -217,7 +217,7 @@ the user accepts the invite to collaborate
 
 the correct funding is displayed to academic user
     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  Page Should Contain    Bath Spa University
-    Run Keyword If   '${status}' == 'PASS'    Run Keywords   the user selects the radio button     selectedOrganisationId   125
+    Run Keyword If   '${status}' == 'PASS'    Run Keywords   the user clicks the button twice      jQuery = label:contains("Bath Spa")
     ...                              AND                     the user clicks the button/link       jQuery = .govuk-button:contains("Save and continue")
     the user clicks the button/link   link = Your finances
     the user should see the element   jQuery = td:contains("100%")
@@ -226,6 +226,7 @@ the academic user marks your project costs as complete
     the user clicks the button/link        link = Your project costs
     the user enters text to a text field   css = input[name$="tsb_reference"]  academic costs
     the user uploads the file              css = .upload-section input  ${5mb_pdf}
+    then the user selects the checkbox     agree-terms-page
     wait for autosave
     the user clicks the button/link        jQuery = button:contains("Mark as complete")
 

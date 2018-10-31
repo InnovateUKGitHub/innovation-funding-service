@@ -21,10 +21,12 @@ Other funding validation message
     And the user selects the checkbox                   termsAgreed
     When The user clicks the button/link                jQuery = button:contains("Mark as complete")
     Then The user should see a field and summary error  Please tell us if you have received any other funding for this project.
+    [Teardown]  the user clicks the button/link         link = Your finances
 
 Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
-    [Tags]
+    [Tags]  HappyPath
+    [Setup]  the user clicks the button/link   link = Your funding
     Given the user selects the radio button    other_funding-otherPublicFunding-    Yes
     Then the user should see the element       css = [name^="finance-grantclaimpercentage"]
     And the user should see the element        css = [name*=other_funding-fundingSource]
@@ -49,9 +51,10 @@ Funding level validations
 
 Other funding validations
     [Documentation]    INFUND-6794
-    [Tags]
+    [Tags]  HappyPath
     Given the user enters text to a text field          css = [name*=other_funding-securedDate]    20
     And the user enters text to a text field            css = [name*=other_funding-fundingAmount]    txt
+    And the user selects the checkbox                   termsAgreed
     And the user clicks the button/link                 jQuery = button:contains("Mark as complete")
     And The user should see a field and summary error   Invalid secured date
     And The user should see a field and summary error   Funding source cannot be blank.
@@ -67,7 +70,7 @@ If funding is complete. application details has a warning message
     [Documentation]    INFUND-6895
     ...
     ...    INFUND-6823
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page   ${DASHBOARD_URL}
     And the user clicks the button/link    link = ${applicationName}
     When the user clicks the button/link   link = Research category
@@ -76,7 +79,7 @@ If funding is complete. application details has a warning message
 
 Changing application details sets funding level to incomplete
     [Documentation]    INFUND-6895
-    [Tags]
+    [Tags]  HappyPath
     Given the user clicks the button twice    css = label[for="researchCategory2"]
     And the user clicks the button/link       id = application-question-complete
     And the user navigates to Your-finances page  ${applicationName}

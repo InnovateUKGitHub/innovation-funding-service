@@ -128,8 +128,17 @@ class ApplicationInviteNotificationService {
             notificationArguments.put("leadApplicantTitle", "");
         }
 
+        notificationArguments.put("participationAction", getParticipationAction(invite));
+
         Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_COLLABORATOR, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
+    }
+
+    private String getParticipationAction(ApplicationInvite invite) {
+        boolean leadOrganisation =
+                invite.getInviteOrganisation().getOrganisation() != null &&
+                invite.getTarget().getLeadOrganisationId().equals(invite.getInviteOrganisation().getOrganisation().getId());
+        return leadOrganisation ? "contribute" : "collaborate";
     }
 
     private String getInviteUrl(String baseUrl, ApplicationInvite invite) {
