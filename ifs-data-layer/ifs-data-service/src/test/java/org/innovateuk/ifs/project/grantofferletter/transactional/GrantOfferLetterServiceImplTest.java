@@ -591,7 +591,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         Competition comp = newCompetition().withName("Test Comp<").build();
         org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
-                .newProjectDocument()
+                .newCompetitionProjectDocument()
                 .withCompetition(comp)
                 .withTitle("Risk Register")
                 .withGuidance("Guidance for Risk Register")
@@ -640,7 +640,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         Competition comp = newCompetition().withName("Test Comp").build();
         org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
-                .newProjectDocument()
+                .newCompetitionProjectDocument()
                 .withCompetition(comp)
                 .withTitle("Risk Register")
                 .withGuidance("Guidance for Risk Register")

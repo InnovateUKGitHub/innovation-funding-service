@@ -13,7 +13,6 @@ import org.innovateuk.ifs.project.documents.viewmodel.AllDocumentsViewModel;
 import org.innovateuk.ifs.project.documents.viewmodel.DocumentViewModel;
 import org.innovateuk.ifs.project.resource.BasicDetails;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
