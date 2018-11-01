@@ -55,7 +55,6 @@ Invite existing academic collaborator
     And logout as user
     And the user accepts the invite to collaborate            ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
 
-
 Maximum funding level available for RTO lead
     [Documentation]  IFS-338
     [Tags]  HappyPath

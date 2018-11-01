@@ -159,14 +159,14 @@ the user adds more rows in other funding
     the user moves focus to the element     jQuery = button:contains("Mark as complete")
     wait for autosave
     the user clicks the button/link         jQuery = button:contains("Add another source of funding")
-    The user should see the element         css = tr:nth-of-type(2) input[name*=source]
+    the user should see the element         css = tr:nth-of-type(2) input[name*=source]
     the user enters text to a text field    css = tr:nth-of-type(2) input[name*=source]  wealthy uncle
     the user enters text to a text field    css = tr:nth-of-type(2) input[name*=date]  02-${nextyear}
     the user enters text to a text field    css = tr:nth-of-type(2) input[name*=fundingAmount]  15000
     the user moves focus to the element     jQuery = button:contains("Mark as complete")
     wait for autosave
     the user clicks the button/link         jQuery = button:contains("Add another source of funding")
-    The user should see the element         css = tr:nth-of-type(3) input[name*=source]
+    the user should see the element         css = tr:nth-of-type(3) input[name*=source]
     the user enters text to a text field    css = tr:nth-of-type(3) input[name*=source]  wealthy grandma
     the user enters text to a text field    css = tr:nth-of-type(3) input[name*=date]  11-${nextyear}
     the user enters text to a text field    css = tr:nth-of-type(3) input[name*=fundingAmount]  200000
