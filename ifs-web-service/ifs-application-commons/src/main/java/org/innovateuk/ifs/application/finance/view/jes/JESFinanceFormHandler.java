@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
+import org.innovateuk.ifs.application.forms.ApplicationFormUtil;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -54,7 +55,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     public static final String NON_NEGATIVE_MESSAGE = "validation.standard.non.negative.integer.format";
     public static final String BLANK_FIELD_MESSAGE = "validation.field.must.not.be.blank";
     public static final String TSB_REFERENCE = "tsb_reference";
-    public static final String MARK_SECTION_AS_COMPLETE = "mark_section_as_complete";
+    public static final String MARK_SECTION_AS_COMPLETE = ApplicationFormUtil.MARK_SECTION_AS_COMPLETE;
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
