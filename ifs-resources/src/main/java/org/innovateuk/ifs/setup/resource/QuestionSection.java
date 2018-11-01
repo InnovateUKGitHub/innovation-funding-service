@@ -4,7 +4,8 @@ import static java.util.Arrays.stream;
 
 public enum QuestionSection {
     APPLICATION_QUESTIONS("Application questions"),
-    PROJECT_DETAILS("Project details");
+    PROJECT_DETAILS("Project details"),
+    FINANCES("Finances");
 
     private final String name;
 
