@@ -80,7 +80,7 @@ Academic partner finance section
     Then The user should not see the element        link = Not requesting funding
     And the user should see the element             link = Your project costs
     And the user should not see the element         link = Your organisation
-    And the user should see the element         link = Your funding
+    And the user should see the element             link = Your funding
     And the user should not see the element         link = application details
 
 Academic partner can upload file for field J-es PDF

@@ -43,7 +43,6 @@ Select NO Other Funding and mark as complete should be possible
     [Documentation]    INFUND-2214
     [Tags]
     Given the user selects the radio button     requestingFunding   false
-    #And the user enters text to a text field    css = [name^="grantClaimPercentage"]  50
     When the user selects the radio button      otherFunding  false
     And the user selects the checkbox           agree-terms-page
     Then the user clicks the button/link        jQuery = button:contains("Mark as complete")

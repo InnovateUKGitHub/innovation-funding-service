@@ -257,7 +257,6 @@ the user checks Your Funding section
     the user clicks the button/link  link = Your funding
     ${Research_category_selected} =   run keyword and return status without screenshots    Element Should Not Be Visible   jQuery = a:contains("research category")
     Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
-    #Heretolink
     Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}
 
 the user selects research area
@@ -442,8 +441,7 @@ the user fills in the address info
 the user marks your funding section as complete
     the user selects the radio button     requestingFunding   true
     the user enters text to a text field  css = [name^="grantClaimPercentage"]  30
-    the user selects the radio button                    otherFunding  false
-    #the user clicks the button twice      jQuery = label[for$="otherPublicFunding-no"]:contains("No")
+    the user selects the radio button     otherFunding  false
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
 

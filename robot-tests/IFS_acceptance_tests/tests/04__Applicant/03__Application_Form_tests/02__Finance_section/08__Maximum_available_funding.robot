@@ -68,7 +68,7 @@ Maximum funding level available for RTO lead
     And the user fills in the organisation information                      ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs                                 labour costs  n/a
     When the user clicks the button/link                                    link = Your funding
-    the user marks your funding section as complete
+    And the user marks your funding section as complete
     [Teardown]  the user clicks the button/link                             link = Application overview
 
 Editing research category does not reset your funding

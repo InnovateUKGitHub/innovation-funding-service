@@ -77,7 +77,7 @@ Your Finance includes Finance summary table for lead applicant
 Your Finance includes Finance summary table for collaborator
     [Documentation]    INFUND-6893
     [Tags]
-    [Setup]  log in as a different user           &{collaborator2_credentials}
+    [Setup]  log in as a different user            &{collaborator2_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     Then the finance summary table in Your Finances has correct values for collaborator  £ 990  0  0  0  990
     And The user clicks the button/link            link = Return to application overview
@@ -296,15 +296,15 @@ the finance summary table in Your Finances has correct values for lead
 the finance summary table in Your Finances has correct values for collaborator
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}  #£ 990
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}  #0%
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}  #297
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  ${other_funding}   #0
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  ${other_funding}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}  #693
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
 
 the contribution to project and funding sought should be 0 and not a negative number
     the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
@@ -419,8 +419,8 @@ the user navigates to the finances of the application
     the user expands the section     Finances summary
 
 the academic user marks finances as complete
-    log in as a different user                &{collaborator2_credentials}
-    the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    log in as a different user                 &{collaborator2_credentials}
+    the user navigates to Your-finances page   ${OPEN_COMPETITION_APPLICATION_2_NAME}
     the user clicks the button/link            link = Your project costs
     the user selects the checkbox              termsAgreed
     the user clicks the button/link            jQuery = button:contains("Mark as complete")
