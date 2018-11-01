@@ -22,12 +22,12 @@ Other funding client side
     [Documentation]    INFUND-2214
     [Tags]
     When the user selects the radio button   otherFunding  true
-    And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  e
+    And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  e   #TODO Raise ticket?
     Then the user should see the element     css = #other-funding-table[aria-hidden="false"]
     # This line should be after css = label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
     When the user should see a field error   Enter a funding source.
     Then the user should see a field error   Enter date secured.
-    And the user should see a field error    Enter funding amount.
+    And the user should see a field error    This field can only accept whole numbers.
 
 Other funding server side
     [Documentation]    INFUND-2214
@@ -43,7 +43,6 @@ Select NO Other Funding and mark as complete should be possible
     [Documentation]    INFUND-2214
     [Tags]
     Given the user selects the radio button     requestingFunding   false
-    #And the user enters text to a text field    css = [name^="grantClaimPercentage"]  50
     When the user selects the radio button      otherFunding  false
     And the user selects the checkbox           agree-terms-page
     Then the user clicks the button/link        jQuery = button:contains("Mark as complete")
@@ -237,7 +236,7 @@ Funding level server side
     [Setup]  the user clicks the button/link     link = Your finances
     Given the user clicks the button/link        link = Your funding
     And the user clicks the button/link          jQuery = button:contains("Edit your funding")
-    the user selects the radio button            requestingFunding   true
+    And the user selects the radio button            requestingFunding   true
     When the user enters text to a text field    css = [name^="grantClaimPercentage"]  71
     And the user selects the checkbox            agree-terms-page
     And the user clicks the button/link          jQuery = button:contains("Mark as complete")
