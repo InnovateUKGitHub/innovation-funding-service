@@ -15,6 +15,7 @@ public class ProjectResource {
 
     private Long id;
     private Long application;
+    private Long competition;
     private LocalDate targetStartDate;
     private AddressResource address;
     private String name;
@@ -101,6 +102,14 @@ public class ProjectResource {
 
     public void setApplication(Long application) {
         this.application = application;
+    }
+
+    public Long getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Long competition) {
+        this.competition = competition;
     }
 
     public ZonedDateTime getDocumentsSubmittedDate() {

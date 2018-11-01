@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -56,9 +54,6 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     private OrganisationService organisationService;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private CompetitionService competitionService;
 
     @Override
@@ -72,8 +67,7 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
 
     private ServiceResult<SpendProfileCostCategorySummaries> createCostCategorySummariesWithCostCategoryType(
             Long projectId, Long organisationId, ProjectResource project, OrganisationResource organisation, ProjectFinanceResource finances) {
-        Application application = applicationRepository.findByProjectId(projectId);
-        CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition().getId()).getSuccess();
+        CompetitionResource competition = competitionService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean useAcademicFinances = financeUtil.isUsingJesFinances(competition, organisation.getOrganisationType());
 
         return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(projectId, organisationId).andOnSuccessReturn(
