@@ -155,8 +155,7 @@ the funding section has been reset including funding level
     the user should not see the text in the element    css = [name*=source]    Lottery funding
     the user should not see the text in the element    css = [name*=date]    12-2008
     the user should not see the text in the element    css = [name*=fundingAmount]    20000
-    the user should see that the checkbox is disabled  agree-terms-page
-    #the checkbox should not be selected                agree-terms-page   #termsAgreed
+    Selenium2Library.Checkbox Should Not Be Selected   termsAgreed
 
 the user marks the 'your funding' section as incomplete again
     the user clicks the button/link    link = Your funding

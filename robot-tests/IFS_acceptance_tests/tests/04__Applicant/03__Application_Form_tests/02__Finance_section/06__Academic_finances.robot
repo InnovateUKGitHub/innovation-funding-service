@@ -32,7 +32,6 @@ Academic finance validations
     When the user navigates to Your-finances page    Academic robot test application
     And the user clicks the button/link              link = Your project costs
     And the applicant enters invalid inputs
-    #And the element should be disabled               id = mark-all-as-complete
     And Mark academic finances as complete
     And the user should see the element              css = .govuk-error-summary__list
 
@@ -103,7 +102,6 @@ Academic finances JeS link showing
     [Tags]
     [Setup]    log in as a different user            ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to Your-finances page    Academic robot test application
-    #Then the user should not see the element         link = Your funding
     And the user should see correct grant percentage
     When the user clicks the button/link             link = Your project costs
     Then the user can see JeS details
@@ -120,6 +118,8 @@ Mark all as complete
     And the user selects the checkbox              termsAgreed
     When the user clicks the button/link           jQuery = button:contains("Mark as complete")
     And the user enters the project location
+    And the user clicks the button/link               link = Your funding
+    And the user marks your funding section as complete
     Then the user should see the text in the page  Your finances
     And the user navigates to the finance overview of the academic
     And the user should see the element            css = .finance-summary tr:nth-of-type(2) img[src*="/images/ifs-images/icons/icon-tick"]
@@ -210,7 +210,7 @@ Mark academic finances as complete
 
 the user should see correct grant percentage
     the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
-    the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
+    the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  0%
 
 The user marks the academic application finances as incomplete
     the user navigates to Your-finances page  Academic robot test application

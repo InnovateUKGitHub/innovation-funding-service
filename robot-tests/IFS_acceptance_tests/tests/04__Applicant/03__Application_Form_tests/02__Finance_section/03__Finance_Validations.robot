@@ -27,7 +27,7 @@ Other funding client side
     # This line should be after css = label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
     When the user should see a field error   Enter a funding source.
     Then the user should see a field error   Enter date secured.
-    And the user should see a field error    Enter funding amount.
+    And the user should see a field error    This field can only accept whole numbers.
 
 Other funding server side
     [Documentation]    INFUND-2214
