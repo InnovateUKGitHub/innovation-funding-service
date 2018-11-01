@@ -27,7 +27,7 @@ public class InnovationAreaAjaxController {
     private CategoryRestService categoryRestService;
 
     /* AJAX Function */
-    @ZeroDowntime(reference = "IFS-4662", description = "remove /getInnovationArea/{innovationSectorId")
+    @ZeroDowntime(reference = "IFS-4701", description = "remove /getInnovationArea/{innovationSectorId")
     @GetMapping({"/getInnovationArea/{innovationSectorId}", "/get-innovation-areas/{innovationSectorId}"})
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {

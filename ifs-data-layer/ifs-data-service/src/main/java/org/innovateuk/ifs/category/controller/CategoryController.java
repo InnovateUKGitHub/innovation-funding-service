@@ -25,7 +25,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @ZeroDowntime(reference = "IFS-4662", description = "remove findInnovationAreas")
+    @ZeroDowntime(reference = "IFS-4701", description = "remove findInnovationAreas")
     @GetMapping({"/findInnovationAreas", "find-innovation-areas"})
     public RestResult<List<InnovationAreaResource>> findInnovationAreas() {
         return categoryService.getInnovationAreas().toGetResponse();
@@ -42,19 +42,19 @@ public class CategoryController {
         return simpleFilter(innovationAreaResources, InnovationAreaResource::isNotNone);
     }
 
-    @ZeroDowntime(reference = "IFS-4662", description = "remove findInnovationSectors")
+    @ZeroDowntime(reference = "IFS-4701", description = "remove findInnovationSectors")
     @GetMapping({"/findInnovationSectors", "find-innovation-sectors"})
     public RestResult<List<InnovationSectorResource>> findInnovationSectors() {
         return categoryService.getInnovationSectors().toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-4662", description = "remove findResearchCategories")
+    @ZeroDowntime(reference = "IFS-4701", description = "remove findResearchCategories")
     @GetMapping({"/findResearchCategories", "find-research-categories"})
     public RestResult<List<ResearchCategoryResource>> findResearchCategories() {
         return categoryService.getResearchCategories().toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-4662", description = "remove findByInnovationSector")
+    @ZeroDowntime(reference = "IFS-4701", description = "remove findByInnovationSector")
     @GetMapping({"/findByInnovationSector/{sectorId}", "/find-by-innovation-sector/{sectorId}"})
     public RestResult<List<InnovationAreaResource>> findInnovationAreasBySector(@PathVariable("sectorId") final long sectorId){
         return categoryService.getInnovationAreasBySector(sectorId).toGetResponse();
