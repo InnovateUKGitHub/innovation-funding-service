@@ -19,26 +19,7 @@ repoToScan = str(sys.argv[3])
 commitDepth = str(sys.argv[4])
 whiteList = str(sys.argv[5])
 breakOnSuspicious = int(sys.argv[6])
-
 pathToLogs = 'log.json'
-
-subprocess.call(["rm",pathToLogs])
-gitRobProcess = subprocess.Popen([ "./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", pathToLogs, gitHubUserName], stdout=subprocess.PIPE, shell=True)
-
-print("Please wait for GitRob to finish scanning...")
-
-gitRobRunning = True
-byteOfKillWord = b'Ctrl+C'
-
-for line in gitRobProcess.stdout:
-    if byteOfKillWord in line:
-        gitRobProcess.kill()
-        break
-
-with open(pathToLogs) as data_file:
-    data_loaded = json.load(data_file)
-
-pp = pprint.PrettyPrinter(indent=2)
 
 
 class Colors:
@@ -46,6 +27,29 @@ class Colors:
     Warning = '\033[93m'
     Fail = '\033[91m'
 
+
+gitRobProcess = subprocess.Popen([ "./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", pathToLogs, gitHubUserName], stdout=subprocess.PIPE)
+
+print("Please wait for GitRob to finish scanning...")
+
+gitRobRunning = True
+byteOfKillWord = b'Ctrl+C'
+dot = ""
+
+while gitRobRunning:
+    for line in gitRobProcess.stdout:
+        if byteOfKillWord in line:
+            gitRobRunning = False
+            gitRobProcess.kill()
+            break
+        else:
+            dot += "."
+            print(dot)
+
+with open(pathToLogs) as data_file:
+    data_loaded = json.load(data_file)
+
+pp = pprint.PrettyPrinter(indent=2)
 
 anySuspicious = 0
 
