@@ -28,7 +28,7 @@ ${customQuestion}   How innovative is your project?
 *** Test Cases ***
 Comp Admin Creates Competitions where Research can lead
     [Documentation]  IFS-1012 IFS-182 IFS-2832
-    [Tags]  CompAdmin
+    [Tags]  CompAdmin  HappyPath
     # In this test case we also check that we can remove the Project details questions in Comp Setup.
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
     Then The competition admin creates a competition for  ${ACADEMIC_TYPE_ID}  ${compResearch}  Research
@@ -36,13 +36,13 @@ Comp Admin Creates Competitions where Research can lead
 Requesting the id of this Competition
     [Documentation]  IFS-182
     ...   retrieving the id of the competition so that we can use it in urls
-    [Tags]  MySQL
+    [Tags]  MySQL  HappyPath
     ${reseachCompId} =  get comp id from comp title  ${compResearch}
     Set suite variable  ${reseachCompId}
 
 The Applicant is able to apply to the competition once is Open and see the correct Questions
     [Documentation]  IFS-182 IFS-2832  IFS-4046
-    [Tags]  MySQL
+    [Tags]  MySQL  HappyPath
     [Setup]  the competition moves to Open state  ${reseachCompId}
     Given log in as a different user              &{collaborator2_credentials}
     And logged in user applies to competition research     ${compResearch}  2
@@ -69,7 +69,7 @@ Applicant Applies to Research leading Competition
 
 Applicant Applies to Public content leading Competition
     [Documentation]  IFS-1012  IFS-4046
-    [Tags]  Applicant  CompAdmin
+    [Tags]  Applicant  CompAdmin  HappyPath
     [Setup]  log in as a different user                   becky.mason@gmail.com  ${short_password}
     # This application is for competition Photonics for Public, which is Web test data.
     Given logged in user applies to competition public    ${openCompetitionPublicSector_name}  4
@@ -82,7 +82,7 @@ Applicant Applies to Public content leading Competition
 
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-1724
-    [Tags]  CompAdmin
+    [Tags]  CompAdmin  HappyPath
     [Setup]  log in as a different user    &{internal_finance_credentials}
     Given the competition is now in Project Setup
     Then the user is able to download the overheads file
@@ -96,7 +96,7 @@ The competition admin creates a competition for
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}  2
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility                    ${orgType}  1  true  collaborative     # 1 means 30%
@@ -104,7 +104,7 @@ The competition admin creates a competition for
     the internal user can see that the Generic competition has only one Application Question
     The user removes the Project details questions and marks the Application section as done  yes  Generic
     the user fills in the CS Assessors
-    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    # TODO IFS-4609 Uncomment when this functionality is enabled.
     #the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
     the user fills in the Public content and publishes      ${extraKeyword}

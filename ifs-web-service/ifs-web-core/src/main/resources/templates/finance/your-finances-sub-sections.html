@@ -5,7 +5,8 @@
 <th:block th:fragment="finance(model)">
     <div class="your-finances">
         <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Finances</h2>
-        <div class="message-alert">
+        <div class="message-alert"
+             th:unless="${model.competition.collaborationLevel == T(org.innovateuk.ifs.competition.resource.CollaborationLevel).SINGLE}">
             <p class="govuk-body">Only members from your organisation will be able to see a breakdown of your finances.</p>
         </div>
         <p class="govuk-body govuk-!-margin-top-6">Please complete your project finances.</p>
@@ -99,7 +100,7 @@
         </div>
     </th:block>
 
-    <th:block th:if="${model.isBusinessOrganisation()}">
+    <th:block th:if="${model.stateAidEligibility and model.businessOrganisation}">
         <div th:insert="fragments/elements :: application-agree-eligible-for-state-aid" class="agree-to-terms-container" th:unless="${model.allReadOnly}"></div>
 
         <div class="message-alert">
@@ -173,7 +174,7 @@
 </th:block>
 
 <th:block th:fragment="your_finance_summary (model)">
-    <div class="govuk-form-group" style="overflow:auto;">
+    <div class="govuk-form-group table-overflow">
         <table class="govuk-table">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
