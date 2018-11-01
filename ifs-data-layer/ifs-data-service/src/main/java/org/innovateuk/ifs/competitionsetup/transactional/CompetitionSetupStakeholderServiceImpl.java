@@ -11,6 +11,8 @@ import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.domain.StakeholderInvite;
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
+import org.innovateuk.ifs.invite.mapper.StakeholderInviteMapper;
+import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -70,6 +72,9 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     private StakeholderRepository stakeholderRepository;
 
     @Autowired
+    private StakeholderInviteMapper stakeholderInviteMapper;
+
+    @Autowired
     private UserMapper userMapper;
 
     @Value("${ifs.system.internal.user.email.domain}")
@@ -79,7 +84,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     private String webBaseUrl;
 
     private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.ukri.org";
-    private static final String WEB_CONTEXT = "/management/competition/setup/stakeholder";
+    private static final String WEB_CONTEXT = "/management/stakeholder";
 
     enum Notifications {
         STAKEHOLDER_INVITE,
@@ -196,6 +201,12 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         List<UserResource> stakeholderUsers = simpleMap(stakeholders, stakeholder -> userMapper.mapToResource(stakeholder.getUser()));
 
         return serviceSuccess(stakeholderUsers);
+    }
+
+    @Override
+    public ServiceResult<StakeholderInviteResource> getInviteByHash(String hash) {
+        StakeholderInvite stakeholderInvite = stakeholderInviteRepository.getByHash(hash);
+        return serviceSuccess(stakeholderInviteMapper.mapToResource(stakeholderInvite));
     }
 
     @Override

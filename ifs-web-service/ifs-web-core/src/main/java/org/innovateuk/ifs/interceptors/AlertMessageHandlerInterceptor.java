@@ -2,6 +2,7 @@ package org.innovateuk.ifs.interceptors;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.alert.resource.AlertResource;
@@ -27,7 +28,7 @@ public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
 
     private static final String ALERT_MESSAGES = "alertMessages";
 
-    private static final Cache<String, List<AlertResource>> ALERT_CACHE
+    private Cache<String, List<AlertResource>> alertCache
             = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).build();
 
     @Autowired
@@ -43,8 +44,8 @@ public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
     private void addAlertMessages(ModelAndView modelAndView) {
         List<AlertResource> alerts;
         try {
-            alerts = ALERT_CACHE.get(ALERT_MESSAGES, () -> alertRestService.findAllVisible().getSuccess());
-        } catch (ExecutionException e) {
+            alerts = alertCache.get(ALERT_MESSAGES, () -> alertRestService.findAllVisible().getSuccess());
+        } catch (ExecutionException | UncheckedExecutionException e) {
             LOG.error("exception thrown getting alert messages", e);
             alerts = emptyList();
         }
@@ -53,4 +54,5 @@ public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
             modelAndView.getModelMap().addAttribute(ALERT_MESSAGES, alerts);
         }
     }
+
 }

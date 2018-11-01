@@ -287,12 +287,34 @@ function pushAnonymisedDatabaseDumpImages() {
 }
 
 function blockUntilServiceIsUp() {
+    while oc get pods ${SVC_ACCOUNT_CLAUSE} 2>&1 | grep "No resources found."; do
+        echo "No pods are deployed yet.."
+        sleep 15
+    done
+
     UNREADY_PODS=1
     while [ ${UNREADY_PODS} -ne "0" ]
     do
+        if [ ${DEPLOY_PODS} -eq "0" ]; then
+            if [ ${ERRORRED_PODS} -ne "0" ]; then
+                echo "$ERRORRED_PODS pods stuck in error state.."
+                exit 1
+            fi
+        else
+            if [ ${ERRORRED_DEPLOY_PODS} -ne "0" ]; then
+                echo "$ERRORRED_DEPLOY_PODS deploy pods stuck in error state.."
+                exit 1
+            fi
+        fi
+
         UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
+        ERRORRED_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep Error | wc -l)
+        DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | wc -l)
+        ERRORRED_DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | grep Error | wc -l)
+
         oc get pods ${SVC_ACCOUNT_CLAUSE}
-        echo "$UNREADY_PODS pods still not ready"
+        echo "$UNREADY_PODS pods still not ready.."
+        
         sleep 5s
     done
     oc get routes ${SVC_ACCOUNT_CLAUSE}
@@ -309,6 +331,10 @@ function scaleFinanceDataService() {
 
 function scaleSurveyDataService() {
     oc scale dc survey-data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
+}
+
+function scaleEuDataService() {
+    oc scale dc eu-grant-registration-data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
 }
 
 function createProject() {

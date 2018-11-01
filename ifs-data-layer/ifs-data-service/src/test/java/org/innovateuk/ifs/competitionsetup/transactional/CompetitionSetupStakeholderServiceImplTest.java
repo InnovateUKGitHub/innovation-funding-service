@@ -194,7 +194,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
 
         Notification sentNotification = notificationCaptor.getValue();
         assertEquals("competition1", sentNotification.getGlobalArguments().get("competitionName"));
-        assertEquals("null/management/competition/setup/stakeholder/" + savedStakeholderInvite.getHash() + "/register",
+        assertEquals("null/management/stakeholder/" + savedStakeholderInvite.getHash() + "/register",
                 sentNotification.getGlobalArguments().get("inviteUrl"));
         assertEquals(expectedName, sentNotification.getTo().get(0).getName());
         assertEquals(expectedEmail, sentNotification.getTo().get(0).getEmailAddress());

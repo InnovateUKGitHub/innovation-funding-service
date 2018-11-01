@@ -25,14 +25,14 @@ Comp Admin creates an APC competition
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
     And the user navigates to the page             ${CA_UpcomingComp}
     When the user clicks the button/link           link = Create competition
-    Then the user fills in the CS Initial details  ${apcCompetitionTitle}  ${month}  ${nextyear}  Advanced Propulsion Centre
+    Then the user fills in the CS Initial details  ${apcCompetitionTitle}  ${month}  ${nextyear}  Advanced Propulsion Centre  1
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${business_type_id}  1  true  single   # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
     And the user fills in the CS Assessors
-    # TODO IFS-4186 Uncomment when this functionality is enabled.
+    # TODO IFS-4609 Uncomment when this functionality is enabled.
     #And #the user fills in the CS Documents in other projects
     When the user clicks the button/link           link = Public content
     Then the user fills in the Public content and publishes  APC
@@ -49,6 +49,7 @@ Applicant applies to newly created APC competition
     Then logged in user applies to competition    ${apccompetitionTitle}  1
     And the applicant cannot add a collaborator to a single comp
     And the applicant sees single comp finance summary
+    And the applicant sees state aid information
 
 Applicant submits his application
     [Documentation]  IFS-2286
@@ -80,4 +81,11 @@ the applicant sees single comp finance summary
     the user clicks the button/link      link = Finances overview
     the user should see the element      jQuery = .warning-alert:contains("You have not marked your finances as complete")
     the user should not see the element  jQuery = .finance-summary th[scope = "row"]:contains("Total")
+    the user clicks the button/link      link = Application overview
+
+the applicant sees state aid information
+    the user clicks the button/link      link = Your finances
+    the user clicks the button/link      link = Your organisation
+    the user should see the element      link = eligible for state aid
+    the user clicks the button/link      link = Your finances
     the user clicks the button/link      link = Application overview
