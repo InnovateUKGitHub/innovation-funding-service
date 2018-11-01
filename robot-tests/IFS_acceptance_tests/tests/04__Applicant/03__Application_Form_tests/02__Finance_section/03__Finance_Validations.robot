@@ -22,7 +22,7 @@ Other funding client side
     [Documentation]    INFUND-2214
     [Tags]
     When the user selects the radio button   otherFunding  true
-    And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  e
+    And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  e   #TODO Raise ticket?
     Then the user should see the element     css = #other-funding-table[aria-hidden="false"]
     # This line should be after css = label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
     When the user should see a field error   Enter a funding source.

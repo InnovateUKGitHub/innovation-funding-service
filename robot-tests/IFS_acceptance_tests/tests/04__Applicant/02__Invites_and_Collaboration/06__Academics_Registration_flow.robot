@@ -39,7 +39,6 @@ Accept invitation as academic
     And the user clicks the button/link                 link = Your finances
     Then the user should see the element                link = Your project costs
     And the user should not see the element             link = Your organisation
-    #And the user should not see the element             jQuery = h3:contains("Your funding")  #Manually checking this should be displayed as the comp is business???
     When the user clicks the button/link                link = Your project costs
     Then the user should not see the text in the page   Labour
     And the user should not see an error in the page

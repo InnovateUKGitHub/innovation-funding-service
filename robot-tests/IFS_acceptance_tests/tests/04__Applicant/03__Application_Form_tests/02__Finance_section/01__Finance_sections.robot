@@ -30,34 +30,6 @@ Finance sub-sections
     [Tags]  HappyPath
     Then the user should see all the Your-Finances Sections
 
-#Not requesting funding guidance
- #   [Documentation]    INFUND-7093
-  #  [Tags]
-   # Given the user should not see the funding guidance
-    #When the user clicks the button/link                jQuery = summary span:contains("Not requesting funding")
-    #Then the user should see the funding guidance
-    #When the user clicks the button/link                jQuery = summary span:contains("Not requesting funding")
-    #Then the user should not see the funding guidance
-
-#Not requesting funding button
- #   [Documentation]    INFUND-7093
-  #  [Tags]
-   # When the user clicks the button/link                jQuery = summary span:contains("Not requesting funding")
-    #And the user clicks the button/link                 jQuery = button:contains("Not requesting funding")
-    #Then the user should see the funding guidance
-    #And the user should see the element                 jQuery = button:contains("Requesting funding")
-    #And the user should see the element                 jQuery = li:nth-of-type(3) span:contains("No action required")
-    #And the user should see the element                 jQuery = li:nth-of-type(4) span:contains("No action required")
-
-#Requesting funding button
- #   [Documentation]    INFUND-7093
-  #  [Tags]
-   # When the user clicks the button/link                jQuery = button:contains("Requesting funding")
-    #Then the user should see the element                jQuery = li:nth-of-type(2) > .task-status-incomplete
-    #And the user should not see the element             jQuery = li:nth-of-type(3) span:contains("No action required")
-    #And the user should not see the element             jQuery = li:nth-of-type(3) > .task-status-complete
-    #And the user should not see the funding guidance
-
 Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
@@ -95,7 +67,6 @@ Non-academic partner finance section
     [Tags]  HappyPath
     [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
-    #And The user should see the element     jQuery = .govuk-details__summary:contains("Not requesting funding")
     And the user should see the element     link = Your project costs
     And the user should see the element     link = Your organisation
     When the user clicks the button/link    link = Your funding
@@ -143,7 +114,6 @@ File upload mandatory for Academic partner to mark section as complete
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page    ${applicationName}
     And the user clicks the button/link               link = Your project costs
-    #And the element should be disabled                id = mark-all-as-complete
     And the user clicks the button/link               jQuery = button:contains("Remove")
     When the user selects the checkbox                termsAgreed
     And the user clicks the button/link               jQuery = button:contains("Mark as complete")

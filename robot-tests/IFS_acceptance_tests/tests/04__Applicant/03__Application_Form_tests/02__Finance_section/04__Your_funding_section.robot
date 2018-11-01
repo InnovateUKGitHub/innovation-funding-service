@@ -25,26 +25,11 @@ Other funding validation message
 Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
     [Tags]
-    #Given the user selects the radio button    other_funding-otherPublicFunding-    Yes   #Remove if not needed, update the elements
     Given the user selects the radio button    otherFunding  true
-    #Then the user should see the element       css = [name^="grantClaimPercentage"]
     And the user should see the element        css = [name*=source]
     And the user should see the element        css = [name*=date]
     And the user should see the element        css = [name*=fundingAmount]
-    #And the user should see the element        id = other_funding-otherPublicFunding- ~ label
 
-#Remove if not needed...
-    #Then the user should see the element       css = [name^="grantClaimPercentage"]
-    #And the user should see the element        css = [name*=other_funding-fundingSource]
-    #And the user should see the element        css = [name*=other_funding-securedDate]
-    #And the user should see the element        css = [name*=other_funding-fundingAmount]
-    #And the user should see the element        css = [name^="other_funding-otherPublicFunding-"] ~ label
-
-#Applicant can see maximum funding size available to them
-#    [Documentation]    INFUND-6794
-#    [Tags]
-#    The user should see the text in the page    Enter your funding level (maximum 50%)
-#
 Funding level validations
     [Documentation]    INFUND-6794
     [Tags]

@@ -59,8 +59,6 @@ Single applicant cannot submit his application to a collaborative comp
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
     And the user does not see state aid information
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
-    #Here
-    #And the user checks the override value is applied
     And the user selects research category              Feasibility studies
     And the finance overview is marked as incomplete
     And the application cannot be submited
