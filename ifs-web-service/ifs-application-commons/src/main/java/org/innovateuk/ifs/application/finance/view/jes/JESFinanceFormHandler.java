@@ -99,7 +99,10 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
-        validateLong(value, financeFormField);
+
+        if (!financeFormField.getCostName().equals(TSB_REFERENCE)) {
+            validateLong(value, financeFormField);
+        }
 
         FinanceRowHandler financeRowHandler = new AcademicFinanceHandler();
 
@@ -115,7 +118,6 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     }
 
     private ValidationMessages validateLong(String value, FinanceFormField financeFormField) {
-        if (!financeFormField.getCostName().equals(TSB_REFERENCE)) {
             // if this is a project cost we test for 1) fractional values, 2) negative values - empty values are okay.
             if (!inputIsLong(value)) {
                 return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
@@ -124,7 +126,6 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                 return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
                         financeFormField, NON_NEGATIVE_MESSAGE));
             }
-        }
         return null;
     }
 
