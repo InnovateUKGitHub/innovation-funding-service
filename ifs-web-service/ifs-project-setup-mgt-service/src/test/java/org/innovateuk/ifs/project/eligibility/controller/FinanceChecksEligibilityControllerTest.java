@@ -143,6 +143,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
 
         application = applications.get(0);
         project.setApplication(application.getId());
+        project.setCompetition(competitionId);
 
         industrialOrganisation = newOrganisationResource()
                 .withId(2L)

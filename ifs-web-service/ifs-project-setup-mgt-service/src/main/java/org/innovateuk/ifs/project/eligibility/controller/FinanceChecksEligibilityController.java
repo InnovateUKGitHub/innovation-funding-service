@@ -195,8 +195,7 @@ public class FinanceChecksEligibilityController {
                              UserResource user) {
         Long organisationType = organisationRestService.getOrganisationById(organisationId).getSuccess().getOrganisationType();
         ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
         FinanceRowItem costItem = addCost(competition, organisationType, organisationId, projectId, questionId);
         FinanceRowType costType = costItem.getCostType();
@@ -391,8 +390,7 @@ public class FinanceChecksEligibilityController {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager) financeViewHandlerProvider
                 .getProjectFinanceModelManager(competition, organisation.getOrganisationType()))
                     .getProjectFinanceChangesViewModel(true, project, organisation, userId);

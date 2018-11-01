@@ -150,6 +150,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
         application = applications.get(0);
         project.setApplication(application.getId());
+        project.setCompetition(competitionId);
 
         industrialOrganisation = newOrganisationResource()
                 .withId(2L)
@@ -194,7 +195,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
                 .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
-        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).build();
+        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).withCompetition(competitionId).build();
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
@@ -231,7 +232,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
                 .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
-        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).build();
+        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).withCompetition(competitionId).build();
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 

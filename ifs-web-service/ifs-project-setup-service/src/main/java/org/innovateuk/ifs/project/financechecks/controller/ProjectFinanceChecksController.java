@@ -381,8 +381,7 @@ public class ProjectFinanceChecksController {
         Long projectId = compositeId.getProjectId();
         Long organisationId = compositeId.getOrganisationId();
         ProjectResource projectResource = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(projectResource.getApplication());
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
         OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         Map<Long, String> attachmentLinks =
@@ -518,8 +517,7 @@ public class ProjectFinanceChecksController {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager) financeViewHandlerProvider.getProjectFinanceModelManager(competition, organisation.getOrganisationType())).getProjectFinanceChangesViewModel(false, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";

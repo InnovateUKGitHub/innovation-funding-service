@@ -107,6 +107,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
     ProjectResource project = newProjectResource().withId(projectId).withName("Project1").
             withApplication(applicationResource).
+            withCompetition(competitionId).
             withProjectUsers(singletonList(financeContactProjectUser.getId())).build();
 
     QueryResource thread;
