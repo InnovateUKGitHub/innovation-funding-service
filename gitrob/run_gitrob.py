@@ -23,19 +23,12 @@ breakOnSuspicious = int(sys.argv[6])
 pathToLogs = 'log.json'
 
 subprocess.call(["rm",pathToLogs])
-gitRobProcess = subprocess.Popen([ "./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", pathToLogs, gitHubUserName], stdout=subprocess.PIPE)
+gitRobProcess = subprocess.Popen([ "./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", pathToLogs, gitHubUserName], stdout=subprocess.PIPE, shell=True)
 
 print("Please wait for GitRob to finish scanning...")
 
 gitRobRunning = True
 byteOfKillWord = b'Ctrl+C'
-
-#while gitRobRunning:
-#    for line in gitRobProcess.stdout:
-#        if byteOfKillWord in line:
-#            gitRobRunning = False
-#            gitRobProcess.kill()
-#            break
 
 for line in gitRobProcess.stdout:
     if byteOfKillWord in line:
