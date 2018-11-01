@@ -3,9 +3,9 @@ package org.innovateuk.ifs.application.validation;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.application.validator.ApplicationDetailsMarkAsCompleteValidator;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -19,7 +19,6 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,9 +61,6 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private OrganisationService organisationService;
-
-    @Autowired
-    private LoggedInUserSupplier loggedInUserSupplier;
 
     @Override
     public List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId) {
@@ -147,7 +143,8 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
     private boolean financeFileisNotPresent(Application application) {
         List<ApplicationFinance> applicationFinances = application.getApplicationFinances();
-        Optional<OrganisationResource> organisation = organisationService.getByUserAndApplicationId(loggedInUserSupplier.get().getId(), application.getId()).getOptionalSuccessObject();
+        Optional<User> userResult = getCurrentlyLoggedInUser().getOptionalSuccessObject();
+        Optional<OrganisationResource> organisation = organisationService.getByUserAndApplicationId(userResult.get().getId(), application.getId()).getOptionalSuccessObject();
 
         if (applicationFinances == null || !organisation.isPresent()) {
             return true;
