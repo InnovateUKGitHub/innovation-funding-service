@@ -4,15 +4,12 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.login.HomeController;
 import org.innovateuk.ifs.login.form.RoleSelectionForm;
-import org.innovateuk.ifs.login.model.RoleSelectionModelPopulator;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
@@ -25,10 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController> {
-
-    @Spy
-    @InjectMocks
-    private RoleSelectionModelPopulator roleSelectionModelPopulator;
 
     @Mock
     private CookieUtil cookieUtil;

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.login.form.RoleSelectionForm;
-import org.innovateuk.ifs.login.model.RoleSelectionModelPopulator;
+import org.innovateuk.ifs.login.viewmodel.RoleSelectionViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -38,9 +38,6 @@ import static org.springframework.util.StringUtils.hasText;
 public class HomeController {
 
     @Autowired
-    private RoleSelectionModelPopulator roleSelectionModelPopulator;
-
-    @Autowired
     private CookieUtil cookieUtil;
 
     public static String getRedirectUrlForUser(UserResource user) {
@@ -59,7 +56,7 @@ public class HomeController {
         }
 
         UserResource user = (UserResource) authentication.getDetails();
-        if (user.hasMultipleRoles() && !user.hasRole(Role.IFS_ADMINISTRATOR)) {
+        if (user.userHasMultipleExternalRoles(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER)) {
             return "redirect:/roleSelection";
         }
 
@@ -72,7 +69,7 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (unauthenticated(authentication) || !user.hasMultipleRoles()) {
+        if (unauthenticated(authentication) || (!user.userHasMultipleExternalRoles(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER))){
             return "redirect:/";
         }
 
@@ -80,7 +77,7 @@ public class HomeController {
     }
 
     @PostMapping("/roleSelection")
-    public String processRole(Model model,
+    public String processRole(Model model,//
                               UserResource user,
                               @Valid @ModelAttribute("form") RoleSelectionForm form,
                               BindingResult bindingResult,
@@ -98,7 +95,7 @@ public class HomeController {
     }
 
     private String doViewRoleSelection(Model model, UserResource user) {
-        model.addAttribute("model", roleSelectionModelPopulator.populateModel(user));
+        model.addAttribute("model", new RoleSelectionViewModel(user));
         return "login/multiple-user-choice";
     }
 

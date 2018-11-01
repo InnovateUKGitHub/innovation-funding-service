@@ -102,7 +102,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
                 UserResource user = authentication.getDetails();
 
                 //multiple roles
-                if (user.hasRoles(ASSESSOR, APPLICANT)) {
+                if (user.userHasMultipleExternalRoles(ASSESSOR, APPLICANT)) {
                   String role = cookieUtil.getCookieValue(request, "role");
                   if (!role.isEmpty()) {
                       if("assessor".equals(role)) {

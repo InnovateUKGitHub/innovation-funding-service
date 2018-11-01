@@ -7,10 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -169,10 +166,6 @@ public class UserResource {
         return CollectionUtils.containsAny(internalRoles(), roles);
     }
 
-    public boolean hasRoles(Role... acceptedRoles) {
-        return roles.containsAll(newHashSet(acceptedRoles));
-    }
-
     public boolean hasAnyRoles(Role... acceptedRoles) {
         return !disjoint(roles, newHashSet(acceptedRoles));
     }
@@ -181,8 +174,12 @@ public class UserResource {
         return !disjoint(roles, newHashSet(testRoles));
     }
 
-    public boolean hasMultipleRoles(){
-        return getRoles().size() > 1;
+    public Collection hasRoles(Role... acceptedRoles){
+        return CollectionUtils.retainAll(roles, Arrays.asList(acceptedRoles));
+    }
+
+    public boolean userHasMultipleExternalRoles(Role... acceptedRoles){
+        return hasRoles(acceptedRoles).size() > 1;
     }
 
     public Long getProfileId() {
