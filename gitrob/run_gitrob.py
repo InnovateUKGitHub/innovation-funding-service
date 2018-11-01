@@ -30,7 +30,7 @@ class Colors:
     Fail = '\033[91m'
 
 
-gitRobProcess = subprocess.Popen([ "./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", pathToLogs, gitHubUserName], stdout=subprocess.PIPE)
+gitRobProcess = subprocess.Popen(["./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", pathToLogs, gitHubUserName], stdout=subprocess.PIPE)
 
 print("Please wait for GitRob to finish scanning...")
 
