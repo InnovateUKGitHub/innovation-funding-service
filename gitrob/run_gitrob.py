@@ -1,3 +1,5 @@
+#!/bin/env python
+
 import sys
 import json
 import pprint
