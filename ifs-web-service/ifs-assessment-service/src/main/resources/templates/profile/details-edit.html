@@ -115,11 +115,11 @@
                                    th:errorclass="govuk-input--error" type="text" />
                         </div>
                         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.county}')} ? 'govuk-form-group--error'">
-                            <label class="govuk-label" for="addressForm.county">County</label>
+                            <label class="govuk-label govuk-label--s" for="addressForm.county">County</label>
                             <th:block th:if="${#fields.hasErrors('*{addressForm.county}')}">
                                   <span class="govuk-error-message"  th:each="err : ${#fields.errors('addressForm.county')}" th:text="${err}"></span>
                             </th:block>
-                            <input class="govuk-input"
+                            <input class="govuk-input govuk-!-width-one-half"
                                    th:field="*{addressForm.county}"
                                    th:errorclass="govuk-input--error"
                                    type="text" />
