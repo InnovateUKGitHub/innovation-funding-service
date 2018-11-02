@@ -35,19 +35,19 @@ with open('outFile', 'a') as outFile:
 
 print("Please wait for GitRob to finish scanning...")
 
-byteOfKillWord = 'Ctrl+C'
+killWord = 'Ctrl+C'
 gitRobRunning = True
-dot = "."
+dots = Colors.OK + "."
 
-with open('outFile') as file:
-    while gitRobRunning:
-        for line in file:
-            if byteOfKillWord not in line:
-                print(dot)
-                dot += "."
-            else:
-                gitRobProcess.kill()
-                gitRobRunning = False
+while gitRobRunning:
+    outPutTail = subprocess.check_output(['tail', '-3', 'outFile'])
+    if killWord not in outPutTail:
+        time.sleep(1)
+        print(dot)
+        dot = dot + "."
+    else:
+        gitRobProcess.kill()
+        gitRobRunning = False
 
 with open(pathToLogs) as data_file:
     data_loaded = json.load(data_file)
