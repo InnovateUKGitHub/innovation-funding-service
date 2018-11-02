@@ -1,14 +1,24 @@
 #!/bin/bash
 set -e
 
-PROJECT=$(oc project -q)
+PROJECT=$1
+TARGET=$2
+VERSION=$3
 
-echo "Stopping tests on the current oc project ($PROJECT)"
+. $(dirname $0)/deploy-functions.sh
+
+PROJECT=$(getProjectName $PROJECT $TARGET)
+SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
+HOST=$(getHost $TARGET)
+ROUTE_DOMAIN=$(getRouteDomain $TARGET $HOST)
+SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
+
+echo "Stopping tests on project ($PROJECT)"
 
 function stopTests() {
-    oc delete dc chrome
-    oc delete dc robot-framework
-    oc delete svc chrome
+    oc delete dc chrome ${SVC_ACCOUNT_CLAUSE}
+    oc delete dc robot-framework ${SVC_ACCOUNT_CLAUSE}
+    oc delete svc chrome ${SVC_ACCOUNT_CLAUSE}
 }
 
 stopTests
