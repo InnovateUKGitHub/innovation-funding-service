@@ -7,7 +7,6 @@ IFS.core.conditionalForms = (function () {
   'use strict'
   return {
     init: function () {
-      console.log('init')
       jQuery('[data-target]').each(function () {
         var dataTargetContainer = jQuery(this)
         var dataTarget = dataTargetContainer.attr('data-target')
