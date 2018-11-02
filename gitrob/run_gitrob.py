@@ -43,8 +43,8 @@ while gitRobRunning:
     outPutTail = subprocess.check_output(['tail', '-3', 'outFile'])
     if killWord not in outPutTail:
         time.sleep(1)
-        print(dot)
-        dot = dot + "."
+        print(dots)
+        dots = dots + "."
     else:
         gitRobProcess.kill()
         gitRobRunning = False
