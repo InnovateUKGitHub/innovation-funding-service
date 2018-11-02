@@ -11,7 +11,6 @@ Suite Teardown    Mark application details as incomplete and the user closes the
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
-Resource          ../../../../resources/keywords/01__Edit_Form_Actions.robot
 
 *** Test Cases ***
 Before org size is selected, your funding link is not available

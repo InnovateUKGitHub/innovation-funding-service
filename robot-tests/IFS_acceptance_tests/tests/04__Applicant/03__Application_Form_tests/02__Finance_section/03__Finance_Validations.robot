@@ -245,7 +245,7 @@ Funding level server side
     [Setup]  the user clicks the button/link     link = Your finances
     Given the user clicks the button/link        link = Your funding
     And the user clicks the button/link          jQuery = button:contains("Edit your funding")
-    And the user selects the radio button            requestingFunding   true
+    And the user selects the radio button        requestingFunding   true
     When the user enters text to a text field    css = [name^="grantClaimPercentage"]  71
     And the user selects the checkbox            agree-terms-page
     And the user clicks the button/link          jQuery = button:contains("Mark as complete")
