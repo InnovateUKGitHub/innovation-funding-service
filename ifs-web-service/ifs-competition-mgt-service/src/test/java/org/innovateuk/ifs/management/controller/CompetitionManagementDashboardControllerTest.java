@@ -242,7 +242,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
         when(competitionDashboardSearchService.searchCompetitions(searchQuery, defaultPage)).thenReturn(searchResult);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/search?searchQuery=" + searchQuery))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/internal/search?searchQuery=" + searchQuery))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard/search"))
                 .andReturn();
@@ -264,7 +264,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
         when(competitionDashboardSearchService.searchCompetitions(searchQuery, defaultPage)).thenReturn(searchResult);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/search"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/internal/search"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard/search"))
                 .andReturn();
@@ -289,7 +289,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
         when(competitionDashboardSearchService.searchCompetitions(trimmedQuery, defaultPage)).thenReturn(searchResult);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/search?searchQuery=" + searchQuery))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/internal/search?searchQuery=" + searchQuery))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard/search"))
                 .andReturn();

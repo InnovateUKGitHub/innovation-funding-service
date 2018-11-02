@@ -157,7 +157,7 @@ public class CompetitionManagementDashboardController {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
         boolean isSearchNumeric = trimmedSearchQuery.chars().allMatch(Character::isDigit);
 
-        if (isSearchNumeric) {
+        if (isSearchNumeric && !trimmedSearchQuery.isEmpty()) {
             return searchApplication(trimmedSearchQuery, page, pageSize, model, request, user);
         } else {
             return searchCompetition(trimmedSearchQuery, page, model, user);
@@ -200,11 +200,14 @@ public class CompetitionManagementDashboardController {
 
         if (user.getRoles().contains(INNOVATION_LEAD) || user.getRoles().contains(STAKEHOLDER)) {
             getUserApplicationResources(matchedApplications, user);
+            matchedApplications.setNumber(page);
+            matchedApplications.setSize(pageSize);
+            matchedApplications.setTotalPages((int) Math.ceil((double) matchedApplications.getTotalElements()/pageSize));
         }
 
         ApplicationSearchDashboardViewModel viewModel =
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
-                        matchedApplications.getContent().size(),
+                        matchedApplications.getTotalElements(),
                         new Pagination(matchedApplications, "search?" + existingSearchQuery),
                         searchQuery,
                         isSupport(user));
