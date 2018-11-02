@@ -13,12 +13,12 @@
     <!-- <variable name="idp.process.appender" value="ASYNC_PROCESS" /> -->
     
     <!-- Logging level shortcuts. -->
-    <variable name="idp.loglevel.idp" value="INFO" />
-    <variable name="idp.loglevel.ldap" value="WARN" />
-    <variable name="idp.loglevel.messages" value="INFO" />
-    <variable name="idp.loglevel.encryption" value="INFO" />
-    <variable name="idp.loglevel.opensaml" value="INFO" />
-    <variable name="idp.loglevel.props" value="INFO" />
+    <variable name="idp.loglevel.idp" value="DEBUG" />
+    <variable name="idp.loglevel.ldap" value="DEBUG" />
+    <variable name="idp.loglevel.messages" value="DEBUG" />
+    <variable name="idp.loglevel.encryption" value="DEBUG" />
+    <variable name="idp.loglevel.opensaml" value="DEBUG" />
+    <variable name="idp.loglevel.props" value="DEBUG" />
     
     <!-- Don't turn these up unless you want a *lot* of noise. -->
     <variable name="idp.loglevel.spring" value="ERROR" />

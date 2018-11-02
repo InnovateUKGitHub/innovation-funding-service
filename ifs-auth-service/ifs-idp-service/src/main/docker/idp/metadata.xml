@@ -50,7 +50,7 @@
     </IDPSSODescriptor>
 </EntityDescriptor>
 
-<EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://ifs.local-dev">
+<!--<EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://ifs.local-dev">
 
   <Extensions xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport">
     <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
@@ -95,8 +95,78 @@
     <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://ifs.local-dev/Shibboleth.sso/SAML2/ECP" index="4"/>
   </SPSSODescriptor>
 
-</EntityDescriptor>
+</EntityDescriptor>-->
 
+    <!-- A service provider. -->
+    <EntityDescriptor entityID="http://localhost">
+        <SPSSODescriptor
+                protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol">
 
+            <Extensions>
+                <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+                                           index="1"
+                                           Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+                                           Location="http://localhost/Shibboleth.sso/DS"/>
+                <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+                                           index="2"
+                                           Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+                                           Location="http://localhost/Shibboleth.sso/DS"/>
+            </Extensions>
+
+            <KeyDescriptor>
+                <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509SubjectName>CN=localhost,O=organisation,L=location,ST=state,C=GB</ds:X509SubjectName>
+                        <ds:X509Certificate>MIICljCCAX4CCQCofSfHO657uzANBgkqhkiG9w0BAQsFADANMQswCQYDVQQGEwJl
+                            bjAeFw0xODExMDExNjE3NDFaFw0xODEyMDExNjE3NDFaMA0xCzAJBgNVBAYTAmVu
+                            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA11KxjkLL8/VCe8P7diPD
+                            2I7qqjzGFBP33Mkt+kvQ2u3CGv2fPQ11IxaVrF5sG5zlLAr/GNMBoj+t+r47Cntc
+                            1qrxs34gEk7n7SXez5yt3dbyI5Vx5wgYBDjMZc1Q60ZV0j/rlczXr40J+t3hUExc
+                            x1rjzoKgCKXKHDbYRP/z03V3Jz+Fcnndh1jHxmPWKyHHoJ8JE0rS9LpTxnRCSIvP
+                            7G9DdN/Gevu/+x1J9gwadCi6Q0SLgHDY4uUeywQQcDc4KUHBwwISttalwfe5Z3yC
+                            94HVskfiZshPs+/hw2YG5wNHRt7qT4xGVvaYcWffPmfQ+W3gWtGKISgkf+XxCS7l
+                            6QIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQBfpbYolOt05Y3XFSiKby4rb0jWuVbv
+                            QfxeJ2ugBvbVbJETQWPNcaDIZgdXP5t/P0xyDcMVj1bwxJnwYdTqLqtLUv2CQuTT
+                            jHFIZKtOoDwaqVG3DkHTH+bX/3RrUDt/D7szmGlaob/YuyTkDoFeIAC99Bjv3Lz3
+                            tixtJs3tvVAOSsF0iHXDITWYUvWFBvXslgs25AwCd9Herk5aDI+vi+ESue4fIHbG
+                            MlbVPgAw34h/6WqMz5zJyubH3kWIg89NLaxQxYim7vskJEmk0apQaQxj3kdfjscg
+                            ZbHTiW/Ku+O4llLn/efg2dP7zsjjYoxsYNVvVBQ43ZpnVZrxkeDklVSw</ds:X509Certificate>
+                    </ds:X509Data>
+                </ds:KeyInfo>
+            </KeyDescriptor>
+
+            <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+            <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+
+            <AssertionConsumerService index="1" isDefault="true"
+                                      Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                      Location="http://localhost/Shibboleth.sso/SAML2/POST"/>
+            <AssertionConsumerService index="2"
+                                      Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"
+                                      Location="http://localhost/Shibboleth.sso/SAML2/POST-SimpleSign"/>
+            <AssertionConsumerService index="3"
+                                      Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
+                                      Location="http://localhost/Shibboleth.sso/SAML2/Artifact"/>
+            <AssertionConsumerService index="4"
+                                      Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
+                                      Location="http://localhost/Shibboleth.sso/SAML/POST"/>
+            <AssertionConsumerService index="5"
+                                      Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01"
+                                      Location="http://localhost/Shibboleth.sso/SAML/Artifact"/>
+
+        </SPSSODescriptor>
+
+        <Organization>
+            <OrganizationName xml:lang="en">Your Service</OrganizationName>
+            <OrganizationDisplayName xml:lang="en">Your Service</OrganizationDisplayName>
+            <OrganizationURL xml:lang="en">http://localhost/</OrganizationURL>
+        </Organization>
+        <ContactPerson contactType="technical">
+            <GivenName>Your</GivenName>
+            <SurName>Admin</SurName>
+            <EmailAddress>admin@example.org</EmailAddress>
+        </ContactPerson>
+
+    </EntityDescriptor>
 
 </EntitiesDescriptor>
