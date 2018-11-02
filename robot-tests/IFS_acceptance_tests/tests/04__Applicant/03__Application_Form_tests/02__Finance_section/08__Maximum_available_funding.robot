@@ -26,9 +26,9 @@ Maximum funding level available for lead business
     And the user clicks the button/link                      link = Your funding
     And the user selects the radio button                    requestingFunding   true
     Then the user should see the text in the page            The maximum you can enter is 45%
-    #Then the user should see the text in the page            Enter your funding level (maximum 45%).
     And the correct funding displayed for lead applicant     Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  60%
     And the correct funding displayed for lead applicant     Industrial research  ${LARGE_ORGANISATION_SIZE}  50%
+    And the correct funding displayed for lead applicant     Experimental development  ${SMALL_ORGANISATION_SIZE}  45%
     And the user selects the radio button                    requestingFunding   true
     Then the user should see the text in the page            The maximum you can enter is 45%
     And the user selects the radio button                    otherFunding  false
