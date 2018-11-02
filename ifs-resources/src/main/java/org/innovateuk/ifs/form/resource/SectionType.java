@@ -28,7 +28,7 @@ public enum SectionType {
 
     public static List<SectionType> sectionsNotRequiredForOrganisationType(Long organisationTypeId) {
         if (OrganisationTypeEnum.getFromId(organisationTypeId).equals(OrganisationTypeEnum.RESEARCH)) {
-            return asList(ORGANISATION_FINANCES, FUNDING_FINANCES);
+            return asList(FUNDING_FINANCES);
         } else {
             return Collections.emptyList();
         }

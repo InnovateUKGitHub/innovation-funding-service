@@ -7,6 +7,7 @@ IFS.core.conditionalForms = (function () {
   'use strict'
   return {
     init: function () {
+      console.log('init')
       jQuery('[data-target]').each(function () {
         var dataTargetContainer = jQuery(this)
         var dataTarget = dataTargetContainer.attr('data-target')
@@ -45,12 +46,13 @@ IFS.core.conditionalForms = (function () {
       if (isInverted) {
         radioStatus = !radioStatus
       }
+
       if (radioStatus) {
         target.attr('aria-hidden', 'false').removeClass('js-hidden')
       } else {
         target.attr('aria-hidden', 'true')
         if (clearForm) {
-          target.find('input[type=checkbox]').prop('checked', false)
+          target.find('input[type=radio],input[type=checkbox]').prop('checked', false)
           target.find('select, textarea, input[type=text]').val('')
           target.find('.editor').html('')
         }

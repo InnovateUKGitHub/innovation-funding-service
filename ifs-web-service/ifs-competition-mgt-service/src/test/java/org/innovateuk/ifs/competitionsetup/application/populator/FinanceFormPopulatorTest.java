@@ -52,7 +52,6 @@ public class FinanceFormPopulatorTest {
 
     @Test
     public void populateForm() {
-        final boolean isIncludeGrowthTable = true;
         final String fundingRules = "Funding rules for competition are fun, right?";
 
         SectionResource overviewFinanceSection = newSectionResource()
@@ -60,7 +59,8 @@ public class FinanceFormPopulatorTest {
                 .build();
 
         CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()
-                .withIncludeGrowthTable(isIncludeGrowthTable)
+                .withIncludeGrowthTable(true)
+                .withIncludeYourOrganisationSection(true)
                 .withApplicationFinanceType(STANDARD)
                 .build();
 
@@ -84,20 +84,20 @@ public class FinanceFormPopulatorTest {
         assertTrue(result instanceof FinanceForm);
         FinanceForm form = (FinanceForm) result;
         assertEquals(STANDARD, form.getApplicationFinanceType());
-        assertEquals(isIncludeGrowthTable, form.getIncludeGrowthTable());
+        assertTrue(form.getIncludeGrowthTable());
+        assertTrue(form.getIncludeYourOrganisationSection());
         assertEquals(fundingRules, form.getFundingRules());
     }
 
     @Test
     public void populateForm_noFinances() {
-        final boolean isIncludeGrowthTable = true;
-
         CompetitionResource competition = newCompetitionResource()
                 .withNonFinanceType(true)
                 .build();
 
         CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()
-                .withIncludeGrowthTable(isIncludeGrowthTable)
+                .withIncludeGrowthTable(false)
+                .withIncludeYourOrganisationSection(false)
                 .withApplicationFinanceType(NO_FINANCES)
                 .build();
 
@@ -111,7 +111,9 @@ public class FinanceFormPopulatorTest {
         assertTrue(result instanceof FinanceForm);
         FinanceForm form = (FinanceForm) result;
         assertEquals(NO_FINANCES, form.getApplicationFinanceType());
-        assertEquals(isIncludeGrowthTable, form.getIncludeGrowthTable());
+        assertFalse(form.getIncludeGrowthTable());
+        assertFalse(form.getIncludeYourOrganisationSection());
+
         assertNull(form.getFundingRules());
     }
 }

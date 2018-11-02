@@ -32,6 +32,11 @@ public class CompetitionSetupFinanceResourceBuilder extends BaseBuilder<Competit
         return withArray((includeGrowthTable, competitionSetupFinance) -> setField("includeGrowthTable", includeGrowthTable, competitionSetupFinance), includeGrowthTables);
     }
 
+    public CompetitionSetupFinanceResourceBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSections) {
+        return withArray((includeYourOrganisationSection, competitionSetupFinance) -> setField(
+                "includeYourOrganisationSection", includeYourOrganisationSection, competitionSetupFinance), includeYourOrganisationSections);
+    }
+
     @Override
     protected CompetitionSetupFinanceResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionSetupFinanceResource>> actions) {
         return new CompetitionSetupFinanceResourceBuilder(actions);

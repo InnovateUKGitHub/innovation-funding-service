@@ -6,12 +6,17 @@ import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.form.transactional.SectionService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -90,6 +95,12 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
             applicant.getSection().getChildSections().forEach(subSectionId -> {
                 ApplicantSectionResource applicantSectionResource = new ApplicantSectionResource();
                 populateSection(results, applicantSectionResource, subSectionId, applicationId, applicant.getApplicants());
+
+                if (isSectionExcluded(applicantSectionResource.getSection(),
+                        applicant.getCurrentApplicant().getOrganisation(), applicant.getCompetition())) {
+                    return;
+                }
+
                 applicant.addChildSection(applicantSectionResource);
             });
         }
@@ -184,6 +195,16 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         results.trackResult(() -> organisationService.findById(role.getOrganisationId()), applicantResource::setOrganisation);
         applicantResource.setProcessRole(role);
         return serviceSuccess(applicantResource);
+    }
+
+    private boolean isSectionExcluded(SectionResource section,  OrganisationResource organisation,
+                                      CompetitionResource competition) {
+        boolean isYourOrganisationSection = section.getType() == SectionType.ORGANISATION_FINANCES;
+        boolean isResearchOrganisation = OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
+        boolean excludeYourOrganisationSectionForResearchOrgs =
+                Boolean.FALSE.equals(competition.getIncludeYourOrganisationSection());
+
+        return isYourOrganisationSection && isResearchOrganisation && excludeYourOrganisationSectionForResearchOrgs;
     }
 
 

@@ -56,7 +56,8 @@
                                    th:text="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).STANDARD_WITH_VAT.displayLabel}"
                                    class="govuk-label govuk-radios__label"/>
                         </div>
-                        <div class="govuk-radios__item">
+                        <div class="govuk-radios__item" data-target="include-your-organisation-section"
+                             data-target-inverted="true" data-target-clear-form="true">
                             <input id="application-finance-no-finances"
                                    class="govuk-radios__input"
                                    th:value="${T(org.innovateuk.ifs.competition.resource.ApplicationFinanceType).NO_FINANCES}"
@@ -110,6 +111,47 @@
                     </div>
                 </fieldset>
             </div>
+
+            <div class="govuk-form-group" id="include-your-organisation-section"
+                 th:classappend="${#fields.hasErrors('includeYourOrganisationSection')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noFinancesCompetition}">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeYourOrganisationSection">
+                        <h2 class="govuk-fieldset__heading">Include the 'Your organisation' section for research organisations</h2>
+                        <th:block th:if="${#fields.hasErrors('includeYourOrganisationSection')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeYourOrganisationSection')}" th:text="${err}"></span>
+                        </th:block>
+                    </legend>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input id="include-your-organisation-section-yes"
+                                   class="govuk-radios__input"
+                                   value="true"
+                                   type="radio"
+                                   th:field="*{includeYourOrganisationSection}"
+                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeYourOrganisationSection.required}"
+                                   required="required" />
+                            <label for="include-your-organisation-section-yes"
+                                   class="govuk-label govuk-radios__label">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input id="include-your-organisation-section-no"
+                                   class="govuk-radios__input"
+                                   value="false"
+                                   type="radio"
+                                   th:field="*{includeYourOrganisationSection}"
+                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeYourOrganisationSection.required}"
+                                   required="required"/>
+                            <label for="include-your-organisation-section-no"
+                                   class="govuk-label govuk-radios__label">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('fundingRules')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noFinancesCompetition}">
                 <label class="govuk-label" for="fundingRules">
@@ -141,6 +183,8 @@
                 <th:block th:unless="${model.subsection.noFinancesCompetition}">
                     <dt class="govuk-grid-column-one-third">Include project growth table</dt>
                     <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
+                    <dt class="govuk-grid-column-one-third">Include the 'Your organisation' section for research organisations</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeYourOrganisationSection ? 'Yes' :  'No'}" />
                     <dt class="govuk-grid-column-full govuk-!-margin-0">Funding rules for this competition</dt>
                     <dd class="govuk-grid-column-full wysiwyg-styles" ifs:utext="${competitionSetupForm.fundingRules}" />
                 </th:block>

@@ -10,8 +10,8 @@ import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -53,12 +53,13 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
                                  BindingResult bindingResult,
                                  Boolean readOnly,
                                  Optional<Long> applicantOrganisationId) {
-        ApplicantSectionResource yourOrganisation = findChildSectionByType(section, SectionType.ORGANISATION_FINANCES);
-        ApplicantSectionResource yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);
+        Optional<SectionResource> yourOrganisation = findChildSectionByType(section, SectionType.ORGANISATION_FINANCES);
+        Optional<SectionResource> yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
 
-        boolean yourFundingComplete = completedSectionIds.contains(yourFunding.getSection().getId());
-        boolean yourOrganisationComplete = completedSectionIds.contains(yourOrganisation.getSection().getId());
+        boolean yourFundingComplete = completedSectionIds.contains(yourFunding.get().getId());
+        boolean yourOrganisationComplete =
+                !yourOrganisation.isPresent() || completedSectionIds.contains(yourOrganisation.get().getId());
 
         initializeApplicantFinances(section);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, section.getApplication().getId());
@@ -76,8 +77,11 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
         }
     }
 
-    private ApplicantSectionResource findChildSectionByType(ApplicantSectionResource section, SectionType sectionType) {
-        return section.getApplicantChildrenSections().stream().filter(child -> child.getSection().getType().equals(sectionType)).findAny().get();
+    private Optional<SectionResource> findChildSectionByType(ApplicantSectionResource section,
+                                                             SectionType sectionType) {
+        return section.getApplicantChildrenSections().stream()
+                .filter(child -> child.getSection().getType().equals(sectionType))
+                .findAny().map(ApplicantSectionResource::getSection);
     }
 
     @Override
