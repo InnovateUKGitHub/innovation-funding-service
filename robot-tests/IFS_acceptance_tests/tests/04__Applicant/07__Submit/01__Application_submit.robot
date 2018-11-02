@@ -140,6 +140,26 @@ RTO lead has read only view after submission
     And the user clicks the button/link                    link = Review and submit
     And the user should not see the element                css = input
 
+Submit flow rto lead (complete application)
+    [Documentation]  IFS-1051
+    [Tags]
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link                     link = ${application_rto_name}
+    And the user should see the text in the element         css = .message-alert  Now your application is complete, you need to review and then submit.
+    When the user clicks the button/link                    link = Review and submit
+    Then the user should be redirected to the correct page  summary
+    And the applicant clicks Yes in the submit modal
+    Then the user should be redirected to the correct page  submit
+    And the user should see the text in the page            Application submitted
+    And The user should see the element                     link = Finished
+
+Applications are on Dashboard when Competition is Closed
+    [Documentation]  IFS-1149
+    [Tags]
+    [Setup]  Get the original values of the competition's milestones
+    Given the competition is closed
+    Then the user should be able to see his application on his dashboard  ${submit_bus_email}  ${application_bus_name}
+    And the user should be able to see his application on his dashboard   ${submit_rto_email}  ${application_rto_name}
 
 *** Keywords ***
 the applicant clicks Yes in the submit modal
