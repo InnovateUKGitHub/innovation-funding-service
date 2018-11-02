@@ -30,23 +30,26 @@ class Colors:
     Fail = '\033[91m'
 
 
-gitRobProcess = subprocess.Popen(["./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", pathToLogs, gitHubUserName], stdout=subprocess.PIPE)
+with open('outFile', 'a') as outFile:
+    gitRobProcess = subprocess.Popen(["./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", pathToLogs, gitHubUserName], stdout=outFile)
+
+print(outFile)
 
 print("Please wait for GitRob to finish scanning...")
 
+byteOfKillWord = 'Ctrl+C'
 gitRobRunning = True
-byteOfKillWord = b'Ctrl+C'
-dot = ""
+dot = "."
 
-while gitRobRunning:
-    for line in gitRobProcess.stdout:
-        if byteOfKillWord in line:
-            gitRobRunning = False
-            gitRobProcess.kill()
-            break
-        else:
-            dot += "."
-            print(dot)
+with open('outFile') as file:
+    while gitRobRunning:
+        for line in file:
+            if byteOfKillWord not in line:
+                print(dot)
+                dot += "."
+            else:
+                gitRobProcess.kill()
+                gitRobRunning = False
 
 with open(pathToLogs) as data_file:
     data_loaded = json.load(data_file)
@@ -64,6 +67,8 @@ if data_loaded['Findings'] != None:
                 print(Colors.Warning + "\n##### Suspicious item #%s\n" % i)
                 pp.pprint(finding)
                 i = i + 1
+
+subprocess.call(["rm", "log.json", "outFile"])
 
 if anySuspicious == 1:
     if breakOnSuspicious == 1:
