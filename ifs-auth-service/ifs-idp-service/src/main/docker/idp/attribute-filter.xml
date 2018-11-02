@@ -17,6 +17,19 @@
         </AttributeRule>
     </AttributeFilterPolicy>
 
+    <!-- Release the uid and mail attributes to the IFS SP -->
+    <AttributeFilterPolicy id="localhost">
+        <PolicyRequirementRule xsi:type="Requester" value="http://localhost" />
+
+        <AttributeRule attributeID="uid">
+            <PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+
+        <AttributeRule attributeID="mail">
+            <PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+    </AttributeFilterPolicy>
+
     <!-- Example of a policy for more than one SP -->
     <!--
     <AttributeFilterPolicy id="example">

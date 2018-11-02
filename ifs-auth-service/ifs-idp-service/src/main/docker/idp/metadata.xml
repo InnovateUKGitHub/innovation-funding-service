@@ -50,7 +50,7 @@
     </IDPSSODescriptor>
 </EntityDescriptor>
 
-<!--<EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://ifs.local-dev">
+<EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://ifs.local-dev">
 
   <Extensions xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport">
     <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
@@ -95,7 +95,7 @@
     <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://ifs.local-dev/Shibboleth.sso/SAML2/ECP" index="4"/>
   </SPSSODescriptor>
 
-</EntityDescriptor>-->
+</EntityDescriptor>
 
     <!-- A service provider. -->
     <EntityDescriptor entityID="http://localhost">
@@ -117,26 +117,23 @@
                 <ds:KeyInfo>
                     <ds:X509Data>
                         <ds:X509SubjectName>CN=localhost,O=organisation,L=location,ST=state,C=GB</ds:X509SubjectName>
-                        <ds:X509Certificate>MIICljCCAX4CCQCofSfHO657uzANBgkqhkiG9w0BAQsFADANMQswCQYDVQQGEwJl
-                            bjAeFw0xODExMDExNjE3NDFaFw0xODEyMDExNjE3NDFaMA0xCzAJBgNVBAYTAmVu
-                            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA11KxjkLL8/VCe8P7diPD
-                            2I7qqjzGFBP33Mkt+kvQ2u3CGv2fPQ11IxaVrF5sG5zlLAr/GNMBoj+t+r47Cntc
-                            1qrxs34gEk7n7SXez5yt3dbyI5Vx5wgYBDjMZc1Q60ZV0j/rlczXr40J+t3hUExc
-                            x1rjzoKgCKXKHDbYRP/z03V3Jz+Fcnndh1jHxmPWKyHHoJ8JE0rS9LpTxnRCSIvP
-                            7G9DdN/Gevu/+x1J9gwadCi6Q0SLgHDY4uUeywQQcDc4KUHBwwISttalwfe5Z3yC
-                            94HVskfiZshPs+/hw2YG5wNHRt7qT4xGVvaYcWffPmfQ+W3gWtGKISgkf+XxCS7l
-                            6QIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQBfpbYolOt05Y3XFSiKby4rb0jWuVbv
-                            QfxeJ2ugBvbVbJETQWPNcaDIZgdXP5t/P0xyDcMVj1bwxJnwYdTqLqtLUv2CQuTT
-                            jHFIZKtOoDwaqVG3DkHTH+bX/3RrUDt/D7szmGlaob/YuyTkDoFeIAC99Bjv3Lz3
-                            tixtJs3tvVAOSsF0iHXDITWYUvWFBvXslgs25AwCd9Herk5aDI+vi+ESue4fIHbG
-                            MlbVPgAw34h/6WqMz5zJyubH3kWIg89NLaxQxYim7vskJEmk0apQaQxj3kdfjscg
-                            ZbHTiW/Ku+O4llLn/efg2dP7zsjjYoxsYNVvVBQ43ZpnVZrxkeDklVSw</ds:X509Certificate>
+                        <ds:X509Certificate>MIICljCCAX4CCQCpMW/GYQ2l3jANBgkqhkiG9w0BAQsFADANMQswCQYDVQQGEwJl
+                            bjAeFw0xODExMDIxMDUyMjZaFw0xODEyMDIxMDUyMjZaMA0xCzAJBgNVBAYTAmVu
+                            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzsoR7JTLCXt+NNREZF5s
+                            ddUvuqOrOzXENrTGYSVQKlYQ/CLD78EsXOQqcc7nqzqgxbj+fhXaWIJVi2Pyf2IP
+                            ecs19II3CmlzWAK2vEkncSjuCLppkIHbpRluhKahr/srE3AZ/pV9u+aoRF7SMvFJ
+                            I6oaYpNuSkzkJzA4nY9g0+2/E8RIfeZPhO+OLyfuQbI9oTp7Y/bs3Ic8cjVyWYbe
+                            4pFhusvoCYXSHoXN8dZIjIOIr+qZyvbrvDmdKarIedpWfeoTuMqyF7ADQNiajoNX
+                            kLNTnKo5KQd+m+9UDj+D9xQ1DUoOHkxrt0rRSJF7CVElhkiRW9IfzYZuHABUENvR
+                            iQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQBmB6WfKHu9Vg6F6tUMG9HTecx2r04A
+                            0hszKRy5Kl6DnU7e5dHvMI5ogURRwbvhOWfAlR8oao1D975xczIIr6t+PhecKbSV
+                            Yf3/ird/cGvmu7BbLeFWdxgP0T0ovKelYObyqkvZJBFpEssqFG+AbbPD7LZRwRqY
+                            HUp7RF//wiKT7AKtpyD2w8r/5XxeF2rJz4/E9KOzz6SCGSEDpi3Nwrfe9drMti6W
+                            i+5GTNSbv5Jzp6CnjXd/zaktTMVQCgq5W0kF/Y1qttzYO7jRaL3TgxcKs/mGcl06
+                            o6xKdlptYVrH7xiRgHttCs9HZ8QVAwvcrGdnvyYWIzjd9nCyP4OuZ9Ij</ds:X509Certificate>
                     </ds:X509Data>
                 </ds:KeyInfo>
             </KeyDescriptor>
-
-            <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
-            <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
 
             <AssertionConsumerService index="1" isDefault="true"
                                       Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
