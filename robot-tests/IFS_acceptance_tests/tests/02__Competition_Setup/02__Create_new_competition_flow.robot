@@ -128,14 +128,6 @@ Initial details - User enters valid values and marks as done
     When the user clicks the button/link                        jQuery = button:contains("Done")
     Then the user should see the read-only view of the initial details
 
-Initial details - Innovation sector of Open should be visible
-    [Documentation]    INFUND-9152
-    [Tags]
-    Given the user clicks the button/link                       jQuery = .govuk-button:contains("Edit")  # Click Edit
-    When the user selects the option from the drop-down menu    Programme    id = competitionTypeId
-    Then the user selects the option from the drop-down menu    Sector    id = competitionTypeId
-    When the user clicks the button/link                        css = button[class = "govuk-button"]  # Click Done
-
 Initial details - Competitions allow multiple innovation areas
     [Documentation]    INFUND-6478, INFUND-6479
     [Tags]
@@ -190,7 +182,7 @@ The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
-    When the user selects the option from the drop-down menu    5  id=termsAndConditionsId  #5 selects the option with the value of 5, which refers to APC
+    When the user selects the index from the drop-down menu     2  id=termsAndConditionsId  #5 selects the option with the value of 5, which refers to APC
     And the user clicks the button/link      css = button.govuk-button  #Done
     Then the user should see the element     link = Advanced Propulsion Centre (APC)
     And the user clicks the button/link      link = Competition setup
@@ -632,7 +624,6 @@ Application: Edit again should mark as incomplete
     And the user navigates to the page          ${server}/management/competition/setup/${competitionId}
     Then the user should see the element        css = #compCTA[disabled="disabled"]
     When the user navigates to the page         ${server}/management/competition/setup/${competitionId}/section/application/landing-page
-    Then the user clicks the button/link        jQuery = button:contains("Done")
     When the user clicks the button/link        link = Application details
     And the user clicks the button/link         css = button[type="submit"]
     Then the user should see the element        jQuery = li:contains("Application details") .task-status-complete
@@ -762,13 +753,13 @@ The user can see the VAT text in Your project costs
 
 *** Keywords ***
 the user moves focus and waits for autosave
-    focus    link=Sign out
+    Set Focus To Element    link=Sign out
     Wait For Autosave
 
 the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input
-    Focus    jQuery=button:contains("Done")
+    Set Focus To Element    jQuery=button:contains("Done")
     Wait Until Element Contains Without Screenshots    css=.govuk-heading-s  ${Total}
 
 the user fills the milestones with valid data
@@ -811,7 +802,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].day    22
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2019
-    Focus    jQuery = button:contains(Done)
+    Set Focus To Element    jQuery = button:contains(Done)
     wait for autosave
 
 the weekdays should be correct
@@ -845,12 +836,12 @@ The user enters valid data in the initial details
     Given the user enters text to a text field                 css = #title  ${competitionTitle}
     When the user selects the option from the drop-down menu   Sector  id = competitionTypeId
     And the user selects the option from the drop-down menu    Infrastructure systems  id = innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Offshore wind  name = innovationAreaCategoryIds[0]
+    And the user selects the value from the drop-down menu     32   name = innovationAreaCategoryIds[0]
     And the user selects the option from the drop-down menu    Open  id = innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Biosciences     name = innovationAreaCategoryIds[0]
+    And the user selects the value from the drop-down menu     19     name = innovationAreaCategoryIds[0]
     And the user selects the option from the drop-down menu    Emerging and enabling  id = innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Satellite applications  name = innovationAreaCategoryIds[0]
-    And the user selects the option from the drop-down menu    Space technology  name = innovationAreaCategoryIds[1]
+    And the user selects the value from the drop-down menu     6  name = innovationAreaCategoryIds[0]
+    And the user selects the value from the drop-down menu     15  name = innovationAreaCategoryIds[1]
     And the user enters text to a text field                   id = openingDateDay    10
     And the user enters text to a text field                   id = openingDateMonth    1
     And the user enters text to a text field                   id = openingDateYear     ${nextyear}
@@ -905,10 +896,10 @@ Custom suite setup
 
 the user enters multiple innovation areas
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
-    the user selects the option from the drop-down menu    Space technology    name=innovationAreaCategoryIds[1]
+    the user selects the value from the drop-down menu     15    name=innovationAreaCategoryIds[1]
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
     List Should not Contain Value                          css = [id="innovationAreaCategoryIds[2]"]    Space technology
-    the user selects the option from the drop-down menu    Creative industries    name=innovationAreaCategoryIds[2]
+    the user selects the value from the drop-down menu     12    name=innovationAreaCategoryIds[2]
 
 The user should not see the selected option again
     List Should not Contain Value    css = [id="innovationAreaCategoryIds[1]"]    Biosciences

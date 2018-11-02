@@ -248,7 +248,7 @@ Lead applicant should be able to remove the partner organisation
 the collaborator edits the 'public description' question
     Clear Element Text  css = .textarea-wrapped .editor
     The user enters text to a text field  css = .textarea-wrapped .editor  collaborator's text
-    Focus  link = Sign out
+    Set Focus To Element    link = Sign out
     wait for autosave
     the user reloads the page
 
