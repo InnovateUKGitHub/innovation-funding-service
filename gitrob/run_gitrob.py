@@ -30,7 +30,7 @@ class Colors:
     Fail = '\033[91m'
 
 
-with open('outFile', 'a') as outFile:
+with open('gitrob/outFile', 'a') as outFile:
     gitRobProcess = subprocess.Popen(["./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", pathToLogs, gitHubUserName], stdout=outFile)
 
 print("Please wait for GitRob to finish scanning...")
