@@ -48,6 +48,10 @@ insert into finance_row (cost, description, item, quantity, name, target_id, que
     from project_finance finance
     inner join organisation org
     on org.id = finance.organisation_id
+    inner join project proj
+    on proj.id = finance.project_id
+    inner join application app
+    on app.id = proj.application_id
     inner join question quest
     on quest.competition_id = app.competition
     where org.organisation_type_id=@academic_organisation_type_id
@@ -58,6 +62,10 @@ insert into finance_row (cost, description, item, quantity, name, target_id, que
     from project_finance finance
     inner join organisation org
     on org.id = finance.organisation_id
+    inner join project proj
+    on proj.id = finance.project_id
+    inner join application app
+    on app.id = proj.application_id
     inner join question quest
     on quest.competition_id = app.competition
     where org.organisation_type_id=@academic_organisation_type_id

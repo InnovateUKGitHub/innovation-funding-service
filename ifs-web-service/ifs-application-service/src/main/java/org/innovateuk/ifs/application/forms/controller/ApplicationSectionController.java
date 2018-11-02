@@ -58,8 +58,8 @@ import static org.jsoup.helper.StringUtil.isBlank;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 public class ApplicationSectionController {
-    private static final int MINIMUM_POSTCODE_LENGTH = 6;
-    private static final int MAXIMUM_POSTCODE_LENGTH = 8;
+    private static final int MINIMUM_POSTCODE_LENGTH = 3;
+    private static final int MAXIMUM_POSTCODE_LENGTH = 10;
 
     private static final Log LOG = LogFactory.getLog(ApplicationSectionController.class);
 
@@ -163,7 +163,7 @@ public class ApplicationSectionController {
                 .filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) && Arrays.asList(Role.LEADAPPLICANT.getName(),
                         Role.COLLABORATOR.getName()).contains(pr.getRoleName()))
                 .findFirst()
-                .orElseThrow(() -> new ObjectNotFoundException());
+                .orElseThrow(ObjectNotFoundException::new);
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
         if (applicantSection.getSection().getType() == SectionType.FUNDING_FINANCES) {
