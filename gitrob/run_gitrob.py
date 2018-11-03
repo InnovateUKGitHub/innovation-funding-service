@@ -23,28 +23,21 @@ whiteList = str(sys.argv[5])
 breakOnSuspicious = int(sys.argv[6])
 pathToLogs = 'log.json'
 
-
-class Colors:
-    OK = '\033[92m'
-    Warning = '\033[93m'
-    Fail = '\033[91m'
-
-
 with open('outFile', 'a') as outFile:
     gitRobProcess = subprocess.Popen(["./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", pathToLogs, gitHubUserName], stdout=outFile)
 
 print("Please wait for GitRob to finish scanning...")
 
-killWord = 'Ctrl+C'
+killWord = b'Ctrl+C'
 gitRobRunning = True
-dots = Colors.OK + "."
+dots = "*"
 
 while gitRobRunning:
     outPutTail = subprocess.check_output(['tail', '-3', 'outFile'])
     if killWord not in outPutTail:
-        time.sleep(1)
+        time.sleep(2)
         print(dots)
-        dots = dots + "."
+        dots = dots + "*"
     else:
         gitRobProcess.kill()
         gitRobRunning = False
@@ -57,22 +50,24 @@ pp = pprint.PrettyPrinter(indent=2)
 anySuspicious = 0
 
 if data_loaded['Findings'] != None:
-    i = 1
-    for finding in data_loaded['Findings']:
-        if finding['RepositoryName'] == repoToScan:
-            if finding['FilePath'].split('/')[-1] not in whiteList:
-                anySuspicious = 1
-                print(Colors.Warning + "\n##### Suspicious item #%s\n" % i)
-                pp.pprint(finding)
-                i = i + 1
+    with open('log.html', 'a+') as logHtml:
+        i = 1
+        for finding in data_loaded['Findings']:
+            if finding['RepositoryName'] == repoToScan:
+                if finding['FilePath'].split('/')[-1] not in whiteList:
+                    anySuspicious = 1
+                    print("\n##### Suspicious item #%s\n" % i)
+                    pp.pprint(finding)
+                    logHtml.write(str(finding))
+                    i = i + 1
 
 if anySuspicious == 1:
     if breakOnSuspicious == 1:
-        print(Colors.Fail + "\nSuspicious item(s) found, exiting with error code 1.\n")
+        print("\nSuspicious item(s) found, exiting with error code 1.\n")
         sys.exit(1)
     else:
-        print(Colors.Warning + "\033[93m\nSuspicious item(s) found, breaking not enforced, exiting with 0.\n")
+        print("\nSuspicious item(s) found, breaking not enforced, exiting with 0.\n")
         sys.exit(0)
 else:
-    print(Colors.OK + "Nothing risky found. Exiting with 0.")
+    print("Nothing risky found. Exiting with 0.")
     sys.exit(0)
