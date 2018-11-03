@@ -5,6 +5,8 @@ import json
 import pprint
 import subprocess
 import time
+import ast
+import os
 
 amountOfArgs = 6
 
@@ -21,10 +23,28 @@ repoToScan = str(sys.argv[3])
 commitDepth = str(sys.argv[4])
 whiteList = str(sys.argv[5])
 breakOnSuspicious = int(sys.argv[6])
-pathToLogs = 'log.json'
+logFile = 'log.json'
+htmlFile = 'log.html'
+tempFile = 'outFile'
 
-with open('outFile', 'a') as outFile:
-    gitRobProcess = subprocess.Popen(["./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", pathToLogs, gitHubUserName], stdout=outFile)
+
+try:
+    os.remove(tempFile)
+except OSError:
+    pass
+
+try:
+    os.remove(logFile)
+except OSError:
+    pass
+
+try:
+    os.remove(htmlFile)
+except OSError:
+    pass
+
+with open(tempFile, 'a') as outFile:
+    gitRobProcess = subprocess.Popen(["./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", logFile, gitHubUserName], stdout=outFile)
 
 print("Please wait for GitRob to finish scanning...")
 
@@ -33,7 +53,7 @@ gitRobRunning = True
 dots = "*"
 
 while gitRobRunning:
-    outPutTail = subprocess.check_output(['tail', '-3', 'outFile'])
+    outPutTail = subprocess.check_output(['tail', '-3', tempFile])
     if killWord not in outPutTail:
         time.sleep(2)
         print(dots)
@@ -42,7 +62,7 @@ while gitRobRunning:
         gitRobProcess.kill()
         gitRobRunning = False
 
-with open(pathToLogs) as data_file:
+with open(logFile) as data_file:
     data_loaded = json.load(data_file)
 
 pp = pprint.PrettyPrinter(indent=2)
@@ -50,15 +70,15 @@ pp = pprint.PrettyPrinter(indent=2)
 anySuspicious = 0
 
 if data_loaded['Findings'] != None:
-    with open('log.html', 'a+') as logHtml:
+    with open(htmlFile, 'a+') as logHtml:
         i = 1
         for finding in data_loaded['Findings']:
             if finding['RepositoryName'] == repoToScan:
                 if finding['FilePath'].split('/')[-1] not in whiteList:
                     anySuspicious = 1
                     print("\n##### Suspicious item #%s\n" % i)
-                    pp.pprint(finding)
-                    logHtml.write(str(finding))
+                    pp.pprint(ast.literal_eval(json.dumps(finding)))
+                    logHtml.write(str(ast.literal_eval(json.dumps(finding))))
                     i = i + 1
 
 if anySuspicious == 1:
