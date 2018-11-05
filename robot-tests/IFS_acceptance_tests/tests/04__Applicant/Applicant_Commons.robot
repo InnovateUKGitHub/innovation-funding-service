@@ -86,7 +86,6 @@ the user marks the finances as complete
     Run Keyword if  '${Project_growth_table}' == 'yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
-    #Is the below needed for other tests?
     the user clicks the button/link  link = Application overview
     the user should see the element  jQuery = li:contains("Your finances") > .task-status-complete
 
@@ -102,7 +101,6 @@ the user fills in the project costs
     the user fills in Other costs
     the user clicks the button/link  css = label[for="stateAidAgreed"]
     the user clicks the button/link  jQuery = button:contains("Mark as complete")
-    #Here!! Validation hit here. Find out what field!
     the user clicks the button/link  link = Your project costs
     the user has read only view once section is marked complete
 
@@ -259,7 +257,6 @@ the user checks Your Funding section
     the user clicks the button/link  link = Your funding
     ${Research_category_selected} =   run keyword and return status without screenshots    Element Should Not Be Visible   jQuery = a:contains("research category")
     Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
-    #Heretolink
     Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}
 
 the user selects research area
@@ -273,7 +270,6 @@ the user fills in the funding information
     the user clicks the button/link       link = Your funding
     the user selects the radio button     requestingFunding   true
     the user enters text to a text field  css = [name^="grantClaimPercentage"]  45
-    #click element                         jQuery = label:contains("No") - Remove if not needed!!
     the user selects the radio button     otherFunding   false
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
@@ -441,3 +437,14 @@ the user fills in the address info
    the user clicks the button/link        jQuery = a:contains("Continue and create an account")
    the user selects the radio button      organisationTypeId  ${organisationType}
    the user clicks the button/link        jQuery = button:contains("Save and continue")
+
+the user marks your funding section as complete
+    the user selects the radio button     requestingFunding   true
+    the user enters text to a text field  css = [name^="grantClaimPercentage"]  30
+    the user selects the radio button     otherFunding  false
+    the user selects the checkbox         agree-terms-page
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+
+the user selects medium organisation size
+    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}

@@ -63,7 +63,6 @@ Applicant Applies to Research leading Competition
     And the user marks every section but one as complete  ${researchLeadApp}  Experimental development
     When the academic user fills in his finances          ${researchLeadApp}
     And the user enters the project location
-    #Add keyword for your funding?
     And the user fills in the funding information         ${researchLeadApp}
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                   link = Application overview

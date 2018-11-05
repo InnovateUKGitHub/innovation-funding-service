@@ -2,6 +2,8 @@
 Documentation     INFUND-844: As an applicant I want to receive a validation error in the finance sections if I my input is invalid in a particular field so that I am informed how to correctly submit the information
 ...
 ...               INFUND-2214: As an applicant I want to be prevented from marking my finances as complete if I have not fully completed the Other funding section so that I can be sure I am providing all the required information
+...
+...               IFS-4569: As an applicant I am able to input a non-UK postcode for Project location
 Suite Setup       Custom Suite Setup
 Suite Teardown    Mark application details as incomplete and the user closes the browser  ${OPEN_COMPETITION_APPLICATION_5_NAME}
 Force Tags        Applicant
@@ -22,12 +24,12 @@ Other funding client side
     [Documentation]    INFUND-2214
     [Tags]
     When the user selects the radio button   otherFunding  true
-    And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  e
+    And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  e   #TODO Raise ticket?
     Then the user should see the element     css = #other-funding-table[aria-hidden="false"]
     # This line should be after css = label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
     When the user should see a field error   Enter a funding source.
     Then the user should see a field error   Enter date secured.
-    And the user should see a field error    Enter funding amount.
+    And the user should see a field error    This field can only accept whole numbers.
 
 Other funding server side
     [Documentation]    INFUND-2214
@@ -43,7 +45,6 @@ Select NO Other Funding and mark as complete should be possible
     [Documentation]    INFUND-2214
     [Tags]
     Given the user selects the radio button     requestingFunding   false
-    #And the user enters text to a text field    css = [name^="grantClaimPercentage"]  50
     When the user selects the radio button      otherFunding  false
     And the user selects the checkbox           agree-terms-page
     Then the user clicks the button/link        jQuery = button:contains("Mark as complete")
@@ -230,6 +231,13 @@ Other costs server side
     And the user should see a field and summary error    This field cannot be left blank.
     [Teardown]    Remove row    jQuery = button:contains("Other costs")    jQuery = #other-costs-table button:contains("Remove")
 
+Project location server-side validations
+    [Documentation]  IFS-4569
+    [Setup]  the user clicks the button/link  link = Your finances
+    Given the user clicks the button/link     link = Your project location
+    And The user enters text to a text field  id = projectLocation  ${EMPTY}
+    When the user clicks the button/link      id = mark-all-as-complete
+    Then The user should see a field and summary error  Enter a valid postcode.
 #Funding level client side is covered in 02__Org_size_validation.robot
 
 Funding level server side
@@ -237,7 +245,7 @@ Funding level server side
     [Setup]  the user clicks the button/link     link = Your finances
     Given the user clicks the button/link        link = Your funding
     And the user clicks the button/link          jQuery = button:contains("Edit your funding")
-    the user selects the radio button            requestingFunding   true
+    And the user selects the radio button        requestingFunding   true
     When the user enters text to a text field    css = [name^="grantClaimPercentage"]  71
     And the user selects the checkbox            agree-terms-page
     And the user clicks the button/link          jQuery = button:contains("Mark as complete")

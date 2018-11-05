@@ -10,19 +10,24 @@ import org.innovateuk.ifs.application.viewmodel.section.AbstractYourProjectCosts
 import org.innovateuk.ifs.application.viewmodel.section.DefaultProjectCostSection;
 import org.innovateuk.ifs.application.viewmodel.section.StandardYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.JesYourProjectCostsSectionViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -34,15 +39,18 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
     private SectionService sectionService;
     private FinanceViewHandlerProvider financeViewHandlerProvider;
     private FormInputViewModelGenerator formInputViewModelGenerator;
+    private MessageSource messageSource;
 
     public YourProjectCostsSectionPopulator(final ApplicationNavigationPopulator navigationPopulator,
                                             final SectionService sectionService,
                                             final FinanceViewHandlerProvider financeViewHandlerProvider,
-                                            final FormInputViewModelGenerator formInputViewModelGenerator) {
+                                            final FormInputViewModelGenerator formInputViewModelGenerator,
+                                            final MessageSource messageSource) {
         super(navigationPopulator);
         this.sectionService = sectionService;
         this.financeViewHandlerProvider = financeViewHandlerProvider;
         this.formInputViewModelGenerator = formInputViewModelGenerator;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -55,6 +63,8 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
             Boolean readOnly,
             Optional<Long> applicantOrganisationId
     ) {
+        updateYourProjectCostsQuestionDescription(section.getCompetition(), section.getApplicantQuestions().get(0).getQuestion());
+
         List<ApplicantQuestionResource> costQuestions =
                 section.allQuestions()
                         .filter(question -> QuestionType.COST.equals(question.getQuestion().getType()))
@@ -105,6 +115,18 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
                 })
             );
         }
+    }
+
+    private QuestionResource updateYourProjectCostsQuestionDescription(CompetitionResource competition,
+                                                                       QuestionResource question) {
+        String description = competition.getCollaborationLevel() == SINGLE ?
+                messageSource.getMessage("ifs.question.yourProjectCosts.description", null,
+                        Locale.getDefault()) :
+                messageSource.getMessage("ifs.question.yourProjectCosts.collaborative.description", null,
+                        Locale.getDefault());
+
+        question.setDescription(description);
+        return question;
     }
 
     @Override

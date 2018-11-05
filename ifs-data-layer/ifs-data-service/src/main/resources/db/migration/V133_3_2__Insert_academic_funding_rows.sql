@@ -42,8 +42,31 @@ insert into finance_row (cost, description, item, quantity, name, target_id, que
     and quest.name='Funding level'
     and not exists (select inner_row.id from finance_row inner_row where inner_row.target_id=finance.id and name='grant-claim');
 
+-- Project Finance
+insert into finance_row (cost, description, item, quantity, name, target_id, question_id, row_type)
+    select '0', 'Other Funding', 'No', '0', 'other-funding', finance.id, quest.id, 'ProjectFinanceRow'
+    from project_finance finance
+    inner join organisation org
+    on org.id = finance.organisation_id
+    inner join project proj
+    on proj.id = finance.project_id
+    inner join application app
+    on app.id = proj.application_id
+    inner join question quest
+    on quest.competition_id = app.competition
+    where org.organisation_type_id=@academic_organisation_type_id
+    and quest.name='Other funding';
 
-
-
-
-
+insert into finance_row (cost, description, item, quantity, name, target_id, question_id, row_type)
+    select '0', 'Grant Claim', '', '100', 'grant-claim', finance.id, quest.id, 'ProjectFinanceRow'
+    from project_finance finance
+    inner join organisation org
+    on org.id = finance.organisation_id
+    inner join project proj
+    on proj.id = finance.project_id
+    inner join application app
+    on app.id = proj.application_id
+    inner join question quest
+    on quest.competition_id = app.competition
+    where org.organisation_type_id=@academic_organisation_type_id
+    and quest.name='Funding level'
