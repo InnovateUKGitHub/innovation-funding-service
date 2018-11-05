@@ -209,7 +209,7 @@ Mark academic finances as complete
     the user clicks the button/link  id = mark-all-as-complete
 
 the user should see correct grant percentage
-    the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  Funding level (%)
     the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
 
 The user marks the academic application finances as incomplete
