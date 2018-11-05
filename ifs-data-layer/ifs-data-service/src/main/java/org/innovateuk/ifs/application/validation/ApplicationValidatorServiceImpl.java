@@ -20,6 +20,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -59,6 +60,9 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private FinanceUtil financeUtil;
 
     @Override
     public List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId) {

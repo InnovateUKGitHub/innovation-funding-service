@@ -187,7 +187,7 @@ public class ApplicationModelPopulatorTest {
         when(questionRestService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(restSuccess(costsQuestions));
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
 
-        when(competitionRestService.getCompetitionById(competitionId).getSuccess()).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(financeViewHandlerProvider.getFinanceModelManager(competition, organisationType)).thenReturn(financeModelManager);
 
         ProcessRoleResource processRole = newProcessRoleResource().withOrganisation().withUser(user).build();

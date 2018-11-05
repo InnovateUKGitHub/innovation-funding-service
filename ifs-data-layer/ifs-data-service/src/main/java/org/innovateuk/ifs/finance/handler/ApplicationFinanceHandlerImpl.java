@@ -67,7 +67,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
 
         for (ApplicationFinance applicationFinance : applicationFinances) {
-            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication(), applicationFinance.getOrganisation().getOrganisationType().getId());
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
             Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinance.getId(), applicationFinance.getApplication().getCompetition());
 
             ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);

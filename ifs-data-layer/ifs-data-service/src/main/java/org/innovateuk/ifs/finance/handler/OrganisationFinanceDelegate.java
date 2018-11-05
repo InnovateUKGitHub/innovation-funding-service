@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.handler;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
@@ -29,9 +28,5 @@ public class OrganisationFinanceDelegate {
         } else {
             return organisationFinanceDefaultHandler;
         }
-    }
-
-    public OrganisationFinanceHandler getOrganisationFinanceHandler(Application application, Long organisationType) {
-        return getOrganisationFinanceHandler(application.getCompetition().getId(), organisationType);
     }
 }

@@ -45,6 +45,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
@@ -209,7 +210,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Test
     public void validateFormInputResponseWhenIsResearchUser() {
-        Application application = newApplication().build();
+        Application application = newApplication().withCompetition(newCompetition().withIncludeJesForm(true).build()).build();
         long markedAsCompleteById = 4L;
         FormInputResponse formInputResponse = newFormInputResponse().build();
         BindingResult bindingResultExpected = ValidatorTestUtil.getBindingResult(formInputResponse);

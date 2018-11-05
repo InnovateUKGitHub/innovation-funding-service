@@ -90,7 +90,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
         finances.forEach(finance -> {
             ProjectFinanceResource financeResource = projectFinanceMapper.mapToResource(finance);
             OrganisationFinanceHandler organisationFinanceHandler =
-                    organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getProject().getApplication(), finance.getOrganisation().getOrganisationType().getId());
+                    organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getProject().getApplication().getCompetition().getId(), finance.getOrganisation().getOrganisationType().getId());
             EnumMap<FinanceRowType, FinanceRowCostCategory> costs =
                     new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinances(financeResource.getId(),
                             finance.getProject().getApplication().getCompetition()));
