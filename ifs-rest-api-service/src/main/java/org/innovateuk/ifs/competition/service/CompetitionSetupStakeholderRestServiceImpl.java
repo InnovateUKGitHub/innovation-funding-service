@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
 
 /**
@@ -41,6 +42,11 @@ public class CompetitionSetupStakeholderRestServiceImpl extends BaseRestService 
     @Override
     public RestResult<List<UserResource>> findPendingStakeholderInvites(long competitionId) {
         return getWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/pending-invites", userListType());
+    }
+
+    @Override
+    public RestResult<List<Long>> findCompetitionsByStakeholderUserId(long competitionId, long stakeholderUserId) {
+        return getWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/findCompetitionsByStakeholderId/" + stakeholderUserId, longsListType());
     }
 }
 

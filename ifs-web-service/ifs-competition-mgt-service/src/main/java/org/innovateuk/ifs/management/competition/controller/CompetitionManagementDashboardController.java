@@ -7,15 +7,14 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,15 +49,16 @@ public class CompetitionManagementDashboardController {
 
     private BankDetailsRestService bankDetailsRestService;
 
-    @Autowired
-    private CompetitionRestService competitionRestService;
+    private CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService;
 
     public CompetitionManagementDashboardController(CompetitionDashboardSearchService competitionDashboardSearchService,
                                                     CompetitionSetupRestService competitionSetupRestService,
-                                                    BankDetailsRestService bankDetailsRestService) {
+                                                    BankDetailsRestService bankDetailsRestService,
+                                                    CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService) {
         this.competitionDashboardSearchService = competitionDashboardSearchService;
         this.competitionSetupRestService = competitionSetupRestService;
         this.bankDetailsRestService = bankDetailsRestService;
+        this.competitionSetupStakeholderRestService = competitionSetupStakeholderRestService;
     }
 
     @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
@@ -198,11 +198,14 @@ public class CompetitionManagementDashboardController {
 
         ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, page, pageSize);
 
-        if (user.getRoles().contains(INNOVATION_LEAD) || user.getRoles().contains(STAKEHOLDER)) {
-            getUserApplicationResources(matchedApplications, user);
-            matchedApplications.setNumber(page);
-            matchedApplications.setSize(pageSize);
-            matchedApplications.setTotalPages((int) Math.ceil((double) matchedApplications.getTotalElements()/pageSize));
+        if (user.getRoles().contains(INNOVATION_LEAD)) {
+            List<Long> competitions = competitionSetupRestService.findCompetitionsByInnovationLeadId(user.getId()).getSuccess();
+            populateApplications(matchedApplications, competitions, page, pageSize);
+        }
+
+        if (user.getRoles().contains(STAKEHOLDER)) {
+            List<Long> competitions = competitionSetupStakeholderRestService.findCompetitionsByStakeholderUserId(0l, user.getId()).getSuccess();
+            populateApplications(matchedApplications, competitions, page, pageSize);
         }
 
         ApplicationSearchDashboardViewModel viewModel =
@@ -217,11 +220,16 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "application-search";
     }
 
-    private void getUserApplicationResources(ApplicationPageResource matchedApplications, UserResource user) {
+    private void populateApplications(ApplicationPageResource matchedApplications, List<Long> competitions, int page, int pageSize) {
         List<ApplicationResource> applicationResources = matchedApplications.getContent().stream().filter(
-                applicationResource -> competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess().getLeadTechnologist().equals(user.getId()))
+                applicationResource -> competitions.contains(applicationResource.getCompetition()))
                 .collect(Collectors.toList());
+
         matchedApplications.setContent(applicationResources);
         matchedApplications.setTotalElements(applicationResources.size());
+        ;
+        matchedApplications.setNumber(page);
+        matchedApplications.setSize(pageSize);
+        matchedApplications.setTotalPages((int) Math.ceil((double) matchedApplications.getTotalElements() / pageSize));
     }
 }

@@ -53,6 +53,11 @@ public class CompetitionSetupStakeholderController {
 
         return competitionSetupStakeholderService.findPendingStakeholderInvites(competitionId).toGetResponse();
     }
+
+    @GetMapping("/findCompetitionsByStakeholderId/{stakeholderUserId}")
+    public RestResult<List<Long>> findCompetitionsByStakeholderId(@PathVariable("stakeholderUserId") final long stakeholderUserId) {
+        return competitionSetupStakeholderService.findCompetitionByStakeholderId(stakeholderUserId).toGetResponse();
+    }
 }
 
 

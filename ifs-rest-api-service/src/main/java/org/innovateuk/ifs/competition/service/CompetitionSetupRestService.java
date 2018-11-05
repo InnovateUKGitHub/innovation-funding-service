@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,4 +44,7 @@ public interface CompetitionSetupRestService {
     RestResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(long competitionId);
 
     RestResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(long competitionId);
+
+    RestResult<List<Long>> findCompetitionsByInnovationLeadId(long stakeholderUserId);
+
 }

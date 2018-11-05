@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.management.competition.controller.CompetitionManagementDashboardController;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.dashboard.viewmodel.*;
@@ -62,6 +63,9 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Mock
     private BankDetailsRestService bankDetailsRestService;
+
+    @Mock
+    private CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService;
 
     private CompetitionCountResource counts;
 
@@ -416,6 +420,6 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Override
     protected CompetitionManagementDashboardController supplyControllerUnderTest() {
-        return new CompetitionManagementDashboardController(competitionDashboardSearchService, competitionSetupRestService, bankDetailsRestService);
+        return new CompetitionManagementDashboardController(competitionDashboardSearchService, competitionSetupRestService, bankDetailsRestService, competitionSetupStakeholderRestService);
     }
 }

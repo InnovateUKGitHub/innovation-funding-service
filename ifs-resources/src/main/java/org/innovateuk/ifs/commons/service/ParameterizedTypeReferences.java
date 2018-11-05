@@ -112,6 +112,9 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<UserResource>> userListType() {
         return new ParameterizedTypeReference<List<UserResource>>() {};
     }
+    public static ParameterizedTypeReference<List<Long>> longListType() {
+        return new ParameterizedTypeReference<List<Long>>() {};
+    }
 
     public static ParameterizedTypeReference<List<UserOrganisationResource>> userOrganisationListType() {
         return new ParameterizedTypeReference<List<UserOrganisationResource>>() {};

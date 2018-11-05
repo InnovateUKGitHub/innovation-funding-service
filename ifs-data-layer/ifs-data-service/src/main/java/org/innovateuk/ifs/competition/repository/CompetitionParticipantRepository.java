@@ -16,6 +16,8 @@ public interface CompetitionParticipantRepository<ParticipantType extends Compet
     ParticipantType getByCompetitionIdAndUserIdAndRole(long competitionId, long userId, CompetitionParticipantRole
             role);
 
+    List<CompetitionParticipant> getCompetitionByUserIdAndRole(long userId, CompetitionParticipantRole role);
+
     void deleteByCompetitionIdAndUserIdAndRole(long competitionId, long userId, CompetitionParticipantRole role);
 
     void deleteByCompetitionIdAndRole(long competitionId, CompetitionParticipantRole role);

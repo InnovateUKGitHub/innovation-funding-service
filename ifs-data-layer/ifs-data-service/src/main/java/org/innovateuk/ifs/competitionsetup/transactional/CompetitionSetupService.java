@@ -9,6 +9,7 @@ import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -74,4 +75,8 @@ public interface CompetitionSetupService {
             "or the IFS Admin are able to delete competitions in preparation prior to them being in the Open state")
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'DELETE')")
     ServiceResult<Void> deleteCompetition(long competitionId);
+
+    @SecuredBySpring(value = "READ", description = "Only innovation lead role can view competitions they are associated with")
+    @PreAuthorize("hasAnyAuthority('innovation_lead')")
+    ServiceResult<List<Long>> findCompetitionByInnovationLeadId(long userId);
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -87,6 +88,11 @@ public class CompetitionSetupController {
     @GetMapping("/subsection-status/{competitionId}")
     public RestResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(@PathVariable("competitionId") final Long competitionId) {
         return competitionSetupService.getSubsectionStatuses(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/findCompetitionsByInnovationLeadId/{innovationLeadUserId}")
+    public RestResult<List<Long>> findCompetitionsByInnovationLeadId(@PathVariable("innovationLeadUserId") final long innovationLeadUserId) {
+        return competitionSetupService.findCompetitionByInnovationLeadId(innovationLeadUserId).toGetResponse();
     }
 
     @PostMapping("/{id}/mark-as-setup")

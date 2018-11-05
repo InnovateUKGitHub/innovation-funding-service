@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -20,6 +21,9 @@ public interface CompetitionService {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
     ServiceResult<List<UserResource>> findInnovationLeads(final Long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('innovation_lead')")
+    ServiceResult<List<Long>> findCompetitionByInnovationLead(final Long innovationLeadId);
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
     ServiceResult<Void> addInnovationLead(final Long competitionId, final Long innovationLeadUserId);

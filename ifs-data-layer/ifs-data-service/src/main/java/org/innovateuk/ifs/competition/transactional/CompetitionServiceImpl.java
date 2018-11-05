@@ -104,6 +104,11 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    public ServiceResult<List<Long>> findCompetitionByInnovationLead(Long innovationLeadId) {
+        return null;
+    }
+
+    @Override
     @Transactional
     public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
 
