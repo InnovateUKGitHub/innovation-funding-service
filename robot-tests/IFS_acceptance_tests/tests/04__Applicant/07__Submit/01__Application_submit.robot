@@ -130,7 +130,8 @@ RTO lead has read only view after submission
     Given the user navigates to the page                   ${DASHBOARD_URL}
     And the user clicks the button/link                    link = ${application_rto_name}
     When the applicant completes the application details   ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
-    Then the user clicks the button/link                   link = Your finances
+    And the user fills in the organisation information     ${application_rto_name}  ${SMALL_ORGANISATION_SIZE}
+    #Then the user clicks the button/link                   link = Your finances
     And the user clicks the button/link                    link = Your funding
     And the user marks your funding section as complete
     And the user enters the project location
