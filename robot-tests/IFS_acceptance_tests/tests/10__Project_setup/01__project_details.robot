@@ -93,7 +93,7 @@ Non-lead partner can see the project setup page
     Given log in as a different user                &{collaborator1_credentials}
     When The user clicks the button/link            link = ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the element             link = view application feedback
-    And the user clicks the button/link             link = view the grant terms and conditions
+    And the user clicks the button/link             link = view the competition terms and conditions
     And the user goes back to the previous page
     And the user should see the element             css = li.require-action:nth-of-type(1)    #Action required, seen by non-lead
     And the user should see the project setup stages
