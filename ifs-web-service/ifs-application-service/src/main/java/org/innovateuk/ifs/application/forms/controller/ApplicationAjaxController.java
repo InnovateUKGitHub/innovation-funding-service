@@ -148,7 +148,7 @@ public class ApplicationAjaxController {
             financeViewHandlerProvider.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value, competitionId);
             return new StoreFieldResult();
         } else if (inputIdentifier.startsWith("formInput[cost-") || fieldName.startsWith("cost-")) {
-            ValidationMessages validationMessages = financeViewHandlerProvider.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value, competitionId, false);
+            ValidationMessages validationMessages = financeViewHandlerProvider.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value, competitionId);
 
             if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
                 LOG.debug("no errors");

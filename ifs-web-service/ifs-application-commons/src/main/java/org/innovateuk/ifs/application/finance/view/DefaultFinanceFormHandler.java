@@ -81,7 +81,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
     }
 
     @Override
-    public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId, boolean markSectionAsComplete) {
+    public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
         if (fieldName == null || value == null) {
             return new ValidationMessages();
         }

@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
-import org.innovateuk.ifs.application.forms.ApplicationFormUtil;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -55,7 +54,6 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     public static final String NON_NEGATIVE_MESSAGE = "validation.standard.non.negative.integer.format";
     public static final String BLANK_FIELD_MESSAGE = "validation.field.must.not.be.blank";
     public static final String TSB_REFERENCE = "tsb_reference";
-    public static final String MARK_SECTION_AS_COMPLETE = ApplicationFormUtil.MARK_SECTION_AS_COMPLETE;
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
@@ -67,8 +65,6 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     private ValidationMessages storeFinanceRowItems(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
 
-        boolean markSectionAsComplete = request.getParameterMap().containsKey(MARK_SECTION_AS_COMPLETE);
-
         ValidationMessages validationMessages = new ValidationMessages();
         Enumeration<String> parameterNames = request.getParameterNames();
 
@@ -76,21 +72,24 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             String parameter = parameterNames.nextElement();
             String[] parameterValues = request.getParameterValues(parameter);
             if (parameterValues.length > 0) {
-                validationMessages.addAll(storeCost(userId, applicationId, parameter, parameterValues[0], competitionId, markSectionAsComplete));
+                validationMessages.addAll(storeCost(userId, applicationId, parameter, parameterValues[0], competitionId));
             }
         }
         return validationMessages;
     }
 
     @Override
-    public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId, boolean markSectionAsComplete) {
+    public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
         if (fieldName != null && value != null && fieldName.startsWith("cost-")) {
-            return storeField(fieldName.replace("cost-", ""), value, userId, applicationId, competitionId, markSectionAsComplete);
+            return storeField(fieldName.replace("cost-", ""), value, userId, applicationId, competitionId);
         }
         return null;
     }
 
-    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId, Long competitionId, boolean markSectionAsComplete) {
+    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId, Long competitionId) {
+
+        ValidationMessages validationMessages = new ValidationMessages();
+
         FinanceFormField financeFormField = getCostFormField(competitionId, fieldName, value);
         if (financeFormField == null) {
             return null;
@@ -102,16 +101,16 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
 
         if (!financeFormField.getCostName().equals(TSB_REFERENCE)) {
-            validateLong(value, financeFormField);
+            validationMessages.addAll(validateLong(value, financeFormField));
         }
 
         FinanceRowHandler financeRowHandler = new AcademicFinanceHandler();
 
         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
-        storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        validationMessages.addAll(storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId()));
 
-        if (value.isEmpty() && markSectionAsComplete && financeFormField.getCostName().equals(TSB_REFERENCE)) {
-            return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-item]",
+        if (value.isEmpty() && financeFormField.getCostName().equals(TSB_REFERENCE)) {
+            validationMessages.addError(fieldError("formInput[cost-" + financeFormField.getId() + "-item]",
                     financeFormField, BLANK_FIELD_MESSAGE));
         }
 
