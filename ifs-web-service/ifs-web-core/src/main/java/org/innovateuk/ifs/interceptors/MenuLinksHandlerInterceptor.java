@@ -60,7 +60,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
         UserResource user = authentication.getDetails();
         String role = cookieUtil.getCookieValue(request, "role");
 
-        return user.hasMoreThanOneRoleOf(ASSESSOR, APPLICANT, STAKEHOLDER) && "stakeholder".equals(role);
+        return user.hasMoreThanOneRoleOf(ASSESSOR, APPLICANT, STAKEHOLDER) && STAKEHOLDER.name().equals(role);
     }
 
     private void addUserProfileLink(HttpServletRequest request, ModelAndView modelAndView) {
