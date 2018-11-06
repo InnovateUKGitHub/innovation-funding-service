@@ -3,6 +3,7 @@ describe('test editor manipulation', () => {
 		// import IFS module
 		IFS = {"core" : {}}
 		require("./editor")
+		//const $ = require('jquery');
 	})
 	test("check list formatter", () => {
 		// check basic <div> addition to list
@@ -41,5 +42,5 @@ describe('test editor manipulation', () => {
 		expect(
 			IFS.core.editor.textToHtml("this is \n a break \n see")
 		).toBe("<p>this is <br /> a break <br /> see</p>")
-	}
+	})
 })

@@ -37,5 +37,10 @@
   "scripts": {
     "test": "jest"
   },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "<rootDir>/build/"
+    ]
+  },
   "private": true
 }
