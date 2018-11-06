@@ -2,9 +2,26 @@ describe('test editor manipulation', () => {
 	beforeAll(() => {
 		// import IFS module
 		IFS = {"core" : {}}
+		jQuery = require('jquery');
 		require("./editor")
-		//const $ = require('jquery');
 	})
+
+	test("editor creator basic", () => {
+		// build a mock textarea
+		var wrapper = jQuery('<div><p></p><textarea data-editor="test"></textarea></div>');
+		var textarea = wrapper.find('textarea')[0]
+
+		// run prepareEditorHTML
+		IFS.core.editor.prepareEditorHTML(textarea)
+
+		// verify wrapper now looks correct
+		dataEditor = wrapper.find('div')
+		expect(dataEditor.attr('data-editor')).toBe("test")
+		expect(dataEditor.attr('class')).toBe("editor govuk-body")
+		expect(dataEditor.attr('role')).toBe("textbox")
+	})
+
+
 	test("check list formatter", () => {
 		// check basic <div> addition to list
 		expect(
