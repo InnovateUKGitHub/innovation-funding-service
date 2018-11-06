@@ -122,8 +122,8 @@ User fills in funding overide
 the user checks the override value is applied
     the user clicks the button/link     link = Your finances
     the user clicks the button/link     link = Your funding
-    the user clicks the button/link     jQuery = button:contains("Edit your funding")    #css = button[type=submit]
-    the user should see the text in the page            The maximum you can enter is 100%
+    the user clicks the button/link     jQuery = button:contains("Edit your funding")
+    the user should see the element     jQuery = span:contains("The maximum you can enter is 100%")
     the user selects the checkbox       agree-terms-page
     the user clicks the button/link     jQuery = button:contains("Mark as complete")
     the user clicks the button/link     link = Application overview
