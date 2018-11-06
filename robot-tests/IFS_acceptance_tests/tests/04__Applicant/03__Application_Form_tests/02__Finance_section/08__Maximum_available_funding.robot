@@ -73,6 +73,10 @@ Maximum funding level available for RTO lead
     And the user fills in the organisation information                      ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs                                 labour costs  n/a
     When the user clicks the button/link                                    link = Your funding
+    And the user should see the text in the page                            The amount you apply for must reflect other
+    And the correct funding displayed for lead RTO applicant                Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}
+    And the correct funding displayed for lead RTO applicant                Industrial research  ${LARGE_ORGANISATION_SIZE}
+    #And the user selects Research category                                  Experimental development
     And the user marks your funding section as complete
     [Teardown]  the user clicks the button/link                             link = Application overview
 
@@ -241,9 +245,9 @@ the correct funding displayed for lead applicant
     the user selects the radio button           requestingFunding   true
     the user should see the text in the page    The maximum you can enter is ${funding_amount}
 
-the user marks your funding section as complete
-    the user selects the radio button     requestingFunding   true
-    the user enters text to a text field  css = [name^="grantClaimPercentage"]  30
-    the user selects the radio button     otherFunding  false
-    the user selects the checkbox         agree-terms-page
-    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+the correct funding displayed for lead RTO applicant
+    [Arguments]   ${research_cat}  ${org_size}
+    the user edits the research category        ${research_cat}
+    the user edits the organisation size        ${org_size}
+    the user selects the radio button           requestingFunding   true
+    the user should see the text in the page    The amount you apply for must reflect other
