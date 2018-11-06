@@ -108,7 +108,8 @@ Invite existing academic collaborator for RTO lead
     And the user clicks the button/link                jQuery = button:contains("Add organisation and invite applicants")
     And logout as user
     When the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
-    And the user clicks the button/link                 link = Your finances
+    And the correct funding is displayed to academic user
+    #And the user clicks the button/link                 link = Your finances
     And the academic user marks your project costs as complete
 
 Invite existing business user into RTO lead application
@@ -238,10 +239,8 @@ the correct funding displayed for lead applicant
     [Arguments]   ${research_cat}  ${org_size}  ${funding_amount}
     the user edits the research category        ${research_cat}
     the user edits the organisation size        ${org_size}
-    #And the user clicks the button/link                      link = Your funding
     the user selects the radio button           requestingFunding   true
     the user should see the text in the page    The maximum you can enter is ${funding_amount}
-    #the user should see the text in the page    Enter your funding level (maximum ${funding_amount}).
 
 the user marks your funding section as complete
     the user selects the radio button     requestingFunding   true
