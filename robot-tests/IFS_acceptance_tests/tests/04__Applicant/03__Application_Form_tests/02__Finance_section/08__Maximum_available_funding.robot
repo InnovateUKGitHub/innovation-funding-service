@@ -76,7 +76,6 @@ Maximum funding level available for RTO lead
     And the user should see the text in the page                            The amount you apply for must reflect other
     And the correct funding displayed for lead RTO applicant                Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}
     And the correct funding displayed for lead RTO applicant                Industrial research  ${LARGE_ORGANISATION_SIZE}
-    #And the user selects Research category                                  Experimental development
     And the user marks your funding section as complete
     [Teardown]  the user clicks the button/link                             link = Application overview
 
