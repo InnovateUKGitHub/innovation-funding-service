@@ -22,8 +22,10 @@ echo "$IDP_SAML_ENCRYPTION_CERTIFICATE" > /opt/shibboleth-idp/credentials/idp-en
 echo "$LDAP_ENCRYPTION_CERTIFICATE" > /opt/shibboleth-idp/credentials/ldap-encryption.crt && \
 $JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /opt/shibboleth-idp/credentials/ldap-encryption.crt -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass "$JAVA_KEYSTORE_PASSWORD"
 
+. idp-extras.sh
+
 # idp configuration
-sed -i "s#\/\/ifs.local-dev#\/\/$SP_DOMAIN#g" /etc/shibboleth/*
+sed -i "s#\/\/ifs.local-dev#\/\/$SP_DOMAIN#g" /etc/shibboleth/*.xml
 sed -i "s#\/\/idp#\/\/$IDP_DOMAIN#g" /etc/shibboleth/metadata.xml /opt/shibboleth-idp/conf/idp.properties
 sed -i "s#\/\/ifs-local-dev#\/\/$SP_DOMAIN#g" /opt/shibboleth-idp/conf/attribute-filter.xml /opt/shibboleth-idp/views/error.vm
 
