@@ -15,7 +15,7 @@ SET @applicant_role_id =
 INSERT INTO user_role
 (user_id, role_id)
 VALUES
-((SELECT id FROM user WHERE email = 'felix.wilson@gmail.com'), @stakeholder_role_id);
+((SELECT id FROM user WHERE email = 'blake.wood@gmail.com'), @stakeholder_role_id);
 
 INSERT INTO user_role
 (user_id, role_id)

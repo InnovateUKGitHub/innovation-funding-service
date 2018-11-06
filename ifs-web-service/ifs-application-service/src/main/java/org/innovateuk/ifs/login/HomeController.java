@@ -56,7 +56,7 @@ public class HomeController {
         }
 
         UserResource user = (UserResource) authentication.getDetails();
-        if (user.userHasMultipleExternalRoles(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER)) {
+        if (user.hasMoreThanOneRoleOf(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER)) {
             return "redirect:/roleSelection";
         }
 
@@ -69,7 +69,7 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (unauthenticated(authentication) || (!user.userHasMultipleExternalRoles(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER))){
+        if (unauthenticated(authentication) || (!user.hasMoreThanOneRoleOf(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER))){
             return "redirect:/";
         }
 
@@ -77,7 +77,7 @@ public class HomeController {
     }
 
     @PostMapping("/roleSelection")
-    public String processRole(Model model,//
+    public String processRole(Model model,
                               UserResource user,
                               @Valid @ModelAttribute("form") RoleSelectionForm form,
                               BindingResult bindingResult,

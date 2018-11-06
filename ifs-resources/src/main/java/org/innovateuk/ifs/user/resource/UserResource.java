@@ -178,7 +178,7 @@ public class UserResource {
         return CollectionUtils.retainAll(roles, Arrays.asList(acceptedRoles));
     }
 
-    public boolean userHasMultipleExternalRoles(Role... acceptedRoles){
+    public boolean hasMoreThanOneRoleOf(Role... acceptedRoles){
         return hasRoles(acceptedRoles).size() > 1;
     }
 
