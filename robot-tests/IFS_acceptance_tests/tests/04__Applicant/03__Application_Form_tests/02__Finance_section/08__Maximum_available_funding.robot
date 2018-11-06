@@ -109,7 +109,6 @@ Invite existing academic collaborator for RTO lead
     And logout as user
     When the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
     And the correct funding is displayed to academic user
-    #And the user clicks the button/link                 link = Your finances
     And the academic user marks your project costs as complete
 
 Invite existing business user into RTO lead application
