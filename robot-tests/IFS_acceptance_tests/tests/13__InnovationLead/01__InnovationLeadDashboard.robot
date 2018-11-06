@@ -6,7 +6,7 @@ Documentation   IFS-984 Innovation Leads user journey navigation
 ...             IFS-1308 Innovation Leads: Project Setup
 Suite Setup     The user logs-in in new browser  &{innovation_lead_one}
 Suite Teardown  the user closes the browser
-Force Tags      InnovationLead
+Force Tags      InnovationLead  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
 Resource        ../10__Project_setup/PS_Common.robot
@@ -50,7 +50,6 @@ Innnovation lead can see competitions assigned to him only
     And the user should not see the text in the page  ${openCompetitionBusinessRTO_name}
     When the user clicks the button/link  css = #section-4 a  #Project setup tab
     Then the user should see the element  link = ${PROJECT_SETUP_COMPETITION_NAME}
-
 
 *** Keywords ***
 The user should see permission error on page

@@ -51,7 +51,7 @@ Resource          PS_Common.robot
 *** Test Cases ***
 External user cannot view the GOL section before spend profiles have been approved
     [Documentation]    INFUND-6741
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user       ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page        ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     When the user should not see the element    css = li.waiting:nth-child(7)
@@ -61,7 +61,7 @@ External user cannot view the GOL section before spend profiles have been approv
 
 Support user cannot access spend profile until it is approved
     [Documentation]    IFS-1307
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user                                   &{support_user_credentials}
     Given the user navigates to the page                                  ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should see the element                                  jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(5).status.action  # Spend profile status
@@ -72,7 +72,7 @@ Support user cannot access spend profile until it is approved
 
 GOL not generated before spend profiles have been approved
     [Documentation]    INFUND-6741
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user                                 &{Comp_admin1_credentials}
     When the user navigates to the page                                   ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should not see the element                              css = #table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action
@@ -94,7 +94,7 @@ Status updates correctly for internal user's table
 
 IFS Admin user selects the grant offer letter
     [Documentation]  INFUND-6377, INFUND-6048, IFS-603
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user          &{ifs_admin_user_credentials}
     Given the user navigates to the page         ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     When the user clicks the button/link         css = #table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a
@@ -106,7 +106,7 @@ IFS Admin user selects the grant offer letter
 
 Project Finance can download GOL
     [Documentation]  INFUND-6377
-    [Tags]    Download
+    [Tags]    Download  HappyPath
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user downloads the file                           ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
@@ -114,7 +114,7 @@ Project Finance can download GOL
 
 Lead should not be able to see GOL until it is sent by IUK
     [Documentation]  INFUND-7027
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user            ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     And the user should see the element              css = li.waiting:nth-child(7)
@@ -133,7 +133,7 @@ Lead cannot change project manager, project address and finance contact after GO
 
 Non lead should not be able to see GOL until it is sent by IUK
     [Documentation]  INFUND-7027
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user            ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should not see the element         css = li.complete:nth-child(7)
@@ -146,7 +146,7 @@ Non lead should not be able to see GOL until it is sent by IUK
 
 Project finance user removes the grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user           &{internal_finance_credentials}
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user can remove the uploaded file    removeGrantOfferLetterClicked  grant_offer_letter.pdf
@@ -163,10 +163,9 @@ Comp Admin cannot upload big or non-pdf grant offer letter
     And the user uploads a file                      grantOfferLetter  ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
 
-
 Comp Admin user uploads new grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user         &{Comp_admin1_credentials}
     Given the user navigates to the page        ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user uploads a file                grantOfferLetter  ${valid_pdf}
@@ -288,7 +287,7 @@ Non lead partner can download the annex
 
 Academic users can see the uploaded Grant Offer letter
     [Documentation]    INFUND-5998
-    [Tags]
+    [Tags]  HappyPath
     Given log in as a different user        ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
     And the user navigates to the page      ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
     Then the user should see the element    css = ul li.waiting:nth-child(7)
