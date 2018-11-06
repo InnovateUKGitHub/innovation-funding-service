@@ -58,6 +58,7 @@ gulp.task('web-core:ifs-js', function () {
   return gulp.src([
     __dirname + '/js/ifsCoreLoader.js',
     __dirname + '/js/ifs_modules/*.js',
+    '!' + __dirname + '/js/ifs_modules/*.test.js',
     __dirname + '/js/ifs_pages/*.js',
     __dirname + '/js/fire.js'
   ])
@@ -112,7 +113,7 @@ gulp.task('web-core:css:watch', function () {
 })
 
 gulp.task('web-core:js:watch', function () {
-  gulp.watch([__dirname + '/js/**/*.js', '!' + __dirname + '/js/dest/*.js'], ['web-core-js'])
+  gulp.watch([__dirname + '/js/**/*.js', '!' + __dirname + '/js/**/*.test.js',  '!' + __dirname + '/js/dest/*.js'], ['web-core-js'])
 })
 
 gulp.task('default', gulp.parallel('web-core:js', 'web-core:css'))

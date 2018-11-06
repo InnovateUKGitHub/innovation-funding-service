@@ -536,10 +536,9 @@ IFS.core.formValidation = (function () {
       var telAttribute = 'tel'
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, telAttribute)
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, telAttribute)
-      var re = /^$|^[\\)\\(\\+\s-]*(?:\d[\\)\\(\\+\s-]*){8,20}$/
 
       var tel = field.val()
-      var validPhone = re.test(tel)
+      var validPhone = IFS.core.formValidation.validateTelRegex(tel)
 
       if (!validPhone) {
         IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
@@ -548,6 +547,10 @@ IFS.core.formValidation = (function () {
         IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
         return true
       }
+    },
+    validateTelRegex: function (tel) {
+      var re = /^$|^[\\)\\(\\+\s-]*(?:\d[\\)\\(\\+\s-]*){8,20}$/
+      return re.test(tel)
     },
     checkDate: function (field) {
       var dateGroup = field.closest('.date-group')
