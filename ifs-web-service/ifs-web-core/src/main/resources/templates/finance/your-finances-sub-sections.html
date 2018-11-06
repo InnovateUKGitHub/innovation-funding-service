@@ -5,7 +5,8 @@
 <th:block th:fragment="finance(model)">
     <div class="your-finances">
         <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Finances</h2>
-        <div class="message-alert">
+        <div class="message-alert"
+             th:unless="${model.competition.collaborationLevel == T(org.innovateuk.ifs.competition.resource.CollaborationLevel).SINGLE}">
             <p class="govuk-body">Only members from your organisation will be able to see a breakdown of your finances.</p>
         </div>
         <p class="govuk-body govuk-!-margin-top-6">Please complete your project finances.</p>
