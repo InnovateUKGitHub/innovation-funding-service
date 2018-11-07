@@ -63,7 +63,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "AND str(a.id) LIKE CONCAT('%', :searchString, '%')";
 
     String APPLICATION_SEARCH_BY_USER_ID_AND_STAKEHOLDER_ROLE = "SELECT a from Application a " +
-            "INNER JOIN InnovationLead cp " +
+            "INNER JOIN Stakeholder cp " +
             "ON cp.competition.id = a.competition.id " +
             "WHERE cp.user.id = :userId " +
             "AND str(a.id) LIKE CONCAT('%', :searchString, '%')";
