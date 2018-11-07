@@ -70,6 +70,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.ne
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
@@ -291,7 +292,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         String searchString = "12";
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
 
-        Pageable pageable = setUpMockingWildcardSearchById(searchString, applicationResource, 5);
+        Pageable pageable = setUpPageable(Role.SUPPORT, searchString, applicationResource, 5);
 
         ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
 
@@ -305,7 +306,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         String searchString = "12";
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
 
-        Pageable pageable = setUpMockingWildcardSearchById(searchString, applicationResource, 2);
+        Pageable pageable = setUpPageable(Role.COMP_ADMIN, searchString, applicationResource, 2);
 
         ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
 
@@ -313,8 +314,39 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     }
 
-    private Pageable setUpMockingWildcardSearchById(String searchString, ApplicationResource applicationResource,
+    @Test
+    public void SearchApplicationAsInnovationLead() {
+
+        String searchString = "12";
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        Pageable pageable = setUpPageable(INNOVATION_LEAD, searchString, applicationResource, 2);
+
+        ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
+
+        assertWildcardSearchById(result, applicationResource, 2, 3, 5);
+    }
+
+    @Test
+    public void SearchApplicationAsStakeholder() {
+        String searchString = "12";
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        Pageable pageable = setUpPageable(Role.STAKEHOLDER, searchString, applicationResource, 2);
+
+        ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
+
+        assertWildcardSearchById(result, applicationResource, 2, 3, 5);
+    }
+
+    private Pageable setUpPageable(Role role, String searchString, ApplicationResource applicationResource,
                                                     int pageSize) {
+
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(role)).build();
+        User user = newUser().withId(userResource.getId()).withRoles(singleton(role)).build();
+
+        setLoggedInUser(userResource);
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
         List<Application> applications = ApplicationBuilder.newApplication().build(5);
 
@@ -322,6 +354,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = new PageImpl<>(applications, pageable, applications.size());
 
         when(applicationRepositoryMock.searchByIdLike(searchString, pageable)).thenReturn(pagedResult);
+        when(applicationRepositoryMock.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), searchString, pageable)).thenReturn(pagedResult);
+        when(applicationRepositoryMock.searchApplicationsByUserIdAndStakeholderRole(user.getId(), searchString, pageable)).thenReturn(pagedResult);
         when(applicationMapperMock.mapToResource(any(Application.class))).thenReturn(applicationResource);
 
         return pageable;
