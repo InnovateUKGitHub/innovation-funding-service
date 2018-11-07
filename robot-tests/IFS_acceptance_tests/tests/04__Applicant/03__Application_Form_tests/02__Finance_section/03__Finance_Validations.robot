@@ -99,7 +99,7 @@ Overhead cost server side
     [Documentation]    INFUND-844
     Given the user selects the checkbox        agree-terms-page
     When the user clicks the button/link       jQuery = button:contains("Mark as complete")
-    Then the user should see a summary error   You should upload a completed overheads spreadsheet.
+    Then The user should see a field and summary error   You should upload a completed overheads spreadsheet.
 
 Materials client side
     [Documentation]    INFUND-844
