@@ -27,7 +27,7 @@ Academic finances should be editable when lead marks them as complete
 
 Academic finance validations
     [Documentation]    INFUND-2399  IFS-2879
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    Log in as a different user            ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to Your-finances page    Academic robot test application
     And the user clicks the button/link              link = Your project costs
@@ -38,7 +38,7 @@ Academic finance validations
 
 Academic finance calculations
     [Documentation]    INFUND-917, INFUND-2399
-    [Tags]
+    [Tags]  HappyPath
     When the academic fills in the project costs
     And the user clicks the button/link  link = Your project costs
     Then the subtotals should be correctly updated
@@ -60,7 +60,7 @@ Non pdf uploads not allowed
 
 Lead applicant can't upload a JeS file
     [Documentation]    INFUND-2720
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user     &{lead_applicant_credentials}
     Given the user navigates to Your-finances page  Academic robot test application
     When the user clicks the button/link      link = Your project costs
@@ -207,6 +207,7 @@ the applicant enters invalid inputs
 Mark academic finances as complete
     the user selects the checkbox    termsAgreed
     the user clicks the button/link  id = mark-all-as-complete
+    the user should see a field and summary error  This field cannot be left blank.
 
 the user should see correct grant percentage
     the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
@@ -215,6 +216,6 @@ the user should see correct grant percentage
 The user marks the academic application finances as incomplete
     the user navigates to Your-finances page  Academic robot test application
     the user clicks the button/link    link = Your project costs
-    Focus    jQuery = button:contains("Edit")
+    Set Focus To Element      jQuery = button:contains("Edit")
     the user clicks the button/link    jQuery = button:contains("Edit")
     wait for autosave

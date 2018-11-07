@@ -15,19 +15,19 @@ ${application_not_submitted_message}    This application has not been entered in
 *** Test Cases ***
 Application shows as not submitted on the dashboard
     [Documentation]    INFUND-2741
-    [Tags]
+    [Tags]  HappyPath
     Then the user should see that the application is not submitted
     And the user clicks the button/link    link = ${IN_ASSESSMENT_APPLICATION_1_TITLE}
 
 Application shows as not submitted on the overview
     [Documentation]    INFUND-2742
-    [Tags]
+    [Tags]  HappyPath
     When the user navigates to the page              ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1_NUMBER}
     Then the user should see the text in the page    ${application_not_submitted_message}
 
 Submit button should be disabled
     [Documentation]    INFUND-2742, INFUND-2312, INFUND-3175
-    [Tags]
+    [Tags]  HappyPath
     When the user navigates to the page              ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1_NUMBER}/summary
     Then the user should see the text in the page    Registration is now closed, you are no longer able to submit your application.
     And the user should not see the element          jQuery = .govuk-button:contains("Submit application")
@@ -35,7 +35,7 @@ Submit button should be disabled
 
 Applicant shouldn't see the Mark as complete-Edit-Save buttons
     [Documentation]    INFUND-3740
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page        ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1_NUMBER}/summary
     When The user clicks the button/link        jQuery = button:contains(Project summary)
     Then The user should not see the element    jQuery = .govuk-button:contains(Mark as complete)
@@ -45,7 +45,7 @@ Applicant shouldn't see the Mark as complete-Edit-Save buttons
 
 Already submitted application should not show error when the competition is closed
     [Documentation]    INFUND-3175
-    [Tags]
+    [Tags]  HappyPath
     When the user navigates to the page                  ${dashboard_url}
     And the user clicks the button/link                  link = ${OPEN_COMPETITION_APPLICATION_3_NAME}
     Then the user should not see the text in the page    Application not submitted

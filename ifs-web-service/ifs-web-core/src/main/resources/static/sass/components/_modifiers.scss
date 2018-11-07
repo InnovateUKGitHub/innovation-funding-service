@@ -9,6 +9,18 @@ table {
     white-space: nowrap;
   }
 
+  .width-15-percent {
+    box-sizing: border-box;
+    padding-right: 1em;
+    width: 15%;
+  }
+
+  .width-20-percent {
+    box-sizing: border-box;
+    padding-right: 1em;
+    width: 20%;
+  }
+
   .width-30-percent {
     box-sizing: border-box;
     padding-right: 1em;

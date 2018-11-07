@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -19,6 +20,12 @@ public interface CompetitionSetupStakeholderService {
     @SecuredBySpring(value = "FIND_STAKEHOLDERS_FOR_COMPETITION", description = "Only comp admin, project finance or IFS admin can search stakeholders for a given competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<List<UserResource>> findStakeholders(long competitionId);
+
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "READ_STAKEHOLDER_INVITE_ON_HASH",
+            description = "The System Registration user can read an invite for a given hash",
+            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
+    ServiceResult<StakeholderInviteResource> getInviteByHash(String hash);
 
     @SecuredBySpring(value = "ADD_STAKEHOLDER_TO_COMPETITION", description = "Only comp admin, project finance or IFS admin can add stakeholders to a given competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")

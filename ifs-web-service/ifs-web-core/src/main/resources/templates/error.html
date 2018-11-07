@@ -38,7 +38,7 @@
           You can either go back to the page you were previously on or to the <a th:href="${userDashboardLink}" class="govuk-link">Innovation Funding Service sign in page</a>.
         </p>
 
-        <p class="govuk-body" th:unless="${#strings.isEmpty(stacktrace)}" th:text="${'Stack trace for debugging: ' + stacktrace}" style="margin-top: 2em;">
+        <p class="govuk-body govuk-!-margin-top-6" th:unless="${#strings.isEmpty(stacktrace)}" th:text="${'Stack trace for debugging: ' + stacktrace}">
             Stack trace will be printed here when using the "debug" active profile
         </p>
 
