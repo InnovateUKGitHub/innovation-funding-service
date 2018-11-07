@@ -131,7 +131,8 @@
                th:if="${model.complete || model.getCompetition().getCompetitionStatus().isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}"
                class="govuk-!-margin-top-6 button-secondary">Return to finances
             </a>
-            <button type="submit"
+            <button name="save-and-return"
+                    type="submit"
                     th:unless="${model.complete || model.getCompetition().getCompetitionStatus().isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}"
                     class="govuk-!-margin-top-6 govuk-button">
                 Save and return to finances
