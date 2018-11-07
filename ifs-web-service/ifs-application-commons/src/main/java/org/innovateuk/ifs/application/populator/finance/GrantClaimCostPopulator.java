@@ -6,8 +6,6 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.stereotype.Component;
 
-import static java.util.Optional.ofNullable;
-
 /**
  * Populator for grant claim form inputs.
  */
@@ -28,7 +26,7 @@ public class GrantClaimCostPopulator extends AbstractCostPopulator<GrantClaimCos
     protected void populateCost(AbstractApplicantResource resource, GrantClaimCostViewModel viewModel, ApplicationFinanceResource organisationFinances) {
         if (organisationFinances != null) {
             viewModel.setMaximumGrantClaimPercentage(organisationFinances.getMaximumFundingLevel());
-            viewModel.setOrganisationGrantClaimPercentage(ofNullable(organisationFinances.getGrantClaim().getGrantClaimPercentage()).orElse(0));
+            viewModel.setOrganisationGrantClaimPercentage(organisationFinances.getGrantClaim().getGrantClaimPercentage());
             viewModel.setOrganisationGrantClaimPercentageId(organisationFinances.getGrantClaim().getId());
         }
     }
