@@ -15,19 +15,20 @@ Mark as complete Your funding with only one input should not be possible
     [Documentation]    INFUND-2214
     [Tags]
     When the user clicks the button/link      link = Your funding
-    And the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  70
+    And the user selects the radio button     requestingFunding   true
+    And the user enters text to a text field  css = [name^="grantClaimPercentage"]  70
     And the user moves focus to the element   css = [data-target="other-funding-table"] label
     Then the user should see the element      jQuery = #mark-all-as-complete.disabled:contains("Mark as complete")
 
 Other funding client side
     [Documentation]    INFUND-2214
     [Tags]
-    When the user clicks the button twice    css = label[for$="otherPublicFunding-yes"]
+    When the user selects the radio button   otherFunding  true
     And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  -6565
     Then the user should see the element     css = #other-funding-table[aria-hidden="false"]
     # This line should be after css = label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
-    When the user should see a field error   Funding source cannot be blank.
-    Then the user should see a field error   Invalid secured date.
+    When the user should see a field error   Enter a funding source.
+    Then the user should see a field error   Enter date secured.
     And the user should see a field error    This field should be 1 or higher.
 
 Other funding server side
@@ -36,15 +37,15 @@ Other funding server side
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
     And the user selects the checkbox                    agree-terms-page
     And the user clicks the button/link                  jQuery = button:contains("Mark as complete")
-    Then the user should see a field and summary error   Funding source cannot be blank.
-    And the user should see a field and summary error    Please use MM-YYYY format.
+    Then the user should see a field and summary error   Enter a funding source.
+    And the user should see a field and summary error    Enter date secured.
     And the user should see a field and summary error    This field should be 1 or higher.
 
 Select NO Other Funding and mark as complete should be possible
     [Documentation]    INFUND-2214
     [Tags]
-    Given the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  50
-    When the user clicks the button/link        jQuery = label:contains("No")
+    Given the user selects the radio button     requestingFunding   false
+    When the user selects the radio button      otherFunding  false
     And the user selects the checkbox           agree-terms-page
     Then the user clicks the button/link        jQuery = button:contains("Mark as complete")
     And the user should not see an error in the page
@@ -106,7 +107,7 @@ Materials client side
     Given the user clicks the button/link       jQuery = button:contains("Materials")
     When the user enters text to a text field   css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1234567810111213141516171819202122
     And the user enters text to a text field    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
-    the user moves focus to the element         css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input
+    And the user moves focus to the element     css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input
     Then the user should see a field error      You must enter a value less than 10 digits.
     And the user should see a field error       This field should be 1 or higher.
 
@@ -244,11 +245,13 @@ Funding level server side
     [Setup]  the user clicks the button/link     link = Your finances
     Given the user clicks the button/link        link = Your funding
     And the user clicks the button/link          jQuery = button:contains("Edit your funding")
-    When the user enters text to a text field    css = [name^="finance-grantclaimpercentage"]  71
+    And the user selects the radio button        requestingFunding   true
+    When the user enters text to a text field    css = [name^="grantClaimPercentage"]  71
     And the user selects the checkbox            agree-terms-page
     And the user clicks the button/link          jQuery = button:contains("Mark as complete")
-    Then the user should see a field and summary error   This field should be 70% or lower.
-    Then the user enters text to a text field    css = [name^="finance-grantclaimpercentage"]  69
+    Then the user should see a field and summary error   Funding level must be 70% or lower.
+    And the user selects the radio button        requestingFunding   true
+    Then the user enters text to a text field    css = [name^="grantClaimPercentage"]  69
     And the user moves focus to the element      css = [data-target="other-funding-table"] label
 
 *** Keywords ***

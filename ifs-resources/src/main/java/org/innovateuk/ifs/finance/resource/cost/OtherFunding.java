@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 
 import javax.validation.constraints.Digits;
@@ -12,7 +15,6 @@ public class OtherFunding extends AbstractFinanceRowItem {
     private String otherPublicFunding;
     private String fundingSource;
     private String securedDate;
-
 
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal fundingAmount;
@@ -106,5 +108,47 @@ public class OtherFunding extends AbstractFinanceRowItem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OtherFunding that = (OtherFunding) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(otherPublicFunding, that.otherPublicFunding)
+                .append(fundingSource, that.fundingSource)
+                .append(securedDate, that.securedDate)
+                .append(fundingAmount, that.fundingAmount)
+                .append(name, that.name)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(otherPublicFunding)
+                .append(fundingSource)
+                .append(securedDate)
+                .append(fundingAmount)
+                .append(name)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("otherPublicFunding", otherPublicFunding)
+                .append("fundingSource", fundingSource)
+                .append("securedDate", securedDate)
+                .append("fundingAmount", fundingAmount)
+                .append("name", name)
+                .toString();
     }
 }

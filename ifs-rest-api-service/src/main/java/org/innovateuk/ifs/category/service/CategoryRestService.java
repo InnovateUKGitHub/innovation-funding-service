@@ -14,6 +14,8 @@ public interface CategoryRestService {
 
     RestResult<List<InnovationAreaResource>> getInnovationAreas();
 
+    RestResult<List<InnovationAreaResource>> getInnovationAreasExcludingNone();
+
     RestResult<List<InnovationSectorResource>> getInnovationSectors();
 
     RestResult<List<ResearchCategoryResource>> getResearchCategories();

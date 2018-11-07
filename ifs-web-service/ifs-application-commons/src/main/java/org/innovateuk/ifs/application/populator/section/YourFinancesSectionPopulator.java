@@ -65,7 +65,6 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, section.getApplication().getId());
         BaseFinanceResource organisationFinances = organisationFinanceOverview.getFinancesByOrganisation().get(section.getCurrentApplicant().getOrganisation().getId());
 
-        viewModel.setNotRequestingFunding(yourFundingComplete && yourOrganisationComplete && organisationFinances.getGrantClaimPercentage() != null && organisationFinances.getGrantClaimPercentage() == 0);
         viewModel.setCompletedSectionIds(completedSectionIds);
         viewModel.setOrganisationFinance(organisationFinances);
     }

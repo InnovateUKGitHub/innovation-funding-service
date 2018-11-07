@@ -17,7 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_SECTION_AS_COMPLETE;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_SECTION_AS_INCOMPLETE;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.junit.Assert.assertEquals;
@@ -47,13 +48,6 @@ public class ApplicationSectionFinanceSaverTest {
                                 .withCompetition(competitionId)
                                 .withType(SectionType.ORGANISATION_FINANCES)
                                 .build(1));
-
-        when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES))
-                .thenReturn(
-                        newSectionResource()
-                                .withCompetition(competitionId)
-                                .withType(SectionType.FUNDING_FINANCES)
-                                .build(1));
     }
 
     @Test
@@ -63,7 +57,7 @@ public class ApplicationSectionFinanceSaverTest {
 
         saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.RESEARCH.getId(), newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build(), 3L, competitionId, 7L);
 
-        verify(sectionService, times(2)).markAsNotRequired(anyLong(), anyLong(), anyLong());
+        verify(sectionService, times(1)).markAsNotRequired(anyLong(), anyLong(), anyLong());
     }
 
     @Test
@@ -94,31 +88,5 @@ public class ApplicationSectionFinanceSaverTest {
         saver.handleStateAid(params, application, form, selectedSection);
 
         assertEquals(Boolean.FALSE, application.getStateAidAgreed());
-    }
-
-    @Test
-    public void handleRequestFundingRequests_requestFunding() {
-        final Map<String, String[]> params = new HashMap<>();
-        final Long applicationId = 3L;
-        final Long processRoleId = 15L;
-
-        params.put(REQUESTING_FUNDING, null);
-
-        saver.handleRequestFundingRequests(params, applicationId, competitionId, processRoleId);
-
-        verify(sectionService, times(2)).markAsInComplete(anyLong(), anyLong(), anyLong());
-    }
-
-    @Test
-    public void handleRequestFundingRequests_notRequestFunding() {
-        final Map<String, String[]> params = new HashMap<>();
-        final Long applicationId = 3L;
-        final Long processRoleId = 15L;
-
-        params.put(NOT_REQUESTING_FUNDING, null);
-
-        saver.handleRequestFundingRequests(params, applicationId, competitionId, processRoleId);
-
-        verify(sectionService, times(2)).markAsNotRequired(anyLong(), anyLong(), anyLong());
     }
 }
