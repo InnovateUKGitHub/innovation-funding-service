@@ -41,7 +41,7 @@
 
                 <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
                 <input type="hidden" id="cacheTest" value=""/>
-                <th:block th:unless="${model.complete}" >
+                <th:block th:unless="${model.readOnly}" >
                     <input type="hidden"
                            th:field="*{otherFundingQuestionId}" />
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('requestingFunding')} ? 'govuk-form-group--error'">
@@ -143,7 +143,7 @@
                         </fieldset>
                     </div>
                 </th:block>
-                <th:block th:if="${model.complete}">
+                <th:block th:if="${model.readOnly}">
                     <dl class="govuk-list readonly-data">
                         <dt>Funding level</dt>
                         <dd th:text="${form.grantClaimPercentage == null ? 0 : form.grantClaimPercentage +'%'}">50%</dd>

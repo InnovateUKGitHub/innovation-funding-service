@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.controller;
+    package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.assessment.transactional.AssessmentInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;

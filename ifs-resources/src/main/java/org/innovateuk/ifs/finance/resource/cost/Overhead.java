@@ -38,6 +38,7 @@ public class Overhead extends AbstractFinanceRowItem {
     public Overhead() {
         this.rateType = OverheadRateType.NONE;
         this.name = getCostType().getType();
+        this.calculationFile = Optional.empty();
     }
 
     public Overhead(Long id, OverheadRateType rateType, Integer rate) {
