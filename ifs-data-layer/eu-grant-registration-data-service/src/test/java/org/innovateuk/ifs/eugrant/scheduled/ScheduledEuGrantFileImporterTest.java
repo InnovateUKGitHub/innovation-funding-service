@@ -16,12 +16,12 @@ import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.innovateuk.ifs.service.ServiceFailureTestHelper.assertThatServiceFailureIs;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -82,5 +82,23 @@ public class ScheduledEuGrantFileImporterTest {
         verify(grantsFileExtractorMock, times(1)).processFile(sourceFile);
         verify(grantsImporterMock, times(1)).importGrants(extractionResults);
         verify(resultsFileGeneratorMock, times(1)).generateResultsFile(importResults, sourceFile);
+    }
+
+    @Test
+    public void importEuGrantsFileFailureHandling() throws IOException {
+
+        File sourceFile = File.createTempFile("temp", "temp");
+
+        when(grantsFileUploaderMock.getFileIfExists()).thenReturn(serviceSuccess(sourceFile));
+        when(grantsFileExtractorMock.processFile(sourceFile)).thenReturn(serviceFailure(internalServerErrorError()));
+
+        ServiceResult<File> result = importer.importEuGrantsFile();
+
+        assertThatServiceFailureIs(result, internalServerErrorError());
+
+        verify(grantsFileUploaderMock, times(1)).getFileIfExists();
+        verify(grantsFileExtractorMock, times(1)).processFile(sourceFile);
+        verify(grantsImporterMock, never()).importGrants(any());
+        verify(resultsFileGeneratorMock, never()).generateResultsFile(any(), any());
     }
 }
