@@ -207,6 +207,7 @@ the applicant enters invalid inputs
 Mark academic finances as complete
     the user selects the checkbox    termsAgreed
     the user clicks the button/link  id = mark-all-as-complete
+    the user should see a field and summary error  This field cannot be left blank.
 
 the user should see correct grant percentage
     the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant

@@ -197,7 +197,7 @@ public class ApplicationSectionController {
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        if (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)) {
+        if (!isSaveAndReturnRequest(params) && (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request))) {
             validationHandler.addAnyErrors(saveApplicationErrors);
             populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), isSupport);
             return APPLICATION_FORM;
