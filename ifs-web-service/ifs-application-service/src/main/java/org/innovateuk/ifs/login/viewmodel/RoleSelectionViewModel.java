@@ -10,7 +10,7 @@ import java.util.List;
  */
 public final class RoleSelectionViewModel {
 
-    private List<Role> acceptedRoles;
+    private final List<Role> acceptedRoles;
 
     public RoleSelectionViewModel(UserResource user) {
         acceptedRoles = user.getRoles();
@@ -18,9 +18,5 @@ public final class RoleSelectionViewModel {
 
     public List<Role> getAcceptedRoles() {
         return acceptedRoles;
-    }
-
-    public void setAcceptedRoles(List<Role> acceptedRoles) {
-        this.acceptedRoles = acceptedRoles;
     }
 }
