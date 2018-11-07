@@ -4,7 +4,8 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.login.form.RoleSelectionForm;
-import org.innovateuk.ifs.login.model.RoleSelectionModelPopulator;
+import org.innovateuk.ifs.login.viewmodel.RoleSelectionViewModel;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,6 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -37,9 +36,6 @@ import static org.springframework.util.StringUtils.hasText;
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = HomeController.class)
 @PreAuthorize("permitAll")
 public class HomeController {
-
-    @Autowired
-    private RoleSelectionModelPopulator roleSelectionModelPopulator;
 
     @Autowired
     private CookieUtil cookieUtil;
@@ -60,7 +56,7 @@ public class HomeController {
         }
 
         UserResource user = (UserResource) authentication.getDetails();
-        if (user.hasRoles(ASSESSOR, APPLICANT)) {
+        if (user.hasMoreThanOneRoleOf(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER)) {
             return "redirect:/roleSelection";
         }
 
@@ -73,11 +69,11 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (unauthenticated(authentication) || !user.hasRoles(ASSESSOR, APPLICANT)) {
+        if (unauthenticated(authentication) || (!user.hasMoreThanOneRoleOf(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER))){
             return "redirect:/";
         }
 
-        return doViewRoleSelection(model);
+        return doViewRoleSelection(model, user);
     }
 
     @PostMapping("/roleSelection")
@@ -88,7 +84,7 @@ public class HomeController {
                               ValidationHandler validationHandler,
                               HttpServletResponse response) {
 
-        Supplier<String> failureView = () -> doViewRoleSelection(model);
+        Supplier<String> failureView = () -> doViewRoleSelection(model, user);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
@@ -98,9 +94,9 @@ public class HomeController {
         });
     }
 
-    private String doViewRoleSelection(Model model) {
-        model.addAttribute("model", roleSelectionModelPopulator.populateModel());
-        return "login/dual-user-choice";
+    private String doViewRoleSelection(Model model, UserResource user) {
+        model.addAttribute("model", new RoleSelectionViewModel(user));
+        return "login/multiple-user-choice";
     }
 
     private String redirectToChosenDashboard(UserResource user, String role) {

@@ -36,7 +36,7 @@ the calculation of the remaining days should be correct
 the total calculation in dashboard should be correct
     [Arguments]    ${TEXT}    ${Section_Xpath}
     [Documentation]    This keyword uses 2 arguments. The first one is about the page's text (competition or application) and the second is about the Xpath selector.
-    ${NO_OF_COMP_OR_APPL}=    Get Matching Xpath Count    ${Section_Xpath}
+    ${NO_OF_COMP_OR_APPL}=    Get Element Count    ${Section_Xpath}
     Page Should Contain    ${TEXT} (${NO_OF_COMP_OR_APPL})
 
 The assessment deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the past

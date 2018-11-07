@@ -99,7 +99,5 @@ public class YourFinancesSectionPopulatorTest {
         YourFinancesSectionViewModel viewModel = yourFinancesSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
 
         assertThat(viewModel.isSection(), equalTo(true));
-        assertThat(viewModel.isNotRequestingFunding(), equalTo(true));
-        assertThat(viewModel.getOrganisationFinance(), equalTo(financeResource));
     }
 }
