@@ -9,13 +9,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
@@ -70,11 +70,11 @@ public class ScheduledEuGrantFileImporter {
                 simpleAnyMatch(sourceFileCheck.getFailure().getErrors(), e -> NOT_FOUND.equals(e.getStatusCode()));
     }
 
-    static ServiceResult<URL> getUrlFromString(String s) {
+    static ServiceResult<URI> getUriFromString(String s) {
         try {
-            return serviceSuccess(new URL(s));
-        } catch (MalformedURLException e) {
-            return serviceFailure(new Error(e.getMessage(), INTERNAL_SERVER_ERROR));
+            return serviceSuccess(new URI(s));
+        } catch (URISyntaxException e) {
+            return serviceFailure(new Error(e.getMessage(), BAD_REQUEST));
         }
     }
 }

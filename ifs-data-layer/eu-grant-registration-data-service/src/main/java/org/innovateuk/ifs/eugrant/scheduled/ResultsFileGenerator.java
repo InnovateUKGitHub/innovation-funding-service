@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.eugrant.scheduled.ScheduledEuGrantFileImporter.getUrlFromString;
+import static org.innovateuk.ifs.eugrant.scheduled.ScheduledEuGrantFileImporter.getUriFromString;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -31,11 +31,11 @@ public class ResultsFileGenerator {
 
     private static final Log LOG = LogFactory.getLog(ResultsFileGenerator.class);
 
-    private URL resultsFileUrl;
+    private URI resultsFileUrl;
 
     @Autowired
     ResultsFileGenerator(@Value("${ifs.eu.data.service.grant.importer.results.file.location}") String resultsFileUrl) {
-        this.resultsFileUrl = getUrlFromString(resultsFileUrl).getSuccess();
+        this.resultsFileUrl = getUriFromString(resultsFileUrl).getSuccess();
     }
 
     ServiceResult<File> generateResultsFile(List<ServiceResult<UUID>> results, File originalFile) {
