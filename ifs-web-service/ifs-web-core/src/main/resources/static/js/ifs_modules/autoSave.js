@@ -137,7 +137,10 @@ IFS.core.autoSave = (function () {
           }
           break
         default :
-          jsonObj = false
+          jsonObj = {
+            field: field.attr('name'),
+            value: field.val()
+          }
       }
       return jsonObj
     },
@@ -172,7 +175,7 @@ IFS.core.autoSave = (function () {
           url = '/assessment/' + assessmentId + '/formInput/' + formInputId
           break
         default:
-          url = false
+          url = saveType
       }
       return url
     },

@@ -51,5 +51,10 @@ IFS.core.loadOrder = {
     finalize: function () {
       IFS.core.financeSpecifics.init()
     }
+  },
+  'your-funding': {
+    init: function () {
+      IFS.core.yourFunding.init()
+    }
   }
 }
