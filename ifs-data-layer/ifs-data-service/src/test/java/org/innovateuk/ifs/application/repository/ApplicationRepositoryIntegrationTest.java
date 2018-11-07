@@ -7,12 +7,16 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.competition.domain.StakeholderInvite;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,8 +37,10 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.StakeholderInviteBuilder.newStakeholderInvite;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 
@@ -55,6 +61,12 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private StakeholderRepository stakeholderRepository;
 
     @Autowired
     @Override
@@ -235,5 +247,62 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .build();
         application.getApplicationProcess().setProcessState(applicationState);
         return application;
+    }
+
+    @Test
+    public void searchApplicationsByUserIdAndInnovationLeadRole() {
+        loginCompAdmin();
+
+        Competition competition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withLeadTechnologist()
+                .build());
+
+        List<Application> applications = newApplication()
+                .withCompetition(competition)
+                .withId(1L, 2L, 3L, 4L, 5L, 6L)
+                .build(6);
+        applicationRepository.save(applications);
+
+        setLoggedInUser(null);
+        loginInnovationLead();
+
+        Pageable pageable = new PageRequest(1, 40);
+        Page<Application> retrieved = repository.searchApplicationsByUserIdAndInnovationLeadRole(getLoggedInUser().getId(), "1", pageable);
+        assertEquals(6, retrieved.getTotalElements());
+    }
+
+    @Test
+    public void searchApplicationsByUserIdAndStakeholderRole() throws Exception {
+
+        loginCompAdmin();
+
+        Competition competition = competitionRepository.save(newCompetition()
+                .with(id(null))
+                .withLeadTechnologist()
+                .build());
+
+        setLoggedInUser(null);
+        loginSteveSmith();
+
+        List<Application> applications = newApplication()
+                .withCompetition(competition)
+                .withId(1L, 2L, 3L, 4L, 5L, 10L)
+                .build(6);
+        applicationRepository.save(applications);
+
+        setLoggedInUser(null);
+        loginIfsAdmin();
+
+        StakeholderInvite invite = newStakeholderInvite().build();
+        Stakeholder stakeholder = new Stakeholder(newCompetition().build(), newUser().build());
+
+        setLoggedInUser(null);
+
+        // need to log in as Stakeholder
+
+        Pageable pageable = new PageRequest(1, 40);
+        Page<Application> retrieved = repository.searchApplicationsByUserIdAndStakeholderRole(getLoggedInUser().getId(), "1", pageable);
+        assertEquals(6, retrieved.getTotalElements());
     }
 }
