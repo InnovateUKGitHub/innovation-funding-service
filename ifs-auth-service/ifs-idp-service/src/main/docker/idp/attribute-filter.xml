@@ -4,9 +4,9 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="urn:mace:shibboleth:2.0:afp http://shibboleth.net/schema/idp/shibboleth-afp.xsd">
 
-    <!-- Release the uid and mail attributes to the IFS SP -->
+    <!-- Release the uid and mail attributes to SPs -->
     <AttributeFilterPolicy id="IUK">
-        <PolicyRequirementRule xsi:type="Requester" value="https://ifs-local-dev" />
+        <PolicyRequirementRule xsi:type="ANY"/>
 
         <AttributeRule attributeID="uid">
             <PermitValueRule xsi:type="ANY" />
@@ -16,36 +16,5 @@
             <PermitValueRule xsi:type="ANY" />
         </AttributeRule>
     </AttributeFilterPolicy>
-
-    <!-- Release the uid and mail attributes to the IFS SP -->
-    <AttributeFilterPolicy id="localhost">
-        <PolicyRequirementRule xsi:type="Requester" value="http://localhost" />
-
-        <AttributeRule attributeID="uid">
-            <PermitValueRule xsi:type="ANY" />
-        </AttributeRule>
-
-        <AttributeRule attributeID="mail">
-            <PermitValueRule xsi:type="ANY" />
-        </AttributeRule>
-    </AttributeFilterPolicy>
-
-    <!-- Example of a policy for more than one SP -->
-    <!--
-    <AttributeFilterPolicy id="example">
-        <PolicyRequirementRule xsi:type="OR">
-            <Rule xsi:type="Requester" value="https://sp.example.org" />
-            <Rule xsi:type="Requester" value="https://another.example.org" />
-        </PolicyRequirementRule>
-
-        <AttributeRule attributeID="uid">
-            <PermitValueRule xsi:type="ANY" />
-        </AttributeRule>
-
-        <AttributeRule attributeID="mail">
-            <PermitValueRule xsi:type="ANY" />
-        </AttributeRule>
-    </AttributeFilterPolicy>
-    -->
 
 </AttributeFilterPolicyGroup>
