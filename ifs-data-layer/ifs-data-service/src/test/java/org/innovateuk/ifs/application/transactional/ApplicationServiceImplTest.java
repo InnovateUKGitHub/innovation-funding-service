@@ -28,6 +28,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -56,6 +57,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
 import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -70,6 +72,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.ne
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
@@ -297,6 +300,35 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         assertWildcardSearchById(result, applicationResource, 5, 1, 5);
 
+    }
+
+    @Test
+    public void innovationLeadApplicationSearch() {
+
+        String searchString = "12";
+        ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
+        Pageable pageable = setUpMockingWildcardSearchById(searchString, applicationResource, 5);
+
+        UserResource user = UserResourceBuilder.newUserResource()
+                .withId(25l)
+                .withRoleGlobal(INNOVATION_LEAD)
+                .build();
+
+        setLoggedInUser(user);
+
+        Competition competition = competitionRepositoryMock.save(newCompetition().with(id(null)).build());
+
+        List<Application> applications = newApplication()
+                .withCompetition(competition)
+                .withActivityState(SUBMITTED)
+                .with(id(null))
+                .build(2);
+
+        applicationRepositoryMock.save(applications);
+
+        ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
+
+        String a = "a";
     }
 
     @Test

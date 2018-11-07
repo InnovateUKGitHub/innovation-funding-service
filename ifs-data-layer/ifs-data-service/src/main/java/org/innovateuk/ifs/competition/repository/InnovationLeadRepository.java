@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INNOVATION_LEAD;
-import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.STAKEHOLDER;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -34,12 +33,4 @@ public interface InnovationLeadRepository extends CompetitionParticipantReposito
     default boolean existsInnovationLead(long competitionId, long userId) {
         return existsByCompetitionIdAndUserIdAndRole(competitionId, userId, INNOVATION_LEAD);
     }
-
-    default List<Long> findCompetitionsByInnovationLeadId(long userId){
-        return getCompetitionByUserIdAndRole(userId, INNOVATION_LEAD)
-                .stream()
-                .map(cp -> cp.getProcess().getId())
-                .collect(Collectors.toList());
-    }
-
 }

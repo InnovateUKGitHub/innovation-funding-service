@@ -12,9 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSectionStatusMap;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSubsectionStatusMap;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 
 /**
  * Implements {@link CompetitionSetupRestService}
@@ -98,10 +96,5 @@ public class CompetitionSetupRestServiceImpl extends BaseRestService implements 
     @Override
     public RestResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(long competitionId) {
         return getWithRestResult(String.format("%s/subsection-status/%s", competitionSetupRestURL, competitionId), competitionSetupSubsectionStatusMap());
-    }
-
-    @Override
-    public RestResult<List<Long>> findCompetitionsByInnovationLeadId(long innovationLeadUserId) {
-        return getWithRestResult(String.format("%s/findCompetitionsByInnovationLeadId/%s", competitionSetupRestURL, innovationLeadUserId), longsListType());
     }
 }

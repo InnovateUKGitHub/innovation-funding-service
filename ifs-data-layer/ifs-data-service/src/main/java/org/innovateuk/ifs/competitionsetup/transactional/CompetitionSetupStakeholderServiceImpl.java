@@ -33,10 +33,7 @@ import java.util.Map;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_EMAIL_TAKEN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID_EMAIL;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
@@ -250,14 +247,6 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
                 pendingStakeholderInvite -> convert(pendingStakeholderInvite));
 
         return serviceSuccess(pendingStakeholderInviteUsers);
-    }
-
-    @Override
-    public ServiceResult<List<Long>> findCompetitionByStakeholderId(long userId) {
-
-        List<Long> competitions = stakeholderRepository.findCompetitionsByStakeholderId(userId);
-
-        return serviceSuccess(competitions);
     }
 
     private UserResource convert(StakeholderInvite stakeholderInvite) {

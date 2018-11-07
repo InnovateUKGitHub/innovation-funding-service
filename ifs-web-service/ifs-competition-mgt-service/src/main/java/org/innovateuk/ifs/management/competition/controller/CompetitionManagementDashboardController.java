@@ -198,16 +198,6 @@ public class CompetitionManagementDashboardController {
 
         ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, page, pageSize);
 
-        if (user.getRoles().contains(INNOVATION_LEAD)) {
-            List<Long> competitions = competitionSetupRestService.findCompetitionsByInnovationLeadId(user.getId()).getSuccess();
-            populateApplications(matchedApplications, competitions, page, pageSize);
-        }
-
-        if (user.getRoles().contains(STAKEHOLDER)) {
-            List<Long> competitions = competitionSetupStakeholderRestService.findCompetitionsByStakeholderUserId(0l, user.getId()).getSuccess();
-            populateApplications(matchedApplications, competitions, page, pageSize);
-        }
-
         ApplicationSearchDashboardViewModel viewModel =
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
                         matchedApplications.getTotalElements(),
@@ -218,18 +208,5 @@ public class CompetitionManagementDashboardController {
         model.addAttribute("model", viewModel);
 
         return TEMPLATE_PATH + "application-search";
-    }
-
-    private void populateApplications(ApplicationPageResource matchedApplications, List<Long> competitions, int page, int pageSize) {
-        List<ApplicationResource> applicationResources = matchedApplications.getContent().stream().filter(
-                applicationResource -> competitions.contains(applicationResource.getCompetition()))
-                .collect(Collectors.toList());
-
-        matchedApplications.setContent(applicationResources);
-        matchedApplications.setTotalElements(applicationResources.size());
-        ;
-        matchedApplications.setNumber(page);
-        matchedApplications.setSize(pageSize);
-        matchedApplications.setTotalPages((int) Math.ceil((double) matchedApplications.getTotalElements() / pageSize));
     }
 }

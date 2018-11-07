@@ -18,13 +18,6 @@ public interface StakeholderRepository extends CompetitionParticipantRepository<
         return getByCompetitionIdAndRole(competitionId, STAKEHOLDER);
     }
 
-    default List<Long> findCompetitionsByStakeholderId(long userId){
-        return getCompetitionByUserIdAndRole(userId, STAKEHOLDER)
-                .stream()
-                .map(cp -> cp.getProcess().getId())
-                .collect(Collectors.toList());
-    }
-
     default void deleteAllStakeholders(long competitionId) {
         deleteByCompetitionIdAndRole(competitionId, STAKEHOLDER);
     }

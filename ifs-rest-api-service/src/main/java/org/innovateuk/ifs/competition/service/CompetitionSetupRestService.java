@@ -44,7 +44,4 @@ public interface CompetitionSetupRestService {
     RestResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(long competitionId);
 
     RestResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(long competitionId);
-
-    RestResult<List<Long>> findCompetitionsByInnovationLeadId(long stakeholderUserId);
-
 }

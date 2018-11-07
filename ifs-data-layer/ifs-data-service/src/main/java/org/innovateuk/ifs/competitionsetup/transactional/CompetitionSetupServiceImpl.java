@@ -321,13 +321,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 }));
     }
 
-    @Override
-    public ServiceResult<List<Long>> findCompetitionByInnovationLeadId(long userId) {
-
-        List<Long> competitions = innovationLeadRepository.findCompetitionsByInnovationLeadId(userId);
-        return serviceSuccess(competitions);
-    }
-
     private void deleteSetupStatus(Competition competition) {
         setupStatusRepository.deleteByTargetClassNameAndTargetId(Competition.class.getName(), competition.getId());
     }

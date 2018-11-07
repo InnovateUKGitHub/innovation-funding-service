@@ -43,11 +43,4 @@ public class CompetitionSetupStakeholderRestServiceImpl extends BaseRestService 
     public RestResult<List<UserResource>> findPendingStakeholderInvites(long competitionId) {
         return getWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/pending-invites", userListType());
     }
-
-    @Override
-    public RestResult<List<Long>> findCompetitionsByStakeholderUserId(long competitionId, long stakeholderUserId) {
-        return getWithRestResult(competitionSetupStakeholderRestURL + competitionId + "/stakeholder/findCompetitionsByStakeholderId/" + stakeholderUserId, longsListType());
-    }
 }
-
-

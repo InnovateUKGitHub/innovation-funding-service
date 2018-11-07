@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,8 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunctions.verifyApplicationIsOpen;
@@ -235,10 +239,21 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable) {
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+            if (user.hasRole(INNOVATION_LEAD)) {
+                return handleApplicationSearchResultPage(applicationRepository.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), searchString, pageable));
+            } else if (user.hasRole(STAKEHOLDER)) {
+                return handleApplicationSearchResultPage(applicationRepository.searchApplicationsByUserIdAndStakeholderRole(user.getId(), searchString, pageable));
+            } else {
+                return handleApplicationSearchResultPage(applicationRepository.searchByIdLike(searchString, pageable));
+            }
+        });
+    }
 
-        Page<Application> pagedResult = applicationRepository.searchByIdLike(searchString, pageable);
-        List<ApplicationResource> applicationResource = simpleMap(pagedResult.getContent(), application -> applicationMapper.mapToResource(application));
-        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
+    public static final String S = "";
+
+    private Optional<String> something(HttpRequest request){
+        return Optional.of(S);
     }
 
     @Override
@@ -291,6 +306,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<PreviousApplicationResource> previousApplications = simpleMap(pagedResult.getContent(), this::convertToPreviousApplicationResource);
 
         return serviceSuccess(new PreviousApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), previousApplications, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    private ServiceResult<ApplicationPageResource> handleApplicationSearchResultPage(Page<Application> pagedResult) {
+        List<ApplicationResource> applicationResource = simpleMap(pagedResult.getContent(), application -> applicationMapper.mapToResource(application));
+        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     private Collection<ApplicationState> getApplicationStatesFromFilter(String filter) {

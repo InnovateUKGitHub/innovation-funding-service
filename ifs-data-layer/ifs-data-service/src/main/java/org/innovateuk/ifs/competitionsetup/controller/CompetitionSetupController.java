@@ -39,7 +39,7 @@ public class CompetitionSetupController {
                                                             @PathVariable("id") final long id) {
         CompetitionResource existingCompetitionResource = competitionService.getCompetitionById(id).getSuccess();
         return competitionSetupService.updateCompetitionInitialDetails(id, competitionResource,
-                    existingCompetitionResource.getLeadTechnologist()).toPutResponse();
+                existingCompetitionResource.getLeadTechnologist()).toPutResponse();
     }
 
     @PostMapping("/{id}/initialise-form/{competitionTypeId}")
@@ -88,11 +88,6 @@ public class CompetitionSetupController {
     @GetMapping("/subsection-status/{competitionId}")
     public RestResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(@PathVariable("competitionId") final Long competitionId) {
         return competitionSetupService.getSubsectionStatuses(competitionId).toGetResponse();
-    }
-
-    @GetMapping("/findCompetitionsByInnovationLeadId/{innovationLeadUserId}")
-    public RestResult<List<Long>> findCompetitionsByInnovationLeadId(@PathVariable("innovationLeadUserId") final long innovationLeadUserId) {
-        return competitionSetupService.findCompetitionByInnovationLeadId(innovationLeadUserId).toGetResponse();
     }
 
     @PostMapping("/{id}/mark-as-setup")
