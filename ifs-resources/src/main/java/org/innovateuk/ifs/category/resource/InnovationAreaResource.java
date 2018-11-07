@@ -34,6 +34,10 @@ public class InnovationAreaResource extends CategoryResource {
         this.sectorName = sectorName;
     }
 
+    public boolean isNotNone() {
+        return !"None".equals(getName());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
