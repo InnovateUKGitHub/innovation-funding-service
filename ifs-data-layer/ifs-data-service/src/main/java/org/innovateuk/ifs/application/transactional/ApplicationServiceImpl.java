@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -114,18 +112,18 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                                      ApplicationResource application) {
         return find(() -> getApplication(id)).andOnSuccess(
                 foundApplication -> verifyApplicationIsOpen(foundApplication).andOnSuccessReturn(
-                    openApplication -> {
-                        openApplication.setName(application.getName());
-                        openApplication.setDurationInMonths(application.getDurationInMonths());
-                        openApplication.setStartDate(application.getStartDate());
-                        openApplication.setStateAidAgreed(application.getStateAidAgreed());
-                        openApplication.setResubmission(application.getResubmission());
-                        openApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
-                        openApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
+                        openApplication -> {
+                            openApplication.setName(application.getName());
+                            openApplication.setDurationInMonths(application.getDurationInMonths());
+                            openApplication.setStartDate(application.getStartDate());
+                            openApplication.setStateAidAgreed(application.getStateAidAgreed());
+                            openApplication.setResubmission(application.getResubmission());
+                            openApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
+                            openApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
 
-                        Application savedApplication = applicationRepository.save(openApplication);
-                        return applicationMapper.mapToResource(savedApplication);
-                    }));
+                            Application savedApplication = applicationRepository.save(openApplication);
+                            return applicationMapper.mapToResource(savedApplication);
+                        }));
     }
 
     @Override
@@ -248,12 +246,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 return handleApplicationSearchResultPage(applicationRepository.searchByIdLike(searchString, pageable));
             }
         });
-    }
-
-    public static final String S = "";
-
-    private Optional<String> something(HttpRequest request){
-        return Optional.of(S);
     }
 
     @Override

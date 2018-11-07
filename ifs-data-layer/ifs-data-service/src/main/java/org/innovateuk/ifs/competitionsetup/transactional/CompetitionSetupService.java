@@ -9,7 +9,6 @@ import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

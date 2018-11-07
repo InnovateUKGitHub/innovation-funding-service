@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.repository;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.STAKEHOLDER;
 

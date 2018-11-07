@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.repository;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -89,13 +88,13 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     @Query(value = APPLICATION_SEARCH_BY_USER_ID_AND_INNOVATION_LEAD_ROLE)
     Page<Application> searchApplicationsByUserIdAndInnovationLeadRole(@Param("userId") Long userId,
-                                                        @Param("searchString") String searchString,
-                                                        Pageable pageable);
+                                                                      @Param("searchString") String searchString,
+                                                                      Pageable pageable);
 
     @Query(value = APPLICATION_SEARCH_BY_USER_ID_AND_STAKEHOLDER_ROLE)
     Page<Application> searchApplicationsByUserIdAndStakeholderRole(@Param("userId") Long userId,
-                                                        @Param("searchString") String searchString,
-                                                        Pageable pageable);
+                                                                   @Param("searchString") String searchString,
+                                                                   Pageable pageable);
 
     List<Application> findByCompetitionId(long competitionId);
 
