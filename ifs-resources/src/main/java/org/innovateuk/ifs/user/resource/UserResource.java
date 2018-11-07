@@ -174,12 +174,12 @@ public class UserResource {
         return !disjoint(roles, newHashSet(testRoles));
     }
 
-    public Collection hasRoles(Role... acceptedRoles){
-        return CollectionUtils.retainAll(roles, Arrays.asList(acceptedRoles));
+    public boolean hasRoles(Role... acceptedRoles){
+        return roles.containsAll(newHashSet(acceptedRoles));
     }
 
     public boolean hasMoreThanOneRoleOf(Role... acceptedRoles){
-        return hasRoles(acceptedRoles).size() > 1;
+        return CollectionUtils.retainAll(roles, Arrays.asList(acceptedRoles)).size() > 1;
     }
 
     public Long getProfileId() {
