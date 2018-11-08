@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.ProjectService;
@@ -30,6 +31,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DO
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
@@ -57,6 +59,9 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
     @Mock
     private OrganisationAddressRestService organisationAddressRestService;
 
+    @Mock
+    private ApplicationFinanceRestService applicationFinanceRestService;
+
     @Override
     protected BankDetailsController supplyControllerUnderTest() {
         return new BankDetailsController();
@@ -72,8 +77,10 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
         when(projectRestService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(restFailure(new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION)));
+        when(applicationFinanceRestService.getApplicationFinance(applicationResource.getId(), organisationResource.getId())).thenReturn(restSuccess(newApplicationFinanceResource().withWorkPostcode("ABC 123").build()));
 
         BankDetailsForm form = new BankDetailsForm();
+        form.getAddressForm().setPostcodeInput("ABC 123");
 
         mockMvc.perform(get("/project/{id}/bank-details", projectResource.getId()))
                 .andExpect(status().isOk())
@@ -219,6 +226,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
         when(projectRestService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(restFailure(new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION)));
+        when(applicationFinanceRestService.getApplicationFinance(applicationResource.getId(), organisationResource.getId())).thenReturn(restSuccess(newApplicationFinanceResource().build()));
 
         return projectResource;
     }

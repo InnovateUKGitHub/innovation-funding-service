@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
@@ -42,7 +42,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
     private OrganisationAddressRestService organisationAddressRestService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @GetMapping("/{projectId}/details/project-address")
@@ -56,7 +56,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
         if (project.getAddress() != null && project.getAddress().getId() != null) {
             form.getAddressForm().setPostcodeInput(project.getAddress().getPostcode());
         } else {
-            ProjectFinanceResource finance = projectFinanceService.getProjectFinance(projectId, leadOrganisation.getId());
+            ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(project.getApplication(), leadOrganisation.getId()).getSuccess();
             form.getAddressForm().setPostcodeInput(finance.getWorkPostcode());
         }
 
