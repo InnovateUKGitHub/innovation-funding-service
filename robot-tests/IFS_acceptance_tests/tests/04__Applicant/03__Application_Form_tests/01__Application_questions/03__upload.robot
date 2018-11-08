@@ -48,7 +48,7 @@ Non pdf uploads not allowed
     And the user clicks the button/link   link = Academic robot test application
     And the user clicks the button/link   link = 5. Technical approach
     When the user uploads the file        css = .inputfile    ${text_file}
-    The user should see an error          ${wrong_filetype_validation_error}
+    The user should see an error          Your upload must be a PDF.
 
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832  IFS-2327
