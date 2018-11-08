@@ -181,7 +181,7 @@
                 </th:block>
                 <div class="form-footer" th:if="${model.open}">
                     <div class="form-footer__actions">
-                        <button id="mark-all-as-complete" th:unless="${model.readOnly}" type="submit" name="complete"
+                        <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="complete"
                                 class="button-clear" value="true">Mark as complete
                         </button>
                         <button th:if="${model.complete}" type="submit" name="edit" class="button-clear" value="true"

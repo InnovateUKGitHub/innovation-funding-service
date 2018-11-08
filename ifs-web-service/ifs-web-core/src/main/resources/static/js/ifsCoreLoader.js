@@ -56,5 +56,10 @@ IFS.core.loadOrder = {
     init: function () {
       IFS.core.yourFunding.init()
     }
+  },
+  'overheads': {
+   init: function () {
+     IFS.core.overheads.init()
+   }
   }
 }

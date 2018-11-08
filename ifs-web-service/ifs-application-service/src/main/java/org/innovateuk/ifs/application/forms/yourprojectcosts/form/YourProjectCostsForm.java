@@ -100,4 +100,38 @@ public class YourProjectCostsForm {
     public BigDecimal getTotalLabourCosts() {
         return labourCosts.values().stream().map(LabourRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
+
+    public BigDecimal getTotalOverheadCosts() {
+        return overhead.getTotal();
+    }
+
+    public BigDecimal getTotalMaterialCosts() {
+        return materialRows.values().stream().map(MaterialRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    }
+
+    public BigDecimal getTotalCapitalUsageCosts() {
+        return capitalUsageRows.values().stream().map(CapitalUsageRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    }
+
+    public BigDecimal getTotalSubcontractingCosts() {
+        return subcontractingRows.values().stream().map(SubcontractingRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    }
+
+    public BigDecimal getTotalTravelCosts() {
+        return travelRows.values().stream().map(TravelRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    }
+
+    public BigDecimal getTotalOtherCosts() {
+        return otherRows.values().stream().map(OtherCostRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    }
+
+    public BigDecimal getOrganisationFinanceTotal() {
+        return getTotalLabourCosts()
+                .add(getTotalOverheadCosts())
+                .add(getTotalMaterialCosts())
+                .add(getTotalCapitalUsageCosts())
+                .add(getTotalSubcontractingCosts())
+                .add(getTotalTravelCosts())
+                .add(getTotalOtherCosts());
+    }
 }

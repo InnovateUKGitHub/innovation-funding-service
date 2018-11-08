@@ -5,12 +5,15 @@ import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+
 public class OverheadForm {
 
     private OverheadRateType rateType;
     private Integer totalSpreadsheet;
     private String filename;
     private MultipartFile overheadfile;
+    private BigDecimal total;
 
     public OverheadForm() {
     }
@@ -19,6 +22,7 @@ public class OverheadForm {
         this.rateType = overhead.getRateType();
         this.totalSpreadsheet = overhead.getRate();
         this.filename = overhead.getCalculationFile().map(FileEntryResource::getName).orElse("");
+        this.total = overhead.getTotal();
     }
 
     public OverheadRateType getRateType() {
@@ -43,5 +47,9 @@ public class OverheadForm {
 
     public void setOverheadfile(MultipartFile overheadfile) {
         this.overheadfile = overheadfile;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
     }
 }
