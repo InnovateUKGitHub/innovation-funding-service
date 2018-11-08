@@ -52,10 +52,6 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
         return getByEmail("ifsadmin@innovateuk.test");
     }
 
-    protected UserResource getInnovationLead() {
-        return getByEmail("comp_technologist1@innovateuk.test");
-    }
-
     protected UserResource getAnonUser() {
         return SecurityRuleUtil.getAnonymous();
     }
@@ -96,10 +92,6 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
 
     protected void loginFelixWilson() {
         setLoggedInUser(getFelixWilson());
-    }
-
-    protected void loginInnovationLead() {
-        setLoggedInUser(getInnovationLead());
     }
 
     protected void flushAndClearSession() {

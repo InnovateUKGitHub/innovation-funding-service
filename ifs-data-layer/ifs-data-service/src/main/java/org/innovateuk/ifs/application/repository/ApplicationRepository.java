@@ -87,12 +87,12 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     Page<Application> searchByIdLike(@Param("searchString") String searchString, Pageable pageable);
 
     @Query(value = APPLICATION_SEARCH_BY_USER_ID_AND_INNOVATION_LEAD_ROLE)
-    Page<Application> searchApplicationsByUserIdAndInnovationLeadRole(@Param("userId") Long userId,
+    Page<Application> searchApplicationsByUserIdAndInnovationLeadRole(@Param("userId") long userId,
                                                                       @Param("searchString") String searchString,
                                                                       Pageable pageable);
 
     @Query(value = APPLICATION_SEARCH_BY_USER_ID_AND_STAKEHOLDER_ROLE)
-    Page<Application> searchApplicationsByUserIdAndStakeholderRole(@Param("userId") Long userId,
+    Page<Application> searchApplicationsByUserIdAndStakeholderRole(@Param("userId") long userId,
                                                                    @Param("searchString") String searchString,
                                                                    Pageable pageable);
 

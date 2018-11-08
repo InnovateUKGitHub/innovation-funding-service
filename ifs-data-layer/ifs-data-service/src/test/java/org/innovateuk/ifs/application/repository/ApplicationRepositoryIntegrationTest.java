@@ -3,25 +3,23 @@ package org.innovateuk.ifs.application.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
-import org.innovateuk.ifs.competition.domain.*;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,13 +40,8 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.StakeholderInviteBuilder.newStakeholderInvite;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 
@@ -269,48 +262,25 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         User user = new User("Innovation", "Lead", "innovationLead@gmail.com", "", "123IL");
 
-        userRepository.save(user);
-
-        UserResource innovationLeadUser = newUserResource()
-                .withId(user.getId())
-                .withEmail(user.getEmail())
-                .withRoleGlobal(INNOVATION_LEAD)
-                .build();
-
-        Competition associatedCompetition = newCompetition()
-                .with(id(null))
-                .withLeadTechnologist(user)
-                .build();
-
-        Competition unAssociatedCompetition = newCompetition()
-                .with(id(null))
-                .withLeadTechnologist()
-                .build();
-
-        competitionRepository.save(associatedCompetition);
-        competitionRepository.save(unAssociatedCompetition);
-
-        setLoggedInUser(null);
-        setLoggedInUser(innovationLeadUser);
+        List<Competition> competitions = newCompetition().with(id(null)).withLeadTechnologist().build(2);
 
         List<Application> applications = newApplication()
-                .withCompetition(associatedCompetition, associatedCompetition, associatedCompetition, unAssociatedCompetition, unAssociatedCompetition, unAssociatedCompetition)
+                .withCompetition(competitions.get(0), competitions.get(1))
                 .with(id(null))
-                .withName("app1","app2","app3","app4","app5","app6")
-                .build(6);
+                .withName("app1", "app2")
+                .build(2);
 
-        applicationRepository.save(applications);
-
-        competitionRepository.save(associatedCompetition);
-        competitionRepository.save(unAssociatedCompetition);
-
-        InnovationLead innovationLead = new InnovationLead(associatedCompetition, user);
-        innovationLeadRepository.save(innovationLead);
+        InnovationLead innovationLead = new InnovationLead(competitions.get(0), user);
 
         Pageable pageable = new PageRequest(1, 40);
 
+        userRepository.save(user);
+        competitionRepository.save(competitions);
+        applicationRepository.save(applications);
+        innovationLeadRepository.save(innovationLead);
+
         Page<Application> foundApplication = repository.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), applications.get(0).getId().toString(), pageable);
-        Page<Application> notFoundApplication = repository.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), applications.get(5).getId().toString(), pageable);
+        Page<Application> notFoundApplication = repository.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), applications.get(1).getId().toString(), pageable);
 
         assertEquals(1, foundApplication.getTotalElements());
         assertEquals(0, notFoundApplication.getTotalElements());
@@ -323,40 +293,26 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         User user = new User("Stake", "Holder", "stakeholder@gmail.com", "", "123abc");
 
-        userRepository.save(user);
-
-        UserResource stakeholderUser = newUserResource()
-                .withId(user.getId())
-                .withEmail(user.getEmail())
-                .withRoleGlobal(STAKEHOLDER)
-                .build();
-
-        Competition competition = competitionRepository.save(newCompetition()
-                .with(id(null))
-                .withLeadTechnologist()
-                .build());
-
-        Competition competition2 = competitionRepository.save(newCompetition()
-                .with(id(null))
-                .withLeadTechnologist()
-                .build());
-
-        Stakeholder stakeholder = new Stakeholder(competition, user);
-        stakeholderRepository.save(stakeholder);
-
-        setLoggedInUser(null);
-        setLoggedInUser(stakeholderUser);
+        List<Competition> competitions = newCompetition().with(id(null)).withLeadTechnologist().build(2);
 
         List<Application> applications = newApplication()
-                .withCompetition(competition, competition, competition, competition2, competition2, competition2)
+                .withCompetition(competitions.get(0), competitions.get(1))
                 .with(id(null))
-                .withName("app1","app2","app3","app4","app5","app6")
-                .build(6);
+                .withName("app1", "app2")
+                .build(2);
 
-        applicationRepository.save(applications);
+        Stakeholder stakeholder = new Stakeholder(competitions.get(0), user);
+
         Pageable pageable = new PageRequest(1, 40);
+
+        userRepository.save(user);
+        competitionRepository.save(competitions);
+        stakeholderRepository.save(stakeholder);
+        applicationRepository.save(applications);
+
+
         Page<Application> foundApplication = repository.searchApplicationsByUserIdAndStakeholderRole(user.getId(), applications.get(0).getId().toString(), pageable);
-        Page<Application> notFoundApplication = repository.searchApplicationsByUserIdAndStakeholderRole(user.getId(), applications.get(5).getId().toString(), pageable);
+        Page<Application> notFoundApplication = repository.searchApplicationsByUserIdAndStakeholderRole(user.getId(), applications.get(1).getId().toString(), pageable);
 
         assertEquals(1, foundApplication.getTotalElements());
         assertEquals(0, notFoundApplication.getTotalElements());
