@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.EMPTY_ROW_ID;
 import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
 @Component
@@ -74,7 +75,7 @@ public class YourProjectCostsFormPopulator {
                 .map(LabourRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
 
-        rows.put("empty", new LabourRowForm());
+        rows.put(EMPTY_ROW_ID, new LabourRowForm());
         return rows;
     }
 
@@ -84,7 +85,7 @@ public class YourProjectCostsFormPopulator {
                 .map(Materials.class::cast)
                 .map(MaterialRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-        rows.put("empty", new MaterialRowForm());
+        rows.put(EMPTY_ROW_ID, new MaterialRowForm());
         return rows;
     }
 
@@ -94,7 +95,7 @@ public class YourProjectCostsFormPopulator {
                 .map(CapitalUsage.class::cast)
                 .map(CapitalUsageRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-        rows.put("empty", new CapitalUsageRowForm());
+        rows.put(EMPTY_ROW_ID, new CapitalUsageRowForm());
         return rows;
     }
 
@@ -104,7 +105,7 @@ public class YourProjectCostsFormPopulator {
                 .map(OtherCost.class::cast)
                 .map(OtherCostRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-        rows.put("empty", new OtherCostRowForm());
+        rows.put(EMPTY_ROW_ID, new OtherCostRowForm());
         return rows;
     }
 
@@ -114,7 +115,7 @@ public class YourProjectCostsFormPopulator {
                 .map(SubContractingCost.class::cast)
                 .map(SubcontractingRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-        rows.put("empty", new SubcontractingRowForm());
+        rows.put(EMPTY_ROW_ID, new SubcontractingRowForm());
         return rows;
     }
 
@@ -124,7 +125,7 @@ public class YourProjectCostsFormPopulator {
                 .map(TravelCost.class::cast)
                 .map(TravelRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-        rows.put("empty", new TravelRowForm());
+        rows.put(EMPTY_ROW_ID, new TravelRowForm());
         return rows;
     }
 

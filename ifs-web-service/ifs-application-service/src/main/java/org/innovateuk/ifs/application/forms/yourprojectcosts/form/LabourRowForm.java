@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.form;
 
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 
 import java.math.BigDecimal;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
 
@@ -53,5 +56,20 @@ public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
 
     public BigDecimal getRate() {
         return rate;
+    }
+
+    @Override
+    public boolean isBlank() {
+        return isNullOrEmpty(role) && gross == null && days == null;
+    }
+
+    @Override
+    public FinanceRowType getRowType() {
+        return FinanceRowType.LABOUR;
+    }
+
+    @Override
+    public LabourCost toCost() {
+        return new LabourCost(getCostId(), null, role, gross, days, null);
     }
 }

@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.form;
 
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.SubContractingCost;
 
 import java.math.BigDecimal;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class SubcontractingRowForm extends AbstractCostRowForm<SubContractingCost> {
 
@@ -54,5 +57,20 @@ public class SubcontractingRowForm extends AbstractCostRowForm<SubContractingCos
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
+    }
+
+    @Override
+    public boolean isBlank() {
+        return isNullOrEmpty(name) && isNullOrEmpty(country) && isNullOrEmpty(role) && cost == null;
+    }
+
+    @Override
+    public FinanceRowType getRowType() {
+        return FinanceRowType.SUBCONTRACTING_COSTS;
+    }
+
+    @Override
+    public SubContractingCost toCost() {
+        return new SubContractingCost(getCostId(), cost, country, name, role);
     }
 }

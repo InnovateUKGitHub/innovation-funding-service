@@ -55,6 +55,7 @@
                         <tr th:each="entry : ${form.labourCosts}"
                             th:with="id=${entry.key}, row=${entry.value}">
                             <th:block th:with="path=${'labourCosts[__${id}__]'}">
+                                <input type="hidden" th:field="*{__${path}__.costId}" />
                                 <td class="govuk-table__cell govuk-form-group">
                                     <label th:for="__${path}__.role">
                                         <span class="govuk-visually-hidden">Role within project</span>
@@ -114,8 +115,10 @@
                                 </th:block>
                                 </td>
                                 <td class="govuk-table__cell buttoncolumn alignright">
-                                    <button type="submit" name="remove_cost"
-                                            class="button-clear js-remove-row" th:value="${id}">Remove
+                                    <button type="submit"
+                                            th:name="remove_row"
+                                            th:value="|${row.rowType},${id}|"
+                                            class="button-clear js-remove-row">Remove
                                     </button>
                                 </td>
                             </th:block>
@@ -348,6 +351,7 @@
                     <th:block th:each="entry : ${form.materialRows}"
                               th:with="id=${entry.key}, row=${entry.value}">
                         <th:block th:with="path=${'materialRows[__${id}__]'}">
+                            <input type="hidden" th:field="*{__${path}__.costId}" />
                             <tr class="govuk-table__row form-group-row-validated">
                                 <td class="govuk-table__cell govuk-form-group">
                                     <label th:for="__${path}__.item">
@@ -409,7 +413,7 @@
                                     <button type="submit"
                                             name="remove_cost"
                                             th:value="${id}"
-                                            th:class="'button-clear js-remove-row'">Remove
+                                            class="button-clear js-remove-row">Remove
                                     </button>
                                 </td>
                             </tr>
@@ -477,6 +481,7 @@
                 <th:block th:each="entry : ${form.capitalUsageRows}"
                           th:with="id=${entry.key}, row=${entry.value}">
                     <th:block th:with="path=${'capitalUsageRows[__${id}__]'}">
+                        <input type="hidden" th:field="*{__${path}__.costId}" />
                         <div class="form-row">
                             <div class="govuk-form-group">
                                 <label class="govuk-label govuk-label--s"
@@ -611,7 +616,7 @@
                             <button type="submit"
                                     name="remove_cost"
                                     th:value="${id}"
-                                    th:class="'button-clear js-remove-row'">Remove
+                                    class="button-clear js-remove-row">Remove
                             </button>
                         </div>
                     </th:block>
@@ -665,8 +670,7 @@
                 <th:block th:each="entry : ${form.subcontractingRows}"
                           th:with="id=${entry.key}, row=${entry.value}">
                     <th:block th:with="path=${'subcontractingRows[__${id}__]'}">
-
-
+                        <input type="hidden" th:field="*{__${path}__.costId}" />
                         <div class="form-row">
                             <div class="govuk-form-group">
                                 <label class="govuk-label govuk-label--s" th:for="__${path}__.name">
@@ -727,7 +731,7 @@
                             <button type="submit"
                                     name="remove_cost"
                                     th:value="${id}"
-                                    th:class="'button-clear js-remove-row'">Remove
+                                    class="button-clear js-remove-row">Remove
                             </button>
                         </div>
                     </th:block>
@@ -804,7 +808,7 @@
                     <th:block th:each="entry : ${form.travelRows}"
                               th:with="id=${entry.key}, row=${entry.value}">
                         <th:block th:with="path=${'travelRows[__${id}__]'}">
-
+                            <input type="hidden" th:field="*{__${path}__.costId}" />
                             <tr class="govuk-table__row form-group-row-validated">
                                 <td class="govuk-table__cell govuk-form-group">
                                     <label th:for="__${path}__.item">
@@ -866,7 +870,7 @@
                                     <button type="submit"
                                             name="remove_cost"
                                             th:value="${id}"
-                                            th:class="'button-clear js-remove-row'">Remove
+                                            class="button-clear js-remove-row">Remove
                                     </button>
                                 </td>
                             </tr>
@@ -926,6 +930,7 @@
                     <th:block th:each="entry : ${form.otherRows}"
                               th:with="id=${entry.key}, row=${entry.value}">
                         <th:block th:with="path=${'otherRows[__${id}__]'}">
+                            <input type="hidden" th:field="*{__${path}__.costId}" />
                             <tr class="form-group-row-validated">
                                 <td class="govuk-table__cell govuk-form-group">
                                     <label th:for="__${path}__.description">
@@ -962,7 +967,7 @@
                                     <button type="submit"
                                             name="remove_cost"
                                             th:value="${id}"
-                                            th:class="'button-clear js-remove-row'">Remove
+                                            class="button-clear js-remove-row">Remove
                                     </button>
                                 </td>
                             </tr>

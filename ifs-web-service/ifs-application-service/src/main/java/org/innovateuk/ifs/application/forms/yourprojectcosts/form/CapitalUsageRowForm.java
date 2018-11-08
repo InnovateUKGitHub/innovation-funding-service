@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.form;
 
 import org.innovateuk.ifs.finance.resource.cost.CapitalUsage;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.math.BigDecimal;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class CapitalUsageRowForm extends AbstractCostRowForm<CapitalUsage> {
 
@@ -23,7 +26,7 @@ public class CapitalUsageRowForm extends AbstractCostRowForm<CapitalUsage> {
     public CapitalUsageRowForm(CapitalUsage cost) {
         super(cost);
         this.item = cost.getDescription();
-        this.newItem = cost.getExisting().equals("No");
+        this.newItem = cost.getExisting().equals("New");
         this.deprecation = cost.getDeprecation();
         this.netValue = cost.getNpv();
         this.residualValue = cost.getResidualValue();
@@ -87,6 +90,21 @@ public class CapitalUsageRowForm extends AbstractCostRowForm<CapitalUsage> {
         return netValue.subtract(residualValue)
                 .multiply(new BigDecimal(utilisation)
                         .divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_EVEN));
+    }
+
+    @Override
+    public boolean isBlank() {
+        return isNullOrEmpty(item) && newItem == null && deprecation == null && netValue == null && residualValue == null && utilisation == null;
+    }
+
+    @Override
+    public FinanceRowType getRowType() {
+        return FinanceRowType.CAPITAL_USAGE;
+    }
+
+    @Override
+    public CapitalUsage toCost() {
+        return new CapitalUsage(getCostId(), deprecation, item, newItem ? "New" : "Existing", netValue, residualValue, utilisation);
     }
 
 }

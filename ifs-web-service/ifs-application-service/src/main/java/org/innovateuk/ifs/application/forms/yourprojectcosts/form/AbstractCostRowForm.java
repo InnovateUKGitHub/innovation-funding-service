@@ -2,10 +2,12 @@ package org.innovateuk.ifs.application.forms.yourprojectcosts.form;
 
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.math.BigDecimal;
 
 public abstract class AbstractCostRowForm<F extends FinanceRowItem> {
+    public static final String EMPTY_ROW_ID = "empty";
 
     private Long costId;
 
@@ -35,4 +37,9 @@ public abstract class AbstractCostRowForm<F extends FinanceRowItem> {
         return total;
     }
 
+    public abstract boolean isBlank();
+
+    public abstract FinanceRowType getRowType();
+
+    public abstract F toCost();
 }
