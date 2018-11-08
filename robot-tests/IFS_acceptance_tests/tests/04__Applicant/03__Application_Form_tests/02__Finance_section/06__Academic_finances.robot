@@ -191,17 +191,16 @@ the user can see JeS details
     the user should see the element  css = a[href*="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system"]
 
 the applicant enters invalid inputs
-    The user enters text to a text field  css = [name$="incurred_staff"]  100£
-    The user enters text to a text field  css = [name$="incurred_travel_subsistence"]  -89
-    The user enters text to a text field  css = [name$="incurred_other_costs"]  999.999
-    The user enters text to a text field  css = [name$="allocated_investigators"]  hello!
-    The user enters text to a text field  css = [name$="allocated_estates_costs"]  £$%^&*
-    The user enters text to a text field  css = [name$="allocated_other_costs"]  TestIt!
-    The user enters text to a text field  css = [name$="indirect_costs"]  42,42
-    The user enters text to a text field  css = [name$="exceptions_staff"]  999.999
+    The user enters text to a text field  css = [name$="incurred_staff"]  ${EMPTY}
+    The user enters text to a text field  css = [name$="incurred_travel_subsistence"]  ${EMPTY}
+    The user enters text to a text field  css = [name$="incurred_other_costs"]  ${EMPTY}
+    The user enters text to a text field  css = [name$="allocated_investigators"]  ${EMPTY}
+    The user enters text to a text field  css = [name$="allocated_estates_costs"]  ${EMPTY}
+    The user enters text to a text field  css = [name$="allocated_other_costs"]  ${EMPTY}
+    The user enters text to a text field  css = [name$="indirect_costs"]  ${EMPTY}
+    The user enters text to a text field  css = [name$="exceptions_staff"]  ${EMPTY}
     The user enters text to a text field  css = [name$="exceptions_other_costs"]  ${EMPTY}
     The user enters text to a text field  css = [name$="tsb_reference"]  ${EMPTY}
-    the user should see a field error  This field can only accept whole numbers.
     the user should see a field error  This field cannot be left blank.
 
 Mark academic finances as complete
@@ -210,7 +209,7 @@ Mark academic finances as complete
     the user should see a field and summary error  This field cannot be left blank.
 
 the user should see correct grant percentage
-    the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  Funding level (%)
     the user should see the text in the element   css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  0
 
 The user marks the academic application finances as incomplete

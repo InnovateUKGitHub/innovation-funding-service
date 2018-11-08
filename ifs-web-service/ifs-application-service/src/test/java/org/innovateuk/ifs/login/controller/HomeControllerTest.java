@@ -4,15 +4,12 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.login.HomeController;
 import org.innovateuk.ifs.login.form.RoleSelectionForm;
-import org.innovateuk.ifs.login.model.RoleSelectionModelPopulator;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
@@ -25,10 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController> {
-
-    @Spy
-    @InjectMocks
-    private RoleSelectionModelPopulator roleSelectionModelPopulator;
 
     @Mock
     private CookieUtil cookieUtil;
@@ -48,7 +41,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
      * Test if you are redirected to the login page, when you visit the root url http://<domain>/
      */
     @Test
-    public void testHome() throws Exception {
+    public void home() throws Exception {
 
         setLoggedInUser(null);
 
@@ -58,7 +51,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void testHomeEmptyAuth() throws Exception {
+    public void homeEmptyAuth() throws Exception {
         setLoggedInUserAuthentication(null);
 
         mockMvc.perform(get("/"))
@@ -67,7 +60,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void testHomeNotAuthenticated() throws Exception {
+    public void homeNotAuthenticated() throws Exception {
         UserAuthentication userAuth = new UserAuthentication(null);
         userAuth.setAuthenticated(false);
         setLoggedInUserAuthentication(userAuth);
@@ -78,7 +71,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void testHomeLoggedInApplicant() throws Exception {
+    public void homeLoggedInApplicant() throws Exception {
         setLoggedInUser(applicant);
 
         mockMvc.perform(get("/"))
@@ -87,7 +80,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void testHomeLoggedInAssessor() throws Exception {
+    public void homeLoggedInAssessor() throws Exception {
         setLoggedInUser(assessor);
 
         mockMvc.perform(get("/"))
@@ -96,7 +89,16 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void testHomeLoggedInWithoutRoles() throws Exception {
+    public void homeLoggedInStakeholder() throws Exception {
+        setLoggedInUser(stakeholder);
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/management/dashboard"));
+    }
+
+    @Test
+    public void homeLoggedInWithoutRoles() throws Exception {
         setLoggedInUser(new UserResource());
 
         mockMvc.perform(get("/"))
@@ -105,7 +107,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void testHomeLoggedInDualRoleAssessor() throws Exception {
+    public void homeLoggedInDualRoleAssessor() throws Exception {
         setLoggedInUser(assessorAndApplicant);
 
         mockMvc.perform(get("/"))
@@ -114,16 +116,25 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void testRoleChoice() throws Exception {
-        setLoggedInUser(assessorAndApplicant);
+    public void homeLoggedInMultipleRoleStakeholder() throws Exception {
+        setLoggedInUser(assessorAndApplicantAndStakeholder);
 
-        mockMvc.perform(get("/roleSelection"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("login/dual-user-choice"));
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/roleSelection"));
     }
 
     @Test
-    public void testRoleChoiceNotAuthenticated() throws Exception {
+    public void roleChoice() throws Exception {
+        setLoggedInUser(stakeholderAndAssessor);
+
+        mockMvc.perform(get("/roleSelection"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("login/multiple-user-choice"));
+    }
+
+    @Test
+    public void roleChoiceNotAuthenticated() throws Exception {
         UserAuthentication userAuth = new UserAuthentication(null);
         userAuth.setAuthenticated(false);
         setLoggedInUserAuthentication(userAuth);
@@ -134,7 +145,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void testRoleSelectionWithSingleRoleUser() throws Exception {
+    public void roleSelectionWithSingleRoleUser() throws Exception {
         setLoggedInUser(applicant);
 
         mockMvc.perform(get("/roleSelection"))
@@ -143,7 +154,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void testRoleSelectionAssessor() throws Exception {
+    public void roleSelectionAssessor() throws Exception {
         setLoggedInUser(assessorAndApplicant);
         Role selectedRole = Role.ASSESSOR;
 
@@ -155,7 +166,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void testRoleSelectionApplicant() throws Exception {
+    public void roleSelectionApplicant() throws Exception {
         setLoggedInUser(assessorAndApplicant);
         Role selectedRole = Role.APPLICANT;
 
@@ -167,7 +178,19 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void testRoleNotSelected() throws Exception {
+    public void roleSelectionStakeholder() throws Exception {
+        setLoggedInUser(stakeholderAndApplicant);
+        Role selectedRole = Role.STAKEHOLDER;
+
+        mockMvc.perform(post("/roleSelection")
+                .param("selectedRole", selectedRole.name()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/management/dashboard"))
+                .andReturn();
+    }
+
+    @Test
+    public void roleNotSelected() throws Exception {
         setLoggedInUser(assessorAndApplicant);
         RoleSelectionForm expectedForm = new RoleSelectionForm();
         expectedForm.setSelectedRole(null);
@@ -178,7 +201,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "selectedRole"))
-                .andExpect(view().name("login/dual-user-choice"))
+                .andExpect(view().name("login/multiple-user-choice"))
                 .andReturn();
 
         RoleSelectionForm form = (RoleSelectionForm) result.getModelAndView().getModel().get("form");
