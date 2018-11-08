@@ -4,7 +4,6 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.form.resource.SectionType;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,12 +40,10 @@ public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
     }
 
     public boolean isSectionDisplayed(ApplicantSectionResource section) {
-        return !SectionType.sectionsNotRequiredForOrganisationType(applicantResource.getCurrentApplicant().getOrganisation().getOrganisationType())
-                .contains(section.getSection().getType());
+        return true;
     }
 
     public boolean isUserIsLeadApplicant() {
         return applicantResource.getCurrentApplicant().isLead();
     }
 }
-
