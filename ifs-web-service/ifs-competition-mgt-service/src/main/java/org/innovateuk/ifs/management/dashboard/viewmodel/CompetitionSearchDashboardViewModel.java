@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
  */
 public class CompetitionSearchDashboardViewModel {
 
-    private CompetitionSearchResult competitions;
+    private final CompetitionSearchResult competitions;
     private String searchQuery;
     private boolean isInternalUser;
 
@@ -19,10 +19,6 @@ public class CompetitionSearchDashboardViewModel {
 
     public CompetitionSearchResult getCompetitions() {
         return competitions;
-    }
-
-    public void setCompetitions(CompetitionSearchResult competitions) {
-        this.competitions = competitions;
     }
 
     public String getSearchQuery() {

@@ -62,7 +62,7 @@ public class ApplicationSummaryViewModelPopulator {
         return new ApplicationSummaryViewModel(
                 application,
                 competition,
-                applicationRestService.isApplicationReadyForSubmit(application.getId()).getSuccess(),
+                applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccess(),
                 summaryViewModelPopulator.populate(applicationId, user, form),
                 applicationTeamViewModel,
                 researchCategorySummaryViewModel,

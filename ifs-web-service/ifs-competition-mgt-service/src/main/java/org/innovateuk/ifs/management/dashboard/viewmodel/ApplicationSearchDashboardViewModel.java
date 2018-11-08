@@ -69,6 +69,7 @@ public class ApplicationSearchDashboardViewModel {
                 .append(applications, viewModel.applications)
                 .append(applicationPagination, viewModel.applicationPagination)
                 .append(searchString, viewModel.searchString)
+                .append(isSupport, viewModel.isSupport)
                 .isEquals();
     }
 
@@ -79,6 +80,7 @@ public class ApplicationSearchDashboardViewModel {
                 .append(applicationCount)
                 .append(applicationPagination)
                 .append(searchString)
+                .append(isSupport)
                 .toHashCode();
     }
 }
