@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -109,13 +110,17 @@ public class GrantResourceBuilder {
 
         String actionTypeString = dataRow.get(CsvHeader.ACTION_TYPE);
 
-        Pattern actionTypeCodePattern = Pattern.compile("^\\(([a-zA-Z0-9-]+)\\).*$");
+        // TODO DW - is it necessary to do regex here, or can we just ask for the action type name?
+        Pattern actionTypeNamePattern = Pattern.compile("^\\(([a-zA-Z0-9-]+)\\).*$");
 
-        String actionTypeCode = actionTypeCodePattern.matcher(actionTypeString).group();
+        Matcher matcher = actionTypeNamePattern.matcher(actionTypeString);
+
+        matcher.find();
+
+        String actionTypeName = matcher.group(1);
 
         // TODO DW - optimise by removing findAll from this method?
-        Optional<EuActionType> matchingActionType = simpleFindFirst(actionTypeRepository.findAllByOrderByPriorityAsc(),
-                type -> type.getName().equals(actionTypeCode));
+        Optional<EuActionType> matchingActionType = actionTypeRepository.findOneByName(actionTypeName);
 
         // TODO DW - error handling
         return matchingActionType.map(actionTypeMapper::mapToResource).orElse(null);
