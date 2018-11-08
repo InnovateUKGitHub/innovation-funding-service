@@ -82,6 +82,19 @@ table {
   }
 }
 
+@include media-down(mobile) {
+  // To fix issue where tables appearing within a conditional section don't overflow correctly
+  .govuk-checkboxes__conditional{
+    .form-in-table{
+      max-width: calc(100vw - 100px);
+    }
+
+    .govuk-table{
+      min-width: 650px;
+    }
+  }
+}
+
 .table-overflow {
   overflow: auto;
   padding-bottom: 0.5em;

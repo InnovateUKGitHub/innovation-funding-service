@@ -9,26 +9,15 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
-
 /**
  * Generic ViewModel for common fields in SectionViewModels
  */
 public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
-    private boolean notRequestingFunding;
     private List<Long> completedSectionIds;
     private BaseFinanceResource organisationFinance;
 
     public YourFinancesSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
-    }
-
-    public boolean isNotRequestingFunding() {
-        return notRequestingFunding;
-    }
-
-    public void setNotRequestingFunding(boolean notRequestingFunding) {
-        this.notRequestingFunding = notRequestingFunding;
     }
 
     public List<Long> getCompletedSectionIds() {
@@ -56,9 +45,6 @@ public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
                 .contains(section.getSection().getType());
     }
 
-    public boolean showSectionAsNotRequired(ApplicantSectionResource section) {
-        return notRequestingFunding && asList(SectionType.FUNDING_FINANCES, SectionType.ORGANISATION_FINANCES).contains(section.getSection().getType());
-    }
     public boolean isUserIsLeadApplicant() {
         return applicantResource.getCurrentApplicant().isLead();
     }
