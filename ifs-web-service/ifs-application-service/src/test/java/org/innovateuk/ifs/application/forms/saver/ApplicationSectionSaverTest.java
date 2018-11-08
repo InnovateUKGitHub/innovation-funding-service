@@ -109,7 +109,6 @@ public class ApplicationSectionSaverTest {
         ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
 
         assertFalse(result.hasErrors());
-        verify(financeSaver, times(1)).handleMarkAcademicFinancesAsNotRequired(anyLong(), any(SectionResource.class), anyLong(), anyLong(), anyLong());
         verify(organisationService, times(1)).getOrganisationType(userId, application.getId());
     }
 

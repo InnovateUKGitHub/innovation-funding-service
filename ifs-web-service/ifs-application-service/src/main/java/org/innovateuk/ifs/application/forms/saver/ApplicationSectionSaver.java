@@ -102,8 +102,6 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
             } else {
                 errors.addAll(saveErrors);
             }
-
-            financeSaver.handleMarkAcademicFinancesAsNotRequired(organisationType, selectedSection, applicationId, competitionId, processRole.getId());
         }
 
         if (isMarkSectionRequest(params)) {
