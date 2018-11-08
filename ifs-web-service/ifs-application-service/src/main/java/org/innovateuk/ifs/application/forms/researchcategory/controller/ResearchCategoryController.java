@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.researchcategory.controller;
 
+import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
 import org.innovateuk.ifs.application.forms.researchcategory.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
 import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
@@ -57,6 +58,9 @@ public class ResearchCategoryController {
 
     @Autowired
     private ResearchCategoryEditableValidator researchCategoryEditableValidator;
+
+    @Autowired
+    private FundingLevelResetHandler fundingLevelResetHandler;
 
     @Autowired
     private ApplicationService applicationService;
