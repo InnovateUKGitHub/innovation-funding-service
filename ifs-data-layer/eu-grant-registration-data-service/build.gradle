@@ -75,6 +75,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile "org.springframework.boot:spring-boot-starter-security"
     compile 'mysql:mysql-connector-java'
+    compile "net.sf.opencsv:opencsv:2.3"
 
     compile project(':ifs-commons')
     compile project(':ifs-resources')

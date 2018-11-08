@@ -29,13 +29,13 @@ public class GrantsFileUploader {
     private URI sourceFileUrl;
 
     @Autowired
-    GrantsFileUploader(@Value("${ifs.eu.data.service.grant.importer.file.location}") String sourceFileUrl)
+    GrantsFileUploader(@Value("${ifs.eu.data.service.grant.importer.file.uri}") String sourceFileUri)
             throws URISyntaxException {
 
-        ServiceResult<URI> uri = getUriFromString(sourceFileUrl);
+        ServiceResult<URI> uri = getUriFromString(sourceFileUri);
 
         if (uri.isFailure()) {
-            throw new URISyntaxException(sourceFileUrl, uri.getFailure().getErrors().get(0).getErrorKey());
+            throw new URISyntaxException(sourceFileUri, uri.getFailure().getErrors().get(0).getErrorKey());
         }
 
         this.sourceFileUrl = uri.getSuccess();

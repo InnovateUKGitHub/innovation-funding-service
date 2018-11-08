@@ -5,12 +5,16 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -76,5 +80,21 @@ public class ScheduledEuGrantFileImporter {
         } catch (URISyntaxException e) {
             return serviceFailure(new Error(e.getMessage(), BAD_REQUEST));
         }
+    }
+
+    static <T> ServiceResult<T> createServiceFailureFromIoException(IOException e) {
+        return serviceFailure(new Error(e.getMessage(), extractHttpCodeFromExceptionIfPossible(e)));
+    }
+
+    private static HttpStatus extractHttpCodeFromExceptionIfPossible(IOException e) {
+
+        Matcher httpStatusCodeMatcher = Pattern.compile("^Server returned HTTP response code: (\\d+)").matcher(e.getMessage());
+
+        if (httpStatusCodeMatcher.find()) {
+            int httpNumericStatusCode = Integer.parseInt(httpStatusCodeMatcher.group(1));
+            return HttpStatus.valueOf(httpNumericStatusCode);
+        }
+
+        return BAD_REQUEST;
     }
 }
