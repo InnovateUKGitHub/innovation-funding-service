@@ -23,12 +23,11 @@ public final class ApplicationFormUtil {
     public static final String REMOVE_COST = "remove_cost";
     public static final String MARK_SECTION_AS_INCOMPLETE = "mark_section_as_incomplete";
     public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
-    public static final String NOT_REQUESTING_FUNDING = "not_requesting_funding";
     public static final String ACADEMIC_FINANCE_REMOVE = "remove_finance_document";
     public static final String REQUESTING_FUNDING = "requesting_funding";
+    public static final String NOT_REQUESTING_FUNDING = "not_requesting_funding";
     public static final String UPLOAD_FILE = "upload_file";
     public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
-    public static final String TERMS_AGREED_KEY = "termsAgreed";
     public static final String STATE_AID_AGREED_KEY = "stateAidAgreed";
     public static final String ORGANISATION_SIZE_KEY = "organisationSize";
     public static final String PROJECT_LOCATION_KEY = "projectLocation";
@@ -48,18 +47,6 @@ public final class ApplicationFormUtil {
 
     public static boolean isMarkQuestionAsIncompleteRequest(@NotNull Map<String, String[]> params) {
         return params.containsKey(MARK_AS_INCOMPLETE);
-    }
-
-    public static boolean isNotRequestingFundingRequest(@NotNull Map<String, String[]> params) {
-        return params.containsKey(NOT_REQUESTING_FUNDING);
-    }
-
-    public static boolean isRequestingFundingRequest(@NotNull Map<String, String[]> params) {
-        return params.containsKey(REQUESTING_FUNDING);
-    }
-
-    public static boolean isFundingRequest(@NotNull Map<String, String[]> params) {
-        return isNotRequestingFundingRequest(params) || isRequestingFundingRequest(params);
     }
 
     public static boolean isMarkSectionRequest(@NotNull Map<String, String[]> params) {

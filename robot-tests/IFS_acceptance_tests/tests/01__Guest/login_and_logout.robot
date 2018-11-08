@@ -24,7 +24,7 @@ Invalid Login
 Valid login with double role as Applicant
     [Documentation]    INFUND-1479
     [Tags]
-    Given The guest user inserts user email and password       &{Multiple_user_credentials}
+    Given The guest user inserts user email and password      &{Multiple_user_credentials}
     And The guest user clicks the log-in button
     Then The user should see the text in the page             Please choose the role you are signing in as today
     And The user clicks the button/link                       jquery = button:contains("Continue")
@@ -37,6 +37,33 @@ Valid login with double role as Applicant
 Valid login with Double role as Assessor
     [Documentation]    INFUND-1479
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
+    And The guest user clicks the log-in button
+    And the user selects the radio button                     selectedRole    ASSESSOR
+    And The user clicks the button/link                       jQuery = button:contains("Continue")
+    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    [Teardown]    Logout as user
+
+Valid login with triple role Assessor
+    [Documentation]  IFS-4568
+    Given the guest user inserts user email and password      &{triple_user_credentials}
+    And The guest user clicks the log-in button
+    And the user selects the radio button                     selectedRole    APPLICANT
+    And The user clicks the button/link                       jQuery = button:contains("Continue")
+    Then the user should be redirected to the correct page    ${DASHBOARD_URL}
+    [Teardown]    Logout as user
+
+Valid login with triple role Stakeholder
+    [Documentation]  IFS-4568
+    Given the guest user inserts user email and password      &{triple_user_credentials}
+    And The guest user clicks the log-in button
+    And the user selects the radio button                     selectedRole    STAKEHOLDER
+    And The user clicks the button/link                       jQuery = button:contains("Continue")
+    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    [Teardown]    Logout as user
+
+Valid login with triple role Applicant
+    [Documentation]  IFS-4568
+    Given the guest user inserts user email and password      &{triple_user_credentials}
     And The guest user clicks the log-in button
     And the user selects the radio button                     selectedRole    ASSESSOR
     And The user clicks the button/link                       jQuery = button:contains("Continue")
