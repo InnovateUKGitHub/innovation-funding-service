@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,8 +22,6 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.eugrant.builder.EuActionTypeResourceBuilder.newEuActionTypeResource;
 import static org.innovateuk.ifs.eugrant.scheduled.CsvHeader.*;
-import static org.innovateuk.ifs.eugrant.scheduled.CsvHeader.PROJECT_COORDINATOR;
-import static org.innovateuk.ifs.eugrant.scheduled.CsvHeader.PROJECT_EU_FUNDING_CONTRIBUTION;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,6 +31,8 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GrantResourceBuilderTest {
+
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @InjectMocks
     private GrantResourceBuilder builder;
@@ -79,12 +81,52 @@ public class GrantResourceBuilderTest {
 
         assertThat(results.isSuccess()).isTrue();
 
-        List<ServiceResult<EuGrantResource>> resourceResults = results.getSuccess();
-        assertThat(resourceResults).hasSize(2);
-
         verify(euActionTypeRepositoryMock).findOneByName("CSA");
         verify(euActionTypeRepositoryMock).findOneByName("SME-1");
         verify(euActionTypeMapperMock).mapToResource(csaActionType);
         verify(euActionTypeMapperMock).mapToResource(smeActionType);
+
+        List<ServiceResult<EuGrantResource>> resourceResults = results.getSuccess();
+        assertThat(resourceResults).hasSize(2);
+
+        EuGrantResource grant1 = resourceResults.get(0).getSuccess();
+        Map<CsvHeader, String> originalRow1 = data.get(0);
+
+        EuGrantResource grant2 = resourceResults.get(1).getSuccess();
+        Map<CsvHeader, String> originalRow2 = data.get(1);
+
+        assertThatEuGrantResourceMatchesOriginalData(grant1, originalRow1, csaActionTypeResource, false);
+        assertThatEuGrantResourceMatchesOriginalData(grant2, originalRow2, smeActionTypeResource, true);
+    }
+
+    private void assertThatEuGrantResourceMatchesOriginalData(EuGrantResource grant, Map<CsvHeader, String> originalRow,
+                                                              EuActionTypeResource expectedActionType,
+                                                              boolean expectedProjectCoordinator) {
+
+        assertThat(grant.getId().toString()).isNotEmpty();
+
+        // TODO DW - reinstate assertions below
+//        assertThat(grant.getShortCode()).isNotEmpty();
+//        assertThat(grant.isContactComplete()).isNotEmpty();
+//        assertThat(grant.isFundingComplete()).isNotEmpty();
+//        assertThat(grant.isOrganisationComplete()).isNotEmpty();
+
+        assertThat(grant.getContact().getEmail()).isEqualTo(originalRow.get(CONTACT_EMAIL_ADDRESS));
+        assertThat(grant.getContact().getJobTitle()).isEqualTo(originalRow.get(CONTACT_JOB_TITLE));
+        assertThat(grant.getContact().getName()).isEqualTo(originalRow.get(CONTACT_FULL_NAME));
+        assertThat(grant.getContact().getTelephone()).isEqualTo(originalRow.get(CONTACT_TELEPHONE_NUMBER));
+
+        assertThat(grant.getFunding().getActionType()).isEqualTo(expectedActionType);
+        assertThat(grant.getFunding().getFundingContribution()).isEqualTo(originalRow.get(PROJECT_EU_FUNDING_CONTRIBUTION));
+        assertThat(grant.getFunding().getGrantAgreementNumber()).isEqualTo(originalRow.get(GRANT_AGREEMENT_NUMBER));
+        assertThat(grant.getFunding().getParticipantId()).isEqualTo(originalRow.get(PIC));
+        assertThat(grant.getFunding().getProjectStartDate()).isEqualTo(LocalDate.from(DATE_FORMAT.parse(originalRow.get(PROJECT_START_DATE))));
+        assertThat(grant.getFunding().getProjectEndDate()).isEqualTo(LocalDate.from(DATE_FORMAT.parse(originalRow.get(PROJECT_END_DATE))));
+        assertThat(grant.getFunding().getProjectName()).isEqualTo(originalRow.get(PROJECT_NAME));
+        assertThat(grant.getFunding().isProjectCoordinator()).isEqualTo(expectedProjectCoordinator);
+
+        assertThat(grant.getOrganisation().getCompaniesHouseNumber()).isEqualTo(originalRow.get(COMPANIES_HOUSE_REGISTRATION_NUMBER));
+        assertThat(grant.getOrganisation().getName()).isEqualTo(originalRow.get(ORGANISATION_NAME));
+        assertThat(grant.getOrganisation().getOrganisationType().getDisplayName()).isEqualTo(originalRow.get(ORGANISATION_TYPE));
     }
 }
