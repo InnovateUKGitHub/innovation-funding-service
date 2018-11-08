@@ -23,21 +23,26 @@ public class CategoryRestServiceImpl extends BaseRestService implements Category
 
     @Override
     public RestResult<List<InnovationAreaResource>> getInnovationAreas() {
-        return getWithRestResultAnonymous(categoryRestURL + "/findInnovationAreas", innovationAreaResourceListType());
+        return getWithRestResultAnonymous(categoryRestURL + "/find-innovation-areas", innovationAreaResourceListType());
+    }
+
+    @Override
+    public RestResult<List<InnovationAreaResource>> getInnovationAreasExcludingNone() {
+        return getWithRestResultAnonymous(categoryRestURL + "/find-innovation-areas-excluding-none", innovationAreaResourceListType());
     }
 
     @Override
     public RestResult<List<InnovationSectorResource>> getInnovationSectors() {
-        return getWithRestResult(categoryRestURL + "/findInnovationSectors", innovationSectorResourceListType());
+        return getWithRestResult(categoryRestURL + "/find-innovation-sectors", innovationSectorResourceListType());
     }
 
     @Override
     public RestResult<List<ResearchCategoryResource>> getResearchCategories() {
-        return getWithRestResult(categoryRestURL + "/findResearchCategories", researchCategoryResourceListType());
+        return getWithRestResult(categoryRestURL + "/find-research-categories", researchCategoryResourceListType());
     }
 
     @Override
     public RestResult<List<InnovationAreaResource>> getInnovationAreasBySector(long sectorId) {
-        return getWithRestResult(categoryRestURL + "/findByInnovationSector/" + sectorId, innovationAreaResourceListType());
+        return getWithRestResult(categoryRestURL + "/find-by-innovation-sector/" + sectorId, innovationAreaResourceListType());
     }
 }

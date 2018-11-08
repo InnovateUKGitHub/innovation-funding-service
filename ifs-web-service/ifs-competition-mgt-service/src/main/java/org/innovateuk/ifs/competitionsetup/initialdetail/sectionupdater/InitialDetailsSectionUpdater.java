@@ -138,8 +138,8 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         List<Long> innovationAreas = initialDetailsForm.getInnovationAreaCategoryIds();
 
         if (competition.getInnovationSector() != null) {
-            List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccess();
-            List<Long> allInnovationAreasIds = getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toList());
+            List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreasExcludingNone().getSuccess();
+            List<Long> allInnovationAreasIds = getAllInnovationAreaIdsExcludingNone(allInnovationAreas).collect(Collectors.toList());
             List<Long> newInnovationAreaIds = initialDetailsForm.getInnovationAreaCategoryIds();
 
             if(CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())
@@ -191,7 +191,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
                 singletonList(allInnovationAreas.stream().map(child -> child.getName()).collect(Collectors.joining(", ")))));
     }
 
-    private Stream<Long> getAllInnovationAreaIds(List<InnovationAreaResource> allInnovationAreas) {
+    private Stream<Long> getAllInnovationAreaIdsExcludingNone(List<InnovationAreaResource> allInnovationAreas) {
         return allInnovationAreas.stream().map(InnovationAreaResource::getId);
     }
 
@@ -308,9 +308,9 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         return valueSet;
     }
 
-    private Set<Long> getAllInnovationAreaIds() {
-        List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccess();
-        return getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toSet());
+    private Set<Long> getAllInnovationAreaIdsExcludingNone() {
+        List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreasExcludingNone().getSuccess();
+        return getAllInnovationAreaIdsExcludingNone(allInnovationAreas).collect(Collectors.toSet());
     }
 
     private void processInnovationAreas(String commaSeparatedIds, CompetitionResource competitionResource) {
@@ -319,7 +319,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         boolean allInnovationAreaIsSelected = innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS);
 
         if(allInnovationAreaIsSelected) {
-            innovationAreaIds = getAllInnovationAreaIds();
+            innovationAreaIds = getAllInnovationAreaIdsExcludingNone();
         }
 
         competitionResource.setInnovationAreas(innovationAreaIds);

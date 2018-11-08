@@ -792,6 +792,9 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
+
+      var formInTable = field.parents('.form-in-table').length > 0
+
       var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
@@ -802,10 +805,17 @@ IFS.core.formValidation = (function () {
 
       if (formGroup.length) {
         if (s.html5validationMode) { field[0].setCustomValidity(message) }
-        if (visuallyhidden === false) { formGroup.addClass('govuk-form-group--error') }
+        if (visuallyhidden === false) {
+          formGroup.addClass('govuk-form-group--error')
+          if (formInTable) {
+            field.closest('.form-in-table').addClass('govuk-form-group--error')
+          }
+        }
         var errorEl = formGroup.find('.govuk-error-message:contains("' + message + '")')
         if (errorEl.length === 0) {
-          if (visuallyhidden === false) { field.addClass('govuk-input--error') }
+          if (visuallyhidden === false) {
+            field.addClass('govuk-input--error')
+          }
           formGroup.find('legend,label').first().after('<span class="govuk-error-message' + (visuallyhidden ? ' govuk-visually-hidden' : '') + '">' + message + '</span>')
         }
       }
@@ -843,6 +853,10 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
+
+      var formInTable = field.parents('.form-in-table').length > 0
+      var formInTableErrors = field.parents('.form-in-table').find('.govuk-input--error').length
+
       var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
@@ -864,6 +878,9 @@ IFS.core.formValidation = (function () {
         if (formGroup.find('.govuk-error-message').length === 0) {
           formGroup.removeClass('govuk-form-group--error')
           field.removeClass('govuk-input--error')
+          if (formInTable && formInTableErrors === 0) {
+            field.closest('.form-in-table').removeClass('govuk-form-group--error')
+          }
           // set corresponding radios/checkboxes valid
           if (s.html5validationMode) {
             jQuery('[name="' + name + '"]').each(function () { this.setCustomValidity('') })

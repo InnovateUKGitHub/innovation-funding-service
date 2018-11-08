@@ -38,7 +38,10 @@ public interface FinanceRowCostsService {
     ServiceResult<List<FinanceRowItem>> getCostItems(Long applicationFinanceId, Long questionId);
 
     @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
-    ServiceResult<FinanceRowItem> addCost(@P("applicationFinanceId") Long applicationFinanceId, Long questionId, FinanceRowItem newCostItem);
+    ServiceResult<FinanceRowItem> addCost(Long applicationFinanceId, Long questionId, FinanceRowItem newCostItem);
+
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
+    ServiceResult<FinanceRowItem> addCost(Long applicationFinanceId, FinanceRowItem newCostItem);
 
     @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
     ServiceResult<FinanceRowItem> addCostWithoutPersisting(@P("applicationFinanceId") Long applicationFinanceId, Long questionId);

@@ -80,10 +80,8 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
         return errors;
     }
 
-
     @Override
     public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
-
         if (fieldName == null || value == null) {
             return new ValidationMessages();
         }

@@ -237,7 +237,7 @@ Project finance user can view finances summary for the consortium
     Given the user should see the element                          jQuery = h3:contains("Finances summary")
     #Check finances summary for lead partner
     Then the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the Categories Are Verified For Finances Summary Section    1    200,903    30%    60,271    2,468    138,164
     #Check finances summary for academic user
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
@@ -274,7 +274,7 @@ IFS Admin user can review Lead partner's finance changes page before the revisio
     Given the user navigates to the page               ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link               css = a.eligibility-0
     And the user clicks the button/link                link = Review all changes to project finances
-    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     Then the categories are verified for Project finances section    1    £200,903    30%    60,271    2,468    138,164
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
     And the categories are verified for Section changes    1   0     0      0    0      0       0        0
@@ -288,7 +288,7 @@ IFS Admin user can review partner's finances before the revisions made
     Given the user clicks the button/link              link = Finance checks
     When the user clicks the button/link               css = a.eligibility-2
     Then the user clicks the button/link               link = Review all changes to project finances
-    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the categories are verified for Project finances section   1   £200,903   30%     60,271    2,468     138,164
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
     And the categories are verified for Section changes    1   0     0      0    0      0       0        0
@@ -666,7 +666,7 @@ Project finance user can see the partner's zero funding request
     [Tags]
     When the user navigates to the page                ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationLudlowId}/eligibility
     Then the user should see the text in the element   css = .table-overview tr:nth-child(1) td:nth-child(2)    £200,903    # Total costs
-    And the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
+    And the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(3)     0%          # Funding level (%)
     And the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(4)     0           # Funding sought
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationLudlowId}/eligibility
 
@@ -842,7 +842,7 @@ Project finance user can view updated finances summary for the consortium
     Given the user should see the element   jQuery = h3:contains("Finances summary")
     #check summary for lead partner
     Then the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the Categories Are Verified For Finances Summary Section   1   £177,784   30%     53,335    2,468     121,981
     #check breakdown for academic user
     When the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
@@ -860,7 +860,7 @@ Project finance user can view Lead Partner's changes to finances
     Given the user clicks the button/link      link = Finance checks
     When the user clicks the button/link       css = a.eligibility-0
     And the user clicks the button/link        link = View changes to finances
-    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     Then the categories are verified for Project finances section   1   £177,784   30%     53,335    2,468     121,981
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
     And the categories are verified for Section changes    1   56,349     1,954      -20,200    4,498      -79,400       4,030        9,650
@@ -1372,7 +1372,7 @@ all the categories are verified
     the user should see the text in the element     jQuery = h3:contains("Project cost breakdown") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)  ${travel}
     the user should see the text in the element     jQuery = h3:contains("Project cost breakdown") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(8)  ${other_costs}
 
-# the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+# the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
 the categories are verified for Project finances section
     [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
     the user should see the text in the element     jQuery = h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${total_costs}
