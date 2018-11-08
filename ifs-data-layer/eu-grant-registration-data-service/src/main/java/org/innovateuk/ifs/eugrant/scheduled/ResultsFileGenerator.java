@@ -30,7 +30,7 @@ public class ResultsFileGenerator {
     private URI resultsFileUri;
 
     @Autowired
-    ResultsFileGenerator(@Value("${ifs.eu.data.service.grant.importer.results.file.location}") String resultsFileUri)
+    ResultsFileGenerator(@Value("${ifs.eu.data.service.grant.importer.results.file.location.uri}") String resultsFileUri)
                         throws URISyntaxException {
 
         ServiceResult<URI> uri = getUriFromString(resultsFileUri);
