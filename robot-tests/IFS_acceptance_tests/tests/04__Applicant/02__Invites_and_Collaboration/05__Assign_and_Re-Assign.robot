@@ -167,7 +167,8 @@ RTO Collaborator is not guided that the research area is not selected
     Given the user navigates to Your-finances page  Assign test
     When the user clicks the button/link            link = Your funding
     Then The user should not see the element        jQuery = .govuk-list li:contains("the lead applicant must mark the research category page as complete")
-    And the user should see the element             css = [name^="finance-grantclaimpercentage"]
+    And the user selects the radio button           requestingFunding   true
+    And the user should see the element             css = [name^="grantClaimPercentage"]
 
 Lead selects Research category
     [Documentation]  INFUND-6823  IFS-3938

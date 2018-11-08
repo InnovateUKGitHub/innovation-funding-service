@@ -66,7 +66,7 @@ public class InitialDetailsFormPopulatorTest {
 				.withId(8L).build();
 
 		List<InnovationAreaResource> innovationAreaCategories = new ArrayList<>();
-		when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreaCategories));
+		when(categoryRestService.getInnovationAreasExcludingNone()).thenReturn(restSuccess(innovationAreaCategories));
 		when(categoryFormatter.format(innovationAreas, innovationAreaCategories)).thenReturn("formattedcategories");
 
 		CompetitionSetupForm result = service.populateForm(competition);
@@ -102,7 +102,7 @@ public class InitialDetailsFormPopulatorTest {
 				.withId(8L).build();
 
 		List<InnovationAreaResource> innovationAreaCategories = newInnovationAreaResource().withId(6L, 7L).build(2);
-		when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreaCategories));
+		when(categoryRestService.getInnovationAreasExcludingNone()).thenReturn(restSuccess(innovationAreaCategories));
 
 		CompetitionSetupForm result = service.populateForm(competition);
 

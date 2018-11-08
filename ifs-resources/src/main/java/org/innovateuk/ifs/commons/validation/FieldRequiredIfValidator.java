@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -71,6 +72,10 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
             return false;
         }
 
+        if (requiredFieldValue instanceof BigDecimal) {
+            return false;
+        }
+
         if (requiredFieldValue instanceof String) {
             return StringUtils.isBlank((String) requiredFieldValue);
         }
@@ -84,7 +89,7 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
         }
 
         throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName
-                + "] must be of type Boolean, Integer, String, Optional, or Collection. Found "
+                + "] must be of type Boolean, Integer, String, Optional, BigDecimal, or Collection. Found "
                 + requiredFieldValue.getClass().getName());
     }
 

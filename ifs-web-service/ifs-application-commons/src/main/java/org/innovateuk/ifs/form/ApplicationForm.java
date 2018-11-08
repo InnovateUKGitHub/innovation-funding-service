@@ -27,6 +27,7 @@ public class ApplicationForm extends Form {
     private String ineligibleReason;
 
     private MultipartFile overheadfile;
+    private MultipartFile jesFileUpload;
 
     public ApplicationForm() {
         super();
@@ -112,5 +113,13 @@ public class ApplicationForm extends Form {
 
     public void setOverheadfile(MultipartFile overheadfile) {
         this.overheadfile = overheadfile;
+    }
+
+    public MultipartFile getJesFileUpload() {
+        return jesFileUpload;
+    }
+
+    public void setJesFileUpload(MultipartFile jesFileUpload) {
+        this.jesFileUpload = jesFileUpload;
     }
 }

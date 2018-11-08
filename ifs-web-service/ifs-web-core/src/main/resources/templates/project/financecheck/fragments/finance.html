@@ -175,7 +175,7 @@
                            th:id="${'cost-other_funding-'+costIdentifier+'-date'}"
                            placeholder="MM-YYYY"
                            pattern="(0[1-9]|1[012])-[0-9]{4}"
-                           th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid}"
+                           th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
                            maxlength="7"
                            th:value="${rejectedValue != null ? rejectedValue : cost.securedDate}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-input--error'"
