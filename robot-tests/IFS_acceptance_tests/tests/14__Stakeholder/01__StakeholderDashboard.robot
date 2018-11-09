@@ -96,6 +96,24 @@ The Stakeholder can search for a competition
     When the user clicks the button/link          id = searchsubmit
     And the user clicks the button/link           link = ${openProgrammeCompetitionName}
     Then the user should see the element          jQuery = h1:contains("${openProgrammeCompetitionId}: ${openProgrammeCompetitionName}")
+    [Teardown]  The user clicks the button/link   link = Dashboard
+
+The Stakeholder can search for application
+    [Documentation]  IFS-4564
+    [Tags]
+    Given the user enters text to a text field    searchQuery  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    When the user clicks the button/link          id = searchsubmit
+    And the user clicks the button/link           link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    Then the user should see the element          jQuery = span:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+    [Teardown]  The user clicks the button/link   link = Dashboard
+
+The Stakeholder cannot search for unassigned applications
+    [Documentation]  IFS-4564
+    [Tags]
+    Given the user enters text to a text field    searchQuery  ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    When the user clicks the button/link          id = searchsubmit
+    Then the user should see the element          jQuery = p:contains("0") strong:contains("${OPEN_COMPETITION_APPLICATION_1_NUMBER}")
+    [Teardown]  The user clicks the button/link   link = Dashboard
 
 The internal user removes a Stakeholder from the competition
     [Documentation]  IFS-4189
