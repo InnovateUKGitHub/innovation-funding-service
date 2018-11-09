@@ -296,14 +296,9 @@ Lead partner can change the project address
     Given the user navigates to the page             ${project_in_setup_details_page}
     And the user clicks the button/link              link = Project address
     When the user clicks the button/link             jQuery = .govuk-button:contains("Save")
-    Then the user should see the text in the page    You need to select an address before you can continue.
-    When the user selects the radio button           addressType    ADD_NEW
-    And the user enters text to a text field         id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link              jQuery = .govuk-button:contains("Find UK address")
+    And The user should see a field and summary error   This field cannot be left blank.
     And the user clicks the button/link              jQuery = .govuk-button:contains("Find UK address")
     Then the user should see the element             css = #select-address-block
-    And the user clicks the button/link              css = #select-address-block > button
-    And the address fields should be filled
     And the user clicks the button/link              jQuery = .govuk-button:contains("Save project address")
     And the user should see the address data
     When the user clicks the button/link             link = Project address

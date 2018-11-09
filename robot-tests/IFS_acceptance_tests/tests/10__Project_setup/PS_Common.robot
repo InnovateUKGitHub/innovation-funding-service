@@ -243,11 +243,8 @@ project lead submits project address
 #Used in 12__ATI_compCreationToSubmission
     [Arguments]  ${project_id}
     the user navigates to the page                ${server}/project-setup/project/${project_id}/details/project-address
-    the user selects the radio button             addressType  ADD_NEW
-    the user enters text to a text field          id = addressForm.postcodeInput   BS14NT
-    the user clicks the button/link               jQuery = .govuk-button:contains("Find UK address")
-    the user clicks the button/link               jQuery = button:contains("Use selected address")
-    the user clicks the button/link               css = #main-content > form > button  #Save project address
+    the user sees the text in the text field      id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link               jQuery = button:contains("Save project address")
 
 project lead submits project details
     [Arguments]  ${project_id}

@@ -72,7 +72,7 @@ Create assessor account: client-side validations
     Then the user should not see the validation error in the create assessor form  Please enter your password.
     And the user should not see the validation error in the create assessor form   Password must be at least 8 characters.
     When the user clicks the button/link                                           id = postcode-lookup
-    And The user should see an error                                               Enter a valid postcode    # empty postcode check
+    And The user should see an error                                               Enter a UK postcode    # empty postcode check
 
 Create assessor account: Postcode lookup and save
     [Documentation]    INFUND-1478
@@ -80,8 +80,7 @@ Create assessor account: Postcode lookup and save
     When The user enters text to a text field               id = addressForm.postcodeInput    BS14NT
     And the user clicks the button/link                     id = postcode-lookup
     Then the user should see the element                    id = addressForm.selectedPostcodeIndex
-    And the user clicks the button/link                     css = #select-address-block button
-    And the address fields should be filled
+    #And the address fields should be filled
     And The user enters text to a text field                id = password    ${correct_password}
     And the user clicks the button/link                     jQuery = button:contains("Continue")
     Then the user should see the text in the page           Your account has been created
