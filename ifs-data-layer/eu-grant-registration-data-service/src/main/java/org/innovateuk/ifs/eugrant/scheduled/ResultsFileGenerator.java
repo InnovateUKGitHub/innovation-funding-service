@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.eugrant.scheduled;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -91,6 +91,7 @@ public class ResultsFileGenerator {
             try (CSVWriter writer = new CSVWriter(fileWriter)) {
                 writer.writeAll(simpleMap(data, row -> row.toArray(new String[] {})));
             }
+
         } catch (IOException e) {
             return createServiceFailureFromIoException(e);
         }
@@ -102,7 +103,7 @@ public class ResultsFileGenerator {
 
         try (FileReader fileReader = new FileReader(originalFile)) {
 
-            try (CSVReader reader = new CSVReader(fileReader, ',', '"')) {
+            try (CSVReader reader = new CSVReader(fileReader)) {
 
                 try {
                     List<String[]> data = reader.readAll();

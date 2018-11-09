@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.eugrant.scheduled;
 
-import au.com.bytecode.opencsv.CSVReader;
+import com.opencsv.CSVReader;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
@@ -47,7 +47,7 @@ public class GrantsFileExtractor {
 
         try (FileReader fileReader = new FileReader(file)) {
 
-            try (CSVReader reader = new CSVReader(fileReader, ',', '"')) {
+            try (CSVReader reader = new CSVReader(fileReader)) {
 
                 try {
                     List<String[]> data = reader.readAll();
