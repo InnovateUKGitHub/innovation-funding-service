@@ -274,7 +274,7 @@ Invited project manager shows on the project manager selection screen
 
 Lead partner selects a project manager
     [Documentation]    INFUND-2616 INFUND-2996 INFUND-5610
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page             ${project_in_setup_details_page}
     And the user clicks the button/link              link = Project Manager
     When the user clicks the button/link             jQuery = .govuk-button:contains("Save")
@@ -338,7 +338,7 @@ Non lead partner invites finance contact
 
 Invited Fin Contact for non lead partner
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Logout as user
     Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  ${PROJECT_SETUP_COMPETITION_NAME}: Finance contact invitation for project ${PROJECT_SETUP_APPLICATION_1}  providing finance details  Ludlow's  FinContact
     When log in as a different user       &{collaborator1_credentials}
@@ -503,7 +503,7 @@ Validation for project location
 
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user  &{lead_applicant_credentials}
     Given the user navigates to the page  ${project_in_setup_details_page}
     And select the project location       Empire
