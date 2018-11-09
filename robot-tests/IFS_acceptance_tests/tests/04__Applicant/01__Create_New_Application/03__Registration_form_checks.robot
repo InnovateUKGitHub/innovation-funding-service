@@ -78,13 +78,13 @@ Your details: client-side validation
     Then the user should not see an error in the page
 
 User can not login with the invalid email
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    the user navigates to the page          ${SERVER}
     Then the user cannot login with the invalid email  ${invalid_email_no_at}
 
 Email duplication check
     [Documentation]    INFUND-886
-    [Tags]
+    [Tags]  HappyPath
     Given Applicant goes to the registration form
     When the user enters the details and clicks the create account  John  Smith  ${lead_applicant}  ${correct_password}
     Then the user should see an error          The email address is already registered with us. Please sign into your account

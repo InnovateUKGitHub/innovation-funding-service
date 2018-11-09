@@ -84,7 +84,7 @@ Internal user can filter notified applications
     And the user clicks the button/link        jQuery = button:contains("Filter")
     Then the user should not see the element   jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
     When the user selects the option from the drop-down menu  All  id = sendFilter
-    And the user selects the option from the drop-down menu  ON_HOLD  id = fundingFilter
+    And the user selects the option from the drop-down menu  On hold  id = fundingFilter
     And the user clicks the button/link        jQuery = button:contains("Filter")
     Then the user should see the element       jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
 

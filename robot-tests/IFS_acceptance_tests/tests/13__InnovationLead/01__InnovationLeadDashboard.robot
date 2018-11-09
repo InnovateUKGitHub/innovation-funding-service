@@ -50,7 +50,22 @@ Innnovation lead can see competitions assigned to him only
     And the user should not see the text in the page  ${openCompetitionBusinessRTO_name}
     When the user clicks the button/link  css = #section-4 a  #Project setup tab
     Then the user should see the element  link = ${PROJECT_SETUP_COMPETITION_NAME}
+    [Teardown]  The user clicks the button/link  link = Dashboard
 
+Innovation lead can only search for applications assigned to them
+    [Documentation]  IFS-4564
+    Given the user enters text to a text field    searchQuery  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    When the user clicks the button/link          id = searchsubmit
+    And the user clicks the button/link           link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    Then the user should see the element          jQuery = span:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+    [Teardown]  The user clicks the button/link   link = Dashboard
+
+Innovation lead cannot search for unassigned applications
+    [Documentation]  IFS-4564
+    Given the user enters text to a text field    searchQuery  ${INFORM_COMPETITION_NAME_1_NUMBER}
+    When the user clicks the button/link          id = searchsubmit
+    Then the user should see the element          jQuery = p:contains("0") strong:contains("${INFORM_COMPETITION_NAME_1_NUMBER}")
+    [Teardown]  The user clicks the button/link   link = Dashboard
 
 *** Keywords ***
 The user should see permission error on page

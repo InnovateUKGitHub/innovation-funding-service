@@ -251,7 +251,7 @@ Assessor: Client-side validation
     Then The user should not see the text in the page  This field can only accept whole numbers
     And the user clicks the button/link          link = Competition setup
 
-# TODO IFS-4186 Uncomment when this functionality is enabled.
+# TODO IFS-4609 Uncomment when this functionality is enabled.
 #Documents in project setup: The competition admin is required to enter a title and guidance message
 #    [Documentation]
 #    [Tags]
@@ -284,7 +284,7 @@ Custom suite setup
     set suite variable  ${tomorrowMonthWord}
 
 the user moves focus and waits for autosave
-    focus    link=Sign out
+    Set Focus To Element    link=Sign out
     Wait For Autosave
 
 the validation error above the question should be visible
@@ -300,7 +300,7 @@ the user fills the empty question fields
 
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
-    focus    jQuery=.govuk-button[value="Save and close"]
+    Set Focus To Element    jQuery=.govuk-button[value="Save and close"]
     Wait Until Element Is Not Visible Without Screenshots    css = .govuk-error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
@@ -400,7 +400,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].day    22
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2019
-    Focus    jQuery = button:contains(Done)
+    Set Focus To Element    jQuery = button:contains(Done)
     wait for autosave
 
 the user should see the correct values in the initial details form
@@ -438,11 +438,11 @@ the user should see the correct details in the eligibility form
 The user should not see the error text in the page
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
-    Focus    jQuery=button:contains("Done")
+    Set Focus To Element    jQuery=button:contains("Done")
     Wait Until Page Does Not Contain Without Screenshots    ${ERROR_TEXT}
 
 the users waits until the page is autosaved
-    Focus    jQuery=button:contains(Done)
+    Set Focus To Element    jQuery=button:contains(Done)
     Wait For Autosave
 
 the user should see the correct inputs in the Milestones form
@@ -481,7 +481,7 @@ The user navigates to the Validation competition
 the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
-    Focus    jQuery = button:contains("Done")
+    Set Focus To Element    jQuery = button:contains("Done")
     Wait for autosave
     Wait Until Element Does Not Contain Without Screenshots    css = .govuk-error-message    ${ERROR_TEXT}
 

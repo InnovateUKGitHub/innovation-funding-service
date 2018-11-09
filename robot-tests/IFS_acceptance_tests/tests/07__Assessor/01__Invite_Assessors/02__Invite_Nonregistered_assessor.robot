@@ -72,7 +72,7 @@ Create assessor account: client-side validations
     Then the user should not see the validation error in the create assessor form  Please enter your password.
     And the user should not see the validation error in the create assessor form   Password must be at least 8 characters.
     When the user clicks the button/link                                           id = postcode-lookup
-    And The user should see an error                                               Please enter a valid postcode    # empty postcode check
+    And The user should see an error                                               Enter a valid postcode    # empty postcode check
 
 Create assessor account: Postcode lookup and save
     [Documentation]    INFUND-1478
@@ -161,7 +161,7 @@ the assessor fills in all fields
 the user should not see the validation error in the create assessor form
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
-    Focus    jQuery = button:contains("Continue")
+    Set Focus To Element      jQuery = button:contains("Continue")
     Wait for autosave
     ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css = .govuk-error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}

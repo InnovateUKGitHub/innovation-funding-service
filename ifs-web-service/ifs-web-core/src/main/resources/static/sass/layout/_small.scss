@@ -57,6 +57,10 @@ table {
     &.no-border {
       border:none;
     }
+
+    &.small-column {
+      width: 10%;
+    }
   }
 }
 
@@ -141,10 +145,6 @@ th {
 
 .aligncentre {
   text-align:center;
-}
-
-.display-inline {
-  display: inline;
 }
 
 col {
@@ -234,4 +234,9 @@ span {
     display: block;
     min-height:1.5em;
   }
+}
+
+pre,
+.display-content {
+  white-space: pre-wrap;
 }

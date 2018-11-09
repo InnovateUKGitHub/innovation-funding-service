@@ -44,23 +44,25 @@ def String ldapEncryptionCertificateFile = "${buildDir}/${ldapEncryptionCertific
 
 task prepareIDPProxySecrets {
 
-    if (!file("${idpCertsVolume}/${idpProxyKeyFileName}").exists() ||
-            !file("${idpCertsVolume}/${idpProxyCertificateFileName}").exists() ||
-            !file("${idpCertsVolume}/${idpProxyCacertificateFileName}").exists()) {
-        buildDir.mkdir()
-        // a valid CA certificate is required for the data service to work
-        assert project.hasProperty('idp.proxy.key')
-        new File(idpProxyKeyFile).write(project['idp.proxy.key'])
-        assert project.hasProperty('idp.proxy.certificate')
-        new File(idpProxyCertificateFile).write(project['idp.proxy.certificate'])
-        assert project.hasProperty('idp.proxy.cacertificate')
-        new File(idpProxyCacertificateFile).write(project['idp.proxy.cacertificate'])
+    doFirst {
+        if (!file("${idpCertsVolume}/${idpProxyKeyFileName}").exists() ||
+                !file("${idpCertsVolume}/${idpProxyCertificateFileName}").exists() ||
+                !file("${idpCertsVolume}/${idpProxyCacertificateFileName}").exists()) {
+            buildDir.mkdir()
+            // a valid CA certificate is required for the data service to work
+            assert project.hasProperty('idp.proxy.key')
+            new File(idpProxyKeyFile).write(project['idp.proxy.key'])
+            assert project.hasProperty('idp.proxy.certificate')
+            new File(idpProxyCertificateFile).write(project['idp.proxy.certificate'])
+            assert project.hasProperty('idp.proxy.cacertificate')
+            new File(idpProxyCacertificateFile).write(project['idp.proxy.cacertificate'])
 
-        copy {
-            from file(idpProxyKeyFile)
-            from file(idpProxyCertificateFile)
-            from file(idpProxyCacertificateFile)
-            into idpCertsVolume
+            copy {
+                from file(idpProxyKeyFile)
+                from file(idpProxyCertificateFile)
+                from file(idpProxyCacertificateFile)
+                into idpCertsVolume
+            }
         }
     }
 }

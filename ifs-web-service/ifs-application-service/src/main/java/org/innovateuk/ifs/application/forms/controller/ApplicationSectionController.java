@@ -58,8 +58,8 @@ import static org.jsoup.helper.StringUtil.isBlank;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 public class ApplicationSectionController {
-    private static final int MINIMUM_POSTCODE_LENGTH = 6;
-    private static final int MAXIMUM_POSTCODE_LENGTH = 8;
+    private static final int MINIMUM_POSTCODE_LENGTH = 3;
+    private static final int MAXIMUM_POSTCODE_LENGTH = 10;
 
     private static final Log LOG = LogFactory.getLog(ApplicationSectionController.class);
 
@@ -101,6 +101,20 @@ public class ApplicationSectionController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @GetMapping("/{sectionType}/{applicantOrganisationId}")
+    public String redirectToSectionManagement(@PathVariable("sectionType") SectionType type,
+                                              @PathVariable(APPLICATION_ID) Long applicationId,
+                                              @PathVariable long applicantOrganisationId,
+                                              @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                              @RequestParam MultiValueMap<String, String> queryParams) {
+
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
+        return applicationRedirectionService.redirectToSection(type, applicationId) + "/" + applicantOrganisationId + originQuery;
+    }
+
+
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{sectionType}")
     public String redirectToSection(@PathVariable("sectionType") SectionType type,
@@ -117,6 +131,9 @@ public class ApplicationSectionController {
                                                  UserResource user) {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
+        if (applicantSection.getSection().getType() == SectionType.FUNDING_FINANCES) {
+            return String.format("redirect:/application/%d/form/your-funding/%d", applicationId, sectionId);
+        }
         boolean isSupport = user.hasRole(SUPPORT);
         populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), isSupport);
         return APPLICATION_FORM;
@@ -136,7 +153,7 @@ public class ApplicationSectionController {
                                                              @RequestParam MultiValueMap<String, String> queryParams) {
 
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
-
+        model.addAttribute("originQuery", originQuery);
         boolean isSupport = user.hasRole(SUPPORT);
 
         ApplicationResource application = applicationService.getById(applicationId);
@@ -146,9 +163,12 @@ public class ApplicationSectionController {
                 .filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) && Arrays.asList(Role.LEADAPPLICANT.getName(),
                         Role.COLLABORATOR.getName()).contains(pr.getRoleName()))
                 .findFirst()
-                .orElseThrow(() -> new ObjectNotFoundException());
+                .orElseThrow(ObjectNotFoundException::new);
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
+        if (applicantSection.getSection().getType() == SectionType.FUNDING_FINANCES) {
+            return String.format("redirect:/application/%d/form/your-funding/%d/%d%s", applicationId, sectionId, applicantOrganisationId, originQuery);
+        }
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true, Optional.of(originQuery), isSupport);
         return APPLICATION_FORM;
     }
@@ -197,7 +217,7 @@ public class ApplicationSectionController {
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        if (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)) {
+        if (!isSaveAndReturnRequest(params) && (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request))) {
             validationHandler.addAnyErrors(saveApplicationErrors);
             populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), isSupport);
             return APPLICATION_FORM;
@@ -241,14 +261,8 @@ public class ApplicationSectionController {
         }
 
         switch (section.getType()) {
-
-            case FUNDING_FINANCES:
-                return validateOtherFundingSelectionMade(params, bindingResult)
-                        && validateTermsAndConditionsAgreement(form, bindingResult);
-
             case PROJECT_COST_FINANCES:
-                return userIsResearch(userId, applicationId) ?
-                        validateTermsAndConditionsAgreement(form, bindingResult) :
+                return userIsResearch(userId, applicationId) ||
                         validateStateAidAgreement(form, bindingResult);
 
             case ORGANISATION_FINANCES:
@@ -264,25 +278,6 @@ public class ApplicationSectionController {
 
     private boolean userIsResearch(long userId, long applicationId) {
         return organisationRestService.getByUserAndApplicationId(userId, applicationId).getSuccess().getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
-    }
-
-    private boolean validateTermsAndConditionsAgreement(ApplicationForm form, BindingResult bindingResult) {
-        if (form.isTermsAgreed()) {
-            return true;
-        }
-        bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
-        return false;
-    }
-
-    private boolean validateOtherFundingSelectionMade(Map<String, String[]> params, BindingResult bindingResult) {
-
-        List<String> publicFundingKeys = simpleFilter(params.keySet(), k -> k.contains("-otherPublicFunding"));
-        if (!publicFundingKeys.isEmpty()) {
-            return true;
-        }
-
-        bindingResult.rejectValue("formInput[cost-otherPublicFunding]", "validation.finance.other.funding.required");
-        return false;
     }
 
     private boolean validateStateAidAgreement(ApplicationForm form, BindingResult bindingResult) {

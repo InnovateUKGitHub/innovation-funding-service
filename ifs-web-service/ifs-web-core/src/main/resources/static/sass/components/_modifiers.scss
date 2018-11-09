@@ -9,6 +9,18 @@ table {
     white-space: nowrap;
   }
 
+  .width-15-percent {
+    box-sizing: border-box;
+    padding-right: 1em;
+    width: 15%;
+  }
+
+  .width-20-percent {
+    box-sizing: border-box;
+    padding-right: 1em;
+    width: 20%;
+  }
+
   .width-30-percent {
     box-sizing: border-box;
     padding-right: 1em;
@@ -67,6 +79,19 @@ table {
 
   .empty-table-cell-select {
     margin-left: 20px;
+  }
+}
+
+@include media-down(mobile) {
+  // To fix issue where tables appearing within a conditional section don't overflow correctly
+  .govuk-checkboxes__conditional{
+    .form-in-table{
+      max-width: calc(100vw - 100px);
+    }
+
+    .govuk-table{
+      min-width: 650px;
+    }
   }
 }
 
