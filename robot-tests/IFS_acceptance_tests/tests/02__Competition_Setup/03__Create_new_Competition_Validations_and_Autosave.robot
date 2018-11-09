@@ -42,7 +42,7 @@ Initial details: server-side validations
     And the user should see an error        Please select a competition type.
     And the user should see an error        Please select an innovation sector.
     And the user should see an error        Please select an innovation area.
-    And the user should see an error        Please enter a valid date.
+    And the user should see an error        ${enter_a_valid_date}
     And the user should see an error        Please select an Innovation Lead.
     And the user should see an error        Please select a Portfolio Manager.
     And the user should see an error        Please select a state aid option.

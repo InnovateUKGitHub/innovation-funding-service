@@ -344,7 +344,7 @@ the compAdmin uploads additional feedback for an application
     the user should get an error page  ${too_large_pdf_validation_error}
     the user goes back to the previous page
     the user uploads the file          id = feedback[0]   ${text_file}    #checking validation for worng fomrate file upload
-    the user should see a field and summary error      Your upload must be a PDF.
+    the user should see a field and summary error     ${wrong_filetype_validation_error}
     the compAdmin/applicant upload feedback     id = feedback[0]  ${5mb_pdf}  link = ${5mb_pdf}
 
 the compAdmin/applicant upload feedback
