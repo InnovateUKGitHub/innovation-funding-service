@@ -39,7 +39,7 @@ public class ScheduledEuGrantFileImporterTest {
     private GrantsFileExtractor grantsFileExtractorMock;
 
     @Mock
-    private GrantsImporter grantsImporterMock;
+    private GrantSaver grantSaverMock;
 
     @Mock
     private ResultsFileGenerator resultsFileGeneratorMock;
@@ -50,7 +50,7 @@ public class ScheduledEuGrantFileImporterTest {
          importer = new ScheduledEuGrantFileImporter(
                  grantsFileUploaderMock,
                  grantsFileExtractorMock,
-                 grantsImporterMock,
+                 grantSaverMock,
                  resultsFileGeneratorMock);
     }
 
@@ -63,16 +63,18 @@ public class ScheduledEuGrantFileImporterTest {
                 serviceSuccess(newEuGrantResource().build()),
                 serviceFailure(new Error("Could not extract!", BAD_REQUEST)));
 
-        List<ServiceResult<UUID>> importResults = asList(
-                serviceSuccess(UUID.randomUUID()),
-                serviceFailure(new Error("Could not extract!", BAD_REQUEST)));
+        EuGrantResource saveGrantResults = newEuGrantResource().withId(UUID.randomUUID()).build();
 
         File resultsFile = File.createTempFile("temp", "temp");
 
         when(grantsFileUploaderMock.getFileIfExists()).thenReturn(serviceSuccess(sourceFile));
         when(grantsFileExtractorMock.processFile(sourceFile)).thenReturn(serviceSuccess(extractionResults));
-        when(grantsImporterMock.importGrants(extractionResults)).thenReturn(serviceSuccess(importResults));
-        when(resultsFileGeneratorMock.generateResultsFile(importResults, sourceFile)).thenReturn(serviceSuccess(resultsFile));
+
+        EuGrantResource successfullyExtractedGrant = extractionResults.get(0).getSuccess();
+        when(grantSaverMock.saveGrant(successfullyExtractedGrant)).thenReturn(serviceSuccess(saveGrantResults));
+
+        List<ServiceResult<EuGrantResource>> combinedListOfSuccessesAndFailures = asList(serviceSuccess(saveGrantResults), extractionResults.get(1));
+        when(resultsFileGeneratorMock.generateResultsFile(combinedListOfSuccessesAndFailures, sourceFile)).thenReturn(serviceSuccess(resultsFile));
 
         ServiceResult<File> result = importer.importEuGrantsFile();
 
@@ -80,8 +82,8 @@ public class ScheduledEuGrantFileImporterTest {
 
         verify(grantsFileUploaderMock, times(1)).getFileIfExists();
         verify(grantsFileExtractorMock, times(1)).processFile(sourceFile);
-        verify(grantsImporterMock, times(1)).importGrants(extractionResults);
-        verify(resultsFileGeneratorMock, times(1)).generateResultsFile(importResults, sourceFile);
+        verify(grantSaverMock, times(1)).saveGrant(successfullyExtractedGrant);
+        verify(resultsFileGeneratorMock, times(1)).generateResultsFile(combinedListOfSuccessesAndFailures, sourceFile);
     }
 
     @Test
@@ -98,7 +100,7 @@ public class ScheduledEuGrantFileImporterTest {
 
         verify(grantsFileUploaderMock, times(1)).getFileIfExists();
         verify(grantsFileExtractorMock, times(1)).processFile(sourceFile);
-        verify(grantsImporterMock, never()).importGrants(any());
+        verify(grantSaverMock, never()).saveGrant(any());
         verify(resultsFileGeneratorMock, never()).generateResultsFile(any(), any());
     }
 }

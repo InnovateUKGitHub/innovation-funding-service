@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.commons.service;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
@@ -292,7 +294,6 @@ public abstract class BaseFailingOrSucceedingResult<T, FailureType extends Error
     private T getRight() {
         return result.getRight();
     }
-
 
     /**
      * Function to aggregate a {@link List} of {@link BaseFailingOrSucceedingResult}.

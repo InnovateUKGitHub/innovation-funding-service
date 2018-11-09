@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,12 +14,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -32,19 +35,19 @@ public class ScheduledEuGrantFileImporter {
 
     private GrantsFileUploader grantsFileUploader;
     private GrantsFileExtractor grantsFileExtractor;
-    private GrantsImporter grantsImporter;
+    private GrantSaver grantsSaver;
     private ResultsFileGenerator resultsFileGenerator;
 
 
     @Autowired
     ScheduledEuGrantFileImporter(@Autowired GrantsFileUploader grantsFileUploader,
                                  @Autowired GrantsFileExtractor grantsFileExtractor,
-                                 @Autowired GrantsImporter grantsImporter,
+                                 @Autowired GrantSaver grantsSaver,
                                  @Autowired ResultsFileGenerator resultsFileGenerator) {
 
         this.grantsFileUploader = grantsFileUploader;
         this.grantsFileExtractor = grantsFileExtractor;
-        this.grantsImporter = grantsImporter;
+        this.grantsSaver = grantsSaver;
         this.resultsFileGenerator = resultsFileGenerator;
     }
 
@@ -60,13 +63,21 @@ public class ScheduledEuGrantFileImporter {
         ServiceResult<File> importResult =
                 sourceFileCheck.andOnSuccess(sourceFile ->
                     grantsFileExtractor.processFile(sourceFile).
-                        andOnSuccess(grantsImporter::importGrants).
+                        andOnSuccess(this::saveSuccessfullyExtractedGrants).
                         andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile))
                 );
 
         return importResult.handleSuccessOrFailureNoReturn(
                 failure -> LOG.error("Unable to complete grant file import.  Failure is: " + importResult.getFailure()),
                 success -> LOG.info("Grants imported successfully!  Results file can be found at " + success.getPath()));
+    }
+
+    private ServiceResult<List<ServiceResult<EuGrantResource>>> saveSuccessfullyExtractedGrants(List<ServiceResult<EuGrantResource>> grantsExtractResults) {
+
+        List<ServiceResult<EuGrantResource>> creationResults = simpleMap(grantsExtractResults, extractResult ->
+                extractResult.andOnSuccess(grantsSaver::saveGrant));
+
+        return serviceSuccess(creationResults);
     }
 
     private boolean isNotFoundError(ServiceResult<File> sourceFileCheck) {

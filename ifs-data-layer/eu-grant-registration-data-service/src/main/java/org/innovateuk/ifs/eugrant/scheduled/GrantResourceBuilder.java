@@ -115,6 +115,7 @@ public class GrantResourceBuilder {
 
         Matcher matcher = actionTypeNamePattern.matcher(actionTypeString);
 
+        // TODO DW - put failure case in here
         matcher.find();
 
         String actionTypeName = matcher.group(1);

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.eugrant.scheduled;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.UUID;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.eugrant.scheduled.ScheduledEuGrantFileImporter.createServiceFailureFromIoException;
@@ -42,7 +42,7 @@ public class ResultsFileGenerator {
         this.resultsFileUri = uri.getSuccess();
     }
 
-    ServiceResult<File> generateResultsFile(List<ServiceResult<UUID>> results, File originalFile) {
+    ServiceResult<File> generateResultsFile(List<ServiceResult<EuGrantResource>> results, File originalFile) {
         try {
             return serviceSuccess(Files.createTempFile("", "").toFile());
         } catch (IOException e) {
