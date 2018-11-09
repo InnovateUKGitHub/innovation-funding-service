@@ -168,6 +168,42 @@ public final class CollectionFunctions {
     }
 
     /**
+     * Given 2 Lists, this method will iterate through both lists, presenting the consumer with the equivalent elements
+     * in from each list at index 0, 1, 2 etc
+     *
+     * @param consumer
+     * @param <T>
+     */
+    public static <T, S> void zipWithIndex(List<T> list1, List<S> list2, TriConsumer<T, S, Integer> consumer) {
+        forEachWithIndex(list1, (i, item1) -> consumer.accept(item1, list2.get(i), i));
+    }
+
+    /**
+     * Given 2 Lists, this method will iterate through both lists, presenting the consumer with the equivalent elements
+     * in from each list at index 0, 1, 2 etc
+     *
+     * @param biFunction
+     * @param <T>
+     */
+    public static <T, R, S> List<R> zipAndMap(List<T> list1, List<S> list2, BiFunction<T, S, R> biFunction) {
+        return zipAndMapWithIndex(list1, list2, (o1, o2, i) -> biFunction.apply(o1, o2));
+    }
+
+    /**
+     * Given 2 Lists, this method will iterate through both lists, presenting the consumer with the equivalent elements
+     * in from each list at index 0, 1, 2 etc
+     *
+     * @param triFunction
+     * @param <T>
+     */
+    public static <T, R, S> List<R> zipAndMapWithIndex(List<T> list1, List<S> list2, TriFunction<T, S, Integer, R> triFunction) {
+
+        List<R> resultList = new ArrayList<>();
+        zipWithIndex(list1, list2, (o1, o2, index) -> resultList.add(triFunction.apply(o1, o2, index)));
+        return resultList;
+    }
+
+    /**
      * Provides a forEach method as per the default List.forEach() method, but with the addition of having an index
      * provided as well and the ability to return values
      *

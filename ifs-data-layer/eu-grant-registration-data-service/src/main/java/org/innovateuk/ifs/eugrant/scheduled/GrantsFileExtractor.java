@@ -37,32 +37,30 @@ public class GrantsFileExtractor {
 
     ServiceResult<List<ServiceResult<EuGrantResource>>> processFile(File file) {
 
-        try (FileReader fileReader = new FileReader(file)) {
+        return readDataFromCsv(file).
+            andOnSuccess(this::mapCsvRowsToHeaders).
+            andOnSuccess(grantResourceBuilder::convertDataRowsToEuGrantResources);
 
-            return readDataFromCsv(fileReader).
-                    andOnSuccess(this::mapCsvRowsToHeaders).
-                    andOnSuccess(grantResourceBuilder::convertDataRowsToEuGrantResources);
-
-        } catch (IOException e) {
-            return createServiceFailureFromIoException(e);
-        }
     }
 
-    private ServiceResult<List<List<String>>> readDataFromCsv(FileReader fileReader) {
+    private ServiceResult<List<List<String>>> readDataFromCsv(File file) {
 
-        CSVReader reader = new CSVReader(fileReader, ',', '"');
+        try (FileReader fileReader = new FileReader(file)) {
 
-        List<String[]> data;
+            try (CSVReader reader = new CSVReader(fileReader, ',', '"')) {
 
-        try {
-            data = reader.readAll();
-            reader.close();
+                try {
+                    List<String[]> data = reader.readAll();
+                    List<List<String>> dataInLists = simpleMap(data, Arrays::asList);
+                    return serviceSuccess(dataInLists);
+                } catch (IOException e) {
+                    return createServiceFailureFromIoException(e);
+                }
+            }
+
         } catch (IOException e) {
             return createServiceFailureFromIoException(e);
         }
-
-        List<List<String>> dataInLists = simpleMap(data, Arrays::asList);
-        return serviceSuccess(dataInLists);
     }
 
     private ServiceResult<List<Map<CsvHeader, String>>> mapCsvRowsToHeaders(List<List<String>> headersAndDataRows) {
