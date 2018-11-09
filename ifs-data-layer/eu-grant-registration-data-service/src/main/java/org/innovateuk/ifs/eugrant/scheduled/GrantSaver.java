@@ -23,6 +23,6 @@ public class GrantSaver {
 
         return grantService.create().andOnSuccess(newGrant ->
                grantService.update(newGrant.getId(), grantResource).andOnSuccess(() ->
-               grantService.findById(grantResource.getId())));
+               grantService.findById(newGrant.getId())));
     }
 }
