@@ -67,7 +67,7 @@ public class ScheduledEuGrantFileImporterTest {
 
         File resultsFile = File.createTempFile("temp", "temp");
 
-        when(grantsFileUploaderMock.getFileIfExists()).thenReturn(serviceSuccess(sourceFile));
+        when(grantsFileUploaderMock.getSourceFileIfExists()).thenReturn(serviceSuccess(sourceFile));
         when(grantsFileExtractorMock.processFile(sourceFile)).thenReturn(serviceSuccess(extractionResults));
 
         EuGrantResource successfullyExtractedGrant = extractionResults.get(0).getSuccess();
@@ -80,7 +80,7 @@ public class ScheduledEuGrantFileImporterTest {
 
         assertThat(result.isSuccess()).isTrue();
 
-        verify(grantsFileUploaderMock, times(1)).getFileIfExists();
+        verify(grantsFileUploaderMock, times(1)).getSourceFileIfExists();
         verify(grantsFileExtractorMock, times(1)).processFile(sourceFile);
         verify(grantSaverMock, times(1)).saveGrant(successfullyExtractedGrant);
         verify(resultsFileGeneratorMock, times(1)).generateResultsFile(combinedListOfSuccessesAndFailures, sourceFile);
@@ -91,14 +91,14 @@ public class ScheduledEuGrantFileImporterTest {
 
         File sourceFile = File.createTempFile("temp", "temp");
 
-        when(grantsFileUploaderMock.getFileIfExists()).thenReturn(serviceSuccess(sourceFile));
+        when(grantsFileUploaderMock.getSourceFileIfExists()).thenReturn(serviceSuccess(sourceFile));
         when(grantsFileExtractorMock.processFile(sourceFile)).thenReturn(serviceFailure(internalServerErrorError()));
 
         ServiceResult<File> result = importer.importEuGrantsFile();
 
         assertThatServiceFailureIs(result, internalServerErrorError());
 
-        verify(grantsFileUploaderMock, times(1)).getFileIfExists();
+        verify(grantsFileUploaderMock, times(1)).getSourceFileIfExists();
         verify(grantsFileExtractorMock, times(1)).processFile(sourceFile);
         verify(grantSaverMock, never()).saveGrant(any());
         verify(resultsFileGeneratorMock, never()).generateResultsFile(any(), any());

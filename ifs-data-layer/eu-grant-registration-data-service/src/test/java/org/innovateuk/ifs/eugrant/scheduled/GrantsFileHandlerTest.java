@@ -17,29 +17,54 @@ import static org.innovateuk.ifs.service.ServiceFailureTestHelper.assertThatServ
 public class GrantsFileHandlerTest {
 
     @Test
-    public void getFileIfExists() throws IOException, URISyntaxException {
+    public void getSourceFileIfExists() throws IOException, URISyntaxException {
 
         File existingSourceFile = File.createTempFile("temp", "temp");
 
         GrantsFileHandler handler = new GrantsFileHandler(existingSourceFile.toURI().toString());
 
-        ServiceResult<File> result = handler.getFileIfExists();
+        ServiceResult<File> result = handler.getSourceFileIfExists();
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(result.getSuccess()).isEqualTo(existingSourceFile);
     }
 
     @Test
-    public void getFileIfExistsDoesntExist() throws URISyntaxException {
+    public void getSourceFileIfExistsDoesntExist() throws URISyntaxException {
 
         File nonExistentSourceFile = new File("non-existent-eu-grant-file");
 
         GrantsFileHandler handler = new GrantsFileHandler(nonExistentSourceFile.toURI().toString());
 
-        ServiceResult<File> result = handler.getFileIfExists();
+        ServiceResult<File> result = handler.getSourceFileIfExists();
 
         assertThat(result.isFailure()).isTrue();
         assertThatServiceFailureIs(result, notFoundError(File.class, nonExistentSourceFile.toURI().toString()));
+    }
+
+    @Test
+    public void deleteSourceFile() throws IOException, URISyntaxException {
+
+        File existingSourceFile = File.createTempFile("temp", "temp");
+
+        GrantsFileHandler handler = new GrantsFileHandler(existingSourceFile.toURI().toString());
+
+        ServiceResult<Void> result = handler.deleteSourceFile();
+
+        assertThat(result.isSuccess()).isTrue();
+        assertThat(existingSourceFile).doesNotExist();
+    }
+
+    @Test
+    public void deleteSourceFileFailureToRemove() throws IOException, URISyntaxException {
+
+        File nonExistentSourceFile = new File("non-existent-eu-grant-file");
+
+        GrantsFileHandler handler = new GrantsFileHandler(nonExistentSourceFile.toURI().toString());
+
+        ServiceResult<Void> result = handler.deleteSourceFile();
+
+        assertThat(result.isFailure()).isTrue();
     }
 
     @Test

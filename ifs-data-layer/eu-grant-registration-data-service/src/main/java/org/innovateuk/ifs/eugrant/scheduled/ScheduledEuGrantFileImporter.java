@@ -54,18 +54,17 @@ public class ScheduledEuGrantFileImporter {
     @Scheduled(cron = "${ifs.eu.data.service.grant.importer.cron.expression}")
     ServiceResult<File> importEuGrantsFile() {
 
-        ServiceResult<File> sourceFileCheck = grantsFileHandler.getFileIfExists();
+        ServiceResult<File> sourceFileCheck = grantsFileHandler.getSourceFileIfExists();
 
         if (isNotFoundError(sourceFileCheck)) {
             return sourceFileCheck;
         }
 
-        ServiceResult<File> importResult =
-                sourceFileCheck.andOnSuccess(sourceFile ->
-                    grantsRecordsExtractor.processFile(sourceFile).
-                        andOnSuccess(this::saveSuccessfullyExtractedGrants).
-                        andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile))
-                );
+        ServiceResult<File> importResult = sourceFileCheck.
+                andOnSuccess(sourceFile -> grantsRecordsExtractor.processFile(sourceFile).
+                andOnSuccess(this::saveSuccessfullyExtractedGrants).
+                andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile)).
+                andOnSuccessDo(file -> grantsFileHandler.deleteSourceFile()));
 
         return importResult.handleSuccessOrFailureNoReturn(
                 failure -> LOG.error("Unable to complete grant file import.  Failure is: " + importResult.getFailure()),

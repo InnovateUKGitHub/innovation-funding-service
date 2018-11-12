@@ -2,6 +2,7 @@ package org.innovateuk.ifs.eugrant.scheduled;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,10 +14,12 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.eugrant.scheduled.ScheduledEuGrantFileImporter.getUriFromString;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * TODO DW - document this class
@@ -41,7 +44,7 @@ public class GrantsFileHandler {
         this.sourceFileUrl = uri.getSuccess();
     }
 
-    ServiceResult<File> getFileIfExists() {
+    ServiceResult<File> getSourceFileIfExists() {
 
         if (Files.exists(Paths.get(sourceFileUrl))) {
             return serviceSuccess(new File(sourceFileUrl));
@@ -50,4 +53,13 @@ public class GrantsFileHandler {
         }
     }
 
+    ServiceResult<Void> deleteSourceFile() {
+
+        if (new File(sourceFileUrl).delete()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(new Error(
+                    "Could not delete source file", singletonList(sourceFileUrl.toString()), INTERNAL_SERVER_ERROR));
+        }
+    }
 }
