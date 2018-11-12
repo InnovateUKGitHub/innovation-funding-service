@@ -6,6 +6,7 @@ Documentation   IFS-4189 Add/Remove Stakeholders
 ...             IFS-4314 Stakeholder invite email
 ...
 ...             IFS-4252 Stakeholder registration
+Force Tags      HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
 

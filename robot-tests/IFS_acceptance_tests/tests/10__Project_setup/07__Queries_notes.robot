@@ -35,7 +35,7 @@ Resource          PS_Common.robot
 *** Test Cases ***
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
-    [Tags]
+    [Tags]  HappyPath
     Given Logging in and Error Checking   &{internal_finance_credentials}
     When the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/eligibility
     And the user clicks the button/link   jQuery = .button-secondary:contains("Queries")
@@ -45,7 +45,7 @@ Queries section is linked from eligibility and this selects eligibility on the q
 
 Queries section is linked from viability and this selects viability on the query dropdown
     [Documentation]    INFUND-4840
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Given the user clicks the button/link    jQuery = table.table-progress th:contains("Lead") + td a
     When the user clicks the button/link     jQuery = .button-secondary:contains("Queries")
@@ -54,7 +54,7 @@ Queries section is linked from viability and this selects viability on the query
 
 Queries section is linked to from the main finance check summary page
     [Documentation]    INFUND-4840
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     When the user clicks the button/link     css = table.table-progress tr:nth-child(1) td:nth-child(6)
     Then the user should see the element     jQuery = h2:contains("Queries")
@@ -68,20 +68,20 @@ Queries section contains finance contact name, email and telephone
 
 Viability and eligibility sections both available
     [Documentation]    INFUND-4840
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link    jQuery = .govuk-button:contains("Post a new query")
     Then the user should see the option in the drop-down menu   Viability      id = section
     And the user should see the option in the drop-down menu    Eligibility    id = section
 
 Project finance user can upload a pdf file
     [Documentation]    INFUND-4840
-    [Tags]
+    [Tags]  HappyPath
     When the user uploads the file        name = attachment  ${valid_pdf}
     Then the user should see the element  jQuery = h3:contains("Supporting documentation") + ul:contains("testing.pdf") .button-clear:contains("Remove")
 
 Project finance can remove the file
     [Documentation]    INFUND-4840
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/query/new-query
     When the user clicks the button/link  name = removeAttachment
     Then the user should not see the text in the page    ${valid_pdf}
@@ -127,7 +127,7 @@ New query can be cancelled
 
 Query can be re-entered (Eligibility)
     [Documentation]    INFUND-4840
-    [Tags]
+    [Tags]  HappyPath
     When the user navigates to the page    ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/query
     And the user clicks the button/link    jQuery = .govuk-button:contains("Post a new query")
     And the user enters text to a text field    id = queryTitle    an eligibility query's title
@@ -137,7 +137,7 @@ Query can be re-entered (Eligibility)
 
 New query can be posted
     [Documentation]    INFUND-4840 INFUND-9546
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link      jQuery = .govuk-button:contains("Post query")
     Then the user should not see the element  jQuery = .govuk-button:contains("Post query")
     When the user expands the section         an eligibility query's title
@@ -155,7 +155,7 @@ Query Section dropdown filters the queries displayed
 
 Finance contact receives an email when new query is posted and can see a pending query
     [Documentation]  INFUND-4841 IFS-2746 IFS-3559
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user     &{PublicSector_lead_applicant_credentials}
     Given the user reads his email          ${PublicSector_lead_applicant_credentials["email"]}  ${PS_EF_Competition_Name}: Query regarding your finances for project ${Queries_Application_No}  We have raised a query around your project finances.
     When the user navigates to the page     ${server}/project-setup/project/${Queries_Application_Project}
@@ -165,7 +165,7 @@ Finance contact receives an email when new query is posted and can see a pending
 
 Project finance user can add another query while he is awaiting for response
     [Documentation]    INFUND-4840
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user       &{internal_finance_credentials}
     Given the user navigates to the page      ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Then the user clicks the button/link      jQuery = th:contains("${Dreambit_Name}") ~ td:contains("View")
@@ -188,7 +188,7 @@ Queries show in reverse chronological order
 
 Applicant - Finance contact can view query
     [Documentation]    INFUND-4843
-    [Tags]
+    [Tags]  HappyPath
     Given log in as a different user      &{PublicSector_lead_applicant_credentials}
     When the user navigates to the page   ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
     Then the user should see the element  jQuery = h2:contains("an eligibility query's title")
