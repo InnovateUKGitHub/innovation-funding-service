@@ -95,18 +95,15 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
                 ApplicantSectionResource applicantSectionResource = new ApplicantSectionResource();
                 populateSection(results, applicantSectionResource, subSectionId, applicationId, applicant.getApplicants());
 
-                if (isSectionExcluded(applicantSectionResource.getSection(),
+                if (!isSectionExcluded(applicantSectionResource.getSection(),
                         applicant.getCurrentApplicant() != null ? applicant.getCurrentApplicant().getOrganisation() : null,
                         applicant.getCompetition())) {
-                    return;
+                    applicant.addChildSection(applicantSectionResource);
                 }
-
-                applicant.addChildSection(applicantSectionResource);
             });
         }
         return results.toSingle().andOnSuccessReturn(() -> applicant);
     }
-
 
     private void populateQuestion(ServiceResults results, ApplicantQuestionResource applicant, Long questionId, Long applicationId, List<ApplicantResource> applicants) {
         results.trackResult(() -> questionService.getQuestionById(questionId), applicant::setQuestion);

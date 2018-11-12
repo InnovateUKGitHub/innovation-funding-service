@@ -134,16 +134,13 @@ public class FinanceOverviewSectionPopulatorTest {
         FinanceOverviewSectionViewModel result = financeOverviewSectionPopulator.createNew(applicantSection, form,
                 readOnly, Optional.of(applicantOrganisationId), readOnlyAllApplicantApplicationFinances);
 
-//        List<SectionType> expectedSectionTypesToSkipForOrganisationType = asList(FUNDING_FINANCES);
-
         assertEquals(applicantSection, result.getApplicantResource());
         assertEquals(readOnly, result.isAllReadOnly());
         assertEquals(applicantOrganisationId, result.getApplicantOrganisationId().longValue());
         assertEquals(readOnlyAllApplicantApplicationFinances, result.isReadOnlyAllApplicantApplicationFinances());
 
         verify(formInputViewModelGenerator, only()).fromSection(applicantSection, applicantSection, form, readOnly);
-        verify(applicationNavigationPopulator, only()).addNavigation(section, application.getId()
-                );
+        verify(applicationNavigationPopulator, only()).addNavigation(section, application.getId());
     }
 
     @Test
