@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -22,6 +23,14 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
 
     public ApplicationSectionFinanceSaver(SectionService sectionService) {
         this.sectionService = sectionService;
+    }
+
+    public void handleMarkAcademicFinancesAsNotRequired(long organisationType, SectionResource selectedSection, long applicationId, long competitionId, long processRoleId) {
+        if (SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType())
+                && OrganisationTypeEnum.RESEARCH.getId() == organisationType) {
+            SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
+            sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
+        }
     }
 
     public void handleStateAid(Map<String, String[]> params, ApplicationResource application, ApplicationForm form, SectionResource selectedSection) {
