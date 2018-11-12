@@ -53,11 +53,7 @@ public class GrantResourceBuilder {
         EuGrantResource grant = new EuGrantResource();
         grant.setContact(contact);
         grant.setFunding(funding);
-//        grant.setContactComplete();
-//        grant.setFundingComplete();
-        grant.setId(UUID.randomUUID());
         grant.setOrganisation(createOrganisation(dataRow));
-//        grant.setShortCode();
 
         return serviceSuccess(grant);
     }

@@ -71,14 +71,15 @@ public class ScheduledEuGrantFileImporter {
             ServiceResult<File> importResult = sourceFileCheck.
                     andOnSuccess(sourceFile -> grantsRecordsExtractor.processFile(sourceFile).
                     andOnSuccess(this::saveSuccessfullyExtractedGrants).
-                    andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile)).
-                    andOnSuccessDo(file -> grantsFileHandler.deleteSourceFile()));
+                    andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile)));
 
             return importResult.handleSuccessOrFailureNoReturn(
                     failure -> LOG.error("Unable to complete grant file import.  Failure is: " + importResult.getFailure()),
                     success -> LOG.info("Grants imported successfully!  Results file can be found at " + success.getPath()));
 
         } finally {
+            
+            grantsFileHandler.deleteSourceFile();
             webUserSecuritySetter.clearWebUser();
         }
     }

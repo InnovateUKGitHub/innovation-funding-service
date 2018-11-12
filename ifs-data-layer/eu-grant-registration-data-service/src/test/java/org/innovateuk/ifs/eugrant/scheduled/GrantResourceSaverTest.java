@@ -36,20 +36,20 @@ public class GrantResourceSaverTest {
 
         EuGrantResource grantToSave = newEuGrantResource().build();
         EuGrantResource savedGrant = newEuGrantResource().withId(UUID.randomUUID()).build();
-        EuGrantResource retrievedGrant = newEuGrantResource().withId(UUID.randomUUID()).withShortCode("adsf").build();
+        EuGrantResource submittedGrant = newEuGrantResource().withId(UUID.randomUUID()).withShortCode("adsf").build();
 
         when(euGrantServiceMock.create()).thenReturn(serviceSuccess(savedGrant));
         when(euGrantServiceMock.update(savedGrant.getId(), grantToSave)).thenReturn(serviceSuccess());
-        when(euGrantServiceMock.findById(savedGrant.getId())).thenReturn(serviceSuccess(retrievedGrant));
+        when(euGrantServiceMock.submit(savedGrant.getId(), false)).thenReturn(serviceSuccess(submittedGrant));
 
         ServiceResult<EuGrantResource> saveResult = grantSaver.saveGrant(grantToSave);
 
         assertThat(saveResult.isSuccess()).isTrue();
-        assertThat(saveResult.getSuccess()).isEqualTo((retrievedGrant));
+        assertThat(saveResult.getSuccess()).isEqualTo((submittedGrant));
 
         verify(euGrantServiceMock, times(1)).create();
         verify(euGrantServiceMock, times(1)).update(savedGrant.getId(), grantToSave);
-        verify(euGrantServiceMock, times(1)).findById(savedGrant.getId());
+        verify(euGrantServiceMock, times(1)).submit(savedGrant.getId(), false);
     }
 
     @Test
@@ -67,6 +67,6 @@ public class GrantResourceSaverTest {
 
         verify(euGrantServiceMock, times(1)).create();
         verify(euGrantServiceMock, times(1)).update(savedGrant.getId(), grantToSave);
-        verify(euGrantServiceMock, never()).findById(savedGrant.getId());
+        verify(euGrantServiceMock, never()).submit(savedGrant.getId(), false);
     }
 }

@@ -67,10 +67,10 @@ public class EuGrantServiceImpl implements EuGrantService {
 
     @Override
     @Transactional
-    public ServiceResult<EuGrantResource> submit(UUID id) {
+    public ServiceResult<EuGrantResource> submit(UUID id, boolean sendEmail) {
         return find(euGrantRepository.findOne(id), notFoundError(EuGrant.class, id))
                 .andOnSuccess(this::onlyAllowInProgress)
-                .andOnSuccess(this::submit);
+                .andOnSuccess(grant -> submit(grant, sendEmail));
     }
 
     private ServiceResult<EuGrant> onlyAllowInProgress(EuGrant euGrant) {
@@ -81,9 +81,8 @@ public class EuGrantServiceImpl implements EuGrantService {
         }
     }
 
-    private ServiceResult<EuGrantResource> submit(EuGrant euGrant) {
+    private ServiceResult<EuGrantResource> submit(EuGrant euGrant, boolean sendEmail) {
         return serviceSuccess(euGrant.submit(generateShortCode()))
-                .andOnSuccess(this::sendEmail)
                 .andOnSuccessReturn(euGrantMapper::mapToResource);
     }
 
@@ -93,6 +92,10 @@ public class EuGrantServiceImpl implements EuGrantService {
             shortCode = randomAlphanumeric(5).toUpperCase();
         }
         return shortCode;
+    }
+
+    private ServiceResult<EuGrant> sendEmailIfNecessary(EuGrant euGrant, boolean sendEmail) {
+        return sendEmail ? sendEmail(euGrant) : serviceSuccess(euGrant);
     }
 
     private ServiceResult<EuGrant> sendEmail(EuGrant euGrant) {

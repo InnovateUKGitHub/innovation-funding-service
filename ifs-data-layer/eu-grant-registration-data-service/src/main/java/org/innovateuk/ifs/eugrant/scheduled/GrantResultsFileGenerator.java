@@ -62,7 +62,7 @@ public class GrantResultsFileGenerator {
 
     private ServiceResult<List<List<String>>> addImportResultsToOriginalData(List<List<String>> originalData, List<ServiceResult<EuGrantResource>> importResults) {
 
-        List<String> newHeaders = combineLists(originalData.get(0), "ID", "Import Failure Reason");
+        List<String> newHeaders = combineLists(originalData.get(0), "Short code", "Import failure reason");
 
         List<List<String>> originalDataMinusHeaders = originalData.subList(1, originalData.size());
 
@@ -70,7 +70,7 @@ public class GrantResultsFileGenerator {
 
             List<String> importResultsColumns = importResultForRow.handleSuccessOrFailure(
                     failure -> asList("", failure.getErrors().get(0).getErrorKey()),
-                    success -> asList(success.getId().toString(), ""));
+                    success -> asList(success.getShortCode(), ""));
 
             return combineLists(originalRow, importResultsColumns);
         });

@@ -12,7 +12,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.UUID;
 
 import static java.lang.Thread.currentThread;
 import static java.util.Arrays.asList;
@@ -41,7 +40,7 @@ public class GrantResultsFileGeneratorTest {
         GrantResultsFileGenerator generator = new GrantResultsFileGenerator(temporaryResultsFolder.toURI().toString());
 
         List<ServiceResult<EuGrantResource>> importResults = asList(
-            serviceSuccess(newEuGrantResource().withId(UUID.fromString("911dd9cb-4ecc-4220-8053-0af04670ee82")).build()),
+            serviceSuccess(newEuGrantResource().withShortCode("abc12").build()),
             serviceFailure(new Error("Import error message, with a comma in it", BAD_REQUEST)));
 
         ServiceResult<File> generatedFileResult = generator.generateResultsFile(importResults, originalCsvFile);
@@ -54,6 +53,5 @@ public class GrantResultsFileGeneratorTest {
         List<String> actualResultsFileContent = FileUtils.readLines(generatedFile);
         List<String> expectedResultsFileContent = FileUtils.readLines(expectedCsvResultsFile);
         assertThat(actualResultsFileContent).isEqualTo(expectedResultsFileContent);
-
     }
 }

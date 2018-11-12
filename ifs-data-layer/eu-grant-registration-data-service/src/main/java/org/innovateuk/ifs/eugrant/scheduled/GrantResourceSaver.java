@@ -21,8 +21,9 @@ public class GrantResourceSaver {
 
     ServiceResult<EuGrantResource> saveGrant(EuGrantResource grantResource) {
 
-        return grantService.create().andOnSuccess(newGrant ->
-               grantService.update(newGrant.getId(), grantResource).andOnSuccess(() ->
-               grantService.findById(newGrant.getId())));
+        return grantService.create().andOnSuccessDo(
+               newGrant -> grantResource.setId(newGrant.getId())).andOnSuccess(() ->
+               grantService.update(grantResource.getId(), grantResource).andOnSuccess(() ->
+               grantService.submit(grantResource.getId(), false)));
     }
 }

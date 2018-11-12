@@ -103,14 +103,6 @@ public class GrantResourceBuilderTest {
                                                               EuActionTypeResource expectedActionType,
                                                               boolean expectedProjectCoordinator) {
 
-        assertThat(grant.getId().toString()).isNotEmpty();
-
-        // TODO DW - reinstate assertions below
-//        assertThat(grant.getShortCode()).isNotEmpty();
-//        assertThat(grant.isContactComplete()).isNotEmpty();
-//        assertThat(grant.isFundingComplete()).isNotEmpty();
-//        assertThat(grant.isOrganisationComplete()).isNotEmpty();
-
         assertThat(grant.getContact().getEmail()).isEqualTo(originalRow.get(CONTACT_EMAIL_ADDRESS));
         assertThat(grant.getContact().getJobTitle()).isEqualTo(originalRow.get(CONTACT_JOB_TITLE));
         assertThat(grant.getContact().getName()).isEqualTo(originalRow.get(CONTACT_FULL_NAME));
@@ -128,5 +120,16 @@ public class GrantResourceBuilderTest {
         assertThat(grant.getOrganisation().getCompaniesHouseNumber()).isEqualTo(originalRow.get(COMPANIES_HOUSE_REGISTRATION_NUMBER));
         assertThat(grant.getOrganisation().getName()).isEqualTo(originalRow.get(ORGANISATION_NAME));
         assertThat(grant.getOrganisation().getOrganisationType().getDisplayName()).isEqualTo(originalRow.get(ORGANISATION_TYPE));
+
+        // these are not settable properties in EuGrant but rather derived properties
+        assertThat(grant.isContactComplete()).isFalse();
+        assertThat(grant.isFundingComplete()).isFalse();
+        assertThat(grant.isOrganisationComplete()).isFalse();
+
+        // the uuid is set when creating a new EuGrant via the EuGrantService.create() call
+        assertThat(grant.getId()).isNull();
+
+        // the short code is created via the EuGrantService.submit() call
+        assertThat(grant.getShortCode()).isNull();
     }
 }

@@ -125,7 +125,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
         EuGrant euGrant = newEuGrant()
                 .withContact(newEuContact()
-                        .withEmail("blah@gmail.com")
+                        .withEmail("blah@example.com")
                         .withJobTitle("King")
                         .withName("Bob")
                         .withTelephone("999")
@@ -149,7 +149,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
         euGrant = euGrantRepository.save(euGrant);
 
-        ServiceResult<EuGrantResource> result = euGrantService.submit(euGrant.getId());
+        ServiceResult<EuGrantResource> result = euGrantService.submit(euGrant.getId(), true);
 
         assertTrue(result.isSuccess());
 
