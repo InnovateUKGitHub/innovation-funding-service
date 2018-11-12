@@ -58,10 +58,10 @@ p.collaboration_agreement_file_entry_id AS file_entry_id,
 'UPLOADED'  AS status,
 'Rejected' AS status_comments
 FROM project p
-inner join application a on p.application_id = a.id
-inner join document_config dc on a.competition = dc.competition_id
-where dc.title = 'Collaboration agreement'
-and p.collaboration_agreement_file_entry_id IS NOT NULL;
+INNER JOIN application a ON p.application_id = a.id
+INNER JOIN document_config dc ON a.competition = dc.competition_id
+WHERE dc.title = 'Collaboration agreement'
+AND p.collaboration_agreement_file_entry_id IS NOT NULL;
 
 -- Copy Exploitation file entry ids to project_document
 -- Status comments are a new feature to be implemented therefore the default message will be Rejected
@@ -74,10 +74,10 @@ p.exploitation_plan_file_entry_id AS file_entry_id,
 'UPLOADED' AS status,
 'Rejected' AS status_comments
 FROM project p
-inner join application a on p.application_id = a.id
-inner join document_config dc on a.competition = dc.competition_id
-where dc.title = 'Exploitation plan'
-and p.exploitation_plan_file_entry_id IS NOT NULL;
+INNER JOIN application a ON p.application_id = a.id
+INNER JOIN document_config dc ON a.competition = dc.competition_id
+WHERE dc.title = 'Exploitation plan'
+AND p.exploitation_plan_file_entry_id IS NOT NULL;
 
 SET SQL_SAFE_UPDATES = 0;
 
@@ -85,19 +85,19 @@ SET SQL_SAFE_UPDATES = 0;
 
 UPDATE project_document
 SET project_document.status = 'SUBMITTED'
-WHERE project_document.project_id in (select id from project where project.documents_submitted_date IS NOT NULL);
+WHERE project_document.project_id IN (SELECT id FROM project WHERE project.documents_submitted_date IS NOT NULL);
 
 -- If collaboration agreement and exploitation plan have been rejected then update project document status
 
 UPDATE project_document
 SET project_document.status = 'REJECTED'
-WHERE project_document.project_id in (select id from project where project.other_documents_approved = 'REJECTED');
+WHERE project_document.project_id IN (SELECT id FROM project WHERE project.other_documents_approved = 'REJECTED');
 
 -- If collaboration agreement and exploitation plan have been accepted then update project document status
 
 UPDATE project_document
 SET project_document.status = 'APPROVED'
-WHERE project_document.project_id in (select id from project where project.other_documents_approved = 'APPROVED');
+WHERE project_document.project_id IN (SELECT id FROM project WHERE project.other_documents_approved = 'APPROVED');
 
 -- Remove collaboration agreement fk constraint
 
