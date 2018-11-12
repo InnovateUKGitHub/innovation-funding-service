@@ -36,7 +36,7 @@ public class GrantResultsFileGenerator {
     private static final Log LOG = LogFactory.getLog(GrantResultsFileGenerator.class);
 
     private static final DateTimeFormatter RESULTS_FILE_SUFFIX_FORMAT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+            DateTimeFormatter.ofPattern("yyyy-MM-dd_hh-mm-ss");
 
     private URI resultsFileUri;
 
