@@ -84,7 +84,6 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
         populateSection(results, applicant, sectionId, applicationId, applicant.getApplicants());
 
-
         if (results.isSuccessful()) {
             if (applicant.getSection().getParentSection() != null) {
                 ApplicantSectionResource parent = new ApplicantSectionResource();
@@ -97,7 +96,8 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
                 populateSection(results, applicantSectionResource, subSectionId, applicationId, applicant.getApplicants());
 
                 if (isSectionExcluded(applicantSectionResource.getSection(),
-                        applicant.getCurrentApplicant().getOrganisation(), applicant.getCompetition())) {
+                        applicant.getCurrentApplicant() != null ? applicant.getCurrentApplicant().getOrganisation() : null,
+                        applicant.getCompetition())) {
                     return;
                 }
 
@@ -200,7 +200,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     private boolean isSectionExcluded(SectionResource section, OrganisationResource organisation,
                                       CompetitionResource competition) {
         boolean isYourOrganisationSection = section.getType() == SectionType.ORGANISATION_FINANCES;
-        boolean isResearchOrganisation = OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
+        boolean isResearchOrganisation = organisation != null  && OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
         boolean excludeYourOrganisationSectionForResearchOrgs =
                 Boolean.FALSE.equals(competition.getIncludeYourOrganisationSection());
 
