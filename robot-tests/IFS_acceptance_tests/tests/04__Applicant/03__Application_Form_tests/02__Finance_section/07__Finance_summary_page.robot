@@ -284,7 +284,7 @@ the finance summary table in Your Finances has correct values for lead
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  Funding level (%)
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
@@ -297,7 +297,7 @@ the finance summary table in Your Finances has correct values for collaborator
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  Funding level (%)
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
