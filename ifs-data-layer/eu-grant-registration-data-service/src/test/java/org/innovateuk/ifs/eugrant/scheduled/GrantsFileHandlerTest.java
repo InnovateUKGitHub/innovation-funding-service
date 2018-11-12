@@ -53,7 +53,7 @@ public class GrantsFileHandlerTest {
     }
 
     @Test
-    public void deleteSourceFileFailureToRemove() throws IOException, URISyntaxException {
+    public void deleteSourceFileFailureToRemove() throws URISyntaxException {
 
         File nonExistentSourceFile = new File("non-existent-eu-grant-file");
 

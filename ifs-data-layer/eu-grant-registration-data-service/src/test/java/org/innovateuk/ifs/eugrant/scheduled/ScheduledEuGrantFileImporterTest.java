@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
@@ -45,7 +46,7 @@ public class ScheduledEuGrantFileImporterTest {
     @Mock
     private GrantResultsFileGenerator resultsFileGeneratorMock;
 
-    @Mock
+    @Spy
     private GrantsImportResultHandler grantsImportResultHandlerMock;
 
     @Mock
@@ -125,7 +126,7 @@ public class ScheduledEuGrantFileImporterTest {
     }
 
     @Test
-    public void importEuGrantsFileNoFileToProcess() throws IOException {
+    public void importEuGrantsFileNoFileToProcess() {
 
         when(grantsFileUploaderMock.getSourceFileIfExists()).thenReturn(
                 serviceFailure(notFoundError(File.class, "/tmp/some/path.csv")));

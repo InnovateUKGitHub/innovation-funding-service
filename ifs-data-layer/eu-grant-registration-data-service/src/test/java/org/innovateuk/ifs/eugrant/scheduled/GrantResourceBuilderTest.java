@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.eugrant.scheduled;
 
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.euactiontype.domain.EuActionType;
 import org.innovateuk.ifs.euactiontype.mapper.EuActionTypeMapper;
@@ -14,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,14 +24,50 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.eugrant.builder.EuActionTypeResourceBuilder.newEuActionTypeResource;
 import static org.innovateuk.ifs.eugrant.scheduled.CsvHeader.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GrantResourceBuilderTest {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    private static final Map<CsvHeader, String> UNIVERSITY_CSV_ROW = asMap(
+            ORGANISATION_TYPE, "Research",
+            ORGANISATION_NAME, "The University of Sheffield",
+            COMPANIES_HOUSE_REGISTRATION_NUMBER, "",
+            CONTACT_FULL_NAME, "Bob Bobbins",
+            CONTACT_JOB_TITLE, "Project manager",
+            CONTACT_EMAIL_ADDRESS, "bob.bobbins@example.com",
+            CONTACT_TELEPHONE_NUMBER, "01234 567890",
+            GRANT_AGREEMENT_NUMBER, "111222",
+            PIC, "998592400",
+            ACTION_TYPE, "(CSA) Coordination and support action",
+            PROJECT_NAME, "An interesting project 1",
+            PROJECT_START_DATE, "01/12/2018",
+            PROJECT_END_DATE, "28/02/2021",
+            PROJECT_EU_FUNDING_CONTRIBUTION, "132470.07",
+            PROJECT_COORDINATOR, "BENEFICIARY");
+
+    private static final Map<CsvHeader, String> BUSINESS_CSV_ROW = asMap(
+            ORGANISATION_TYPE, "Business",
+            ORGANISATION_NAME, "Empire Ltd",
+            COMPANIES_HOUSE_REGISTRATION_NUMBER, "123456789",
+            CONTACT_FULL_NAME, "Steve Smith",
+            CONTACT_JOB_TITLE, "Project administrator",
+            CONTACT_EMAIL_ADDRESS, "steve.smith@example.com",
+            CONTACT_TELEPHONE_NUMBER, "09876 543210",
+            GRANT_AGREEMENT_NUMBER, "333444",
+            PIC, "999763772",
+            ACTION_TYPE, "(SME-1) SME Instrument phase 1",
+            PROJECT_NAME, "An interesting project 2",
+            PROJECT_START_DATE, "30/01/2018",
+            PROJECT_END_DATE, "01/04/2022",
+            PROJECT_EU_FUNDING_CONTRIBUTION, "437766.84",
+            PROJECT_COORDINATOR, "COORDINATOR");
 
     @InjectMocks
     private GrantResourceBuilder builder;
@@ -43,26 +81,7 @@ public class GrantResourceBuilderTest {
     @Test
     public void convertDataRowsToEuGrantResources() {
 
-        List<Map<CsvHeader, String>> data = asList(
-
-            asMap(ORGANISATION_TYPE, "Research", ORGANISATION_NAME, "The University of Sheffield",
-                    COMPANIES_HOUSE_REGISTRATION_NUMBER, "", CONTACT_FULL_NAME, "Bob Bobbins",
-                    CONTACT_JOB_TITLE, "Project manager", CONTACT_EMAIL_ADDRESS, "bob.bobbins@example.com",
-                    CONTACT_TELEPHONE_NUMBER, "01234 567890", GRANT_AGREEMENT_NUMBER, "111222",
-                    PIC, "998592400", ACTION_TYPE, "(CSA) Coordination and support action",
-                    PROJECT_NAME, "An interesting project 1", PROJECT_START_DATE, "01/12/2018",
-                    PROJECT_END_DATE, "28/02/2021", PROJECT_EU_FUNDING_CONTRIBUTION, "132470.07",
-                    PROJECT_COORDINATOR, "BENEFICIARY"),
-
-            asMap(ORGANISATION_TYPE, "Business", ORGANISATION_NAME, "Empire Ltd",
-                    COMPANIES_HOUSE_REGISTRATION_NUMBER, "123456789", CONTACT_FULL_NAME, "Steve Smith",
-                    CONTACT_JOB_TITLE, "Project administrator", CONTACT_EMAIL_ADDRESS, "steve.smith@example.com",
-                    CONTACT_TELEPHONE_NUMBER, "09876 543210", GRANT_AGREEMENT_NUMBER, "333444",
-                    PIC, "999763772", ACTION_TYPE, "(SME-1) SME Instrument phase 1",
-                    PROJECT_NAME, "An interesting project 2", PROJECT_START_DATE, "30/01/2018",
-                    PROJECT_END_DATE, "01/04/2022", PROJECT_EU_FUNDING_CONTRIBUTION, "437766.84",
-                    PROJECT_COORDINATOR, "COORDINATOR")
-        );
+        List<Map<CsvHeader, String>> data = asList(UNIVERSITY_CSV_ROW, BUSINESS_CSV_ROW);
 
         EuActionType csaActionType = new EuActionType();
         EuActionType smeActionType = new EuActionType();
@@ -94,6 +113,50 @@ public class GrantResourceBuilderTest {
 
         assertThatEuGrantResourceMatchesOriginalData(grant1, originalRow1, csaActionTypeResource, false);
         assertThatEuGrantResourceMatchesOriginalData(grant2, originalRow2, smeActionTypeResource, true);
+    }
+
+    @Test
+    public void convertDataRowsToEuGrantResourcesWithBadData() {
+
+        List<Map<CsvHeader, String>> data = asList(
+                createRow(CsvHeader.ACTION_TYPE, "Invalid action type format"),
+                createRow(CsvHeader.ACTION_TYPE, "(UNK) nown action type"),
+                createRow(CsvHeader.PROJECT_EU_FUNDING_CONTRIBUTION, "Invalid number"),
+                createRow(CsvHeader.PROJECT_START_DATE, "Invalid start date"),
+                createRow(CsvHeader.PROJECT_END_DATE, "Invalid end date"));
+
+        EuActionType csaActionType = new EuActionType();
+        EuActionTypeResource csaActionTypeResource = newEuActionTypeResource().withName("CSA").build();
+        when(euActionTypeRepositoryMock.findOneByName("CSA")).thenReturn(Optional.of(csaActionType));
+        when(euActionTypeMapperMock.mapToResource(csaActionType)).thenReturn(csaActionTypeResource);
+
+        when(euActionTypeRepositoryMock.findOneByName("UNK")).thenReturn(Optional.empty());
+
+        ServiceResult<List<ServiceResult<EuGrantResource>>> results = builder.convertDataRowsToEuGrantResources(data);
+
+        assertThat(results.isSuccess()).isTrue();
+
+        // assert that all rows failed to convert
+        List<ServiceResult<EuGrantResource>> builderResults = results.getSuccess();
+        assertThat(simpleAnyMatch(builderResults, ServiceResult::isSuccess)).isFalse();
+
+        List<Error> errors = simpleMap(builderResults, r -> r.getErrors().get(0));
+
+        assertThat(errors).containsExactly(
+                new Error("Unable to extract action type name from string \"Invalid action type format\"", BAD_REQUEST),
+                new Error("Unable to find an Action Type with name \"UNK\"", BAD_REQUEST),
+                new Error("Failed to convert string \"Invalid number\" to number", BAD_REQUEST),
+                new Error("Failed to convert string \"Invalid start date\" to date", BAD_REQUEST),
+                new Error("Failed to convert string \"Invalid end date\" to date", BAD_REQUEST));
+
+        verify(euActionTypeRepositoryMock, atLeastOnce()).findOneByName("CSA");
+        verify(euActionTypeRepositoryMock).findOneByName("UNK");
+    }
+
+    private Map<CsvHeader, String> createRow(CsvHeader overridingHeader, String overridingValue) {
+        Map<CsvHeader, String> newRow = new HashMap<>(UNIVERSITY_CSV_ROW);
+        newRow.put(overridingHeader, overridingValue);
+        return newRow;
     }
 
     private void assertThatEuGrantResourceMatchesOriginalData(EuGrantResource grant, Map<CsvHeader, String> originalRow,

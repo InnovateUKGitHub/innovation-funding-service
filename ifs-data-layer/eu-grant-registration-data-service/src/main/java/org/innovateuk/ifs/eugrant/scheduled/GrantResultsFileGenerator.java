@@ -1,28 +1,24 @@
 package org.innovateuk.ifs.eugrant.scheduled;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.eugrant.scheduled.ScheduledEuGrantFileImporter.createServiceFailureFromIoException;
+import static org.innovateuk.ifs.eugrant.scheduled.CsvUtils.readDataFromCsv;
+import static org.innovateuk.ifs.eugrant.scheduled.CsvUtils.writeDataToCsv;
 import static org.innovateuk.ifs.eugrant.scheduled.ScheduledEuGrantFileImporter.getUriFromString;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.zipAndMap;
 
 /**
  * A component to create a results file based upon a source EU Grant csv.
@@ -39,7 +35,6 @@ public class GrantResultsFileGenerator {
             DateTimeFormatter.ofPattern("yyyy-MM-dd_hh-mm-ss");
 
     private static final List<String> ADDITIONAL_COLUMN_HEADERS = asList("Short code", "Import failure reason");
-
 
     private URI resultsFileUri;
 
@@ -87,38 +82,6 @@ public class GrantResultsFileGenerator {
         String dateTimeSuffix = ZonedDateTime.now().format(RESULTS_FILE_SUFFIX_FORMAT);
         File resultsFileFolder = new File(resultsFileUri);
         File resultsFile = new File(resultsFileFolder, "eu-grants-import-result-" + dateTimeSuffix + ".csv");
-
-        try (FileWriter fileWriter = new FileWriter(resultsFile)) {
-
-            try (CSVWriter writer = new CSVWriter(fileWriter)) {
-                writer.writeAll(simpleMap(data, row -> row.toArray(new String[] {})));
-            }
-
-        } catch (IOException e) {
-            return createServiceFailureFromIoException(e);
-        }
-
-        return serviceSuccess(resultsFile);
+        return writeDataToCsv(data, resultsFile);
     }
-
-    private ServiceResult<List<List<String>>> readDataFromCsv(File originalFile) {
-
-        try (FileReader fileReader = new FileReader(originalFile)) {
-
-            try (CSVReader reader = new CSVReader(fileReader)) {
-
-                try {
-                    List<String[]> data = reader.readAll();
-                    List<List<String>> dataInLists = simpleMap(data, Arrays::asList);
-                    return serviceSuccess(dataInLists);
-                } catch (IOException e) {
-                    return createServiceFailureFromIoException(e);
-                }
-            }
-
-        } catch (IOException e) {
-            return createServiceFailureFromIoException(e);
-        }
-    }
-
 }

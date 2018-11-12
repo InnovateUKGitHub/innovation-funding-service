@@ -17,6 +17,7 @@ import java.util.Map;
 
 import static java.lang.Thread.currentThread;
 import static java.util.Arrays.asList;
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -52,7 +53,7 @@ public class GrantsRecordExtractorTest {
     public void processFileWithMissingColumns() throws URISyntaxException {
 
         URL testCsvUrl = currentThread().getContextClassLoader().getResource("test-eu-grants-missing-column.csv");
-        File testCsvFile = new File(testCsvUrl.toURI());
+        File testCsvFile = new File(requireNonNull(testCsvUrl).toURI());
 
         ServiceResult<List<ServiceResult<EuGrantResource>>> results = extractor.processFile(testCsvFile);
 
@@ -68,8 +69,9 @@ public class GrantsRecordExtractorTest {
     }
 
     private void assertCsvFilesAreProcessedSuccessfully(String filename) throws URISyntaxException {
+
         URL testCsvUrl = currentThread().getContextClassLoader().getResource(filename);
-        File testCsvFile = new File(testCsvUrl.toURI());
+        File testCsvFile = new File(requireNonNull(testCsvUrl).toURI());
 
         List<Map<CsvHeader, String>> expectedExtractedData = asList(
 

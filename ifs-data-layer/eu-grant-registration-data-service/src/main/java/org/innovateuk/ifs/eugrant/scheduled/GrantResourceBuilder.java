@@ -16,13 +16,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.eugrant.scheduled.CsvHeader.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -34,6 +34,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class GrantResourceBuilder {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final Pattern ACTION_TYPE_NAME_PATTERN = Pattern.compile("^\\((.+)\\).*$");
 
     private EuActionTypeRepository actionTypeRepository;
     private EuActionTypeMapper actionTypeMapper;
@@ -69,15 +70,15 @@ public class GrantResourceBuilder {
     private ServiceResult<EuOrganisationResource> createOrganisation(Map<CsvHeader, String> dataRow) {
 
         EuOrganisationResource organisation = new EuOrganisationResource();
-        organisation.setName(dataRow.get(CsvHeader.ORGANISATION_NAME));
+        organisation.setName(dataRow.get(ORGANISATION_NAME));
 
-        String organisationTypeLabel = dataRow.get(CsvHeader.ORGANISATION_TYPE);
+        String organisationTypeLabel = dataRow.get(ORGANISATION_TYPE);
         Optional<EuOrganisationType> matchingOrganisationType = findOrganisationType(organisationTypeLabel);
 
         return matchingOrganisationType.map(organisationType -> {
 
             organisation.setOrganisationType(organisationType);
-            organisation.setCompaniesHouseNumber(dataRow.get(CsvHeader.COMPANIES_HOUSE_REGISTRATION_NUMBER));
+            organisation.setCompaniesHouseNumber(dataRow.get(COMPANIES_HOUSE_REGISTRATION_NUMBER));
             return serviceSuccess(organisation);
 
         }).orElseGet(() -> serviceFailure(notFoundError(EuOrganisationType.class, organisationTypeLabel)));
@@ -91,10 +92,10 @@ public class GrantResourceBuilder {
 
     private ServiceResult<EuFundingResource> createFunding(Map<CsvHeader, String> dataRow) {
 
-        return getBigDecimal(dataRow.get(CsvHeader.PROJECT_EU_FUNDING_CONTRIBUTION)).andOnSuccess(fundingContribution ->
+        return getBigDecimal(dataRow.get(PROJECT_EU_FUNDING_CONTRIBUTION)).andOnSuccess(fundingContribution ->
                getActionType(dataRow).andOnSuccess(actionType ->
-               getDate(dataRow.get(CsvHeader.PROJECT_START_DATE)).andOnSuccess(projectStartDate ->
-               getDate(dataRow.get(CsvHeader.PROJECT_END_DATE)).andOnSuccessReturn(projectEndDate ->
+               getDate(dataRow.get(PROJECT_START_DATE)).andOnSuccess(projectStartDate ->
+               getDate(dataRow.get(PROJECT_END_DATE)).andOnSuccessReturn(projectEndDate ->
                createFunding(dataRow, fundingContribution, actionType, projectStartDate, projectEndDate)))));
     }
 
@@ -108,10 +109,10 @@ public class GrantResourceBuilder {
         EuFundingResource funding = new EuFundingResource();
         funding.setActionType(actionType);
         funding.setFundingContribution(fundingContribution);
-        funding.setGrantAgreementNumber(dataRow.get(CsvHeader.GRANT_AGREEMENT_NUMBER));
-        funding.setProjectCoordinator("COORDINATOR".equalsIgnoreCase(dataRow.get(CsvHeader.PROJECT_COORDINATOR)));
-        funding.setParticipantId(dataRow.get(CsvHeader.PIC));
-        funding.setProjectName(dataRow.get(CsvHeader.PROJECT_NAME));
+        funding.setGrantAgreementNumber(dataRow.get(GRANT_AGREEMENT_NUMBER));
+        funding.setProjectCoordinator("COORDINATOR".equalsIgnoreCase(dataRow.get(PROJECT_COORDINATOR)));
+        funding.setParticipantId(dataRow.get(PIC));
+        funding.setProjectName(dataRow.get(PROJECT_NAME));
         funding.setProjectStartDate(projectStartDate);
         funding.setProjectEndDate(projectEndDate);
         return funding;
@@ -121,7 +122,7 @@ public class GrantResourceBuilder {
         try {
             return serviceSuccess(new BigDecimal(string));
         } catch (NumberFormatException e) {
-            return serviceFailure(new Error("Failed to convert string " + string + " to number", BAD_REQUEST));
+            return serviceFailure(new Error("Failed to convert string \"" + string + "\" to number", BAD_REQUEST));
         }
     }
 
@@ -129,23 +130,20 @@ public class GrantResourceBuilder {
         try {
             return serviceSuccess(LocalDate.from(DATE_FORMAT.parse(string)));
         } catch (DateTimeException e) {
-            return serviceFailure(new Error("Unable to convert string " + string + " into date", BAD_REQUEST));
+            return serviceFailure(new Error("Failed to convert string \"" + string + "\" to date", BAD_REQUEST));
         }
     }
 
     private ServiceResult<EuActionTypeResource> getActionType(Map<CsvHeader, String> dataRow) {
 
-        String actionTypeString = dataRow.get(CsvHeader.ACTION_TYPE);
+        String actionTypeString = dataRow.get(ACTION_TYPE);
 
-        Supplier<ServiceResult<EuActionTypeResource>> failureToFindActionType = () ->
-                serviceFailure(notFoundError(EuActionType.class, actionTypeString));
-
-        Pattern actionTypeNamePattern = Pattern.compile("^\\(([a-zA-Z0-9-]+)\\).*$");
-
-        Matcher matcher = actionTypeNamePattern.matcher(actionTypeString);
+        Matcher matcher = ACTION_TYPE_NAME_PATTERN.matcher(actionTypeString);
 
         if (!matcher.find()) {
-            return failureToFindActionType.get();
+            Error extractionError = new Error("Unable to extract action type name from string \"" +
+                    actionTypeString + "\"", BAD_REQUEST);
+            return serviceFailure(extractionError);
         }
 
         String actionTypeName = matcher.group(1);
@@ -153,16 +151,17 @@ public class GrantResourceBuilder {
         Optional<EuActionType> matchingActionType = actionTypeRepository.findOneByName(actionTypeName);
 
         return matchingActionType.map(type -> serviceSuccess(actionTypeMapper.mapToResource(type))).
-               orElseGet(failureToFindActionType);
+               orElseGet(() -> serviceFailure(new Error("Unable to find an Action Type " +
+                       "with name \"" + actionTypeName+ "\"", BAD_REQUEST)));
     }
 
     private ServiceResult<EuContactResource> createContact(Map<CsvHeader, String> dataRow) {
 
         EuContactResource contact = new EuContactResource();
-        contact.setEmail(dataRow.get(CsvHeader.CONTACT_EMAIL_ADDRESS));
-        contact.setJobTitle(dataRow.get(CsvHeader.CONTACT_JOB_TITLE));
-        contact.setName(dataRow.get(CsvHeader.CONTACT_FULL_NAME));
-        contact.setTelephone(dataRow.get(CsvHeader.CONTACT_TELEPHONE_NUMBER));
+        contact.setEmail(dataRow.get(CONTACT_EMAIL_ADDRESS));
+        contact.setJobTitle(dataRow.get(CONTACT_JOB_TITLE));
+        contact.setName(dataRow.get(CONTACT_FULL_NAME));
+        contact.setTelephone(dataRow.get(CONTACT_TELEPHONE_NUMBER));
 
         return serviceSuccess(contact);
     }
