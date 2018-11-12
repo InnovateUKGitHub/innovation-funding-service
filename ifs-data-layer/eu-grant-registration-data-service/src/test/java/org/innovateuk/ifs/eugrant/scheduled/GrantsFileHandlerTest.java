@@ -14,16 +14,16 @@ import static org.innovateuk.ifs.service.ServiceFailureTestHelper.assertThatServ
 /**
  * TODO DW - document this class
  */
-public class GrantsFileUploaderTest {
+public class GrantsFileHandlerTest {
 
     @Test
     public void getFileIfExists() throws IOException, URISyntaxException {
 
         File existingSourceFile = File.createTempFile("temp", "temp");
 
-        GrantsFileUploader uploader = new GrantsFileUploader(existingSourceFile.toURI().toString());
+        GrantsFileHandler handler = new GrantsFileHandler(existingSourceFile.toURI().toString());
 
-        ServiceResult<File> result = uploader.getFileIfExists();
+        ServiceResult<File> result = handler.getFileIfExists();
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(result.getSuccess()).isEqualTo(existingSourceFile);
@@ -34,9 +34,9 @@ public class GrantsFileUploaderTest {
 
         File nonExistentSourceFile = new File("non-existent-eu-grant-file");
 
-        GrantsFileUploader uploader = new GrantsFileUploader(nonExistentSourceFile.toURI().toString());
+        GrantsFileHandler handler = new GrantsFileHandler(nonExistentSourceFile.toURI().toString());
 
-        ServiceResult<File> result = uploader.getFileIfExists();
+        ServiceResult<File> result = handler.getFileIfExists();
 
         assertThat(result.isFailure()).isTrue();
         assertThatServiceFailureIs(result, notFoundError(File.class, nonExistentSourceFile.toURI().toString()));
@@ -46,7 +46,7 @@ public class GrantsFileUploaderTest {
     public void newGrantsFileUploaderInvalidUri() {
 
         try {
-            new GrantsFileUploader("not a valid uri");
+            new GrantsFileHandler("not a valid uri");
         } catch (URISyntaxException e) {
             assertThat(e.getInput()).isEqualTo("not a valid uri");
             assertThat(e.getMessage()).containsIgnoringCase("Illegal character in path at index 3");

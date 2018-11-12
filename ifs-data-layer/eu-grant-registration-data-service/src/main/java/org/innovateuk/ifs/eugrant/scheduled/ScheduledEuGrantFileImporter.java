@@ -33,28 +33,28 @@ public class ScheduledEuGrantFileImporter {
 
     private static final Log LOG = LogFactory.getLog(ScheduledEuGrantFileImporter.class);
 
-    private GrantsFileUploader grantsFileUploader;
-    private GrantsFileExtractor grantsFileExtractor;
-    private GrantSaver grantsSaver;
-    private ResultsFileGenerator resultsFileGenerator;
+    private GrantsFileHandler grantsFileHandler;
+    private GrantsRecordExtractor grantsRecordsExtractor;
+    private GrantResourceSaver grantResourceSaver;
+    private GrantResultsFileGenerator resultsFileGenerator;
 
 
     @Autowired
-    ScheduledEuGrantFileImporter(@Autowired GrantsFileUploader grantsFileUploader,
-                                 @Autowired GrantsFileExtractor grantsFileExtractor,
-                                 @Autowired GrantSaver grantsSaver,
-                                 @Autowired ResultsFileGenerator resultsFileGenerator) {
+    ScheduledEuGrantFileImporter(@Autowired GrantsFileHandler grantsFileHandler,
+                                 @Autowired GrantsRecordExtractor grantsRecordsExtractor,
+                                 @Autowired GrantResourceSaver grantResourceSaver,
+                                 @Autowired GrantResultsFileGenerator resultsFileGenerator) {
 
-        this.grantsFileUploader = grantsFileUploader;
-        this.grantsFileExtractor = grantsFileExtractor;
-        this.grantsSaver = grantsSaver;
+        this.grantsFileHandler = grantsFileHandler;
+        this.grantsRecordsExtractor = grantsRecordsExtractor;
+        this.grantResourceSaver = grantResourceSaver;
         this.resultsFileGenerator = resultsFileGenerator;
     }
 
     @Scheduled(cron = "${ifs.eu.data.service.grant.importer.cron.expression}")
     ServiceResult<File> importEuGrantsFile() {
 
-        ServiceResult<File> sourceFileCheck = grantsFileUploader.getFileIfExists();
+        ServiceResult<File> sourceFileCheck = grantsFileHandler.getFileIfExists();
 
         if (isNotFoundError(sourceFileCheck)) {
             return sourceFileCheck;
@@ -62,7 +62,7 @@ public class ScheduledEuGrantFileImporter {
 
         ServiceResult<File> importResult =
                 sourceFileCheck.andOnSuccess(sourceFile ->
-                    grantsFileExtractor.processFile(sourceFile).
+                    grantsRecordsExtractor.processFile(sourceFile).
                         andOnSuccess(this::saveSuccessfullyExtractedGrants).
                         andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile))
                 );
@@ -75,7 +75,7 @@ public class ScheduledEuGrantFileImporter {
     private ServiceResult<List<ServiceResult<EuGrantResource>>> saveSuccessfullyExtractedGrants(List<ServiceResult<EuGrantResource>> grantsExtractResults) {
 
         List<ServiceResult<EuGrantResource>> creationResults = simpleMap(grantsExtractResults, extractResult ->
-                extractResult.andOnSuccess(grantsSaver::saveGrant));
+                extractResult.andOnSuccess(grantResourceSaver::saveGrant));
 
         return serviceSuccess(creationResults);
     }

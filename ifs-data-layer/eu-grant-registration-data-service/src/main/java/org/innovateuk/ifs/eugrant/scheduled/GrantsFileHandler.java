@@ -22,14 +22,14 @@ import static org.innovateuk.ifs.eugrant.scheduled.ScheduledEuGrantFileImporter.
  * TODO DW - document this class
  */
 @Component
-public class GrantsFileUploader {
+public class GrantsFileHandler {
 
-    private static final Log LOG = LogFactory.getLog(GrantsFileUploader.class);
+    private static final Log LOG = LogFactory.getLog(GrantsFileHandler.class);
 
     private URI sourceFileUrl;
 
     @Autowired
-    GrantsFileUploader(@Value("${ifs.eu.data.service.grant.importer.file.uri}") String sourceFileUri)
+    GrantsFileHandler(@Value("${ifs.eu.data.service.grant.importer.file.uri}") String sourceFileUri)
             throws URISyntaxException {
 
         ServiceResult<URI> uri = getUriFromString(sourceFileUri);

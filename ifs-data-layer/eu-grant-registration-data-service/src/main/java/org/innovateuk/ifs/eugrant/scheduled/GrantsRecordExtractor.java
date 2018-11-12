@@ -26,12 +26,12 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
  * TODO DW - document this class
  */
 @Component
-public class GrantsFileExtractor {
+public class GrantsRecordExtractor {
 
     private GrantResourceBuilder grantResourceBuilder;
 
     @Autowired
-    GrantsFileExtractor(@Autowired GrantResourceBuilder grantResourceBuilder) {
+    GrantsRecordExtractor(@Autowired GrantResourceBuilder grantResourceBuilder) {
         this.grantResourceBuilder = grantResourceBuilder;
     }
 

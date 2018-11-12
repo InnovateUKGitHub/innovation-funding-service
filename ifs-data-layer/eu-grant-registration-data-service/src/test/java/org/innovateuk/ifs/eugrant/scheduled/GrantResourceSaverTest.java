@@ -23,10 +23,10 @@ import static org.mockito.Mockito.*;
  * TODO DW - document this class
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GrantSaverTest {
+public class GrantResourceSaverTest {
 
     @InjectMocks
-    private GrantSaver grantSaver;
+    private GrantResourceSaver grantSaver;
 
     @Mock
     private EuGrantService euGrantServiceMock;

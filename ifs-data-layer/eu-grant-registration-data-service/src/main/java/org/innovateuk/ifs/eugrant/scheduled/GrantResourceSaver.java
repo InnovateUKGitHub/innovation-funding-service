@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
  * TODO DW - document this class
  */
 @Component
-public class GrantSaver {
+public class GrantResourceSaver {
 
     private EuGrantService grantService;
 
     @Autowired
-    GrantSaver(@Autowired EuGrantService grantService) {
+    GrantResourceSaver(@Autowired EuGrantService grantService) {
         this.grantService = grantService;
     }
 

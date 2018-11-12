@@ -25,7 +25,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 /**
  * TODO DW - document this class
  */
-public class ResultsFileGeneratorTest {
+public class GrantResultsFileGeneratorTest {
 
     @Test
     public void generateResultsFile() throws URISyntaxException, IOException {
@@ -38,7 +38,7 @@ public class ResultsFileGeneratorTest {
         URL expectedCsvResultsFileUrl = currentThread().getContextClassLoader().getResource("test-eu-grants-expected-results.csv");
         File expectedCsvResultsFile = new File(expectedCsvResultsFileUrl.toURI());
 
-        ResultsFileGenerator generator = new ResultsFileGenerator(temporaryResultsFolder.toURI().toString());
+        GrantResultsFileGenerator generator = new GrantResultsFileGenerator(temporaryResultsFolder.toURI().toString());
 
         List<ServiceResult<EuGrantResource>> importResults = asList(
             serviceSuccess(newEuGrantResource().withId(UUID.fromString("911dd9cb-4ecc-4220-8053-0af04670ee82")).build()),

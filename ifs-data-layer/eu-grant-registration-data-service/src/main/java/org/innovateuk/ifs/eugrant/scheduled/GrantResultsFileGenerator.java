@@ -31,9 +31,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  * TODO DW - document this class
  */
 @Component
-public class ResultsFileGenerator {
+public class GrantResultsFileGenerator {
 
-    private static final Log LOG = LogFactory.getLog(ResultsFileGenerator.class);
+    private static final Log LOG = LogFactory.getLog(GrantResultsFileGenerator.class);
 
     private static final DateTimeFormatter RESULTS_FILE_SUFFIX_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
@@ -41,7 +41,7 @@ public class ResultsFileGenerator {
     private URI resultsFileUri;
 
     @Autowired
-    ResultsFileGenerator(@Value("${ifs.eu.data.service.grant.importer.results.file.location.uri}") String resultsFileUri)
+    GrantResultsFileGenerator(@Value("${ifs.eu.data.service.grant.importer.results.file.location.uri}") String resultsFileUri)
                         throws URISyntaxException {
 
         ServiceResult<URI> uri = getUriFromString(resultsFileUri);

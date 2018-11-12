@@ -33,10 +33,10 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
  * TODO DW - document this class
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GrantsFileExtractorTest {
+public class GrantsRecordExtractorTest {
 
     @InjectMocks
-    private GrantsFileExtractor extractor;
+    private GrantsRecordExtractor extractor;
 
     @Mock
     private GrantResourceBuilder grantResourceBuilderMock;

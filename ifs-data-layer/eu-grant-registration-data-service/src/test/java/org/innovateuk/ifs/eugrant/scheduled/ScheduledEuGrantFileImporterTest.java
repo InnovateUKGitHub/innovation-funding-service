@@ -33,16 +33,16 @@ public class ScheduledEuGrantFileImporterTest {
     private ScheduledEuGrantFileImporter importer;
 
     @Mock
-    private GrantsFileUploader grantsFileUploaderMock;
+    private GrantsFileHandler grantsFileUploaderMock;
 
     @Mock
-    private GrantsFileExtractor grantsFileExtractorMock;
+    private GrantsRecordExtractor grantsFileExtractorMock;
 
     @Mock
-    private GrantSaver grantSaverMock;
+    private GrantResourceSaver grantSaverMock;
 
     @Mock
-    private ResultsFileGenerator resultsFileGeneratorMock;
+    private GrantResultsFileGenerator resultsFileGeneratorMock;
 
     @Before
     public void setup() {
