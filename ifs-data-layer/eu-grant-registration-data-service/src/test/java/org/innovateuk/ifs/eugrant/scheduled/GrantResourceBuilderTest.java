@@ -119,6 +119,7 @@ public class GrantResourceBuilderTest {
     public void convertDataRowsToEuGrantResourcesWithBadData() {
 
         List<Map<CsvHeader, String>> data = asList(
+                createRow(CsvHeader.ORGANISATION_TYPE, "Invalid organisation type"),
                 createRow(CsvHeader.ACTION_TYPE, "Invalid action type format"),
                 createRow(CsvHeader.ACTION_TYPE, "(UNK) nown action type"),
                 createRow(CsvHeader.PROJECT_EU_FUNDING_CONTRIBUTION, "Invalid number"),
@@ -143,6 +144,7 @@ public class GrantResourceBuilderTest {
         List<Error> errors = simpleMap(builderResults, r -> r.getErrors().get(0));
 
         assertThat(errors).containsExactly(
+                new Error("Unable to find an Organisation Type with name \"Invalid organisation type\"", BAD_REQUEST),
                 new Error("Unable to extract action type name from string \"Invalid action type format\"", BAD_REQUEST),
                 new Error("Unable to find an Action Type with name \"UNK\"", BAD_REQUEST),
                 new Error("Failed to convert string \"Invalid number\" to number", BAD_REQUEST),

@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.eugrant.scheduled.CsvHeader.*;
@@ -81,7 +80,8 @@ public class GrantResourceBuilder {
             organisation.setCompaniesHouseNumber(dataRow.get(COMPANIES_HOUSE_REGISTRATION_NUMBER));
             return serviceSuccess(organisation);
 
-        }).orElseGet(() -> serviceFailure(notFoundError(EuOrganisationType.class, organisationTypeLabel)));
+        }).orElseGet(() -> serviceFailure(new Error("Unable to find an Organisation Type " +
+                "with name \"" + organisationTypeLabel + "\"", BAD_REQUEST)));
     }
 
     private Optional<EuOrganisationType> findOrganisationType(String organisationTypeLabel) {
