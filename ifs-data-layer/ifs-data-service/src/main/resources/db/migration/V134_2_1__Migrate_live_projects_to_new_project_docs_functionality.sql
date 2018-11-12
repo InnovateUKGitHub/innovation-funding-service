@@ -1,4 +1,4 @@
--- IFS-4631 Migrate live projects to new project docs functionality
+-- IFS-4631 Migrate all competitions to new configurable documents excluding princes trust and Expression of interest
 
 INSERT INTO document_config
 (competition_id, title, guidance, editable, enabled, type)
@@ -12,8 +12,7 @@ WHERE c.id IN (
 	SELECT c.id FROM competition c
 	LEFT JOIN competition_type ct ON (c.competition_type_id = ct.id)
 	LEFT JOIN document_config dc ON (c.id = dc.competition_id)
-	WHERE EXISTS (SELECT a.manage_funding_email_date FROM application a WHERE a.competition = c.id AND a.funding_decision = 'FUNDED' AND a.manage_funding_email_date IS NOT NULL)
-	AND c.setup_complete = TRUE AND c.template = FALSE AND c.non_ifs = FALSE
+	WHERE c.setup_complete = TRUE AND c.template = FALSE AND c.non_ifs = FALSE
 	AND ct.name != 'Expression of interest'
 	AND ct.name != 'The Prince''s Trust'
 	AND dc.competition_id IS NULL
@@ -31,8 +30,7 @@ WHERE c.id IN (
 	SELECT c.id FROM competition c
 	LEFT JOIN competition_type ct ON (c.competition_type_id = ct.id)
 	LEFT JOIN document_config dc ON c.id = dc.competition_id
-	WHERE EXISTS (SELECT a.manage_funding_email_date FROM application a WHERE a.competition = c.id AND a.funding_decision = 'FUNDED' AND a.manage_funding_email_date IS NOT NULL)
-	AND c.setup_complete = TRUE AND c.template = FALSE AND c.non_ifs = FALSE
+	WHERE c.setup_complete = TRUE AND c.template = FALSE AND c.non_ifs = FALSE
 	AND ct.name != 'Expression of interest'
 	AND ct.name != 'The Prince''s Trust'
 	AND dc.title = 'Collaboration agreement'
