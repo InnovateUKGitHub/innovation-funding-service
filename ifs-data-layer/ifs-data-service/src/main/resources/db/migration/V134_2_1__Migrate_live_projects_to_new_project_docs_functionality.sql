@@ -47,14 +47,6 @@ WHERE dc.id IN (
   WHERE dcft.document_config_id IS NULL
 );
 
-
-select p.id, p.name, p.application_id , p.collaboration_agreement_file_entry_id, p.exploitation_plan_file_entry_id, p.other_documents_approved, dc.id
-from project p
-inner join application a on p.application_id = a.id
-inner join document_config dc on a.competition = dc.competition_id
-where dc.title = 'Collaboration agreement'
-and p.collaboration_agreement_file_entry_id IS NOT NULL;
-
 -- Copy Collaboration file entry ids to project_document
 -- Status comments are a new feature to be implemented therefore the default message will be Rejected
 
