@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition completion stage'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="govuk-template__body" th:with="endSet=${param.completionStage != null ? TRUE : FALSE}">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
+
+<div class="govuk-width-container">
+
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4650-end-milestone'})" />
+
+    <main class="govuk-main-wrapper" id="content">
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+
+                <h1 class="govuk-heading-xl">Completion stage</h1>
+
+                <th:block th:if="${!endSet}">
+                    <p class="govuk-body">Select the stage at which the competition is complete for Innovate UK.</p>
+                    <p class="govuk-body">You do not need to run stages 9 to 11</p>
+                </th:block>
+
+                <ul class="govuk-list govuk-!-padding-0 govuk-!-margin-0 govuk-!-margin-bottom-2">
+
+                    <th:block th:if="${!endSet}">
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">1. Open date</span></li>
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">2. Briefing event</span></li>
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">3. Submission date</span></li>
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">4. Allocate assessors</span></li>
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">5. Assessor briefing</span></li>
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">6. Assessor accepts</span></li>
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">7. Assessor deadline</span></li>
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">8. Line draw</span></li>
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">9. Assessment panel</span></li>
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">10. Panel date</span></li>
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">11. Funders panel</span></li>
+                        <li class="govuk-radios__item"><span class="govuk-label govuk-radios__label">12. Notifications</span></li>
+                    </th:block>
+
+                    <th:block th:if="${endSet}" th:with="endStep=${param.completionStage[0]}">
+                        <li class="govuk-!-margin-bottom-4">1. Open date</li>
+                        <li class="govuk-!-margin-bottom-4">2. Briefing event</li>
+                        <li class="govuk-!-margin-bottom-4">3. Submission date</li>
+                        <li class="govuk-!-margin-bottom-4">4. Allocate assessors</li>
+                        <li class="govuk-!-margin-bottom-4">5. Assessor briefing</li>
+                        <li class="govuk-!-margin-bottom-4">6. Assessor accepts</li>
+                        <li class="govuk-!-margin-bottom-4">7. Assessor deadline</li>
+                        <li class="govuk-!-margin-bottom-4">8. Line draw</li>
+                        <li class="govuk-!-margin-bottom-4">9. Assessment panel</li>
+                        <li class="govuk-!-margin-bottom-4">10. Panel date</li>
+                        <li class="govuk-!-margin-bottom-4">11. Funders panel</li>
+                        <li class="govuk-!-margin-bottom-4">12. Notifications</li>
+                        <th:block th:if="${endStep == '13'}">
+                            <li class="govuk-!-margin-bottom-4">13. Release feedback</li>
+                            <li class="govuk-!-margin-bottom-4"><s>14. Project setup</s></li>
+                        </th:block>
+                        <th:block th:if="${endStep == '14'}">
+                            <li class="govuk-!-margin-bottom-4">13. Release feedback</li>
+                            <li class="govuk-!-margin-bottom-4">14. Project setup</li>
+                        </th:block>
+                    </th:block>
+
+                </ul>
+
+                <th:block th:if="${endSet}">
+                    <a class="govuk-button" th:href="${#httpServletRequest.requestURI}">Edit</a>
+                </th:block>
+
+
+                <th:block th:if="${!endSet}">
+                    <form id="lead-organisation-type-form" th:action="${#httpServletRequest.requestURI}" method="GET">
+
+                        <div class="govuk-form-group">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-visually-hidden">
+                                    Please select the completion stage
+                                </legend>
+
+                                <div class="govuk-radios">
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input"
+                                               id="radio-1" type="radio" required="required" value='13'
+                                               data-required-errormessage="Select a completion stage."
+                                               name="completionStage">
+                                        <label class="govuk-label govuk-radios__label" for="radio-1">
+                                            13. Release feedback
+                                        </label>
+                                    </div>
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input"
+                                               id="radio-2" type="radio" required="required" value='14'
+                                               data-required-errormessage="Select a completion stage."
+                                               name="completionStage">
+                                        <label class="govuk-label govuk-radios__label" for="radio-2">
+                                            14. Project setup
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+
+                        <button type="submit" class="govuk-button">
+                            Done
+                        </button>
+                    </form>
+                </th:block>
+
+                <ul class="govuk-list pagination">
+                    <li class="prev">
+                        <a rel="prev" title="Navigate to next part" href="#">
+                            <span class="pagination-label">Previous</span>
+                            <span class="pagination-part-title">Eligibility</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a rel="next" title="Navigate to next part" href="#">
+                            <span class="pagination-label">Next</span>
+                            <span class="pagination-part-title">Application</span>
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+
+        <!-- END OF HARDCODED PROTOTYPE HTML -->
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+</div>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+
+
+</body>
+</html>
