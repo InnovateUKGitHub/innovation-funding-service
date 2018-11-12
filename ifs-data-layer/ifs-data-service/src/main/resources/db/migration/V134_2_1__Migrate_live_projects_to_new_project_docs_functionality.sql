@@ -107,6 +107,19 @@ UPDATE project_document
 SET project_document.status = 'APPROVED'
 WHERE project_document.project_id in (select id from project where project.other_documents_approved = 'APPROVED');
 
---todo delete old columns and tidy up above query
+-- Remove collaboration agreement fk constraint
 
+ALTER TABLE project
+  DROP FOREIGN KEY project_ibfk_1;
 
+-- Remove exploitation plan fk constraint
+
+ALTER TABLE project
+  DROP FOREIGN KEY project_ibfk_2;
+
+--  Drop old unused columns
+
+ALTER TABLE project DROP COLUMN collaboration_agreement_file_entry_id;
+ALTER TABLE project DROP COLUMN exploitation_plan_file_entry_id;
+ALTER TABLE project DROP COLUMN documents_submitted_date;
+ALTER TABLE project DROP COLUMN other_documents_approved;
