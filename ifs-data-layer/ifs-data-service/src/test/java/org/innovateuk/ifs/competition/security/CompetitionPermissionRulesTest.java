@@ -91,7 +91,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void internalUsersBarringInnovationLeadAndIFSAdminCanViewPreviousApplications() {
         allGlobalRoleUsers.forEach(user -> {
-            if ((allInternalUsers.contains(user) && !user.hasRoles(INNOVATION_LEAD) && !user.hasRole(STAKEHOLDER))
+            if ((allInternalUsers.contains(user) && !user.hasRole(INNOVATION_LEAD) && !user.hasRole(STAKEHOLDER))
                     || getUserWithRole(IFS_ADMINISTRATOR).equals(user)) {
                 assertTrue(rules.internalUsersAndIFSAdminCanViewPreviousApplications(newCompetitionResource().build(), user));
             } else {
