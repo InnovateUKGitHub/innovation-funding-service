@@ -14,14 +14,15 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.util.Lists.emptyList;
-import static org.innovateuk.ifs.util.CollectionFunctions.union;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 public abstract class AbstractDataServiceSecurityAnnotationsTest extends AbstractServiceSecurityAnnotationsTest {
 
     @Override
     protected final List<Class<?>> excludedClasses() {
-        return union(asList(UidAuthenticationService.class), additionalExcludedClasses());
+        return combineLists(UidAuthenticationService.class, additionalExcludedClasses());
     }
 
     @Override
@@ -31,7 +32,7 @@ public abstract class AbstractDataServiceSecurityAnnotationsTest extends Abstrac
 
     @Override
     protected final List<Class<? extends Annotation>> annotationsOnClassesToSecure() {
-        return asList(Service.class);
+        return singletonList(Service.class);
     }
 
     @Override
@@ -53,7 +54,6 @@ public abstract class AbstractDataServiceSecurityAnnotationsTest extends Abstrac
 
     /**
      * Add classes which are not present in this base project but still need to be ignored.
-     * @return
      */
     protected abstract List<Class<?>> additionalExcludedClasses();
 
