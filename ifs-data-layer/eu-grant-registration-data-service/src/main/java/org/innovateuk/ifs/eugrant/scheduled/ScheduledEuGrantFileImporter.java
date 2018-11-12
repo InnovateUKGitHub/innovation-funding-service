@@ -70,9 +70,9 @@ public class ScheduledEuGrantFileImporter {
         try {
             ServiceResult<File> importResult = sourceFileCheck.
                     andOnSuccess(sourceFile -> grantsRecordsExtractor.processFile(sourceFile).
-                            andOnSuccess(this::saveSuccessfullyExtractedGrants).
-                            andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile)).
-                            andOnSuccessDo(file -> grantsFileHandler.deleteSourceFile()));
+                    andOnSuccess(this::saveSuccessfullyExtractedGrants).
+                    andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile)).
+                    andOnSuccessDo(file -> grantsFileHandler.deleteSourceFile()));
 
             return importResult.handleSuccessOrFailureNoReturn(
                     failure -> LOG.error("Unable to complete grant file import.  Failure is: " + importResult.getFailure()),
