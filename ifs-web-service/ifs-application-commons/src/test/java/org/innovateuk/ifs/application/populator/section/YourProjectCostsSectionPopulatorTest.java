@@ -131,7 +131,7 @@ public class YourProjectCostsSectionPopulatorTest {
         organisation.setOrganisationType(BUSINESS.getId());
         section.getCompetition().setApplicationFinanceType(STANDARD_WITH_VAT);
 
-        when(financeViewHandlerProvider.getFinanceModelManager(BUSINESS.getId())).thenReturn(financeModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(competition, BUSINESS.getId())).thenReturn(financeModelManager);
         when(messageSource.getMessage("ifs.question.yourProjectCosts.description", null, Locale.getDefault()))
                 .thenReturn("Your project costs question description");
 
