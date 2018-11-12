@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.yourfunding.form;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -13,7 +14,7 @@ public class YourFundingForm {
 
     private Boolean otherFunding;
 
-    private Map<String, OtherFundingRowForm> otherFundingRows;
+    private Map<String, OtherFundingRowForm> otherFundingRows = new LinkedHashMap<>();
 
     private Boolean termsAgreed;
 

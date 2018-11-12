@@ -133,7 +133,7 @@ public class YourFundingController {
         });
     }
 
-    @PostMapping(params = "add_other_funding")
+    @PostMapping(params = "add_cost")
     public String addFundingRowFormPost(Model model,
                                         UserResource user,
                                         @PathVariable long applicationId,
@@ -144,7 +144,7 @@ public class YourFundingController {
         return viewYourFunding(model, applicationId, sectionId, user);
     }
 
-    @PostMapping(params = "remove_other_funding")
+    @PostMapping(params = "remove_cost")
     public String removeFundingRowFormPost(Model model,
                                            UserResource user,
                                            @PathVariable long applicationId,

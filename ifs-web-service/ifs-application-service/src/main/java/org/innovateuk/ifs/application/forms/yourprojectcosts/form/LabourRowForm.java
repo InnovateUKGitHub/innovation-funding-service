@@ -15,11 +15,10 @@ public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
 
     private Integer days;
 
-    private BigDecimal rate;
+    private BigDecimal rate = BigDecimal.ZERO;
 
     public LabourRowForm() {
         super();
-        this.rate = BigDecimal.ZERO;
     }
 
     public LabourRowForm(LabourCost cost) {
@@ -56,6 +55,10 @@ public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
 
     public BigDecimal getRate() {
         return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
     }
 
     @Override

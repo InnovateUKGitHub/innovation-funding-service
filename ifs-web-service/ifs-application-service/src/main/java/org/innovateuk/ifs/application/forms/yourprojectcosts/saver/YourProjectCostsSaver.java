@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.saver;
 
-import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm;
-import org.innovateuk.ifs.application.forms.yourprojectcosts.form.LabourRowForm;
-import org.innovateuk.ifs.application.forms.yourprojectcosts.form.OverheadForm;
-import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.form.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
@@ -114,5 +111,67 @@ public class YourProjectCostsSaver {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(finance.getApplication()).getSuccess();
         QuestionResource questionResource = questionRestService.getQuestionByCompetitionIdAndFormInputType(applicationResource.getCompetition(), type.getFormInputType()).getSuccess();
         return questionResource.getId();
+    }
+
+    public void removeRowFromForm(YourProjectCostsForm form, FinanceRowType type, String id) {
+        getRowsFromType(form, type).remove(id);
+        removeFinanceRow(id);
+    }
+
+    public void removeFinanceRow(String id) {
+        if (!EMPTY_ROW_ID.equals(id)) {
+            financeRowRestService.delete(Long.valueOf(id)).getSuccess();
+        }
+    }
+
+    public <R extends AbstractCostRowForm> R addRowForm(YourProjectCostsForm form, FinanceRowType rowType, Long applicationId, UserResource user) throws IllegalAccessException, InstantiationException {
+        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
+        ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
+
+        Class<R> clazz = newRowFromType(rowType);
+        R row = clazz.newInstance();
+        Long costId = financeRowRestService.addWithResponse(finance.getId(), row.toCost()).getSuccess().getId();
+        row.setCostId(costId);
+        Map<String, R> map = getRowsFromType(form, rowType);
+        map.put(String.valueOf(costId), row);
+        return row;
+    }
+
+    private <R extends AbstractCostRowForm> Map<String, R> getRowsFromType(YourProjectCostsForm form, FinanceRowType type) {
+        switch (type) {
+            case LABOUR:
+                return (Map<String, R>) form.getLabourCosts();
+            case CAPITAL_USAGE:
+                return (Map<String, R>) form.getCapitalUsageRows();
+            case MATERIALS:
+                return (Map<String, R>) form.getMaterialRows();
+            case OTHER_COSTS:
+                return (Map<String, R>) form.getOtherRows();
+            case SUBCONTRACTING_COSTS:
+                return (Map<String, R>) form.getSubcontractingRows();
+            case TRAVEL:
+                return (Map<String, R>) form.getTravelRows();
+            default:
+                throw new RuntimeException("Unknown row type");
+        }
+    }
+
+    private <R extends AbstractCostRowForm> Class<R> newRowFromType(FinanceRowType type) {
+        switch (type) {
+            case LABOUR:
+                return (Class<R>) LabourRowForm.class;
+            case CAPITAL_USAGE:
+                return (Class<R>) CapitalUsageRowForm.class;
+            case MATERIALS:
+                return (Class<R>) MaterialRowForm.class;
+            case OTHER_COSTS:
+                return (Class<R>) OtherCostRowForm.class;
+            case SUBCONTRACTING_COSTS:
+                return (Class<R>) SubcontractingRowForm.class;
+            case TRAVEL:
+                return (Class<R>) TravelRowForm.class;
+            default:
+                throw new RuntimeException("Unknown row type");
+        }
     }
 }

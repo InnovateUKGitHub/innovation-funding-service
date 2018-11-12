@@ -1,25 +1,27 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.form;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class YourProjectCostsForm {
 
     private Integer workingDaysPerYear;
 
-    private Map<String, LabourRowForm> labourCosts;
+    private Map<String, LabourRowForm> labourCosts = new LinkedHashMap<>();
 
     private OverheadForm overhead;
 
-    private Map<String, MaterialRowForm> materialRows;
+    private Map<String, MaterialRowForm> materialRows = new LinkedHashMap<>();
 
-    private Map<String, CapitalUsageRowForm> capitalUsageRows;
+    private Map<String, CapitalUsageRowForm> capitalUsageRows = new LinkedHashMap<>();
 
-    private Map<String, SubcontractingRowForm> subcontractingRows;
+    private Map<String, SubcontractingRowForm> subcontractingRows = new LinkedHashMap<>();
 
-    private Map<String, TravelRowForm> travelRows;
+    private Map<String, TravelRowForm> travelRows = new LinkedHashMap<>();
 
-    private Map<String, OtherCostRowForm> otherRows;
+    private Map<String, OtherCostRowForm> otherRows = new LinkedHashMap<>();
 
     private Boolean eligibleAgreement;
 
@@ -98,31 +100,39 @@ public class YourProjectCostsForm {
 
     /* View methods. */
     public BigDecimal getTotalLabourCosts() {
-        return labourCosts.values().stream().map(LabourRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return labourCosts.values().stream().map(LabourRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
     public BigDecimal getTotalOverheadCosts() {
-        return overhead.getTotal();
+        switch (overhead.getRateType()) {
+            case NONE:
+                return BigDecimal.ZERO;
+            case DEFAULT_PERCENTAGE:
+                return getTotalLabourCosts().multiply(new BigDecimal("0.2"));
+            case TOTAL:
+                return BigDecimal.valueOf(getOverhead().getTotalSpreadsheet());
+        }
+        return BigDecimal.ZERO;
     }
 
     public BigDecimal getTotalMaterialCosts() {
-        return materialRows.values().stream().map(MaterialRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return materialRows.values().stream().map(MaterialRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
     public BigDecimal getTotalCapitalUsageCosts() {
-        return capitalUsageRows.values().stream().map(CapitalUsageRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return capitalUsageRows.values().stream().map(CapitalUsageRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
     public BigDecimal getTotalSubcontractingCosts() {
-        return subcontractingRows.values().stream().map(SubcontractingRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return subcontractingRows.values().stream().map(SubcontractingRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
     public BigDecimal getTotalTravelCosts() {
-        return travelRows.values().stream().map(TravelRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return travelRows.values().stream().map(TravelRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
     public BigDecimal getTotalOtherCosts() {
-        return otherRows.values().stream().map(OtherCostRowForm::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return otherRows.values().stream().map(OtherCostRowForm::getTotal).filter(Objects::nonNull).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
     public BigDecimal getOrganisationFinanceTotal() {

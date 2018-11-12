@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your project costs'"/>
 </head>
-<body class="govuk-template__body your-funding overheads">
+<body class="govuk-template__body finance-row-form overheads">
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
@@ -29,9 +29,7 @@
 
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/{sectionId}/auto-save(applicationId=${model.applicationId},sectionId=${model.sectionId})},
-                       data-application-id=${model.applicationId},
-                       data-section-id=${model.sectionId}"
+              th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/{sectionId}/auto-save(applicationId=${model.applicationId},sectionId=${model.sectionId})}"
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">
@@ -48,12 +46,12 @@
             </th:block>
 
             <th:block th:insert="application/your-project-costs-fragments :: labour" />
-            <th:block th:insert="application/your-project-costs-fragments :: overhead" />
-            <th:block th:insert="application/your-project-costs-fragments :: material" />
-            <th:block th:insert="application/your-project-costs-fragments :: capital-usage" />
-            <th:block th:insert="application/your-project-costs-fragments :: subcontracting" />
+            <th:block th:insert="application/your-project-costs-fragments :: overheads" />
+            <th:block th:insert="application/your-project-costs-fragments :: materials" />
+            <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
+            <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
             <th:block th:insert="application/your-project-costs-fragments :: travel" />
-            <th:block th:insert="application/your-project-costs-fragments :: other" />
+            <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
 
             <div class="govuk-grid-row total-cost">
                 <div class="govuk-grid-column-one-half">
