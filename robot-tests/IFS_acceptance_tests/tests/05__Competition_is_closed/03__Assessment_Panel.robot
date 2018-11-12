@@ -54,14 +54,14 @@ ${assessment_panel}  ${server}/management/assessment/panel/competition/${CLOSED_
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
     [Documentation]  IFS-786 INF-2637
-    [Tags]
+    [Tags]  HappyPath
     Given The user clicks the button/link  link = ${CLOSED_COMPETITION_NAME}
     Then the user should see the element   jQuery = .disabled:contains("Manage assessment panel")
     And the user should see the element    jQuery = .disabled:contains("Manage interview panel")
 
 Confirm changes button unavailable before sending invite
     [Documentation]  IFS-1125
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  enable assessment panel for the competition
     Given the user clicks the button/link  link = Manage assessment panel
     When the user should see the element   jQuery = span:contains("0") ~ small:contains("Assessors accepted")
@@ -84,13 +84,13 @@ There are no Assessors in Invite and Pending and declined tab before sending inv
 
 CompAdmin can add an assessors to the invite list
     [Documentation]  IFS-31
-    [Tags]
-    When the user clicks the button/link     link = Find
+    [Tags]  HappyPath
+    When the user navigates to the page    ${assessment_panel}/assessors/find     #the user clicks the button/link     link = Find
     Then the competition admin invites assessors to the competition
 
 CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link    link = Invite
     Then the compadmin can remove an assessor or application from the invite list    ${assessor_madeleine}
 
@@ -105,7 +105,7 @@ Cancel sending invite returns to the invite tab
 
 Assessor recieves the invite to panel
     [Documentation]  IFS-1560  IFS-1564
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user clicks the button/link  link = Invite
     Given the user clicks the button/link     link = Review and send invites
     When the user clicks the button/link      jQuery = button:contains("Send invite")
@@ -115,7 +115,7 @@ Assessor recieves the invite to panel
 
 Bulk add assessor to invite list
     [Documentation]  IFS-31
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user clicks the button/link  link = Find
     Given the user selects the checkbox       select-all-check
     And the user clicks the button/link       jQuery = button:contains("Add selected to invite list")
@@ -135,7 +135,7 @@ CompAdmin resend invites to multiple assessors
 
 Assesor is able to accept the invitation from dashboard
     [Documentation]  IFS-37  IFS-1135  IFS-1566  IFS-1138
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Log in as a different user       ${assessor_ben_email}  ${short_password}
     Given the user clicks the button/link     jQuery = h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button    acceptInvitation  true
@@ -181,15 +181,15 @@ Assessor tries to accept expired invitation
 
 Assign application link decativated if competition is in close state
     [Documentation]   IFS-25
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
     Then the user should see the element  jQuery = .disabled:contains("Assign applications to panel")
 
 Assign application link activate if competition is in panel state
     [Documentation]   IFS-25
-    [Tags]
-    [Setup]  the user clicks the button/link     link = Competition
+    [Tags]  HappyPath
+    [Setup]  the user navigates to the page  ${server}/management/competition/${CLOSED_COMPETITION}   #the user clicks the button/link     link = Competition
     Given the user moves the closed competition to panel
     And the user should see the element          jQuery = h1:contains("Panel")
     When the user clicks the button/link         link = Manage assessment panel
@@ -217,7 +217,7 @@ Filter by application number
 
 Assign applications to panel
     [Documentation]  IFS-1125
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link    jQuery = td:contains("${Neural_network_application}") ~ td:contains("Assign")
     And the user clicks the button/link     jQuery = td:contains("${computer_vision_application_name}") ~ td:contains("Assign")
     Then the user should see the element    jQuery = h2:contains("Assigned applications (2)")
@@ -227,7 +227,7 @@ Assign applications to panel
 
 Assign applications to assessor upon accepting invite in panel
     [Documentation]   IFS-2549
-    [Tags]
+    [Tags]  HappyPath
     # When subsequently an assessor is invited, assign application without clicking on 'Confirm action'
     Given the user clicks the button/link     link = Invite assessors to attend
     And the user clicks the button/link       link = Invite
@@ -240,7 +240,7 @@ Assign applications to assessor upon accepting invite in panel
 
 Assessors view of competition dashboard and applications in panel status
     [Documentation]  IFS-1138  IFS-388
-    [Tags]
+    [Tags]  HappyPath
     Given Log in as a different user            ${assessor_ben_email}  ${short_password}
     When the user clicks the button/link        jQuery = h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
     Then the user should see the element        jQuery = h2:contains("Applications for panel") + ul li h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
@@ -258,7 +258,7 @@ Assessors view of competition dashboard and applications in panel status
 
 Assessor can attend Panel and see applications he has not assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
-    [Tags]
+    [Tags]  HappyPath
     # assessor view of application summary when he has not assessed application at first place.
     Given the user clicks the button/link       link = ${computer_vision_application_name}
     When the user should see the element        jQuery = h1 span:contains("${computer_vision_application_name}")
@@ -269,7 +269,7 @@ Assessor can attend Panel and see applications he has not assessed
 
 Assessor can attend Panel and see applications that he has assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user         ${assessor_madeleine_email}  ${short_password}
     Given the user clicks the button/link       jQuery = h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
     Then the user clicks the button/link        JQuery = .progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div a:contains("Accept or reject")
