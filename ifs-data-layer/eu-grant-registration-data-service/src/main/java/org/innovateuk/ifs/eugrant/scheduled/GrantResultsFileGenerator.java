@@ -40,7 +40,6 @@ public class GrantResultsFileGenerator {
 
     private URI resultsFileUri;
 
-    @Autowired
     GrantResultsFileGenerator(@Value("${ifs.eu.data.service.grant.importer.results.file.location.uri}") String resultsFileUri)
                         throws URISyntaxException {
 

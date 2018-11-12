@@ -14,7 +14,6 @@ public class GrantResourceSaver {
 
     private EuGrantService grantService;
 
-    @Autowired
     GrantResourceSaver(@Autowired EuGrantService grantService) {
         this.grantService = grantService;
     }

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.eugrant.scheduled;
 
 /**
- * TODO DW - document this class
+ * Partial column header text that should match the column headers in the supplied EU Grant csv
  */
 enum CsvHeader {
 

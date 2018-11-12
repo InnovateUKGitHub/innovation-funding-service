@@ -30,7 +30,6 @@ public class GrantsRecordExtractor {
 
     private GrantResourceBuilder grantResourceBuilder;
 
-    @Autowired
     GrantsRecordExtractor(@Autowired GrantResourceBuilder grantResourceBuilder) {
         this.grantResourceBuilder = grantResourceBuilder;
     }

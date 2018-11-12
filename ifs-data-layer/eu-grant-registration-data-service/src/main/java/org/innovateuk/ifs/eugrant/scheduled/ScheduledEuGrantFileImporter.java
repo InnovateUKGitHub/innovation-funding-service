@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.eugrant.scheduled;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
@@ -21,13 +22,13 @@ import java.util.regex.Pattern;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
- * TODO DW - document this class
+ * A scheduled job to look for a csv file containing multiple rows of EU Grant project information and import them
+ * into the EU Grant Registration database.
  */
 @Component
 public class ScheduledEuGrantFileImporter {
@@ -38,47 +39,48 @@ public class ScheduledEuGrantFileImporter {
     private GrantsRecordExtractor grantsRecordsExtractor;
     private GrantResourceSaver grantResourceSaver;
     private GrantResultsFileGenerator resultsFileGenerator;
+    private GrantsImportResultHandler grantsImportResultHandler;
     private WebUserSecuritySetter webUserSecuritySetter;
 
-
-    @Autowired
     ScheduledEuGrantFileImporter(@Autowired GrantsFileHandler grantsFileHandler,
                                  @Autowired GrantsRecordExtractor grantsRecordsExtractor,
                                  @Autowired GrantResourceSaver grantResourceSaver,
                                  @Autowired GrantResultsFileGenerator resultsFileGenerator,
+                                 @Autowired GrantsImportResultHandler grantsImportResultHandler,
                                  @Autowired WebUserSecuritySetter webUserSecuritySetter) {
 
         this.grantsFileHandler = grantsFileHandler;
         this.grantsRecordsExtractor = grantsRecordsExtractor;
         this.grantResourceSaver = grantResourceSaver;
         this.resultsFileGenerator = resultsFileGenerator;
+        this.grantsImportResultHandler = grantsImportResultHandler;
         this.webUserSecuritySetter = webUserSecuritySetter;
     }
 
     @Scheduled(cron = "${ifs.eu.data.service.grant.importer.cron.expression}")
-    ServiceResult<File> importEuGrantsFile() {
+    void importEuGrantsFile() {
 
         ServiceResult<File> sourceFileCheck = grantsFileHandler.getSourceFileIfExists();
 
         if (isNotFoundError(sourceFileCheck)) {
-            return sourceFileCheck;
+            return;
         }
 
+        LOG.info("Beginning import of grants...");
 
         webUserSecuritySetter.setWebUser();
 
         try {
-            ServiceResult<File> importResult = sourceFileCheck.
-                    andOnSuccess(sourceFile -> grantsRecordsExtractor.processFile(sourceFile).
-                    andOnSuccess(this::saveSuccessfullyExtractedGrants).
-                    andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile)));
+            ServiceResult<Pair<File, List<ServiceResult<EuGrantResource>>>> importResult = sourceFileCheck.
+                andOnSuccess(sourceFile -> grantsRecordsExtractor.processFile(sourceFile).
+                andOnSuccess(this::saveSuccessfullyExtractedGrants).
+                andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile).
+                andOnSuccessReturn(resultsFile -> Pair.of(resultsFile, results))));
 
-            return importResult.handleSuccessOrFailureNoReturn(
-                    failure -> LOG.error("Unable to complete grant file import.  Failure is: " + importResult.getFailure()),
-                    success -> LOG.info("Grants imported successfully!  Results file can be found at " + success.getPath()));
+            grantsImportResultHandler.recordResult(importResult);
 
         } finally {
-            
+
             grantsFileHandler.deleteSourceFile();
             webUserSecuritySetter.clearWebUser();
         }

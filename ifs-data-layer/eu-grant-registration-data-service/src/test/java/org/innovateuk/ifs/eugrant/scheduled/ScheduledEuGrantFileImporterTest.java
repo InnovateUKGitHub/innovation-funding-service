@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.eugrant.scheduled;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
@@ -17,7 +18,9 @@ import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
@@ -46,6 +49,9 @@ public class ScheduledEuGrantFileImporterTest {
     private GrantResultsFileGenerator resultsFileGeneratorMock;
 
     @Mock
+    private GrantsImportResultHandler grantsImportResultHandlerMock;
+
+    @Mock
     private WebUserSecuritySetter webUserSecuritySetter;
 
     @Before
@@ -56,6 +62,7 @@ public class ScheduledEuGrantFileImporterTest {
                  grantsFileExtractorMock,
                  grantSaverMock,
                  resultsFileGeneratorMock,
+                 grantsImportResultHandlerMock,
                  webUserSecuritySetter);
     }
 
@@ -81,9 +88,14 @@ public class ScheduledEuGrantFileImporterTest {
         List<ServiceResult<EuGrantResource>> combinedListOfSuccessesAndFailures = asList(serviceSuccess(saveGrantResults), extractionResults.get(1));
         when(resultsFileGeneratorMock.generateResultsFile(combinedListOfSuccessesAndFailures, sourceFile)).thenReturn(serviceSuccess(resultsFile));
 
-        ServiceResult<File> result = importer.importEuGrantsFile();
+        importer.importEuGrantsFile();
 
-        assertThat(result.isSuccess()).isTrue();
+        verify(grantsImportResultHandlerMock).recordResult(createLambdaMatcher(result -> {
+            assertThat(result.isSuccess()).isTrue();
+            Pair<File, List<ServiceResult<EuGrantResource>>> success = result.getSuccess();
+            assertThat(success.getLeft()).isEqualTo(resultsFile);
+            assertThat(success.getRight()).isEqualTo(combinedListOfSuccessesAndFailures);
+        }));
 
         verify(webUserSecuritySetter, times(1)).setWebUser();
         verify(grantsFileUploaderMock, times(1)).getSourceFileIfExists();
@@ -101,9 +113,11 @@ public class ScheduledEuGrantFileImporterTest {
         when(grantsFileUploaderMock.getSourceFileIfExists()).thenReturn(serviceSuccess(sourceFile));
         when(grantsFileExtractorMock.processFile(sourceFile)).thenReturn(serviceFailure(internalServerErrorError()));
 
-        ServiceResult<File> result = importer.importEuGrantsFile();
+        importer.importEuGrantsFile();
 
-        assertThatServiceFailureIs(result, internalServerErrorError());
+        verify(grantsImportResultHandlerMock).recordResult(createLambdaMatcher(result -> {
+            assertThatServiceFailureIs(result, internalServerErrorError());
+        }));
 
         verify(webUserSecuritySetter, times(1)).setWebUser();
         verify(grantsFileUploaderMock, times(1)).getSourceFileIfExists();
@@ -111,5 +125,23 @@ public class ScheduledEuGrantFileImporterTest {
         verify(grantSaverMock, never()).saveGrant(any());
         verify(resultsFileGeneratorMock, never()).generateResultsFile(any(), any());
         verify(webUserSecuritySetter, times(1)).clearWebUser();
+    }
+
+    @Test
+    public void importEuGrantsFileNoFileToProcess() throws IOException {
+
+        when(grantsFileUploaderMock.getSourceFileIfExists()).thenReturn(
+                serviceFailure(notFoundError(File.class, "/tmp/some/path.csv")));
+
+        importer.importEuGrantsFile();
+
+        verify(grantsFileUploaderMock, times(1)).getSourceFileIfExists();
+
+        verify(grantsImportResultHandlerMock, never()).recordResult(any());
+        verify(webUserSecuritySetter, never()).setWebUser();
+        verify(grantsFileExtractorMock, never()).processFile(any());
+        verify(grantSaverMock, never()).saveGrant(any());
+        verify(resultsFileGeneratorMock, never()).generateResultsFile(any(), any());
+        verify(webUserSecuritySetter, never()).clearWebUser();
     }
 }

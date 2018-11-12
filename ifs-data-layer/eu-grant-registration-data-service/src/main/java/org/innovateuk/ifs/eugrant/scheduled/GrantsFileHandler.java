@@ -31,7 +31,6 @@ public class GrantsFileHandler {
 
     private URI sourceFileUrl;
 
-    @Autowired
     GrantsFileHandler(@Value("${ifs.eu.data.service.grant.importer.file.uri}") String sourceFileUri)
             throws URISyntaxException {
 
