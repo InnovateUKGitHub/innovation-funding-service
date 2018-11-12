@@ -2,11 +2,8 @@ package org.innovateuk.ifs.eugrant.scheduled;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -28,15 +25,21 @@ import static org.innovateuk.ifs.eugrant.scheduled.ScheduledEuGrantFileImporter.
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
- * TODO DW - document this class
+ * A component to create a results file based upon a source EU Grant csv.
+ *
+ * The output results file will contain the contents of the original source file with
+ * the addition of 2 extra columns - a "Short code" column for recording the Short codes
+ * of the successfully imported rows, and an "Import failure reason" column for
+ * recording any import failure reasons for rows that failed to import.
  */
 @Component
 public class GrantResultsFileGenerator {
 
-    private static final Log LOG = LogFactory.getLog(GrantResultsFileGenerator.class);
-
     private static final DateTimeFormatter RESULTS_FILE_SUFFIX_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd_hh-mm-ss");
+
+    private static final List<String> ADDITIONAL_COLUMN_HEADERS = asList("Short code", "Import failure reason");
+
 
     private URI resultsFileUri;
 
@@ -61,7 +64,7 @@ public class GrantResultsFileGenerator {
 
     private ServiceResult<List<List<String>>> addImportResultsToOriginalData(List<List<String>> originalData, List<ServiceResult<EuGrantResource>> importResults) {
 
-        List<String> newHeaders = combineLists(originalData.get(0), "Short code", "Import failure reason");
+        List<String> newHeaders = combineLists(originalData.get(0), ADDITIONAL_COLUMN_HEADERS);
 
         List<List<String>> originalDataMinusHeaders = originalData.subList(1, originalData.size());
 

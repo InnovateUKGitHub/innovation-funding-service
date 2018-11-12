@@ -11,9 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.service.ServiceFailureTestHelper.assertThatServiceFailureIs;
 
-/**
- * TODO DW - document this class
- */
 public class GrantsFileHandlerTest {
 
     @Test

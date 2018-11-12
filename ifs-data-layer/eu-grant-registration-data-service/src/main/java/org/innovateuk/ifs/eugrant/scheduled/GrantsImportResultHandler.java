@@ -14,7 +14,11 @@ import java.util.List;
 import static org.innovateuk.ifs.util.CollectionFunctions.simplePartition;
 
 /**
- * TODO DW - document this class
+ * A component to record the success or failure of an import run.
+ *
+ * This is useful to have for testing purposes as well as logging purposes as the Spring documentation
+ * discourages the use of non-void returns in @Scheduled methods, and so we are able to verify the results of
+ * {@link ScheduledEuGrantFileImporter#importEuGrantsFile()} by using this component during tests.
  */
 @Component
 public class GrantsImportResultHandler {
@@ -23,10 +27,6 @@ public class GrantsImportResultHandler {
 
     void recordResult(ServiceResult<Pair<File, List<ServiceResult<EuGrantResource>>>> result) {
         result.handleSuccessOrFailureNoReturn(this::logFailure, this::logSuccess);
-    }
-
-    private void logFailure(ServiceFailure failure) {
-        LOG.error("Unable to complete grant file import.  Failure is: " + failure);
     }
 
     private void logSuccess(Pair<File, List<ServiceResult<EuGrantResource>>> success) {
@@ -54,5 +54,9 @@ public class GrantsImportResultHandler {
         }
 
         LOG.info("Results file can be found at " + resultsFile.getPath());
+    }
+
+    private void logFailure(ServiceFailure failure) {
+        LOG.error("Unable to complete grant file import.  Failure is: " + failure);
     }
 }

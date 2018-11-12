@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.eugrant.scheduled;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,12 +19,10 @@ import static org.innovateuk.ifs.eugrant.scheduled.ScheduledEuGrantFileImporter.
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
- * TODO DW - document this class
+ * A component to handle the location and the deletion of EU Grant csv files.
  */
 @Component
 public class GrantsFileHandler {
-
-    private static final Log LOG = LogFactory.getLog(GrantsFileHandler.class);
 
     private URI sourceFileUrl;
 

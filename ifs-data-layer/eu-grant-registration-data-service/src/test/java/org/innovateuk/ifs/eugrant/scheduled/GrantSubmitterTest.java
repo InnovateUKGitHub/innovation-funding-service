@@ -19,20 +19,17 @@ import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGra
 import static org.innovateuk.ifs.service.ServiceFailureTestHelper.assertThatServiceFailureIs;
 import static org.mockito.Mockito.*;
 
-/**
- * TODO DW - document this class
- */
 @RunWith(MockitoJUnitRunner.class)
-public class GrantResourceSaverTest {
+public class GrantSubmitterTest {
 
     @InjectMocks
-    private GrantResourceSaver grantSaver;
+    private GrantSubmitter grantSubmitter;
 
     @Mock
     private EuGrantService euGrantServiceMock;
 
     @Test
-    public void saveGrant() {
+    public void createAndSubmitGrant() {
 
         EuGrantResource grantToSave = newEuGrantResource().build();
         EuGrantResource savedGrant = newEuGrantResource().withId(UUID.randomUUID()).build();
@@ -42,7 +39,7 @@ public class GrantResourceSaverTest {
         when(euGrantServiceMock.update(savedGrant.getId(), grantToSave)).thenReturn(serviceSuccess());
         when(euGrantServiceMock.submit(savedGrant.getId(), false)).thenReturn(serviceSuccess(submittedGrant));
 
-        ServiceResult<EuGrantResource> saveResult = grantSaver.saveGrant(grantToSave);
+        ServiceResult<EuGrantResource> saveResult = grantSubmitter.createAndSubmitGrant(grantToSave);
 
         assertThat(saveResult.isSuccess()).isTrue();
         assertThat(saveResult.getSuccess()).isEqualTo((submittedGrant));
@@ -53,7 +50,7 @@ public class GrantResourceSaverTest {
     }
 
     @Test
-    public void saveGrantFailureHandling() {
+    public void createAndSubmitGrantFailureHandling() {
 
         EuGrantResource grantToSave = newEuGrantResource().build();
         EuGrantResource savedGrant = newEuGrantResource().withId(UUID.randomUUID()).build();
@@ -61,7 +58,7 @@ public class GrantResourceSaverTest {
         when(euGrantServiceMock.create()).thenReturn(serviceSuccess(savedGrant));
         when(euGrantServiceMock.update(savedGrant.getId(), grantToSave)).thenReturn(serviceFailure(internalServerErrorError()));
 
-        ServiceResult<EuGrantResource> saveResult = grantSaver.saveGrant(grantToSave);
+        ServiceResult<EuGrantResource> saveResult = grantSubmitter.createAndSubmitGrant(grantToSave);
 
         assertThatServiceFailureIs(saveResult, internalServerErrorError());
 

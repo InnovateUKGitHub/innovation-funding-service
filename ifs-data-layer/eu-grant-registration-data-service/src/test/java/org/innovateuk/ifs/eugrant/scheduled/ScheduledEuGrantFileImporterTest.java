@@ -28,9 +28,6 @@ import static org.innovateuk.ifs.service.ServiceFailureTestHelper.assertThatServ
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-/**
- * TODO DW - document this class
- */
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduledEuGrantFileImporterTest {
 
@@ -43,7 +40,7 @@ public class ScheduledEuGrantFileImporterTest {
     private GrantsRecordExtractor grantsFileExtractorMock;
 
     @Mock
-    private GrantResourceSaver grantSaverMock;
+    private GrantSubmitter grantSaverMock;
 
     @Mock
     private GrantResultsFileGenerator resultsFileGeneratorMock;
@@ -83,7 +80,7 @@ public class ScheduledEuGrantFileImporterTest {
         when(grantsFileExtractorMock.processFile(sourceFile)).thenReturn(serviceSuccess(extractionResults));
 
         EuGrantResource successfullyExtractedGrant = extractionResults.get(0).getSuccess();
-        when(grantSaverMock.saveGrant(successfullyExtractedGrant)).thenReturn(serviceSuccess(saveGrantResults));
+        when(grantSaverMock.createAndSubmitGrant(successfullyExtractedGrant)).thenReturn(serviceSuccess(saveGrantResults));
 
         List<ServiceResult<EuGrantResource>> combinedListOfSuccessesAndFailures = asList(serviceSuccess(saveGrantResults), extractionResults.get(1));
         when(resultsFileGeneratorMock.generateResultsFile(combinedListOfSuccessesAndFailures, sourceFile)).thenReturn(serviceSuccess(resultsFile));
@@ -100,7 +97,7 @@ public class ScheduledEuGrantFileImporterTest {
         verify(webUserSecuritySetter, times(1)).setWebUser();
         verify(grantsFileUploaderMock, times(1)).getSourceFileIfExists();
         verify(grantsFileExtractorMock, times(1)).processFile(sourceFile);
-        verify(grantSaverMock, times(1)).saveGrant(successfullyExtractedGrant);
+        verify(grantSaverMock, times(1)).createAndSubmitGrant(successfullyExtractedGrant);
         verify(resultsFileGeneratorMock, times(1)).generateResultsFile(combinedListOfSuccessesAndFailures, sourceFile);
         verify(webUserSecuritySetter, times(1)).clearWebUser();
     }
@@ -122,7 +119,7 @@ public class ScheduledEuGrantFileImporterTest {
         verify(webUserSecuritySetter, times(1)).setWebUser();
         verify(grantsFileUploaderMock, times(1)).getSourceFileIfExists();
         verify(grantsFileExtractorMock, times(1)).processFile(sourceFile);
-        verify(grantSaverMock, never()).saveGrant(any());
+        verify(grantSaverMock, never()).createAndSubmitGrant(any());
         verify(resultsFileGeneratorMock, never()).generateResultsFile(any(), any());
         verify(webUserSecuritySetter, times(1)).clearWebUser();
     }
@@ -140,7 +137,7 @@ public class ScheduledEuGrantFileImporterTest {
         verify(grantsImportResultHandlerMock, never()).recordResult(any());
         verify(webUserSecuritySetter, never()).setWebUser();
         verify(grantsFileExtractorMock, never()).processFile(any());
-        verify(grantSaverMock, never()).saveGrant(any());
+        verify(grantSaverMock, never()).createAndSubmitGrant(any());
         verify(resultsFileGeneratorMock, never()).generateResultsFile(any(), any());
         verify(webUserSecuritySetter, never()).clearWebUser();
     }

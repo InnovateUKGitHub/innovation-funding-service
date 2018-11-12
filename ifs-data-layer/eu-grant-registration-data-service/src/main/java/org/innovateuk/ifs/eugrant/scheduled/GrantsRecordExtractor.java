@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
- * TODO DW - document this class
+ * A component for extracting data from the EU Grant csv into a structured form.
  */
 @Component
 public class GrantsRecordExtractor {

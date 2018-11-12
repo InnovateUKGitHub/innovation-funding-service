@@ -7,18 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * TODO DW - document this class
+ * A component to create and submit an EuGrant given an EuGrantResource instance.
  */
 @Component
-public class GrantResourceSaver {
+public class GrantSubmitter {
 
     private EuGrantService grantService;
 
-    GrantResourceSaver(@Autowired EuGrantService grantService) {
+    GrantSubmitter(@Autowired EuGrantService grantService) {
         this.grantService = grantService;
     }
 
-    ServiceResult<EuGrantResource> saveGrant(EuGrantResource grantResource) {
+    ServiceResult<EuGrantResource> createAndSubmitGrant(EuGrantResource grantResource) {
 
         return grantService.create().andOnSuccessDo(
                newGrant -> grantResource.setId(newGrant.getId())).andOnSuccess(() ->

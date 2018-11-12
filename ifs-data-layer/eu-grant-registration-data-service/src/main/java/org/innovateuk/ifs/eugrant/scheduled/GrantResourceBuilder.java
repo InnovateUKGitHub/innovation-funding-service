@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
- * TODO DW - document this class
+ * A component to create an EuGrantResource given a row of data from the EU Grant csv
  */
 @Component
 public class GrantResourceBuilder {

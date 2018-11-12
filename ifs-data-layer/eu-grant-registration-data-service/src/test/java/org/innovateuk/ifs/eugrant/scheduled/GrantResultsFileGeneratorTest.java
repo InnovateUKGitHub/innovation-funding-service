@@ -21,9 +21,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-/**
- * TODO DW - document this class
- */
 public class GrantResultsFileGeneratorTest {
 
     @Test

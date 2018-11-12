@@ -29,9 +29,6 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-/**
- * TODO DW - document this class
- */
 @RunWith(MockitoJUnitRunner.class)
 public class GrantsRecordExtractorTest {
 

@@ -26,9 +26,6 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * TODO DW - document this class
- */
 @RunWith(MockitoJUnitRunner.class)
 public class GrantResourceBuilderTest {
 

@@ -27,8 +27,11 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
- * A scheduled job to look for a csv file containing multiple rows of EU Grant project information and import them
- * into the EU Grant Registration database.
+ * A scheduled job that looks for an EU Grant csv file containing rows of EU Grant project information, and imports
+ * them into the EU Grant Registration database.
+ *
+ * It will produce a report file with the results of the import, recording successfully imported Grants' Short Codes
+ * and import failure reasons if and when they should occur.
  */
 @Component
 public class ScheduledEuGrantFileImporter {
@@ -37,21 +40,21 @@ public class ScheduledEuGrantFileImporter {
 
     private GrantsFileHandler grantsFileHandler;
     private GrantsRecordExtractor grantsRecordsExtractor;
-    private GrantResourceSaver grantResourceSaver;
+    private GrantSubmitter grantSubmitter;
     private GrantResultsFileGenerator resultsFileGenerator;
     private GrantsImportResultHandler grantsImportResultHandler;
     private WebUserSecuritySetter webUserSecuritySetter;
 
     ScheduledEuGrantFileImporter(@Autowired GrantsFileHandler grantsFileHandler,
                                  @Autowired GrantsRecordExtractor grantsRecordsExtractor,
-                                 @Autowired GrantResourceSaver grantResourceSaver,
+                                 @Autowired GrantSubmitter grantSubmitter,
                                  @Autowired GrantResultsFileGenerator resultsFileGenerator,
                                  @Autowired GrantsImportResultHandler grantsImportResultHandler,
                                  @Autowired WebUserSecuritySetter webUserSecuritySetter) {
 
         this.grantsFileHandler = grantsFileHandler;
         this.grantsRecordsExtractor = grantsRecordsExtractor;
-        this.grantResourceSaver = grantResourceSaver;
+        this.grantSubmitter = grantSubmitter;
         this.resultsFileGenerator = resultsFileGenerator;
         this.grantsImportResultHandler = grantsImportResultHandler;
         this.webUserSecuritySetter = webUserSecuritySetter;
@@ -89,7 +92,7 @@ public class ScheduledEuGrantFileImporter {
     private ServiceResult<List<ServiceResult<EuGrantResource>>> saveSuccessfullyExtractedGrants(List<ServiceResult<EuGrantResource>> grantsExtractResults) {
 
         List<ServiceResult<EuGrantResource>> creationResults = simpleMap(grantsExtractResults, extractResult ->
-                extractResult.andOnSuccess(grantResourceSaver::saveGrant));
+                extractResult.andOnSuccess(grantSubmitter::createAndSubmitGrant));
 
         return serviceSuccess(creationResults);
     }
