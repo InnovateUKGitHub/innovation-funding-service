@@ -92,7 +92,7 @@ ${ELBOW_GREASE_PROJECT}    ${getProjectId("Elbow grease")}
 *** Test Cases ***
 Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016, INFUND-4820, INFUND-7718
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    Log in as a different user        &{internal_finance_credentials}
     Given the user navigates to the page         ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element         css = table.table-progress
@@ -109,23 +109,24 @@ Validation on duration of Project
     And the user should see an error                    This field cannot be left blank.
     When the user clicks the button/link                jQuery = button:contains("Save and return to finances")
     Then the user should see a field and summary error  This field cannot be left blank.
-
+    [Teardown]  the user clicks the button/link         link = Projects in setup
 
 Project Finance can edit the duration of the Project
     [Documentation]  IFS-2313
-    [Tags]
+    [Tags]  HappyPath
+    [Setup]  the user clicks the button/link       link = Edit
     Given the user enters text to a text field     id = durationInMonths  4
     And the user clicks the button/link            jQuery = button:contains("Save and return to finances")
     Then the user should see the element           jQuery = dd:contains("4 months")
 
 Project finance user cannot view viability section if this is not applicable for the org in question
     [Documentation]    INFUND-9517
-    [Tags]
+    [Tags]  HappyPath
     When the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationEggsId}/viability    ${404_error_message}
 
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page                     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then The user should see the element                     jQuery = .table-progress th:contains("Viability")
     And The user should see the element                      jQuery = .table-progress th:contains("Queries raised")
@@ -136,7 +137,7 @@ Status of the Eligibility column (workaround for private beta competition)
 # Leaving this query test here as it has to be done before finance contacts and bank details are filled in
 Query section is disabled before finance contacts have been selected
     [Documentation]    IFS-236
-    [Tags]
+    [Tags]  HappyPath
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationEggsId}/eligibility
     And the user clicks the button/link     jQuery = .button-secondary:contains("Queries")
     Then the user should see the element    jQuery = .govuk-button:contains("Post a new query")[disabled]
@@ -147,7 +148,7 @@ Query section is disabled before finance contacts have been selected
 
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
-    [Tags]
+    [Tags]  HappyPath
     # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
     Given the user navigates to the page             ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link             css = a.eligibility-1
@@ -156,7 +157,6 @@ Project Finance user can view academic Jes form
     Then the user should not see an error in the page
     And the user closes the last opened tab
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-
 
 Project finance can see the within limit research participation level
     [Documentation]    INFUND-7580
@@ -191,7 +191,8 @@ Proj finance can see the maximum research participation level
 
 Timestamp approval verification for viability and eligibility
     [Documentation]    INFUND-654
-    [Tags]
+    [Tags]  HappyPath
+    [Setup]  the user navigates to the page                  ${server}/project-setup-management/project/${ELBOW_GREASE_PROJECT}/finance-check
     Given the user clicks the button/link                    css = table.table-progress a.viability-0
     And the user selects the checkbox                        project-viable
     And the user selects the option from the drop-down menu  Green  id = rag-rating
@@ -210,7 +211,7 @@ Timestamp approval verification for viability and eligibility
 
 External users can view finance checks status on dashboard
     [Documentation]    INFUND-4843, INFUND-8787
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Given log in as a different user                &{lead_applicant_credentials}  #Non finance contact
     Then check finance checks status on dashboard   waiting  Awaiting review
@@ -223,8 +224,8 @@ External users can view finance checks status on dashboard
 
 Project finance user can view finance overview for the consortium
     [Documentation]    INFUND-4846
-    [Tags]
-    log in as a different user              &{internal_finance_credentials}
+    [Tags]  HappyPath
+    [Setup]  log in as a different user              &{internal_finance_credentials}
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    link = View finances
     Then the user should see the element    jQuery = h1:contains("Finance overview")
@@ -233,11 +234,11 @@ Project finance user can view finance overview for the consortium
 
 Project finance user can view finances summary for the consortium
     [Documentation]    INFUND-4846
-    [Tags]
+    [Tags]  HappyPath
     Given the user should see the element                          jQuery = h3:contains("Finances summary")
     #Check finances summary for lead partner
     Then the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the Categories Are Verified For Finances Summary Section    1    200,903    30%    60,271    2,468    138,164
     #Check finances summary for academic user
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
@@ -251,7 +252,7 @@ Project finance user can view finances summary for the consortium
 
 Project finance can see finance breakdown for different categories
     [Documentation]    INFUND-4846
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page                      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link                      link = View finances
     #Check finances summary for lead partner
@@ -269,12 +270,12 @@ Project finance can see finance breakdown for different categories
 
 IFS Admin user can review Lead partner's finance changes page before the revisions made
     [Documentation]    INFUND-4837, IFS-603
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user                &{ifs_admin_user_credentials}
     Given the user navigates to the page               ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link               css = a.eligibility-0
     And the user clicks the button/link                link = Review all changes to project finances
-    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     Then the categories are verified for Project finances section    1    £200,903    30%    60,271    2,468    138,164
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
     And the categories are verified for Section changes    1   0     0      0    0      0       0        0
@@ -284,11 +285,11 @@ IFS Admin user can review Lead partner's finance changes page before the revisio
 
 IFS Admin user can review partner's finances before the revisions made
     [Documentation]    INFUND-4837, IFS-603
-    [Tags]
+    [Tags]  HappyPath
     Given the user clicks the button/link              link = Finance checks
     When the user clicks the button/link               css = a.eligibility-2
     Then the user clicks the button/link               link = Review all changes to project finances
-    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the categories are verified for Project finances section   1   £200,903   30%     60,271    2,468     138,164
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
     And the categories are verified for Section changes    1   0     0      0    0      0       0        0
@@ -333,7 +334,7 @@ Viability checks are populated in the table
 
 IFS Admin user can see the viability check page for the lead partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
@@ -354,14 +355,14 @@ Project finance user can see the lead partner's information
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
-    [Tags]
+    [Tags]  HappyPath
     When the user selects the checkbox      project-viable
     Then the user should see the element    id = rag-rating
     And the user should see the element     jQuery = .disabled:contains("Confirm viability")
 
 RAG choices update on the finance checks page
     [Documentation]    INFUND-4822, INFUND-4856
-    [Tags]
+    [Tags]  HappyPath
     When the rag rating updates on the finance check page for lead for viability   Green
     And the rag rating updates on the finance check page for lead for viability    Amber
     And the rag rating updates on the finance check page for lead for viability    Red
@@ -666,7 +667,7 @@ Project finance user can see the partner's zero funding request
     [Tags]
     When the user navigates to the page                ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationLudlowId}/eligibility
     Then the user should see the text in the element   css = .table-overview tr:nth-child(1) td:nth-child(2)    £200,903    # Total costs
-    And the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
+    And the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(3)     0%          # Funding level (%)
     And the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(4)     0           # Funding sought
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationLudlowId}/eligibility
 
@@ -842,7 +843,7 @@ Project finance user can view updated finances summary for the consortium
     Given the user should see the element   jQuery = h3:contains("Finances summary")
     #check summary for lead partner
     Then the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the Categories Are Verified For Finances Summary Section   1   £177,784   30%     53,335    2,468     121,981
     #check breakdown for academic user
     When the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
@@ -860,7 +861,7 @@ Project finance user can view Lead Partner's changes to finances
     Given the user clicks the button/link      link = Finance checks
     When the user clicks the button/link       css = a.eligibility-0
     And the user clicks the button/link        link = View changes to finances
-    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     Then the categories are verified for Project finances section   1   £177,784   30%     53,335    2,468     121,981
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
     And the categories are verified for Section changes    1   56,349     1,954      -20,200    4,498      -79,400       4,030        9,650
@@ -1107,7 +1108,7 @@ Non Lead-Partner can view only the external version of finance checks eligibilit
 
 Project finance user adds, modifies and removes labour rows
     [Documentation]    IFS-1904
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Log in as a different user            &{internal_finance_credentials}
     Given the user navigates to the page           ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/finance-check/organisation/${PS_GOL_APPLICATION_LEAD_ORGANISATION_ID}/eligibility
     When the user expands the section              Labour
@@ -1372,7 +1373,7 @@ all the categories are verified
     the user should see the text in the element     jQuery = h3:contains("Project cost breakdown") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)  ${travel}
     the user should see the text in the element     jQuery = h3:contains("Project cost breakdown") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(8)  ${other_costs}
 
-# the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+# the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
 the categories are verified for Project finances section
     [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
     the user should see the text in the element     jQuery = h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${total_costs}

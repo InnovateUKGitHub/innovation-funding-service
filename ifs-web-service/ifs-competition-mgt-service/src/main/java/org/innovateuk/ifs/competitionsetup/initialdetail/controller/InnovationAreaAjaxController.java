@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.initialdetail.controller;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competitionsetup.core.util.CompetitionSpecialSectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,13 @@ public class InnovationAreaAjaxController {
     private CategoryRestService categoryRestService;
 
     /* AJAX Function */
-    @GetMapping("/getInnovationArea/{innovationSectorId}")
+    @ZeroDowntime(reference = "IFS-4701", description = "remove /getInnovationArea/{innovationSectorId")
+    @GetMapping({"/getInnovationArea/{innovationSectorId}", "/get-innovation-areas/{innovationSectorId}"})
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
 
         if (CompetitionSpecialSectors.isOpenSector().test(innovationSectorId)) {
-            List<InnovationAreaResource> returningList = categoryRestService.getInnovationAreas().getSuccess();
+            List<InnovationAreaResource> returningList = categoryRestService.getInnovationAreasExcludingNone().getSuccess();
             returningList.add(0, createAllInnovationArea());
 
             return returningList;

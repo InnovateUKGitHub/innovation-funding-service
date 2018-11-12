@@ -7,7 +7,7 @@ Suite Teardown    Close browser and delete emails
 *** Test Cases ***
 Project dashboard shows message that the project is live
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     Given log in as a different user                 ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     When the user navigates to the page              ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the text in the page    The project is live, you can review progress at
@@ -17,7 +17,7 @@ Project dashboard shows message that the project is live
 
 Status indicators should not show
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     When the user should not see the element    link = status of my partners
     And the user should not see the element     css.complete
     And the user should not see the element     css = .action
@@ -25,7 +25,7 @@ Status indicators should not show
 
 Project details section is read-only
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link        link = Project details
     Then the user should not see the element    link = Target start date
     And the user should not see the element     link = Project address
@@ -35,7 +35,7 @@ Project details section is read-only
 
 Bank details section is read-only
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link        link = Bank details
     Then the user should not see the element    name = accountNumber
     And the user should not see the element     name = sortCode
@@ -44,7 +44,7 @@ Bank details section is read-only
 
 Spend profile section is read-only
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link        link = Spend profile
     And the user clicks the button/link         link = ${Cogilith_Name}
     Then the user should not see the element    jQuery = .govuk-button:contains("Edit spend profile")
@@ -61,7 +61,7 @@ Spend profile section is read-only
 
 Other documents section is read-only
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link       link = Other documents
     Then the user should not see the text in the page    Remove
     And the user should not see the element    name = removeCollaborationAgreementClicked
@@ -70,10 +70,9 @@ Other documents section is read-only
     And the use can see the mandatory documents
     [Teardown]    the user goes back to the previous page
 
-
 Grant offer letter section is read-only
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link        link = Grant offer letter
     Then the user should not see the element    jQuery = .govuk-button:contains("Send signed offer letter")
     And the user should not see the text in the page    Remove
@@ -81,14 +80,13 @@ Grant offer letter section is read-only
 
 Project dashboard shows message that the project is live for industrial partner
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     Given log in as a different user                 ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     When the user navigates to the page              ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the text in the page    The project is live, you can review progress at
     When log in as a different user                  ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     And the user navigates to the page               ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the text in the page    The project is live, you can review progress at
-
 
 Status indicators should not show for industrial partner
     [Documentation]    INFUND-6376
@@ -110,7 +108,7 @@ Project details section is read-only for industrial partner
 
 Bank details section is read-only for industrial partner
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link        link = Bank details
     Then the user should not see the element    name = accountNumber
     And the user should not see the element     name = sortCode
@@ -119,7 +117,7 @@ Bank details section is read-only for industrial partner
 
 Spend profile section is read-only for industrial partner
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link        link = Spend profile
     And the user clicks the button/link         link = ${Cogilith_Name}
     Then the user should not see the element    jQuery = .govuk-button:contains("Edit spend profile")
@@ -136,14 +134,13 @@ Spend profile section is read-only for industrial partner
 
 Other documents section is read-only for industrial partner
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link       link = Other documents
     Then the user should not see the text in the page    Remove
     And the user should not see the element    name = removeCollaborationAgreementClicked
     And the user should not see the element    name = removeExploitationPlanClicked
     And the user should not see the element    jQuery = .govuk-button:contains("Submit documents")
     [Teardown]    the user goes back to the previous page
-
 
 Grant offer letter section is read-only for industrial partner
     [Documentation]    INFUND-6376
@@ -153,17 +150,15 @@ Grant offer letter section is read-only for industrial partner
     And the user should not see the text in the page    Remove
     And the user should not see the element     name = signedGrantOfferLetter
 
-
 Project dashboard shows message that the project is live for academic partner
     [Documentation]    INFUND-6376
-    [Tags]
+    [Tags]  HappyPath
     Given log in as a different user                 ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
     When the user navigates to the page              ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the text in the page    The project is live, you can review progress at
     When log in as a different user                  ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     And the user navigates to the page               ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the text in the page    The project is live, you can review progress at
-
 
 Status indicators should not show for academic partner
     [Documentation]    INFUND-6376
@@ -219,7 +214,6 @@ Other documents section is read-only for academic partner
     And the user should not see the element    jQuery = .govuk-button:contains("Submit documents")
     And the use can see the mandatory documents
     [Teardown]    the user goes back to the previous page
-
 
 Grant offer letter section is read-only for academic partner
     [Documentation]    INFUND-6376

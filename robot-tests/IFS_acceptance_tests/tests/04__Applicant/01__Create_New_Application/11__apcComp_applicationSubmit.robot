@@ -56,7 +56,6 @@ Applicant submits his application
     Given the user clicks the button/link               link = Application details
     When the user fills in the Application details      ${apcApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(APC)
-    And the user selects Research category              Feasibility studies
     When the user navigates to Your-finances page       ${apcApplicationTitle}
     And the user marks the finances as complete         ${apcApplicationTitle}   labour costs  54,000  yes
     Then the applicant submits the application

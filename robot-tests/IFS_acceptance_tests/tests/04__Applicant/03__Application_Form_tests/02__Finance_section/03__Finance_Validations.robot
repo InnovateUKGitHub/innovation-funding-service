@@ -24,22 +24,22 @@ Other funding client side
     [Documentation]    INFUND-2214
     [Tags]
     When the user selects the radio button   otherFunding  true
-    And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  e   #TODO Raise ticket?
+    And the user enters invalid inputs in the other funding fields  ${EMPTY}  132020  -6565
     Then the user should see the element     css = #other-funding-table[aria-hidden="false"]
     # This line should be after css = label[for$="otherPublicFunding-yes"], but it requires a bit more time to be loaded, thus is put here.
     When the user should see a field error   Enter a funding source.
     Then the user should see a field error   Enter date secured.
-    And the user should see a field error    This field can only accept whole numbers.
+    And the user should see a field error    This field should be 1 or higher.
 
 Other funding server side
     [Documentation]    INFUND-2214
     [Tags]
-    When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    e
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
     And the user selects the checkbox                    agree-terms-page
     And the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   Enter a funding source.
     And the user should see a field and summary error    Enter date secured.
-    And the user should see a field and summary error    Enter funding amount.
+    And the user should see a field and summary error    This field should be 1 or higher.
 
 Select NO Other Funding and mark as complete should be possible
     [Documentation]    INFUND-2214
@@ -99,7 +99,7 @@ Overhead cost server side
     [Documentation]    INFUND-844
     Given the user selects the checkbox        agree-terms-page
     When the user clicks the button/link       jQuery = button:contains("Mark as complete")
-    Then the user should see a summary error   You should upload a completed overheads spreadsheet.
+    Then The user should see a field and summary error   You should upload a completed overheads spreadsheet.
 
 Materials client side
     [Documentation]    INFUND-844
@@ -107,7 +107,7 @@ Materials client side
     Given the user clicks the button/link       jQuery = button:contains("Materials")
     When the user enters text to a text field   css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1234567810111213141516171819202122
     And the user enters text to a text field    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
-    the user moves focus to the element         css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input
+    And the user moves focus to the element     css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input
     Then the user should see a field error      You must enter a value less than 10 digits.
     And the user should see a field error       This field should be 1 or higher.
 

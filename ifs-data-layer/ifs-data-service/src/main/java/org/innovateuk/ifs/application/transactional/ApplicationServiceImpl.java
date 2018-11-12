@@ -28,6 +28,8 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunctions.verifyApplicationIsOpen;
@@ -110,18 +112,18 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                                      ApplicationResource application) {
         return find(() -> getApplication(id)).andOnSuccess(
                 foundApplication -> verifyApplicationIsOpen(foundApplication).andOnSuccessReturn(
-                    openApplication -> {
-                        openApplication.setName(application.getName());
-                        openApplication.setDurationInMonths(application.getDurationInMonths());
-                        openApplication.setStartDate(application.getStartDate());
-                        openApplication.setStateAidAgreed(application.getStateAidAgreed());
-                        openApplication.setResubmission(application.getResubmission());
-                        openApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
-                        openApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
+                        openApplication -> {
+                            openApplication.setName(application.getName());
+                            openApplication.setDurationInMonths(application.getDurationInMonths());
+                            openApplication.setStartDate(application.getStartDate());
+                            openApplication.setStateAidAgreed(application.getStateAidAgreed());
+                            openApplication.setResubmission(application.getResubmission());
+                            openApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
+                            openApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
 
-                        Application savedApplication = applicationRepository.save(openApplication);
-                        return applicationMapper.mapToResource(savedApplication);
-                    }));
+                            Application savedApplication = applicationRepository.save(openApplication);
+                            return applicationMapper.mapToResource(savedApplication);
+                        }));
     }
 
     @Override
@@ -235,10 +237,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable) {
-
-        Page<Application> pagedResult = applicationRepository.searchByIdLike(searchString, pageable);
-        List<ApplicationResource> applicationResource = simpleMap(pagedResult.getContent(), application -> applicationMapper.mapToResource(application));
-        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+            if (user.hasRole(INNOVATION_LEAD)) {
+                return handleApplicationSearchResultPage(applicationRepository.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), searchString, pageable));
+            } else if (user.hasRole(STAKEHOLDER)) {
+                return handleApplicationSearchResultPage(applicationRepository.searchApplicationsByUserIdAndStakeholderRole(user.getId(), searchString, pageable));
+            } else {
+                return handleApplicationSearchResultPage(applicationRepository.searchByIdLike(searchString, pageable));
+            }
+        });
     }
 
     @Override
@@ -291,6 +298,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<PreviousApplicationResource> previousApplications = simpleMap(pagedResult.getContent(), this::convertToPreviousApplicationResource);
 
         return serviceSuccess(new PreviousApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), previousApplications, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    private ServiceResult<ApplicationPageResource> handleApplicationSearchResultPage(Page<Application> pagedResult) {
+        List<ApplicationResource> applicationResource = simpleMap(pagedResult.getContent(), application -> applicationMapper.mapToResource(application));
+        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     private Collection<ApplicationState> getApplicationStatesFromFilter(String filter) {
