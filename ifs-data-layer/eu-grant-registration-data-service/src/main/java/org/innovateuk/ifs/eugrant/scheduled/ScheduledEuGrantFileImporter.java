@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
+import org.innovateuk.ifs.security.WebUserSecuritySetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,18 +38,21 @@ public class ScheduledEuGrantFileImporter {
     private GrantsRecordExtractor grantsRecordsExtractor;
     private GrantResourceSaver grantResourceSaver;
     private GrantResultsFileGenerator resultsFileGenerator;
+    private WebUserSecuritySetter webUserSecuritySetter;
 
 
     @Autowired
     ScheduledEuGrantFileImporter(@Autowired GrantsFileHandler grantsFileHandler,
                                  @Autowired GrantsRecordExtractor grantsRecordsExtractor,
                                  @Autowired GrantResourceSaver grantResourceSaver,
-                                 @Autowired GrantResultsFileGenerator resultsFileGenerator) {
+                                 @Autowired GrantResultsFileGenerator resultsFileGenerator,
+                                 @Autowired WebUserSecuritySetter webUserSecuritySetter) {
 
         this.grantsFileHandler = grantsFileHandler;
         this.grantsRecordsExtractor = grantsRecordsExtractor;
         this.grantResourceSaver = grantResourceSaver;
         this.resultsFileGenerator = resultsFileGenerator;
+        this.webUserSecuritySetter = webUserSecuritySetter;
     }
 
     @Scheduled(cron = "${ifs.eu.data.service.grant.importer.cron.expression}")
@@ -60,15 +64,23 @@ public class ScheduledEuGrantFileImporter {
             return sourceFileCheck;
         }
 
-        ServiceResult<File> importResult = sourceFileCheck.
-                andOnSuccess(sourceFile -> grantsRecordsExtractor.processFile(sourceFile).
-                andOnSuccess(this::saveSuccessfullyExtractedGrants).
-                andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile)).
-                andOnSuccessDo(file -> grantsFileHandler.deleteSourceFile()));
 
-        return importResult.handleSuccessOrFailureNoReturn(
-                failure -> LOG.error("Unable to complete grant file import.  Failure is: " + importResult.getFailure()),
-                success -> LOG.info("Grants imported successfully!  Results file can be found at " + success.getPath()));
+        webUserSecuritySetter.setWebUser();
+
+        try {
+            ServiceResult<File> importResult = sourceFileCheck.
+                    andOnSuccess(sourceFile -> grantsRecordsExtractor.processFile(sourceFile).
+                            andOnSuccess(this::saveSuccessfullyExtractedGrants).
+                            andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile)).
+                            andOnSuccessDo(file -> grantsFileHandler.deleteSourceFile()));
+
+            return importResult.handleSuccessOrFailureNoReturn(
+                    failure -> LOG.error("Unable to complete grant file import.  Failure is: " + importResult.getFailure()),
+                    success -> LOG.info("Grants imported successfully!  Results file can be found at " + success.getPath()));
+
+        } finally {
+            webUserSecuritySetter.clearWebUser();
+        }
     }
 
     private ServiceResult<List<ServiceResult<EuGrantResource>>> saveSuccessfullyExtractedGrants(List<ServiceResult<EuGrantResource>> grantsExtractResults) {

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.eugrant.scheduled;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
+import org.innovateuk.ifs.security.WebUserSecuritySetter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +45,9 @@ public class ScheduledEuGrantFileImporterTest {
     @Mock
     private GrantResultsFileGenerator resultsFileGeneratorMock;
 
+    @Mock
+    private WebUserSecuritySetter webUserSecuritySetter;
+
     @Before
     public void setup() {
 
@@ -51,7 +55,8 @@ public class ScheduledEuGrantFileImporterTest {
                  grantsFileUploaderMock,
                  grantsFileExtractorMock,
                  grantSaverMock,
-                 resultsFileGeneratorMock);
+                 resultsFileGeneratorMock,
+                 webUserSecuritySetter);
     }
 
     @Test
@@ -80,10 +85,12 @@ public class ScheduledEuGrantFileImporterTest {
 
         assertThat(result.isSuccess()).isTrue();
 
+        verify(webUserSecuritySetter, times(1)).setWebUser();
         verify(grantsFileUploaderMock, times(1)).getSourceFileIfExists();
         verify(grantsFileExtractorMock, times(1)).processFile(sourceFile);
         verify(grantSaverMock, times(1)).saveGrant(successfullyExtractedGrant);
         verify(resultsFileGeneratorMock, times(1)).generateResultsFile(combinedListOfSuccessesAndFailures, sourceFile);
+        verify(webUserSecuritySetter, times(1)).clearWebUser();
     }
 
     @Test
@@ -98,9 +105,11 @@ public class ScheduledEuGrantFileImporterTest {
 
         assertThatServiceFailureIs(result, internalServerErrorError());
 
+        verify(webUserSecuritySetter, times(1)).setWebUser();
         verify(grantsFileUploaderMock, times(1)).getSourceFileIfExists();
         verify(grantsFileExtractorMock, times(1)).processFile(sourceFile);
         verify(grantSaverMock, never()).saveGrant(any());
         verify(resultsFileGeneratorMock, never()).generateResultsFile(any(), any());
+        verify(webUserSecuritySetter, times(1)).clearWebUser();
     }
 }
