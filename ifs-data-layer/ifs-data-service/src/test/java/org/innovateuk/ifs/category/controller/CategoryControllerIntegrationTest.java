@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 public class CategoryControllerIntegrationTest extends BaseControllerIntegrationTest<CategoryController> {
 
     private static final int EXPECTED_INNOVATION_SECTOR_TOTAL = 7;
-    private static final int EXPECTED_INNOVATION_AREA_TOTAL = 48;
+    private static final int EXPECTED_INNOVATION_AREA_TOTAL = 54;
     private static final int EXPECTED_RESEARCH_CATEGORY_TOTAL = 3;
 
     @Override

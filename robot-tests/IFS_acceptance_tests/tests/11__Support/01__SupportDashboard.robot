@@ -10,7 +10,7 @@ Documentation     IFS-188 Stakeholder views – Support team
 ...               IFS-3072 Search by either application number or competition name across each Competition management tab
 Suite Setup       The user logs-in in new browser  &{support_user_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Support  CompAdmin
+Force Tags        Support  CompAdmin  HappyPath
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
