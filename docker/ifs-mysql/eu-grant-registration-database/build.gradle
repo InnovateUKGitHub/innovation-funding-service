@@ -7,11 +7,6 @@ buildscript {
     repositories { jcenter() }
 }
 
-def enabled = project.hasProperty('ifs.eu-grant-registration-data-service.enabled') ? project.property('ifs.eu-grant-registration-data-service.enabled').toBoolean() : false
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
-    task.enabled = enabled
-}
-
 createContainer.containerName = "eu-grant-registration-database"
 createContainer.containerId = "eu-grant-registration-database"
 createContainer.env = ["MYSQL_ROOT_PASSWORD=password", "MYSQL_DATABASE=eu_grant_registration"]

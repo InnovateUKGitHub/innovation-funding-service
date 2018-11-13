@@ -7,11 +7,6 @@ buildscript {
     repositories { jcenter() }
 }
 
-def enabled = project.hasProperty('ifs.finance-data-service.enabled') ? project.property('ifs.finance-data-service.enabled').toBoolean() : false
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
-    task.enabled = enabled
-}
-
 createContainer.containerName = "ifs-finance-database"
 createContainer.containerId = "ifs-finance-database"
 createContainer.env = ["MYSQL_ROOT_PASSWORD=password", "MYSQL_DATABASE=ifs_finance"]

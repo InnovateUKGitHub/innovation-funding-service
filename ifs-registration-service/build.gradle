@@ -71,8 +71,7 @@ createContainer.containerId="registration-svc"
 createContainer.env = [ "SHIBBOLETH_API_KEYS=${shibbolethApiKey}" ]
 
 
-def enabled = (project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false) &&
-        (project.hasProperty('ifs.registration-service.enabled') ? project.property('ifs.registration-service.enabled').toBoolean() : true)
+def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
