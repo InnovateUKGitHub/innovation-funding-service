@@ -63,7 +63,7 @@ Display errors for invalid inputs of the First name
     Given the user navigates to the page                  ${EDIT_PROFILE_URL}
     And browser validations have been disabled
     When the user fills in the first name                 ${EMPTY}
-    Then the user should see a field error                Please enter a first name.
+    Then the user should see a field error                ${enter_a_first_name}
     And browser validations have been disabled
     And browser validations have been disabled
     And the user fills in the first name                  testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
@@ -79,7 +79,7 @@ Display errors for invalid inputs of the Last name
     Given the user navigates to the page                  ${EDIT_PROFILE_URL}
     And browser validations have been disabled
     When the user fills in the last name                  ${EMPTY}
-    Then the user should see a field error                Please enter a last name.
+    Then the user should see a field error                ${enter_a_last_name}
     And browser validations have been disabled
     And browser validations have been disabled
     And the user fills in the last name                   testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
@@ -95,14 +95,14 @@ Display errors for invalid inputs of the Phone field
     Given the user navigates to the page                   ${EDIT_PROFILE_URL}
     And browser validations have been disabled
     When the user fills in the Phone field                 ${EMPTY}
-    Then the user should see a field error                 Please enter a phone number.
+    Then the user should see a field error                 ${enter_a_phone_number}
     And browser validations have been disabled
     And the user fills in the Phone field                  121212121212121212121
     And the user clicks the button/link                    css = [name="create-account"]
-    And the user should see a field and summary error      Please enter a valid phone number between 8 and 20 digits.
+    And the user should see a field and summary error      ${enter_a_phone_number_between_8_and_20_digits}
     And browser validations have been disabled
     And the user fills in the Phone field                  12
-    And the user should see a field error                  Please enter a valid phone number between 8 and 20 digits.
+    And the user should see a field error                  ${enter_a_phone_number_between_8_and_20_digits}
 
 *** Keywords ***
 the user enters profile details

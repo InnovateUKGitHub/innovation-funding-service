@@ -49,11 +49,11 @@ Create assessor account: server-side validations
     [Tags]
     Given the user clicks the button/link                   jQuery = .govuk-button:contains("Create account")
     When the user clicks the button/link                    jQuery = button:contains("Continue")
-    Then the user should see a field and summary error      Please enter a first name.
-    And the user should see a field and summary error       Please enter a last name.
-    And the user should see a field and summary error       Please enter a phone number.
+    Then the user should see a field and summary error      ${enter_a_first_name}
+    And the user should see a field and summary error       ${enter_a_last_name}
+    And the user should see a field and summary error       ${enter_a_phone_number}
     And the user should see a field and summary error       Please enter your password.
-    And the user should see a field and summary error       Please enter a valid phone number between 8 and 20 digits.
+    And the user should see a field and summary error       ${enter_a_phone_number_between_8_and_20_digits}
     And the user should see a field and summary error       Your last name should have at least 2 characters.
     And the user should see a field and summary error       Your first name should have at least 2 characters.
     And the user should see a field and summary error       Password must be at least 8 characters.
@@ -62,12 +62,12 @@ Create assessor account: client-side validations
     [Documentation]    INFUND-1478
     [Tags]
     When The user enters text to a text field                                      id = firstName    Thomas
-    Then the user should not see the validation error in the create assessor form  Please enter a first name.
+    Then the user should not see the validation error in the create assessor form  ${enter_a_first_name}
     When The user enters text to a text field                                      id = lastName    Fister
-    Then the user should not see the validation error in the create assessor form  Please enter a last name.
+    Then the user should not see the validation error in the create assessor form  ${enter_a_last_name}
     When the user enters text to a text field                                      id = phoneNumber    123123123123
-    Then the user should not see the validation error in the create assessor form  Please enter a phone number.
-    And the user should not see the validation error in the create assessor form   Please enter a valid phone number between 8 and 20 digits.
+    Then the user should not see the validation error in the create assessor form  ${enter_a_phone_number}
+    And the user should not see the validation error in the create assessor form   ${enter_a_phone_number_between_8_and_20_digits}
     When The user enters text to a text field                                      id = password    ${correct_password}
     Then the user should not see the validation error in the create assessor form  Please enter your password.
     And the user should not see the validation error in the create assessor form   Password must be at least 8 characters.
@@ -155,7 +155,7 @@ The internal user invites the applicant to assess another competition
 *** Keywords ***
 the assessor fills in all fields
     Select From List By Index                     id = rejectReasonValid  3
-    The user should not see the text in the page  This field cannot be left blank
+    The user should not see the text in the page  ${empty_field_warning_message}
     The user enters text to a text field          id = rejectComment    Unable to assess this application.
 
 the user should not see the validation error in the create assessor form

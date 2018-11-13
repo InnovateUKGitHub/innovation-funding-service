@@ -91,30 +91,30 @@ MO server-side validation
     Given the user navigates to the page                ${Successful_Monitoring_Officer_Page}
     When the user clicks the button/link                jQuery = .govuk-button:contains("Assign Monitoring Officer")
     And the user clicks the button/link                 jQuery = [role = "dialog"] .govuk-button:contains("Assign Monitoring Officer")
-    Then the user should see a field and summary error  Please enter a first name.
-    And the user should see a field and summary error   Please enter a last name.
+    Then the user should see a field and summary error  ${enter_a_first_name}
+    And the user should see a field and summary error   ${enter_a_last_name}
     And the user should see a field and summary error   Please enter an email address.
-    And the user should see a field and summary error   Please enter a phone number.
-    And the user should see a field and summary error   Please enter a valid phone number between 8 and 20 digits.
+    And the user should see a field and summary error   ${enter_a_phone_number}
+    And the user should see a field and summary error   ${enter_a_phone_number_between_8_and_20_digits}
 
 MO client-side validation
     [Documentation]    INFUND-2630
     [Tags]  HappyPath
     Given the user navigates to the page                 ${Successful_Monitoring_Officer_Page}
     When the user enters text to a text field            id = firstName    Abbey
-    Then the user should not see the validation error    Please enter a first name.
+    Then the user should not see the validation error    ${enter_a_first_name}
     When the user enters text to a text field            id = lastName    Abigail
-    Then the user should not see the validation error    Please enter a last name.
+    Then the user should not see the validation error    ${enter_a_last_name}
     When standard verification for email address follows
     When the user enters text to a text field            id = emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
-    And the user should not see the validation error     Please enter a valid email address.
+    And the user should not see the validation error     ${enter_a_valid_email}
     And the user should not see the validation error     Please enter an email address.
     When the user enters text to a text field            id = phoneNumber    0123
-    And the user should not see the validation error     Please enter a phone number.
-    And the user should not see the validation error     Please enter a valid phone number.
-    And the user should see a field error                Please enter a valid phone number between 8 and 20 digits.
+    And the user should not see the validation error     ${enter_a_phone_number}
+    And the user should not see the validation error     ${enter_a_valid_phone_number}
+    And the user should see a field error                ${enter_a_phone_number_between_8_and_20_digits}
     When the user enters text to a text field            id = phoneNumber    07438620303
-    Then the user should not see the validation error    Please enter a valid phone number between 8 and 20 digits.
+    Then the user should not see the validation error    ${enter_a_phone_number_between_8_and_20_digits}
 
 MO details can be added
     [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
@@ -227,15 +227,15 @@ Monitoring Officer cannot see projects if they are not assigned to them
 *** Keywords ***
 standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}
-    the user should see a field error       Please enter a valid email address.
+    the user should see a field error       ${enter_a_valid_email}
     the user enters text to a text field    id = emailAddress    ${invalid_email_symbols}
-    the user should see a field error       Please enter a valid email address.
+    the user should see a field error       ${enter_a_valid_email}
     the user enters text to a text field    id = emailAddress    ${invalid_email_no_username}
-    the user should see a field error       Please enter a valid email address.
+    the user should see a field error       ${enter_a_valid_email}
     the user enters text to a text field    id = emailAddress    ${invalid_email_format}
-    the user should see a field error       Please enter a valid email address.
+    the user should see a field error       ${enter_a_valid_email}
     the user enters text to a text field    id = emailAddress    ${invalid_email_no_at}
-    the user should see a field error       Please enter a valid email address.
+    the user should see a field error       ${enter_a_valid_email}
 
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}

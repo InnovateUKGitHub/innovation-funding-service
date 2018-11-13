@@ -15,7 +15,7 @@
 
 <div class="govuk-width-container">
 
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/IFS-4650-end-milestone'})" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${endSet ? '/prototypes/IFS-4650-end-milestone?selectedStage=' + param.completionStage[0] : '/prototypes/IFS-4650-end-milestone'})" />
 
     <main class="govuk-main-wrapper" id="content">
 
@@ -62,19 +62,19 @@
                         <li class="govuk-!-margin-bottom-4">11. Funders panel</li>
                         <li class="govuk-!-margin-bottom-4">12. Notifications</li>
                         <th:block th:if="${endStep == '13'}">
-                            <li class="govuk-!-margin-bottom-4"><s class="govuk-hint">13. Release feedback</s></li>
+                            <li class="govuk-!-margin-bottom-4">13. Release feedback</li>
                             <li class="govuk-!-margin-bottom-4"><s class="govuk-hint">14. Project setup</s></li>
                         </th:block>
                         <th:block th:if="${endStep == '14'}">
                             <li class="govuk-!-margin-bottom-4">13. Release feedback</li>
-                            <li class="govuk-!-margin-bottom-4"><s class="govuk-hint">14. Project setup</s></li>
+                            <li class="govuk-!-margin-bottom-4">14. Project setup</li>
                         </th:block>
                     </th:block>
 
                 </ul>
 
                 <th:block th:if="${endSet}">
-                    <a class="govuk-button" th:href="${#httpServletRequest.requestURI}">Edit</a>
+                    <a class="govuk-button" th:href="@{'?selectedStage=' + ${param.completionStage[0]}}">Edit</a>
                 </th:block>
 
 
@@ -92,7 +92,8 @@
                                         <input class="govuk-radios__input"
                                                id="radio-1" type="radio" required="required" value='13'
                                                data-required-errormessage="Select a completion stage."
-                                               name="completionStage">
+                                               name="completionStage"
+                                               th:checked="${param.selectedStage != null && param.selectedStage[0] == '13'}">
                                         <label class="govuk-label govuk-radios__label" for="radio-1">
                                             13. Release feedback
                                         </label>
@@ -101,7 +102,8 @@
                                         <input class="govuk-radios__input"
                                                id="radio-2" type="radio" required="required" value='14'
                                                data-required-errormessage="Select a completion stage."
-                                               name="completionStage">
+                                               name="completionStage"
+                                               th:checked="${param.selectedStage != null && param.selectedStage[0] == '14'}">
                                         <label class="govuk-label govuk-radios__label" for="radio-2">
                                             14. Project setup
                                         </label>

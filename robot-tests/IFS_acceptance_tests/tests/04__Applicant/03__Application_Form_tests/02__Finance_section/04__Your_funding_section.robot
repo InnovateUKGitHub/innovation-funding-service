@@ -35,7 +35,7 @@ Funding level validations
     [Tags]
     When the user provides invalid value as percentage then he should see the error  Funding level must be 50% or lower.  60
     When the user provides invalid value as percentage then he should see the error  Funding level must be above 0%.  -14
-    When the user provides invalid value as percentage then he should see the error  This field can only accept whole numbers.  15.35
+    When the user provides invalid value as percentage then he should see the error  ${only_accept_whole_numbers_message}  15.35
     #TODO add server side validation for the percentage field when double number is provided IFS-3066
     And the user selects the radio button         requestingFunding   true
     When the user enters text to a text field     css = [name^="grantClaimPercentage"]  24

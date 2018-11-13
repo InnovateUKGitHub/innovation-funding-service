@@ -52,8 +52,8 @@ Server side validation for invite new internal user
     Given the user navigates to the page                ${server}/management/admin/users/active
     And the user clicks the button/link                 link = Invite a new internal user
     And the user clicks the button/link                 jQuery = button:contains("Send invite")
-    Then The user should see a field and summary error  Please enter a first name.
-    And The user should see a field and summary error   Please enter a last name.
+    Then The user should see a field and summary error  ${enter_a_first_name}
+    And The user should see a field and summary error   ${enter_a_last_name}
     And The user should see a field and summary error   Please enter an email address.
 
 The user must use an Innovate UK email
@@ -74,14 +74,14 @@ Client side validations for invite new internal user
     [Tags]
     Given the user navigates to the page       ${server}/management/admin/invite-user
     When the user enters text to a text field  id = firstName  A
-    Then the user should not see the element   jQuery = .govuk-error-message:contains("Please enter a first name.")
+    Then the user should not see the element   jQuery = .govuk-error-message:contains("${enter_a_first_name}")
     And the user should see the element        jQuery = .govuk-error-message:contains("Your first name should have at least 2 characters.")
     When the user enters text to a text field  id = lastName  D
-    Then the user should not see the element   jQuery = .govuk-error-message:contains("Please enter a last name.")
+    Then the user should not see the element   jQuery = .govuk-error-message:contains("${enter_a_last_name}")
     And the user should see the element        jQuery = .govuk-error-message:contains("Your last name should have at least 2 characters.")
     When the user enters text to a text field  id = emailAddress  astle
     Then the user should not see the element   jQuery = .govuk-error-message:contains("Please enter an email address.")
-    And the user should see the element        jQuery = .govuk-error-message:contains("Please enter a valid email address.")
+    And the user should see the element        jQuery = .govuk-error-message:contains("${enter_a_valid_email}")
 
 Administrator can successfully invite a new user
     [Documentation]  IFS-27 IFS-983
@@ -118,8 +118,8 @@ Account creation validation checks - Blank
     [Documentation]  IFS-643
     [Tags]
     Given the user clicks the button/link   jQuery = .govuk-button:contains("Create account")
-    And the user should see a field and summary error   Please enter a first name.
-    And the user should see a field and summary error   Please enter a last name.
+    And the user should see a field and summary error   ${enter_a_first_name}
+    And the user should see a field and summary error   ${enter_a_last_name}
     And The user should see a field and summary error   Password must be at least 8 characters
     When the user enters text to a text field  css = #firstName  New
     And the user enters text to a text field   css = #lastName  Administrator
@@ -194,19 +194,19 @@ Server side validation for edit internal user details
     Given the user enters text to a text field  id = firstName  ${empty}
     And the user enters text to a text field    id = lastName  ${empty}
     When the user clicks the button/link        jQuery = button:contains("Save and return")
-    Then the user should see a field error      Please enter a first name.
+    Then the user should see a field error      ${enter_a_first_name}
     And the user should see a field error       Your first name should have at least 2 characters.
-    And the user should see a field error       Please enter a last name.
+    And the user should see a field error       ${enter_a_last_name}
     And the user should see a field error       Your last name should have at least 2 characters.
 
 Client side validations for edit internal user details
     [Documentation]  IFS-18
     [Tags]
     Given the user enters text to a text field  id = firstName  A
-    Then the user should not see the element    jQuery = .govuk-error-message:contains("Please enter a first name.")
+    Then the user should not see the element    jQuery = .govuk-error-message:contains("${enter_a_first_name}")
     And the user should see the element         jQuery = .govuk-error-message:contains("Your first name should have at least 2 characters.")
     When the user enters text to a text field   id = lastName  D
-    Then the user should not see the element    jQuery = .govuk-error-message:contains("Please enter a last name.")
+    Then the user should not see the element    jQuery = .govuk-error-message:contains("${enter_a_last_name}")
     And the user should see the element         jQuery = .govuk-error-message:contains("Your last name should have at least 2 characters.")
 
 Administrator can successfully edit internal user details

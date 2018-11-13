@@ -40,7 +40,7 @@ Validations for invalid inputs
     And the user clicks the button/link          jQuery = button:contains("Save and return to your details")
     Then the user should see a field and summary error    Invalid first name.
     And the user should see a field and summary error     Invalid last name.
-    And the user should see a field and summary error     Please enter a valid phone number between 8 and 20 digits.
+    And the user should see a field and summary error     ${enter_a_phone_number_between_8_and_20_digits}
     And the user should see a field and summary error     The first line of the address cannot be blank.
     And the user should see a field and summary error     The postcode cannot be blank.
     And the user should see a field and summary error     The town cannot be blank.

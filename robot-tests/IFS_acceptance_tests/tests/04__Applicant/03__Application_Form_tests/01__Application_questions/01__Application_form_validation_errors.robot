@@ -29,13 +29,13 @@ Day field client side
     [Tags]
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id = application_details-startdate_day    32
-    Then the user should see a field error       Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_day    0
-    Then the user should see a field error       Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_day    -1
-    Then the user should see a field error       Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_day    ${EMPTY}
-    Then the user should see a field error       Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -44,13 +44,13 @@ Month field client side
     [Tags]
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id = application_details-startdate_month    0
-    Then the user should see a field error       Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_month    13
-    Then the user should see a field error       Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_month    -1
-    Then the user should see a field error       Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_month    ${EMPTY}
-    Then the user should see a field error       Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -77,7 +77,7 @@ Duration field client side
     Then the user should see a field and summary error  Your project should last between 1 and 36 months.
 
     When the user enters text to a text field  id = application.durationInMonths  ${EMPTY}
-    Then the user should see a field error     This field cannot be left blank.
+    Then the user should see a field error     ${empty_field_warning_message}
 
     And the user enters text to a text field   id = application.durationInMonths  25
     And the applicant should not see the validation error of the duration any more
@@ -95,7 +95,7 @@ Application details server side
     And the user clicks the button/link       id = application-question-complete
     And The user should see a field and summary error   Please enter the full title of the project.
     And the user should see a field and summary error   Please enter a future date.
-    And the user should see a field and summary error   This field cannot be left blank.
+    And the user should see a field and summary error   ${empty_field_warning_message}
     And the user should see a field and summary error   Please enter the full title of the project.
     [Teardown]  the user enters text to a text field    id = application.name  ${applicationTitle}
 
