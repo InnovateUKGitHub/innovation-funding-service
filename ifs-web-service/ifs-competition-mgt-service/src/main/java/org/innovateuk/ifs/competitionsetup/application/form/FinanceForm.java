@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @FieldRequiredIf(required = "includeGrowthTable", argument = "financesRequired", predicate = true, message = "{competition.setup.finances.includeGrowthTable.required}")
 @FieldRequiredIf(required = "fundingRules", argument = "financesRequired", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "includeJesForm", argument = "financesRequired", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "includeJesForm", argument = "financesRequired", predicate = true, message = "{competition.setup.finances.includeJesForm.required}")
 public class FinanceForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
