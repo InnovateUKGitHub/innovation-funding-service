@@ -89,6 +89,14 @@ the user marks the finances as complete
     the user clicks the button/link  link = Application overview
     the user should see the element  jQuery = li:contains("Your finances") > .task-status-complete
 
+the user marks finances complete (no Your org)
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
+    the user fills in the project costs  ${overheadsCost}  ${totalCosts}
+    the user enters the project location
+    the user checks Your Funding section        ${Application}
+    the user clicks the button/link  link = Application overview
+    the user should see the element  jQuery = li:contains("Your finances") > .task-status-complete
+
 the user fills in the project costs
     [Arguments]  ${overheadsCost}  ${totalCosts}
     the user clicks the button/link  link = Your project costs

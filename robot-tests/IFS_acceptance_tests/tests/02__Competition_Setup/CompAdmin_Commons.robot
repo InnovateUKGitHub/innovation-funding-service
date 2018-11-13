@@ -128,7 +128,7 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
     Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
-    Run keyword If  '${comp_type}'!= '${compType_EOI}'   the user fills in the Finances questions  ${growthTable}
+    Run keyword If  '${comp_type}'!= '${compType_EOI}'   the user fills in the Finances questions  ${growthTable}  false
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Competition setup
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
@@ -192,11 +192,11 @@ the user marks each question as complete
     the user should see the element  jQuery = li:contains("${question_link}") .task-status-complete
 
 the user fills in the Finances questions
-    [Arguments]  ${growthTable}
+    [Arguments]  ${growthTable}  ${jes}
     the user clicks the button/link       link = Finances
     the user clicks the button twice      css = label[for = "include-growth-table-${growthTable}"]
     the user selects the radio button     applicationFinanceType  STANDARD
-    the user selects the radio button     includeJesForm  true
+    the user selects the radio button     includeJesForm  ${jes}
     the user enters text to a text field  css = .editor  Those are the rules that apply to Finances
     the user clicks the button/link       css = button[type="submit"]
     the user clicks the button/link       link = Finances
