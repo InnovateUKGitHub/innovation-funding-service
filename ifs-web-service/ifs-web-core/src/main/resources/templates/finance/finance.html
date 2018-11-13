@@ -320,40 +320,6 @@
         </div>
     </th:block>
 
-    <!-- ===========================View: assessor_detailed_finance =========================== -->
-    <th:block th:fragment="assessment_detailed_finance(model, internalView)">
-        <h2 class="govuk-heading-m">Detailed finances</h2>
-
-        <section class="collapsible" th:each="projectCostSection : ${detailedCostings.defaultProjectCostSections}">
-            <h2>
-                <th:block th:text="${projectCostSection.applicantSection.section.name}" ></th:block>
-                <span th:attr="data-mirror='#section-total-'+${projectCostSection.applicantSection.section.id}" ></span>
-            </h2>
-            <div class="collapsible-content">
-                <th:block th:each="costViewModel : ${projectCostSection.costViews}">
-                    <th:block th:if="${costViewModel.formInput.type.displayableFinanceType}">
-                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (costViewModel=${costViewModel}, internalView=${internalView})" ></th:block>
-                    </th:block>
-                </th:block>
-            </div>
-        </section>
-
-        <div class="govuk-grid-row total-cost">
-            <div class="govuk-grid-column-one-half">
-                <label for="total-cost" class="govuk-heading-m">Total project costs</label>
-            </div>
-            <div class="govuk-grid-column-one-half alignright">
-                <input type="text"
-                       id="total-cost"
-                       readonly="readonly"
-                       class="govuk-heading-m alignright"
-                       data-calculation-fields="[id*=section-total]"
-                       data-calculation-operations="+"
-                       th:value="'£' + ${#numbers.formatInteger(organisationFinanceTotal, 0, 'DEFAULT')}"/>
-            </div>
-        </div>
-    </th:block>
-
     <!-- ===========================Form: labour =========================== -->
     <th:block th:fragment="labour (costViewModel, internalView)">
         <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>

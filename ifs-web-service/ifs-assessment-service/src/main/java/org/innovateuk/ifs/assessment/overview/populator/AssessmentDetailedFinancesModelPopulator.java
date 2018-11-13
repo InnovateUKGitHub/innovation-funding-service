@@ -86,8 +86,12 @@ public class AssessmentDetailedFinancesModelPopulator {
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantProcessRole.getUser(), applicationId, costSection.getId());
         ApplicationForm form = new ApplicationForm();
 
-        AbstractSectionViewModel sectionViewModel = projectCostsSectionPopulator.populate(
-                applicantSection, form, model, null, true, Optional.of(organisationId), true);
+
+
+
+
+
+        
         model.addAttribute("detailedCostings", sectionViewModel);
         model.addAttribute("form", form);
         model.addAttribute("readonly", true);

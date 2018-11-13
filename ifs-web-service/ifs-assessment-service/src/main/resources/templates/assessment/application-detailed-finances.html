@@ -51,6 +51,32 @@
                     </table>
                 </div>
 
+                <h2 class="govuk-heading-m">Detailed finances</h2>
+
+                <th:block th:insert="application/your-project-costs-fragments :: labour" />
+                <th:block th:insert="application/your-project-costs-fragments :: overheads" />
+                <th:block th:insert="application/your-project-costs-fragments :: materials" />
+                <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
+                <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
+                <th:block th:insert="application/your-project-costs-fragments :: travel" />
+                <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
+
+                <div class="govuk-grid-row total-cost">
+                    <div class="govuk-grid-column-one-half">
+                        <label for="total-cost" class="govuk-heading-m">Total project costs</label>
+                    </div>
+                    <div class="govuk-grid-column-one-half alignright">
+                        <input type="text"
+                               id="total-cost"
+                               readonly="readonly"
+                               class="govuk-heading-m alignright"
+                               data-calculation-fields="[id*=section-total]"
+                               data-calculation-operations="+"
+                               th:value="'£' + ${#numbers.formatInteger(organisationFinanceTotal, 0, 'DEFAULT')}"/>
+                    </div>
+                </div>
+
+
                 <th:block th:include="finance/your-finances-sub-sections :: assessment_finances (model=${model}, internalView=${false})" />
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
