@@ -27,12 +27,9 @@ Valid login with double role as Applicant
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
     And The guest user clicks the log-in button
     Then The user should see the text in the page             Please choose the role you are signing in as today
-#    And The user clicks the button/link                       jQuery = button:contains("Continue")
     And The user clicks the button/link                       id = continue
-#    Then The user should see an error                         Please select a role.
     Then the user should see a summary error                  Please select a role.
     And the user selects the radio button                     selectedRole    APPLICANT
-#    And The user clicks the button/link                       jQuery = button:contains("Continue")
     And The user clicks the button/link                       id = continue
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     [Teardown]    Logout as user
