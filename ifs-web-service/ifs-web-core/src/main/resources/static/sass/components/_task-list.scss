@@ -167,3 +167,35 @@
     }
   }
 }
+
+.govuk-grid-column-one-half {
+  .task-list {
+    > li {
+      .task {
+        @include media-down(tablet) {
+          width: 100%;
+        }
+
+        width: 33%;
+      }
+
+      .notification {
+        @include media-down(tablet) {
+          width: 100%;
+          padding-left: 0;
+        }
+
+        width: 45%;
+        color: $govuk-button-colour;
+      }
+
+      .task-status {
+        @include media-down(tablet) {
+          position: static;
+          margin: 10px 0;
+          text-align: right;
+        }
+      }
+    }
+  }
+}

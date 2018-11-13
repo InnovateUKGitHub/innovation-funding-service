@@ -83,12 +83,17 @@ public abstract class BaseFinanceFormHandler<FinanceRowRestServiceType extends F
         errors.addErrors(getFinanceRowItemErrors);
 
         List<FinanceRowItem> validItems = costItems.stream().filter(Either::isLeft).map(Either::getLeft).collect(toList());
+
         Map<Long, ValidationMessages> storedItemErrors = storeFinanceRowItems(validItems, updatingFunction);
         storedItemErrors.forEach((costId, validationMessages) ->
                 validationMessages.getErrors().forEach(e -> {
                     if (StringUtils.hasText(e.getErrorKey())) {
-                        errors.addError(fieldError("formInput[cost-" + costId + "-" + e.getFieldName() + "]",
-                                e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
+                        if (e.isFieldError() && e.getFieldName().equals("calculationFile")) {
+                            errors.addError(fieldError("overheadfile", e));
+                        } else {
+                            errors.addError(fieldError("formInput[cost-" + costId + "-" + e.getFieldName() + "]",
+                                    e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
+                        }
                     } else {
                         errors.addError(fieldError("formInput[cost-" + costId + "]", e.getFieldRejectedValue(),
                                 e.getErrorKey(), e.getArguments()));
@@ -154,6 +159,7 @@ public abstract class BaseFinanceFormHandler<FinanceRowRestServiceType extends F
 
     FinanceFormField getCostFormField(String costTypeKey, String value) {
         String[] keyParts = costTypeKey.split("-");
+
         if (keyParts.length > 3) {
             return new FinanceFormField(keyParts[0] + "-" + keyParts[2] + "-" + keyParts[3], value, keyParts[3], keyParts[2], keyParts[1], keyParts[0]);
         } else if (keyParts.length == 3) {

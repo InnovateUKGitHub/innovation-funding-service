@@ -18,6 +18,7 @@ public class AssessmentResource {
     private Long application;
     private String applicationName;
     private Long competition;
+    private boolean collaborativeProject;
 
     public Long getId() {
         return id;
@@ -115,6 +116,14 @@ public class AssessmentResource {
         this.internalParticipant = internalParticipant;
     }
 
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
+
+    public void setCollaborativeProject(final boolean collaborativeProject) {
+        this.collaborativeProject = collaborativeProject;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -128,6 +137,7 @@ public class AssessmentResource {
         AssessmentResource that = (AssessmentResource) o;
 
         return new EqualsBuilder()
+                .append(collaborativeProject, that.collaborativeProject)
                 .append(id, that.id)
                 .append(event, that.event)
                 .append(assessmentState, that.assessmentState)
@@ -158,6 +168,7 @@ public class AssessmentResource {
                 .append(application)
                 .append(applicationName)
                 .append(competition)
+                .append(collaborativeProject)
                 .toHashCode();
     }
 }

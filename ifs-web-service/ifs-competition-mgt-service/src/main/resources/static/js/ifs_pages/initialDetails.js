@@ -47,7 +47,7 @@ IFS.competitionManagement.initialDetails = (function () {
         var innovationCategory = jQuery('[name*="innovationAreaCategoryId"]')
         innovationCategory.html('<option value="" disabled="disabled" selected="selected">Please select an innovation sector first &hellip;</option>')
       } else {
-        var url = window.location.protocol + '//' + window.location.host + '/management/competition/setup/getInnovationArea/' + sector
+        var url = window.location.protocol + '//' + window.location.host + '/management/competition/setup/get-innovation-areas/' + sector
         jQuery.ajaxProtected({
           type: 'GET',
           url: url

@@ -81,4 +81,8 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
     public AssessmentResourceBuilder withActivityState(AssessmentState... value) {
         return withArraySetFieldByReflection("assessmentState", value);
     }
+
+    public AssessmentResourceBuilder withCollaborativeProject(Boolean... value) {
+        return withArraySetFieldByReflection("collaborativeProject", value);
+    }
 }

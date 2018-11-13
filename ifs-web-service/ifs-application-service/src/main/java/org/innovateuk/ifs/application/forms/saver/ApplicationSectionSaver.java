@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
@@ -13,7 +14,6 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
@@ -84,13 +85,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
 
         ValidationMessages errors = new ValidationMessages();
 
-        if (isFundingRequest(params)) {
-            financeSaver.handleRequestFundingRequests(params, applicationId, competitionId, processRole.getId());
-        }
-
         if (!isMarkSectionAsIncompleteRequest(params)) {
-
-
             List<QuestionResource> questions = selectedSection.getQuestions()
                     .stream()
                     .map(questionId -> questionRestService.findById(questionId).getSuccess())
@@ -150,20 +145,31 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
                 validationMessage.getErrors().stream()
                         .filter(Objects::nonNull)
                         .filter(e -> hasText(e.getErrorKey()))
-                        .forEach(e -> {
-                            if ("costItem".equals(validationMessage.getObjectName())) {
-                                if (hasText(e.getErrorKey())) {
-                                    toFieldErrors.addError(fieldError("formInput[cost-" + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e));
-                                } else {
-                                    toFieldErrors.addError(fieldError(getFormCostInputKey(validationMessage.getObjectId()), e));
-                                }
-                            } else {
-                                toFieldErrors.addError(fieldError(getFormInputKey(validationMessage.getObjectId()), e));
-                            }
-                        })
+                        .forEach(mapToApplicationFormErrors(validationMessage, toFieldErrors))
         );
 
         return toFieldErrors;
+    }
+
+    /* We are converting the error messages from the data service to our target ApplicationForm. File uploads cannot be handled as a formInput[id...]. */
+    private Consumer<Error> mapToApplicationFormErrors(ValidationMessages dataServiceMessage, ValidationMessages applicationFormErrors) {
+        return dataServiceError -> {
+            if ("costItem".equals(dataServiceMessage.getObjectName())) {
+                if (dataServiceError.isFieldError() && dataServiceError.getFieldName().equals("calculationFile")) {
+                    applicationFormErrors.addError(fieldError("overheadfile", dataServiceError));
+                } else if (hasText(dataServiceError.getErrorKey())) {
+                    applicationFormErrors.addError(fieldError("formInput[cost-" + dataServiceMessage.getObjectId() + "-" + dataServiceError.getFieldName() + "]", dataServiceError));
+                } else {
+                    applicationFormErrors.addError(fieldError(getFormCostInputKey(dataServiceMessage.getObjectId()), dataServiceError));
+                }
+            } else {
+                if(dataServiceError.isFieldError() && dataServiceError.getFieldName().equals("jesFileUpload")) {
+                    applicationFormErrors.addError(dataServiceError);
+                } else {
+                    applicationFormErrors.addError(fieldError(getFormInputKey(dataServiceMessage.getObjectId()), dataServiceError));
+                }
+            }
+        };
     }
 
     private List<ValidationMessages> markAllQuestionsInSection(ApplicationResource application,

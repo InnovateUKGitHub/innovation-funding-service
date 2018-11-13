@@ -27,7 +27,7 @@ Resource          PS_Common.robot
 *** Test Cases ***
 Project Finance can see Bank details requiring action
     [Documentation]    INFUND-3763, INFUND-4903
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/management/dashboard/project-setup
     When the user clicks the button/link  link = ${PS_EF_Competition_Name}
@@ -39,7 +39,7 @@ Project Finance can see Bank details requiring action
 
 Project Finance can see the company name with score
     [Documentation]  INFUND-3763
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
     And the user clicks the button/link           link = ${Ntag_Name}
     Then the user should be redirected to the correct page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
@@ -48,14 +48,14 @@ Project Finance can see the company name with score
 
 Project Finance can see the company number with status
     [Documentation]    INFUND-3763
-    [Tags]
+    [Tags]  HappyPath
     Then the user should see the text in the page    Company Number
     And the user should see the text in the page     ${Ntag_No}
     And the user should see the element              jQuery = tr:nth-child(2) td:nth-child(3):contains("No Match")
 
 Project Finance can see the account number with status
     [Documentation]    INFUND-3763
-    [Tags]
+    [Tags]  HappyPath
     Then the user should see the text in the page    Bank account number / Sort code
     And the user should see the text in the page    ${account_one} / ${sortCode_one}
     And the user should see the element             jQuery = tr:nth-child(3) td:nth-child(3):contains("No Match")
@@ -75,7 +75,7 @@ Project Finance has the options to edit the details and to approve the bank deta
 
 Project Finance can change address and companies house details
     [Documentation]    INFUND-4054
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page                     ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     Then the user clicks the button/link                     link = Change bank account details
     And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details/change
@@ -139,7 +139,7 @@ Project Finance updates bank account details
 
 Project Finance approves the bank details
     [Documentation]    INFUND-4054, INFUND-6714, INFUND-7161
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page            ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     And the user should see the text in the page    ${Ntag_Name} - Account details
     When the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
@@ -159,7 +159,7 @@ Project Finance approves the bank details
 
 Project Finance cannot approve the bank details again
     [Documentation]    INFUND-9061
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page            ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Jetpulse_Id}/review-bank-details
     And the user should see the text in the page    ${Jetpulse_Name} - Account details
     When the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
@@ -171,7 +171,7 @@ Project Finance cannot approve the bank details again
 Lead partner can see that bank details has been approved
     [Documentation]    INFUND-7109
     [Tags]
-    [Setup]    log in as a different user          ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
+    [Setup]    log in as a different user          ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link           link = ${PS_EF_APPLICATION_TITLE}
     Then the user should see the element           css = ul li.complete:nth-child(4)
     When the user clicks the button/link           link = View the status of partners
@@ -187,7 +187,7 @@ Other internal users cannot access this page
 Project partners cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
-    [Setup]    log in as a different user  ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
+    [Setup]    log in as a different user  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 
