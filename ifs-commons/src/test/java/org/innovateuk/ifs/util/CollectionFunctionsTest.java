@@ -18,11 +18,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 import static org.junit.Assert.*;
 
-/**
- *
- */
 public class CollectionFunctionsTest {
-
 
     @Test
     public void test_simpleGroupBy(){
@@ -74,7 +70,7 @@ public class CollectionFunctionsTest {
         List<List<Integer>> deepList = asList(asList(1, 2, 3), asList(4, 5), singletonList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 4, 5, 6);
 
-        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
+        assertEquals(expectedFlatList, flattenLists(deepList));
     }
 
     @Test
@@ -83,7 +79,7 @@ public class CollectionFunctionsTest {
         List<List<Integer>> deepList = asList(asList(1, 2, 3), null, singletonList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 6);
 
-        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
+        assertEquals(expectedFlatList, flattenLists(deepList));
     }
 
     @Test
@@ -92,7 +88,7 @@ public class CollectionFunctionsTest {
         List<List<Integer>> deepList = asList(asList(1, 2, 3), emptyList(), singletonList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 6);
 
-        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
+        assertEquals(expectedFlatList, flattenLists(deepList));
     }
 
     @Test
@@ -101,7 +97,7 @@ public class CollectionFunctionsTest {
         List<List<Integer>> deepList = asList(emptyList(), emptyList(), emptyList());
         List<Integer> expectedFlatList = emptyList();
 
-        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
+        assertEquals(expectedFlatList, flattenLists(deepList));
     }
 
     @Test
@@ -110,7 +106,7 @@ public class CollectionFunctionsTest {
         Set<Set<Integer>> deepList = asLinkedSet(asLinkedSet(1, 2, 3), asLinkedSet(4, 5), singleton(6));
         Set<Integer> expectedFlatList = asLinkedSet(1, 2, 3, 4, 5, 6);
 
-        assertEquals(expectedFlatList, CollectionFunctions.flattenSets(deepList));
+        assertEquals(expectedFlatList, flattenSets(deepList));
     }
 
     @Test
