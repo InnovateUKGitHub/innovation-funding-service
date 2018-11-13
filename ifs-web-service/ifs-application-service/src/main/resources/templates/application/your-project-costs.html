@@ -11,9 +11,9 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Your project costs',linkClass='link-back',linkUrl=${model.financesUrl}"/>
+              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
 
-    <main class="govuk-main-wrapper" id="main-content" role="main" style="background-color:pink;">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
              aria-labelledby="error-summary-title"
@@ -37,13 +37,11 @@
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
 
-            <th:block th:unless="${model.readOnly}">
-                <h2 class="govuk-heading-m govuk-!-margin-0"
-                    th:text="|Provide the project costs for '${model.organisationName}'|"></h2>
-                <p class="govuk-body">Only your organisation can see this level of detail. All members of your
-                    organisation can access and edit your finances. We recommend assigning completion of your finances
-                    to one member of your team.</p>
-            </th:block>
+            <h2 class="govuk-heading-m govuk-!-margin-0"
+                th:text="|Provide the project costs for '${model.organisationName}'|"></h2>
+            <p class="govuk-body">Only your organisation can see this level of detail. All members of your
+                organisation can access and edit your finances. We recommend assigning completion of your finances
+                to one member of your team.</p>
 
             <th:block th:insert="application/your-project-costs-fragments :: labour" />
             <th:block th:insert="application/your-project-costs-fragments :: overheads" />
@@ -68,7 +66,7 @@
                 </div>
             </div>
 
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('eligibleAgreement')} ? 'govuk-form-group--error': ''">
+            <div th:unless="${model.readOnly}" class="govuk-form-group" th:classappend="${#fields.hasErrors('eligibleAgreement')} ? 'govuk-form-group--error': ''">
                 <th:block th:if="${#fields.hasErrors('eligibleAgreement')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('eligibleAgreement')}" th:text="${err}" />
                 </th:block>
@@ -97,8 +95,8 @@
                     <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="complete"
                             class="button-clear" value="true">Mark as complete
                     </button>
-                    <button th:if="${model.complete}" type="submit" name="edit" class="button-clear" value="true"
-                            th:text="${'Edit your funding'}">Edit
+                    <button th:if="${model.complete}" type="submit" name="edit" class="button-clear" value="true">
+                        Edit your project costs
                     </button>
                 </div>
             </div>

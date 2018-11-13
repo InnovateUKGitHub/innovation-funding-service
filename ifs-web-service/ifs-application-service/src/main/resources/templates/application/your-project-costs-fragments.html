@@ -10,16 +10,19 @@
 <th:block th:fragment="labour">
     <section class="collapsible">
         <h2>
-            <th:block>Labour</th:block>
-            <span data-mirror="#section-total-labour" th:text="'£' + ${#numbers.formatInteger(form.totalLabourCosts, 0,'DEFAULT')}">£82,000</span>
+            Labour
+            <span data-mirror="#section-total-labour"></span>
         </h2>
         <div class="collapsible-content">
-            <p class="govuk-body">If your application is awarded funding, you will need to account for
-                all your labour costs as they occur. For example, you should keep timesheets and payroll
-                records. These should show the actual hours worked by individuals and paid by the
-                organisation.</p>
+            <th:block th:if="${model.readOnly}">
+                <th:block th:insert="application/your-project-costs-fragments :: labour_read_only"/>
+            </th:block>
+            <th:block th:unless="${model.readOnly}">
 
-            <div>
+                <p class="govuk-body">If your application is awarded funding, you will need to account for
+                    all your labour costs as they occur. For example, you should keep timesheets and payroll
+                    records. These should show the actual hours worked by individuals and paid by the
+                    organisation.</p>
                 <div class="govuk-form-group inline">
                     <label class="govuk-label" th:for="working-days-per-year">
                         Working days per year
@@ -59,9 +62,10 @@
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
-                            <th:block th:each="entry : *{labourCosts}">
-                                <th:block th:insert="application/your-project-costs-fragments :: labour_row (${entry.key}, ${entry.value})" />
-                            </th:block>
+                        <th:block th:each="entry : *{labourCosts}">
+                            <th:block
+                                th:insert="application/your-project-costs-fragments :: labour_row (${entry.key}, ${entry.value})"/>
+                        </th:block>
                         </tbody>
                     </table>
                     <p class="alignright">
@@ -71,7 +75,8 @@
                                 data-repeatable-rowcontainer="#labour-costs-table tbody"
                                 name="add_cost"
                                 th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR}"
-                                class="button-clear">Add another role</button>
+                                class="button-clear">Add another role
+                        </button>
                     </div>
                     <p></p>
                 </div>
@@ -87,64 +92,66 @@
                        id="section-total-labour"
                        th:attr="data-calculation-rawvalue=${form.totalLabourCosts}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalLabourCosts, 0,'DEFAULT')}"/>
-            </div>
 
 
-            <div class="govuk-body"><p>You can claim the labour costs of all employees you have working
-                on your project.</p></div>
+                <div class="govuk-body"><p>You can claim the labour costs of all employees you have working
+                    on your project.</p></div>
 
-            <details class="govuk-details" role="group">
-                <summary class="govuk-details__summary" role="button"
-                         aria-controls="details-content-3475902b-acb6-4932-ba86-ee72342c0488"
-                         aria-expanded="false">
-                    <span class="govuk-details__summary-text">Labour costs guidance</span>
-                </summary>
-                <div class="govuk-details__text wysiwyg-styles"
-                     id="details-content-3475902b-acb6-4932-ba86-ee72342c0488" aria-hidden="true"><p>You
-                    can include the following labour costs, based upon your PAYE records:</p>
-                    <ul class="list-bullet">
-                        <li>gross salary</li>
-                        <li>National Insurance</li>
-                        <li>company pension contribution</li>
-                        <li>life insurance</li>
-                        <li>other non-discretionary package costs.</li>
-                    </ul>
-                    <p>You can't include:</p>
-                    <ul class="list-bullet">
-                        <li>discretionary bonuses</li>
-                        <li>performance related payments of any kind</li>
-                    </ul>
-                    <p>You may include the total number of working days for staff but do not
-                        include:</p>
-                    <ul class="list-bullet">
-                        <li>sick days</li>
-                        <li>waiting time</li>
-                        <li>training days</li>
-                        <li>non-productive time</li>
-                    </ul>
-                    <p>Enter the total number of working days in the year. List the total days worked by
-                        all categories of staff on your project. Describe their role.</p>
-                    <p>We will review the total amount of time and cost of labour before we approve your
-                        application. The terms and conditions of the grant include compliance with these
-                        points.</p></div>
-            </details>
+                <details class="govuk-details" role="group">
+                    <summary class="govuk-details__summary" role="button"
+                             aria-controls="details-content-3475902b-acb6-4932-ba86-ee72342c0488"
+                             aria-expanded="false">
+                        <span class="govuk-details__summary-text">Labour costs guidance</span>
+                    </summary>
+                    <div class="govuk-details__text wysiwyg-styles"
+                         id="details-content-3475902b-acb6-4932-ba86-ee72342c0488" aria-hidden="true"><p>You
+                        can include the following labour costs, based upon your PAYE records:</p>
+                        <ul class="list-bullet">
+                            <li>gross salary</li>
+                            <li>National Insurance</li>
+                            <li>company pension contribution</li>
+                            <li>life insurance</li>
+                            <li>other non-discretionary package costs.</li>
+                        </ul>
+                        <p>You can't include:</p>
+                        <ul class="list-bullet">
+                            <li>discretionary bonuses</li>
+                            <li>performance related payments of any kind</li>
+                        </ul>
+                        <p>You may include the total number of working days for staff but do not
+                            include:</p>
+                        <ul class="list-bullet">
+                            <li>sick days</li>
+                            <li>waiting time</li>
+                            <li>training days</li>
+                            <li>non-productive time</li>
+                        </ul>
+                        <p>Enter the total number of working days in the year. List the total days worked by
+                            all categories of staff on your project. Describe their role.</p>
+                        <p>We will review the total amount of time and cost of labour before we approve your
+                            application. The terms and conditions of the grant include compliance with these
+                            points.</p></div>
+                </details>
+            </th:block>
         </div>
     </section>
 </th:block>
 
 <th:block th:fragment="ajax_labour_row">
     <th:block th:object="${form}">
-        <th:block th:insert="application/your-project-costs-fragments :: labour_row (${id}, ${row})" />
+        <th:block th:insert="application/your-project-costs-fragments :: labour_row (${id}, ${row})"/>
     </th:block>
 </th:block>
 
 <th:block th:fragment="labour_row (id, row)">
     <tr th:with="path=${'labourCosts[__${id}__]'}" th:attr="data-repeatable-row=${path}">
-        <input type="hidden" th:field="*{__${path}__.costId}" />
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.role">
                 <span class="govuk-visually-hidden">Role within project</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.role)"/>
             <input type="text"
                    class="govuk-input"
                    th:id="__${path}__.role"
@@ -157,9 +164,12 @@
             <label th:for="__${path}__.gross">
                 <span class="govuk-visually-hidden">Gross employee cost</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.gross)"/>
             <input type="number"
                    th:id="__${path}__.gross"
                    th:field="*{__${path}__.gross}"
+                   th:errorclass="govuk-input--error"
                    class="govuk-input"
                    placeholder="0"
                    required="required"
@@ -175,13 +185,15 @@
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.days">
-                                        <span
-                                            class="govuk-visually-hidden">Days to be spent by all staff at this grade</span>
+                <span class="govuk-visually-hidden">Days to be spent by all staff at this grade</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.days)"/>
             <input type="number"
                    class="govuk-input govuk-input--width-4"
                    th:id="__${path}__.days"
                    th:field="*{__${path}__.days}"
+                   th:errorclass="govuk-input--error"
                    value="200" placeholder="0"
                    required="required"
                    min="1"
@@ -207,6 +219,54 @@
     </tr>
 </th:block>
 
+<th:block th:fragment="labour_read_only">
+    <dl class="standard-definition-list">
+        <dt>Working days per year</dt>
+        <dd th:text="${form.workingDaysPerYear}">232</dd>
+    </dl>
+    <p class="govuk-body">Number of staff and roles within the project</p>
+    <div class="table-overflow">
+        <table class="govuk-table labour-costs-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Role within project</th>
+                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Gross employee cost (&pound;)
+                </th>
+                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Rate (&pound;/day)</th>
+                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Days to be spent by all staff
+                    at this grade
+                </th>
+                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <th:block th:each="entry : *{labourCosts}" th:with="cost=${entry.value}">
+                <tr class="govuk-table__row" th:unless="${cost.blank}">
+                    <td class="govuk-table__cell" th:text="${cost.role}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"
+                        th:text="${cost.gross != null ? #numbers.formatInteger(cost.gross,0,'DEFAULT') : '0'}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"
+                        th:text="${cost.rate != null ? #numbers.formatInteger(cost.rate,0,'DEFAULT') : '0'}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.days}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
+                        th:text="${cost.total != null ? #numbers.formatInteger(cost.total, 0, 'DEFAULT') : '0'}"/>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <tfoot class="govuk-table__foot">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" colspan="4" scope="row">Total labour costs</th>
+                <td class="govuk-table__cell govuk-table__cell--numeric labour-total" id="section-total-labour"
+                    th:attr="data-calculation-rawvalue=${form.totalLabourCosts}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalLabourCosts, 0, 'DEFAULT')}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</th:block>
+
 <!--/***************************
 
             OVERHEADS
@@ -215,132 +275,226 @@
 <th:block th:fragment="overheads">
     <section class="collapsible">
         <h2>
-            <th:block>Overhead costs</th:block>
-            <span data-mirror="#section-total-overhead" th:text="'£' + ${#numbers.formatInteger(form.totalOverheadCosts, 0,'DEFAULT')}">£82,000</span>
+            Overhead costs
+            <span data-mirror="#section-total-overhead"></span>
         </h2>
         <div class="collapsible-content">
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">Overhead costs</legend>
-                    <div class="govuk-radios">
-                        <div class="govuk-radios__item" data-target="overhead-none">
-                            <input id="overhead-rate-type-none"
-                                   class="govuk-radios__input overhead-radio"
-                                   type="radio"
-                                   required="required"
-                                   th:field="*{overhead.rateType}"
-                                   th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE}"/>
-                            <label th:for="overhead-rate-type-none"
-                                   class="govuk-label govuk-radios__label">
-                                No overhead costs
+            <th:block th:if="${model.readOnly}">
+                <th:block th:insert="application/your-project-costs-fragments :: overheads_read_only"/>
+            </th:block>
+            <th:block th:unless="${model.readOnly}">
+                <input type="hidden" th:field="*{overhead.costId}" />
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-visually-hidden">Overhead costs</legend>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item" data-target="overhead-none">
+                                <input id="overhead-rate-type-none"
+                                       class="govuk-radios__input overhead-radio"
+                                       type="radio"
+                                       required="required"
+                                       th:field="*{overhead.rateType}"
+                                       th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE}"/>
+                                <label th:for="overhead-rate-type-none"
+                                       class="govuk-label govuk-radios__label">
+                                    No overhead costs
+                                </label>
+                            </div>
+
+                            <div class="govuk-radios__item" data-target="overhead-default-percentage">
+                                <input id="overhead-rate-type-default-percentage"
+                                       class="govuk-radios__input overhead-radio"
+                                       type="radio"
+                                       required="required"
+                                       th:field="*{overhead.rateType}"
+                                       th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE}"/>
+                                <label for="overhead-rate-type-default-percentage"
+                                       class="govuk-label govuk-radios__label">
+                                    20% of labour costs
+                                </label>
+                            </div>
+
+                            <div class="govuk-radios__item" data-target="overhead-total">
+                                <input id="overhead-rate-type-total"
+                                       class="govuk-radios__input overhead-radio"
+                                       type="radio"
+                                       required="required"
+                                       th:field="*{overhead.rateType}"
+                                       th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL}"/>
+                                <label for="overhead-rate-type-total"
+                                       class="govuk-label govuk-radios__label">
+                                    Calculate overheads
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <input type="hidden" id="section-total-overhead"
+                       th:value="|£${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}|"/>
+
+                <div class="govuk-form-group" id="overhead-none">
+                    <p class="govuk-body">You are not currently applying for overhead costs</p>
+                    <input type="hidden" value="£0" data-calculation-rawvalue="0" id="section-total-overhead-none"/>
+                </div>
+
+                <div class="govuk-form-group" id="overhead-default-percentage">
+                    <p class="govuk-body">There is no need to provide any further supporting documentation or
+                        calculations.
+                        Actual costs can be claimed up to a maximum of this calculated figure.</p>
+                    <h4 class="govuk-heading-s alignright section-total-summary">
+                        Total overhead costs
+                        <span class="govuk-heading-s"
+                              data-mirror="#section-total-overhead-default">
+                                          £<th:block
+                            th:text="${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}"></th:block></span>
+                    </h4>
+                    <input type="hidden"
+                           id="section-total-overhead-default"
+                           data-calculation-fields="[id='section-total-labour'],0.2"
+                           th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
+                           data-calculation-operations="*"
+                           th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
+
+                </div>
+                <div class="govuk-form-group" id="overhead-total">
+
+                    <!--/* Applicants' view of Overheads */-->
+                    <th:block>
+                        <h3 class="govuk-heading-m">Calculate overheads</h3>
+                        <p class="govuk-body">
+                            If you feel your overheads are higher than 20% you may calculate a value using the Innovate
+                            UK
+                            model in the spreadsheet available below.
+                            The model shows you which types of indirect costs associated with your project you may
+                            claim.
+                            For support with this option, please contact our Customer Support Service on 0300 321 4357.
+                            Any
+                            value claimed under this model will be subject to a review.
+                            This will assess the appropriateness of your claim if your grant application is successful.
+                        </p>
+                        <div class="govuk-form-group download">
+                            <h3 class="govuk-heading-s">Download the overhead calculation spreadsheet</h3>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>Download as an Excel document <a href="/files/overheads.xlsx" class="govuk-link">overhead
+                                    calculation spreadsheet.xlsx (16KB)</a></li>
+                                <li>Download as an Open Office document <a href="/files/overheads.ods"
+                                                                           class="govuk-link">overhead
+                                    calculation spreadsheet.ods (10KB)</a></li>
+                            </ul>
+                        </div>
+                        <div class="upload-section govuk-!-margin-top-6">
+                            <h3 class="govuk-heading-s govuk-!-margin-0">Upload your completed spreadsheet</h3>
+                            <div class="govuk-form-group">
+
+                                <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
+                                    @{${'/application/download/overheadfile/'+form.overhead.costId}},
+                                    ${form.overhead.filename},
+                                    overhead.file,
+                                    overhead.file,
+                                    true,
+                                    removeOverheadFile,
+                                    uploadOverheadFile)" />
+                            </div>
+                        </div>
+                        <div class="govuk-form-group alignright inline">
+                            <label for="overhead.totalSpreadsheet"
+                                   class="govuk-label">
+                                Enter the total cost of overheads as calculated in the spreadsheet &pound;
                             </label>
+                            <input id="overhead.totalSpreadsheet"
+                                   th:field="*{overhead.totalSpreadsheet}"
+                                   type="number"
+                                   class="govuk-input govuk-input--width-10 alignright"
+                                   min="0"
+                                   max="999999999"
+                                   step="1"/>
+                            <input type="hidden"
+                                   readonly="readonly"
+                                   id="section-total-overhead-calculated"
+                                   data-calculation-fields="[id='overhead.totalSpreadsheet'],1"
+                                   data-calculation-operations="*"
+                                   th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
+                                   th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
                         </div>
-
-                        <div class="govuk-radios__item" data-target="overhead-default-percentage">
-                            <input id="overhead-rate-type-default-percentage"
-                                   class="govuk-radios__input overhead-radio"
-                                   type="radio"
-                                   required="required"
-                                   th:field="*{overhead.rateType}"
-                                   th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE}"/>
-                            <label for="overhead-rate-type-default-percentage"
-                                   class="govuk-label govuk-radios__label">
-                                20% of labour costs
-                            </label>
-                        </div>
-
-                        <div class="govuk-radios__item" data-target="overhead-total">
-                            <input id="overhead-rate-type-total"
-                                   class="govuk-radios__input overhead-radio"
-                                   type="radio"
-                                   required="required"
-                                   th:field="*{overhead.rateType}"
-                                   th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL}"/>
-                            <label for="overhead-rate-type-total"
-                                   class="govuk-label govuk-radios__label">
-                                Calculate overheads
-                            </label>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-            <input type="hidden" id="section-total-overhead" th:value="|£${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}|"/>
-
-            <div class="govuk-form-group" id="overhead-none">
-                <p class="govuk-body">You are not currently applying for overhead costs</p>
-                <input type="hidden" value="£0" data-calculation-rawvalue="0" id="section-total-overhead-none"/>
-            </div>
-
-            <div class="govuk-form-group" id="overhead-default-percentage">
-                <p class="govuk-body">There is no need to provide any further supporting documentation or calculations.
-                    Actual costs can be claimed up to a maximum of this calculated figure.</p>
-                <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total overhead costs
-                    <span class="govuk-heading-s"
-                          data-mirror="#section-total-overhead-default">
-                                      £<th:block
-                        th:text="${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}"></th:block></span>
-                </h4>
-                <input type="hidden"
-                       id="section-total-overhead-default"
-                       data-calculation-fields="[id='section-total-labour'],0.2"
-                       th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
-                       data-calculation-operations="*"
-                       th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
-
-            </div>
-            <div class="govuk-form-group" id="overhead-total">
-
-                <!--/* Applicants' view of Overheads */-->
-                <th:block>
-                    <h3 class="govuk-heading-m">Calculate overheads</h3>
-                    <p class="govuk-body">
-                        If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK
-                        model in the spreadsheet available below.
-                        The model shows you which types of indirect costs associated with your project you may claim.
-                        For support with this option, please contact our Customer Support Service on 0300 321 4357. Any
-                        value claimed under this model will be subject to a review.
-                        This will assess the appropriateness of your claim if your grant application is successful.
-                    </p>
-                    <div class="govuk-form-group download">
-                        <h3 class="govuk-heading-s">Download the overhead calculation spreadsheet</h3>
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>Download as an Excel document <a href="/files/overheads.xlsx" class="govuk-link">overhead
-                                calculation spreadsheet.xlsx (16KB)</a></li>
-                            <li>Download as an Open Office document <a href="/files/overheads.ods" class="govuk-link">overhead
-                                calculation spreadsheet.ods (10KB)</a></li>
-                        </ul>
-                    </div>
-                    <div class="upload-section govuk-!-margin-top-6">
-                        <h3 class="govuk-heading-s govuk-!-margin-0">Upload your completed spreadsheet</h3>
-                        <div class="govuk-form-group">
-                            TODO
-                        </div>
-                    </div>
-                    <div class="govuk-form-group alignright inline">
-                        <label for="overhead.totalSpreadsheet"
-                               class="govuk-label">
-                            Enter the total cost of overheads as calculated in the spreadsheet &pound;
-                        </label>
-                        <input id="overhead.totalSpreadsheet"
-                               th:field="*{overhead.totalSpreadsheet}"
-                               type="number"
-                               class="govuk-input govuk-input--width-10 alignright"
-                               min="0"
-                               max="999999999"
-                               step="1"/>
-                        <input type="hidden"
-                               readonly="readonly"
-                               id="section-total-overhead-calculated"
-                               data-calculation-fields="[id='overhead.totalSpreadsheet'],1"
-                               data-calculation-operations="*"
-                               th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
-                               th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
-                    </div>
-                </th:block>
-            </div>
+                    </th:block>
+                </div>
+            </th:block>
         </div>
     </section>
+</th:block>
+
+<th:block th:fragment="overheads_read_only">
+    <th:block th:switch="${form.overhead.rateType.name()}">
+        <th:block th:case="'NONE'">
+            <span class="govuk-body">No overhead costs</span>
+            <div data-current-overhead-total="" data-calculation-rawvalue="0" id="section-total-overhead"
+                 aria-hidden="true">£0
+            </div>
+        </th:block>
+        <th:block th:case="'DEFAULT_PERCENTAGE'">
+            <div class="table-overflow">
+                <table class="govuk-table">
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">20% of labour costs</th>
+                        <th scope="col" class="govuk-table__header alignright">
+                            <span class="govuk-visually-hidden">total overhead costs</span>
+                        </th>
+                    </tr>
+                    </tbody>
+                    <tfoot class="govuk-table__foot">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Total overhead costs</th>
+                        <td class="govuk-table__cell alignright" data-current-overhead-total=""
+                            th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}" id="section-total-overhead">
+                            &pound;<th:block th:text="${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}">
+                            1,000
+                        </th:block>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </th:block>
+        <th:block th:case="'TOTAL'">
+            <div class="table-overflow">
+                <table class="govuk-table">
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Calculated overheads</th>
+                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Total calculated overheads</span>
+                        </th>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-form-group download">
+                            <h3 class="govuk-heading-s govuk-!-margin-0">Download the overhead calculation
+                                spreadsheet</h3>
+                            <ul>
+                                <li th:if="${form.overhead.filename} != null"><a
+                                    th:href="@{${'/application/download/overheadfile/'+form.overhead.costId}}"
+                                    th:text="${form.overhead.filename}" class="govuk-link">Overhead calculation
+                                    spreadsheet.pdf</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot class="govuk-table__foot">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Total cost of overheads as calculated in the
+                            spreadsheet
+                        </th>
+                        <td class="govuk-table__cell alignright" data-current-overhead-total=""
+                            th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}" id="section-total-overhead">
+                            &pound;<th:block th:text="${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}">
+                            0
+                        </th:block>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </th:block>
+    </th:block>
 </th:block>
 
 <!--/***************************
@@ -351,99 +505,113 @@
 <th:block th:fragment="materials">
     <section class="collapsible">
         <h2>
-            <th:block>Materials</th:block>
-            <span data-mirror="#section-total-material" th:text="'£' + ${#numbers.formatInteger(form.totalMaterialCosts, 0,'DEFAULT')}">£82,000</span>
+            Materials
+            <span data-mirror="#section-total-material"></span>
         </h2>
         <div class="collapsible-content">
-            <p class="govuk-body">Please provide a breakdown of the materials you expect to use during the project</p>
-            <div class="govuk-form-group table-overflow">
-                <table class="govuk-table" id="material-costs-table">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th id="materials-item" scope="col" class="govuk-table__header">Item</th>
-                        <th id="materials-quantity" scope="col"
-                            class="govuk-table__header govuk-table__header--numeric width-150">Quantity
-                        </th>
-                        <th id="materials-cost" scope="col"
-                            class="govuk-table__header govuk-table__header--numeric width-150">Cost per item (&pound;)
-                        </th>
-                        <th id="materials-total" scope="col"
-                            class="govuk-table__header govuk-table__header--numeric width-150">Total
-                        </th>
-                        <th class="govuk-table__header" scope="col">
-                            <span class="govuk-visually-hidden">Actions</span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
+            <th:block th:if="${model.readOnly}">
+                <th:block th:insert="application/your-project-costs-fragments :: materials_read_only"/>
+            </th:block>
+            <th:block th:unless="${model.readOnly}">
+                <p class="govuk-body">Please provide a breakdown of the materials you expect to use during the
+                    project</p>
+                <div class="govuk-form-group table-overflow">
+                    <table class="govuk-table" id="material-costs-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th id="materials-item" scope="col" class="govuk-table__header">Item</th>
+                            <th id="materials-quantity" scope="col"
+                                class="govuk-table__header govuk-table__header--numeric width-150">Quantity
+                            </th>
+                            <th id="materials-cost" scope="col"
+                                class="govuk-table__header govuk-table__header--numeric width-150">Cost per item (&pound;)
+                            </th>
+                            <th id="materials-total" scope="col"
+                                class="govuk-table__header govuk-table__header--numeric width-150">Total
+                            </th>
+                            <th class="govuk-table__header" scope="col">
+                                <span class="govuk-visually-hidden">Actions</span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
                         <th:block th:each="entry : *{materialRows}">
-                            <th:block th:insert="application/your-project-costs-fragments :: materials_row (${entry.key}, ${entry.value})" />
+                            <th:block
+                                th:insert="application/your-project-costs-fragments :: materials_row (${entry.key}, ${entry.value})"/>
                         </th:block>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
 
-                <p class="alignright">
-                    <button type="submit"
-                            data-repeatable-rowcontainer="#material-costs-table tbody"
-                            name="add_cost"
-                            th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS}"
-                            class="button-clear">Add another materials cost</button>
-                </p>
-            </div>
-            <h4 class="govuk-heading-s alignright section-total-summary">
-                Total materials costs
-                <span class="govuk-heading-s"
-                      data-mirror='#section-total-material'
-                      th:text="'£' + ${#numbers.formatInteger(form.totalMaterialCosts, 0,'DEFAULT')}"></span>
-            </h4>
-            <input type="hidden"
-                   data-calculation-fields=".material-totals"
-                   data-calculation-operations="+"
-                   id="section-total-material"
-                   th:attr="data-calculation-rawvalue=${form.totalMaterialCosts}"
-                   th:value="'£' + ${#numbers.formatInteger(form.totalMaterialCosts, 0,'DEFAULT')}"/>
-            <div class="govuk-body"><p>You can claim the costs of materials used on your project providing:</p>
-                <ul class="list-bullet">
-                    <li>they are not already purchased or included in the overheads</li>
-                    <li>they are purchased from third parties</li>
-                    <li>they won’t have a residual/resale value at the end of your project. If they do you can claim the
-                        costs minus this value
-                    </li>
-                </ul>
-                <p><a
-                    href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Please
-                    refer to our guide to project costs for further information.</a></p>
-            </div>
-            <details class="govuk-details" role="group">
-                <summary class="govuk-details__summary" role="button"
-                         aria-controls="details-content-43406a87-dcf3-428e-aba8-9e455c94a1ff" aria-expanded="false">
-                    <span class="govuk-details__summary-text">Materials costs guidance</span>
-                </summary>
-                <div class="govuk-details__text wysiwyg-styles"
-                     id="details-content-43406a87-dcf3-428e-aba8-9e455c94a1ff" aria-hidden="true"><p>Materials supplied
-                    by associated companies or project partners should be charged at cost.</p>
-                    <p>Software that you have purchased specifically for use during your project may be included. If you
-                        already own the software then only additional costs which are incurred and paid during your
-                        project, will be eligible. For example, installation, training or customisation.</p>
-                    <p>Material costs must be itemised to justify that they are eligible.</p></div>
-            </details>
+                    <p class="alignright">
+                        <button type="submit"
+                                data-repeatable-rowcontainer="#material-costs-table tbody"
+                                name="add_cost"
+                                th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS}"
+                                class="button-clear">Add another materials cost
+                        </button>
+                    </p>
+                </div>
+                <h4 class="govuk-heading-s alignright section-total-summary">
+                    Total materials costs
+                    <span class="govuk-heading-s"
+                          data-mirror='#section-total-material'
+                          th:text="'£' + ${#numbers.formatInteger(form.totalMaterialCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       data-calculation-fields=".material-totals"
+                       data-calculation-operations="+"
+                       id="section-total-material"
+                       th:attr="data-calculation-rawvalue=${form.totalMaterialCosts}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalMaterialCosts, 0,'DEFAULT')}"/>
+                <div class="govuk-body"><p>You can claim the costs of materials used on your project providing:</p>
+                    <ul class="list-bullet">
+                        <li>they are not already purchased or included in the overheads</li>
+                        <li>they are purchased from third parties</li>
+                        <li>they won’t have a residual/resale value at the end of your project. If they do you can claim
+                            the
+                            costs minus this value
+                        </li>
+                    </ul>
+                    <p><a
+                        href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Please
+                        refer to our guide to project costs for further information.</a></p>
+                </div>
+                <details class="govuk-details" role="group">
+                    <summary class="govuk-details__summary" role="button"
+                             aria-controls="details-content-43406a87-dcf3-428e-aba8-9e455c94a1ff" aria-expanded="false">
+                        <span class="govuk-details__summary-text">Materials costs guidance</span>
+                    </summary>
+                    <div class="govuk-details__text wysiwyg-styles"
+                         id="details-content-43406a87-dcf3-428e-aba8-9e455c94a1ff" aria-hidden="true"><p>Materials
+                        supplied
+                        by associated companies or project partners should be charged at cost.</p>
+                        <p>Software that you have purchased specifically for use during your project may be included. If
+                            you
+                            already own the software then only additional costs which are incurred and paid during your
+                            project, will be eligible. For example, installation, training or customisation.</p>
+                        <p>Material costs must be itemised to justify that they are eligible.</p></div>
+                </details>
+            </th:block>
         </div>
     </section>
 </th:block>
 
 <th:block th:fragment="ajax_materials_row">
     <th:block th:object="${form}">
-        <th:block th:insert="application/your-project-costs-fragments :: materials_row (${id}, ${row})" />
+        <th:block th:insert="application/your-project-costs-fragments :: materials_row (${id}, ${row})"/>
     </th:block>
 </th:block>
 
 <th:block th:fragment="materials_row (id, row)">
-    <tr th:with="path=${'materialRows[__${id}__]'}" class="govuk-table__row form-group-row-validated" th:attr="data-repeatable-row=${path}">
-        <input type="hidden" th:field="*{__${path}__.costId}" />
+    <tr th:with="path=${'materialRows[__${id}__]'}" class="govuk-table__row form-group-row-validated"
+        th:attr="data-repeatable-row=${path}">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.item">
                 <span class="govuk-visually-hidden">Item</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.item)"/>
             <input type="text"
                    class="govuk-input"
                    th:id="__${path}__.item"
@@ -456,6 +624,8 @@
             <label th:for="__${path}__.quantity">
                 <span class="govuk-visually-hidden">Quantity</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.quantity)"/>
             <input type="number"
                    class="govuk-input"
                    th:id="__${path}__.quantity"
@@ -472,6 +642,8 @@
             <label th:for="__${path}__.cost">
                 <span class="govuk-visually-hidden">Cost per item</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
             <input type="number"
                    class="govuk-input"
                    th:id="__${path}__.cost"
@@ -506,6 +678,48 @@
     </tr>
 </th:block>
 
+<th:block th:fragment="materials_read_only">
+    <div class="table-overflow">
+        <table class="govuk-table" id="material-costs-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th id="materials-item" scope="col" class="govuk-table__header">Item</th>
+                <th id="materials-quantity" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Quantity
+                </th>
+                <th id="materials-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">Cost per
+                    item (&pound;)
+                </th>
+                <th id="materials-total" scope="col" class="govuk-table__header govuk-table__header--numeric">Total</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <th:block th:each="entry : *{materialRows}" th:with="cost=${entry.value}">
+                <tr class="govuk-table__row" th:unless="${cost.blank}">
+                    <td class="govuk-table__cell" th:text="${cost.item}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"
+                        th:text="${cost.quantity != null ? cost.quantity : 0}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"
+                        th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
+                        th:text="${cost.total != null ? #numbers.formatInteger(cost.total,0,'DEFAULT') : '0'}"/>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <tfoot class="govuk-table__foot">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row" colspan="3">Total materials costs</th>
+                <td id="section-total-material" th:attr="data-calculation-rawvalue=${form.totalMaterialCosts}"
+                    class="govuk-table__cell govuk-table__cell--numeric">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalMaterialCosts, 0,'DEFAULT')}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</th:block>
+
 
 <!--/***************************
 
@@ -515,71 +729,83 @@
 <th:block th:fragment="capital_usage">
     <section class="collapsible">
         <h2>
-            <th:block>Capital usage</th:block>
-            <span data-mirror="#section-total-capital-usage" th:text="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}">£82,000</span>
+            Capital usage
+            <span data-mirror="#section-total-capital-usage"></span>
         </h2>
         <div class="collapsible-content">
-            <p class="govuk-body">Please provide a breakdown of the capital items you will buy and/or use for the
-                project.</p>
+            <th:block th:if="${model.readOnly}">
+                <th:block th:insert="application/your-project-costs-fragments :: capital_usage_read_only"/>
+            </th:block>
+            <th:block th:unless="${model.readOnly}">
+                <p class="govuk-body">Please provide a breakdown of the capital items you will buy and/or use for the
+                    project.</p>
 
-            <div id="capital-usage">
-                <th:block th:each="entry : *{capitalUsageRows}">
-                    <th:block th:insert="application/your-project-costs-fragments :: capital_usage_row (${entry.key}, ${entry.value})" />
-                </th:block>
-            </div>
-            <p class="alignright">
-                <button type="submit"
-                        name="add_cost"
-                        data-repeatable-rowcontainer="#capital-usage"
-                        th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE}"
-                        class="button-clear">Add another asset</button>
-            </p>
-            <h4 class="govuk-heading-s alignright section-total-summary">
-                Total capital usage costs
-                <span class="govuk-heading-s"
-                      data-mirror='#section-total-capital-usage'
-                      th:text="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"></span>
-            </h4>
-            <input type="hidden"
-                   data-calculation-fields=".capital-usage-totals"
-                   data-calculation-operations="+"
-                   id="section-total-capital-usage"
-                   th:attr="data-calculation-rawvalue=${form.totalCapitalUsageCosts}"
-                   th:value="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"/>
+                <div id="capital-usage">
+                    <th:block th:each="entry : *{capitalUsageRows}">
+                        <th:block
+                            th:insert="application/your-project-costs-fragments :: capital_usage_row (${entry.key}, ${entry.value})"/>
+                    </th:block>
+                </div>
+                <p class="alignright">
+                    <button type="submit"
+                            name="add_cost"
+                            data-repeatable-rowcontainer="#capital-usage"
+                            th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE}"
+                            class="button-clear">Add another asset
+                    </button>
+                </p>
+                <h4 class="govuk-heading-s alignright section-total-summary">
+                    Total capital usage costs
+                    <span class="govuk-heading-s"
+                          data-mirror='#section-total-capital-usage'
+                          th:text="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       data-calculation-fields=".capital-usage-totals"
+                       data-calculation-operations="+"
+                       id="section-total-capital-usage"
+                       th:attr="data-calculation-rawvalue=${form.totalCapitalUsageCosts}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalCapitalUsageCosts, 0,'DEFAULT')}"/>
 
-            <div class="govuk-body"><p>You can claim the usage costs of capital assets you will buy for, or use on, your
-                project.</p></div>
-            <details class="govuk-details" role="group">
-                <summary class="govuk-details__summary" role="button"
-                         aria-controls="details-content-412b50ac-c8d6-49eb-bf7d-24b1eeaeb7a1" aria-expanded="false">
-                    <span class="govuk-details__summary-text">Capital usage guidance</span>
-                </summary>
-                <div class="govuk-details__text wysiwyg-styles"
-                     id="details-content-412b50ac-c8d6-49eb-bf7d-24b1eeaeb7a1" aria-hidden="true"><p>You will need to
-                    calculate a ‘usage’ value for each item. You can do this by deducting its expected value from its
-                    original price at the end of your project. If you owned the equipment before the project started
-                    then you should use its net present value.</p>
-                    <p>This value is then multiplied by the amount, in percentages, that is used during the project.
-                        This final value represents the eligible cost to your project.</p></div>
-            </details>
+                <div class="govuk-body"><p>You can claim the usage costs of capital assets you will buy for, or use on,
+                    your
+                    project.</p></div>
+                <details class="govuk-details" role="group">
+                    <summary class="govuk-details__summary" role="button"
+                             aria-controls="details-content-412b50ac-c8d6-49eb-bf7d-24b1eeaeb7a1" aria-expanded="false">
+                        <span class="govuk-details__summary-text">Capital usage guidance</span>
+                    </summary>
+                    <div class="govuk-details__text wysiwyg-styles"
+                         id="details-content-412b50ac-c8d6-49eb-bf7d-24b1eeaeb7a1" aria-hidden="true"><p>You will need
+                        to
+                        calculate a ‘usage’ value for each item. You can do this by deducting its expected value from
+                        its
+                        original price at the end of your project. If you owned the equipment before the project started
+                        then you should use its net present value.</p>
+                        <p>This value is then multiplied by the amount, in percentages, that is used during the project.
+                            This final value represents the eligible cost to your project.</p></div>
+                </details>
+            </th:block>
         </div>
     </section>
 </th:block>
 
 <th:block th:fragment="ajax_capital_usage_row">
     <th:block th:object="${form}">
-        <th:block th:insert="application/your-project-costs-fragments :: capital_usage_row (${id}, ${row})" />
+        <th:block th:insert="application/your-project-costs-fragments :: capital_usage_row (${id}, ${row})"/>
     </th:block>
 </th:block>
 
 <th:block th:fragment="capital_usage_row (id, row)">
     <div class="form-row" th:with="path=${'capitalUsageRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
-        <input type="hidden" th:field="*{__${path}__.costId}" />
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
         <div class="govuk-form-group">
             <label class="govuk-label govuk-label--s"
                    th:for="__${path}__.item">
                 <span>Item description</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.item)"/>
             <textarea
                 class="govuk-textarea"
                 th:id="__${path}__.item"
@@ -595,6 +821,8 @@
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                     <h2 class="govuk-fieldset__heading">New or existing item</h2>
                 </legend>
+                <th:block
+                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.newItem)"/>
                 <div class="govuk-radios govuk-radios--inline">
                     <div class="govuk-radios__item">
                         <input th:id="__${path}__.newItem.new"
@@ -609,7 +837,6 @@
                             New
                         </label>
                     </div>
-
                     <div class="govuk-radios__item">
                         <input th:id="__${path}__.newItem.existing"
                                th:field="*{__${path}__.newItem}"
@@ -630,6 +857,8 @@
             <label th:for="__${path}__.deprecation" class="govuk-label govuk-label--s">
                 Depreciation period (months)
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.deprecation)"/>
             <input th:id="__${path}__.deprecation"
                    th:field="*{__${path}__.deprecation}"
                    th:errorclass="govuk-input--error"
@@ -647,6 +876,8 @@
             <label th:for="__${path}__.netValue" class="govuk-label govuk-label--s">
                 Net present value at the start of your project or the price you bought it for (&pound;)
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.netValue)"/>
             <input th:id="__${path}__.netValue"
                    th:field="*{__${path}__.netValue}"
                    th:errorclass="govuk-input--error"
@@ -664,6 +895,8 @@
             <label th:for="__${path}__.residualValue" class="govuk-label govuk-label--s">
                 Residual value at end of project (&pound;)
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.residualValue)"/>
             <input th:id="__${path}__.residualValue"
                    th:field="*{__${path}__.residualValue}"
                    th:errorclass="govuk-input--error"
@@ -681,6 +914,8 @@
             <label th:for="__${path}__.utilisation" class="govuk-label govuk-label--s">
                 Utilisation (&percnt;)
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.utilisation)"/>
             <input th:id="__${path}__.utilisation"
                    th:field="*{__${path}__.utilisation}"
                    th:errorclass="govuk-input--error"
@@ -713,6 +948,60 @@
     </div>
 </th:block>
 
+<th:block th:fragment="capital_usage_read_only">
+    <div class="table-overflow">
+        <table class="govuk-table" id="capital-usage-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" id="cap-usage-description" class="govuk-table__header">Item description</th>
+                <th scope="col" id="cap-usage-new-existing" class="govuk-table__header">New or Existing</th>
+                <th scope="col" id="cap-usage-depreciation-period" class="govuk-table__header">Depreciation period
+                    (months)
+                </th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric"
+                    id="cap-usage-net-present-value">Net present value (&pound;)
+                </th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="cap-usage-residual-value">
+                    Residual value (&pound;)
+                </th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="cap-usage-utilisation">
+                    Utilisation (&percnt;)
+                </th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="cap-usage-cost">Net cost
+                </th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <th:block th:each="entry : *{capitalUsageRows}" th:with="cost=${entry.value}">
+                <tr class="govuk-table__row" th:unless="${cost.blank}">
+                    <td class="govuk-table__cell" th:text="${cost.item}"></td>
+                    <td class="govuk-table__cell" th:text="${cost.newItem ? 'Existing' : 'New'}"></td>
+                    <td class="govuk-table__cell" th:text="${cost.deprecation}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"
+                        th:text="${#numbers.formatInteger(cost.netValue, 0, 'DEFAULT')}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"
+                        th:text="${#numbers.formatInteger(cost.residualValue, 0, 'DEFAULT')}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.utilisation}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        &pound;<th:block
+                        th:text="${cost.total &lt; 0 ? 0 : #numbers.formatInteger(cost.total, 0, 'DEFAULT')}"/>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <tfoot>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" colspan="6">Total capital usage</th>
+                <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-capital-usage"
+                    th:attr="data-calculation-rawvalue=${form.totalCapitalUsageCosts}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalCapitalUsageCosts, 0, 'DEFAULT')}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</th:block>
+
 
 <!--/***************************
 
@@ -722,73 +1011,87 @@
 <th:block th:fragment="subcontracting_costs">
     <section class="collapsible">
         <h2>
-            <th:block>Subcontracting costs</th:block>
-            <span data-mirror="#section-total-subcontracting" th:text="'£' + ${#numbers.formatInteger(form.totalSubcontractingCosts, 0,'DEFAULT')}">£82,000</span>
+            Subcontracting costs
+            <span data-mirror="#section-total-subcontracting"></span>
         </h2>
         <div class="collapsible-content">
-            <p class="govuk-body">Please provide details of any work that you expect to subcontract for your
-                project.</p>
-            <div id="subcontracting">
-                <th:block th:each="entry : *{subcontractingRows}">
-                    <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs_row (${entry.key}, ${entry.value})" />
-                </th:block>
-            </div>
-            <p class="alignright">
-                <button type="submit"
-                        name="add_cost"
-                        th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS}"
-                        class="button-clear"
-                        data-repeatable-rowcontainer="#subcontracting">Add another subcontractor</button>
-            </p>
-            <h4 class="govuk-heading-s alignright section-total-summary">
-                Total subcontracting costs
-                <span class="govuk-heading-s"
-                      data-mirror="#section-total-subcontracting"
-                      th:text="'£' + ${#numbers.formatInteger(form.totalSubcontractingCosts, 0,'DEFAULT')}"></span>
-            </h4>
-            <input type="hidden"
-                   data-calculation-fields=".subcontracting-totals"
-                   data-calculation-operations="+"
-                   id="section-total-subcontracting"
-                   th:attr="data-calculation-rawvalue=${form.totalSubcontractingCosts}"
-                   th:value="'£' + ${#numbers.formatInteger(form.totalSubcontractingCosts, 0,'DEFAULT')}"/>
+            <th:block th:if="${model.readOnly}">
+                <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs_read_only"/>
+            </th:block>
+            <th:block th:unless="${model.readOnly}">
+                <p class="govuk-body">Please provide details of any work that you expect to subcontract for your
+                    project.</p>
+                <div id="subcontracting">
+                    <th:block th:each="entry : *{subcontractingRows}">
+                        <th:block
+                            th:insert="application/your-project-costs-fragments :: subcontracting_costs_row (${entry.key}, ${entry.value})"/>
+                    </th:block>
+                </div>
+                <p class="alignright">
+                    <button type="submit"
+                            name="add_cost"
+                            th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS}"
+                            class="button-clear"
+                            data-repeatable-rowcontainer="#subcontracting">Add another subcontractor
+                    </button>
+                </p>
+                <h4 class="govuk-heading-s alignright section-total-summary">
+                    Total subcontracting costs
+                    <span class="govuk-heading-s"
+                          data-mirror="#section-total-subcontracting"
+                          th:text="'£' + ${#numbers.formatInteger(form.totalSubcontractingCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       data-calculation-fields=".subcontracting-totals"
+                       data-calculation-operations="+"
+                       id="section-total-subcontracting"
+                       th:attr="data-calculation-rawvalue=${form.totalSubcontractingCosts}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalSubcontractingCosts, 0,'DEFAULT')}"/>
 
-            <div class="govuk-body"><p>You can subcontract work if you don’t have the expertise in your project team.
-                You can also subcontract if it is cheaper than developing your skills in-house.</p></div>
-            <details class="govuk-details" role="group">
-                <summary class="govuk-details__summary" role="button"
-                         aria-controls="details-content-6f96a41f-908c-4039-8aa3-4edb6a35af0e" aria-expanded="false">
-                    <span class="govuk-details__summary-text">Subcontracting costs guidance</span>
-                </summary>
-                <div class="govuk-details__text wysiwyg-styles"
-                     id="details-content-6f96a41f-908c-4039-8aa3-4edb6a35af0e" aria-hidden="true"><p>Subcontracting
-                    costs relate to work carried out by third party organisations. These organisations are not part of
-                    your project.</p>
-                    <p>Subcontracting is eligible providing it’s justified as to why the work cannot be performed by a
-                        project partner.</p>
-                    <p>Subcontracting associate companies should be charged at cost.</p>
-                    <p>Where possible you should select a UK based contractor. You should name the subcontractor (where
-                        known) and describe what they will be doing. You should also state where the work will be
-                        undertaken. We will look at the size of this contribution when assessing your eligibility and
-                        level of support.</p></div>
-            </details>
+                <div class="govuk-body"><p>You can subcontract work if you don’t have the expertise in your project
+                    team.
+                    You can also subcontract if it is cheaper than developing your skills in-house.</p></div>
+                <details class="govuk-details" role="group">
+                    <summary class="govuk-details__summary" role="button"
+                             aria-controls="details-content-6f96a41f-908c-4039-8aa3-4edb6a35af0e" aria-expanded="false">
+                        <span class="govuk-details__summary-text">Subcontracting costs guidance</span>
+                    </summary>
+                    <div class="govuk-details__text wysiwyg-styles"
+                         id="details-content-6f96a41f-908c-4039-8aa3-4edb6a35af0e" aria-hidden="true"><p>Subcontracting
+                        costs relate to work carried out by third party organisations. These organisations are not part
+                        of
+                        your project.</p>
+                        <p>Subcontracting is eligible providing it’s justified as to why the work cannot be performed by
+                            a
+                            project partner.</p>
+                        <p>Subcontracting associate companies should be charged at cost.</p>
+                        <p>Where possible you should select a UK based contractor. You should name the subcontractor
+                            (where
+                            known) and describe what they will be doing. You should also state where the work will be
+                            undertaken. We will look at the size of this contribution when assessing your eligibility
+                            and
+                            level of support.</p></div>
+                </details>
+            </th:block>
         </div>
     </section>
 </th:block>
 
 <th:block th:fragment="ajax_subcontracting_costs_row">
     <th:block th:object="${form}">
-        <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs_row (${id}, ${row})" />
+        <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs_row (${id}, ${row})"/>
     </th:block>
 </th:block>
 
 <th:block th:fragment="subcontracting_costs_row (id, row)">
     <div class="form-row" th:with="path=${'subcontractingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
-        <input type="hidden" th:field="*{__${path}__.costId}" />
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
         <div class="govuk-form-group">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.name">
                 Subcontractor name
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.name)"/>
             <input th:id="__${path}__.name"
                    th:field="*{__${path}__.name}"
                    th:errorclass="govuk-input--error"
@@ -801,6 +1104,8 @@
             <label class="govuk-label govuk-label--s" th:for="__${path}__.country">
                 Country where the subcontractor will work
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.country)"/>
             <input th:id="__${path}__.country"
                    th:field="*{__${path}__.country}"
                    th:errorclass="govuk-input--error"
@@ -814,6 +1119,8 @@
             <label class="govuk-label govuk-label--s" th:for="__${path}__.role">
                 Role of the subcontractor in the project and description of the work they’ll do
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.role)"/>
             <textarea
                 class="govuk-textarea"
                 th:id="__${path}__.role"
@@ -829,6 +1136,8 @@
             <label class="govuk-label govuk-label--s" th:for="__${path}__.cost">
                 Cost
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
             <input th:id="__${path}__.cost"
                    th:field="*{__${path}__.cost}"
                    th:errorclass="govuk-input--error"
@@ -849,6 +1158,41 @@
     </div>
 </th:block>
 
+<th:block th:fragment="subcontracting_costs_read_only">
+    <div class="table-overflow">
+        <table class="govuk-table" id="subcontracting-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header" id="subcontracting-name">Subcontractor name</th>
+                <th scope="col" class="govuk-table__header" id="subcontracting-country">Country</th>
+                <th scope="col" class="govuk-table__header" id="subcontracting-role">Role</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="subcontracting-cost">Cost</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <th:block th:each="entry : *{subcontractingRows}" th:with="cost=${entry.value}">
+                    <tr class="govuk-table__row" th:unless="${cost.blank}">
+                    <td class="govuk-table__cell" th:text="${cost.name}">Mr Francis Bois</td>
+                    <td class="govuk-table__cell" th:text="${cost.country}">France</td>
+                    <td class="govuk-table__cell" th:text="${cost.role}">Specialist consultant</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        &pound;<th:block th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}">150,000</th:block>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <tfoot class="govuk-table__foot">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" colspan="3" scope="row">Total subcontracting costs</th>
+                <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-subcontracting" th:attr="data-calculation-rawvalue=${form.totalSubcontractingCosts}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalSubcontractingCosts, 0, 'DEFAULT')}" />
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</th:block>
+
 
 <!--/***************************
 
@@ -858,76 +1202,85 @@
 <th:block th:fragment="travel">
     <section class="collapsible">
         <h2>
-            <th:block>Travel and subsistence</th:block>
-            <span data-mirror="#section-total-travel" th:text="'£' + ${#numbers.formatInteger(form.totalTravelCosts, 0,'DEFAULT')}">£82,000</span>
+            Travel and subsistence
+            <span data-mirror="#section-total-travel"></span>
         </h2>
         <div class="collapsible-content">
-            <p class="govuk-body">You should include travel and subsistence costs that relate to this project.</p>
-            <div class="govuk-form-group table-overflow">
-                <table class="govuk-table" id="travel-costs-table">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th id="travel-purpose" class="govuk-table__header" scope="col">Purpose of journey or
-                            description of subsistence cost
-                        </th>
-                        <th id="travel-times" class="govuk-table__header govuk-table__header--numeric" scope="col">
-                            Number of times
-                        </th>
-                        <th id="travel-cost" class="govuk-table__header govuk-table__header--numeric" scope="col">Cost
-                            each (&pound;)
-                        </th>
-                        <th id="travel-total" class="govuk-table__header govuk-table__header--numeric" scope="col">
-                            Total
-                        </th>
-                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                    <th:block th:each="entry : *{travelRows}">
-                        <th:block th:insert="application/your-project-costs-fragments :: travel_row (${entry.key}, ${entry.value})" />
-                    </th:block>
-                    </tbody>
-                </table>
+            <th:block th:if="${model.readOnly}">
+                <th:block th:insert="application/your-project-costs-fragments :: travel_read_only"/>
+            </th:block>
+            <th:block th:unless="${model.readOnly}">
+                <p class="govuk-body">You should include travel and subsistence costs that relate to this project.</p>
+                <div class="govuk-form-group table-overflow">
+                    <table class="govuk-table" id="travel-costs-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th id="travel-purpose" class="govuk-table__header" scope="col">Purpose of journey or
+                                description of subsistence cost
+                            </th>
+                            <th id="travel-times" class="govuk-table__header govuk-table__header--numeric" scope="col">
+                                Number of times
+                            </th>
+                            <th id="travel-cost" class="govuk-table__header govuk-table__header--numeric" scope="col">Cost
+                                each (&pound;)
+                            </th>
+                            <th id="travel-total" class="govuk-table__header govuk-table__header--numeric" scope="col">
+                                Total
+                            </th>
+                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <th:block th:each="entry : *{travelRows}">
+                            <th:block
+                                th:insert="application/your-project-costs-fragments :: travel_row (${entry.key}, ${entry.value})"/>
+                        </th:block>
+                        </tbody>
+                    </table>
 
-                <p class="alignright">
-                    <button type="submit"
-                            name="add_cost"
-                            th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).TRAVEL}"
-                            class="button-clear"
-                            data-repeatable-rowcontainer="#travel-costs-table tbody">Add another travel cost</button>
-                </p>
-            </div>
-            <h4 class="govuk-heading-s alignright section-total-summary">
-                Total travel and subsistence costs
-                <span class="govuk-heading-s"
-                      data-mirror="#section-total-travel"
-                      th:text="'£' + ${#numbers.formatInteger(form.totalTravelCosts, 0,'DEFAULT')}"></span>
-            </h4>
-            <input type="hidden"
-                   data-calculation-fields=".travel-totals"
-                   data-calculation-operations="+"
-                   id="section-total-travel"
-                   th:attr="data-calculation-rawvalue=${form.totalTravelCosts}"
-                   th:value="'£' + ${#numbers.formatInteger(form.totalTravelCosts, 0,'DEFAULT')}"/>
-
+                    <p class="alignright">
+                        <button type="submit"
+                                name="add_cost"
+                                th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).TRAVEL}"
+                                class="button-clear"
+                                data-repeatable-rowcontainer="#travel-costs-table tbody">Add another travel cost
+                        </button>
+                    </p>
+                </div>
+                <h4 class="govuk-heading-s alignright section-total-summary">
+                    Total travel and subsistence costs
+                    <span class="govuk-heading-s"
+                          data-mirror="#section-total-travel"
+                          th:text="'£' + ${#numbers.formatInteger(form.totalTravelCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       data-calculation-fields=".travel-totals"
+                       data-calculation-operations="+"
+                       id="section-total-travel"
+                       th:attr="data-calculation-rawvalue=${form.totalTravelCosts}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalTravelCosts, 0,'DEFAULT')}"/>
+            </th:block>
         </div>
     </section>
 </th:block>
 
 <th:block th:fragment="ajax_travel_row">
     <th:block th:object="${form}">
-        <th:block th:insert="application/your-project-costs-fragments :: travel_row (${id}, ${row})" />
+        <th:block th:insert="application/your-project-costs-fragments :: travel_row (${id}, ${row})"/>
     </th:block>
 </th:block>
 
 <th:block th:fragment="travel_row (id, row)">
-    <tr class="govuk-table__row form-group-row-validated" th:with="path=${'travelRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
-        <input type="hidden" th:field="*{__${path}__.costId}" />
+    <tr class="govuk-table__row form-group-row-validated" th:with="path=${'travelRows[__${id}__]'}"
+        th:attr="data-repeatable-row=${path}">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.item">
                 <span class="govuk-visually-hidden">Purpose of journey or description of subsistence cost</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.item)"/>
             <input th:id="__${path}__.item"
                    th:field="*{__${path}__.item}"
                    th:errorclass="govuk-input--error"
@@ -940,6 +1293,8 @@
             <label th:for="__${path}__.times">
                 <span class="govuk-visually-hidden">Number of times</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.times)"/>
             <input th:id="__${path}__.times"
                    th:field="*{__${path}__.times}"
                    th:errorclass="govuk-input--error"
@@ -956,6 +1311,8 @@
             <label th:for="__${path}__.eachCost">
                 <span class="govuk-visually-hidden">Cost each (&pound;)</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.eachCost)"/>
             <input th:id="__${path}__.eachCost"
                    th:field="*{__${path}__.eachCost}"
                    th:errorclass="govuk-input--error"
@@ -990,6 +1347,40 @@
     </tr>
 </th:block>
 
+<th:block th:fragment="travel_read_only">
+    <div class="table-overflow">
+        <table class="govuk-table" id="travel-costs-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th id="travel-purpose" class="govuk-table__header" scope="col">Purpose of journey or description of subsistence cost</th>
+                <th id="travel-times" class="govuk-table__header govuk-table__header--numeric" scope="col">Number of times</th>
+                <th id="travel-cost" class="govuk-table__header govuk-table__header--numeric" scope="col">Cost each (&pound;)</th>
+                <th id="travel-total" class="govuk-table__header govuk-table__header--numeric" scope="col">Total</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <th:block th:each="entry : *{travelRows}" th:with="cost=${entry.value}">
+                <tr class="govuk-table__row" th:unless="${cost.blank}">
+                <td class="govuk-table__cell" th:text="${cost.item}"></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.times}"></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.eachCost != null ? #numbers.formatInteger(cost.eachCost,0,'DEFAULT') : '0'}"></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    &pound;<th:block th:text="${#numbers.formatInteger(cost.total, 0, 'DEFAULT')}">1220</th:block>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell govuk-table__cell--numeric" th:id="section-total-travel" th:attr="data-calculation-rawvalue=${form.totalTravelCosts}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalTravelCosts, 0, 'DEFAULT')}" />
+                </td>
+                <th class="govuk-table__header" scope="row" colspan="3">Total travel and subsistence</th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</th:block>
+
 <!--/***************************
 
             OTHER COSTS
@@ -998,72 +1389,80 @@
 <th:block th:fragment="other_costs">
     <section class="collapsible">
         <h2>
-            <th:block>Other costs</th:block>
-            <span data-mirror="#section-total-other" th:text="'£' + ${#numbers.formatInteger(form.totalOtherCosts, 0,'DEFAULT')}">£82,000</span>
+            Other costs
+            <span data-mirror="#section-total-other"></span>
         </h2>
         <div class="collapsible-content">
-            <p class="govuk-body">Please note that legal or project audit and accountancy fees are not eligible and
-                should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
-                limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
-                within any other cost headings.</p>
-            <div class="govuk-form-group table-overflow">
-                <table class="govuk-table" id="other-costs-table">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" id="other_costs-description" scope="col">Description and
-                            justification of the cost
-                        </th>
-                        <th id="other_costs-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
-                            Estimated cost (&pound;)
-                        </th>
-                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                    <th:block th:each="entry : *{otherRows}">
-                        <th:block th:insert="application/your-project-costs-fragments :: other_costs_row (${entry.key}, ${entry.value})" />
-                    </th:block>
-                    </tbody>
-                </table>
-                <p class="alignright">
-                    <button type="submit"
-                            name="add_cost"
-                            th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS}"
-                            class="button-clear"
-                            data-repeatable-rowcontainer="#other-costs-table tbody">Add another cost</button>
-                </p>
-            </div>
-            <h4 class="govuk-heading-s alignright section-total-summary">
-                Total other costs
-                <span class="govuk-heading-s"
-                      data-mirror="#section-total-other"
-                      th:text="'£' + ${#numbers.formatInteger(form.totalOtherCosts, 0,'DEFAULT')}"></span>
-            </h4>
-            <input type="hidden"
-                   data-calculation-fields=".other-totals"
-                   data-calculation-operations="+"
-                   id="section-total-other"
-                   th:attr="data-calculation-rawvalue=${form.totalOtherCosts}"
-                   th:value="'£' + ${#numbers.formatInteger(form.totalOtherCosts, 0,'DEFAULT')}"/>
+            <th:block th:if="${model.readOnly}">
+                <th:block th:insert="application/your-project-costs-fragments :: other_costs_read_only"/>
+            </th:block>
+            <th:block th:unless="${model.readOnly}">
+                <p class="govuk-body">Please note that legal or project audit and accountancy fees are not eligible and
+                    should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
+                    limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
+                    within any other cost headings.</p>
+                <div class="govuk-form-group table-overflow">
+                    <table class="govuk-table" id="other-costs-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" id="other_costs-description" scope="col">Description and
+                                justification of the cost
+                            </th>
+                            <th id="other_costs-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                                Estimated cost (&pound;)
+                            </th>
+                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <th:block th:each="entry : *{otherRows}">
+                            <th:block
+                                th:insert="application/your-project-costs-fragments :: other_costs_row (${entry.key}, ${entry.value})"/>
+                        </th:block>
+                        </tbody>
+                    </table>
+                    <p class="alignright">
+                        <button type="submit"
+                                name="add_cost"
+                                th:value="${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS}"
+                                class="button-clear"
+                                data-repeatable-rowcontainer="#other-costs-table tbody">Add another cost
+                        </button>
+                    </p>
+                </div>
+                <h4 class="govuk-heading-s alignright section-total-summary">
+                    Total other costs
+                    <span class="govuk-heading-s"
+                          data-mirror="#section-total-other"
+                          th:text="'£' + ${#numbers.formatInteger(form.totalOtherCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       data-calculation-fields=".other-totals"
+                       data-calculation-operations="+"
+                       id="section-total-other"
+                       th:attr="data-calculation-rawvalue=${form.totalOtherCosts}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalOtherCosts, 0,'DEFAULT')}"/>
+            </th:block>
         </div>
     </section>
 </th:block>
 
 <th:block th:fragment="ajax_other_costs_row">
     <th:block th:object="${form}">
-        <th:block th:insert="application/your-project-costs-fragments :: other_costs_row (${id}, ${row})" />
+        <th:block th:insert="application/your-project-costs-fragments :: other_costs_row (${id}, ${row})"/>
     </th:block>
 </th:block>
 
 <th:block th:fragment="other_costs_row (id, row)">
-    <tr class="form-group-row-validated" th:with="path=${'otherRows[__${id}__]'}"  th:attr="data-repeatable-row=${path}">
-        <input type="hidden" th:field="*{__${path}__.costId}" />
+    <tr class="form-group-row-validated" th:with="path=${'otherRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.description">
-                                    <span
-                                        class="govuk-visually-hidden">Description and justification of the cost</span>
+                <span class="govuk-visually-hidden">Description and justification of the cost</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.description)"/>
             <textarea
                 class="govuk-textarea"
                 th:id="__${path}__.description"
@@ -1078,6 +1477,8 @@
             <label th:for="__${path}__.estimate">
                 <span class="govuk-visually-hidden">Estimated cost (&pound;)</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.estimate)"/>
             <input th:id="__${path}__.estimate"
                    th:field="*{__${path}__.estimate}"
                    th:errorclass="govuk-input--error"
@@ -1098,6 +1499,37 @@
             </button>
         </td>
     </tr>
+</th:block>
+
+<th:block th:fragment="other_costs_read_only">
+    <div class="table-overflow">
+        <table class="govuk-table" id="other-costs-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th id="other_costs-description" class="govuk-table__header" scope="col" >Description and justification of the cost</th>
+                <th id="other_costs-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">Estimated cost (&pound;)</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <th:block th:each="entry : *{otherRows}" th:with="cost=${entry.value}">
+                <tr class="govuk-table__row" th:unless="${cost.blank}">
+                    <td class="govuk-table__cell" th:text="${cost.description}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block th:text="${cost.estimate != null ? #numbers.formatInteger(cost.estimate,0,'DEFAULT') : '0'}">1500</th:block>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <tfoot class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">Total other costs</th>
+                <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-other" th:attr="data-calculation-rawvalue=${form.totalOtherCosts}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalOtherCosts, 0, 'DEFAULT')}" />
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
 </th:block>
 
 </html>

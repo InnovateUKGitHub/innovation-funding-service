@@ -5,15 +5,26 @@ import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.groups.Default;
 import java.math.BigDecimal;
+
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 
 public class OverheadForm {
 
+    private Long costId;
+
     private OverheadRateType rateType;
+
+    @Min(value = 0, groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = MAX_DIGITS_MESSAGE)
     private Integer totalSpreadsheet;
     private String filename;
-    private MultipartFile overheadfile;
     private BigDecimal total;
+
+    private MultipartFile file;
 
     public OverheadForm() {
     }
@@ -23,6 +34,7 @@ public class OverheadForm {
         this.totalSpreadsheet = overhead.getRate();
         this.filename = overhead.getCalculationFile().map(FileEntryResource::getName).orElse("");
         this.total = overhead.getTotal();
+        this.costId = overhead.getId();
     }
 
     public OverheadRateType getRateType() {
@@ -41,15 +53,35 @@ public class OverheadForm {
         this.totalSpreadsheet = totalSpreadsheet;
     }
 
-    public MultipartFile getOverheadfile() {
-        return overheadfile;
+    public String getFilename() {
+        return filename;
     }
 
-    public void setOverheadfile(MultipartFile overheadfile) {
-        this.overheadfile = overheadfile;
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 
     public BigDecimal getTotal() {
         return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    public Long getCostId() {
+        return costId;
+    }
+
+    public void setCostId(Long costId) {
+        this.costId = costId;
     }
 }

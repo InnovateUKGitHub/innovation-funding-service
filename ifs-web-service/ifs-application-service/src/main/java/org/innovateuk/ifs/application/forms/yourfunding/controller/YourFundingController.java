@@ -58,7 +58,7 @@ public class YourFundingController {
     private YourFundingFormValidator yourFundingFormValidator;
 
     @GetMapping("/{applicantOrganisationId}")
-    @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
+    @SecuredBySpring(value = "MANAGEMENT_VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your Finances'")
     @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
     public String managementViewYourFunding(Model model,
                                             UserResource user,

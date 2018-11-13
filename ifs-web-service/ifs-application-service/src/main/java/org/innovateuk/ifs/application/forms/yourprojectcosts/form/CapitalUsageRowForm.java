@@ -1,24 +1,45 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.form;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.finance.resource.cost.CapitalUsage;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 
 public class CapitalUsageRowForm extends AbstractCostRowForm<CapitalUsage> {
 
+    @NotBlank(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String item;
 
+    @NotNull(message = NOT_BLANK_MESSAGE)
     private Boolean newItem;
 
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer deprecation;
 
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal netValue;
 
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal residualValue;
 
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Max(value = 100, message = VALUE_MUST_BE_LOWER_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer utilisation;
 
     public CapitalUsageRowForm() {}

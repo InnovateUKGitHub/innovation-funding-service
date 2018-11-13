@@ -1,18 +1,31 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.form;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 
 public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
 
+    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     private String role;
 
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal gross;
 
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @Min(value=1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Max(value=365, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_LOWER_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer days;
 
     private BigDecimal rate = BigDecimal.ZERO;

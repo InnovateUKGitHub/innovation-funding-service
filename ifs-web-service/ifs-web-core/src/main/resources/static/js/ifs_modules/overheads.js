@@ -14,6 +14,12 @@ IFS.core.overheads = (function () {
     init: function () {
       s = this.settings
       IFS.core.overheads.setOverheadSectionElementValue()
+
+      var el = jQuery(s.radios + ':checked')
+      if (el.length) {
+        IFS.core.overheads.setActiveTotal(el)
+      }
+
       jQuery(document).on('change', s.radios, function () {
         IFS.core.overheads.setActiveTotal(this)
       })

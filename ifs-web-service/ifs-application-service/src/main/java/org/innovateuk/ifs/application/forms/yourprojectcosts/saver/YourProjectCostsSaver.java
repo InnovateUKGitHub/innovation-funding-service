@@ -138,40 +138,56 @@ public class YourProjectCostsSaver {
     }
 
     private <R extends AbstractCostRowForm> Map<String, R> getRowsFromType(YourProjectCostsForm form, FinanceRowType type) {
+        Map<String, ?> map;
         switch (type) {
             case LABOUR:
-                return (Map<String, R>) form.getLabourCosts();
+                map = form.getLabourCosts();
+                break;
             case CAPITAL_USAGE:
-                return (Map<String, R>) form.getCapitalUsageRows();
+                map = form.getCapitalUsageRows();
+                break;
             case MATERIALS:
-                return (Map<String, R>) form.getMaterialRows();
+                map = form.getMaterialRows();
+                break;
             case OTHER_COSTS:
-                return (Map<String, R>) form.getOtherRows();
+                map = form.getOtherRows();
+                break;
             case SUBCONTRACTING_COSTS:
-                return (Map<String, R>) form.getSubcontractingRows();
+                map = form.getSubcontractingRows();
+                break;
             case TRAVEL:
-                return (Map<String, R>) form.getTravelRows();
+                map = form.getTravelRows();
+                break;
             default:
                 throw new RuntimeException("Unknown row type");
         }
+        return (Map<String, R>) map;
     }
 
     private <R extends AbstractCostRowForm> Class<R> newRowFromType(FinanceRowType type) {
+        Class<?> clazz;
         switch (type) {
             case LABOUR:
-                return (Class<R>) LabourRowForm.class;
+                clazz = LabourRowForm.class;
+                break;
             case CAPITAL_USAGE:
-                return (Class<R>) CapitalUsageRowForm.class;
+                clazz = CapitalUsageRowForm.class;
+                break;
             case MATERIALS:
-                return (Class<R>) MaterialRowForm.class;
+                clazz = MaterialRowForm.class;
+                break;
             case OTHER_COSTS:
-                return (Class<R>) OtherCostRowForm.class;
+                clazz = OtherCostRowForm.class;
+                break;
             case SUBCONTRACTING_COSTS:
-                return (Class<R>) SubcontractingRowForm.class;
+                clazz = SubcontractingRowForm.class;
+                break;
             case TRAVEL:
-                return (Class<R>) TravelRowForm.class;
+                clazz = TravelRowForm.class;
+                break;
             default:
                 throw new RuntimeException("Unknown row type");
         }
+        return (Class<R>) clazz;
     }
 }
