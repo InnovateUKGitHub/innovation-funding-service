@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import static java.util.Collections.singletonList;
 
 /**
- * TODO DW - document this class
+ * A component to set the special Web User on the Spring Security context, and additionally clear afterwards.
  */
 @Component
 public class WebUserSecuritySetter {

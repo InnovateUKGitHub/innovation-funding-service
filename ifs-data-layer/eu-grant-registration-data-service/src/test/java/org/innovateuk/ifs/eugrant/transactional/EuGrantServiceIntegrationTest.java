@@ -9,7 +9,6 @@ import org.innovateuk.ifs.eugrant.EuOrganisationResource;
 import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.innovateuk.ifs.eugrant.repository.EuGrantRepository;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +28,7 @@ import static org.innovateuk.ifs.eugrant.domain.EuFundingBuilder.newEuFunding;
 import static org.innovateuk.ifs.eugrant.domain.EuGrantBuilder.newEuGrant;
 import static org.innovateuk.ifs.eugrant.domain.EuOrganisationBuilder.newEuOrganisation;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -48,7 +48,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
         euGrantRepository.deleteAll();
     }
 
-    private UserResource webUser = newUserResource().withRoleGlobal(Role.SYSTEM_REGISTRATION_USER).build();
+    private UserResource webUser = newUserResource().withRoleGlobal(SYSTEM_REGISTRATION_USER).build();
 
     @Test
     public void update() {

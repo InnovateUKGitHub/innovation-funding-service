@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.commons.service;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
@@ -15,8 +13,8 @@ import java.util.Optional;
 import java.util.function.*;
 
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.util.CollectionFunctions.nullSafe;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
@@ -73,6 +71,7 @@ public abstract class BaseFailingOrSucceedingResult<T, FailureType extends Error
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public BaseFailingOrSucceedingResult<Void, FailureType> andOnSuccessReturnVoid(Runnable successHandler) {
 
         if (isLeft()) {
@@ -89,6 +88,7 @@ public abstract class BaseFailingOrSucceedingResult<T, FailureType extends Error
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public BaseFailingOrSucceedingResult<T, FailureType> andOnSuccess(Runnable successHandler) {
 
         if (isLeft()) {
@@ -121,6 +121,7 @@ public abstract class BaseFailingOrSucceedingResult<T, FailureType extends Error
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Supplier<? extends FailingOrSucceedingResult<R, FailureType>> successHandler) {
         if (isLeft()) {
             return (BaseFailingOrSucceedingResult<R, FailureType>) this;
@@ -135,6 +136,7 @@ public abstract class BaseFailingOrSucceedingResult<T, FailureType extends Error
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <R> BaseFailingOrSucceedingResult<R, FailureType> andOnSuccessReturn(Supplier<R> successHandler) {
 
         if (isLeft()) {
@@ -156,7 +158,7 @@ public abstract class BaseFailingOrSucceedingResult<T, FailureType extends Error
         return flatMap(successHandler);
     }
 
-    
+    @SuppressWarnings("unchecked")
     public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Function<FailureType, FailingOrSucceedingResult<R, FailureType>> failureHandler) {
         if (isRight()) {
             return (BaseFailingOrSucceedingResult<R, FailureType>) this;
@@ -237,10 +239,11 @@ public abstract class BaseFailingOrSucceedingResult<T, FailureType extends Error
 
     public abstract T findAndThrowException(FailureType failureType);
 
-    protected <T1> T1 mapLeftOrRight(ExceptionThrowingFunction<? super FailureType, ? extends T1> lFunc, ExceptionThrowingFunction<? super T, ? extends T1> rFunc) {
+    private <T1> T1 mapLeftOrRight(ExceptionThrowingFunction<? super FailureType, ? extends T1> lFunc, ExceptionThrowingFunction<? super T, ? extends T1> rFunc) {
         return result.mapLeftOrRight(lFunc, rFunc);
     }
 
+    @SuppressWarnings("unchecked")
     protected <R> BaseFailingOrSucceedingResult<R, FailureType> map(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, FailureType>> rFunc) {
 
         if (result.isLeft()) {
@@ -256,6 +259,7 @@ public abstract class BaseFailingOrSucceedingResult<T, FailureType extends Error
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected <R> BaseFailingOrSucceedingResult<R, FailureType> flatMap(ExceptionThrowingFunction<? super T, R> rFunc) {
 
         if (result.isLeft()) {
@@ -297,29 +301,24 @@ public abstract class BaseFailingOrSucceedingResult<T, FailureType extends Error
 
     /**
      * Function to aggregate a {@link List} of {@link BaseFailingOrSucceedingResult}.
-     *
-     * @param input
-     * @param failureCollector
-     * @param emptyResult
-     * @param <Item>
-     * @param <FailureType>
-     * @param <Result>
-     * @param <Input>
-     * @return
      */
-    protected static <Item,
+    @SuppressWarnings("unchecked")
+    protected static <
+            Item,
             FailureType extends ErrorHolder,
             Result extends BaseFailingOrSucceedingResult<List<Item>, FailureType>,
-            Input extends BaseFailingOrSucceedingResult<Item, FailureType>>
-    Result aggregate(final List<Input> input,
-                     final BinaryOperator<FailureType> failureCollector,
-                     final Result emptyResult) {
+            Input extends BaseFailingOrSucceedingResult<Item, FailureType>
+            > Result aggregate(
+                    final List<Input> input,
+                    final BinaryOperator<FailureType> failureCollector,
+                    final Result emptyResult) {
+
         if (input == null || input.isEmpty()) {
             return emptyResult;
         }
         final Input firstResult = input.get(0);
         final List<Item> items = new ArrayList<>();
-        final List<FailureType> failures = new ArrayList<FailureType>();
+        final List<FailureType> failures = new ArrayList<>();
         for (final Input i : input) {
             if (i.isSuccess()) {
                 items.add(i.getSuccess());
@@ -335,8 +334,7 @@ public abstract class BaseFailingOrSucceedingResult<T, FailureType extends Error
         }
     }
 
-
     public static <T, FailureType extends ErrorHolder, R extends BaseFailingOrSucceedingResult<T, FailureType>> List<R> filterErrors(final List<R> results, Predicate<FailureType> errorsFilter){
-        return results.stream().filter(result -> result.isSuccess() ? true : errorsFilter.test(result.getFailure())).collect(toList());
+        return simpleFilter(results, result -> result.isSuccess() || errorsFilter.test(result.getFailure()));
     }
 }

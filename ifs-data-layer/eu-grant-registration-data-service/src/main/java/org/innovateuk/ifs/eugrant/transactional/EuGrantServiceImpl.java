@@ -83,6 +83,7 @@ public class EuGrantServiceImpl implements EuGrantService {
 
     private ServiceResult<EuGrantResource> submit(EuGrant euGrant, boolean sendEmail) {
         return serviceSuccess(euGrant.submit(generateShortCode()))
+                .andOnSuccess(submittedGrant -> sendEmailIfNecessary(submittedGrant, sendEmail))
                 .andOnSuccessReturn(euGrantMapper::mapToResource);
     }
 
