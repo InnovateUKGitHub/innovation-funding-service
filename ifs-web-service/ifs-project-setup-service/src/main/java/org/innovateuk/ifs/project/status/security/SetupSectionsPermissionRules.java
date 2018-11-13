@@ -11,7 +11,6 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -51,9 +50,6 @@ public class SetupSectionsPermissionRules {
 
     @Autowired
     private StatusService statusService;
-
-    @Autowired
-    private OtherDocumentsService otherDocumentsService;
 
     @Autowired
     private OrganisationRestService organisationRestService;
@@ -157,20 +153,6 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectOrganisationCompositeId.getProjectId(), user, (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canEditSpendProfileSection(organisation, projectOrganisationCompositeId.getOrganisationId()));
     }
 
-    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A partner can access the Other Documents " +
-            "section if their Organisation is a business type (i.e. if Companies House details are required)")
-    @OtherDocsWindDown
-    public boolean partnerCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessOtherDocumentsSection);
-    }
-
-    @PermissionRule(value = "SUBMIT_OTHER_DOCUMENTS_SECTION", description = "A project manager can submit uploaded Other Documents " +
-            "if they have not already been submitted, they are allowed to submit and haven't been rejected")
-    @OtherDocsWindDown
-    public boolean projectManagerCanSubmitOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSubmitOtherDocumentsCheck(projectCompositeId.id(), user);
-    }
-
     @PermissionRule(value = "ACCESS_DOCUMENTS_SECTION", description = "A lead can access Documents section. A partner can access Documents " +
             "section if their Companies House information is unnecessary or complete")
     public boolean canAccessDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
@@ -204,17 +186,6 @@ public class SetupSectionsPermissionRules {
         Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectLeadPartners, projectUserResource -> projectUserResource.getUser().equals(user.getId()));
 
         return returnedProjectUser.isPresent();
-    }
-
-    private boolean doSubmitOtherDocumentsCheck(Long projectId, UserResource user) {
-        ProjectResource project = projectService.getById(projectId);
-        boolean isProjectManager = projectService.isProjectManager(user.getId(), projectId);
-        boolean isSubmitAllowed = otherDocumentsService.isOtherDocumentSubmitAllowed(projectId);
-
-        boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
-        ApprovalType otherDocumentsApproved = project.getOtherDocumentsApproved();
-
-        return isProjectManager && !otherDocumentsSubmitted && isSubmitAllowed && !otherDocumentsApproved.equals(ApprovalType.REJECTED);
     }
 
     @PermissionRule(value = "IS_NOT_FROM_OWN_ORGANISATION", description = "A lead partner cannot mark their own spend profiles as incomplete")

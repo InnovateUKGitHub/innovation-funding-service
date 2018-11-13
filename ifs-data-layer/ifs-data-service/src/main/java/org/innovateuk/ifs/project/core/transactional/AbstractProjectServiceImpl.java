@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.core.transactional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
@@ -45,7 +44,6 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PA
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
-import static org.innovateuk.ifs.project.resource.ApprovalType.UNSET;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -94,17 +92,6 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
         return projectUserRepository.findByProjectId(projectId);
-    }
-
-    @OtherDocsWindDown
-    protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
-        if (APPROVED.equals(project.getOtherDocumentsApproved())) {
-            return COMPLETE;
-        } else if (UNSET.equals(project.getOtherDocumentsApproved()) && project.getDocumentsSubmittedDate() != null) {
-            return PENDING;
-        } else {
-            return ACTION_REQUIRED;
-        }
     }
 
     protected ProjectActivityStates createDocumentStatus(Project project) {

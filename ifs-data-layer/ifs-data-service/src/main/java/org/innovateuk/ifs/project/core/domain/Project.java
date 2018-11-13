@@ -2,19 +2,16 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -22,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static javax.persistence.EnumType.STRING;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -84,12 +80,6 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
-    //TODO IFS-471 use workflow for approving other documents
-    @NotNull
-    @Enumerated(STRING)
-    @OtherDocsWindDown
-    private ApprovalType otherDocumentsApproved = ApprovalType.UNSET;
-
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SpendProfile> spendProfiles;
 
@@ -99,8 +89,7 @@ public class Project implements ProcessActivity {
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
-                   Long durationInMonths, String name, ZonedDateTime documentsSubmittedDate,
-                   ApprovalType otherDocumentsApproved) {
+                   Long durationInMonths, String name, ZonedDateTime documentsSubmittedDate) {
 
         this.id = id;
         this.application = application;
@@ -109,7 +98,6 @@ public class Project implements ProcessActivity {
         this.durationInMonths = durationInMonths;
         this.name = name;
         this.documentsSubmittedDate = documentsSubmittedDate;
-        this.otherDocumentsApproved = otherDocumentsApproved;
     }
 
     public void addProjectUser(ProjectUser projectUser) {
@@ -278,16 +266,6 @@ public class Project implements ProcessActivity {
 
     public void setGrantOfferLetter(FileEntry grantOfferLetter) {
         this.grantOfferLetter = grantOfferLetter;
-    }
-
-    @OtherDocsWindDown
-    public ApprovalType getOtherDocumentsApproved() {
-        return otherDocumentsApproved;
-    }
-
-    @OtherDocsWindDown
-    public void setOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
-        this.otherDocumentsApproved = otherDocumentsApproved;
     }
 
     public ZonedDateTime getSpendProfileSubmittedDate() {

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
@@ -232,22 +231,6 @@ public class SetupSectionAccessibilityHelper {
         return userOrganisation.getId().equals(organisationIdFromUrl);
     }
 
-    @OtherDocsWindDown
-    public SectionAccess canAccessOtherDocumentsSection(OrganisationResource organisation) {
-
-        if (setupProgressChecker.isLeadPartnerOrganisation(organisation)) {
-            return ACCESSIBLE;
-        }
-
-        if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Non-lead Partners are unable to access Other Documents section until their Companies House information " +
-                        "is complete")) {
-            return ACCESSIBLE;
-        }
-
-        return NOT_ACCESSIBLE;
-    }
-
     public SectionAccess canAccessDocumentsSection(OrganisationResource organisation) {
 
         if (setupProgressChecker.isLeadPartnerOrganisation(organisation)) {
@@ -265,17 +248,13 @@ public class SetupSectionAccessibilityHelper {
 
     public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
 
-        if (setupProgressChecker.isSpendProfileApproved() && documentsApproved()
-                && setupProgressChecker.isGrantOfferLetterAvailable() && setupProgressChecker.isGrantOfferLetterSent()) {
+        if (setupProgressChecker.isSpendProfileApproved()
+                && setupProgressChecker.isGrantOfferLetterAvailable()
+                && setupProgressChecker.isGrantOfferLetterSent()) {
             return ACCESSIBLE;
         }
 
         return NOT_ACCESSIBLE;
-    }
-
-    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
-    private boolean documentsApproved() {
-       return setupProgressChecker.isOtherDocumentsApproved() || setupProgressChecker.isDocumentsApproved();
     }
 
     public boolean isSpendProfileGenerated() {
