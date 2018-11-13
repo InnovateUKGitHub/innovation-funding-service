@@ -497,6 +497,7 @@ Validation for project location
     Given the user navigates to the page                ${project_in_setup_details_page}
     Given the user clicks the button/link               jQuery = #project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
     And the user moves focus to the element             id = postcode
+    Set Focus To Element                                link = Contact us
     And the user should see a field error               ${empty_field_warning_message}
     When the user clicks the button/link                css = button[type = "submit"]
     Then the user should see a field and summary error  ${empty_field_warning_message}
