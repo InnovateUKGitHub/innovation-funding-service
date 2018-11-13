@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
@@ -15,7 +14,6 @@ import java.util.Optional;
  * A view model that backs the Project Status page
  */
 
-@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;
@@ -132,10 +130,6 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return sectionAccesses.getSpendProfileSection();
     }
 
-    public SectionAccess getOtherDocumentsSection() {
-        return sectionAccesses.getOtherDocumentsSection();
-    }
-
     public SectionAccess getDocumentsSection() {
         return sectionAccesses.getDocumentsSection();
     }
@@ -160,10 +154,6 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public SectionStatus getSpendProfileStatus() {
         return sectionStatuses.getSpendProfileStatus();
-    }
-
-    public SectionStatus getOtherDocumentsStatus() {
-        return sectionStatuses.getOtherDocumentsStatus();
     }
 
     public SectionStatus getDocumentsStatus() {

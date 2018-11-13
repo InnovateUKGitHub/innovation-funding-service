@@ -28,7 +28,6 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
@@ -216,7 +215,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withApplication(application).
                 withPartnerOrganisations(po).
                 withDateSubmitted(ZonedDateTime.now()).
-                withOtherDocumentsApproved(ApprovalType.APPROVED).
                 withSpendProfileSubmittedDate(ZonedDateTime.now()).
                 build();
 
