@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.isMarkSectionAsCompleteRequest;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.isMarkSectionAsIncompleteRequest;
 
 /**
  * This Saver will handle save all finance sections that are related to the application.

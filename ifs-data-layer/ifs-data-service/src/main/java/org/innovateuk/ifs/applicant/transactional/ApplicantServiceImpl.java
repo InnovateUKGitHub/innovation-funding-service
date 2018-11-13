@@ -84,7 +84,6 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
         populateSection(results, applicant, sectionId, applicationId, applicant.getApplicants());
 
-
         if (results.isSuccessful()) {
             if (applicant.getSection().getParentSection() != null) {
                 ApplicantSectionResource parent = new ApplicantSectionResource();
@@ -96,17 +95,15 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
                 ApplicantSectionResource applicantSectionResource = new ApplicantSectionResource();
                 populateSection(results, applicantSectionResource, subSectionId, applicationId, applicant.getApplicants());
 
-                if (isSectionExcluded(applicantSectionResource.getSection(),
-                        applicant.getCurrentApplicant().getOrganisation(), applicant.getCompetition())) {
-                    return;
+                if (!isSectionExcluded(applicantSectionResource.getSection(),
+                        applicant.getCurrentApplicant() != null ? applicant.getCurrentApplicant().getOrganisation() : null,
+                        applicant.getCompetition())) {
+                    applicant.addChildSection(applicantSectionResource);
                 }
-
-                applicant.addChildSection(applicantSectionResource);
             });
         }
         return results.toSingle().andOnSuccessReturn(() -> applicant);
     }
-
 
     private void populateQuestion(ServiceResults results, ApplicantQuestionResource applicant, Long questionId, Long applicationId, List<ApplicantResource> applicants) {
         results.trackResult(() -> questionService.getQuestionById(questionId), applicant::setQuestion);
@@ -197,16 +194,15 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         return serviceSuccess(applicantResource);
     }
 
-    private boolean isSectionExcluded(SectionResource section,  OrganisationResource organisation,
+    private boolean isSectionExcluded(SectionResource section, OrganisationResource organisation,
                                       CompetitionResource competition) {
         boolean isYourOrganisationSection = section.getType() == SectionType.ORGANISATION_FINANCES;
-        boolean isResearchOrganisation = OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
+        boolean isResearchOrganisation = organisation != null  && OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
         boolean excludeYourOrganisationSectionForResearchOrgs =
                 Boolean.FALSE.equals(competition.getIncludeYourOrganisationSection());
 
         return isYourOrganisationSection && isResearchOrganisation && excludeYourOrganisationSectionForResearchOrgs;
     }
-
 
     private class ServiceResults {
         private List<ServiceResult<Void>> results = new ArrayList<>();

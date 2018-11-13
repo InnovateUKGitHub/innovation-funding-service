@@ -10,7 +10,6 @@ import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -53,13 +52,7 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
                                  BindingResult bindingResult,
                                  Boolean readOnly,
                                  Optional<Long> applicantOrganisationId) {
-        Optional<SectionResource> yourOrganisation = findChildSectionByType(section, SectionType.ORGANISATION_FINANCES);
-        Optional<SectionResource> yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
-
-        boolean yourFundingComplete = completedSectionIds.contains(yourFunding.get().getId());
-        boolean yourOrganisationComplete =
-                !yourOrganisation.isPresent() || completedSectionIds.contains(yourOrganisation.get().getId());
 
         initializeApplicantFinances(section);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, section.getApplication().getId());
@@ -76,16 +69,8 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
         }
     }
 
-    private Optional<SectionResource> findChildSectionByType(ApplicantSectionResource section,
-                                                             SectionType sectionType) {
-        return section.getApplicantChildrenSections().stream()
-                .filter(child -> child.getSection().getType().equals(sectionType))
-                .findAny().map(ApplicantSectionResource::getSection);
-    }
-
     @Override
     public SectionType getSectionType() {
         return SectionType.FINANCE;
     }
 }
-
