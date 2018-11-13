@@ -183,6 +183,10 @@
     <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
 </th:block>
 
+<th:block th:fragment="assessment_finances(model, internalView)">
+    <th:block th:insert="'finance/'+${detailedCostings.financeView} :: assessment_detailed_finance(model=${model}, internalView=${internalView})" />
+</th:block>
+
 <th:block th:fragment="funding_finances(model, internalView)">
     <th:block th:if="${model.fundingSectionLocked}">
         <p class="govuk-body" th:if="${model.leadApplicant}">

@@ -147,7 +147,7 @@ public class YourProjectCostsController {
                        @PathVariable long sectionId,
                        @ModelAttribute("form") YourProjectCostsForm form) {
         sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
-        return viewYourProjectCosts(model, user, applicationId, sectionId, form);
+        return String.format("redirect:/application/%s/form/your-project-costs/%s", applicationId, sectionId);
     }
 
     @PostMapping(params = "remove_cost")

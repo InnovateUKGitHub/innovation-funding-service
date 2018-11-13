@@ -4,6 +4,10 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProjectCostsFormPopulator;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.populator.section.YourProjectCostsSectionPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
@@ -44,17 +48,11 @@ public class AssessmentDetailedFinancesModelPopulator {
     private SectionService sectionService;
     private FinanceService financeService;
     private ApplicantRestService applicantRestService;
+    private YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator;
+    private YourProjectCostsFormPopulator yourProjectCostsFormPopulator;
     private YourProjectCostsSectionPopulator projectCostsSectionPopulator;
 
-    public AssessmentDetailedFinancesModelPopulator(final CompetitionRestService competitionRestService,
-                                                    final AssessmentService assessmentService,
-                                                    final UserRestService userRestService,
-                                                    final OrganisationRestService organisationRestService,
-                                                    final FileEntryRestService fileEntryRestService,
-                                                    final SectionService sectionService,
-                                                    final FinanceService financeService,
-                                                    final ApplicantRestService applicantRestService,
-                                                    final YourProjectCostsSectionPopulator projectCostsSectionPopulator) {
+    public AssessmentDetailedFinancesModelPopulator(CompetitionRestService competitionRestService, AssessmentService assessmentService, UserRestService userRestService, OrganisationRestService organisationRestService, FileEntryRestService fileEntryRestService, SectionService sectionService, FinanceService financeService, ApplicantRestService applicantRestService, YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator, YourProjectCostsFormPopulator yourProjectCostsFormPopulator, YourProjectCostsSectionPopulator projectCostsSectionPopulator) {
         this.competitionRestService = competitionRestService;
         this.assessmentService = assessmentService;
         this.userRestService = userRestService;
@@ -63,6 +61,8 @@ public class AssessmentDetailedFinancesModelPopulator {
         this.sectionService = sectionService;
         this.financeService = financeService;
         this.applicantRestService = applicantRestService;
+        this.yourProjectCostsViewModelPopulator = yourProjectCostsViewModelPopulator;
+        this.yourProjectCostsFormPopulator = yourProjectCostsFormPopulator;
         this.projectCostsSectionPopulator = projectCostsSectionPopulator;
     }
 
@@ -84,17 +84,27 @@ public class AssessmentDetailedFinancesModelPopulator {
         SectionResource costSection = sectionService.getSectionsForCompetitionByType(competitionId, PROJECT_COST_FINANCES).get(0);
         ProcessRoleResource applicantProcessRole = getApplicantProcessRole(applicationRoles, organisationId).get();
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantProcessRole.getUser(), applicationId, costSection.getId());
-        ApplicationForm form = new ApplicationForm();
 
+        model.addAttribute("applicationResource", applicantSection.getApplication());
+        if (applicantSection.getCurrentApplicant().isResearch()) { //TODO IFS-4143 check if jes included
+            //TODO IFS-4774 remove this and the templates in your-finance-sub-sections once the JeS page is refactored
+            ApplicationForm form = new ApplicationForm();
+            AbstractSectionViewModel sectionViewModel = projectCostsSectionPopulator.populate(
+                                    applicantSection, form, model, null, true, Optional.of(organisationId), true);
 
+            model.addAttribute("detailedCostings", sectionViewModel);
+            model.addAttribute("form", form);
+            model.addAttribute("readonly", true);
+            model.addAttribute("financeView", "academic-finance");
+        } else {
+            YourProjectCostsViewModel viewModel = yourProjectCostsViewModelPopulator.populateManagement(applicationId, costSection.getId(), organisationId, "");
+            YourProjectCostsForm form = new YourProjectCostsForm();
+            yourProjectCostsFormPopulator.populateForm(form, applicationId, null, Optional.of(organisationId));
+            model.addAttribute("costsViewModel", viewModel);
+            model.addAttribute("form", form);
+            model.addAttribute("financeView", "finance");
+        }
 
-
-
-
-        
-        model.addAttribute("detailedCostings", sectionViewModel);
-        model.addAttribute("form", form);
-        model.addAttribute("readonly", true);
     }
 
     private void addApplicationAndOrganisationDetails(Model model, List<ProcessRoleResource> userApplicationRoles, OrganisationResource organisation, AssessorFinanceView financeView) {

@@ -109,7 +109,7 @@ public class YourFundingController {
                        @PathVariable long sectionId,
                        @ModelAttribute("form") YourFundingForm form) {
         sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
-        return viewYourFunding(model, user, applicationId, sectionId, form);
+        return String.format("redirect:/application/%s/form/your-funding/%s", applicationId, sectionId);
     }
 
     @PostMapping(params = "complete")
