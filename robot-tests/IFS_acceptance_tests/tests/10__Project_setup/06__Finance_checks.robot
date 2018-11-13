@@ -106,7 +106,8 @@ Validation on duration of Project
     [Tags]
     Given the user clicks the button/link               link = Edit
     And the user moves focus to the element             id = durationInMonths
-    And the user should see an error                    This field cannot be left blank.
+    Run Keyword And Ignore Error Without Screenshots    Set Focus To Element      link=Contact us
+    And the user should see a field error               This field cannot be left blank.
     When the user clicks the button/link                jQuery = button:contains("Save and return to finances")
     Then the user should see a field and summary error  This field cannot be left blank.
     [Teardown]  the user clicks the button/link         link = Projects in setup

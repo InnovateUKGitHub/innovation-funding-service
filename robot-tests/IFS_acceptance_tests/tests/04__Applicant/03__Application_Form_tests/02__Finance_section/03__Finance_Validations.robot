@@ -191,13 +191,13 @@ Travel and subsistence client side
     And the user enters text to a text field    css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
     Then the user should see a field error      This field cannot be left blank.
     Then the user should see a field error      You must enter a value less than 10 digits.
-    And the user should see an error            This field should be 1 or higher.
+    And the user should see a field and summary error    This field should be 1 or higher.
     When the user enters text to a text field   css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    0
     And the user enters text to a text field    css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    13123232134234234234234234423
     Then the user should see a field error      This field cannot be left blank.
     Then the user should see a field error      You must enter a value less than 20 digits.
-    And the user should see an error            This field should be 1 or higher.
+    And the user should see a field and summary error    This field should be 1 or higher.
 
 Travel and subsistence server side
     [Documentation]    INFUND-844

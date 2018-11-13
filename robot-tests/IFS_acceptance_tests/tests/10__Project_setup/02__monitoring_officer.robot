@@ -112,7 +112,7 @@ MO client-side validation
     When the user enters text to a text field            id = phoneNumber    0123
     And the user should not see the validation error     Please enter a phone number.
     And the user should not see the validation error     Please enter a valid phone number.
-    And the user should see an error                     Please enter a valid phone number between 8 and 20 digits.
+    And the user should see a field error                Please enter a valid phone number between 8 and 20 digits.
     When the user enters text to a text field            id = phoneNumber    07438620303
     Then the user should not see the validation error    Please enter a valid phone number between 8 and 20 digits.
 
@@ -227,15 +227,15 @@ Monitoring Officer cannot see projects if they are not assigned to them
 *** Keywords ***
 standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}
-    the user should see an error            Please enter a valid email address.
+    the user should see a field error       Please enter a valid email address.
     the user enters text to a text field    id = emailAddress    ${invalid_email_symbols}
-    the user should see an error            Please enter a valid email address.
+    the user should see a field error       Please enter a valid email address.
     the user enters text to a text field    id = emailAddress    ${invalid_email_no_username}
-    the user should see an error            Please enter a valid email address.
+    the user should see a field error       Please enter a valid email address.
     the user enters text to a text field    id = emailAddress    ${invalid_email_format}
-    the user should see an error            Please enter a valid email address.
+    the user should see a field error       Please enter a valid email address.
     the user enters text to a text field    id = emailAddress    ${invalid_email_no_at}
-    the user should see an error            Please enter a valid email address.
+    the user should see a field error       Please enter a valid email address.
 
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
