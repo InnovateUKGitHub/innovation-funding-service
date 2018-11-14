@@ -46,7 +46,7 @@ public interface CompetitionService {
     ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
 
     @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'ifs_administrator')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
 
     @SecuredBySpring(value = "COUNT", description = "Only internal users count competitions")
@@ -90,7 +90,7 @@ public interface CompetitionService {
     ServiceResult<Long> countPendingSpendProfiles(Long competitionId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
-    @SecuredBySpring(value="UPDATE_TERMS_AND_CONDITIONS", securedType=CompetitionResource.class,
+    @SecuredBySpring(value = "UPDATE_TERMS_AND_CONDITIONS", securedType = CompetitionResource.class,
             description = "Only Comp Admins are able to update grant terms and conditions for the given competitions")
     ServiceResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
 }

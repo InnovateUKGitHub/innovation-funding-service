@@ -24,9 +24,14 @@ Maximum funding level available for lead business
     And the user fills the organisation details with Project growth table     ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
     When the user fills in the project costs                 labour costs  n/a
     And the user clicks the button/link                      link = Your funding
-    Then the user should see the text in the page            Enter your funding level (maximum 45%).
+    And the user selects the radio button                    requestingFunding   true
+    Then the user should see the text in the page            The maximum you can enter is 45%
     And the correct funding displayed for lead applicant     Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  60%
     And the correct funding displayed for lead applicant     Industrial research  ${LARGE_ORGANISATION_SIZE}  50%
+    And the correct funding displayed for lead applicant     Experimental development  ${SMALL_ORGANISATION_SIZE}  45%
+    And the user selects the radio button                    requestingFunding   true
+    Then the user should see the text in the page            The maximum you can enter is 45%
+    And the user selects the radio button                    otherFunding  false
     And the user clicks the button/link                      jQuery = a:contains("Your finances")
     [Teardown]  the user clicks the button/link              link = Application overview
 
@@ -37,7 +42,9 @@ Lead applicant invites a Charity member
     When the user clicks the button/link                                    link = ${Application_name_business}
     And the user fills the organisation details with Project growth table   ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs                                 labour costs  n/a
-    Then the funding displayed is as expected
+    And the user clicks the button/link                                     link = Your funding
+    And the user selects the radio button                                   requestingFunding   true
+    And the user should see the text in the page                            Select a funding level
 
 Invite existing academic collaborator
     [Documentation]  IFS-338
@@ -66,9 +73,9 @@ Maximum funding level available for RTO lead
     And the user fills in the organisation information                      ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs                                 labour costs  n/a
     When the user clicks the button/link                                    link = Your funding
-    Then the user should see the text in the page                           Enter your funding level (maximum 100%).
-    And the correct funding displayed for lead applicant                    Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  100%
-    And the correct funding displayed for lead applicant                    Industrial research  ${LARGE_ORGANISATION_SIZE}  100%
+    And the user should see the text in the page                            The amount you apply for must reflect other
+    And the correct funding displayed for lead RTO applicant                Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}
+    And the correct funding displayed for lead RTO applicant                Industrial research  ${LARGE_ORGANISATION_SIZE}
     And the user marks your funding section as complete
     [Teardown]  the user clicks the button/link                             link = Application overview
 
@@ -88,7 +95,7 @@ Lead RTO applicant invites a Charity member
     When the user clicks the button/link                link = ${Application_name_RTO}
     And the user fills in the organisation information  ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs             labour costs  n/a
-    Then the funding displayed is as expected
+    When the user clicks the button/link                link = Your funding
     And the user marks your funding section as complete
 
 Invite existing academic collaborator for RTO lead
@@ -104,7 +111,7 @@ Invite existing academic collaborator for RTO lead
     And the user clicks the button/link                jQuery = button:contains("Add organisation and invite applicants")
     And logout as user
     When the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
-    Then the correct funding is displayed to academic user
+    And the correct funding is displayed to academic user
     And the academic user marks your project costs as complete
 
 Invite existing business user into RTO lead application
@@ -220,23 +227,26 @@ the correct funding is displayed to academic user
     Run Keyword If   '${status}' == 'PASS'    Run Keywords   the user clicks the button twice      jQuery = label:contains("Bath Spa")
     ...                              AND                     the user clicks the button/link       jQuery = .govuk-button:contains("Save and continue")
     the user clicks the button/link   link = Your finances
-    the user should see the element   jQuery = td:contains("100%")
+    the user should see the element   jQuery = td:contains(" 0%")
 
 the academic user marks your project costs as complete
     the user clicks the button/link        link = Your project costs
     the user enters text to a text field   css = input[name$="tsb_reference"]  academic costs
     the user uploads the file              css = .upload-section input  ${5mb_pdf}
+    then the user selects the checkbox     agree-terms-page
     wait for autosave
     the user clicks the button/link        jQuery = button:contains("Mark as complete")
 
 the correct funding displayed for lead applicant
-    [Arguments]   ${research_cat}  ${org_size}  ${funding_amoount}
+    [Arguments]   ${research_cat}  ${org_size}  ${funding_amount}
     the user edits the research category        ${research_cat}
     the user edits the organisation size        ${org_size}
-    the user should see the text in the page    Enter your funding level (maximum ${funding_amoount}).
+    the user selects the radio button           requestingFunding   true
+    the user should see the text in the page    The maximum you can enter is ${funding_amount}
 
-the user marks your funding section as complete
-    the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  30
-    the user clicks the button twice      jQuery = label[for$="otherPublicFunding-no"]:contains("No")
-    the user selects the checkbox         agree-terms-page
-    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+the correct funding displayed for lead RTO applicant
+    [Arguments]   ${research_cat}  ${org_size}
+    the user edits the research category        ${research_cat}
+    the user edits the organisation size        ${org_size}
+    the user selects the radio button           requestingFunding   true
+    the user should see the text in the page    The amount you apply for must reflect other

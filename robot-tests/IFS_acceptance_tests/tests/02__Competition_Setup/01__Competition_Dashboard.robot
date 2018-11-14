@@ -142,9 +142,9 @@ the total calculation should be correct
     run keyword if    '${pagination}' == 'FAIL'    check calculations on one page
 
 check calculations on both pages
-    ${NO_OF_COMP_Page_one} =    Get Matching Xpath Count    //section/div/ul/li    #gets the Xpaths from the first page
+    ${NO_OF_COMP_Page_one} =    Get Element Count    //section/div/ul/li    #gets the Xpaths from the first page
     The user clicks the button/link    name = page
-    ${NO_OF_COMP_Page_two} =    Get Matching Xpath Count    //section/div/ul/li    #gets the Xpaths from the second page
+    ${NO_OF_COMP_Page_two} =    Get Element Count    //section/div/ul/li    #gets the Xpaths from the second page
     ${total_length} =    Evaluate    ${NO_OF_COMP_Page_one}+${NO_OF_COMP_Page_two}
     ${length_summary} =    Get text    css = .govuk-body span     #gets the total number
     Should Be Equal As Integers    ${length_summary}    ${total_length}
@@ -154,6 +154,6 @@ the result should be correct
     Element Should Contain    css = #searchform p    ${COMPETITION_RESULTS}
 
 check calculations on one page
-    ${NO_OF_COMP_Page_one} =    Get Matching Xpath Count    //section/div/ul/li
+    ${NO_OF_COMP_Page_one} =    Get Element Count    //section/div/ul/li
     ${length_summary} =    Get text    css = form .govuk-body span    #gets the total number
     Should Be Equal As Integers    ${length_summary}    ${NO_OF_COMP_Page_one}

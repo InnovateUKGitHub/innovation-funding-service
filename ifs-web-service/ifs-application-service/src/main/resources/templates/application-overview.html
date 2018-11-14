@@ -41,7 +41,7 @@
                      th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="govuk-!-margin-top-6"/>
             </div>
             <div class="govuk-grid-column-one-half">
-                <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the grant terms and conditions</a>
+                <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the competition terms and conditions</a>
             </div>
         </div>
         <div class="govuk-!-margin-bottom-6">
@@ -50,7 +50,7 @@
             </div>
         </div>
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post" class="application-overview">
-            <th:block th:each="section,iteration : ${model.section.sections.values()}">
+            <th:block th:each="section,iteration : ${model.section.sections}">
                 <section th:id="'section-'+${section.id}">
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${section.name}" />
                     <p class="govuk-body" th:text="${section.description}"></p>

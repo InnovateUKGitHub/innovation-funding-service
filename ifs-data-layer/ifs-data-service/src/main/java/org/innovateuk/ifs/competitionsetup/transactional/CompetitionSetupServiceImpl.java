@@ -217,7 +217,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return setupStatuses.stream()
                 .filter(setupStatusResource ->
                         setupStatusResource.getClassName().equals(className) &&
-                        setupStatusResource.getClassPk().equals(classPk))
+                                setupStatusResource.getClassPk().equals(classPk))
                 .map(SetupStatusResource::getCompleted)
                 .findAny();
     }
@@ -259,7 +259,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private SetupStatusResource findOrCreateSetupStatusResource(Long competitionId, String sectionClassName, Long sectionId, Optional<CompetitionSetupSection> parentSection) {
-        Optional<SetupStatusResource> setupStatusOpt = setupStatusService.findSetupStatusAndTarget(sectionClassName, sectionId,Competition.class.getName(), competitionId)
+        Optional<SetupStatusResource> setupStatusOpt = setupStatusService.findSetupStatusAndTarget(sectionClassName, sectionId, Competition.class.getName(), competitionId)
                 .getOptionalSuccessObject();
 
         return setupStatusOpt.orElseGet(() -> createNewSetupStatus(competitionId, sectionClassName, sectionId, parentSection));
@@ -270,13 +270,13 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         parentSectionOpt.ifPresent(parentSection -> {
             Optional<SetupStatusResource> parentSetupStatusOpt =
-                    setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(),Competition.class.getName(), competitionId)
-                    .getOptionalSuccessObject();
+                    setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId)
+                            .getOptionalSuccessObject();
 
             newSetupStatusResource.setParentId(
                     parentSetupStatusOpt
-                        .orElseGet(() -> markSectionIncomplete(competitionId, parentSection).getSuccess())
-                        .getId()
+                            .orElseGet(() -> markSectionIncomplete(competitionId, parentSection).getSuccess())
+                            .getId()
             );
         });
 

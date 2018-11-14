@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +14,17 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @Rollback
 @Transactional
 public class CategoryControllerIntegrationTest extends BaseControllerIntegrationTest<CategoryController> {
+
+    private static final int EXPECTED_INNOVATION_SECTOR_TOTAL = 7;
+    private static final int EXPECTED_INNOVATION_AREA_TOTAL = 54;
+    private static final int EXPECTED_RESEARCH_CATEGORY_TOTAL = 3;
+
     @Override
     @Autowired
     protected void setControllerUnderTest(CategoryController controller) {
@@ -34,42 +38,44 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void findInnovationAreas() {
-        RestResult<List<InnovationAreaResource>> categoriesResult = controller.findInnovationAreas();
-        assertTrue(categoriesResult.isSuccess());
-        List<InnovationAreaResource> categories = categoriesResult.getSuccess();
+        List<InnovationAreaResource> innovationAreas = controller.findInnovationAreas().getSuccess();
 
-        assertThat(categories, hasSize(47));
-        assertThat(categories, everyItem(hasProperty("sector", notNullValue())));
+        assertThat(innovationAreas, hasSize(EXPECTED_INNOVATION_AREA_TOTAL));
+        assertThat(innovationAreas, hasItem(hasProperty("name", equalTo("None"))));
+        assertThat(innovationAreas, everyItem(hasProperty("sector", notNullValue())));
+    }
+
+    @Test
+    public void findInnovationAreasExcludingNone() {
+        List<InnovationAreaResource> innovationAreas = controller.findInnovationAreasExcludingNone().getSuccess();
+
+        assertThat(innovationAreas, hasSize(EXPECTED_INNOVATION_AREA_TOTAL - 1));
+        assertThat(innovationAreas, not(hasItem(hasProperty("name", equalTo("None")))));
+        assertThat(innovationAreas, everyItem(hasProperty("sector", notNullValue())));
     }
 
     @Test
     public void findInnovationSectors() {
-        RestResult<List<InnovationSectorResource>> categoriesResult = controller.findInnovationSectors();
-        assertTrue(categoriesResult.isSuccess());
-        List<InnovationSectorResource> categories = categoriesResult.getSuccess();
+        List<InnovationSectorResource> innovationSectors = controller.findInnovationSectors().getSuccess();
 
-        assertThat(categories, hasSize(6));
-        assertThat(categories, everyItem(hasProperty("children", notNullValue())));
+        assertThat(innovationSectors, hasSize(EXPECTED_INNOVATION_SECTOR_TOTAL));
+        assertThat(innovationSectors, everyItem(hasProperty("children", notNullValue())));
     }
 
     @Test
     public void findResearchCategories() {
-        RestResult<List<ResearchCategoryResource>> categoriesResult = controller.findResearchCategories();
-        assertTrue(categoriesResult.isSuccess());
-        List<ResearchCategoryResource> categories = categoriesResult.getSuccess();
+        List<ResearchCategoryResource> researchCategories = controller.findResearchCategories().getSuccess();
 
-        assertThat(categories, hasSize(3));
+        assertThat(researchCategories, hasSize(EXPECTED_RESEARCH_CATEGORY_TOTAL));
     }
 
     @Test
     public void findInnovationAreasBySector() {
-        RestResult<List<InnovationAreaResource>> categoriesResult = controller.findInnovationAreasBySector(1L);
-        assertTrue(categoriesResult.isSuccess());
-        List<InnovationAreaResource> categories = categoriesResult.getSuccess();
+        List<InnovationAreaResource> innovationAreas = controller.findInnovationAreasBySector(1L).getSuccess();
 
-        assertThat(categories, hasSize(10));
-        assertThat(categories, everyItem(hasProperty("sector", equalTo(1L))));
-        assertThat(categories, containsInAnyOrder(asList(
+        assertThat(innovationAreas, hasSize(10));
+        assertThat(innovationAreas, everyItem(hasProperty("sector", equalTo(1L))));
+        assertThat(innovationAreas, containsInAnyOrder(asList(
                 hasProperty("name", equalTo("Advanced therapies")),
                 hasProperty("name", equalTo("Agricultural productivity")),
                 hasProperty("name", equalTo("Biosciences")),

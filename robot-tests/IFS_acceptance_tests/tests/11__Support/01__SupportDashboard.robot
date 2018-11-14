@@ -10,7 +10,7 @@ Documentation     IFS-188 Stakeholder views – Support team
 ...               IFS-3072 Search by either application number or competition name across each Competition management tab
 Suite Setup       The user logs-in in new browser  &{support_user_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Support  CompAdmin
+Force Tags        Support  CompAdmin  HappyPath
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
@@ -59,7 +59,7 @@ Support user is able to search active external users
     When the user is searching for external users  dustin  Email
     Then the user should see the element           jQuery = td:contains("Kazio") ~ td:contains("worth.email.test+dustin@gmail.com") + td:contains("Verified")
     And the user clicks the button/link            link = Clear
-    When the user is searching for external users  Empire  ORGANISATION_NAME
+    When the user is searching for external users  Empire  Organisation name
     Then the user should see the element           jQuery = td:contains("${EMPIRE_LTD_NAME}") + td:contains("Business") + td:contains("${EMPIRE_LTD_ID}") + td:contains("${lead_applicant_credentials["email"]}")
     And the user clicks the button/link            link = Clear
 

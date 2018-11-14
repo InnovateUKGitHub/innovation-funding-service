@@ -30,34 +30,6 @@ Finance sub-sections
     [Tags]  HappyPath
     Then the user should see all the Your-Finances Sections
 
-Not requesting funding guidance
-    [Documentation]    INFUND-7093
-    [Tags]
-    Given the user should not see the funding guidance
-    When the user clicks the button/link                jQuery = summary span:contains("Not requesting funding")
-    Then the user should see the funding guidance
-    When the user clicks the button/link                jQuery = summary span:contains("Not requesting funding")
-    Then the user should not see the funding guidance
-
-Not requesting funding button
-    [Documentation]    INFUND-7093
-    [Tags]  HappyPath
-    When the user clicks the button/link                jQuery = summary span:contains("Not requesting funding")
-    And the user clicks the button/link                 jQuery = button:contains("Not requesting funding")
-    Then the user should see the funding guidance
-    And the user should see the element                 jQuery = button:contains("Requesting funding")
-    And the user should see the element                 jQuery = li:nth-of-type(3) span:contains("No action required")
-    And the user should see the element                 jQuery = li:nth-of-type(4) span:contains("No action required")
-
-Requesting funding button
-    [Documentation]    INFUND-7093
-    [Tags]  HappyPath
-    When the user clicks the button/link                jQuery = button:contains("Requesting funding")
-    Then the user should see the element                jQuery = li:nth-of-type(2) > .task-status-incomplete
-    And the user should not see the element             jQuery = li:nth-of-type(3) span:contains("No action required")
-    And the user should not see the element             jQuery = li:nth-of-type(3) > .task-status-complete
-    And the user should not see the funding guidance
-
 Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
@@ -85,10 +57,9 @@ User pressing back button should get the correct version of the page
     [Setup]  Applicant navigates to the finances of the Robot application
     And the user clicks the button/link     link = Your project costs
     Given The user adds three material rows
-    When the user navigates to another page
-    And the user should be redirected to the correct page without the usual headers    ${project_guidance}
-    And the user goes back to the previous page
-    Then the user should see the element    css = #material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    And The user clicks the button/link     link = Your finances
+    And the user clicks the button/link     link = Your project costs
+    Then the user should see the element    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input
     [Teardown]    the user removes the materials rows
 
 Non-academic partner finance section
@@ -96,7 +67,6 @@ Non-academic partner finance section
     [Tags]  HappyPath
     [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
-    And The user should see the element     jQuery = .govuk-details__summary:contains("Not requesting funding")
     And the user should see the element     link = Your project costs
     And the user should see the element     link = Your organisation
     When the user clicks the button/link    link = Your funding
@@ -110,7 +80,7 @@ Academic partner finance section
     Then The user should not see the element        link = Not requesting funding
     And the user should see the element             link = Your project costs
     And the user should not see the element         link = Your organisation
-    And the user should not see the element         link = Your funding
+    And the user should see the element             link = Your funding
     And the user should not see the element         link = application details
 
 Academic partner can upload file for field J-es PDF
@@ -144,9 +114,7 @@ File upload mandatory for Academic partner to mark section as complete
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page    ${applicationName}
     And the user clicks the button/link               link = Your project costs
-    And the element should be disabled                id = mark-all-as-complete
     And the user clicks the button/link               jQuery = button:contains("Remove")
-    When the user selects the checkbox                termsAgreed
     And the user clicks the button/link               jQuery = button:contains("Mark as complete")
     Then the user should see a field error            You must upload a Je-S file
 
@@ -173,25 +141,26 @@ Custom Suite Setup
 
 the user adds three material rows
     the user expands the section          Materials
-    the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input  01
-    ${pagination} =   Run Keyword And Ignore Error Without Screenshots  wait until element is visible  css = #material-costs-table tr:nth-of-type(2)
-    run keyword if    ${pagination} == 'PASS'  click element  jQuery = #material-costs-table tr:nth-of-type(2) .button-clear:contains("Remove")
+    the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(1) td:nth-of-type(2) input  01
+    ${pagination} =   Run Keyword And Ignore Error Without Screenshots  wait until element is visible  css = table[id=material-costs-table] tr:nth-of-type(2)
+    run keyword if    ${pagination} == 'PASS'  click element  jQuery = table[id=material-costs-table] tr:nth-of-type(2) .button-clear:contains("Remove")
     the user clicks the button/link       jQuery = button:contains("Add another materials cost")
-    the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input  01
+    the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(2) td:nth-of-type(2) input  01
     the user clicks the button/link       jQuery = button:contains("Add another materials cost")
-    the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
+    the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
     the user moves focus to the element   link = Please refer to our guide to project costs for further information.
+    Wait for autosave
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
-    the user clicks the button/link                          jQuery = #material-costs-table button:contains("Remove")
-    Wait Until Element Is Not Visible Without Screenshots    css = #material-costs-table tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
-    the user moves focus to the element                      jQuery = #material-costs-table button:contains("Remove")
-    the user clicks the button/link                          jQuery = #material-costs-table button:contains("Remove")
-    Wait Until Element Is Not Visible Without Screenshots    css = #material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
-    the user clicks the button/link                          jQuery = #material-costs-table button:contains("Remove")
-    Run Keyword And Ignore Error Without Screenshots         the user clicks the button/link    jQuery = #material-costs-table button:contains("Remove")
-    Wait Until Element Is Not Visible Without Screenshots    css = #material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
+    the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
+    Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
+    the user moves focus to the element                      jQuery = table[id=material-costs-table] button:contains("Remove")
+    the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
+    Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
+    the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
+    Run Keyword And Ignore Error Without Screenshots         the user clicks the button/link    jQuery = table[id=material-costs-table] button:contains("Remove")
+    Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
     the user clicks the button/link                          jQuery = button:contains("Materials")
 
 the working days per year should be 232 by default
@@ -200,8 +169,8 @@ the working days per year should be 232 by default
     Should Be Equal As Strings         ${Days_value}    232
 
 the user navigates to another page
-    the user clicks the button/link    link = Please refer to our guide to project costs for further information.
-    Run Keyword And Ignore Error Without Screenshots    Confirm Action
+    the user navigates to the page    https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
+    Run Keyword And Ignore Error Without Screenshots    Handle Alert
 
 the user should see the funding guidance
     [Documentation]    INFUND-7093

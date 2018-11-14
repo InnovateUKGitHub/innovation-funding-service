@@ -137,7 +137,10 @@ IFS.core.autoSave = (function () {
           }
           break
         default :
-          jsonObj = false
+          jsonObj = {
+            field: field.attr('name'),
+            value: field.val()
+          }
       }
       return jsonObj
     },
@@ -172,7 +175,7 @@ IFS.core.autoSave = (function () {
           url = '/assessment/' + assessmentId + '/formInput/' + formInputId
           break
         default:
-          url = false
+          url = saveType
       }
       return url
     },
@@ -248,8 +251,17 @@ IFS.core.autoSave = (function () {
               }
             }
           }).always(function () {
-            form.attr('data-save-status', 'done')
             defer.resolve()
+            var inProgress = false
+            jQuery.each(promiseList, function (key, value) {
+              if (inProgress) return
+              if (value.state() !== 'resolved') {
+                inProgress = true
+              }
+            })
+            if (!inProgress) {
+              form.attr('data-save-status', 'done')
+            }
           })
 
         return defer.promise()

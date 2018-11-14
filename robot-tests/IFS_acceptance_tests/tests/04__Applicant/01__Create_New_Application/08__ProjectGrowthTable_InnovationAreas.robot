@@ -392,10 +392,6 @@ the user should see an error message in the field
     [Arguments]  ${field}  ${errmsg}
     the user should see the element  jQuery = span:contains("${field}") + *:contains("${errmsg}")
 
-the user selects medium organisation size
-    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
-    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
-
 the user populates the project growth table
     the user enters value to field    Annual turnover    65000
     the user enters value to field    Annual profit    2000
@@ -425,7 +421,7 @@ the applicant enters valid inputs
     The user enters text to a text field    name = organisations[1].organisationName  ${organisationLudlowName}
     The user enters text to a text field    name = organisations[1].invites[0].personName    Jessica Doe
     The user enters text to a text field    name = organisations[1].invites[0].email    ${collaborator1_credentials["email"]}
-    focus                                   jquery = button:contains("Save changes")
+    Set Focus To Element                                     jquery = button:contains("Save changes")
     The user clicks the button/link         jquery = button:contains("Save changes")
 
 the user can edit resubmit and read only of the organisation
@@ -471,12 +467,12 @@ the user fills in the Open-All Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
     the user selects the option from the drop-down menu  Sector  id = competitionTypeId
     the user selects the option from the drop-down menu  Open  id = innovationSectorCategoryId
-    the user selects the option from the drop-down menu  All  css = select[id^=innovationAreaCategory]
+    the user selects the value from the drop-down menu   -1  id = innovationAreaCategoryIds
     the user enters text to a text field                 css = #openingDateDay  1
     the user enters text to a text field                 css = #openingDateMonth  ${month}
     the user enters text to a text field                 css = #openingDateYear  ${nextyear}
-    the user selects the option from the drop-down menu  Ian Cooper  id = innovationLeadUserId
-    the user selects the option from the drop-down menu  Robert Johnson  id = executiveUserId
+    the user selects the value from the drop-down menu   24  id = innovationLeadUserId
+    the user selects the value from the drop-down menu   21  id = executiveUserId
     the user clicks the button twice                     css = label[for="stateAid2"]
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Competition setup
