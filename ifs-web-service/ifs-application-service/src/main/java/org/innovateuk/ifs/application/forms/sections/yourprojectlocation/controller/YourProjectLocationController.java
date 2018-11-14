@@ -5,6 +5,8 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.Yo
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel.YourProjectLocationViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel.YourProjectLocationViewModelPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -30,7 +33,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "PROJECT_LOCATION_APPLICANT",
         description = "Applicants can all fill out the Project Location section of the application.")
-public class YourProjectLocationController {
+public class YourProjectLocationController extends AsyncAdaptor {
 
     private YourProjectLocationViewModelPopulator viewModelPopulator;
     private YourProjectLocationFormPopulator formPopulator;
@@ -52,8 +55,8 @@ public class YourProjectLocationController {
         this.userRestService = userRestService;
     }
 
-    // TODO DW - parallelize?
     @GetMapping
+    @AsyncMethod
     public String view(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("sectionId") long sectionId,
@@ -62,13 +65,16 @@ public class YourProjectLocationController {
 
         long userId = loggedInUser.getId();
 
-        ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
+        Future<YourProjectLocationViewModel> viewModelRequest = async(() ->
+                viewModelPopulator.populate(userId, applicationId, sectionId));
 
-        YourProjectLocationViewModel viewModel = viewModelPopulator.populate(userId, applicationId, sectionId);
-        YourProjectLocationForm form = formPopulator.populate(applicationId, processRole.getOrganisationId());
+        Future<YourProjectLocationForm> formRequest = async(() -> {
+            ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
+            return formPopulator.populate(applicationId, processRole.getOrganisationId());
+        });
 
-        model.addAttribute("model", viewModel);
-        model.addAttribute("form", form);
+        model.addAttribute("model", viewModelRequest);
+        model.addAttribute("form", formRequest);
 
         return "application/sections/your-project-location/your-project-location";
     }
@@ -84,19 +90,8 @@ public class YourProjectLocationController {
 
         updatePostcode(applicationId, form, processRole);
 
-        return redirectToViewPage(applicationId, sectionId);
-    }
-
-    private void updatePostcode(long applicationId,
-                                YourProjectLocationForm form,
-                                ProcessRoleResource processRole) {
-        
-        ApplicationFinanceResource finance =
-                applicationFinanceRestService.getFinanceDetails(applicationId, processRole.getOrganisationId()).getSuccess();
-
-        finance.setWorkPostcode(form.getPostcode());
-
-        applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
+        // TODO DW - we're constructing this URL in a few places - maybe a NavigationUtil?
+        return "redirect:" + String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
     }
 
     @PostMapping(params = "mark-as-complete")
@@ -135,6 +130,18 @@ public class YourProjectLocationController {
         ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
         return redirectToViewPage(applicationId, sectionId);
+    }
+
+    private void updatePostcode(long applicationId,
+                                YourProjectLocationForm form,
+                                ProcessRoleResource processRole) {
+
+        ApplicationFinanceResource finance =
+                applicationFinanceRestService.getFinanceDetails(applicationId, processRole.getOrganisationId()).getSuccess();
+
+        finance.setWorkPostcode(form.getPostcode());
+
+        applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
     }
 
     private String redirectToViewPage(long applicationId, long sectionId) {

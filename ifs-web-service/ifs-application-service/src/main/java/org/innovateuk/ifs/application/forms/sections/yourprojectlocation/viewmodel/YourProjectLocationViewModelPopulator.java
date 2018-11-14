@@ -30,9 +30,9 @@ public class YourProjectLocationViewModelPopulator {
 
         long organisationId = section.getCurrentApplicant().getOrganisation().getId();
 
-        List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), organisationId);
+        List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
-        boolean sectionMarkedAsComplete = completedSectionIds.contains(section.getSection().getId());
+        boolean sectionMarkedAsComplete = completedSectionIds.contains(sectionId);
 
         boolean readOnly = sectionMarkedAsComplete || !section.getCompetition().isOpen() || !section.getApplication().isOpen();
 
