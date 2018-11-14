@@ -112,7 +112,7 @@ MO client-side validation
     When the user enters text to a text field            id = phoneNumber    0123
     And the user should not see the validation error     ${enter_a_phone_number}
     And the user should not see the validation error     ${enter_a_valid_phone_number}
-    And the user should see an error                     ${enter_a_phone_number_between_8_and_20_digits}
+    And the user should see a field error                ${enter_a_phone_number_between_8_and_20_digits}
     When the user enters text to a text field            id = phoneNumber    07438620303
     Then the user should not see the validation error    ${enter_a_phone_number_between_8_and_20_digits}
 
@@ -227,15 +227,15 @@ Monitoring Officer cannot see projects if they are not assigned to them
 *** Keywords ***
 standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}
-    the user should see an error            ${enter_a_valid_email}
+    the user should see a field error       ${enter_a_valid_email}
     the user enters text to a text field    id = emailAddress    ${invalid_email_symbols}
-    the user should see an error            ${enter_a_valid_email}
+    the user should see a field error       ${enter_a_valid_email}
     the user enters text to a text field    id = emailAddress    ${invalid_email_no_username}
-    the user should see an error            ${enter_a_valid_email}
+    the user should see a field error       ${enter_a_valid_email}
     the user enters text to a text field    id = emailAddress    ${invalid_email_format}
-    the user should see an error            ${enter_a_valid_email}
+    the user should see a field error       ${enter_a_valid_email}
     the user enters text to a text field    id = emailAddress    ${invalid_email_no_at}
-    the user should see an error            ${enter_a_valid_email}
+    the user should see a field error       ${enter_a_valid_email}
 
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}

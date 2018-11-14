@@ -497,7 +497,8 @@ Validation for project location
     Given the user navigates to the page                ${project_in_setup_details_page}
     Given the user clicks the button/link               jQuery = #project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
     And the user moves focus to the element             id = postcode
-    And the user should see an error                    ${empty_field_warning_message}
+    Set Focus To Element                                link = Contact us
+    And the user should see a field error               ${empty_field_warning_message}
     When the user clicks the button/link                css = button[type = "submit"]
     Then the user should see a field and summary error  ${empty_field_warning_message}
 
@@ -606,7 +607,7 @@ the user should see a validation error
     [Arguments]    ${ERROR1}
     Set Focus To Element    jQuery = button:contains("Save")
     wait for autosave
-    Then the user should see an error    ${ERROR1}
+    Then the user should see a field error    ${ERROR1}
 
 the matching status checkbox is updated
     [Arguments]    ${table_id}    ${ROW}    ${STATUS}

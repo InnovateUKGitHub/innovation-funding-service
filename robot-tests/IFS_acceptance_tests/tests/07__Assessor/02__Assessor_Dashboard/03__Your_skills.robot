@@ -23,8 +23,8 @@ Client-side validations
     And the user should see the element      jQuery = h2:contains("Innovation areas")
     And the user enters multiple strings into a text field    id = skillAreas    w${SPACE}    101
     And the user clicks the button/link      jQuery = button:contains("Save and return to your skills")
-    Then the user should see an error        Please select an assessor type.
-    And the user should see an error         Maximum word count exceeded. Please reduce your word count to 100.
+    Then the user should see a field and summary error        Please select an assessor type.
+    And the user should see a field and summary error         Maximum word count exceeded. Please reduce your word count to 100.
 
 Cancel button redirects to the read-only view without changes
     [Documentation]    INFUND-8009  IFS-3942
@@ -46,11 +46,11 @@ Server-side validations
     Given the user clicks the button/link                      jQuery = label:contains("Business")
     When the user enters multiple strings into a text field    id = skillAreas    w${SPACE}    102
     And the user clicks the button/link                        jQuery = button:contains("Save and return to your skills")
-    Then the user should see an error                          Maximum word count exceeded. Please reduce your word count to 100.
+    Then the user should see a field and summary error         Maximum word count exceeded. Please reduce your word count to 100.
     And browser validations have been disabled
     And the user enters multiple strings into a text field     id = skillAreas    e    5001
     And the user clicks the button/link                        jQuery = button:contains("Save and return to your skills")
-    Then the user should see an error                          This field cannot contain more than 5,000 characters.
+    Then the user should see a field and summary error         This field cannot contain more than 5,000 characters.
 
 Save Skills should redirect to the read-only view
     [Documentation]    INFUND-5182  IFS-3942

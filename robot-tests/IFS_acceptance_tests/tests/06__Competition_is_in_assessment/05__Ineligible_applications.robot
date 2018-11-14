@@ -79,7 +79,7 @@ Client side validation - mark an application as ineligible
     [Tags]  InnovationLead
     Given the user clicks the button/link                   jQuery = h2 button:contains("Mark application as ineligible")
     And the user enters multiple strings into a text field  id = ineligibleReason  a${SPACE}  402
-    Then the user should see an error                       Maximum word count exceeded. Please reduce your word count to 400.
+    Then the user should see a field error                  Maximum word count exceeded. Please reduce your word count to 400.
     When the user enters text to a text field               id = ineligibleReason  This is the reason of ineligibility.
     [Teardown]  the user clicks the button/link             jQuery = h2 button:contains("Mark application as ineligible")
 
