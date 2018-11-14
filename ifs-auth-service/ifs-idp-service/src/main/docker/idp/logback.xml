@@ -14,7 +14,7 @@
     
     <!-- Logging level shortcuts. -->
     <variable name="idp.loglevel.idp" value="DEBUG" />
-    <variable name="idp.loglevel.ldap" value="DEBUG" />
+    <variable name="idp.loglevel.ldap" value="INFO" />
     <variable name="idp.loglevel.messages" value="DEBUG" />
     <variable name="idp.loglevel.encryption" value="DEBUG" />
     <variable name="idp.loglevel.opensaml" value="DEBUG" />
@@ -38,6 +38,8 @@
     <!-- =========================================================== -->
     <!-- ============== Logging Categories and Levels ============== -->
     <!-- =========================================================== -->
+
+    <logger name="org.opensaml.saml.metadata.resolver" level="TRACE"/>
 
     <!-- Logs IdP, but not OpenSAML, messages -->
     <logger name="net.shibboleth.idp" level="${idp.loglevel.idp:-INFO}"/>

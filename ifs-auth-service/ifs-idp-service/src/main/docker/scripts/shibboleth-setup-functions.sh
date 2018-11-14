@@ -90,13 +90,6 @@ property() {
 createEntitiesFromProperties() {
   echo "Creating entities from properties"
   for properties in ${LOCAL_CONFIG_DIR}/entities/*.properties ; do
-    propertiesBasename=$(basename -- ${properties})
-    entityName="${propertiesBasename%.*}"
-    TEMPLATE=$(property TEMPLATE ${properties})
-    echo "Creating entity ${entityName} using template ${TEMPLATE}"
-    entityFileName=/etc/shibboleth/metadata/${entityName}.xml
-    mv ${LOCAL_CONFIG_DIR}/templates/${TEMPLATE} ${entityFileName}
-
     DOMAIN=$(property DOMAIN ${properties})
     PORT=$(property PORT ${properties})
     PROTOCOL=$(property PROTOCOL ${properties})
@@ -109,6 +102,19 @@ createEntitiesFromProperties() {
     : "${PROTOCOL:=https}"
     : "${CERTIFICATE_SUBJECT_NAME:=CN=localhost,O=organisation,L=location,ST=state,C=GB}"
     PORT_POSTFIX=$(createPortPostfix ${PORT} ${PROTOCOL})
+    TEMPLATE=$(property TEMPLATE ${properties})
+
+    if [ "${PORT_POSTFIX}" = "__EMPTY__" ] ; then
+      entityName="${PROTOCOL}://${DOMAIN}"
+    else
+      entityName="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}"
+    fi
+    entityNameHash=`echo -n ${entityName} | openssl sha1 | sed 's/^.* //'`
+    echo "Creating entity ${entityName} using template ${TEMPLATE} : ${entityNameHash}"
+
+    entityFileName=${SHIBBOLETH_CONF_DIR}/metadata/${entityNameHash}.xml
+    templateFileName=${LOCAL_CONFIG_DIR}/templates/${TEMPLATE}
+    cp ${templateFileName} ${entityFileName}
 
     replacePlaceholders ${entityFileName} DOMAIN PROTOCOL PORT_POSTFIX CERTIFICATE ENCRYPTION_CERTIFICATE
   done

@@ -3,6 +3,7 @@
 . shibboleth-setup-functions.sh
 
 LOCAL_CONFIG_DIR=/etc/shibboleth/extras
+SHIBBOLETH_CONF_DIR=/etc/shibboleth
 
 mkdir /etc/shibboleth/metadata/
 

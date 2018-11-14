@@ -1,52 +1,57 @@
-<EntitiesDescriptor Name="innovateuk"
-                    xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
-                    xmlns:mdalg="urn:oasis:names:tc:SAML:metadata:algsupport" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
-                    xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<EntityDescriptor entityID="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}"
+                  xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                  xmlns:mdalg="urn:oasis:names:tc:SAML:metadata:algsupport" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
+                  xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}">
+    <Extensions xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport">
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#sha384"/>
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#sha224"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha224"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+    </Extensions>
 
-        <Extensions xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport">
-            <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
-            <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#sha384"/>
-            <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-            <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#sha224"/>
-            <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"/>
-            <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"/>
-            <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"/>
-            <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha224"/>
-            <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/>
-            <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"/>
-            <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+    <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <Extensions>
+            <init:RequestInitiator xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/Login"/>
+            <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/Login" index="1"/>
         </Extensions>
+        <KeyDescriptor>
+            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                <ds:KeyName>ifs.local-dev</ds:KeyName>
+                <ds:X509Data>
+                    <ds:X509SubjectName>${CERTIFICATE_SUBJECT_NAME}</ds:X509SubjectName>
+                    <ds:X509Certificate>${CERTIFICATE}</ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
 
-        <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-            <Extensions>
-                <init:RequestInitiator xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/Login"/>
-                <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/Login" index="1"/>
-            </Extensions>
-            <KeyDescriptor>
-                <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-                    <ds:KeyName>ifs.local-dev</ds:KeyName>
-                    <ds:X509Data>
-                        <ds:X509SubjectName>${CERTIFICATE_SUBJECT_NAME}</ds:X509SubjectName>
-                        <ds:X509Certificate>${CERTIFICATE}</ds:X509Certificate>
-                    </ds:X509Data>
-                </ds:KeyInfo>
+            <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes128-cbc"/>
+            <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes192-cbc"/>
+            <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/>
+            <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"/>
 
-                <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes128-cbc"/>
-                <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes192-cbc"/>
-                <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/>
-                <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"/>
+        </KeyDescriptor>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+                                   Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/Artifact/SOAP" index="2"/>
+        <AssertionConsumerService index="1" isDefault="true"
+                                  Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/POST"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/success" index="5"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/sso" index="6"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/POST-SimpleSign" index="7"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/Artifact" index="8"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/ECP" index="9"/>
+    </SPSSODescriptor>
 
-            </KeyDescriptor>
-            <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/Artifact/SOAP" index="2"/>
-            <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/success" index="5"/>
-            <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/sso" index="6"/>
-            <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/POST-SimpleSign" index="7"/>
-            <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/Artifact" index="8"/>
-            <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/ECP" index="9"/>
-        </SPSSODescriptor>
-
-    </EntityDescriptor>
-
-</EntitiesDescriptor>
+</EntityDescriptor>
