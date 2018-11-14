@@ -138,6 +138,7 @@ RUN mkdir /etc/tomcat8/certs && \
   mkdir /etc/shibboleth/extras && \
   mv /idp/templates /etc/shibboleth/extras && \
   mv /idp/entities /etc/shibboleth/extras && \
+  mv /idp/certs /etc/shibboleth/extras && \
 
   rm -rf /idp
 
