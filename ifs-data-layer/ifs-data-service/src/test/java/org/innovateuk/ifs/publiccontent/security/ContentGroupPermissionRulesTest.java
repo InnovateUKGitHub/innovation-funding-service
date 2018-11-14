@@ -44,11 +44,10 @@ public class ContentGroupPermissionRulesTest extends BasePermissionRulesTest<Con
                         .withPublicContent(newPublicContent().build()).build()).build());
 
 
-        ContentGroupCompositeId publishedContentGroupId = ContentGroupCompositeId.id(2L);;
+        ContentGroupCompositeId publishedContentGroupId = ContentGroupCompositeId.id(2L);
         when(contentGroupRepository.findOne(publishedContentGroupId.id())).thenReturn(
                 newContentGroup().withContentSection(newContentSection()
                         .withPublicContent(newPublicContent().withPublishDate(ZonedDateTime.now()).build()).build()).build());
-
 
         assertFalse(rules.externalUsersCanViewPublishedContentGroupFiles(unpublishedContentGroupId, systemRegistrationUser()));
         assertTrue(rules.externalUsersCanViewPublishedContentGroupFiles(publishedContentGroupId, systemRegistrationUser()));

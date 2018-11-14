@@ -72,13 +72,13 @@ public class LoginController {
 
     @GetMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}")
     public String resetPassword(@PathVariable("hash") String hash, @ModelAttribute(binding = false) ResetPasswordForm resetPasswordForm, Model model, HttpServletRequest request) {
-        userRestService.checkPasswordResetHash(hash);
+        userRestService.checkPasswordResetHash(hash).getSuccess();
         return LOGIN_BASE + "/" + RESET_PASSWORD_FORM;
     }
 
     @PostMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}")
     public String resetPasswordPost(@PathVariable("hash") String hash, @Valid @ModelAttribute ResetPasswordForm resetPasswordForm, BindingResult bindingResult) {
-        userRestService.checkPasswordResetHash(hash);
+        userRestService.checkPasswordResetHash(hash).getSuccess();
 
         if (bindingResult.hasErrors()) {
             return LOGIN_BASE + "/" + RESET_PASSWORD + "-form";

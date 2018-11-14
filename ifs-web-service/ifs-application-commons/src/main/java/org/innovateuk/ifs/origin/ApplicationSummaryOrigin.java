@@ -16,7 +16,8 @@ public enum ApplicationSummaryOrigin implements BackLinkOrigin {
     SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted", "Application overview"),
     PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status", "Back"),
     INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible", "Application overview"),
-    APPLICATION("/application/{applicationId}", "Application overview");
+    APPLICATION("/application/{applicationId}", "Application overview"),
+    MANAGEMENT_DASHBOARD("/management/dashboard", "Dashboard");
 
     private String originUrl;
     private String title;

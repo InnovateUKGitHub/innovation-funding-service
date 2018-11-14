@@ -15,22 +15,22 @@ Business opportunity Server-side validations setup questions
     And The user clicks the button/link    jQuery = a:contains("Business opportunity")
     When the user leaves all the question field empty
     And The user clicks the button/link    css = button[type="submit"]
-    Then the user should see the element   jQuery = .govuk-label:contains("Question heading") ~ .govuk-error-message:contains("This field cannot be left blank.")
-    And the user should see the element    jQuery = .govuk-label:contains("Question title") ~ .govuk-error-message:contains("This field cannot be left blank.")
-    And the user should see the element    jQuery = .govuk-label:contains("Question guidance title") ~ .govuk-error-message:contains("This field cannot be left blank.")
-    And the user should see the element    jQuery = .govuk-label:contains("Max word count") ~ .govuk-error-message:contains("This field cannot be left blank.")
-    And the user should see the element    jQuery = .govuk-fieldset__legend:contains("Accepted appendix file type") ~ .govuk-error-message:contains("This field cannot be left blank.")
-    And the user should see the element    jQuery = .govuk-label:contains("Appendix guidance") ~ .govuk-error-message:contains("This field cannot be left blank.")
-    And the user should see a summary error    This field cannot be left blank.
+    Then the user should see the element   jQuery = .govuk-label:contains("Question heading") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element    jQuery = .govuk-label:contains("Question title") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element    jQuery = .govuk-label:contains("Question guidance title") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element    jQuery = .govuk-label:contains("Max word count") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element    jQuery = .govuk-fieldset__legend:contains("Accepted appendix file type") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element    jQuery = .govuk-label:contains("Appendix guidance") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see a summary error    ${empty_field_warning_message}
 
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
     [Tags]
     Given the user leaves all the assessment questions empty
     When the user clicks the button/link    css = button[type="submit"]
-    Then the user should see the element    jQuery = .govuk-label[for="guidanceRows[0].scoreFrom"] ~ .govuk-error-message:contains("This field cannot be left blank.")
-    And the user should see the element     jQuery = .govuk-label[for="guidanceRows[0].scoreTo"] ~ .govuk-error-message:contains("This field cannot be left blank.")
-    And the user should see the element     jQuery = .govuk-label[for="guidanceRows[0].justification"] ~ .govuk-error-message:contains("This field cannot be left blank.")
+    Then the user should see the element    jQuery = .govuk-label[for="guidanceRows[0].scoreFrom"] ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element     jQuery = .govuk-label[for="guidanceRows[0].scoreTo"] ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element     jQuery = .govuk-label[for="guidanceRows[0].justification"] ~ .govuk-error-message:contains("${empty_field_warning_message}")
 
 Business opportunity: Client side validations
     [Documentation]    INFUND-5629 INFUND-5685
@@ -41,14 +41,14 @@ Business opportunity: Client side validations
     And the user selects the radio button                               question.appendix  0
     And the user moves focus and waits for autosave
     And the user fills the empty assessment fields
-    Then the validation error above the question should not be visible  css = label[for="question.shortTitle"]            This field cannot be left blank.
-    And the validation error above the question should not be visible   css = label[for="question.title"]                 This field cannot be left blank.
-    And the validation error above the question should not be visible   css = label[for="question.guidanceTitle"]         This field cannot be left blank.
-    And the validation error above the question should not be visible   css = label[for="question.maxWords"]              This field cannot be left blank.
-    And the validation error above the question should not be visible   id = question.allowedFileTypes                    This field cannot be left blank.
-    And the validation error above the question should not be visible   css = label[for="guidanceRows[0].scoreFrom"]      This field cannot be left blank.
-    And the validation error above the question should not be visible   css = label[for="guidanceRows[0].scoreTo"]        This field cannot be left blank.
-    And the validation error above the question should not be visible   css = label[for="guidanceRows[0].justification"]  This field cannot be left blank.
+    Then the validation error above the question should not be visible  css = label[for="question.shortTitle"]            ${empty_field_warning_message}
+    And the validation error above the question should not be visible   css = label[for="question.title"]                 ${empty_field_warning_message}
+    And the validation error above the question should not be visible   css = label[for="question.guidanceTitle"]         ${empty_field_warning_message}
+    And the validation error above the question should not be visible   css = label[for="question.maxWords"]              ${empty_field_warning_message}
+    And the validation error above the question should not be visible   id = question.allowedFileTypes                    ${empty_field_warning_message}
+    And the validation error above the question should not be visible   css = label[for="guidanceRows[0].scoreFrom"]      ${empty_field_warning_message}
+    And the validation error above the question should not be visible   css = label[for="guidanceRows[0].scoreTo"]        ${empty_field_warning_message}
+    And the validation error above the question should not be visible   css = label[for="guidanceRows[0].justification"]  ${empty_field_warning_message}
 
 Business opportunity: Autosave
     [Documentation]    INFUND-5629 INFUND-5685
@@ -75,7 +75,7 @@ Scope: Sever-side validations assessment questions
     Given the user clicks the button/link               link = Scope
     When the user clicks the button/link                jQuery = Button:contains("+Add guidance row")
     And the user clicks the button/link                 css = button[type="submit"]
-    Then the user should see a field and summary error  This field cannot be left blank
+    Then the user should see a field and summary error  ${empty_field_warning_message}
     And The user clicks the button/link                 id = remove-guidance-row-2
     And the user clicks the button/link                 css = button[type="submit"]
     And the user cannot see a validation error in the page
@@ -90,7 +90,7 @@ Custom Suite setup
 the user leaves all the question field empty
     Clear Element Text    css = .editor
     Press Key    css = .editor    \\8
-    focus    css = button[type="submit"]
+    Set Focus To Element      css = button[type="submit"]
     wait for autosave
     The user enters text to a text field    id = question.shortTitle     ${EMPTY}
     The user enters text to a text field    id = question.title          ${EMPTY}
@@ -110,12 +110,12 @@ the validation error above the question should be visible
 
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
-    focus    css = button[type="submit"]
+    Set Focus To Element      css = button[type="submit"]
     Wait Until Element Is Not Visible Without Screenshots    css = .govuk-error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
 the user moves focus and waits for autosave
-    focus    link = Sign out
+    Set Focus To Element      link = Sign out
     Wait For Autosave
 
 the user should see the correct inputs in the Applications questions form

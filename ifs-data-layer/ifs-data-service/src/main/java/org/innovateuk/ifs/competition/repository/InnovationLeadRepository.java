@@ -32,5 +32,4 @@ public interface InnovationLeadRepository extends CompetitionParticipantReposito
     default boolean existsInnovationLead(long competitionId, long userId) {
         return existsByCompetitionIdAndUserIdAndRole(competitionId, userId, INNOVATION_LEAD);
     }
-
 }

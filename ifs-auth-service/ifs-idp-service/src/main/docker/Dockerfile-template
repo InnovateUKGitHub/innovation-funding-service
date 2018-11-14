@@ -78,6 +78,7 @@ ENV HTTP_PORT=9080 \
   LDAP_VALIDATEPERIOD="PT20S" \
 
   GOOGLEANALYTICS_TRACKINGID="" \
+  BUILD_TIMESTAMP="@build_timestamp@" \
   IDP_PROXY_KEY="@auth_idp_proxy_key@" \
   IDP_PROXY_CERTIFICATE="@auth_idp_proxy_certificate@" \
   IDP_PROXY_CACERTIFICATE="@auth_idp_proxy_cacertificate@" \

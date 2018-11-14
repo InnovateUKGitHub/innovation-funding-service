@@ -4,12 +4,16 @@ Documentation   IFS-4189 Add/Remove Stakeholders
 ...             IFS-4190 Create a new user in stakeholder role
 ...
 ...             IFS-4314 Stakeholder invite email
+...
+...             IFS-4252 Stakeholder registration
+Force Tags      HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${openProgrammeCompetitionName}  Photonics for All
 ${openProgrammeCompetitionId}    ${competition_ids['${openProgrammeCompetitionName}']}
+${stakeholderEmail}              stakeHolder@test.com
 
 *** Test Cases ***
 The internal user cannot invite a Stakeholder when they have triggered the name validation
@@ -24,7 +28,7 @@ The internal user cannot invite a Stakeholder when they have triggered the email
     [Documentation]  IFS-4190
     [Tags]
     When the user triggers the email validation
-    Then the user should see a field and summary error    Please enter a valid email address.
+    Then the user should see a field and summary error    ${enter_a_valid_email}
 
 The internal user cannot invite users with an Innovate UK email as Stakeholders
     [Documentation]  IFS-4190
@@ -38,6 +42,36 @@ The internal user invites a Stakeholder
     Given the user enters the correct details of a Stakeholder
     When the user clicks the button/link    jQuery = a:contains("Added to competition")
     Then the user should see the element    jQuery = td:contains("Stake Holder") ~ td:contains("stakeHolder@test.com") ~ td:contains("Invite pending")
+    [Teardown]  logout as user
+
+Create stakeholders account validations
+    [Documentation]  IFS-4252
+    [Tags]
+    Given the user reads his email and clicks the link    ${stakeholderEmail}  Invite to Innovation Funding Service  You have been invited to view the following competition  1
+    When the user clicks the button/link                  jQuery = .govuk-button:contains("Create account")
+    Then the user should see a field and summary error    Please enter a first name.
+    And the user should see a field and summary error     Please enter a last name.
+    And the user should see a field and summary error     Please enter your password.
+
+Invited stakeholder registration flow
+    [Documentation]  IFS-4252
+    [Tags]
+    When the user enters text to a text field             id = firstName  Stake
+    And the user enters text to a text field              id = lastName  Holder
+    And the user enters text to a text field              id = password  ${short_password}
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Create account")
+    Then the user should see the element                  jQuery = h1:contains("Your account has been created")
+    When the user clicks the button/link                  jQuery = a:contains("Sign into your account")
+    Then Logging in and Error Checking                    ${stakeholderEmail}  ${short_password}
+    And the user should see the element                   jQuery = h2:contains("Open") ~ ul a:contains("${openProgrammeCompetitionName}")
+
+The internal user checks the status for newly added stakeholder
+    [Documentation]  IFS-4252
+    [Tags]
+    Given log in as a different user          &{Comp_admin1_credentials}
+    And the user navigates to the page        ${SERVER}/management/competition/setup/${competition_ids['${openProgrammeCompetitionName}']}/manage-stakeholders
+    When the user clicks the button/link      css = a[href="?tab=added"]
+    Then the user should see the element      jQuery = td:contains("Stake Holder") ~ td:contains("Added")
 
 The internal user adds a Stakeholder to the competition
     [Documentation]  IFS-4189  IFS-4314
@@ -62,6 +96,24 @@ The Stakeholder can search for a competition
     When the user clicks the button/link          id = searchsubmit
     And the user clicks the button/link           link = ${openProgrammeCompetitionName}
     Then the user should see the element          jQuery = h1:contains("${openProgrammeCompetitionId}: ${openProgrammeCompetitionName}")
+    [Teardown]  The user clicks the button/link   link = Dashboard
+
+The Stakeholder can search for application
+    [Documentation]  IFS-4564
+    [Tags]
+    Given the user enters text to a text field    searchQuery  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    When the user clicks the button/link          id = searchsubmit
+    And the user clicks the button/link           link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    Then the user should see the element          jQuery = span:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+    [Teardown]  The user clicks the button/link   link = Dashboard
+
+The Stakeholder cannot search for unassigned applications
+    [Documentation]  IFS-4564
+    [Tags]
+    Given the user enters text to a text field    searchQuery  ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    When the user clicks the button/link          id = searchsubmit
+    Then the user should see the element          jQuery = p:contains("0") strong:contains("${OPEN_COMPETITION_APPLICATION_1_NUMBER}")
+    [Teardown]  The user clicks the button/link   link = Dashboard
 
 The internal user removes a Stakeholder from the competition
     [Documentation]  IFS-4189
@@ -85,9 +137,9 @@ the user triggers the name validation
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
 
 the user should see the name validation messages
-    the user should see a field and summary error    Please enter a first name.
+    the user should see a field and summary error    ${enter_a_first_name}
     the user should see a field and summary error    Your first name should have at least 2 characters.
-    the user should see a field and summary error    Please enter a last name.
+    the user should see a field and summary error    ${enter_a_last_name}
     the user should see a field and summary error    Your last name should have at least 2 characters.
 
 the user triggers the email validation
@@ -105,5 +157,5 @@ the user enters an Innovate UK email
 the user enters the correct details of a Stakeholder
     the user enters text to a text field    id = firstName     Stake
     the user enters text to a text field    id = lastName      Holder
-    the user enters text to a text field    id = emailAddress  stakeHolder@test.com
+    the user enters text to a text field    id = emailAddress  ${stakeholderEmail}
     the user clicks the button/link         css = button[name = "inviteStakeholder"]

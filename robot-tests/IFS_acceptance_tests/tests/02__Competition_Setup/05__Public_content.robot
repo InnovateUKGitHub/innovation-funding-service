@@ -461,7 +461,7 @@ User creates a new competition
     [Arguments]    ${competition_name}
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery = .govuk-button:contains("Create competition")
-    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}
+    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}  2
     And the user selects the Terms and Conditions
     And the user fills in the CS Milestones  ${month}  ${nextyear}
 
@@ -523,7 +523,7 @@ the user can add and remove multiple content groups for summary
 the user can add and remove multiple event groups
     When the user clicks the button/link       jQuery = button:contains("+ add new event")
     And the user clicks the button/link        jQuery = button:contains("Save and review")
-    Then The user should see a summary error   Please enter a valid date.
+    Then The user should see a summary error   ${enter_a_valid_date}
     #TODO add keywork to check field error check when IFS-3126 done
     And The user should see a field and summary error    Please enter valid content.
     And the user enters text to a text field   id = dates[0].day      60

@@ -3,8 +3,7 @@ package org.innovateuk.ifs.application.feedback.viewmodel;
 public class InterviewFeedbackViewModel {
     static final String LEAD_WITH_RESPONSE_BANNER =  "Your response has been uploaded." +
             " This response will be noted by the interview panel.";
-    static final String LEAD_WITHOUT_RESPONSE_BANNER =  "As the lead applicant you can respond to feedback." +
-            " This response will be noted by the interview panel.";
+    static final String LEAD_WITHOUT_RESPONSE_BANNER =  "If you are asked to respond to feedback you can upload your response below.";
     static final String COLLAB_WITH_RESPONSE_BANNER =  "The lead applicant has responded to feedback." +
             " This response will be noted by the interview panel.";
     static final String COLLAB_WITHOUT_RESPONSE_BANNER =  "The lead applicant can respond to feedback." +
