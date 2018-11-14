@@ -14,6 +14,10 @@ public class YourProjectLocationFormPopulator {
 
     private ApplicationFinanceRestService applicationFinanceRestService;
 
+    YourProjectLocationFormPopulator(ApplicationFinanceRestService applicationFinanceRestService) {
+        this.applicationFinanceRestService = applicationFinanceRestService;
+    }
+
     public YourProjectLocationForm populate(long applicationId, long organisationId) {
 
         RestResult<ApplicationFinanceResource> applicationFinanceResourceRestResult = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId);

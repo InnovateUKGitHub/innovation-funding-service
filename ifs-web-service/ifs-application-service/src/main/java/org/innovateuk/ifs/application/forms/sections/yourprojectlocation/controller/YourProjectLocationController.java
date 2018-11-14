@@ -39,7 +39,7 @@ public class YourProjectLocationController {
     }
 
     // TODO DW - parallelize?
-    @GetMapping("/")
+    @GetMapping
     public String view(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("sectionId") long sectionId,
@@ -55,7 +55,7 @@ public class YourProjectLocationController {
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
 
-        return "application/your-project-location";
+        return "application/sections/your-project-location/your-project-location";
     }
 
 }
