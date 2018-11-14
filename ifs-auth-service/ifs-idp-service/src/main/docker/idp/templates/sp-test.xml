@@ -25,18 +25,5 @@
         <AssertionConsumerService index="1" isDefault="true"
                                   Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
                                   Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/POST"/>
-        <AssertionConsumerService index="2"
-                                  Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"
-                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/POST-SimpleSign"/>
-        <AssertionConsumerService index="3"
-                                  Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
-                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/Artifact"/>
-        <AssertionConsumerService index="4"
-                                  Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
-                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML/POST"/>
-        <AssertionConsumerService index="5"
-                                  Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01"
-                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML/Artifact"/>
-
     </SPSSODescriptor>
 </EntityDescriptor>
