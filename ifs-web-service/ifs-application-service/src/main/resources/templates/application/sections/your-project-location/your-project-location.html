@@ -29,7 +29,7 @@
 
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              th:attr="data-autosave=@{/application/{applicationId}/form/your-project-location/{sectionId}/auto-save(applicationId=${model.applicationId},sectionId=${model.sectionId})},
+              th:attr="data-autosave='autosaveFormPost',
                        data-application-id=${model.applicationId},
                        data-section-id=${model.sectionId}"
               enctype="multipart/form-data"
@@ -50,7 +50,8 @@
                             <th:block th:if="${#fields.hasErrors('postcode')}">
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('postcode')}" th:text="${err}"></span>
                             </th:block>
-                            <input class="govuk-input govuk-input--width-10" id="postcode" th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
+                            <input class="govuk-input govuk-input--width-10" id="postcode"
+                                   th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
                                    type="text" name="postcode" th:value="${form.postcode}" />
                         </div>
                     </th:block>

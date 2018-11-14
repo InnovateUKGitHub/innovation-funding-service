@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel.YourProjectLocationViewModel;
@@ -34,6 +36,8 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @SecuredBySpring(value = "PROJECT_LOCATION_APPLICANT",
         description = "Applicants can all fill out the Project Location section of the application.")
 public class YourProjectLocationController extends AsyncAdaptor {
+
+    private static final String VIEW_PAGE = "application/sections/your-project-location/your-project-location";
 
     private YourProjectLocationViewModelPopulator viewModelPopulator;
     private YourProjectLocationFormPopulator formPopulator;
@@ -76,22 +80,31 @@ public class YourProjectLocationController extends AsyncAdaptor {
         model.addAttribute("model", viewModelRequest);
         model.addAttribute("form", formRequest);
 
-        return "application/sections/your-project-location/your-project-location";
+        return VIEW_PAGE;
     }
 
     @PostMapping
     public String update(
             @PathVariable("applicationId") long applicationId,
-            @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
             @ModelAttribute YourProjectLocationForm form) {
 
         ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-
         updatePostcode(applicationId, form, processRole);
+        return redirectToYourFinances(applicationId);
+    }
 
-        // TODO DW - we're constructing this URL in a few places - maybe a NavigationUtil?
-        return "redirect:" + String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
+    @PostMapping("/auto-save")
+    public @ResponseBody JsonNode autosave(
+            @PathVariable("applicationId") long applicationId,
+            UserResource loggedInUser,
+            @ModelAttribute YourProjectLocationForm form) {
+
+        update(applicationId, loggedInUser, form);
+
+        // TODO DW - necessary?
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.createObjectNode();
     }
 
     @PostMapping(params = "mark-as-complete")
@@ -103,7 +116,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler) {
 
-        Supplier<String> failureHandler = () -> "application/sections/your-project-location/your-project-location";
+        Supplier<String> failureHandler = () -> VIEW_PAGE;
         Supplier<String> successHandler = () -> redirectToViewPage(applicationId, sectionId);
 
         return validationHandler.failNowOrSucceedWith(
@@ -146,5 +159,10 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     private String redirectToViewPage(long applicationId, long sectionId) {
         return "redirect:" + APPLICATION_BASE_URL + String.format("%d/form/project-location/%d", applicationId, sectionId);
+    }
+
+    private String redirectToYourFinances(long applicationId) {
+        // TODO DW - we're constructing this URL in a few places - maybe a NavigationUtil?
+        return "redirect:" + String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
     }
 }
