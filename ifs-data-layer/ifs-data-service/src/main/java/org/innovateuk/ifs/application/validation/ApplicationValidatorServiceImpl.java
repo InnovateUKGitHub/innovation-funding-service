@@ -129,6 +129,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         return noErrors(formInputId);
     }
 
+    //This method is duplicating work in FinanceUtil
     private boolean jesFinances(Application application) {
         Optional<User> userResult = getCurrentlyLoggedInUser().getOptionalSuccessObject();
         if(userResult.isPresent()) {
