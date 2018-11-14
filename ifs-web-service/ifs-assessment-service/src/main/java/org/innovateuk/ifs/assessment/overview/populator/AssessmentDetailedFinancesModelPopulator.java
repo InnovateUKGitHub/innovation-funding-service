@@ -5,7 +5,7 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
-import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProjectCostsFormPopulator;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.AbstractYourProjectCostsFormPopulator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.populator.section.YourProjectCostsSectionPopulator;
@@ -49,10 +49,10 @@ public class AssessmentDetailedFinancesModelPopulator {
     private FinanceService financeService;
     private ApplicantRestService applicantRestService;
     private YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator;
-    private YourProjectCostsFormPopulator yourProjectCostsFormPopulator;
+    private AbstractYourProjectCostsFormPopulator yourProjectCostsFormPopulator;
     private YourProjectCostsSectionPopulator projectCostsSectionPopulator;
 
-    public AssessmentDetailedFinancesModelPopulator(CompetitionRestService competitionRestService, AssessmentService assessmentService, UserRestService userRestService, OrganisationRestService organisationRestService, FileEntryRestService fileEntryRestService, SectionService sectionService, FinanceService financeService, ApplicantRestService applicantRestService, YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator, YourProjectCostsFormPopulator yourProjectCostsFormPopulator, YourProjectCostsSectionPopulator projectCostsSectionPopulator) {
+    public AssessmentDetailedFinancesModelPopulator(CompetitionRestService competitionRestService, AssessmentService assessmentService, UserRestService userRestService, OrganisationRestService organisationRestService, FileEntryRestService fileEntryRestService, SectionService sectionService, FinanceService financeService, ApplicantRestService applicantRestService, YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator, AbstractYourProjectCostsFormPopulator yourProjectCostsFormPopulator, YourProjectCostsSectionPopulator projectCostsSectionPopulator) {
         this.competitionRestService = competitionRestService;
         this.assessmentService = assessmentService;
         this.userRestService = userRestService;

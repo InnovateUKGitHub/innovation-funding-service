@@ -55,7 +55,7 @@ public class YourProjectCostsSaver {
 
         ValidationMessages messages = new ValidationMessages();
 
-        messages.addAll(saveLabourCosts(form.getLabourCosts(), form.getWorkingDaysPerYear(), finance));
+        messages.addAll(saveLabourCosts(form.getLabour(), finance));
         messages.addAll(saveOverheads(form.getOverhead(), finance));
         messages.addAll(saveRows(form.getMaterialRows(), finance));
         messages.addAll(saveRows(form.getCapitalUsageRows(), finance));
@@ -70,6 +70,17 @@ public class YourProjectCostsSaver {
         }
     }
 
+    private ValidationMessages saveLabourCosts(LabourForm labourForm, ApplicationFinanceResource finance) {
+        ValidationMessages messages = new ValidationMessages();
+
+        LabourCostCategory labourCostCategory = (LabourCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.LABOUR);
+        labourCostCategory.getWorkingDaysPerYearCostItem().setLabourDays(labourForm.getWorkingDaysPerYear());
+        messages.addAll(financeRowRestService.update(labourCostCategory.getWorkingDaysPerYearCostItem()).getSuccess());
+        messages.addAll(saveRows(labourForm.getRows(), finance));
+        return messages;
+
+    }
+
     private ValidationMessages saveOverheads(OverheadForm overhead, ApplicationFinanceResource finance) {
         OverheadCostCategory overheadCostCategory = (OverheadCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OVERHEADS);
         Overhead overheadCost = (Overhead) overheadCostCategory.getCosts().stream().findFirst().get();
@@ -80,16 +91,6 @@ public class YourProjectCostsSaver {
         return financeRowRestService.update(overheadCost).getSuccess();
     }
 
-    private ValidationMessages saveLabourCosts(Map<String, LabourRowForm> labourCosts, Integer workingDaysPerYear, ApplicationFinanceResource finance) {
-        ValidationMessages messages = new ValidationMessages();
-
-        LabourCostCategory labourCostCategory = (LabourCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.LABOUR);
-        labourCostCategory.getWorkingDaysPerYearCostItem().setLabourDays(workingDaysPerYear);
-        messages.addAll(financeRowRestService.update(labourCostCategory.getWorkingDaysPerYearCostItem()).getSuccess());
-        messages.addAll(saveRows(labourCosts, finance));
-        return messages;
-
-    }
 
     private <R extends AbstractCostRowForm> ValidationMessages saveRows(Map<String, R> rows, ApplicationFinanceResource finance) {
         ValidationMessages messages = new ValidationMessages();
@@ -141,7 +142,7 @@ public class YourProjectCostsSaver {
         Map<String, ?> map;
         switch (type) {
             case LABOUR:
-                map = form.getLabourCosts();
+                map = form.getLabour().getRows();
                 break;
             case CAPITAL_USAGE:
                 map = form.getCapitalUsageRows();

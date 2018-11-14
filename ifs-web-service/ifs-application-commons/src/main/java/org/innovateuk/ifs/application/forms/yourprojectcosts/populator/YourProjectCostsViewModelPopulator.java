@@ -37,7 +37,6 @@ public class YourProjectCostsViewModelPopulator {
                 section.getCompetition().getId(),
                 complete,
                 open,
-                section.getCurrentApplicant().isLead(),
                 section.getApplication().getName(),
                 section.getCurrentApplicant().getOrganisation().getName(),
                 String.format("/application/%d/form/FINANCE", applicationId));

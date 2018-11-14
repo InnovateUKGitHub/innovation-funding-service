@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel;
 
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+
 public class YourProjectCostsViewModel {
-    private final long applicationId;
+    private final Long applicationId;
 
-    private final long sectionId;
+    private final Long sectionId;
 
-    private final long competitionId;
+    private final Long competitionId;
 
     private final boolean complete;
 
     private final boolean open;
-
-    private final boolean leadApplicant;
 
     private final String applicationName;
 
@@ -19,16 +19,32 @@ public class YourProjectCostsViewModel {
 
     private final String financesUrl;
 
-    public YourProjectCostsViewModel(long applicationId, long sectionId, long competitionId, boolean complete, boolean open, boolean leadApplicant, String applicationName, String organisationName, String financesUrl) {
+    private final boolean internal;
+
+    public YourProjectCostsViewModel(long applicationId, long sectionId, long competitionId, boolean complete, boolean open, String applicationName, String organisationName, String financesUrl) {
+        this.internal = false;
+
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.competitionId = competitionId;
         this.complete = complete;
         this.open = open;
-        this.leadApplicant = leadApplicant;
         this.applicationName = applicationName;
         this.organisationName = organisationName;
         this.financesUrl = financesUrl;
+    }
+
+    public YourProjectCostsViewModel(boolean open) {
+        this.open = open;
+        this.complete = false;
+        this.internal = true;
+
+        this.applicationName = null;
+        this.organisationName = null;
+        this.financesUrl = null;
+        this.applicationId = null;
+        this.sectionId = null;
+        this.competitionId = null;
     }
 
     public long getApplicationId() {
@@ -51,10 +67,6 @@ public class YourProjectCostsViewModel {
         return open;
     }
 
-    public boolean isLeadApplicant() {
-        return leadApplicant;
-    }
-
     public String getApplicationName() {
         return applicationName;
     }
@@ -67,8 +79,16 @@ public class YourProjectCostsViewModel {
         return organisationName;
     }
 
+    public boolean isInternal() {
+        return internal;
+    }
+
     /* view logic */
     public boolean isReadOnly() {
         return complete || !open;
+    }
+
+    public boolean isReadOnly(FinanceRowType type) {
+        return isReadOnly();
     }
 }

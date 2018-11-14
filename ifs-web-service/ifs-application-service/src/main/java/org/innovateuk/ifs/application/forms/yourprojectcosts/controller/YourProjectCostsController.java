@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
-import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProjectCostsFormPopulator;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.ApplicationYourProjectCostsFormPopulator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsAutosaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsSaver;
@@ -56,7 +56,7 @@ public class YourProjectCostsController {
     private static final String VIEW = "application/your-project-costs";
 
     @Autowired
-    private YourProjectCostsFormPopulator formPopulator;
+    private ApplicationYourProjectCostsFormPopulator formPopulator;
 
     @Autowired
     private YourProjectCostsViewModelPopulator viewModelPopulator;
@@ -95,7 +95,7 @@ public class YourProjectCostsController {
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
         YourProjectCostsViewModel viewModel = viewModelPopulator.populateManagement(applicationId, sectionId, applicantOrganisationId, originQuery);
         model.addAttribute("model", viewModel);
-        formPopulator.populateForm(form, applicationId, user, Optional.of(applicantOrganisationId));
+        formPopulator.populateForm(form, applicationId, applicantOrganisationId);
         return VIEW;
     }
 
@@ -105,7 +105,7 @@ public class YourProjectCostsController {
                                        @PathVariable long applicationId,
                                        @PathVariable long sectionId,
                                        @ModelAttribute("form") YourProjectCostsForm form) {
-        formPopulator.populateForm(form, applicationId, user, Optional.empty());
+        formPopulator.populateForm(form, applicationId, user);
         return viewYourProjectCosts(form, model, applicationId, sectionId, user);
     }
 

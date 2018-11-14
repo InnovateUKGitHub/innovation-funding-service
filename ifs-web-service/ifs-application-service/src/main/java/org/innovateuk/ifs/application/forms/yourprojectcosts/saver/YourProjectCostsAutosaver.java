@@ -39,13 +39,13 @@ public class YourProjectCostsAutosaver {
         ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
 
         try {
-            if (field.equals("workingDaysPerYear")) {
+            if (field.equals("labour.workingDaysPerYear")) {
                 finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
                 LabourCostCategory category = (LabourCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR);
                 LabourCost workingDaysCost = category.getWorkingDaysPerYearCostItem();
                 workingDaysCost.setLabourDays(Integer.parseInt(value));
                 financeRowRestService.update(workingDaysCost).getSuccess();
-            } else if (field.startsWith("labourCosts")) {
+            } else if (field.startsWith("labour.costs")) {
                 return autosaveLabourCost(field, value, finance);
             } else if (field.startsWith("overhead")) {
                 return autosaveOverheadCost(field, value, finance, applicationId, organisation.getId());

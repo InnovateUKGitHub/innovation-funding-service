@@ -9,7 +9,6 @@ public class ManagementYourProjectCostsViewModel extends YourProjectCostsViewMod
                 competitionId,
                 true,
                 false,
-                false,
                 applicationName,
                 organisationName,
                 url);

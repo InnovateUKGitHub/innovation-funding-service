@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.validator;
 
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm;
-import org.innovateuk.ifs.application.forms.yourprojectcosts.form.OverheadForm;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.form.LabourForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -28,22 +27,26 @@ public class YourProjectCostsFormValidator {
     private Validator validator;
 
     public void validate(YourProjectCostsForm form, ValidationHandler validationHandler) {
-        validateRows(form.getLabourCosts(), "labourCosts[%s].%s", validationHandler);
+        validateLabour(form.getLabour(), validationHandler);
         if (OverheadRateType.CUSTOM_RATE.equals(form.getOverhead().getRateType())) {
-            Set<ConstraintViolation<OverheadForm>> constraintViolations = validator.validate(form.getOverhead());
-            validationHandler.addAnyErrors(new ValidationMessages(constraintViolations), toFieldErrorWithPath("overhead", ""), defaultConverters());
+            validateForm(form.getOverhead(), validationHandler, "overhead.");
         }
-        validateRows(form.getMaterialRows(), "materialRows[%s].%s", validationHandler);
-        validateRows(form.getCapitalUsageRows(), "capitalUsageRows[%s].%s", validationHandler);
-        validateRows(form.getSubcontractingRows(), "subcontractingRows[%s].%s", validationHandler);
-        validateRows(form.getTravelRows(), "travelRows[%s].%s", validationHandler);
-        validateRows(form.getOtherRows(), "otherRows[%s].%s", validationHandler);
+        validateRows(form.getMaterialRows(), "materialRows[%s].", validationHandler);
+        validateRows(form.getCapitalUsageRows(), "capitalUsageRows[%s].", validationHandler);
+        validateRows(form.getSubcontractingRows(), "subcontractingRows[%s].", validationHandler);
+        validateRows(form.getTravelRows(), "travelRows[%s].", validationHandler);
+        validateRows(form.getOtherRows(), "otherRows[%s].", validationHandler);
     }
 
-    private ErrorToObjectErrorConverter toFieldErrorWithPath(String path, String id) {
+    private void validateLabour(LabourForm labour, ValidationHandler validationHandler) {
+        validateForm(labour, validationHandler, "labour.");
+        validateRows(labour.getRows(), "labour.labourCosts[%s].", validationHandler);
+    }
+
+    private ErrorToObjectErrorConverter toFieldErrorWithPath(String path) {
         return e -> {
             if (e.isFieldError()) {
-                return Optional.of(newFieldError(e, String.format(path, id, e.getFieldName()), e.getFieldRejectedValue()));
+                return Optional.of(newFieldError(e, path + e.getFieldName(), e.getFieldRejectedValue()));
             }
             return Optional.empty();
         };
@@ -51,11 +54,15 @@ public class YourProjectCostsFormValidator {
 
     private <R extends AbstractCostRowForm> void validateRows(Map<String, R> rows, String path, ValidationHandler validationHandler) {
         rows.forEach((id, row) -> {
-            Set<ConstraintViolation<R>> constraintViolations = Collections.emptySet();
             if (!(EMPTY_ROW_ID.equals(id) && row.isBlank())) {
-                constraintViolations = validator.validate(row);
+                validateForm(row, validationHandler,  path, id);
             }
-            validationHandler.addAnyErrors(new ValidationMessages(constraintViolations), toFieldErrorWithPath(path, id), defaultConverters());
         });
+    }
+
+    private <R> void validateForm(R form, ValidationHandler validationHandler, String path, Object... arguments) {
+        Set<ConstraintViolation<R>> constraintViolations = validator.validate(form);
+        validationHandler.addAnyErrors(new ValidationMessages(constraintViolations), toFieldErrorWithPath(String.format(path, arguments)), defaultConverters());
+
     }
 }
