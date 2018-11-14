@@ -8,7 +8,7 @@ public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewMode
     private final FinanceRowType editableRowType;
 
     public FinanceChecksProjectCostsViewModel(boolean open, FinanceRowType editableRowType) {
-        super(open);
+        super(open, true);
         this.editableRowType = editableRowType;
     }
 

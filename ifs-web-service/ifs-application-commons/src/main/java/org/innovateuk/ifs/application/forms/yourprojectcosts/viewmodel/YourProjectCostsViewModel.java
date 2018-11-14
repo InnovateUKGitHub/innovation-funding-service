@@ -34,10 +34,10 @@ public class YourProjectCostsViewModel {
         this.financesUrl = financesUrl;
     }
 
-    public YourProjectCostsViewModel(boolean open) {
+    public YourProjectCostsViewModel(boolean open, boolean internal) {
         this.open = open;
         this.complete = false;
-        this.internal = true;
+        this.internal = internal;
 
         this.applicationName = null;
         this.organisationName = null;
