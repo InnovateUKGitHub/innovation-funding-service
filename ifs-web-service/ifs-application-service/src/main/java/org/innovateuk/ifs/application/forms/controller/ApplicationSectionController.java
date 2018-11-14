@@ -58,6 +58,7 @@ import static org.jsoup.helper.StringUtil.isBlank;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 public class ApplicationSectionController {
+
     private static final int MINIMUM_POSTCODE_LENGTH = 3;
     private static final int MAXIMUM_POSTCODE_LENGTH = 10;
 
@@ -131,12 +132,20 @@ public class ApplicationSectionController {
                                                  UserResource user) {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-        if (applicantSection.getSection().getType() == SectionType.FUNDING_FINANCES) {
-            return String.format("redirect:/application/%d/form/your-funding/%d", applicationId, sectionId);
+
+        switch (applicantSection.getSection().getType()) {
+            case FUNDING_FINANCES: {
+                return String.format("redirect:/application/%d/form/your-funding/%d", applicationId, sectionId);
+            }
+            case PROJECT_LOCATION: {
+                return String.format("redirect:/application/%d/form/project-location/%d", applicationId, sectionId);
+            }
+            default: {
+                boolean isSupport = user.hasRole(SUPPORT);
+                populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), isSupport);
+                return APPLICATION_FORM;
+            }
         }
-        boolean isSupport = user.hasRole(SUPPORT);
-        populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), isSupport);
-        return APPLICATION_FORM;
     }
 
     @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
