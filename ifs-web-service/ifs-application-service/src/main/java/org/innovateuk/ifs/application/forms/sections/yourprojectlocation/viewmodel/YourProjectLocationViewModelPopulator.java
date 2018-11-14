@@ -28,7 +28,9 @@ public class YourProjectLocationViewModelPopulator {
 
         ApplicantSectionResource section = applicantRestService.getSection(userId, applicationId, sectionId);
 
-        List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
+        long organisationId = section.getCurrentApplicant().getOrganisation().getId();
+
+        List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), organisationId);
 
         boolean sectionMarkedAsComplete = completedSectionIds.contains(section.getSection().getId());
 

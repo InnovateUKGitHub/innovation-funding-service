@@ -20,7 +20,8 @@ public class YourProjectLocationFormPopulator {
 
     public YourProjectLocationForm populate(long applicationId, long organisationId) {
 
-        RestResult<ApplicationFinanceResource> applicationFinanceResourceRestResult = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId);
+        RestResult<ApplicationFinanceResource> applicationFinanceResourceRestResult =
+                applicationFinanceRestService.getApplicationFinance(applicationId, organisationId);
 
         String postcode = applicationFinanceResourceRestResult.handleSuccessOrFailure(
                 failure -> null,

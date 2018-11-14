@@ -7,8 +7,12 @@ public class YourProjectLocationForm {
 
     private String postcode;
 
-    public YourProjectLocationForm(String postcode) {
+    YourProjectLocationForm(String postcode) {
         this.postcode = postcode;
+    }
+
+    // for Spring instantiation
+    YourProjectLocationForm() {
     }
 
     public String getPostcode() {
