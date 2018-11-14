@@ -94,7 +94,7 @@ Non-lead partner can see the project setup page
     Given log in as a different user                &{collaborator1_credentials}
     When The user clicks the button/link            link = ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the element             link = view application feedback
-    And the user clicks the button/link             link = view the grant terms and conditions
+    And the user clicks the button/link             link = view the competition terms and conditions
     And the user goes back to the previous page
     And the user should see the element             css = li.require-action:nth-of-type(1)    #Action required, seen by non-lead
     And the user should see the project setup stages
@@ -218,7 +218,7 @@ Inviting project manager client side validations
     When the user enters text to a text field            id = email-project-manager    test
     And the user moves focus to the element              jQuery = .govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name.
-    And the user should see the text in the page         Please enter a valid email address.
+    And the user should see the text in the page         ${enter_a_valid_email}
     When the user selects the radio button               projectManager    projectManager1
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page     Please enter a valid name.
@@ -249,8 +249,8 @@ Invited project manager registration validation
     [Tags]  HappyPath
     Given the user accepts invitation                   ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  ${PROJECT_SETUP_COMPETITION_NAME}: Project Manager invitation for project  managing the project
     When the user clicks the button/link                css = button[type = "submit"][name = "create-account"]
-    Then The user should see a field and summary error  Please enter a first name.
-    And the user should see a field and summary error   Please enter a last name.
+    Then The user should see a field and summary error  ${enter_a_first_name}
+    And the user should see a field and summary error   ${enter_a_last_name}
     And the user should see a field and summary error   To create a new account you must agree to the website terms and conditions.
     And the user should see a field and summary error   Please enter your password.
 
@@ -403,7 +403,7 @@ Inviting finance contact client side validations
     When the user enters text to a text field            id = email-finance-contact    test
     And the user moves focus to the element              jQuery = .govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
-    And the user should see the text in the page         Please enter a valid email address
+    And the user should see the text in the page         ${enter_a_valid_email}
     When the user enters text to a text field            id = email-finance-contact    test@example.com
     And the user moves focus to the element              jQuery = .govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter an email address.
@@ -497,9 +497,10 @@ Validation for project location
     Given the user navigates to the page                ${project_in_setup_details_page}
     Given the user clicks the button/link               jQuery = #project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
     And the user moves focus to the element             id = postcode
-    And the user should see an error                    This field cannot be left blank.
+    Set Focus To Element                                link = Contact us
+    And the user should see a field error               ${empty_field_warning_message}
     When the user clicks the button/link                css = button[type = "submit"]
-    Then the user should see a field and summary error  This field cannot be left blank.
+    Then the user should see a field and summary error  ${empty_field_warning_message}
 
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
@@ -606,7 +607,7 @@ the user should see a validation error
     [Arguments]    ${ERROR1}
     Set Focus To Element    jQuery = button:contains("Save")
     wait for autosave
-    Then the user should see an error    ${ERROR1}
+    Then the user should see a field error    ${ERROR1}
 
 the matching status checkbox is updated
     [Arguments]    ${table_id}    ${ROW}    ${STATUS}

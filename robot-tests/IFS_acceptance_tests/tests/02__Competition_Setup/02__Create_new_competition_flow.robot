@@ -391,14 +391,14 @@ Application: Application details validations
     # TODO IFS-3188
 
     When the user selects the radio button       useResubmissionQuestion  true
-    Then the user should see the element         jQuery = label[for="minProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
-    And the user should see the element          jQuery = label[for="maxProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
+    Then the user should see the element         jQuery = label[for="minProjectDuration"] + .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element          jQuery = label[for="maxProjectDuration"] + .govuk-error-message:contains("${empty_field_warning_message}")
     When the user clicks the button/link         css = button[type="submit"]
     Then the user should see the element         css = .govuk-error-summary__list
 
     When the user enters text to a text field    id = minProjectDuration  -2
     And the user enters text to a text field     id = maxProjectDuration  -3
-    Then the user should see a field error       This field should be 1 or higher.
+    Then the user should see a field error       ${field_should_be_1_or_higher}
     And the user should see a field error        The maximum must be larger than the minimum.
 
     When the user enters text to a text field    id = minProjectDuration  66
