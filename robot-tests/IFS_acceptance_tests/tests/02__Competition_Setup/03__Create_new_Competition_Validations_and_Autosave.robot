@@ -211,11 +211,13 @@ Application finances: validation empty
     And the user enters text to a text field                   css = .editor  ${EMPTY}
     When The user clicks the button/link                       jQuery = button:contains("Done")
     Then the user should see a field and summary error         This field cannot be left blank.
+    And the user should see a field and summary error          Select whether to include the Je-S form.
     And the user should see a field and summary error          Select whether to include the project growth table.
     And the user enters text to a text field                   css = .editor  Funding rules for this competition added
     And the user selects the radio button                      applicationFinanceType  STANDARD
     And the user selects the radio button                      includeGrowthTable  false
     And the user selects the radio button                      includeYourOrganisationSection  true
+    And the user selects the radio button                      includeJesForm  true
     And the user clicks the button/link                        jQuery = button:contains("Done")
 
 Application finances: able to edit the field

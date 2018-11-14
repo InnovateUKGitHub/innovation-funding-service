@@ -9,12 +9,15 @@ import javax.validation.constraints.NotNull;
 @FieldRequiredIf(required = "includeGrowthTable", argument = "financesRequired", predicate = true, message = "{competition.setup.finances.includeGrowthTable.required}")
 @FieldRequiredIf(required = "includeYourOrganisationSection", argument = "financesRequired", predicate = true, message = "{competition.setup.finances.includeYourOrganisationSection.required}")
 @FieldRequiredIf(required = "fundingRules", argument = "financesRequired", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "includeJesForm", argument = "financesRequired", predicate = true, message = "{competition.setup.finances.includeJesForm.required}")
 public class FinanceForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private ApplicationFinanceType applicationFinanceType;
 
     private boolean financesRequired;
+
+    private Boolean includeJesForm;
 
     private Boolean includeGrowthTable;
 
@@ -60,5 +63,13 @@ public class FinanceForm extends CompetitionSetupForm {
 
     public void setFundingRules(String fundingRules) {
         this.fundingRules = fundingRules;
+    }
+
+    public Boolean getIncludeJesForm() {
+        return includeJesForm;
+    }
+
+    public void setIncludeJesForm(Boolean includeJesForm) {
+        this.includeJesForm = includeJesForm;
     }
 }

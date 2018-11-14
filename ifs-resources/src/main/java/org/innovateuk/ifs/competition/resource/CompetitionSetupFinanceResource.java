@@ -11,6 +11,7 @@ public class CompetitionSetupFinanceResource {
     private ApplicationFinanceType applicationFinanceType;
     private Boolean includeGrowthTable;
     private Boolean includeYourOrganisationSection;
+    private Boolean includeJesForm;
 
     public Long getCompetitionId() {
         return competitionId;
@@ -44,23 +45,28 @@ public class CompetitionSetupFinanceResource {
         this.includeYourOrganisationSection = includeYourOrganisationSection;
     }
 
+    public Boolean getIncludeJesForm() {
+        return includeJesForm;
+    }
+
+    public void setIncludeJesForm(Boolean includeJesForm) {
+        this.includeJesForm = includeJesForm;
+    }
+
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
-        final CompetitionSetupFinanceResource that = (CompetitionSetupFinanceResource) o;
+        CompetitionSetupFinanceResource that = (CompetitionSetupFinanceResource) o;
 
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
                 .append(applicationFinanceType, that.applicationFinanceType)
                 .append(includeGrowthTable, that.includeGrowthTable)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
+                .append(includeJesForm, that.includeJesForm)
                 .isEquals();
     }
 
@@ -71,6 +77,7 @@ public class CompetitionSetupFinanceResource {
                 .append(applicationFinanceType)
                 .append(includeGrowthTable)
                 .append(includeYourOrganisationSection)
+                .append(includeJesForm)
                 .toHashCode();
     }
 
@@ -81,6 +88,7 @@ public class CompetitionSetupFinanceResource {
                 ", applicationFinanceType=" + applicationFinanceType +
                 ", includeGrowthTable=" + includeGrowthTable +
                 ", includeYourOrganisationSection=" + includeYourOrganisationSection +
+                ", includeJesForm=" + includeJesForm +
                 '}';
     }
 }

@@ -174,6 +174,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeYourOrganisationSection",
                         "FieldRequiredIf"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "fundingRules",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeJesForm",
                         "FieldRequiredIf"));
 
         verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(CompetitionSetupForm.class),

@@ -536,11 +536,13 @@ Application: Finances
     And the user should not see the element        css = input[id="include-growth-table-no"]
     When the user selects the radio button         includeGrowthTable  true
     And the user selects the radio button          includeYourOrganisationSection  true
+    And the user selects the radio button          includeJesForm  true
     And the user enters text to a text field       css = .editor  Funding rules for this competition are now entered.
     Then The user clicks the button/link           css = button[type="submit"]  #Save and close
     When the user clicks the button/link           link = Finances
     Then the user should see the element           jQuery = dt:contains("Include project growth table")+dd:contains("Yes")
     And the user should see the element            jQuery = dt:contains("Funding rules for this competition")+dd:contains("Funding rules for this competition are now entered.")
+    And the user should see the element            jQuery = dt:contains("Include Je-S form for research organisations") + dd:contains("Yes")
     [Teardown]  the user clicks the button/link    link = Return to application questions
 
 Application: Done enabled when all questions are marked as complete

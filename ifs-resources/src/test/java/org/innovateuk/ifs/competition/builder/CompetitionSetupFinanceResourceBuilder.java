@@ -20,23 +20,24 @@ public class CompetitionSetupFinanceResourceBuilder extends BaseBuilder<Competit
     }
 
     public CompetitionSetupFinanceResourceBuilder withCompetitionId(Long... competitionIds) {
-        return withArray((competitionId, competitionSetupFinance) ->
-                competitionSetupFinance.setCompetitionId(competitionId), competitionIds);
+        return withArray((competitionId, competitionSetupFinance) -> competitionSetupFinance.setCompetitionId(competitionId), competitionIds);
     }
 
     public CompetitionSetupFinanceResourceBuilder withApplicationFinanceType(ApplicationFinanceType... applicationFinanceTypes) {
-        return withArray((applicationFinanceType, competitionSetupFinance) ->
-                competitionSetupFinance.setApplicationFinanceType(applicationFinanceType), applicationFinanceTypes);
+        return withArray((applicationFinanceType, competitionSetupFinance) -> competitionSetupFinance.setApplicationFinanceType(applicationFinanceType), applicationFinanceTypes);
     }
 
     public CompetitionSetupFinanceResourceBuilder withIncludeGrowthTable(Boolean... includeGrowthTables) {
-        return withArray((includeGrowthTable, competitionSetupFinance) ->
-                competitionSetupFinance.setIncludeGrowthTable(includeGrowthTable), includeGrowthTables);
+        return withArray((includeGrowthTable, competitionSetupFinance) -> competitionSetupFinance.setIncludeGrowthTable(includeGrowthTable), includeGrowthTables);
     }
 
     public CompetitionSetupFinanceResourceBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSections) {
         return withArray((includeYourOrganisationSection, competitionSetupFinance) ->
                 competitionSetupFinance.setIncludeYourOrganisationSection(includeYourOrganisationSection), includeYourOrganisationSections);
+    }
+
+    public CompetitionSetupFinanceResourceBuilder withIncludeJesForm(Boolean... includeJesForms) {
+        return withArray((includeJesForm, competitionSetupFinance) -> competitionSetupFinance.setIncludeJesForm(includeJesForm), includeJesForms);
     }
 
     @Override

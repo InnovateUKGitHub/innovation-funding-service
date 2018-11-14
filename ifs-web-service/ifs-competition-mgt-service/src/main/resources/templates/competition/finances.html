@@ -153,6 +153,46 @@
             </div>
 
             <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('includeJesForm')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noFinancesCompetition}">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeJesForm">
+                        <h2 class="govuk-fieldset__heading">Include Je-S form for research organisations</h2>
+                        <th:block th:if="${#fields.hasErrors('includeJesForm')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeJesForm')}" th:text="${err}"></span>
+                        </th:block>
+                    </legend>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input id="include-jes-form-yes"
+                                   class="govuk-radios__input"
+                                   value="true"
+                                   type="radio"
+                                   th:field="*{includeJesForm}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeJesForm.required}"/>
+                            <label for="include-jes-form-yes"
+                                   class="govuk-label govuk-radios__label">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input id="include-jes-form-no"
+                                   class="govuk-radios__input"
+                                   value="false"
+                                   type="radio"
+                                   th:field="*{includeJesForm}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeJesForm.required}"/>
+                            <label for="include-jes-form-no"
+                                   class="govuk-label govuk-radios__label">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('fundingRules')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noFinancesCompetition}">
                 <label class="govuk-label" for="fundingRules">
                   Funding rules for this competition
@@ -185,6 +225,8 @@
                     <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
                     <dt class="govuk-grid-column-one-third">Include the 'Your organisation' section for research organisations</dt>
                     <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeYourOrganisationSection ? 'Yes' :  'No'}" />
+                    <dt class="govuk-grid-column-one-third">Include Je-S form for research organisations</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeJesForm ? 'Yes' :  'No'}" />
                     <dt class="govuk-grid-column-full govuk-!-margin-0">Funding rules for this competition</dt>
                     <dd class="govuk-grid-column-full wysiwyg-styles" ifs:utext="${competitionSetupForm.fundingRules}" />
                 </th:block>
