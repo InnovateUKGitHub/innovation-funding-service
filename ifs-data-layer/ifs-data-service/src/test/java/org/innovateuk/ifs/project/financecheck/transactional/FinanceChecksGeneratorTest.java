@@ -101,6 +101,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     private PartnerOrganisation savedProjectPartnerOrganisation;
     private Project newProject;
     private CompetitionResource competition;
+
     @Before
     public void setUp() {
 

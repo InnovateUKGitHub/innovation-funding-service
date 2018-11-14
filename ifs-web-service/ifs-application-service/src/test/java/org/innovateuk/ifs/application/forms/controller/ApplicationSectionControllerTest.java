@@ -117,7 +117,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     private Long questionId;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
     private ApplicantSectionResourceBuilder sectionBuilder;
-    private  ApplicantResource applicantResource;
+    private ApplicantResource applicantResource;
 
     @Override
     protected ApplicationSectionController supplyControllerUnderTest() {

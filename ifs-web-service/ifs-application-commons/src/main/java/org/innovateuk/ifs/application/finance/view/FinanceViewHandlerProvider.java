@@ -26,7 +26,7 @@ public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
     private JESFinanceFormHandler jesFinanceFormHandler;
 
     public FinanceFormHandler getFinanceFormHandler(CompetitionResource competition, long organisationType) {
-        if(competition.showJesFinances(organisationType)) {
+        if (competition.showJesFinances(organisationType)) {
             return jesFinanceFormHandler;
         } else {
             return defaultFinanceFormHandler;
@@ -34,7 +34,7 @@ public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
     }
 
     public FinanceFormHandler getProjectFinanceFormHandler(CompetitionResource competition, long organisationType) {
-        if(competition.showJesFinances(organisationType)) {
+        if (competition.showJesFinances(organisationType)) {
             return jesFinanceFormHandler;
         } else {
             return projectFinanceFormHandler;
@@ -42,7 +42,7 @@ public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
     }
 
     public FinanceModelManager getFinanceModelManager(CompetitionResource competition, long organisationType) {
-        if(competition.showJesFinances(organisationType)) {
+        if (competition.showJesFinances(organisationType)) {
             return getJESFinanceModelManager();
         } else {
             return getDefaultFinanceModelManager();
@@ -50,7 +50,7 @@ public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
     }
 
     public FinanceModelManager getProjectFinanceModelManager(CompetitionResource competition, long organisationType) {
-        if(competition.showJesFinances(organisationType)) {
+        if (competition.showJesFinances(organisationType)) {
             return getJESProjectFinanceModelManager();
         } else {
             return getDefaultProjectFinanceModelManager();

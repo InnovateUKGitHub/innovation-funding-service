@@ -55,9 +55,7 @@ public class FinanceOverviewPopulator {
         }
     }
 
-
     private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type){
         return simpleFilter(list, s -> type.equals(s.getType()));
     }
-
 }

@@ -19,7 +19,7 @@ public abstract class BaseFinanceResource {
     protected Long target;
     protected OrganisationSize organisationSize;
     protected String workPostcode;
-    protected Map<FinanceRowType, FinanceRowCostCategory>   financeOrganisationDetails = new HashMap<>();
+    protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
         if (originalFinance != null) {

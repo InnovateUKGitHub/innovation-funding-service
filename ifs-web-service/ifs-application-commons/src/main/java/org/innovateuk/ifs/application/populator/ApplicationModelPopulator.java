@@ -204,7 +204,7 @@ public class ApplicationModelPopulator {
             applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
 
             List<QuestionResource> costsQuestions = questionRestService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST).getSuccess();
-            // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
+            // TODO 4781 NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
             if (!form.isAdminMode() || optionalOrganisationId.isPresent()) {
                 Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
                 financeViewHandlerProvider.getFinanceModelManager(competitionRestService.getCompetitionById(competitionId).getSuccess(), organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);

@@ -63,7 +63,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
     private FinanceUtil financeUtilMock;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionService competitionServiceMock;
 
     @Test
     public void testGenerateSpendProfileForIndustrialOrganisation() {
@@ -112,7 +112,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
-        when(competitionService.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
+        when(competitionServiceMock.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
         when(financeUtilMock.isUsingJesFinances(competition, organisation.getOrganisationType())).thenReturn(false);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
@@ -193,7 +193,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
-        when(competitionService.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
+        when(competitionServiceMock.getCompetitionById(project.getCompetition())).thenReturn(serviceSuccess(competition));
         when(financeUtilMock.isUsingJesFinances(competition, organisation.getOrganisationType())).thenReturn(true);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 

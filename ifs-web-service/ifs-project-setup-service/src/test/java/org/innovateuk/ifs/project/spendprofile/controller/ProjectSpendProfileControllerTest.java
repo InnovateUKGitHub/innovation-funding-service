@@ -216,8 +216,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     public void saveSpendProfileWhenErrorWhilstSaving() throws Exception {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
-        Long competitionId = 1L;
+        Long organisationId = 2L;
+        Long competitionId = 3L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
