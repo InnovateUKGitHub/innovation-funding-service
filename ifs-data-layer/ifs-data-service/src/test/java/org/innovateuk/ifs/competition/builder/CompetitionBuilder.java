@@ -295,4 +295,9 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
         return withArraySetFieldByReflection("modifiedOn", modifiedOns);
     }
+
+    public CompetitionBuilder withIncludeJesForm(boolean... includeJesForms) {
+        return withArraySetFieldByReflection("includeJesForm", includeJesForms);
+    }
+
 }

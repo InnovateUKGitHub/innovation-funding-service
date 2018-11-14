@@ -10,6 +10,7 @@ public class CompetitionSetupFinanceResource {
     private Long competitionId;
     private ApplicationFinanceType applicationFinanceType;
     private Boolean includeGrowthTable;
+    private Boolean includeJesForm;
 
     public Long getCompetitionId() {
         return competitionId;
@@ -33,6 +34,14 @@ public class CompetitionSetupFinanceResource {
 
     public void setIncludeGrowthTable(Boolean includeGrowthTable) {
         this.includeGrowthTable = includeGrowthTable;
+    }
+
+    public Boolean getIncludeJesForm() {
+        return includeJesForm;
+    }
+
+    public void setIncludeJesForm(Boolean includeJesForm) {
+        this.includeJesForm = includeJesForm;
     }
 
     @Override
