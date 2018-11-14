@@ -8,7 +8,7 @@ import time
 import ast
 import os
 
-amountOfArgs = 6
+amountOfArgs = 8
 
 if len(sys.argv) != amountOfArgs + 1:
     print("Exactly %s arguments needed. You provided the following %s:" % (amountOfArgs, len(sys.argv) - 1))
@@ -19,14 +19,15 @@ if len(sys.argv) != amountOfArgs + 1:
 
 gitHubUserName = str(sys.argv[1])
 accessToken = str(sys.argv[2])
-repoToScan = str(sys.argv[3])
-commitDepth = str(sys.argv[4])
-whiteList = str(sys.argv[5])
-breakOnSuspicious = int(sys.argv[6])
+dockerRegUser = str(sys.argv[3])
+dockerRegPass = str(sys.argv[4])
+repoToScan = str(sys.argv[5])
+commitDepth = str(sys.argv[6])
+whiteList = str(sys.argv[7])
+breakOnSuspicious = int(sys.argv[8])
 logFile = 'log.json'
 htmlFile = 'log.html'
 tempFile = 'outFile'
-
 
 try:
     os.remove(tempFile)
@@ -42,6 +43,9 @@ try:
     os.remove(htmlFile)
 except OSError:
     pass
+
+p=subprocess.Popen(["../setup-files/scripts/copy-from-nexus-container.sh", dockerRegUser, dockerRegPass, "gitrob"])
+p.wait()
 
 with open(tempFile, 'a') as outFile:
     gitRobProcess = subprocess.Popen(["./gitrob", "-github-access-token", accessToken, "-commit-depth", commitDepth, "-save", logFile, gitHubUserName], stdout=outFile)
@@ -91,3 +95,4 @@ if anySuspicious == 1:
 else:
     print("Nothing risky found. Exiting with 0.")
     sys.exit(0)
+
