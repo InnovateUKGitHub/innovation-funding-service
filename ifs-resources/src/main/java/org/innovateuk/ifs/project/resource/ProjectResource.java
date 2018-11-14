@@ -13,7 +13,7 @@ import java.util.List;
 public class ProjectResource {
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
 
-    private long id;
+    private Long id;
     private long application;
     private long competition;
     private LocalDate targetStartDate;
@@ -48,11 +48,11 @@ public class ProjectResource {
     @JsonIgnore
     public boolean isWithdrawn() { return projectState.equals(ProjectState.WITHDRAWN); }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
