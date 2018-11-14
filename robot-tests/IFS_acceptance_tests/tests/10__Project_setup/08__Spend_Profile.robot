@@ -232,7 +232,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
     Then the user should see the element       jQuery = .govuk-error-summary__list li:contains("This field should be 0 or higher")
     When the user enters text to a text field  jQuery = th:contains("Overheads") ~ td:nth-child(4) input  35.25
     And the user moves focus to the element    jQuery = th:contains("Overheads") ~ td:nth-child(5)
-    Then the user should see the element       jQuery = .govuk-error-summary__list li:contains("This field can only accept whole numbers")
+    Then the user should see the element       jQuery = .govuk-error-summary__list li:contains("${only_accept_whole_numbers_message}")
     When the user clicks the button/link       jQuery = .button-secondary:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
     When the user enters text to a text field  jQuery = th:contains("Overheads") ~ td:nth-child(4) input  0

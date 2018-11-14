@@ -107,7 +107,7 @@ Bank details client side validations
     And the user moves focus away from the element       name = accountNumber
     Then the user should not see the text in the page    Please enter an account number.
     And the user should not see the text in the page     Please correct this field
-    And the user should see an error                     Please enter a valid account number
+    And the user should see a field error                Please enter a valid account number
     When the user enters text to a text field            name = accountNumber    abcdefgh
     And the user moves focus away from the element       name = accountNumber
     Then the user should see the text in the page        Please enter an account number.
@@ -118,7 +118,7 @@ Bank details client side validations
     And the user should not see the text in the page     Please correct this field
     When the user enters text to a text field            name = sortCode    12345
     And the user moves focus away from the element       name = sortCode
-    Then the user should see an error                    Please enter a valid sort code.
+    Then the user should see a field error               Please enter a valid sort code.
     When the user enters text to a text field            name = sortCode    abcdef
     And the user moves focus away from the element       name = sortCode
     Then the user should see the text in the page        Please enter a sort code.

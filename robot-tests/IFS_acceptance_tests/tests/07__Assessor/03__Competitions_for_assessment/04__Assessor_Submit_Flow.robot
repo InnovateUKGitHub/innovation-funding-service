@@ -117,13 +117,13 @@ Summary:Assessor should be able to re-edit before submit
 Summary:Funding Decision Validations
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5228
     [Tags]
-    When The user clicks the button/link        jQuery = .govuk-button:contains("Save assessment")
-    And The user should see an error            Please indicate your decision.
-    And The user enters text to a text field    id = feedback    ${EMPTY}
-    And The user enters text to a text field    id = comment    ${EMPTY}
-    Then the user selects the radio button      fundingConfirmation    false
-    And The user clicks the button/link         jQuery = .govuk-button:contains("Save assessment")
-    Then The user should see an error           Please enter your feedback.
+    When The user clicks the button/link                  jQuery = .govuk-button:contains("Save assessment")
+    And the user should see a field and summary error     Please indicate your decision.
+    And The user enters text to a text field              id = feedback    ${EMPTY}
+    And The user enters text to a text field              id = comment    ${EMPTY}
+    Then the user selects the radio button                fundingConfirmation    false
+    And The user clicks the button/link                   jQuery = .govuk-button:contains("Save assessment")
+    Then the user should see a field and summary error    Please enter your feedback.
 
 Summary:Word count check(Your feedback)
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5178  INFUND-5179
@@ -131,10 +131,10 @@ Summary:Word count check(Your feedback)
     [Setup]    browser validations have been disabled
     When the user enters multiple strings into a text field      id = feedback  t  5001
     And the user clicks the button/link                          jQuery = .govuk-button:contains("Save assessment")
-    Then the user should see an error                            This field cannot contain more than 5,000 characters.
+    Then the user should see a field and summary error           This field cannot contain more than 5,000 characters.
     When the user enters multiple strings into a text field      id = feedback  w${SPACE}  102
     And the user clicks the button/link                          jQuery = .govuk-button:contains("Save assessment")
-    Then the user should see an error                            Maximum word count exceeded. Please reduce your word count to 100.
+    Then the user should see a field and summary error           Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct                         Words remaining: -2
     When the user enters text to a text field                    id = feedback    Testing the feedback word count.
     Then The user should not see the text in the page            Maximum word count exceeded. Please reduce your word count to 100.
@@ -144,7 +144,7 @@ Summary:Word count check(Comments for InnovateUK)
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5178  INFUND-5179
     When the user enters multiple strings into a text field     id = comment  a${SPACE}  102
     And the user clicks the button/link                         jQuery = .govuk-button:contains("Save assessment")
-    Then the user should see an error                           Maximum word count exceeded. Please reduce your word count to 100.
+    Then the user should see a field and summary error          Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct                        Words remaining: -2
     When the user enters text to a text field                   id = comment    Testing the comments word count.
     Then The user should not see the text in the page           Maximum word count exceeded. Please reduce your word count to 100.
