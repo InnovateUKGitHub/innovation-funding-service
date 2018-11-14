@@ -2,10 +2,12 @@ package org.innovateuk.ifs.application.forms.yourprojectcosts.validator;
 
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.LabourForm;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.form.OverheadForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,16 +28,46 @@ public class YourProjectCostsFormValidator {
     @Autowired
     private Validator validator;
 
+    public void validateType(YourProjectCostsForm form, FinanceRowType type, ValidationHandler validationHandler) {
+        switch (type) {
+            case LABOUR:
+                validateLabour(form.getLabour(), validationHandler);
+                break;
+            case OVERHEADS:
+                validateOverhead(form.getOverhead(), validationHandler);
+                break;
+            case CAPITAL_USAGE:
+                validateRows(form.getCapitalUsageRows(), "capitalUsageRows[%s].", validationHandler);
+                break;
+            case MATERIALS:
+                validateRows(form.getMaterialRows(), "materialRows[%s].", validationHandler);
+                break;
+            case OTHER_COSTS:
+                validateRows(form.getOtherRows(), "otherRows[%s].", validationHandler);
+                break;
+            case SUBCONTRACTING_COSTS:
+                validateRows(form.getSubcontractingRows(), "subcontractingRows[%s].", validationHandler);
+                break;
+            case TRAVEL:
+                validateRows(form.getTravelRows(), "travelRows[%s].", validationHandler);
+                break;
+        }
+    }
+
     public void validate(YourProjectCostsForm form, ValidationHandler validationHandler) {
         validateLabour(form.getLabour(), validationHandler);
-        if (OverheadRateType.CUSTOM_RATE.equals(form.getOverhead().getRateType())) {
-            validateForm(form.getOverhead(), validationHandler, "overhead.");
-        }
+        validateOverhead(form.getOverhead(), validationHandler);
         validateRows(form.getMaterialRows(), "materialRows[%s].", validationHandler);
         validateRows(form.getCapitalUsageRows(), "capitalUsageRows[%s].", validationHandler);
         validateRows(form.getSubcontractingRows(), "subcontractingRows[%s].", validationHandler);
         validateRows(form.getTravelRows(), "travelRows[%s].", validationHandler);
         validateRows(form.getOtherRows(), "otherRows[%s].", validationHandler);
+    }
+
+    private void validateOverhead(OverheadForm overhead, ValidationHandler validationHandler) {
+        if (OverheadRateType.CUSTOM_RATE.equals(overhead.getRateType())) {
+            validateForm(overhead, validationHandler, "overhead.");
+        }
     }
 
     private void validateLabour(LabourForm labour, ValidationHandler validationHandler) {

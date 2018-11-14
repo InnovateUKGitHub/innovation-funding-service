@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Eligibility'" />
 </head>
 
-<body class="govuk-template__body competition-management eligibility-form finance">
+<body class="govuk-template__body competition-management eligibility-form finance-row-form overheads">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <th:block th:insert="fragments/layout :: body-start" />
@@ -82,8 +82,9 @@
                 </th:block>
             </th:block>
 
-            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data">
-                <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1" name="save-eligibility">Save form</button>
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data"
+                  th:attr="data-row-operation-url=@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
+                <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1" name="save-and-continue">Save form</button>
 
                 <th:block th:insert="application/your-project-costs-fragments :: labour" />
                 <th:block th:insert="application/your-project-costs-fragments :: overheads" />

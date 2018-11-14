@@ -7,8 +7,9 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRo
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.ApplicationYourProjectCostsFormPopulator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.ApplicationYourProjectCostsSaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsAutosaver;
-import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsSaver;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.AbstractYourProjectCostsSaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
@@ -51,7 +52,7 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "YOUR_PROJECT_COSTS_APPLICANT", description = "Applicants can all fill out the Your project costs section of the application.")
 public class YourProjectCostsController {
-    private final static Logger LOG = LoggerFactory.getLogger(YourProjectCostsSaver.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AbstractYourProjectCostsSaver.class);
 
     private static final String VIEW = "application/your-project-costs";
 
@@ -62,7 +63,7 @@ public class YourProjectCostsController {
     private YourProjectCostsViewModelPopulator viewModelPopulator;
 
     @Autowired
-    private YourProjectCostsSaver saver;
+    private ApplicationYourProjectCostsSaver saver;
 
     @Autowired
     private YourProjectCostsAutosaver autosaver;
@@ -115,7 +116,7 @@ public class YourProjectCostsController {
                                        @PathVariable long applicationId,
                                        @PathVariable long sectionId,
                                        @ModelAttribute("form") YourProjectCostsForm form) {
-        saver.save(applicationId, form, user);
+        saver.save(form, applicationId, user);
         return redirectToYourFinances(applicationId);
     }
 
@@ -131,7 +132,7 @@ public class YourProjectCostsController {
         Supplier<String> failureView = () -> viewYourProjectCosts(form, model, applicationId, sectionId, user);
         validator.validate(form, validationHandler);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            validationHandler.addAnyErrors(saver.save(applicationId, form, user));
+            validationHandler.addAnyErrors(saver.save(form, applicationId, user));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId()))
                         .getSuccess().forEach(validationHandler::addAnyErrors);
@@ -247,10 +248,10 @@ public class YourProjectCostsController {
     }
 
     private void recalculateTotals(YourProjectCostsForm form) {
-        form.getLabourCosts().forEach((id, row) -> {
+        form.getLabour().getRows().forEach((id, row) -> {
             LabourCost cost = row.toCost();
-            row.setTotal(cost.getTotal(form.getWorkingDaysPerYear()));
-            row.setRate(cost.getRate(form.getWorkingDaysPerYear()));
+            row.setTotal(cost.getTotal(form.getLabour().getWorkingDaysPerYear()));
+            row.setRate(cost.getRate(form.getLabour().getWorkingDaysPerYear()));
         });
         recalculateTotal(form.getMaterialRows());
         recalculateTotal(form.getCapitalUsageRows());

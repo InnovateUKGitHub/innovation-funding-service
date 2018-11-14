@@ -53,6 +53,14 @@ public class ProjectFinanceRowController {
         }
     }
 
+    @PostMapping("/add-with-response/{financeId}")
+    public RestResult<FinanceRowItem> addWithResponse(
+            @PathVariable final Long financeId,
+            @RequestBody final FinanceRowItem newCostItem) {
+        return projectFinanceRowService.addCost(financeId, newCostItem).toPostCreateResponse();
+    }
+
+
     /**
      * Used to add new empty rows on load of project finances page.  This is done to be consistent with how application
      * finances work.  It may be possible to build resource object without going to data layer.  That will require
@@ -88,10 +96,8 @@ public class ProjectFinanceRowController {
         }
         return restSuccess(validationMessages);
     }
-    @DeleteMapping("/{projectId}/organisation/{organisationId}/delete/{costId}")
-    public RestResult<Void> delete(@PathVariable("projectId") final Long projectId,
-                                   @PathVariable("organisationId") final Long organisationId,
-                                   @PathVariable("costId") final Long costId) {
-        return projectFinanceRowService.deleteCost(projectId, organisationId, costId).toDeleteResponse();
+    @DeleteMapping("/delete/{costId}")
+    public RestResult<Void> delete(@PathVariable("costId") final Long costId) {
+        return projectFinanceRowService.deleteCost(costId).toDeleteResponse();
     }
 }

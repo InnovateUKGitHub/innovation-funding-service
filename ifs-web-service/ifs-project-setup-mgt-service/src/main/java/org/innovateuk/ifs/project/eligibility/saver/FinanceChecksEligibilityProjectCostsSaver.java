@@ -1,16 +1,21 @@
-package org.innovateuk.ifs.project.eligibility.populator;
+package org.innovateuk.ifs.project.eligibility.saver;
 
-import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.AbstractYourProjectCostsFormPopulator;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.AbstractYourProjectCostsSaver;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FinanceChecksEligibilityProjectCostsFormPopulator extends AbstractYourProjectCostsFormPopulator {
+public class FinanceChecksEligibilityProjectCostsSaver extends AbstractYourProjectCostsSaver {
 
     @Autowired
     private ProjectFinanceRestService projectFinanceRestService;
+
+    @Autowired
+    private ProjectFinanceRowRestService projectFinanceRowRestService;
 
     @Override
     protected BaseFinanceResource getFinanceResource(long projectId, long organisationId) {
@@ -18,7 +23,7 @@ public class FinanceChecksEligibilityProjectCostsFormPopulator extends AbstractY
     }
 
     @Override
-    protected boolean shouldAddEmptyRow() {
-        return false;
+    protected FinanceRowRestService getFinanceRowService() {
+        return projectFinanceRowRestService;
     }
 }

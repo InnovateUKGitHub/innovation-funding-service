@@ -1,13 +1,11 @@
-package org.innovateuk.ifs.application.forms.yourprojectcosts.populator;
+package org.innovateuk.ifs.assessment.overview.populator;
 
+import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.AbstractYourProjectCostsFormPopulator;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ApplicationYourProjectCostsFormPopulator extends AbstractYourProjectCostsFormPopulator {
-
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
@@ -18,6 +16,6 @@ public class ApplicationYourProjectCostsFormPopulator extends AbstractYourProjec
 
     @Override
     protected boolean shouldAddEmptyRow() {
-        return true;
+        return false;
     }
 }

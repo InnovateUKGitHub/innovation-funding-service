@@ -1,27 +1,21 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.saver;
 
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.*;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -29,29 +23,51 @@ import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.Abstrac
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
-@Component
-public class YourProjectCostsSaver {
+public abstract class AbstractYourProjectCostsSaver {
 
-    private final static Logger LOG = LoggerFactory.getLogger(YourProjectCostsSaver.class);
-
-    @Autowired
-    private ApplicationFinanceRestService applicationFinanceRestService;
+    private final static Logger LOG = LoggerFactory.getLogger(AbstractYourProjectCostsSaver.class);
 
     @Autowired
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private DefaultFinanceRowRestService financeRowRestService;
-
-    @Autowired
     private ApplicationRestService applicationRestService;
 
-    @Autowired
-    private QuestionRestService questionRestService;
+    public ServiceResult<Void> saveType(YourProjectCostsForm form, FinanceRowType type, long targetId, long organisationId) {
+        BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
+        ValidationMessages messages = new ValidationMessages();
 
-    public ServiceResult<Void> save(long applicationId, YourProjectCostsForm form, UserResource user) {
-        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
-        ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
+        switch (type) {
+            case LABOUR:
+                messages.addAll(saveLabourCosts(form.getLabour(), finance));
+                break;
+            case OVERHEADS:
+                messages.addAll(saveOverheads(form.getOverhead(), finance));
+                break;
+            case CAPITAL_USAGE:
+                messages.addAll(saveRows(form.getCapitalUsageRows(), finance));
+                break;
+            case MATERIALS:
+                messages.addAll(saveRows(form.getMaterialRows(), finance));
+                break;
+            case OTHER_COSTS:
+                messages.addAll(saveRows(form.getOtherRows(), finance));
+                break;
+            case SUBCONTRACTING_COSTS:
+                messages.addAll(saveRows(form.getSubcontractingRows(), finance));
+                break;
+            case TRAVEL:
+                messages.addAll(saveRows(form.getTravelRows(), finance));
+                break;
+        }
+        if (messages.getErrors().isEmpty()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(messages.getErrors());
+        }
+    }
+    public ServiceResult<Void> save(YourProjectCostsForm form, long targetId, long organisationId) {
+        BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
 
         ValidationMessages messages = new ValidationMessages();
 
@@ -70,48 +86,43 @@ public class YourProjectCostsSaver {
         }
     }
 
-    private ValidationMessages saveLabourCosts(LabourForm labourForm, ApplicationFinanceResource finance) {
+    private ValidationMessages saveLabourCosts(LabourForm labourForm, BaseFinanceResource finance) {
         ValidationMessages messages = new ValidationMessages();
 
         LabourCostCategory labourCostCategory = (LabourCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.LABOUR);
         labourCostCategory.getWorkingDaysPerYearCostItem().setLabourDays(labourForm.getWorkingDaysPerYear());
-        messages.addAll(financeRowRestService.update(labourCostCategory.getWorkingDaysPerYearCostItem()).getSuccess());
+        messages.addAll(getFinanceRowService().update(labourCostCategory.getWorkingDaysPerYearCostItem()).getSuccess());
         messages.addAll(saveRows(labourForm.getRows(), finance));
         return messages;
 
     }
 
-    private ValidationMessages saveOverheads(OverheadForm overhead, ApplicationFinanceResource finance) {
+    private ValidationMessages saveOverheads(OverheadForm overhead, BaseFinanceResource finance) {
         OverheadCostCategory overheadCostCategory = (OverheadCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OVERHEADS);
         Overhead overheadCost = (Overhead) overheadCostCategory.getCosts().stream().findFirst().get();
 
         overheadCost.setRateType(overhead.getRateType());
         overheadCost.setRate(overhead.getRateType().equals(OverheadRateType.TOTAL) ? overhead.getTotalSpreadsheet() : 0);
 
-        return financeRowRestService.update(overheadCost).getSuccess();
+        return getFinanceRowService().update(overheadCost).getSuccess();
     }
 
 
-    private <R extends AbstractCostRowForm> ValidationMessages saveRows(Map<String, R> rows, ApplicationFinanceResource finance) {
+    private <R extends AbstractCostRowForm> ValidationMessages saveRows(Map<String, R> rows, BaseFinanceResource finance) {
         ValidationMessages messages = new ValidationMessages();
 
         rows.forEach((id, row) -> {
             if (EMPTY_ROW_ID.equals(id)) {
                 if (!row.isBlank()) {
-                    messages.addAll(financeRowRestService.add(finance.getId(), getQuestionId(row.getRowType(), finance), row.toCost()).getSuccess());
+                    FinanceRowItem result = getFinanceRowService().addWithResponse(finance.getId(), row.toCost()).getSuccess();
+                    messages.addAll(getFinanceRowService().update(result)); //TODO these two rest calls really could be a single one if the response contained the validation messages.
                 }
             } else {
-                messages.addAll(financeRowRestService.update(row.toCost()).getSuccess());
+                messages.addAll(getFinanceRowService().update(row.toCost()).getSuccess());
             }
         });
 
         return messages;
-    }
-
-    private Long getQuestionId(FinanceRowType type, ApplicationFinanceResource finance) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(finance.getApplication()).getSuccess();
-        QuestionResource questionResource = questionRestService.getQuestionByCompetitionIdAndFormInputType(applicationResource.getCompetition(), type.getFormInputType()).getSuccess();
-        return questionResource.getId();
     }
 
     public void removeRowFromForm(YourProjectCostsForm form, FinanceRowType type, String id) {
@@ -121,17 +132,16 @@ public class YourProjectCostsSaver {
 
     public void removeFinanceRow(String id) {
         if (!EMPTY_ROW_ID.equals(id)) {
-            financeRowRestService.delete(Long.valueOf(id)).getSuccess();
+            getFinanceRowService().delete(Long.valueOf(id)).getSuccess();
         }
     }
 
-    public <R extends AbstractCostRowForm> R addRowForm(YourProjectCostsForm form, FinanceRowType rowType, Long applicationId, UserResource user) throws IllegalAccessException, InstantiationException {
-        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
-        ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
+    public <R extends AbstractCostRowForm> R addRowForm(YourProjectCostsForm form, FinanceRowType rowType, long targetId, long organisationId) throws IllegalAccessException, InstantiationException {
+        BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
 
         Class<R> clazz = newRowFromType(rowType);
         R row = clazz.newInstance();
-        Long costId = financeRowRestService.addWithResponse(finance.getId(), row.toCost()).getSuccess().getId();
+        Long costId = getFinanceRowService().addWithResponse(finance.getId(), row.toCost()).getSuccess().getId();
         row.setCostId(costId);
         Map<String, R> map = getRowsFromType(form, rowType);
         map.put(String.valueOf(costId), row);
@@ -191,4 +201,8 @@ public class YourProjectCostsSaver {
         }
         return (Class<R>) clazz;
     }
+
+    protected abstract BaseFinanceResource getFinanceResource(long targetId, long organisationId);
+
+    protected abstract FinanceRowRestService getFinanceRowService();
 }

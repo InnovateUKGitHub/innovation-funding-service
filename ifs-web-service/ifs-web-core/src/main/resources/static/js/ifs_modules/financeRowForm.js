@@ -19,12 +19,15 @@ IFS.core.financeRowForm = (function () {
         IFS.core.financeRowForm.persistUnsavedRow(name, newFieldId)
       })
     },
+    getUrl: function (el) {
+      return jQuery(el).closest('form').data('row-operation-url')
+    },
     addRow: function (el, event) {
       var addRowButton = jQuery(el)
       var rowValue = addRowButton.val()
       event.preventDefault()
       jQuery.ajaxProtected({
-        url: window.location.href + '/add-row/' + rowValue,
+        url: IFS.core.financeRowForm.getUrl(el) + '/add-row/' + rowValue,
         method: 'POST',
         beforeSend: function () {
           addRowButton.before('<span class="govuk-hint">Adding a new row</span>')
@@ -48,7 +51,7 @@ IFS.core.financeRowForm = (function () {
       var id = rowValue.split(',')[0]
       event.preventDefault()
       jQuery.ajaxProtected({
-        url: window.location.href + '/remove-row/' + id,
+        url: IFS.core.financeRowForm.getUrl(el) + '/remove-row/' + id,
         method: 'POST'
       }).done(function (data) {
         removeButton.closest('[data-repeatable-row]').remove()

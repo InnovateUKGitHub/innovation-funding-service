@@ -29,7 +29,8 @@
 
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/{sectionId}/auto-save(applicationId=${model.applicationId},sectionId=${model.sectionId})}"
+              th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/{sectionId}/auto-save(applicationId=${model.applicationId},sectionId=${model.sectionId})},
+                       data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/{sectionId}(applicationId=${model.applicationId},sectionId=${model.sectionId})}"
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">

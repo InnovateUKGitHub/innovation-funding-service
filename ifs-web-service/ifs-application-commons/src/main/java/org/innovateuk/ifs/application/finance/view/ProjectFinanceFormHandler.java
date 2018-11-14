@@ -12,7 +12,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 @Component
 public class ProjectFinanceFormHandler extends BaseFinanceFormHandler<ProjectFinanceRowRestService> implements FinanceFormHandler {
@@ -71,15 +70,15 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler<ProjectFin
     }
 
     private void addRemoveCostRows(HttpServletRequest request, Long projectId, Long organisationId) {
-        Map<String, String[]> requestParams = request.getParameterMap();
-        if (requestParams.containsKey("add_cost")) {
-            String addCostParam = request.getParameter("add_cost");
-            ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
-            projectFinanceRowRestService.add(projectFinance.getId(), Long.valueOf(addCostParam), null);
-        }
-        if (requestParams.containsKey("remove_cost")) {
-            String removeCostParam = request.getParameter("remove_cost");
-            getFinanceRowRestService().delete(projectId, organisationId, Long.valueOf(removeCostParam)).getSuccess();
-        }
+//        Map<String, String[]> requestParams = request.getParameterMap();
+//        if (requestParams.containsKey("add_cost")) {
+//            String addCostParam = request.getParameter("add_cost");
+//            ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
+//            projectFinanceRowRestService.add(projectFinance.getId(), Long.valueOf(addCostParam), null);
+//        }
+//        if (requestParams.containsKey("remove_cost")) {
+//            String removeCostParam = request.getParameter("remove_cost");
+//            getFinanceRowRestService().delete(projectId, organisationId, Long.valueOf(removeCostParam)).getSuccess();
+//        }
     }
 }
