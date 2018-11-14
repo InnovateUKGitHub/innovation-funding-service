@@ -49,7 +49,7 @@ Application details: Innovation area section is visible
     And the user should see the element        jQuery = label:contains("My innovation area is not listed")
     And the user should see the element        jQuery = a:contains("Cancel")
     When the user clicks the button/link       jQuery = button:contains("Save")
-    Then the user should see an error          ${empty_field_warning_message}
+    Then the user should see a field error     ${empty_field_warning_message}
     When the user clicks the button/link       jQuery = label:contains("Digital manufacturing")
     And the user clicks the button/link        jQuery = button:contains("Save")
     Then the user should see the element       jQuery = button:contains("Change your innovation area")

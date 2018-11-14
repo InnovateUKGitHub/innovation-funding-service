@@ -191,13 +191,13 @@ Travel and subsistence client side
     And the user enters text to a text field    css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
     Then the user should see a field error      ${empty_field_warning_message}
     Then the user should see a field error      You must enter a value less than 10 digits.
-    And the user should see an error            ${field_should_be_1_or_higher}
+    And the user should see a field and summary error    ${field_should_be_1_or_higher}
     When the user enters text to a text field   css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    0
     And the user enters text to a text field    css = #travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    13123232134234234234234234423
     Then the user should see a field error      ${empty_field_warning_message}
     Then the user should see a field error      You must enter a value less than 20 digits.
-    And the user should see an error            ${field_should_be_1_or_higher}
+    And the user should see a field and summary error    ${field_should_be_1_or_higher}
 
 Travel and subsistence server side
     [Documentation]    INFUND-844

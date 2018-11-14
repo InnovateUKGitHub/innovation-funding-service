@@ -29,13 +29,13 @@ Day field client side
     [Tags]
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id = application_details-startdate_day    32
-    Then the user should see an error            ${enter_a_valid_date}
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_day    0
-    Then the user should see an error            ${enter_a_valid_date}
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_day    -1
-    Then the user should see an error            ${enter_a_valid_date}
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_day    ${EMPTY}
-    Then the user should see an error            ${enter_a_valid_date}
+    Then the user should see a field error       ${enter_a_valid_date}
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -44,13 +44,13 @@ Month field client side
     [Tags]
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id = application_details-startdate_month    0
-    Then the user should see an error            ${enter_a_valid_date}
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_month    13
-    Then the user should see an error            ${enter_a_valid_date}
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_month    -1
-    Then the user should see an error            ${enter_a_valid_date}
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_month    ${EMPTY}
-    Then the user should see an error            ${enter_a_valid_date}
+    Then the user should see a field error       ${enter_a_valid_date}
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -59,9 +59,9 @@ Year field client side
     [Tags]
     Given the user enters text to a text field    id = application.durationInMonths  15
     When the applicant inserts an invalid date
-    Then the user should see an error             Please enter a future date.
+    Then the user should see a field error        Please enter a future date.
     When the user enters text to a text field     id = application_details-startdate_year    ${EMPTY}
-    Then the user should see an error             Please enter a future date.
+    Then the user should see a field error        Please enter a future date.
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -102,12 +102,12 @@ Application details server side
 Empty text area
     [Documentation]    INFUND-43
     [Tags]
-    [Setup]    The user clicks the button/link    link = Application overview
-    Given the user clicks the button/link         link = Project summary
+    [Setup]    The user clicks the button/link            link = Application overview
+    Given the user clicks the button/link                 link = Project summary
     When the applicant clears the text area of the "Project Summary"
-    When the user clicks the button/link          id = application-question-complete
-    Then the user should see an error             Please enter some text.
-    When The user enters text to a text field     css = .textarea-wrapped .editor    Test 123
+    When the user clicks the button/link                  id = application-question-complete
+    Then the user should see a field and summary error    Please enter some text.
+    When The user enters text to a text field             css = .textarea-wrapped .editor    Test 123
     Then the applicant should not see the validation error any more
 
 *** Keywords ***

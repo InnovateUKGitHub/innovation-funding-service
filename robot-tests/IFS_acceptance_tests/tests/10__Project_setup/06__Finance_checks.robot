@@ -106,7 +106,8 @@ Validation on duration of Project
     [Tags]
     Given the user clicks the button/link               link = Edit
     And Set Focus To Element                            id = durationInMonths
-    And the user should see an error                    ${empty_field_warning_message}
+    When Set Focus To Element                           link = Contact us
+    Then the user should see a field error              ${empty_field_warning_message}
     When the user clicks the button/link                jQuery = button:contains("Save and return to finances")
     Then the user should see a field and summary error  ${empty_field_warning_message}
     [Teardown]  the user clicks the button/link         link = Projects in setup
