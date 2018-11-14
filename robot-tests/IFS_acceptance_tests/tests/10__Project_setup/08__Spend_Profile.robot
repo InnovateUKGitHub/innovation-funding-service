@@ -216,7 +216,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
     When the user clicks the button/link       jQuery = .button-secondary:contains("Edit spend profile")
     Then the user should see the element       jQuery = th:contains("Labour") + td input
     When the user enters text to a text field  jQuery = th:contains("Labour") + td input   520
-    And the user moves focus to the element    jQuery = th:contains("Overheads") + td input
+    And Set Focus To Element                   jQuery = th:contains("Overheads") + td input
     Then the user should see the element       jQuery = .govuk-error-summary:contains("Unable to submit spend profile.")
     And the user should see the element        jQuery = .govuk-form-group--error th:contains("Labour")
     And the user should see the element        jQuery = th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue = "3495"]
@@ -226,17 +226,17 @@ Lead partner can edit his spend profile with invalid values and see the error me
     Then the user should see the element       jQuery = .govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
     When the user clicks the button/link       jQuery = .button-secondary:contains("Edit spend profile")
     Then the user enters text to a text field  jQuery = th:contains("Labour") + td input  10
-    And the user should not see the element   jQuery = .govuk-form-group--error th:contains("Labour")
+    And the user should not see the element    jQuery = .govuk-form-group--error th:contains("Labour")
     When the user enters text to a text field  jQuery = th:contains("Overheads") ~ td:nth-child(4) input  -55
-    And the user moves focus to the element    jQuery = th:contains("Overheads") ~ td:nth-child(5)
+    And Set Focus To Element                   jQuery = th:contains("Overheads") ~ td:nth-child(5)
     Then the user should see the element       jQuery = .govuk-error-summary__list li:contains("This field should be 0 or higher")
     When the user enters text to a text field  jQuery = th:contains("Overheads") ~ td:nth-child(4) input  35.25
-    And the user moves focus to the element    jQuery = th:contains("Overheads") ~ td:nth-child(5)
+    And Set Focus To Element                   jQuery = th:contains("Overheads") ~ td:nth-child(5)
     Then the user should see the element       jQuery = .govuk-error-summary__list li:contains("This field can only accept whole numbers")
     When the user clicks the button/link       jQuery = .button-secondary:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
     When the user enters text to a text field  jQuery = th:contains("Overheads") ~ td:nth-child(4) input  0
-    And the user moves focus to the element    css = .spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
+    And Set Focus To Element                   css = .spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
     And the user should not see the element    css = .govuk-error-summary__list
 
 Lead partner can edit his spend profile with valid values
@@ -247,10 +247,10 @@ Lead partner can edit his spend profile with valid values
     And the user should see the element        css = table [type = "number"]    # checking here that the table is not read-only
     Then the user should see the element       jQuery = th:contains("Labour") + td input
     When the user enters text to a text field  jQuery = th:contains("Labour") + td input  14
-    And the user moves focus to the element    jQuery = th:contains("Labour") ~ td:nth-child(4) input
+    And Set Focus To Element                   jQuery = th:contains("Labour") ~ td:nth-child(4) input
     Then the user should see the element       jQuery = th:contains("Labour") ~ td.fix-right input[data-calculation-rawvalue = "2989"]
     When the user enters text to a text field  jQuery = th:contains("Subcontracting") ~ td:nth-child(5) input  0
-    And the user moves focus to the element    jQuery = th:contains("Subcontracting") ~ td:nth-child(7) input
+    And Set Focus To Element                   jQuery = th:contains("Subcontracting") ~ td:nth-child(7) input
     Then the user should see the element       jQuery = th:contains("Subcontracting") ~ td.fix-right input[data-calculation-rawvalue = "90000"]
     And the user should not see the element    jQuery = .govuk-error-summary:contains("Unable to save spend profile")
     When the user clicks the button/link       jQuery = .button-secondary:contains("Save and return to spend profile overview")
@@ -384,7 +384,7 @@ Academic partner spend profile server side validations
     Given the user clicks the button/link            jQuery = .button-secondary:contains("Edit spend profile")
     When the user enters text to a text field        css = .spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    -1    # Directly incurredStaff
     And the user enters text to a text field         css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    3306  # Travel and subsistence
-    And the user moves focus to the element          css = .spend-profile-table tbody .form-group-row:nth-child(7) td:nth-of-type(6) input
+    And Set Focus To Element                         css = .spend-profile-table tbody .form-group-row:nth-child(7) td:nth-of-type(6) input
     Then the user should see the text in the page    Your total costs are higher than your eligible costs.
     When the user clicks the button/link             jQuery = .button-secondary:contains("Save and return to spend profile overview")
     Then the user should see the text in the page    This field should be 0 or higher.
@@ -398,7 +398,7 @@ Academic partner spend profile client side validations
     And the user enters text to a text field           css = .spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    2  # Estates
     And the user enters text to a text field           css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(1) input    0  # Other - Directly allocated
     And the user enters text to a text field           css = .spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(1) input    0  # Other - Exceptions
-    And the user moves focus to the element            link = Set up your project
+    And Set Focus To Element                           link = Set up your project
     Then the user should not see the text in the page  This field should be 0 or higher
     When the user enters text to a text field          css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(2) input   0  # Other - Directly allocated
     And the user enters text to a text field           css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    0  # Other - Directly allocated

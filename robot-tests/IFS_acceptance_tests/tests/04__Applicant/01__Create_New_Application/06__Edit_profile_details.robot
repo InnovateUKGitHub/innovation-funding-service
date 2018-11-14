@@ -38,7 +38,7 @@ Edit the profile and verify if the changes are saved
     And the user should see the text in the page           Brown
     And the user should see the text in the page           0123456789
     When the user clicks the button/link                   link = Edit your details
-    And the user should see that the checkbox is selected  allowMarketingEmails
+    And Checkbox Should Be Selected                        allowMarketingEmails
     When the user can change their details back again
     Then the user should see the element  jQuery = h3:contains("Email preferences") + p:contains("You have asked for updates on Innovate UK competitions by email.")
 

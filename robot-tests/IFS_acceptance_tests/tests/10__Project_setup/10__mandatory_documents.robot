@@ -385,7 +385,7 @@ After rejection, non-lead partner cannot view both documents
     [Tags]
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user moves focus to the element  css = ul li:nth-child(2)
+    Then Set Focus To Element              css = ul li:nth-child(2)
     And the user should see the element    css = #main-content ul > li:nth-child(2) .msg-progress
     And the user clicks the button/link    link = Other documents
     And the user clicks the button/link    link = ${valid_pdf}

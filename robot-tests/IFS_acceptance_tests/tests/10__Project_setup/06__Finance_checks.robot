@@ -105,7 +105,7 @@ Validation on duration of Project
     [Documentation]  IFS-2313
     [Tags]
     Given the user clicks the button/link               link = Edit
-    And the user moves focus to the element             id = durationInMonths
+    And Set Focus To Element                            id = durationInMonths
     And the user should see an error                    This field cannot be left blank.
     When the user clicks the button/link                jQuery = button:contains("Save and return to finances")
     Then the user should see a field and summary error  This field cannot be left blank.
@@ -1119,7 +1119,6 @@ Project finance user adds, modifies and removes labour rows
     And the user adds data into labour row         5  test 1  1450  100
     Then verify percentage and total               1    3%    £5,886
     When the user clicks the button/link           jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(2) button:contains('Remove')
-    And the user clears the text from the element  jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossEmployeeCost"]
     And the user enters text to a text field       jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossEmployeeCost"]    100
     And the user clicks the button/link            css = section:nth-of-type(1) .govuk-button[name = save-eligibility]
     Then verify percentage and total               1    2%    £4,748
@@ -1147,7 +1146,7 @@ the user fills in project costs
     Input Text    name = costs[4].value    £10,000
     Input Text    name = costs[5].value    £10,000
     Input Text    name = costs[6].value    £10,000
-    the user moves focus to the element    css = [for = "costs-reviewed"]
+    Set Focus To Element                     css = [for = "costs-reviewed"]
     the user sees the text in the element    css = tfoot td    £60,000
     the user should see that the element is disabled    jQuery = .govuk-button:contains("Approve eligible costs")
 
@@ -1159,7 +1158,7 @@ project finance approves Viability for
     And the user selects the checkbox       costs-reviewed
     When the user should see the element    jQuery = h2:contains("Approve viability")
     Then the user selects the checkbox      project-viable
-    And the user moves focus to the element  link = Contact us
+    And Set Focus To Element                link = Contact us
     When the user selects the option from the drop-down menu  Green  id = rag-rating
     Then the user clicks the button/link    css = #confirm-button
     And the user clicks the button/link     jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
@@ -1244,8 +1243,7 @@ Project finance user amends labour details in eligibility for lead
     Then the user should see the element            jQuery = section:nth-of-type(1) button span:contains("2%")
     When the user clicks the button/link            jQuery = section:nth-of-type(1) a:contains("Edit")
     Then the user should see the element            css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    When the user clears the text from the element  css = [name^="labour-labourDaysYearly"]
-    And the user enters text to a text field        css = [name^="labour-labourDaysYearly"]    230
+    When the user enters text to a text field       css = [name^="labour-labourDaysYearly"]    230
     And the user adds data into labour row          1  test  120000  100
     Then verify percentage and total                1    21%    £53,648
     When the user clicks the button/link            jQuery = section:nth-of-type(1) button:contains("Add another role")

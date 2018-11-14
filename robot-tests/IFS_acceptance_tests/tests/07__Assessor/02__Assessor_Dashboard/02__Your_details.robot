@@ -63,7 +63,7 @@ Custom Suite Setup
 the assessor updates profile details
     The user enters text to a text field  id = firstName    Joy
     The user enters text to a text field  id = lastName    Archer
-    the user moves focus to the element   id = firstName
+    Set Focus To Element                  id = firstName
     the user enters text to a text field  id = addressForm.addressLine1    7, Phoenix house
     the user enters text to a text field  id = addressForm.town    Reading
     the user enters text to a text field  id = addressForm.postcode    RG1 7UH

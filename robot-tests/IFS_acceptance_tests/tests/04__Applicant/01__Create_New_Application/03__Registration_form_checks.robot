@@ -49,7 +49,7 @@ Your details: client-side password hint validation
     [Tags]
     Given the user navigates to the page       ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field  id = password    ${lower_case_password}
-    And the user moves focus to the element    css = [name="create-account"]
+    And Set Focus To Element                   css = [name="create-account"]
     Then the user should see the element       css = .govuk-list.status [data-minlength-validationstatus][data-valid="true"]
     And the user should see the element        css = .govuk-list.status [data-containsuppercase-validationstatus][data-valid="false"]
     And the user should see the element        css = .govuk-list.status [data-containsnumber-validationstatus][data-valid="true"]

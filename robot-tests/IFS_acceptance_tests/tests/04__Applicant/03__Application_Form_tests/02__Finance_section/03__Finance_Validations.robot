@@ -17,7 +17,7 @@ Mark as complete Your funding with only one input should not be possible
     When the user clicks the button/link      link = Your funding
     And the user selects the radio button     requestingFunding   true
     And the user enters text to a text field  css = [name^="grantClaimPercentage"]  70
-    And the user moves focus to the element   css = [data-target="other-funding-table"] label
+    And Set Focus To Element                  css = [data-target="other-funding-table"] label
     Then the user should see the element      jQuery = #mark-all-as-complete.disabled:contains("Mark as complete")
 
 Other funding client side
@@ -107,7 +107,7 @@ Materials client side
     Given the user clicks the button/link       jQuery = button:contains("Materials")
     When the user enters text to a text field   css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1234567810111213141516171819202122
     And the user enters text to a text field    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
-    And the user moves focus to the element     css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input
+    And Set Focus To Element                    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input
     Then the user should see a field error      You must enter a value less than 10 digits.
     And the user should see a field error       This field should be 1 or higher.
 
@@ -252,7 +252,7 @@ Funding level server side
     Then the user should see a field and summary error   Funding level must be 70% or lower.
     And the user selects the radio button        requestingFunding   true
     Then the user enters text to a text field    css = [name^="grantClaimPercentage"]  69
-    And the user moves focus to the element      css = [data-target="other-funding-table"] label
+    And Set Focus To Element                     css = [data-target="other-funding-table"] label
 
 *** Keywords ***
 Custom Suite Setup
@@ -267,11 +267,11 @@ the user enters invalid inputs in the other funding fields
     the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${SOURCE}
     the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${DATE}
     the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${FUNDING}
-    the user moves focus to the element     css = button.govuk-button[type="submit"]
+    Set Focus To Element                    css = button.govuk-button[type="submit"]
 
 Remove row
     [Arguments]    ${section}    ${close button}
-    the user moves focus to the element    ${close button}
+    Set Focus To Element               ${close button}
     wait for autosave
     the user clicks the button/link    ${close button}
     the user clicks the button/link    ${section}
