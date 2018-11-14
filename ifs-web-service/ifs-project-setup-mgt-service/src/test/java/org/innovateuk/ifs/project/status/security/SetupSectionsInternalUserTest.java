@@ -275,115 +275,6 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     }
 
     @Test
-    public void testCheckAccessToOtherDocumentsSectionHappyPath() {
-        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build()));
-
-        verifyInteractions(
-                SetupProgressChecker::isOtherDocumentsSubmitted
-        );
-    }
-
-    @Test
-    public void testCheckAccessToOtherDocumentsSectionDocsApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build()));
-
-        verifyInteractions(
-                SetupProgressChecker::isOtherDocumentsSubmitted
-        );
-    }
-
-    @Test
-    public void testCheckSupportAccessToOtherDocumentsSectionDocsApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(getSupportUser()));
-
-        verifyInteractions(
-                SetupProgressChecker::isOtherDocumentsSubmitted,
-                SetupProgressChecker::isOtherDocumentsApproved
-        );
-    }
-
-    @Test
-    public void testCheckSupportAccessToOtherDocumentsSectionDocsNotApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
-        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(getSupportUser()));
-
-        verifyInteractions(
-                SetupProgressChecker::isOtherDocumentsSubmitted,
-                SetupProgressChecker::isOtherDocumentsApproved
-        );
-    }
-
-    @Test
-    public void testCheckInnovationLeadAccessToOtherDocumentsSectionDocsApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(getInnovationLeadUser()));
-
-        verifyInteractions(
-                SetupProgressChecker::isOtherDocumentsSubmitted,
-                SetupProgressChecker::isOtherDocumentsApproved
-        );
-    }
-
-    @Test
-    public void testCheckInnovationLeadAccessToOtherDocumentsSectionDocsNotApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
-        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(getInnovationLeadUser()));
-
-        verifyInteractions(
-                SetupProgressChecker::isOtherDocumentsSubmitted,
-                SetupProgressChecker::isOtherDocumentsApproved
-        );
-    }
-
-    @Test
-    public void checkStakeholderAccessToOtherDocumentsSectionDocsApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(stakeholderUser()));
-
-        verifyInteractions(
-                SetupProgressChecker::isOtherDocumentsSubmitted,
-                SetupProgressChecker::isOtherDocumentsApproved
-        );
-    }
-
-    @Test
-    public void checkStakeholderAccessToOtherDocumentsSectionDocsNotApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
-        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(stakeholderUser()));
-
-        verifyInteractions(
-                SetupProgressChecker::isOtherDocumentsSubmitted,
-                SetupProgressChecker::isOtherDocumentsApproved
-        );
-    }
-
-    @Test
-    public void testCheckAccessToOtherDocumentsSectionDocsRejected() {
-        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        when(setupProgressCheckerMock.isOtherDocumentsRejected()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build()));
-
-        verifyInteractions(
-                SetupProgressChecker::isOtherDocumentsSubmitted
-        );
-    }
-
-    @Test
-    public void testCheckAccessToOtherDocumentsSectionButSpendProfileSectionIsNotSubmitted() {
-        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(false);
-        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
-    }
-
-    @Test
     public void internalAdminCanAccessDocumentsSectionIrrespectiveOfDocumentStatus() {
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(false);
         assertEquals(ACCESSIBLE, internalUser.canAccessDocumentsSection(compAdmin()));
@@ -446,7 +337,6 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     }
     @Test
     public void testCheckAccessToGrantOfferLetterSendSectionHappyPath() {
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
 
         Map<Role, ProjectActivityStates> roleSpecificActivityStates = new HashMap<>();
@@ -458,15 +348,13 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
         assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(compAdmin));
 
-        verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
-                SetupProgressChecker::isSpendProfileApproved,
+        verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::getRoleSpecificActivityState);
     }
 
     //OD = Other Documents
     @Test
     public void checkAccessToGrantOfferLetterSendSectionWhenODNotApprovedButDocumentsApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
 
@@ -479,8 +367,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
         assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(compAdmin));
 
-        verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
-                SetupProgressChecker::allDocumentsApproved,
+        verifyInteractions(SetupProgressChecker::allDocumentsApproved,
                 SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::getRoleSpecificActivityState);
     }
@@ -488,43 +375,37 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckSupportAccessToGrantOfferLetterSendSectionHappyPath() {
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getSupportUser()));
 
-        verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
-                SetupProgressChecker::isSpendProfileApproved,
+        verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved);
     }
 
     //OD = Other Documents
     @Test
     public void checkSupportAccessToGrantOfferLetterSendSectionWhenODNotApprovedButDocumentsApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getSupportUser()));
 
-        verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
-                SetupProgressChecker::allDocumentsApproved,
+        verifyInteractions(SetupProgressChecker::allDocumentsApproved,
                 SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved);
     }
 
     @Test
     public void testCheckSupportAccessToGrantOfferLetterSendSectionGrantOfferLetterApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getSupportUser()));
 
-        verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
-                SetupProgressChecker::isSpendProfileApproved,
+        verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved);
     }
 
@@ -539,27 +420,23 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckInnovationLeadAccessToGrantOfferLetterSendSectionHappyPath() {
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getInnovationLeadUser()));
 
-        verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
-                SetupProgressChecker::isSpendProfileApproved,
+        verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved);
     }
 
     @Test
     public void testCheckInnovationLeadAccessToGrantOfferLetterSendSectionGrantOfferLetterApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(getInnovationLeadUser()));
 
-        verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
-                SetupProgressChecker::isSpendProfileApproved,
+        verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved);
     }
 
@@ -574,27 +451,23 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void checkStakeholderAccessToGrantOfferLetterSendSectionHappyPath() {
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(stakeholderUser()));
 
-        verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
-                SetupProgressChecker::isSpendProfileApproved,
+        verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved);
     }
 
     @Test
     public void checkStakeholderAccessToGrantOfferLetterSendSectionWhenGrantOfferLetterNotApproved() {
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterApproved()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(stakeholderUser()));
 
-        verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
-                SetupProgressChecker::isSpendProfileApproved,
+        verifyInteractions(SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved);
     }
 
@@ -615,7 +488,6 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     public void testCheckAccessToGrantOfferLetterSectionSendButOtherSectionsAreIncomplete() {
         List<Role> roles = singletonList(COMP_ADMIN);
         UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
     }
 

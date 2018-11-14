@@ -2,10 +2,8 @@ package org.innovateuk.ifs.project.status.security;
 
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.sections.SectionAccess;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -253,13 +251,11 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
                 true, false, true, true, false, NOT_ACCESSIBLE);
     }
 
-    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     private void doTest(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall,
                         boolean spendProfileApproved, boolean otherDocsApproved, boolean docsApproved, boolean golAvailable, boolean golSent,
                         SectionAccess expectedAccess) {
 
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(spendProfileApproved);
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(otherDocsApproved);
         when(setupProgressCheckerMock.isDocumentsApproved()).thenReturn(docsApproved);
         when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(golAvailable);
         when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(golSent);

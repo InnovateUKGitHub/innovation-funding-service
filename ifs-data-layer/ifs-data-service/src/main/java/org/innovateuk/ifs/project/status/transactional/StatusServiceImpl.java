@@ -356,7 +356,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private boolean documentsApproved(Project project) {
-        return ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved()) || COMPLETE.equals(getDocumentsStatus(project));
+        return ApprovalType.APPROVED.equals(COMPLETE.equals(getDocumentsStatus(project)));
     }
 
     @Override

@@ -54,25 +54,9 @@ class SetupProgressChecker {
         return COMPLETE.equals(projectStatus.getSpendProfileStatus());
     }
 
-    @OtherDocsWindDown
-    public boolean isOtherDocumentsSubmitted() {
-        return ACTION_REQUIRED.equals(projectStatus.getOtherDocumentsStatus());
-    }
-
-    @OtherDocsWindDown
-    public boolean isOtherDocumentsApproved() {
-        return COMPLETE.equals(projectStatus.getOtherDocumentsStatus());
-    }
-
     public boolean allDocumentsApproved() {
         return COMPLETE.equals(projectStatus.getDocumentsStatus());
     }
-
-    @OtherDocsWindDown
-    public boolean isOtherDocumentsRejected() {
-        return REJECTED.equals(projectStatus.getOtherDocumentsStatus());
-    }
-
 
     public boolean isOrganisationRequiringFunding() {
         return !NOT_REQUIRED.equals(projectStatus.getBankDetailsStatus());

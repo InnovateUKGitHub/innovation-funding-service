@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -15,7 +14,6 @@ import static org.innovateuk.ifs.sections.SectionAccess.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
     @Mock
@@ -343,68 +341,10 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         );
     }
 
-    @Test
-    public void testCheckAccessToOtherDocumentsSectionHappyPathForLeadPartner() {
-
-        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
-
-        assertEquals(ACCESSIBLE, accessor.canAccessOtherDocumentsSection(organisation));
-
-        verifyInteractions(mock -> mock.isLeadPartnerOrganisation(organisation));
-
-
-    }
-
-    @Test
-    public void testCheckAccessToOtherDocumentsSectionHappyPathForNonLeadPartner() {
-
-        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-
-        assertEquals(ACCESSIBLE, accessor.canAccessOtherDocumentsSection(organisation));
-
-        verifyInteractions(
-                mock -> mock.isLeadPartnerOrganisation(organisation),
-                mock -> mock.isCompaniesHouseSectionRequired(organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(organisation)
-        );
-    }
-
-    @Test
-    public void testCheckAccessToOtherDocumentsSectionHappyPathForNonLeadPartnerNonBusinessType() {
-
-        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(false);
-
-        assertEquals(ACCESSIBLE, accessor.canAccessOtherDocumentsSection(organisation));
-
-        verifyInteractions(
-                mock -> mock.isLeadPartnerOrganisation(organisation),
-                mock -> mock.isCompaniesHouseSectionRequired(organisation)
-        );
-    }
-
-    @Test
-    public void testCheckAccessToOtherDocumentsSectionButNonLeadPartnerNotCompletedCompaniesHouseInformation() {
-
-        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
-
-        assertEquals(NOT_ACCESSIBLE, accessor.canAccessOtherDocumentsSection(organisation));
-
-        verifyInteractions(
-                mock -> mock.isLeadPartnerOrganisation(organisation),
-                mock -> mock.isCompaniesHouseSectionRequired(organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(organisation)
-        );
-    }
 
     @Test
     public void testCheckAccessToGrantOfferLetterSectionHappyPath() {
 
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(true);
@@ -413,7 +353,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
-                mock -> mock.isOtherDocumentsApproved(),
                 mock -> mock.isGrantOfferLetterAvailable(),
                 mock -> mock.isGrantOfferLetterSent()
         );
@@ -422,7 +361,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToGrantOfferLetterSectionNotAvailable() {
 
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(false);
 
@@ -430,7 +368,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
-                mock -> mock.isOtherDocumentsApproved(),
                 mock -> mock.isGrantOfferLetterAvailable()
         );
     }
@@ -438,7 +375,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToGrantOfferLetterSectionSpendProfilesNotApproved() {
 
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
@@ -451,14 +387,12 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToGrantOfferLetterSectionOtherDocumentsNotApproved() {
 
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
-                mock -> mock.isOtherDocumentsApproved(),
                 mock -> mock.isDocumentsApproved()
         );
     }
@@ -466,7 +400,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToGrantOfferLetterSectionGrantOfferNotSent() {
 
-        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(false);
@@ -475,7 +408,6 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
-                mock -> mock.isOtherDocumentsApproved(),
                 mock -> mock.isGrantOfferLetterAvailable(),
                 mock -> mock.isGrantOfferLetterSent()
         );

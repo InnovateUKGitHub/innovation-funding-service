@@ -152,13 +152,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(), financeChecksAccess);
         SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
-        SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, isProjectManager);
         SectionStatus documentsStatus = sectionStatus.documentsSectionStatus(isProjectManager, competition.getProjectDocuments().size(), project.getProjectDocuments());
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(ownOrganisation.getGrantOfferLetterStatus(), isLeadPartner);
 
         return new SectionStatusList(projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus,
-                financeChecksStatus, spendProfileStatus, otherDocumentsStatus,
-                documentsStatus, grantOfferStatus);
+                financeChecksStatus, spendProfileStatus, documentsStatus, grantOfferStatus);
     }
 
     private boolean isLeadPartner(ProjectTeamStatusResource teamStatus, OrganisationResource organisation) {
@@ -180,13 +178,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(organisation);
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
         SectionAccess spendProfileAccess = statusAccessor.canAccessSpendProfileSection(organisation);
-        SectionAccess otherDocumentsAccess = statusAccessor.canAccessOtherDocumentsSection(organisation);
         SectionAccess documentsAccess = statusAccessor.canAccessDocumentsSection(organisation);
         SectionAccess grantOfferAccess = statusAccessor.canAccessGrantOfferLetterSection(organisation);
 
         return new SectionAccessList(companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess,
-                bankDetailsAccess, financeChecksAccess, spendProfileAccess,
-                otherDocumentsAccess, documentsAccess, grantOfferAccess);
+                bankDetailsAccess, financeChecksAccess, spendProfileAccess, documentsAccess, grantOfferAccess);
     }
 
     private boolean requiredProjectDetailsForMonitoringOfficerComplete(boolean partnerProjectLocationRequired, boolean isProjectDetailsSubmitted, ProjectTeamStatusResource teamStatus) {
