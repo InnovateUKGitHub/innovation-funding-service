@@ -97,18 +97,18 @@ Post new query server side validations
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link     jQuery = .govuk-button:contains("Post query")
-    Then the user should see the element     jQuery = label[for = "queryTitle"] + .govuk-error-message:contains(This field cannot be left blank.)
-    And the user should see the element      jQuery = label[for = "query"] + .govuk-error-message:contains(This field cannot be left blank.)
-    And the user should see a summary error  This field cannot be left blank.
+    Then the user should see the element     jQuery = label[for = "queryTitle"] + .govuk-error-message:contains(${empty_field_warning_message})
+    And the user should see the element      jQuery = label[for = "query"] + .govuk-error-message:contains(${empty_field_warning_message})
+    And the user should see a summary error  ${empty_field_warning_message}
 
 Post new query client side validations
     [Documentation]    INFUND-4840
     [Tags]
     When Set Focus To Element                   link = Sign out
     And the user enters text to a text field    id = queryTitle    an eligibility query's title
-    Then the user should not see the element    jQuery = label[for = "queryTitle"] + .govuk-error-message:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery = label[for = "queryTitle"] + .govuk-error-message:contains(${empty_field_warning_message})
     When the user enters text to a text field    css = .editor    this is some query text
-    Then the user should not see the element    jQuery = label[for = "query] + .govuk-error-message:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery = label[for = "query] + .govuk-error-message:contains(${empty_field_warning_message})
 
 Word count validations
     [Documentation]    INFUND-4840
@@ -208,16 +208,16 @@ Applicant - Response to query server side validations
     Then the user expands the section       an eligibility query's title
     When the user clicks the button/link    jQuery = h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
     And the user clicks the button/link     jQuery = .govuk-button:contains("Post response")
-    Then the user should see a field error  This field cannot be left blank.
+    Then the user should see a field error  ${empty_field_warning_message}
 #    TODO commmented due to IFS-2622
-#    And the user should see a summary error            This field cannot be left blank.
+#    And the user should see a summary error            ${empty_field_warning_message}
 
 Applicant - Response to query client side validations
     [Documentation]    INFUND-4843
     [Tags]
     When the user enters text to a text field          css = .editor  this is some response text
     And Set Focus To Element                           jQuery = .govuk-button:contains("Post response")
-    Then the user should not see the text in the page  This field cannot be left blank.
+    Then the user should not see the text in the page  ${empty_field_warning_message}
     When the user uploads the file                     name = attachment  ${valid_pdf}
     Then the user should see the element               jQuery = a:contains("testing.pdf") + button:contains("Remove")
 
@@ -392,17 +392,17 @@ Create new note server side validations
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link   jQuery = .govuk-button:contains("Save note")
-    Then the user should see the element   jQuery = label[for="noteTitle"] + .govuk-error-message:contains(This field cannot be left blank.)
-    And the user should see the element    jQuery = label[for="note"] + .govuk-error-message:contains(This field cannot be left blank.)
+    Then the user should see the element   jQuery = label[for="noteTitle"] + .govuk-error-message:contains(${empty_field_warning_message})
+    And the user should see the element    jQuery = label[for="note"] + .govuk-error-message:contains(${empty_field_warning_message})
 
 Create new note client side validations
     [Documentation]    INFUND-4845
     [Tags]
     When Set Focus To Element                   link = Sign out
     And the user enters text to a text field    id = noteTitle    an eligibility query's title
-    Then the user should not see the element    jQuery = label[for="noteTitle"] .govuk-error-message:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery = label[for="noteTitle"] .govuk-error-message:contains(${empty_field_warning_message})
     When the user enters text to a text field   css = .editor    this is some note text
-    Then the user should not see the element    jQuery = label[for="note"] .govuk-error-message:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery = label[for="note"] .govuk-error-message:contains(${empty_field_warning_message})
 
 Word count validations for notes
     [Documentation]    INFUND-4845
@@ -505,14 +505,14 @@ Note comments server side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery = .govuk-button:contains("Save comment")
-    Then the user should see the element    jQuery = label[for="comment"] + .govuk-error-message:contains("This field cannot be left blank.")
+    Then the user should see the element    jQuery = label[for="comment"] + .govuk-error-message:contains("${empty_field_warning_message}")
 
 Note comments client side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user enters text to a text field    css = .editor  this is some comment text
     And Set Focus To Element      jQuery = .govuk-button:contains("Save comment")
-    Then the user should not see the element     jQuery = label[for="comment"] .govuk-error-message:contains("This field cannot be left blank.")
+    Then the user should not see the element     jQuery = label[for="comment"] .govuk-error-message:contains("${empty_field_warning_message}")
 
 Word count validations for note comments
     [Documentation]    INFUND-7756

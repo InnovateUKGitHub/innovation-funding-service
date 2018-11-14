@@ -66,7 +66,7 @@ Clicking the ineligible button
     Then the user should see the element    css = [aria-hidden = "false"] [id = "ineligibleReason"]
     And browser validations have been disabled
     When the user clicks the button/link    css = button[name = "markAsIneligible"]
-    Then the user should see a field and summary error  This field cannot be left blank.
+    Then the user should see a field and summary error  ${empty_field_warning_message}
 
 Cancel marking the application as ineligible
     [Documentation]  INFUND-7370 IFS-986

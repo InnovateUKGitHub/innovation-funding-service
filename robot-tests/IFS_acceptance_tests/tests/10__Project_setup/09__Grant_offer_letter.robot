@@ -531,7 +531,7 @@ the user tries to reject without a reason he should get a validation message
     the user selects the radio button     approvalType  rejectGOL
     the user enters text to a text field  id = gol-reject-reason  ${empty}
     Set Focus To Element                  link = Dashboard
-    the user should see a field error     This field cannot be left blank
+    the user should see a field error     ${empty_field_warning_message}
 
 the user rejects the GOL and sees the successful status
     # Insert Rejection text and submit
