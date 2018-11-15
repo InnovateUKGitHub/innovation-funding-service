@@ -56,7 +56,7 @@ SELECT p.id AS project_id,
 dc.id AS document_config_id,
 p.collaboration_agreement_file_entry_id AS file_entry_id,
 'UPLOADED'  AS status,
-'Rejected' AS status_comments
+'' AS status_comments
 FROM project p
 INNER JOIN application a ON p.application_id = a.id
 INNER JOIN document_config dc ON a.competition = dc.competition_id
@@ -72,13 +72,14 @@ SELECT p.id AS project_id,
 dc.id AS document_config_id,
 p.exploitation_plan_file_entry_id AS file_entry_id,
 'UPLOADED' AS status,
-'Rejected' AS status_comments
+'' AS status_comments
 FROM project p
 INNER JOIN application a ON p.application_id = a.id
 INNER JOIN document_config dc ON a.competition = dc.competition_id
 WHERE dc.title = 'Exploitation plan'
 AND p.exploitation_plan_file_entry_id IS NOT NULL;
 
+-- no no no! dont bloody do this! -- understand what this does.
 SET SQL_SAFE_UPDATES = 0;
 
 -- If collaboration agreement and exploitation plan have been submitted then update project document status
@@ -109,9 +110,9 @@ ALTER TABLE project
 ALTER TABLE project
   DROP FOREIGN KEY project_ibfk_2;
 
---  Drop old unused columns
-
-ALTER TABLE project DROP COLUMN collaboration_agreement_file_entry_id;
-ALTER TABLE project DROP COLUMN exploitation_plan_file_entry_id;
-ALTER TABLE project DROP COLUMN documents_submitted_date;
-ALTER TABLE project DROP COLUMN other_documents_approved;
+----  Drop old unused columns -- Comment these out once IFS-4756 is merged!
+--
+--ALTER TABLE project DROP COLUMN collaboration_agreement_file_entry_id;
+--ALTER TABLE project DROP COLUMN exploitation_plan_file_entry_id;
+--ALTER TABLE project DROP COLUMN documents_submitted_date;
+--ALTER TABLE project DROP COLUMN other_documents_approved;
