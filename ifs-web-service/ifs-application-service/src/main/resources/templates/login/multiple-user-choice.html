@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dual user choice',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Multiple user choice',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body class="govuk-template__body app-overview">
@@ -35,8 +35,8 @@
                             <th:block th:if="${#fields.hasErrors('selectedRole')}">
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
                             </th:block>
-                            <div class="govuk-radios govuk-radios--inline">
-                                <div class="govuk-radios__item" th:each="role : ${model.ACCEPTED_ROLES}">
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item" th:each="role : ${model.getAcceptedRoles()}">
                                     <input th:field="*{selectedRole}"
                                            class="govuk-radios__input"
                                            th:value="${role}"

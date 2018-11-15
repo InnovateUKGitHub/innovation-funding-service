@@ -89,7 +89,7 @@ Satisfaction survey:validations
     Given the user clicks the button/link                 link = Finished
     When the user clicks the button/link                  css = button[type="submit"]  #Send feedback
     Then the user should see a field and summary error    Please select a level of satisfaction.
-    And the user should see a field and summary error     This field cannot be left blank.
+    And the user should see a field and summary error     ${empty_field_warning_message}
 
 Applicant submit satisfaction survey after submitting application
     #The survey needs to be set to enabled in gradle.properties
@@ -130,7 +130,7 @@ RTO lead has read only view after submission
     Given the user navigates to the page                   ${DASHBOARD_URL}
     And the user clicks the button/link                    link = ${application_rto_name}
     When the applicant completes the application details   ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
-    Then the user clicks the button/link                   link = Your finances
+    And the user fills in the organisation information     ${application_rto_name}  ${SMALL_ORGANISATION_SIZE}
     And the user clicks the button/link                    link = Your funding
     And the user marks your funding section as complete
     And the user enters the project location

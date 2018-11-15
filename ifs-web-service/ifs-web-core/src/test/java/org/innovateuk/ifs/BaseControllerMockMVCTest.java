@@ -74,11 +74,39 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withRolesGlobal(singletonList(Role.ASSESSOR))
             .withUID("2522-34y34ah-hrt4420").build();
 
+    protected UserResource stakeholder = newUserResource().withId(3L)
+            .withFirstName("Troy")
+            .withLastName("Perez")
+            .withEmail("troy.perez@email.co.uk")
+            .withRolesGlobal(singletonList(Role.STAKEHOLDER))
+            .withUID("2522-34y34ah-hrt4420").build();
+
     protected UserResource assessorAndApplicant = newUserResource().withId(4L)
             .withFirstName("Fred")
             .withLastName("Smith")
             .withEmail("fred.smith@email.co.uk")
             .withRolesGlobal(asList(Role.APPLICANT, Role.ASSESSOR))
+            .withUID("1234-abcdefgh-abc1234").build();
+
+    protected UserResource stakeholderAndAssessor = newUserResource().withId(4L)
+            .withFirstName("Maria")
+            .withLastName("Briggs")
+            .withEmail("maria.briggs@email.co.uk")
+            .withRolesGlobal(asList(Role.ASSESSOR, Role.STAKEHOLDER))
+            .withUID("1234-abcdefgh-abc1234").build();
+
+    protected UserResource stakeholderAndApplicant = newUserResource().withId(4L)
+            .withFirstName("Ken")
+            .withLastName("Brown")
+            .withEmail("ken.brown@email.co.uk")
+            .withRolesGlobal(asList(Role.APPLICANT, Role.STAKEHOLDER))
+            .withUID("1234-abcdefgh-abc1234").build();
+
+    protected UserResource assessorAndApplicantAndStakeholder = newUserResource().withId(4L)
+            .withFirstName("Ollie")
+            .withLastName("Jones")
+            .withEmail("ollie.jones@email.co.uk")
+            .withRolesGlobal(asList(Role.APPLICANT, Role.ASSESSOR, Role.STAKEHOLDER))
             .withUID("1234-abcdefgh-abc1234").build();
 
     protected UserResource collaborator = newUserResource().withId(2L)

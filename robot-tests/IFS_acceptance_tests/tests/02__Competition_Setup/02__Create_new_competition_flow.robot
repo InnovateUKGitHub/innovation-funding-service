@@ -391,14 +391,14 @@ Application: Application details validations
     # TODO IFS-3188
 
     When the user selects the radio button       useResubmissionQuestion  true
-    Then the user should see the element         jQuery = label[for="minProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
-    And the user should see the element          jQuery = label[for="maxProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
+    Then the user should see the element         jQuery = label[for="minProjectDuration"] + .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element          jQuery = label[for="maxProjectDuration"] + .govuk-error-message:contains("${empty_field_warning_message}")
     When the user clicks the button/link         css = button[type="submit"]
     Then the user should see the element         css = .govuk-error-summary__list
 
     When the user enters text to a text field    id = minProjectDuration  -2
     And the user enters text to a text field     id = maxProjectDuration  -3
-    Then the user should see a field error       This field should be 1 or higher.
+    Then the user should see a field error       ${field_should_be_1_or_higher}
     And the user should see a field error        The maximum must be larger than the minimum.
 
     When the user enters text to a text field    id = minProjectDuration  66
@@ -535,11 +535,13 @@ Application: Finances
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]
     When the user selects the radio button         includeGrowthTable  true
+    And the user selects the radio button          includeJesForm  true
     And the user enters text to a text field       css = .editor  Funding rules for this competition are now entered.
     Then The user clicks the button/link           css = button[type="submit"]  #Save and close
     When the user clicks the button/link           link = Finances
     Then the user should see the element           jQuery = dt:contains("Include project growth table")+dd:contains("Yes")
     And the user should see the element            jQuery = dt:contains("Funding rules for this competition")+dd:contains("Funding rules for this competition are now entered.")
+    And the user should see the element            jQuery = dt:contains("Include Je-S form for research organisations") + dd:contains("Yes")
     [Teardown]  the user clicks the button/link    link = Return to application questions
 
 Application: Done enabled when all questions are marked as complete

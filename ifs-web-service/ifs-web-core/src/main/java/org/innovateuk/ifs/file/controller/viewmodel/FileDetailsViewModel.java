@@ -25,7 +25,7 @@ public class FileDetailsViewModel {
 
     public FileDetailsViewModel(String filename, long filesizeBytes) {
         this.filename = filename;
-        this.filesizeKbytes = BigDecimal.valueOf(filesizeBytes).divide(ONE_KB, 0, ROUND_UP);;
+        this.filesizeKbytes = BigDecimal.valueOf(filesizeBytes).divide(ONE_KB, 0, ROUND_UP);
     }
 
     public FileDetailsViewModel(long formInputId, String filename, long filesizeBytes) {

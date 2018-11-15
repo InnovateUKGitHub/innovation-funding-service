@@ -17,6 +17,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -137,7 +138,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     }
 
     private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, FinanceRowType rowType) {
-        Future<ProjectResource> project = async(() -> projectService.getById(projectId));
+        ProjectResource project = projectService.getById(projectId);
+        Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(project.getId()).getSuccess());
         Future<OrganisationResource> organisation = async(() -> organisationRestService.getOrganisationById(organisationId).getSuccess());
         Future<OrganisationResource> leadOrganisation = async(() -> projectService.getLeadOrganisation(projectId));
         Future<EligibilityResource> eligibility = async(() -> projectFinanceService.getEligibility(projectId, organisationId));
@@ -150,12 +152,12 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             boolean eligibilityApproved = eligibility.get().getEligibility() == EligibilityState.APPROVED;
 
             FileDetailsViewModel jesFileDetailsViewModel = null;
-            boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisation.get().getOrganisationType());
+            boolean isUsingJesFinances = financeUtil.isUsingJesFinances(competition.get(), organisation.get().getOrganisationType());
             if (!isUsingJesFinances) {
                 model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType));
                 formPopulator.populateForm(form, projectId, organisationId);
             } else {
-                ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(project.get().getApplication(), organisation.get().getId());
+                ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(project.getApplication(), organisation.get().getId());
                 if (applicationFinanceResource.getFinanceFileEntry() != null) {
                     FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccess();
                     jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
@@ -164,8 +166,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
             boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
 
-            model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview.get(), organisation.get().getName(), project.get().getName(),
-                    project.get().getApplication(), isLeadPartnerOrganisation, project.get().getId(), organisation.get().getId(),
+            model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview.get(), organisation.get().getName(), project.getName(),
+                    project.getApplication(), isLeadPartnerOrganisation, project.getId(), organisation.get().getId(),
                     eligibilityApproved, eligibility.get().getEligibilityRagStatus(), eligibility.get().getEligibilityApprovalUserFirstName(),
                     eligibility.get().getEligibilityApprovalUserLastName(), eligibility.get().getEligibilityApprovalDate(), false, isUsingJesFinances, jesFileDetailsViewModel));
 
@@ -183,8 +185,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
         return new FinanceChecksEligibilityForm(eligibility.getEligibilityRagStatus(), confirmEligibilityChecked);
     }
-
-
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save-eligibility")
@@ -234,8 +234,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
     }
 
-    private FinanceRowItem addCost(Long orgType, Long organisationId, Long projectId, Long questionId) {
-        return financeViewHandlerProvider.getProjectFinanceFormHandler(orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
+    private FinanceRowItem addCost(CompetitionResource competitionResource, Long orgType, Long organisationId, Long projectId, Long questionId) {
+        return financeViewHandlerProvider.getProjectFinanceFormHandler(competitionResource, orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -305,8 +305,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager) financeViewHandlerProvider
-                .getProjectFinanceModelManager(organisation.getOrganisationType()))
+                .getProjectFinanceModelManager(competition, organisation.getOrganisationType()))
                     .getProjectFinanceChangesViewModel(true, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.domain.CategoryLink;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 
@@ -40,19 +42,28 @@ public class ApplicationInnovationAreaLink extends CategoryLink<Application, Inn
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ApplicationInnovationAreaLink that = (ApplicationInnovationAreaLink) o;
 
-        return application != null ? application.equals(that.application) : that.application == null;
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(application, that.application)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (application != null ? application.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(application)
+                .toHashCode();
     }
 }

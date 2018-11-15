@@ -33,6 +33,7 @@ public final class ApplicationFormUtil {
     public static final String PROJECT_LOCATION_KEY = "projectLocation";
     public static final String APPLICATION_BASE_URL = "/application/";
     public static final String APPLICATION_START_DATE = "application.startDate";
+    public static final String SAVE_AND_RETURN_KEY = "save-and-return";
 
     private ApplicationFormUtil() {}
 
@@ -59,4 +60,9 @@ public final class ApplicationFormUtil {
     public static boolean isMarkSectionAsCompleteRequest(@NotNull Map<String, String[]> params) {
         return params.containsKey(MARK_SECTION_AS_COMPLETE);
     }
+
+    public static boolean isSaveAndReturnRequest(@NotNull Map<String, String[]> params) {
+        return params.containsKey(SAVE_AND_RETURN_KEY);
+    }
+
 }

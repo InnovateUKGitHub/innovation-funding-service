@@ -91,7 +91,7 @@ Project Finance is able to see the Overheads costs file
     [Tags]
     Given Log in as a different user       &{internal_finance_credentials}
     When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
-    And the user clicks the button/link    jQuery = tr:contains("org2") td:nth-child(4) a:contains("Review")
+    And the user clicks the button/link    jQuery = tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
     And the user clicks the button/link    jQuery = button:contains("Overhead costs")
     Then the user should see the element   jQuery = a:contains("${excel_file}")
     And the project finance user is able to download the Overheads file    ${ProjectID}  22
@@ -122,10 +122,10 @@ User fills in funding overide
 the user checks the override value is applied
     the user clicks the button/link     link = Your finances
     the user clicks the button/link     link = Your funding
-    the user clicks the button/link     css = button[type=submit]
-    the user should see the element     jQuery = .govuk-label:contains("maximum 100%")
+    the user clicks the button/link     jQuery = button:contains("Edit your funding")
+    the user should see the element     jQuery = span:contains("The maximum you can enter is 100%")
     the user selects the checkbox       agree-terms-page
-    the user clicks the button/link     css = button[name=mark_section_as_complete]
+    the user clicks the button/link     jQuery = button:contains("Mark as complete")
     the user clicks the button/link     link = Application overview
 
 the finance overview is marked as incomplete

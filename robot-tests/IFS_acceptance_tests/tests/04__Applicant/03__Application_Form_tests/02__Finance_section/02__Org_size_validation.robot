@@ -31,7 +31,7 @@ Funding section is now available
     [Documentation]    INFUND-6394
     [Tags]  HappyPath
     When the user clicks the button/link             link = Your funding
-    Then the user should see the text in the page    Are you requesting funding?
+    Then The user should see the element             jQuery = legend:contains("Are you requesting funding?")
 
 Small org can't have more than 70% funding level
     [Documentation]    INFUND-1110

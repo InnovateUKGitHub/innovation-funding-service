@@ -111,8 +111,9 @@
                 th:if="${model.complete || model.getCompetition().getCompetitionStatus().isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}"
                 class="govuk-!-margin-top-6 button-secondary">Return to finances
             </a>
-            <button type="submit" th:unless="${model.complete || model.getCompetition().getCompetitionStatus().isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}"
-                class="govuk-!-margin-top-6 govuk-button">
+            <button name="save-and-return" type="submit"
+                    th:unless="${model.complete || model.getCompetition().getCompetitionStatus().isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}"
+                    class="govuk-!-margin-top-6 govuk-button">
                 Save and return to finances
             </button>
         </div>
@@ -144,7 +145,7 @@
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total project costs</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">% Grant</th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Funding level (%)</th>
                     <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Funding sought
                         (&pound;)</th>
                     <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Other public

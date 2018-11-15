@@ -154,6 +154,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setHasInterviewStage(hasInterviewStage);
                 competition.setAssessorFinanceView(assessorFinanceView);
                 competition.setNonIfsUrl(nonIfsUrl);
+                competition.setIncludeJesForm(true); //TODO IFS-4719 web test data needs to be configurable.
             });
         });
     }

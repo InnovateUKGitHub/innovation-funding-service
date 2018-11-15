@@ -11,6 +11,7 @@ public class CompetitionSetupFinanceDocs {
             fieldWithPath("applicationFinanceType").description("The type of finances for the application"),
             fieldWithPath("includeGrowthTable").description("The active status of staff count and organisation " +
                     "turnover form inputs are false when this is true"),
+            fieldWithPath("includeJesForm").description("Does the competition include the Je-S form for academics"),
     };
 
 }

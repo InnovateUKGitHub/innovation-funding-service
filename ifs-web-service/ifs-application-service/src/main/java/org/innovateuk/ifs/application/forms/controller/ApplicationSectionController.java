@@ -19,9 +19,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -203,11 +201,9 @@ public class ApplicationSectionController {
         boolean isSupport = user.hasRole(SUPPORT);
 
         boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(
-                applicationId,
                 form, bindingResult,
-                applicantSection.getSection(),
-                params,
-                user.getId());
+                applicantSection,
+                params);
 
         ValidationMessages saveApplicationErrors = applicationSaver.saveApplicationForm(
                 applicantSection.getApplication(),
@@ -224,7 +220,7 @@ public class ApplicationSectionController {
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        if (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)) {
+        if (!isSaveAndReturnRequest(params) && (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request))) {
             validationHandler.addAnyErrors(saveApplicationErrors);
             populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), isSupport);
             return APPLICATION_FORM;
@@ -255,25 +251,23 @@ public class ApplicationSectionController {
     }
 
     private boolean validFinanceTermsForMarkAsComplete(
-            long applicationId,
             ApplicationForm form,
             BindingResult bindingResult,
-            SectionResource section,
-            Map<String, String[]> params,
-            Long userId
+            ApplicantSectionResource section,
+            Map<String, String[]> params
     ) {
 
         if (!isMarkSectionAsCompleteRequest(params)) {
             return true;
         }
 
-        switch (section.getType()) {
+        switch (section.getSection().getType()) {
             case PROJECT_COST_FINANCES:
-                return userIsResearch(userId, applicationId) ||
+                return section.getCompetition().showJesFinances(section.getCurrentApplicant().getOrganisation().getOrganisationType()) ||
                         validateStateAidAgreement(form, bindingResult);
 
             case ORGANISATION_FINANCES:
-                return validateOrganisationSizeSelected(applicationId, params, userId, bindingResult);
+                return validateOrganisationSizeSelected(section, params, bindingResult);
 
             case PROJECT_LOCATION:
                 return validateProjectLocation(params, bindingResult);
@@ -281,10 +275,6 @@ public class ApplicationSectionController {
             default:
                 return true;
         }
-    }
-
-    private boolean userIsResearch(long userId, long applicationId) {
-        return organisationRestService.getByUserAndApplicationId(userId, applicationId).getSuccess().getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
     }
 
     private boolean validateStateAidAgreement(ApplicationForm form, BindingResult bindingResult) {
@@ -296,13 +286,12 @@ public class ApplicationSectionController {
     }
 
     private boolean validateOrganisationSizeSelected(
-            long applicationId,
+            ApplicantSectionResource applicantSection,
             Map<String, String[]> params,
-            Long userId,
             BindingResult bindingResult
     ) {
         List<String> financePositionKeys = simpleFilter(params.keySet(), k -> k.contains("financePosition-"));
-        if (!financePositionKeys.isEmpty() || userIsResearch(userId, applicationId)) {
+        if (!financePositionKeys.isEmpty() || applicantSection.getCurrentApplicant().isResearch()) {
             return true;
         }
         bindingResult.rejectValue(ORGANISATION_SIZE_KEY, "APPLICATION_ORGANISATION_SIZE_REQUIRED");
