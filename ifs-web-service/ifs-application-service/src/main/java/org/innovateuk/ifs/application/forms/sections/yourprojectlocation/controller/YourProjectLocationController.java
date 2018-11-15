@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmod
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -28,7 +29,10 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/project-location/{sectionId}")
@@ -38,6 +42,8 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 public class YourProjectLocationController extends AsyncAdaptor {
 
     private static final String VIEW_PAGE = "application/sections/your-project-location/your-project-location";
+    private static final int MINIMUM_POSTCODE_LENGTH = 3;
+    private static final int MAXIMUM_POSTCODE_LENGTH = 10;
 
     private YourProjectLocationViewModelPopulator viewModelPopulator;
     private YourProjectLocationFormPopulator formPopulator;
@@ -70,7 +76,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
         long userId = loggedInUser.getId();
 
         Future<YourProjectLocationViewModel> viewModelRequest = async(() ->
-                viewModelPopulator.populate(userId, applicationId, sectionId));
+                getViewModel(applicationId, sectionId, userId));
 
         Future<YourProjectLocationForm> formRequest = async(() -> {
             ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
@@ -81,6 +87,10 @@ public class YourProjectLocationController extends AsyncAdaptor {
         model.addAttribute("form", formRequest);
 
         return VIEW_PAGE;
+    }
+
+    private YourProjectLocationViewModel getViewModel(@PathVariable("applicationId") long applicationId, @PathVariable("sectionId") long sectionId, long userId) {
+        return viewModelPopulator.populate(userId, applicationId, sectionId);
     }
 
     @PostMapping
@@ -112,26 +122,31 @@ public class YourProjectLocationController extends AsyncAdaptor {
             @PathVariable("applicationId") long applicationId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
-            @Valid @ModelAttribute YourProjectLocationForm form,
+            @Valid @ModelAttribute("form") YourProjectLocationForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
-            ValidationHandler validationHandler) {
+            ValidationHandler validationHandler,
+            Model model) {
 
-        Supplier<String> failureHandler = () -> VIEW_PAGE;
+        Supplier<String> failureHandler = () -> {
+            YourProjectLocationViewModel viewModel = getViewModel(applicationId, sectionId, loggedInUser.getId());
+            model.addAttribute("model", viewModel);
+            model.addAttribute("form", form);
+            return VIEW_PAGE;
+        };
+
         Supplier<String> successHandler = () -> redirectToViewPage(applicationId, sectionId);
 
-        return validationHandler.failNowOrSucceedWith(
-                failureHandler,
-                () -> {
-                    ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-
-                    updatePostcode(applicationId, form, processRole);
-
-                    List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
-
-                    validationMessages.forEach(validationHandler::addAnyErrors);
-
-                    return validationHandler.failNowOrSucceedWith(failureHandler, successHandler);
-                });
+        return validationHandler.
+                addAnyErrors(validateProjectLocation(form.getPostcode(), bindingResult)).
+                failNowOrSucceedWith(
+                    failureHandler,
+                    () -> {
+                        ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
+                        updatePostcode(applicationId, form, processRole);
+                        List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
+                        validationMessages.forEach(validationHandler::addAnyErrors);
+                        return validationHandler.failNowOrSucceedWith(failureHandler, successHandler);
+                    });
     }
 
     @PostMapping(params = "mark-as-incomplete")
@@ -155,6 +170,15 @@ public class YourProjectLocationController extends AsyncAdaptor {
         finance.setWorkPostcode(form.getPostcode());
 
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
+    }
+
+    private List<Error> validateProjectLocation(String postcode, BindingResult bindingResult
+    ) {
+        if (postcode.length() >= MINIMUM_POSTCODE_LENGTH && postcode.length() <= MAXIMUM_POSTCODE_LENGTH) {
+            return emptyList();
+        }
+
+        return singletonList(fieldError("postcode", postcode, "APPLICATION_PROJECT_LOCATION_REQUIRED"));
     }
 
     private String redirectToViewPage(long applicationId, long sectionId) {
