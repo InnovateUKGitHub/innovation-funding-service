@@ -22,6 +22,7 @@ import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -50,8 +51,9 @@ public class AssessmentDetailedFinancesModelPopulator {
     private YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator;
     private ApplicationYourProjectCostsFormPopulator yourProjectCostsFormPopulator;
     private YourProjectCostsSectionPopulator projectCostsSectionPopulator;
+    private FinanceUtil financeUtil;
 
-    public AssessmentDetailedFinancesModelPopulator(CompetitionRestService competitionRestService, AssessmentService assessmentService, UserRestService userRestService, OrganisationRestService organisationRestService, FileEntryRestService fileEntryRestService, SectionService sectionService, FinanceService financeService, ApplicantRestService applicantRestService, YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator, ApplicationYourProjectCostsFormPopulator yourProjectCostsFormPopulator, YourProjectCostsSectionPopulator projectCostsSectionPopulator) {
+    public AssessmentDetailedFinancesModelPopulator(CompetitionRestService competitionRestService, AssessmentService assessmentService, UserRestService userRestService, OrganisationRestService organisationRestService, FileEntryRestService fileEntryRestService, SectionService sectionService, FinanceService financeService, ApplicantRestService applicantRestService, YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator, ApplicationYourProjectCostsFormPopulator yourProjectCostsFormPopulator, YourProjectCostsSectionPopulator projectCostsSectionPopulator, FinanceUtil financeUtil) {
         this.competitionRestService = competitionRestService;
         this.assessmentService = assessmentService;
         this.userRestService = userRestService;
@@ -63,6 +65,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         this.yourProjectCostsViewModelPopulator = yourProjectCostsViewModelPopulator;
         this.yourProjectCostsFormPopulator = yourProjectCostsFormPopulator;
         this.projectCostsSectionPopulator = projectCostsSectionPopulator;
+        this.financeUtil = financeUtil;
     }
 
     public AssessmentDetailedFinancesViewModel populateModel(long assessmentId, long organisationId, Model model) {
@@ -85,7 +88,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantProcessRole.getUser(), applicationId, costSection.getId());
 
         model.addAttribute("applicationResource", applicantSection.getApplication());
-        if (applicantSection.getCurrentApplicant().isResearch()) { //TODO IFS-4143 check if jes included
+        if(financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {)
             //TODO IFS-4774 remove this and the templates in your-finance-sub-sections once the JeS page is refactored
             ApplicationForm form = new ApplicationForm();
             AbstractSectionViewModel sectionViewModel = projectCostsSectionPopulator.populate(

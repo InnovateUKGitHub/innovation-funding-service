@@ -21,6 +21,7 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
+import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -91,6 +92,9 @@ public class ApplicationSectionController {
     @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
+    private FinanceUtil financeUtil;
+
     private Map<SectionType, AbstractSectionPopulator> sectionPopulators;
 
     @Autowired
@@ -133,7 +137,7 @@ public class ApplicationSectionController {
             return String.format("redirect:/application/%d/form/your-funding/%d", applicationId, sectionId);
         }
         if (applicantSection.getSection().getType() == SectionType.PROJECT_COST_FINANCES
-                && !applicantSection.getCurrentApplicant().isResearch()) { //TODO IFS-4143 check if jes included
+                && !financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
             return String.format("redirect:/application/%d/form/your-project-costs/%d", applicationId, sectionId);
         }
         boolean isSupport = user.hasRole(SUPPORT);
@@ -171,7 +175,7 @@ public class ApplicationSectionController {
         if (applicantSection.getSection().getType() == SectionType.FUNDING_FINANCES) {
             return String.format("redirect:/application/%d/form/your-funding/%d/%d%s", applicationId, sectionId, applicantOrganisationId, originQuery);
         } else if (applicantSection.getSection().getType() == SectionType.PROJECT_COST_FINANCES
-                && !applicantSection.getCurrentApplicant().isResearch()) { //TODO IFS-4143 check if jes included
+                && !financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
             return String.format("redirect:/application/%d/form/your-project-costs/%d/%d%s", applicationId, sectionId, applicantOrganisationId, originQuery);
         }
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true, Optional.of(originQuery), isSupport);
