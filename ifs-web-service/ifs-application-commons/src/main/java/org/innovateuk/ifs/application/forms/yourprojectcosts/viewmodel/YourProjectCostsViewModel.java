@@ -48,6 +48,7 @@ public class YourProjectCostsViewModel {
         this.applicationId = null;
         this.sectionId = null;
         this.competitionId = null;
+        this.includeVat = false;
     }
 
     public long getApplicationId() {
@@ -84,6 +85,10 @@ public class YourProjectCostsViewModel {
 
     public boolean isInternal() {
         return internal;
+    }
+
+    public boolean isIncludeVat() {
+        return includeVat;
     }
 
     /* view logic */

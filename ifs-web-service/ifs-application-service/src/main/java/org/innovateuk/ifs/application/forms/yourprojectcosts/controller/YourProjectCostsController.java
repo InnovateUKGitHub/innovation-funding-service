@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.form.LabourForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.ApplicationYourProjectCostsFormPopulator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
@@ -232,6 +233,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
                              @PathVariable long applicationId,
                              @PathVariable FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
         YourProjectCostsForm form = new YourProjectCostsForm();
+        form.setLabour(new LabourForm());
         AbstractCostRowForm row = saver.addRowForm(form, rowType, applicationId, user);
         model.addAttribute("form", form);
         model.addAttribute("id", row.getCostId());

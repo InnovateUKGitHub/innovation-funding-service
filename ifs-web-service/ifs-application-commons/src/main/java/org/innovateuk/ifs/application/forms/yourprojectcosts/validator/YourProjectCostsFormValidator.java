@@ -72,7 +72,7 @@ public class YourProjectCostsFormValidator {
 
     private void validateLabour(LabourForm labour, ValidationHandler validationHandler) {
         validateForm(labour, validationHandler, "labour.");
-        validateRows(labour.getRows(), "labour.labourCosts[%s].", validationHandler);
+        validateRows(labour.getRows(), "labour.rows[%s].", validationHandler);
     }
 
     private ErrorToObjectErrorConverter toFieldErrorWithPath(String path) {
