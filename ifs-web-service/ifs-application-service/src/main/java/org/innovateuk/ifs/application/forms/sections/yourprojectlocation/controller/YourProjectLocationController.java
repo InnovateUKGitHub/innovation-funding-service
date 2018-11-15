@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel.YourProjectLocationViewModel;
@@ -99,12 +101,14 @@ public class YourProjectLocationController extends AsyncAdaptor {
     }
 
     @PostMapping("/auto-save")
-    public void autosave(
+    public @ResponseBody
+    JsonNode autosave(
             @PathVariable("applicationId") long applicationId,
             UserResource loggedInUser,
             @ModelAttribute YourProjectLocationForm form) {
 
         update(applicationId, loggedInUser, form);
+        return new ObjectMapper().createObjectNode();
     }
 
     @PostMapping(params = "mark-as-complete")
@@ -173,7 +177,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     }
 
     private String redirectToViewPage(long applicationId, long sectionId) {
-        return "redirect:" + APPLICATION_BASE_URL + String.format("%d/form/project-location/%d", applicationId, sectionId);
+        return "redirect:" + APPLICATION_BASE_URL + String.format("%d/form/your-project-location/%d", applicationId, sectionId);
     }
 
     private String redirectToYourFinances(long applicationId) {
