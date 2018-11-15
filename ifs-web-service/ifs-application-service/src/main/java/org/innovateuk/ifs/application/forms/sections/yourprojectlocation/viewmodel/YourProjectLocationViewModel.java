@@ -17,9 +17,8 @@ public class YourProjectLocationViewModel {
     private boolean open;
     private boolean complete;
 
-    public YourProjectLocationViewModel(
+    YourProjectLocationViewModel(
             boolean complete,
-            boolean readOnly,
             String financesUrl,
             String applicationName,
             long applicationId,
@@ -27,7 +26,6 @@ public class YourProjectLocationViewModel {
             boolean open) {
 
         this.complete = complete;
-        this.readOnly = readOnly;
         this.financesUrl = financesUrl;
         this.applicationName = applicationName;
         this.applicationId = applicationId;
@@ -40,7 +38,7 @@ public class YourProjectLocationViewModel {
     }
 
     public boolean isReadOnly() {
-        return readOnly;
+        return complete || !open;
     }
 
     public String getFinancesUrl() {

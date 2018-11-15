@@ -34,13 +34,10 @@ public class YourProjectLocationViewModelPopulator {
 
         boolean sectionMarkedAsComplete = completedSectionIds.contains(sectionId);
 
-        boolean readOnly = sectionMarkedAsComplete || !section.getCompetition().isOpen() || !section.getApplication().isOpen();
-
         boolean open = section.getApplication().isOpen() && section.getCompetition().isOpen();
 
         return new YourProjectLocationViewModel(
                 sectionMarkedAsComplete,
-                readOnly,
                 String.format("/application/%d/form/FINANCE", applicationId),
                 section.getApplication().getName(),
                 applicationId,
