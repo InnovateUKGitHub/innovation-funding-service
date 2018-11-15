@@ -32,7 +32,7 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
     public void handleMarkAcademicFinancesAsNotRequired(long organisationType, SectionResource selectedSection, long applicationId, long competitionId, long processRoleId) {
         if (SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType())
                 && OrganisationTypeEnum.RESEARCH.getId() == organisationType
-                && researchUserSeesOrganisationSection(competitionId)) {
+                && !researchUserSeesOrganisationSection(competitionId)) {
             SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
             sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
         }
