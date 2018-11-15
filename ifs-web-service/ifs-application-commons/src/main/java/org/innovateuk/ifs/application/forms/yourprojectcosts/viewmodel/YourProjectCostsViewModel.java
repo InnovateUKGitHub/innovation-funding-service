@@ -21,7 +21,9 @@ public class YourProjectCostsViewModel {
 
     private final boolean internal;
 
-    public YourProjectCostsViewModel(long applicationId, long sectionId, long competitionId, boolean complete, boolean open, String applicationName, String organisationName, String financesUrl) {
+    private final boolean includeVat;
+
+    public YourProjectCostsViewModel(long applicationId, long sectionId, long competitionId, boolean complete, boolean open, boolean includeVat, String applicationName, String organisationName, String financesUrl) {
         this.internal = false;
 
         this.applicationId = applicationId;
@@ -32,6 +34,7 @@ public class YourProjectCostsViewModel {
         this.applicationName = applicationName;
         this.organisationName = organisationName;
         this.financesUrl = financesUrl;
+        this.includeVat = includeVat;
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal) {
