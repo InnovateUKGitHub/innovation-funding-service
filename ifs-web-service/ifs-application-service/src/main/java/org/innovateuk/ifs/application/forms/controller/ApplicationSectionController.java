@@ -134,7 +134,7 @@ public class ApplicationSectionController {
                 return String.format("redirect:/application/%d/form/your-funding/%d", applicationId, sectionId);
             }
             case PROJECT_LOCATION: {
-                return String.format("redirect:/application/%d/form/project-location/%d", applicationId, sectionId);
+                return String.format("redirect:/application/%d/form/your-project-location/%d", applicationId, sectionId);
             }
             default: {
                 boolean isSupport = user.hasRole(SUPPORT);

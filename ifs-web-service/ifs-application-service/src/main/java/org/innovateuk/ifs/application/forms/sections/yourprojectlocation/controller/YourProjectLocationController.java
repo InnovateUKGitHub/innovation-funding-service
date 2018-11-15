@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel.YourProjectLocationViewModel;
@@ -35,7 +33,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/project-location/{sectionId}")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-project-location/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "PROJECT_LOCATION_APPLICANT",
         description = "Applicants can all fill out the Project Location section of the application.")
@@ -89,10 +87,6 @@ public class YourProjectLocationController extends AsyncAdaptor {
         return VIEW_PAGE;
     }
 
-    private YourProjectLocationViewModel getViewModel(@PathVariable("applicationId") long applicationId, @PathVariable("sectionId") long sectionId, long userId) {
-        return viewModelPopulator.populate(userId, applicationId, sectionId);
-    }
-
     @PostMapping
     public String update(
             @PathVariable("applicationId") long applicationId,
@@ -105,16 +99,12 @@ public class YourProjectLocationController extends AsyncAdaptor {
     }
 
     @PostMapping("/auto-save")
-    public @ResponseBody JsonNode autosave(
+    public void autosave(
             @PathVariable("applicationId") long applicationId,
             UserResource loggedInUser,
             @ModelAttribute YourProjectLocationForm form) {
 
         update(applicationId, loggedInUser, form);
-
-        // TODO DW - necessary?
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.createObjectNode();
     }
 
     @PostMapping(params = "mark-as-complete")
@@ -134,19 +124,17 @@ public class YourProjectLocationController extends AsyncAdaptor {
             return VIEW_PAGE;
         };
 
-        Supplier<String> successHandler = () -> redirectToViewPage(applicationId, sectionId);
+        Supplier<String> successHandler = () -> {
+            ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
+            updatePostcode(applicationId, form, processRole);
+            List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
+            validationMessages.forEach(validationHandler::addAnyErrors);
+            return validationHandler.failNowOrSucceedWith(failureHandler, () -> redirectToViewPage(applicationId, sectionId));
+        };
 
         return validationHandler.
-                addAnyErrors(validateProjectLocation(form.getPostcode(), bindingResult)).
-                failNowOrSucceedWith(
-                    failureHandler,
-                    () -> {
-                        ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-                        updatePostcode(applicationId, form, processRole);
-                        List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
-                        validationMessages.forEach(validationHandler::addAnyErrors);
-                        return validationHandler.failNowOrSucceedWith(failureHandler, successHandler);
-                    });
+                addAnyErrors(validateProjectLocation(form.getPostcode())).
+                failNowOrSucceedWith(failureHandler, successHandler);
     }
 
     @PostMapping(params = "mark-as-incomplete")
@@ -172,13 +160,16 @@ public class YourProjectLocationController extends AsyncAdaptor {
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
     }
 
-    private List<Error> validateProjectLocation(String postcode, BindingResult bindingResult
-    ) {
+    private List<Error> validateProjectLocation(String postcode) {
         if (postcode.length() >= MINIMUM_POSTCODE_LENGTH && postcode.length() <= MAXIMUM_POSTCODE_LENGTH) {
             return emptyList();
         }
 
         return singletonList(fieldError("postcode", postcode, "APPLICATION_PROJECT_LOCATION_REQUIRED"));
+    }
+
+    private YourProjectLocationViewModel getViewModel(long applicationId, long sectionId, long userId) {
+        return viewModelPopulator.populate(userId, applicationId, sectionId);
     }
 
     private String redirectToViewPage(long applicationId, long sectionId) {

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +18,10 @@ public class YourProjectLocationFormPopulator {
 
     public YourProjectLocationForm populate(long applicationId, long organisationId) {
 
-        RestResult<ApplicationFinanceResource> applicationFinanceResourceRestResult =
-                applicationFinanceRestService.getApplicationFinance(applicationId, organisationId);
+        ApplicationFinanceResource applicationFinance =
+                applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
-        String postcode = applicationFinanceResourceRestResult.handleSuccessOrFailure(
-                failure -> null,
-                BaseFinanceResource::getWorkPostcode);
-
+        String postcode = applicationFinance.getWorkPostcode();
         return new YourProjectLocationForm(postcode);
     }
 }

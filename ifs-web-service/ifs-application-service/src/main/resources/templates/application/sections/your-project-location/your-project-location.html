@@ -29,9 +29,7 @@
 
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              th:attr="data-autosave='autosaveFormPost',
-                       data-application-id=${model.applicationId},
-                       data-section-id=${model.sectionId}"
+              th:attr="data-autosave='autosaveFormPost'"
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">
@@ -42,7 +40,6 @@
                 <div class="govuk-!-margin-top-6">
                     <th:block th:unless="${model.readOnly}">
                         <p class="govuk-body">Where will most of the project work take place?</p>
-                        <!--/* edit */-->
                         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'govuk-form-group--error'">
                             <label class="govuk-label govuk-label--s" for="postcode">
                                 Postcode
