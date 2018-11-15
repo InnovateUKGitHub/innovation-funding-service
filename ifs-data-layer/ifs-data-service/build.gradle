@@ -159,6 +159,10 @@ task syncShib(type:Exec) {
     commandLine 'docker', 'exec', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
+task prepareAnonymisedDB(dependsOn:[":docker:ifs-mysql:ifs-database:updateIfsWebUser", syncShib]) {
+    syncShib.mustRunAfter ":docker:ifs-mysql:ifs-database:updateIfsWebUser"
+}
+
 flywayClean.dependsOn applyProfiles
 flywayMigrate.dependsOn processResources
 

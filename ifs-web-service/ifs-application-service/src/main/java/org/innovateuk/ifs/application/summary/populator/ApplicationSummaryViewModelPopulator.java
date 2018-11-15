@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.application.summary.populator;
 
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
-import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -48,12 +48,10 @@ public class ApplicationSummaryViewModelPopulator {
         this.projectService = projectService;
     }
 
-    public ApplicationSummaryViewModel populate(long applicationId, UserResource user, ApplicationForm form, boolean isSupport) {
-
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+    public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, ApplicationForm form, boolean isSupport) {
 
         boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
+        long applicationId = application.getId();
 
         ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateSummaryModel(
                 applicationId, user.getId(), application.getCompetition());
@@ -64,7 +62,7 @@ public class ApplicationSummaryViewModelPopulator {
         return new ApplicationSummaryViewModel(
                 application,
                 competition,
-                applicationRestService.isApplicationReadyForSubmit(application.getId()).getSuccess(),
+                applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccess(),
                 summaryViewModelPopulator.populate(applicationId, user, form),
                 applicationTeamViewModel,
                 researchCategorySummaryViewModel,

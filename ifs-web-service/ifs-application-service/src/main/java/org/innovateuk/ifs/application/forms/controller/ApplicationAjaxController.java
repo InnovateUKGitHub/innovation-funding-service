@@ -145,10 +145,11 @@ public class ApplicationAjaxController {
             List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
             return new StoreFieldResult(errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
-            financeViewHandlerProvider.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value, competitionId);
+            financeViewHandlerProvider.getFinanceFormHandler(competitionRestService.getCompetitionById(competitionId).getSuccess(), organisationType).updateFinancePosition(userId, applicationId, fieldName, value, competitionId);
             return new StoreFieldResult();
         } else if (inputIdentifier.startsWith("formInput[cost-") || fieldName.startsWith("cost-")) {
-            ValidationMessages validationMessages = financeViewHandlerProvider.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value, competitionId);
+            CompetitionResource competition = competitionRestService.getCompetitionById(applicationService.getById(applicationId).getCompetition()).getSuccess();
+            ValidationMessages validationMessages = financeViewHandlerProvider.getFinanceFormHandler(competition, organisationType).storeCost(userId, applicationId, fieldName, value, competitionId);
 
             if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
                 LOG.debug("no errors");
@@ -300,15 +301,17 @@ public class ApplicationAjaxController {
                              @PathVariable(APPLICATION_ID) final Long applicationId,
                              @PathVariable(QUESTION_ID) final Long questionId,
                              UserResource user) {
-        FinanceRowItem costItem = addCost(applicationId, questionId, user);
+        Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(applicationService.getById(applicationId).getCompetition()).getSuccess();
+
+        FinanceRowItem costItem = addCost(organisationType, competition, applicationId, questionId, user);
         FinanceRowType costType = costItem.getCostType();
         Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
 
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
-        Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
 
-        financeViewHandlerProvider.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
+        financeViewHandlerProvider.getFinanceModelManager(competition, organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
         return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
@@ -324,8 +327,7 @@ public class ApplicationAjaxController {
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
     }
 
-    private FinanceRowItem addCost(Long applicationId, Long questionId, UserResource user) {
-        Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        return financeViewHandlerProvider.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, user.getId(), questionId);
+    private FinanceRowItem addCost(Long organisationType, CompetitionResource competition, Long applicationId, Long questionId, UserResource user) {
+        return financeViewHandlerProvider.getFinanceFormHandler(competition, organisationType).addCostWithoutPersisting(applicationId, user.getId(), questionId);
     }
 }

@@ -31,3 +31,6 @@
 &{PublicSector_lead_applicant_credentials}        email=becky.mason@gmail.com   password=Passw0rd
 &{monitoring_officer_one_credentials}             email=orville.gibbs@gmail.com    password=Passw0rd
 &{monitoring_officer_two_credentials}             email=nilesh.patti@gmail.com    password=Passw0rd
+&{assessor_stakeholder_credentials}               email=blake.wood@gmail.com    password=Passw0rd
+&{applicant_stakeholder_credentials}              email=gene.bowman@jetpulse.example.com    password=Passw0rd
+&{triple_user_credentials}                        email=carolyn.reed@example.com    password=Passw0rd

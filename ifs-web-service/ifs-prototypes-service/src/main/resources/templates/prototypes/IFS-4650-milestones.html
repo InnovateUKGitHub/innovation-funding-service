@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition completion stage'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="govuk-template__body"
+      th:with="endSet=${param.completionStage != null ? TRUE : FALSE}, milestones=${param.milestones != null && param.milestones[0] == 'complete' ? TRUE : FALSE}">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
+
+<div class="govuk-width-container">
+
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition setup'}, ${'/prototypes/IFS-4650-comp-setup'})" />
+
+    <main class="govuk-main-wrapper" id="content">
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+
+                <h1 class="govuk-heading-xl">Milestones</h1>
+
+                <div class="govuk-body panel">
+                    Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
+                </div>
+
+                <form th:if="${!milestones}" th:action="${#httpServletRequest.requestURI}" data-section="milestones" method="get" novalidate="novalidate" data-competition="12" data-autosave="compSetup" data-save-status="done">
+                    <div id="section-4-edit">
+                        <table class="govuk-table milestones-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col" id="milestone">Milestone</th>
+                                <th class="govuk-table__header" scope="col">Time</th>
+                                <th class="govuk-table__header" scope="col">Weekday</th>
+                                <th class="govuk-table__header" scope="col">Day</th>
+                                <th class="govuk-table__header" scope="col">Month</th>
+                                <th class="govuk-table__header" scope="col">Year</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="" data-date-invalid-errormessage="1. Open date: Please enter a valid date." data-date-future-errormessage="1. Open date: Please enter a future date.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-OPEN_DATE">1. Open date</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[OPEN_DATE].milestoneType" value="OPEN_DATE" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[OPEN_DATE].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-OPEN_DATE">Wed</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="8" name="milestoneEntries[OPEN_DATE].day" aria-labelledby="milestone-OPEN_DATE" data-date="8-7-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="7" name="milestoneEntries[OPEN_DATE].month" aria-labelledby="milestone-OPEN_DATE" data-date="8-7-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[OPEN_DATE].year" aria-labelledby="milestone-OPEN_DATE" data-date="8-7-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="8-7-2020" data-date-invalid-errormessage="2. Briefing event: Please enter a valid date." data-date-future-errormessage="2. Briefing event: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-BRIEFING_EVENT">2. Briefing event</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[BRIEFING_EVENT].milestoneType" value="BRIEFING_EVENT" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[BRIEFING_EVENT].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-BRIEFING_EVENT">Sat</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="18" name="milestoneEntries[BRIEFING_EVENT].day" aria-labelledby="milestone-BRIEFING_EVENT" data-date="18-7-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="7" name="milestoneEntries[BRIEFING_EVENT].month" aria-labelledby="milestone-BRIEFING_EVENT" data-date="18-7-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[BRIEFING_EVENT].year" aria-labelledby="milestone-BRIEFING_EVENT" data-date="18-7-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="18-7-2020" data-date-invalid-errormessage="3. Submission date: Please enter a valid date." data-date-future-errormessage="3. Submission date: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-SUBMISSION_DATE">3. Submission date</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[SUBMISSION_DATE].milestoneType" value="SUBMISSION_DATE" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[SUBMISSION_DATE].editable" value="true" data-date="" data-autosave-disabled="">
+
+                                    <select id="milestoneEntries[SUBMISSION_DATE].time" class="govuk-select" required="required" name="milestoneEntries[SUBMISSION_DATE].time" readonly="readonly">
+                                        <option value="NINE_AM" data-time="9">9:00 am</option>
+                                        <option value="TEN_AM" data-time="10">10:00 am</option>
+                                        <option value="ELEVEN_AM" data-time="11">11:00 am</option>
+                                        <option value="TWELVE_PM" data-time="12" selected="selected">12:00 pm</option>
+                                        <option value="ONE_PM" data-time="13">1:00 pm</option>
+                                        <option value="TWO_PM" data-time="14">2:00 pm</option>
+                                        <option value="THREE_PM" data-time="15">3:00 pm</option>
+                                        <option value="FOUR_PM" data-time="16">4:00 pm</option>
+                                        <option value="FIVE_PM" data-time="17">5:00 pm</option>
+                                        <option value="SIX_PM" data-time="18">6:00 pm</option>
+                                        <option value="SEVEN_PM" data-time="19">7:00 pm</option>
+                                        <option value="EIGHT_PM" data-time="20">8:00 pm</option>
+                                    </select>
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-SUBMISSION_DATE">Tues</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="28" name="milestoneEntries[SUBMISSION_DATE].day" aria-labelledby="milestone-SUBMISSION_DATE" data-date="28-7-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="7" name="milestoneEntries[SUBMISSION_DATE].month" aria-labelledby="milestone-SUBMISSION_DATE" data-date="28-7-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[SUBMISSION_DATE].year" aria-labelledby="milestone-SUBMISSION_DATE" data-date="28-7-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="28-7-2020-12" data-date-invalid-errormessage="4. Allocate assessors: Please enter a valid date." data-date-future-errormessage="4. Allocate assessors: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-ALLOCATE_ASSESSORS">4. Allocate assessors</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[ALLOCATE_ASSESSORS].milestoneType" value="ALLOCATE_ASSESSORS" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[ALLOCATE_ASSESSORS].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-ALLOCATE_ASSESSORS">Fri</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="7" name="milestoneEntries[ALLOCATE_ASSESSORS].day" aria-labelledby="milestone-ALLOCATE_ASSESSORS" data-date="7-8-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="8" name="milestoneEntries[ALLOCATE_ASSESSORS].month" aria-labelledby="milestone-ALLOCATE_ASSESSORS" data-date="7-8-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[ALLOCATE_ASSESSORS].year" aria-labelledby="milestone-ALLOCATE_ASSESSORS" data-date="7-8-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="7-8-2020" data-date-invalid-errormessage="5. Assessor briefing: Please enter a valid date." data-date-future-errormessage="5. Assessor briefing: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-ASSESSOR_BRIEFING">5. Assessor briefing</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[ASSESSOR_BRIEFING].milestoneType" value="ASSESSOR_BRIEFING" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[ASSESSOR_BRIEFING].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-ASSESSOR_BRIEFING">Mon</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="17" name="milestoneEntries[ASSESSOR_BRIEFING].day" aria-labelledby="milestone-ASSESSOR_BRIEFING" data-date="17-8-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="8" name="milestoneEntries[ASSESSOR_BRIEFING].month" aria-labelledby="milestone-ASSESSOR_BRIEFING" data-date="17-8-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[ASSESSOR_BRIEFING].year" aria-labelledby="milestone-ASSESSOR_BRIEFING" data-date="17-8-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="17-8-2020" data-date-invalid-errormessage="6. Assessor accepts: Please enter a valid date." data-date-future-errormessage="6. Assessor accepts: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-ASSESSOR_ACCEPTS">6. Assessor accepts</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[ASSESSOR_ACCEPTS].milestoneType" value="ASSESSOR_ACCEPTS" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[ASSESSOR_ACCEPTS].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                    12:00 pm
+                                    <input type="hidden" data-time="12" name="milestoneEntries[ASSESSOR_ACCEPTS].time" id="milestoneEntries[ASSESSOR_ACCEPTS].time" value="TWELVE_PM" data-date="" data-autosave-disabled="">
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-ASSESSOR_ACCEPTS">Thurs</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="27" name="milestoneEntries[ASSESSOR_ACCEPTS].day" aria-labelledby="milestone-ASSESSOR_ACCEPTS" data-date="27-8-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="8" name="milestoneEntries[ASSESSOR_ACCEPTS].month" aria-labelledby="milestone-ASSESSOR_ACCEPTS" data-date="27-8-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[ASSESSOR_ACCEPTS].year" aria-labelledby="milestone-ASSESSOR_ACCEPTS" data-date="27-8-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="27-8-2020-12" data-date-invalid-errormessage="7. Assessor deadline: Please enter a valid date." data-date-future-errormessage="7. Assessor deadline: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-ASSESSOR_DEADLINE">7. Assessor deadline</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[ASSESSOR_DEADLINE].milestoneType" value="ASSESSOR_DEADLINE" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[ASSESSOR_DEADLINE].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                    12:00 pm
+                                    <input type="hidden" data-time="12" name="milestoneEntries[ASSESSOR_DEADLINE].time" id="milestoneEntries[ASSESSOR_DEADLINE].time" value="TWELVE_PM" data-date="" data-autosave-disabled="">
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-ASSESSOR_DEADLINE">Sun</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="6" name="milestoneEntries[ASSESSOR_DEADLINE].day" aria-labelledby="milestone-ASSESSOR_DEADLINE" data-date="6-9-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="9" name="milestoneEntries[ASSESSOR_DEADLINE].month" aria-labelledby="milestone-ASSESSOR_DEADLINE" data-date="6-9-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[ASSESSOR_DEADLINE].year" aria-labelledby="milestone-ASSESSOR_DEADLINE" data-date="6-9-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="6-9-2020-12" data-date-invalid-errormessage="8. Line draw: Please enter a valid date." data-date-future-errormessage="8. Line draw: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-LINE_DRAW">8. Line draw</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[LINE_DRAW].milestoneType" value="LINE_DRAW" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[LINE_DRAW].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-LINE_DRAW">Wed</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="16" name="milestoneEntries[LINE_DRAW].day" aria-labelledby="milestone-LINE_DRAW" data-date="16-9-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="9" name="milestoneEntries[LINE_DRAW].month" aria-labelledby="milestone-LINE_DRAW" data-date="16-9-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[LINE_DRAW].year" aria-labelledby="milestone-LINE_DRAW" data-date="16-9-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="16-9-2020" data-date-invalid-errormessage="9. Assessment panel: Please enter a valid date." data-date-future-errormessage="9. Assessment panel: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-ASSESSMENT_PANEL">9. Assessment panel</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[ASSESSMENT_PANEL].milestoneType" value="ASSESSMENT_PANEL" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[ASSESSMENT_PANEL].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-ASSESSMENT_PANEL">Sat</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="26" name="milestoneEntries[ASSESSMENT_PANEL].day" aria-labelledby="milestone-ASSESSMENT_PANEL" data-date="26-9-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="9" name="milestoneEntries[ASSESSMENT_PANEL].month" aria-labelledby="milestone-ASSESSMENT_PANEL" data-date="26-9-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[ASSESSMENT_PANEL].year" aria-labelledby="milestone-ASSESSMENT_PANEL" data-date="26-9-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="26-9-2020" data-date-invalid-errormessage="10. Panel date: Please enter a valid date." data-date-future-errormessage="10. Panel date: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-PANEL_DATE">10. Panel date</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[PANEL_DATE].milestoneType" value="PANEL_DATE" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[PANEL_DATE].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-PANEL_DATE">Tues</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="6" name="milestoneEntries[PANEL_DATE].day" aria-labelledby="milestone-PANEL_DATE" data-date="6-10-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="10" name="milestoneEntries[PANEL_DATE].month" aria-labelledby="milestone-PANEL_DATE" data-date="6-10-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[PANEL_DATE].year" aria-labelledby="milestone-PANEL_DATE" data-date="6-10-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="6-10-2020" data-date-invalid-errormessage="11. Funders panel: Please enter a valid date." data-date-future-errormessage="11. Funders panel: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-FUNDERS_PANEL">11. Funders panel</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[FUNDERS_PANEL].milestoneType" value="FUNDERS_PANEL" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[FUNDERS_PANEL].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-FUNDERS_PANEL">Fri</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="16" name="milestoneEntries[FUNDERS_PANEL].day" aria-labelledby="milestone-FUNDERS_PANEL" data-date="16-10-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="10" name="milestoneEntries[FUNDERS_PANEL].month" aria-labelledby="milestone-FUNDERS_PANEL" data-date="16-10-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[FUNDERS_PANEL].year" aria-labelledby="milestone-FUNDERS_PANEL" data-date="16-10-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="16-10-2020" data-date-invalid-errormessage="12. Notifications: Please enter a valid date." data-date-future-errormessage="12. Notifications: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-NOTIFICATIONS">12. Notifications</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[NOTIFICATIONS].milestoneType" value="NOTIFICATIONS" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[NOTIFICATIONS].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-NOTIFICATIONS">Mon</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="26" name="milestoneEntries[NOTIFICATIONS].day" aria-labelledby="milestone-NOTIFICATIONS" data-date="26-10-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="10" name="milestoneEntries[NOTIFICATIONS].month" aria-labelledby="milestone-NOTIFICATIONS" data-date="26-10-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[NOTIFICATIONS].year" aria-labelledby="milestone-NOTIFICATIONS" data-date="26-10-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr class="govuk-table__row date-group form-group-row" data-future-date="26-10-2020" data-date-invalid-errormessage="13. Release feedback: Please enter a valid date." data-date-future-errormessage="13. Release feedback: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-RELEASE_FEEDBACK">13. Release feedback</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[RELEASE_FEEDBACK].milestoneType" value="RELEASE_FEEDBACK" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[RELEASE_FEEDBACK].editable" value="true" data-date="" data-autosave-disabled="">
+
+
+
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-RELEASE_FEEDBACK">Thurs</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="5" name="milestoneEntries[RELEASE_FEEDBACK].day" aria-labelledby="milestone-RELEASE_FEEDBACK" data-date="5-11-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="11" name="milestoneEntries[RELEASE_FEEDBACK].month" aria-labelledby="milestone-RELEASE_FEEDBACK" data-date="5-11-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[RELEASE_FEEDBACK].year" aria-labelledby="milestone-RELEASE_FEEDBACK" data-date="5-11-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            <tr th:unless="${param.completionStage[0] == '13'}" class="govuk-table__row date-group form-group-row" data-future-date="26-10-2020" data-date-invalid-errormessage="13. Release feedback: Please enter a valid date." data-date-future-errormessage="13. Release feedback: Please enter a future date that is after the previous milestone.">
+                                <th class="govuk-table__header" scope="row">
+                                    <legend id="milestone-PROJECT_SETUP">14. Project setup</legend>
+                                </th>
+                                <td class="govuk-table__cell time">
+                                    <input type="hidden" required="required" name="milestoneEntries[PROJECT_SETUP].milestoneType" value="PROJECT_SETUP" data-date="" data-autosave-disabled="">
+                                    <input type="hidden" name="milestoneEntries[PROJECT_SETUP].editable" value="true" data-date="" data-autosave-disabled="">
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay" id="milestoneWeekdayEntry-PROJECT_SETUP">Thurs</td>
+                                <td class="govuk-table__cell day">
+                                    <input type="text" placeholder="DD" min="1" max="31" data-maxlength-errormessage="" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4 js-visited" value="13" name="milestoneEntries[RELEASE_FEEDBACK].day" aria-labelledby="milestone-RELEASE_FEEDBACK" data-date="13-11-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell month">
+                                    <input type="text" placeholder="MM" min="1" max="12" required="required" pattern="^[0-9]{1,2}$" data-prevent-input-regex="[^0-9]" maxlength="2" minlength="1" class="govuk-input govuk-input--width-4" value="11" name="milestoneEntries[RELEASE_FEEDBACK].month" aria-labelledby="milestone-RELEASE_FEEDBACK" data-date="13-11-2020" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                                <td class="govuk-table__cell year">
+                                    <input type="text" placeholder="YYYY" pattern="[0-9]{4,}" data-prevent-input-regex="[^0-9]" maxlength="4" minlength="4" required="required" class="govuk-input govuk-input--width-4" value="2020" name="milestoneEntries[RELEASE_FEEDBACK].year" aria-labelledby="milestone-RELEASE_FEEDBACK" data-date="13-11-2020" min="2018" data-autosave-disabled="" data-number-showmessage="none" data-min-showmessage="none" data-max-showmessage="none">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <th:block th:if="${endSet}">
+                            <input type="hidden" name="completionStage" th:value="${param.completionStage[0]}">
+                            <input type="hidden" name="milestones" value="complete">
+                        </th:block>
+
+                        <button class="govuk-button govuk-!-margin-top-6">Done</button>
+                    </div>
+                </form>
+
+                <th:block th:if="${milestones}">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col" id="milestone">Milestone</th>
+                            <th class="govuk-table__header" scope="col">Time</th>
+                            <th class="govuk-table__header" scope="col">Weekday</th>
+                            <th class="govuk-table__header" scope="col">Date</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">1. Open date</td>
+                            <td class="govuk-table__cell">
+
+
+                            </td>
+                            <td class="govuk-table__cell">Wed</td>
+                            <td class="govuk-table__cell">8 July 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">2. Briefing event</td>
+                            <td class="govuk-table__cell">
+
+
+                            </td>
+                            <td class="govuk-table__cell">Sat</td>
+                            <td class="govuk-table__cell">18 July 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">3. Submission date</td>
+                            <td class="govuk-table__cell">
+                                12:00 pm
+
+                            </td>
+                            <td class="govuk-table__cell">Tue</td>
+                            <td class="govuk-table__cell">28 July 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">4. Allocate assessors</td>
+                            <td class="govuk-table__cell">
+
+
+                            </td>
+                            <td class="govuk-table__cell">Fri</td>
+                            <td class="govuk-table__cell">7 August 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">5. Assessor briefing</td>
+                            <td class="govuk-table__cell">
+
+
+                            </td>
+                            <td class="govuk-table__cell">Mon</td>
+                            <td class="govuk-table__cell">17 August 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">6. Assessor accepts</td>
+                            <td class="govuk-table__cell">
+
+                                12:00 pm
+                            </td>
+                            <td class="govuk-table__cell">Thu</td>
+                            <td class="govuk-table__cell">27 August 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">7. Assessor deadline</td>
+                            <td class="govuk-table__cell">
+
+                                12:00 pm
+                            </td>
+                            <td class="govuk-table__cell">Sun</td>
+                            <td class="govuk-table__cell">6 September 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">8. Line draw</td>
+                            <td class="govuk-table__cell">
+
+
+                            </td>
+                            <td class="govuk-table__cell">Wed</td>
+                            <td class="govuk-table__cell">16 September 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">9. Assessment panel</td>
+                            <td class="govuk-table__cell">
+
+
+                            </td>
+                            <td class="govuk-table__cell">Sat</td>
+                            <td class="govuk-table__cell">26 September 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">10. Panel date</td>
+                            <td class="govuk-table__cell">
+
+
+                            </td>
+                            <td class="govuk-table__cell">Tue</td>
+                            <td class="govuk-table__cell">6 October 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">11. Funders panel</td>
+                            <td class="govuk-table__cell">
+
+
+                            </td>
+                            <td class="govuk-table__cell">Fri</td>
+                            <td class="govuk-table__cell">16 October 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">12. Notifications</td>
+                            <td class="govuk-table__cell">
+
+
+                            </td>
+                            <td class="govuk-table__cell">Mon</td>
+                            <td class="govuk-table__cell">26 October 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">13. Release feedback</td>
+                            <td class="govuk-table__cell">
+
+
+                            </td>
+                            <td class="govuk-table__cell">Thu</td>
+                            <td class="govuk-table__cell">5 November 2020</td>
+                        </tr>
+                        <tr class="govuk-table__row" th:unless="${param.completionStage[0] == '13'}">
+                            <td class="govuk-table__cell">14. Project setup</td>
+                            <td class="govuk-table__cell">
+
+
+                            </td>
+                            <td class="govuk-table__cell">Thu</td>
+                            <td class="govuk-table__cell">13 November 2020</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <th:block th:if="${endSet}">
+                        <a class="govuk-button" th:href="${'/prototypes/IFS-4650-end-milestone?selectedStage=' + param.completionStage[0]}">Edit</a>
+                    </th:block>
+
+                </th:block>
+            </div>
+
+            <ul class="govuk-list pagination">
+                <li class="prev">
+                    <a rel="prev" title="Navigate to next part" href="#">
+                        <span class="pagination-label">Previous</span>
+                        <span class="pagination-part-title">Eligibility</span>
+                    </a>
+                </li>
+                <li class="next">
+                    <a rel="next" title="Navigate to next part" href="#">
+                        <span class="pagination-label">Next</span>
+                        <span class="pagination-part-title">Application</span>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+        <!-- END OF HARDCODED PROTOTYPE HTML -->
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+</div>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+
+
+</body>
+</html>

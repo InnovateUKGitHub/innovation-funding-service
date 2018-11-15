@@ -31,7 +31,7 @@ Resource          ../../07__Assessor/Assessor_Commons.robot
 *** Test Cases ***
 Summary:All the sections are present
     [Documentation]    INFUND-4648
-    [Tags]
+    [Tags]  HappyPath
     When The user clicks the button/link                    link = ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see that the element is disabled    id = submit-assessment-button
     And the user clicks the button/link                     link = Intelligent Building
@@ -50,19 +50,21 @@ Summary:Number of days remaining until assessment submission
 
 Summary shows questions as incomplete
     [Documentation]    INFUND-550
+    [Tags]  HappyPath
     Then the user should see the text in the element    jQuery = button:contains("Scope")    Incomplete
     :FOR  ${ELEMENT}    IN   @{programme_questions}
      \    the user should see the text in the element   jQuery = button:contains("${ELEMENT}")    Incomplete
 
 Summary: Questions should show without score
     [Documentation]    INFUND-550
+    [Tags]  HappyPath
      :FOR  ${ELEMENT}    IN   @{programme_questions}
       \   the user should see the text in the element    jQuery = button:contains("${ELEMENT}")    N/A
     [Teardown]    The user clicks the button/link        link = Back to your assessment overview
 
 Summary:Questions should show as complete
     [Documentation]    INFUND-550
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
     Given The user clicks the button/link                           link = Intelligent Building
     And the assessor adds score and feedback for every question     11   # 11 is the number of questions to iterate through
@@ -73,7 +75,7 @@ Summary:Questions should show as complete
 
 Summary:Questions should show the scores
     [Documentation]    INFUND-550
-    [Tags]
+    [Tags]  HappyPath
     Then The user should see the text in the page        Total: 100/100
     And The user should see the text in the page         100%
     :FOR  ${ELEMENT}    IN   @{programme_questions}
@@ -81,6 +83,7 @@ Summary:Questions should show the scores
 
 Summary:Feedback should show in each section
     [Documentation]    INFUND-550
+    [Tags]  HappyPath
     When the user clicks the button/link              jQuery = button:contains("Scope")
     Then the user should see the text in the page     Testing feedback text
     :FOR  ${ELEMENT}    IN   @{programme_questions}
@@ -100,6 +103,7 @@ Summary:Assessor can return to each question
 
 Summary:Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
+    [Tags]  HappyPath
     When The user clicks the button/link                        jQuery = #collapsible-1 a:contains("Return to this question")
     And The user should see the text in the page                What is the business opportunity that your project addresses?
     When the user selects the option from the drop-down menu    8    css = .assessor-question-score
@@ -113,13 +117,13 @@ Summary:Assessor should be able to re-edit before submit
 Summary:Funding Decision Validations
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5228
     [Tags]
-    When The user clicks the button/link        jQuery = .govuk-button:contains("Save assessment")
-    And The user should see an error            Please indicate your decision.
-    And The user enters text to a text field    id = feedback    ${EMPTY}
-    And The user enters text to a text field    id = comment    ${EMPTY}
-    Then the user selects the radio button      fundingConfirmation    false
-    And The user clicks the button/link         jQuery = .govuk-button:contains("Save assessment")
-    Then The user should see an error           Please enter your feedback.
+    When The user clicks the button/link                  jQuery = .govuk-button:contains("Save assessment")
+    And the user should see a field and summary error     Please indicate your decision.
+    And The user enters text to a text field              id = feedback    ${EMPTY}
+    And The user enters text to a text field              id = comment    ${EMPTY}
+    Then the user selects the radio button                fundingConfirmation    false
+    And The user clicks the button/link                   jQuery = .govuk-button:contains("Save assessment")
+    Then the user should see a field and summary error    Please enter your feedback.
 
 Summary:Word count check(Your feedback)
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5178  INFUND-5179
@@ -127,10 +131,10 @@ Summary:Word count check(Your feedback)
     [Setup]    browser validations have been disabled
     When the user enters multiple strings into a text field      id = feedback  t  5001
     And the user clicks the button/link                          jQuery = .govuk-button:contains("Save assessment")
-    Then the user should see an error                            This field cannot contain more than 5,000 characters.
+    Then the user should see a field and summary error           This field cannot contain more than 5,000 characters.
     When the user enters multiple strings into a text field      id = feedback  w${SPACE}  102
     And the user clicks the button/link                          jQuery = .govuk-button:contains("Save assessment")
-    Then the user should see an error                            Maximum word count exceeded. Please reduce your word count to 100.
+    Then the user should see a field and summary error           Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct                         Words remaining: -2
     When the user enters text to a text field                    id = feedback    Testing the feedback word count.
     Then The user should not see the text in the page            Maximum word count exceeded. Please reduce your word count to 100.
@@ -140,7 +144,7 @@ Summary:Word count check(Comments for InnovateUK)
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5178  INFUND-5179
     When the user enters multiple strings into a text field     id = comment  a${SPACE}  102
     And the user clicks the button/link                         jQuery = .govuk-button:contains("Save assessment")
-    Then the user should see an error                           Maximum word count exceeded. Please reduce your word count to 100.
+    Then the user should see a field and summary error          Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct                        Words remaining: -2
     When the user enters text to a text field                   id = comment    Testing the comments word count.
     Then The user should not see the text in the page           Maximum word count exceeded. Please reduce your word count to 100.
@@ -148,7 +152,7 @@ Summary:Word count check(Comments for InnovateUK)
 
 User Saves the Assessment as Recommended
     [Documentation]    INFUND-4996  INFUND-5765  INFUND-3726  INFUND-6040  INFUND-3724
-    [Tags]
+    [Tags]  HappyPath
     Given the user enters text to a text field               id = feedback  ${EMPTY}
     And the user selects the radio button                    fundingConfirmation    true
     When The user clicks the button/link                     jQuery = .govuk-button:contains("Save assessment")
@@ -160,7 +164,7 @@ User Saves the Assessment as Recommended
 
 User Saves the Assessment as Not Recommended
     [Documentation]    INFUND-5712  INFUND-3726  INFUND-6040  INFUND-3724
-    [Tags]
+    [Tags]  HappyPath
     Given The user clicks the button/link                    link = Park living
     And the assessor adds score and feedback for every question  11  # value 11: is the number of questions to loop through to submit feedback
     And the user clicks the button/link                      jQuery = .govuk-button:contains("Review and complete your assessment")
@@ -178,7 +182,7 @@ Submit Assessments
     ...    INFUND-3743
     ...
     ...    INFUND-6358
-    [Tags]
+    [Tags]  HappyPath
     Given the user should see the element          jQuery = .in-progress li:nth-child(7):contains("Intelligent Building")
     And the user should see that the element is disabled    id = submit-assessment-button
     When the user clicks the button/link           css = .in-progress li:nth-child(7) input[type = "checkbox"] ~ label

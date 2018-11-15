@@ -43,7 +43,7 @@ Edit the profile and verify if the changes are saved
     Then the user should see the element  jQuery = h3:contains("Email preferences") + p:contains("You have asked for updates on Innovate UK competitions by email.")
 
 Verify that the applicant's name has been changed on other parts of the site
-    [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Documentation]    INFUND-1042
     [Tags]  HappyPath
     Given the user navigates to the page           ${DASHBOARD_URL}
     And the user clicks the button/link            link = Profile
@@ -58,51 +58,51 @@ Verify that the applicant's name has been changed on other parts of the site
     And the user can change their details back again
 
 Display errors for invalid inputs of the First name
-    [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Documentation]    INFUND-1042
     [Tags]
-    Given the user navigates to the page   ${EDIT_PROFILE_URL}
+    Given the user navigates to the page                  ${EDIT_PROFILE_URL}
     And browser validations have been disabled
-    When the user fills in the first name  ${EMPTY}
-    Then the user should see an error      Please enter a first name.
+    When the user fills in the first name                 ${EMPTY}
+    Then the user should see a field error                ${enter_a_first_name}
     And browser validations have been disabled
     And browser validations have been disabled
-    And the user fills in the first name   testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
-    And the user clicks the button/link    css = [name="create-account"]
-    And the user should see an error       Your first name cannot have more than 70 characters.
+    And the user fills in the first name                  testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
+    And the user clicks the button/link                   css = [name="create-account"]
+    And the user should see a field and summary error     Your first name cannot have more than 70 characters.
     And browser validations have been disabled
-    And the user fills in the first name   A
-    And the user should see an error       Your first name should have at least 2 characters.
+    And the user fills in the first name                  A
+    And the user should see a field error                 Your first name should have at least 2 characters.
 
 Display errors for invalid inputs of the Last name
-    [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Documentation]    INFUND-1042
     [Tags]
-    Given the user navigates to the page  ${EDIT_PROFILE_URL}
+    Given the user navigates to the page                  ${EDIT_PROFILE_URL}
     And browser validations have been disabled
-    When the user fills in the last name  ${EMPTY}
-    Then the user should see an error     Please enter a last name.
+    When the user fills in the last name                  ${EMPTY}
+    Then the user should see a field error                ${enter_a_last_name}
     And browser validations have been disabled
     And browser validations have been disabled
-    And the user fills in the last name   testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
-    And the user clicks the button/link   css = [name="create-account"]
-    And the user should see an error      Your last name cannot have more than 70 characters.
+    And the user fills in the last name                   testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
+    And the user clicks the button/link                   css = [name="create-account"]
+    And the user should see a field and summary error     Your last name cannot have more than 70 characters.
     And browser validations have been disabled
-    And the user fills in the last name   B
-    And the user should see an error      Your last name should have at least 2 characters.
+    And the user fills in the last name                   B
+    And the user should see a field error                 Your last name should have at least 2 characters.
 
 Display errors for invalid inputs of the Phone field
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]
-    Given the user navigates to the page    ${EDIT_PROFILE_URL}
+    Given the user navigates to the page                   ${EDIT_PROFILE_URL}
     And browser validations have been disabled
-    When the user fills in the Phone field  ${EMPTY}
-    Then the user should see an error       Please enter a phone number.
+    When the user fills in the Phone field                 ${EMPTY}
+    Then the user should see a field error                 ${enter_a_phone_number}
     And browser validations have been disabled
-    And the user fills in the Phone field   121212121212121212121
-    And the user clicks the button/link     css = [name="create-account"]
-    And the user should see an error        Please enter a valid phone number between 8 and 20 digits.
+    And the user fills in the Phone field                  121212121212121212121
+    And the user clicks the button/link                    css = [name="create-account"]
+    And the user should see a field and summary error      ${enter_a_phone_number_between_8_and_20_digits}
     And browser validations have been disabled
-    And the user fills in the Phone field   12
-    And the user should see an error        Please enter a valid phone number between 8 and 20 digits.
+    And the user fills in the Phone field                  12
+    And the user should see a field error                  ${enter_a_phone_number_between_8_and_20_digits}
 
 *** Keywords ***
 the user enters profile details

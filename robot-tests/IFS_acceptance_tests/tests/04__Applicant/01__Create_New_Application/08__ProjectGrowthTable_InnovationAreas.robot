@@ -154,8 +154,8 @@ Organisation server side validation when no
     And the user selects the checkbox                     agree-state-aid
     When the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error    Enter your organisation size.
-    And the user should see a field and summary error     This field cannot be left blank.
-    And the user should see a field and summary error     This field cannot be left blank.
+    And the user should see a field and summary error     ${empty_field_warning_message}
+    And the user should see a field and summary error     ${empty_field_warning_message}
     And the user should not see the element               jQuery = h1:contains("Your finances")
     # Checking that by marking as complete, the user doesn't get redirected to the main finances page
 
@@ -165,10 +165,10 @@ Organisation client side validation when no
     Given the user selects medium organisation size
     When the user enters text to a text field           jQuery = .govuk-hint:contains("Your turnover from the last financial year") + + input  ${empty}
     And the user moves focus to the element             jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input
-    Then the user should see a field and summary error  This field cannot be left blank.
+    Then the user should see a field and summary error  ${empty_field_warning_message}
     And the user enters text to a text field            jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input  ${empty}
     When the user moves focus to the element            jQuery = button:contains("Mark as complete")
-    Then the user should see a field and summary error  This field cannot be left blank.
+    Then the user should see a field and summary error  ${empty_field_warning_message}
     When the user enters text to a text field           jQuery = .govuk-hint:contains("Your turnover from the last financial year") + + input  150
     And the user enters text to a text field            jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input  0
     And the user moves focus to the element             jQuery = button:contains("Mark as complete")
@@ -212,12 +212,12 @@ Organisation server side validation when yes
     Given the user clicks the button/link  link = Your organisation
     And the user selects the checkbox      agree-state-aid
     When the user clicks the button/link   jQuery = button:contains("Mark as complete")
-    And the user should see the element    jQuery = .govuk-error-summary__list li:contains("This field cannot be left blank.")
-    And the user should see the element    jQuery = .govuk-error-message:contains("This field cannot be left blank.")
-    And the user should see the element    jQuery = .govuk-error-summary__list li:contains("Please enter a valid date.")
-    And the user should see the element    jQuery = .govuk-error-message:contains("Please enter a valid date.")
-    And The user should see a field error  This field cannot be left blank.
-    And The user should see a field error  Please enter a valid date.
+    And the user should see the element    jQuery = .govuk-error-summary__list li:contains("${empty_field_warning_message}")
+    And the user should see the element    jQuery = .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element    jQuery = .govuk-error-summary__list li:contains("${enter_a_valid_date}")
+    And the user should see the element    jQuery = .govuk-error-message:contains("${enter_a_valid_date}")
+    And The user should see a field error  ${empty_field_warning_message}
+    And The user should see a field error  ${enter_a_valid_date}
     #And The user should see a field error    Enter your organisation size
     #TODO Enable the above checks when IFS-535 is ready
 
@@ -225,22 +225,22 @@ Organisation client side validation when yes
     [Documentation]    INFUND-6395
     [Tags]
     When the user enters text to a text field                 css = input[name$="month"]    42
-    Then the user should see a field and summary error        Please enter a valid date.
+    Then the user should see a field and summary error        ${enter_a_valid_date}
     When the user enters text to a text field                 css = input[name$="month"]    12
     And the user enters text to a text field                  css = input[name$="year"]    ${nextyear}
     Then the user should see a field and summary error        Please enter a past date.
     When the user enters text to a text field                 css = input[name$="year"]    2016
     And the user enters value to field                        Annual turnover    ${EMPTY}
-    Then the user should see a field and summary error        This field cannot be left blank.
+    Then the user should see a field and summary error        ${empty_field_warning_message}
     When the user enters value to field                       Annual turnover    8.5
     And the user moves focus to the element                   jQuery = td:contains("Annual profit") + td input
-    Then the user should see a field and summary error        This field can only accept whole numbers.
+    Then the user should see a field and summary error        ${only_accept_whole_numbers_message}
     And the user enters value to field                        Annual profit    -5
     When the user enters value to field                       Annual export    ${empty}
-    Then the user should see a field and summary error        This field cannot be left blank.
+    Then the user should see a field and summary error        ${empty_field_warning_message}
     And the user enters value to field                        Research and development spend    2147483647
     When the user enters text to a text field                 jQuery = .govuk-hint:contains("employees") + + input    22.4
-    Then the user should see a field and summary error        This field can only accept whole numbers.
+    Then the user should see a field and summary error        ${only_accept_whole_numbers_message}
     When the user enters text to a text field                 jQuery = .govuk-hint:contains("employees") + input    1
     Then the user should not see the element                  jQuery = span:contains("employees") + .govuk-error-message
 
@@ -391,10 +391,6 @@ the user enters value to field
 the user should see an error message in the field
     [Arguments]  ${field}  ${errmsg}
     the user should see the element  jQuery = span:contains("${field}") + *:contains("${errmsg}")
-
-the user selects medium organisation size
-    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
-    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
 
 the user populates the project growth table
     the user enters value to field    Annual turnover    65000
