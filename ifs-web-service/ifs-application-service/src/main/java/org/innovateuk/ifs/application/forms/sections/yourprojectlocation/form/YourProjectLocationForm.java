@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form;
 
 /**
- * TODO DW - document this class
+ * Form used to capture project location information
  */
 public class YourProjectLocationForm {
 

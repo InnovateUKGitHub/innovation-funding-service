@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel;
 
 /**
- * TODO DW - document this class
+ * View model to support project location page
  */
 public class YourProjectLocationViewModel {
 

@@ -34,6 +34,9 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 
+/**
+ * The Controller for the "Your project location" page in the Application Form process.
+ */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-project-location/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")

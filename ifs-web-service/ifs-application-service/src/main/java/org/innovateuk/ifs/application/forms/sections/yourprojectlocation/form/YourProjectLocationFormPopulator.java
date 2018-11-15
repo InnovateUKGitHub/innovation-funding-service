@@ -5,7 +5,7 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.springframework.stereotype.Component;
 
 /**
- * TODO DW - document this class
+ * A populator to build a YourProjectLocationForm
  */
 @Component
 public class YourProjectLocationFormPopulator {

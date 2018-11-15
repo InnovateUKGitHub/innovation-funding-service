@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * TODO DW - document this class
+ * A populator to build a YourProjectLocationViewModel
  */
 @Component
 public class YourProjectLocationViewModelPopulator {
