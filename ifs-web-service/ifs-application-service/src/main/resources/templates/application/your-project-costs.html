@@ -34,9 +34,12 @@
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">
-
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
+
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.includeVat}">
+                <p class="govuk-body">You must include VAT in all figures where appropriate.</p>
+            </div>
 
             <h2 class="govuk-heading-m govuk-!-margin-0"
                 th:text="|Provide the project costs for '${model.organisationName}'|"></h2>

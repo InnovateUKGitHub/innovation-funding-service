@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public class YourProjectCostsForm {
 
@@ -100,7 +101,7 @@ public class YourProjectCostsForm {
             case DEFAULT_PERCENTAGE:
                 return getTotalLabourCosts().multiply(new BigDecimal("0.2"));
             case TOTAL:
-                return BigDecimal.valueOf(getOverhead().getTotalSpreadsheet());
+                return Optional.ofNullable(getOverhead().getTotalSpreadsheet()).map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
         }
         return BigDecimal.ZERO;
     }

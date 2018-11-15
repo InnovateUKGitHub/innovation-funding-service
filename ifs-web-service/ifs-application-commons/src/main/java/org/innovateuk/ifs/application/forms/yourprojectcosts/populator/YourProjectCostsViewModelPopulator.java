@@ -12,6 +12,8 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
+
 @Component
 public class YourProjectCostsViewModelPopulator {
 
@@ -32,11 +34,14 @@ public class YourProjectCostsViewModelPopulator {
         boolean open = section.getApplication().isOpen() &&
                 section.getCompetition().isOpen();
 
+        boolean includeVat = STANDARD_WITH_VAT.equals(section.getCompetition().getApplicationFinanceType());
+
         return new YourProjectCostsViewModel(applicationId,
                 section.getSection().getId(),
                 section.getCompetition().getId(),
                 complete,
                 open,
+                includeVat,
                 section.getApplication().getName(),
                 section.getCurrentApplicant().getOrganisation().getName(),
                 String.format("/application/%d/form/FINANCE", applicationId));
