@@ -88,7 +88,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantProcessRole.getUser(), applicationId, costSection.getId());
 
         model.addAttribute("applicationResource", applicantSection.getApplication());
-        if(financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {)
+        if(financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
             //TODO IFS-4774 remove this and the templates in your-finance-sub-sections once the JeS page is refactored
             ApplicationForm form = new ApplicationForm();
             AbstractSectionViewModel sectionViewModel = projectCostsSectionPopulator.populate(
