@@ -137,6 +137,7 @@ RUN mkdir /etc/tomcat8/certs && \
 
 # Move files required for IDP/SP "extras" process which allows multiple IDP/SPs to be created
   mkdir /etc/shibboleth/extras && \
+  mkdir -p /idp/templates && mkdir -p /idp/entities && mkdir -p /idp/certs && \
   mv /idp/templates /etc/shibboleth/extras && \
   mv /idp/entities /etc/shibboleth/extras && \
   mv /idp/certs /etc/shibboleth/extras && \
