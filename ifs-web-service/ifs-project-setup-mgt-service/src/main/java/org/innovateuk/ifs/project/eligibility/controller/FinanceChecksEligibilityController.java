@@ -14,6 +14,8 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -51,6 +53,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 /**
@@ -59,7 +64,7 @@ import java.util.function.Supplier;
  */
 @Controller
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility")
-public class FinanceChecksEligibilityController {
+public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     private static final String FORM_ATTR_NAME = "form";
     private static final String ADD_COST = "add_cost";
@@ -128,45 +133,48 @@ public class FinanceChecksEligibilityController {
                                   BindingResult bindingResult,
                                   Model model,
                                   UserResource user) {
-        ProjectResource project = projectService.getById(projectId);
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
-        return doViewEligibility(project, isLeadPartnerOrganisation, organisation, model, null, form, rowType);
+        return doViewEligibility(projectId, organisationId, model, null, form, rowType);
     }
 
-    private String doViewEligibility(ProjectResource project, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, FinanceRowType rowType) {
+    private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, FinanceRowType rowType) {
+        Future<ProjectResource> project = async(() -> projectService.getById(projectId));
+        Future<OrganisationResource> organisation = async(() -> organisationRestService.getOrganisationById(organisationId).getSuccess());
+        Future<OrganisationResource> leadOrganisation = async(() -> projectService.getLeadOrganisation(projectId));
+        Future<EligibilityResource> eligibility = async(() -> projectFinanceService.getEligibility(projectId, organisationId));
+        Future<FinanceCheckEligibilityResource> eligibilityOverview = async(() -> financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId));
 
-        EligibilityResource eligibility = projectFinanceService.getEligibility(project.getId(), organisation.getId());
-
-        if (eligibilityForm == null) {
-            eligibilityForm = getEligibilityForm(eligibility);
-        }
-
-        FinanceCheckEligibilityResource eligibilityOverview = financeCheckService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId());
-
-        boolean eligibilityApproved = eligibility.getEligibility() == EligibilityState.APPROVED;
-
-        FileDetailsViewModel jesFileDetailsViewModel = null;
-        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisation.getOrganisationType());
-        if (!isUsingJesFinances) {
-            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType));
-            formPopulator.populateForm(form, project.getId(), organisation.getId());
-        } else {
-            ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(project.getApplication(), organisation.getId());
-            if (applicationFinanceResource.getFinanceFileEntry() != null) {
-                FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccess();
-                jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
+        try {
+            if (eligibilityForm == null) {
+                eligibilityForm = getEligibilityForm(eligibility.get());
             }
+            boolean eligibilityApproved = eligibility.get().getEligibility() == EligibilityState.APPROVED;
+
+            FileDetailsViewModel jesFileDetailsViewModel = null;
+            boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisation.get().getOrganisationType());
+            if (!isUsingJesFinances) {
+                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType));
+                formPopulator.populateForm(form, projectId, organisationId);
+            } else {
+                ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(project.get().getApplication(), organisation.get().getId());
+                if (applicationFinanceResource.getFinanceFileEntry() != null) {
+                    FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccess();
+                    jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
+                }
+            }
+
+            boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
+
+            model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview.get(), organisation.get().getName(), project.get().getName(),
+                    project.get().getApplication(), isLeadPartnerOrganisation, project.get().getId(), organisation.get().getId(),
+                    eligibilityApproved, eligibility.get().getEligibilityRagStatus(), eligibility.get().getEligibilityApprovalUserFirstName(),
+                    eligibility.get().getEligibilityApprovalUserLastName(), eligibility.get().getEligibilityApprovalDate(), false, isUsingJesFinances, jesFileDetailsViewModel));
+
+            model.addAttribute("eligibilityForm", eligibilityForm);
+
+            return "project/financecheck/eligibility";
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IFSRuntimeException(e, Collections.emptyList());
         }
-        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
-                project.getApplication(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
-                eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
-                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(), false, isUsingJesFinances, jesFileDetailsViewModel));
-
-        model.addAttribute("eligibilityForm", eligibilityForm);
-
-        return "project/financecheck/eligibility";
     }
 
     private FinanceChecksEligibilityForm getEligibilityForm(EligibilityResource eligibility) {
@@ -240,15 +248,10 @@ public class FinanceChecksEligibilityController {
                                      ValidationHandler validationHandler,
                                      Model model,
                                      UserResource user) {
-        ProjectResource projectResource = projectService.getById(projectId);
-        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
-
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
 
-        return doSaveEligibility(projectResource, isLeadPartnerOrganisation, organisationResource, EligibilityState.APPROVED, eligibilityForm, form,
+        return doSaveEligibility(projectId, organisationId, EligibilityState.APPROVED, eligibilityForm, form,
                 validationHandler, successView, model);
     }
 
@@ -263,14 +266,9 @@ public class FinanceChecksEligibilityController {
                                   Model model,
                                   UserResource user) {
 
-        ProjectResource projectResource = projectService.getById(projectId);
-        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
-
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return doSaveEligibility(projectResource, isLeadPartnerOrganisation, organisationResource, EligibilityState.REVIEW, eligibilityForm, form, validationHandler, successView, model);
+        return doSaveEligibility(projectId, organisationId, EligibilityState.REVIEW, eligibilityForm, form, validationHandler, successView, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -281,13 +279,13 @@ public class FinanceChecksEligibilityController {
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
     }
 
-    private String doSaveEligibility(ProjectResource project, boolean isLeadOrganisation, OrganisationResource organisation, EligibilityState eligibility, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, ValidationHandler validationHandler, Supplier<String> successView, Model model) {
+    private String doSaveEligibility(long projectId, long organisationId, EligibilityState eligibility, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, ValidationHandler validationHandler, Supplier<String> successView, Model model) {
 
-        Supplier<String> failureView = () -> doViewEligibility(project, isLeadOrganisation, organisation, model, eligibilityForm, form, null);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, eligibilityForm, form, null);
 
         EligibilityRagStatus statusToSend = getRagStatus(eligibilityForm);
 
-        ServiceResult<Void> saveEligibilityResult = projectFinanceService.saveEligibility(project.getId(), organisation.getId(), eligibility, statusToSend);
+        ServiceResult<Void> saveEligibilityResult = projectFinanceService.saveEligibility(projectId, organisationId, eligibility, statusToSend);
 
         return validationHandler
                 .addAnyErrors(saveEligibilityResult)

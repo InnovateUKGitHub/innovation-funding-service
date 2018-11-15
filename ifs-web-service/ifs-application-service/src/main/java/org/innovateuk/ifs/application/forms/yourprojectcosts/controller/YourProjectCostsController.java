@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.AbstractYourP
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
+import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -41,6 +42,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -51,7 +54,7 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "YOUR_PROJECT_COSTS_APPLICANT", description = "Applicants can all fill out the Your project costs section of the application.")
-public class YourProjectCostsController {
+public class YourProjectCostsController extends AsyncAdaptor {
     private final static Logger LOG = LoggerFactory.getLogger(AbstractYourProjectCostsSaver.class);
 
     private static final String VIEW = "application/your-project-costs";
@@ -91,12 +94,14 @@ public class YourProjectCostsController {
                                             @PathVariable long applicantOrganisationId,
                                             @ModelAttribute("form") YourProjectCostsForm form,
                                             @RequestParam(value = "origin", defaultValue = "MANAGEMENT_DASHBOARD") String origin,
-                                            @RequestParam MultiValueMap<String, String> queryParams) {
+                                            @RequestParam MultiValueMap<String, String> queryParams) throws ExecutionException, InterruptedException {
 
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
-        YourProjectCostsViewModel viewModel = viewModelPopulator.populateManagement(applicationId, sectionId, applicantOrganisationId, originQuery);
-        model.addAttribute("model", viewModel);
-        formPopulator.populateForm(form, applicationId, applicantOrganisationId);
+        Future<YourProjectCostsViewModel> viewModel = async(() -> viewModelPopulator.populateManagement(applicationId, sectionId, applicantOrganisationId, originQuery));
+        Future<Void> populate = async(() -> formPopulator.populateForm(form, applicationId, applicantOrganisationId));
+
+        model.addAttribute("model", viewModel.get());
+        populate.get();
         return VIEW;
     }
 
