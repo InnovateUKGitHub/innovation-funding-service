@@ -89,13 +89,6 @@
                                           th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents')" />
                             </th:block>
 
-                            <th:block th:unless="${model.competitionProjectsStatusResource.isProjectDocuments()}">
-                                <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
-                                          th:insert="project/fragments :: project-status-table(${project.otherDocumentsStatus}, 'other-documents')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/partner/documents'}" />
-                                <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
-                                          th:insert="project/fragments :: project-status-table(${project.otherDocumentsStatus}, 'other-documents')" />
-                            </th:block>
-
                             <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
                                       th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO')" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
                             <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
