@@ -54,7 +54,7 @@ SELECT p.id AS project_id,
 dc.id AS document_config_id,
 p.collaboration_agreement_file_entry_id AS file_entry_id,
 'UPLOADED'  AS status,
-'Rejected' AS status_comments
+'' AS status_comments
 FROM project p
 INNER JOIN application a ON p.application_id = a.id
 INNER JOIN document_config dc ON a.competition = dc.competition_id
@@ -70,7 +70,7 @@ SELECT p.id AS project_id,
 dc.id AS document_config_id,
 p.exploitation_plan_file_entry_id AS file_entry_id,
 'UPLOADED' AS status,
-'Rejected' AS status_comments
+'' AS status_comments
 FROM project p
 INNER JOIN application a ON p.application_id = a.id
 INNER JOIN document_config dc ON a.competition = dc.competition_id
