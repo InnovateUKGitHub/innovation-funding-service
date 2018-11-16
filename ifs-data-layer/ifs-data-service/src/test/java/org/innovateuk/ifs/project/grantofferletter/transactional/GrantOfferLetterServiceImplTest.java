@@ -587,7 +587,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .build();
 
         setupOrganisationsForGrantOfferLetter(o1, o2, o3, applicationFinanceResource, applicationFinanceResource, applicationFinanceResource);
-        project.setOtherDocumentsApproved(ApprovalType.UNSET);
 
         Competition comp = newCompetition().withName("Test Comp<").build();
         org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
@@ -653,7 +652,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
         ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o1).build();
         PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o1).withLeadOrganisation(true).build();
-        Project project = newProject().withOtherDocumentsApproved(ApprovalType.REJECTED).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
+        Project project = newProject().withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
+        ProjectDocument projectDocument = ProjectDocumentBuilder
+                .newProjectDocument()
+                .withProject(project)
+                .withStatus(DocumentStatus.APPROVED)
+                .build();
+        project.setProjectDocuments(singletonList(projectDocument));
 
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
@@ -801,7 +806,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withPostcode("SN1 1AA'")
                 .build();
         project = newProject()
-                .withOtherDocumentsApproved(ApprovalType.APPROVED)
+                .withProjectDocuments(DocumentStatus.APPROVED)
                 .withName("project 1")
                 .withApplication(app)
                 .withPartnerOrganisations(asList(po3, po, po2))
@@ -809,6 +814,12 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withDuration(10L)
                 .withAddress(address)
                 .withTargetStartDate(LocalDate.now())
+                .build();
+
+        ProjectDocument projectDocument = ProjectDocumentBuilder
+                .newProjectDocument()
+                .withProject(project)
+                .withStatus(DocumentStatus.APPROVED)
                 .build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
