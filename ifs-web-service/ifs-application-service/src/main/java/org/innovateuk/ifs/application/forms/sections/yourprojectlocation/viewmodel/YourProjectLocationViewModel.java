@@ -5,8 +5,6 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmo
  */
 public class YourProjectLocationViewModel {
 
-    private boolean readOnly;
-
     // for the view
     private String financesUrl;
     private String applicationName;

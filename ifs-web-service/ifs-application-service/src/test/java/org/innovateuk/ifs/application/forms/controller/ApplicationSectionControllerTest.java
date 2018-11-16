@@ -96,11 +96,9 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     @Mock
     private OverheadFileSaver overheadFileSaver;
 
-    @Mock
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
-
     @Spy
     @InjectMocks
+    @SuppressWarnings("unused")
     private ApplicationRedirectionService applicationRedirectionService;
 
     @Mock
@@ -301,34 +299,6 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"));    }
-
-    @Test
-    public void applicationFormSubmit_projectLocationTooShort() throws Exception {
-        String projectLocationPostcode = "123456718901";
-        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.PROJECT_LOCATION).build()).build());
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param("financePosition-projectLocation", projectLocationPostcode)
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-        ).andExpect(status().isOk())
-                .andExpect(view().name("application-form"))
-                .andExpect(model().attributeErrorCount("form", 1));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
-    }
-
-    @Test
-    public void applicationFormSubmit_projectLocationTooLong() throws Exception {
-        String projectLocationPostcode = "12";
-        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.PROJECT_LOCATION).build()).build());
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param("financePosition-projectLocation", projectLocationPostcode)
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-        ).andExpect(status().isOk())
-                .andExpect(view().name("application-form"))
-                .andExpect(model().attributeErrorCount("form", 1));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
-    }
 
     @Test
     public void applicationFormSubmit_markSectionInComplete() throws Exception {
