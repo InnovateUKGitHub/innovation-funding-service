@@ -24,7 +24,6 @@ public class YourProjectCostsForm {
 
     private Boolean eligibleAgreement;
 
-
     public OverheadForm getOverhead() {
         return overhead;
     }

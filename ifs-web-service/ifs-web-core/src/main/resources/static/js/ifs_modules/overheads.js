@@ -6,9 +6,9 @@ IFS.core.overheads = (function () {
       radios: '.overhead-radio',
       target: '#section-total-overhead',
       totals: {
-        'NONE': '#section-total-overhead-none',
-        'DEFAULT_PERCENTAGE': '#section-total-overhead-default',
-        'TOTAL': '#section-total-overhead-calculated'
+        'NONE': '#total-overhead-none',
+        'DEFAULT_PERCENTAGE': '#total-overhead-default',
+        'TOTAL': '#total-overhead-calculated'
       }
     },
     init: function () {
