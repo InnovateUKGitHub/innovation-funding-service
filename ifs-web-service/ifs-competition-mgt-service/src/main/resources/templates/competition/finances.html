@@ -221,12 +221,12 @@
                 <dd class="govuk-grid-column-two-thirds"
                     th:text="${competitionSetupForm.applicationFinanceType.displayLabel}" />
                 <th:block th:unless="${model.subsection.noFinancesCompetition}">
-                    <dt class="govuk-grid-column-one-third">Include project growth table</dt>
+                    <dt class="govuk-grid-column-one-third clear-floats">Include project growth table</dt>
                     <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
-                    <dt class="govuk-grid-column-one-third">Include the 'Your organisation' section for research organisations</dt>
-                    <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeYourOrganisationSection ? 'Yes' :  'No'}" />
-                    <dt class="govuk-grid-column-one-third">Include Je-S form for research organisations</dt>
+                    <dt class="govuk-grid-column-one-third clear-floats">Include Je-S form for research organisations</dt>
                     <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeJesForm ? 'Yes' :  'No'}" />
+                    <dt class="govuk-grid-column-one-third clear-floats">Include the 'Your organisation' section for research organisations</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeYourOrganisationSection ? 'Yes' :  'No'}" />
                     <dt class="govuk-grid-column-full govuk-!-margin-0">Funding rules for this competition</dt>
                     <dd class="govuk-grid-column-full wysiwyg-styles" ifs:utext="${competitionSetupForm.fundingRules}" />
                 </th:block>
