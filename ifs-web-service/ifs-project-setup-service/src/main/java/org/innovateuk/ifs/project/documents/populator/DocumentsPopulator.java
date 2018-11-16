@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.documents.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.core.populator.BasicDetailsPopulator;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
@@ -36,7 +37,15 @@ public class DocumentsPopulator {
         ProjectResource project = basicDetails.getProject();
         CompetitionResource competition = basicDetails.getCompetition();
 
+        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+
         List<org.innovateuk.ifs.competition.resource.ProjectDocumentResource> configuredProjectDocuments = competition.getProjectDocuments();
+
+        if (partnerOrganisations.size() == 1) {
+            configuredProjectDocuments.removeIf(
+                    document -> document.getTitle().equals("Collaboration agreement"));
+        }
+
         List<ProjectDocumentResource> projectDocuments = project.getProjectDocuments();
 
         List<ProjectDocumentStatus> documents = new ArrayList<>();

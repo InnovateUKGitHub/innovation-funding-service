@@ -110,9 +110,9 @@ ALTER TABLE project
 ALTER TABLE project
   DROP FOREIGN KEY project_ibfk_2;
 
-----  Drop old unused columns -- Comment these out once IFS-4756 is merged!
---
---ALTER TABLE project DROP COLUMN collaboration_agreement_file_entry_id;
---ALTER TABLE project DROP COLUMN exploitation_plan_file_entry_id;
---ALTER TABLE project DROP COLUMN documents_submitted_date;
---ALTER TABLE project DROP COLUMN other_documents_approved;
+--  Drop old unused columns -- Comment these out once IFS-4756 is merged!
+
+ALTER TABLE project DROP COLUMN collaboration_agreement_file_entry_id;
+ALTER TABLE project DROP COLUMN exploitation_plan_file_entry_id;
+ALTER TABLE project DROP COLUMN documents_submitted_date;
+ALTER TABLE project DROP COLUMN other_documents_approved;

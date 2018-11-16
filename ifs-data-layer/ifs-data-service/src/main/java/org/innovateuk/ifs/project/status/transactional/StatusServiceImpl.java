@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
@@ -20,6 +21,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStat
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -78,6 +80,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private PartnerOrganisationService partnerOrganisationService;
 
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId, String applicationSearchString) {
@@ -306,7 +311,20 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
 
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
-        int expectedNumberOfDocuments = project.getApplication().getCompetition().getProjectDocuments().size();
+
+        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> expectedDocuments =
+                project.getApplication().getCompetition().getProjectDocuments();
+
+        List<PartnerOrganisationResource> partnerOrganisations =
+                partnerOrganisationService.getProjectPartnerOrganisations(project.getId()).getSuccess();
+
+        if (partnerOrganisations.size() == 1) {
+            expectedDocuments.removeIf(
+                    document -> document.getTitle().equals("Collaboration agreement"));
+        }
+
+        int expectedNumberOfDocuments = expectedDocuments.size();
+
         int actualNumberOfDocuments = projectDocuments.size();
 
         if (simpleAnyMatch(projectDocuments, projectDocument -> SUBMITTED.equals(projectDocument.getStatus()))){
