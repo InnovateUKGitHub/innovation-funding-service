@@ -117,6 +117,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     private Long questionId;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
     private ApplicantSectionResourceBuilder sectionBuilder;
+    private ApplicantResource applicantResource;
 
     @Override
     protected ApplicationSectionController supplyControllerUnderTest() {
@@ -145,11 +146,11 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(organisations.get(0)));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
         when(overheadFileSaver.isOverheadFileRequest(any(HttpServletRequest.class))).thenCallRealMethod();
-        when(financeViewHandlerProvider.getFinanceFormHandler(anyLong())).thenReturn(defaultFinanceFormHandler);
+        when(financeViewHandlerProvider.getFinanceFormHandler(any(), anyLong())).thenReturn(defaultFinanceFormHandler);
 
-        ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
-        when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
-        sectionBuilder = newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
+        applicantResource = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
+        when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicantResource).withApplicants(asList(applicantResource)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
+        sectionBuilder = newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicantResource).withApplicants(asList(applicantResource)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
         when(applicantRestService.getSection(anyLong(), anyLong(), anyLong())).thenReturn(sectionBuilder.build());
         when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
         when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(Collections.emptyList());

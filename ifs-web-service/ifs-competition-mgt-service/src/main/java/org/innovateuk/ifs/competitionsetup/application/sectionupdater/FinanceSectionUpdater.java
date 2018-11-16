@@ -61,6 +61,7 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
         competitionSetupFinanceResource.setCompetitionId(competition.getId());
         competitionSetupFinanceResource.setApplicationFinanceType(form.getApplicationFinanceType());
         competitionSetupFinanceResource.setIncludeGrowthTable(form.getIncludeGrowthTable());
+        competitionSetupFinanceResource.setIncludeJesForm(form.getIncludeJesForm());
 
         return competitionSetupFinanceRestService.save(competitionSetupFinanceResource).toServiceResult();
     }

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class CompetitionSetupFinanceResourceBuilder extends BaseBuilder<CompetitionSetupFinanceResource, CompetitionSetupFinanceResourceBuilder> {
 
@@ -21,15 +20,19 @@ public class CompetitionSetupFinanceResourceBuilder extends BaseBuilder<Competit
     }
 
     public CompetitionSetupFinanceResourceBuilder withCompetitionId(Long... competitionIds) {
-        return withArray((competitionId, competitionSetupFinance) -> setField("competitionId", competitionId, competitionSetupFinance), competitionIds);
+        return withArray((competitionId, competitionSetupFinance) -> competitionSetupFinance.setCompetitionId(competitionId), competitionIds);
     }
 
     public CompetitionSetupFinanceResourceBuilder withApplicationFinanceType(ApplicationFinanceType... applicationFinanceTypes) {
-        return withArray((applicationFinanceType, competitionSetupFinance) -> setField("applicationFinanceType", applicationFinanceType, competitionSetupFinance), applicationFinanceTypes);
+        return withArray((applicationFinanceType, competitionSetupFinance) -> competitionSetupFinance.setApplicationFinanceType(applicationFinanceType), applicationFinanceTypes);
     }
 
     public CompetitionSetupFinanceResourceBuilder withIncludeGrowthTable(Boolean... includeGrowthTables) {
-        return withArray((includeGrowthTable, competitionSetupFinance) -> setField("includeGrowthTable", includeGrowthTable, competitionSetupFinance), includeGrowthTables);
+        return withArray((includeGrowthTable, competitionSetupFinance) -> competitionSetupFinance.setIncludeGrowthTable(includeGrowthTable), includeGrowthTables);
+    }
+
+    public CompetitionSetupFinanceResourceBuilder withIncludeJesForm(Boolean... includeJesForms) {
+        return withArray((includeJesForm, competitionSetupFinance) -> competitionSetupFinance.setIncludeJesForm(includeJesForm), includeJesForms);
     }
 
     @Override

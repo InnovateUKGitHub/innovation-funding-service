@@ -53,6 +53,7 @@ public class FinanceFormPopulatorTest {
     @Test
     public void populateForm() {
         final boolean isIncludeGrowthTable = true;
+        Boolean includeJesForm = false;
         final String fundingRules = "Funding rules for competition are fun, right?";
 
         SectionResource overviewFinanceSection = newSectionResource()
@@ -62,6 +63,7 @@ public class FinanceFormPopulatorTest {
         CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()
                 .withIncludeGrowthTable(isIncludeGrowthTable)
                 .withApplicationFinanceType(STANDARD)
+                .withIncludeJesForm(includeJesForm)
                 .build();
 
         CompetitionResource competition = newCompetitionResource()
@@ -86,11 +88,13 @@ public class FinanceFormPopulatorTest {
         assertEquals(STANDARD, form.getApplicationFinanceType());
         assertEquals(isIncludeGrowthTable, form.getIncludeGrowthTable());
         assertEquals(fundingRules, form.getFundingRules());
+        assertEquals(includeJesForm, form.getIncludeJesForm());
     }
 
     @Test
     public void populateForm_noFinances() {
         final boolean isIncludeGrowthTable = true;
+        Boolean includeJesForm = false;
 
         CompetitionResource competition = newCompetitionResource()
                 .withNonFinanceType(true)
@@ -99,6 +103,7 @@ public class FinanceFormPopulatorTest {
         CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()
                 .withIncludeGrowthTable(isIncludeGrowthTable)
                 .withApplicationFinanceType(NO_FINANCES)
+                .withIncludeJesForm(includeJesForm)
                 .build();
 
         assertTrue(competition.isNonFinanceType());
@@ -113,5 +118,6 @@ public class FinanceFormPopulatorTest {
         assertEquals(NO_FINANCES, form.getApplicationFinanceType());
         assertEquals(isIncludeGrowthTable, form.getIncludeGrowthTable());
         assertNull(form.getFundingRules());
+        assertEquals(includeJesForm, form.getIncludeJesForm());
     }
 }
