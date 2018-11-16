@@ -7,6 +7,9 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -14,6 +17,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
@@ -100,6 +104,15 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     public ProjectBuilder withSpendProfileSubmittedDate(ZonedDateTime date) {
         return with (project -> project.setSpendProfileSubmittedDate(date));
+    }
+
+    public ProjectBuilder withProjectDocuments(DocumentStatus status){
+        ProjectDocument projectDocument = ProjectDocumentBuilder
+                .newProjectDocument()
+                .withStatus(status)
+                .build();
+
+        return with (project -> project.setProjectDocuments(singletonList(projectDocument)));
     }
 
     @Override
