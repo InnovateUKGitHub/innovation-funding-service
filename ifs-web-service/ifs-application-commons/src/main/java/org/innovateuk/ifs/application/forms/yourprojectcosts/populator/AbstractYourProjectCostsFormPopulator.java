@@ -1,17 +1,11 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.populator;
 
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.*;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -20,20 +14,6 @@ import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.Abstrac
 import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
 public abstract class AbstractYourProjectCostsFormPopulator {
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private QuestionRestService questionRestService;
-
-    @Autowired
-    private ApplicationService applicationService;
-
-    public void populateForm(YourProjectCostsForm form, long applicationId, UserResource user) {
-        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
-        populateForm(form, applicationId, organisation.getId());
-    }
 
     public void populateForm(YourProjectCostsForm form, long targetId, Long organisationId) {
         BaseFinanceResource finance = getFinanceResource(targetId, organisationId);

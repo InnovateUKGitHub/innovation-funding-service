@@ -17,7 +17,7 @@ public class SubcontractingCostBuilder extends BaseBuilder<SubContractingCost, S
     }
 
     public SubcontractingCostBuilder withName(String... value) {
-        return withArraySetFieldByReflection("description", value);
+        return withArraySetFieldByReflection("name", value);
     }
 
     public SubcontractingCostBuilder withCountry(String... value) {
@@ -27,7 +27,6 @@ public class SubcontractingCostBuilder extends BaseBuilder<SubContractingCost, S
     public SubcontractingCostBuilder withRole(String... value) {
         return withArraySetFieldByReflection("role", value);
     }
-
 
     public SubcontractingCostBuilder withCost(BigDecimal... value) {
         return withArraySetFieldByReflection("cost", value);
