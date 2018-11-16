@@ -22,13 +22,15 @@
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
                                   Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/success" index="5"/>
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/sso" index="6"/>
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/auth/success" index="6"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/sso" index="7"/>
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"
-                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/POST-SimpleSign" index="7"/>
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/POST-SimpleSign" index="8"/>
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
-                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/Artifact" index="8"/>
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/Artifact" index="9"/>
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS"
-                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/ECP" index="9"/>
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/ECP" index="10"/>
     </SPSSODescriptor>
 
 </EntityDescriptor>

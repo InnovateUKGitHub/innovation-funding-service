@@ -24,7 +24,9 @@
     <!-- ========================================================================================== -->
 
     <MetadataProvider id="OurProviders" xsi:type="FilesystemMetadataProvider" metadataFile="/etc/shibboleth/metadata.xml" />
-    <MetadataProvider id="Extras" xsi:type="LocalDynamicMetadataProvider" sourceDirectory="/etc/shibboleth/metadata"/>
+    <MetadataProvider id="Extras"
+                      xsi:type="LocalDynamicMetadataProvider"
+                      sourceDirectory="/etc/shibboleth/metadata"/>
 </MetadataProvider>
 
 
