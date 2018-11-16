@@ -285,10 +285,6 @@ Custom suite setup
     ${tomorrowMonthWord} =  get tomorrow month as word
     set suite variable  ${tomorrowMonthWord}
 
-the user moves focus and waits for autosave
-    Set Focus To Element    link=Sign out
-    Wait For Autosave
-
 the validation error above the question should be visible
     [Arguments]    ${QUESTION}    ${ERROR}
     Element Should Contain    ${QUESTION}    ${ERROR}

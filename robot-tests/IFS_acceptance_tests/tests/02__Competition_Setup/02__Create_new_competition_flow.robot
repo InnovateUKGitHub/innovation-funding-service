@@ -754,10 +754,6 @@ The user can see the VAT text in Your project costs
     Then the user should see the element       jQuery = p:contains("You must include VAT in all figures where appropriate.")
 
 *** Keywords ***
-the user moves focus and waits for autosave
-    Set Focus To Element    link=Sign out
-    Wait For Autosave
-
 the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input
