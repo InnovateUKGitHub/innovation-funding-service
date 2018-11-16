@@ -38,8 +38,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
  * The Controller for the "Your project location" page in the Application Form process.
  */
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-project-location/{sectionId}")
-@PreAuthorize("hasAuthority('applicant')")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-project-location/organisation/{organisationId}/section/{sectionId}")
 @SecuredBySpring(value = "PROJECT_LOCATION_APPLICANT",
         description = "Applicants can all fill out the Project Location section of the application.")
 public class YourProjectLocationController extends AsyncAdaptor {
@@ -70,21 +69,19 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     @GetMapping
     @AsyncMethod
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
     public String view(
             @PathVariable("applicationId") long applicationId,
+            @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
             Model model) {
 
-        long userId = loggedInUser.getId();
-
         Future<YourProjectLocationViewModel> viewModelRequest = async(() ->
-                getViewModel(applicationId, sectionId, userId));
+                getViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
 
-        Future<YourProjectLocationForm> formRequest = async(() -> {
-            ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
-            return formPopulator.populate(applicationId, processRole.getOrganisationId());
-        });
+        Future<YourProjectLocationForm> formRequest = async(() ->
+                formPopulator.populate(applicationId, organisationId));
 
         model.addAttribute("model", viewModelRequest);
         model.addAttribute("form", formRequest);
@@ -93,30 +90,33 @@ public class YourProjectLocationController extends AsyncAdaptor {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('applicant')")
     public String update(
             @PathVariable("applicationId") long applicationId,
-            UserResource loggedInUser,
+            @PathVariable("organisationId") long organisationId,
             @ModelAttribute YourProjectLocationForm form) {
 
-        ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-        updatePostcode(applicationId, form, processRole);
+        updatePostcode(applicationId, organisationId, form);
         return redirectToYourFinances(applicationId);
     }
 
     @PostMapping("/auto-save")
+    @PreAuthorize("hasAuthority('applicant')")
     public @ResponseBody
     JsonNode autosave(
             @PathVariable("applicationId") long applicationId,
-            UserResource loggedInUser,
+            @PathVariable("organisationId") long organisationId,
             @ModelAttribute YourProjectLocationForm form) {
 
-        update(applicationId, loggedInUser, form);
+        update(applicationId, organisationId, form);
         return new ObjectMapper().createObjectNode();
     }
 
     @PostMapping(params = "mark-as-complete")
+    @PreAuthorize("hasAuthority('applicant')")
     public String markAsComplete(
             @PathVariable("applicationId") long applicationId,
+            @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
             @Valid @ModelAttribute("form") YourProjectLocationForm form,
@@ -125,18 +125,21 @@ public class YourProjectLocationController extends AsyncAdaptor {
             Model model) {
 
         Supplier<String> failureHandler = () -> {
-            YourProjectLocationViewModel viewModel = getViewModel(applicationId, sectionId, loggedInUser.getId());
+            YourProjectLocationViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
             return VIEW_PAGE;
         };
 
         Supplier<String> successHandler = () -> {
+
+            updatePostcode(applicationId, organisationId, form);
+
             ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-            updatePostcode(applicationId, form, processRole);
             List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
             validationMessages.forEach(validationHandler::addAnyErrors);
-            return validationHandler.failNowOrSucceedWith(failureHandler, () -> redirectToViewPage(applicationId, sectionId));
+
+            return validationHandler.failNowOrSucceedWith(failureHandler, () -> redirectToViewPage(applicationId, organisationId, sectionId));
         };
 
         return validationHandler.
@@ -145,22 +148,24 @@ public class YourProjectLocationController extends AsyncAdaptor {
     }
 
     @PostMapping(params = "mark-as-incomplete")
+    @PreAuthorize("hasAuthority('applicant')")
     public String markAsIncomplete(
             @PathVariable("applicationId") long applicationId,
+            @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser) {
 
         ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
-        return redirectToViewPage(applicationId, sectionId);
+        return redirectToViewPage(applicationId, organisationId, sectionId);
     }
 
     private void updatePostcode(long applicationId,
-                                YourProjectLocationForm form,
-                                ProcessRoleResource processRole) {
+                                long organisationId,
+                                YourProjectLocationForm form) {
 
         ApplicationFinanceResource finance =
-                applicationFinanceRestService.getFinanceDetails(applicationId, processRole.getOrganisationId()).getSuccess();
+                applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
 
         finance.setWorkPostcode(form.getPostcode());
 
@@ -175,12 +180,16 @@ public class YourProjectLocationController extends AsyncAdaptor {
         return singletonList(fieldError("postcode", postcode, "APPLICATION_PROJECT_LOCATION_REQUIRED"));
     }
 
-    private YourProjectLocationViewModel getViewModel(long applicationId, long sectionId, long userId) {
-        return viewModelPopulator.populate(userId, applicationId, sectionId);
+    private YourProjectLocationViewModel getViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
+        return viewModelPopulator.populate(organisationId, applicationId, sectionId, internalUser);
     }
 
-    private String redirectToViewPage(long applicationId, long sectionId) {
-        return "redirect:" + APPLICATION_BASE_URL + String.format("%d/form/your-project-location/%d", applicationId, sectionId);
+    private String redirectToViewPage(long applicationId, long organisationId, long sectionId) {
+        return "redirect:" + APPLICATION_BASE_URL +
+                String.format("%d/form/your-project-location/organisation/%d/section/%d",
+                        applicationId,
+                        organisationId,
+                        sectionId);
     }
 
     private String redirectToYourFinances(long applicationId) {

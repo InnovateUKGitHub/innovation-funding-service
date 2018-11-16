@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel;
 
-import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
-import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 /**
  * A populator to build a YourProjectLocationViewModel
@@ -13,35 +17,53 @@ import java.util.List;
 @Component
 public class YourProjectLocationViewModelPopulator {
 
-    private ApplicantRestService applicantRestService;
+    private ApplicationRestService applicationRestService;
+    private CompetitionRestService competitionRestService;
     private SectionService sectionService;
 
     public YourProjectLocationViewModelPopulator(
-            ApplicantRestService applicantRestService,
+            ApplicationRestService applicationRestService,
+            CompetitionRestService competitionRestService,
             SectionService sectionService) {
 
-        this.applicantRestService = applicantRestService;
+        this.applicationRestService = applicationRestService;
+        this.competitionRestService = competitionRestService;
         this.sectionService = sectionService;
     }
 
-    public YourProjectLocationViewModel populate(long userId, long applicationId, long sectionId) {
+    public YourProjectLocationViewModel populate(long organisationId, long applicationId, long sectionId, boolean internalUser) {
 
-        ApplicantSectionResource section = applicantRestService.getSection(userId, applicationId, sectionId);
-
-        long organisationId = section.getCurrentApplicant().getOrganisation().getId();
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
         boolean sectionMarkedAsComplete = completedSectionIds.contains(sectionId);
 
-        boolean open = section.getApplication().isOpen() && section.getCompetition().isOpen();
+        boolean open = !internalUser && isOpen(application);
 
         return new YourProjectLocationViewModel(
                 sectionMarkedAsComplete,
-                String.format("/application/%d/form/FINANCE", applicationId),
-                section.getApplication().getName(),
+                getYourFinancesUrl(applicationId, organisationId, internalUser),
+                application.getName(),
                 applicationId,
                 sectionId,
                 open);
+    }
+
+    private boolean isOpen(ApplicationResource application) {
+
+        if (application.isOpen()) {
+            return true;
+        } else {
+            CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+            return competition.isOpen();
+        }
+    }
+
+    private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {
+        // TODO DW - we're constructing this URL in a few places - maybe a NavigationUtil?
+        return internalUser ?
+                String.format("%s%d/form/FINANCE/%d", APPLICATION_BASE_URL, applicationId, organisationId) :
+                String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
     }
 }
