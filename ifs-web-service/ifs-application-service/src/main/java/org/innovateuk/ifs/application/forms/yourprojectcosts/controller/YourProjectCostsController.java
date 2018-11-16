@@ -163,7 +163,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                 @PathVariable long applicationId,
                                 @PathVariable long sectionId,
                                 @ModelAttribute("form") YourProjectCostsForm form,
-                                @RequestParam("remove_row") List<String> removeRequest) {
+                                @RequestParam("remove_cost") List<String> removeRequest) {
         String id = removeRequest.get(0);
         FinanceRowType type = FinanceRowType.valueOf(removeRequest.get(1));
         saver.removeRowFromForm(form, type, id);

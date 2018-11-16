@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public class YourProjectCostsForm {
 
-    private LabourForm labour;
+    private LabourForm labour = new LabourForm();
 
-    private OverheadForm overhead;
+    private OverheadForm overhead = new OverheadForm();
 
     private Map<String, MaterialRowForm> materialRows = new LinkedHashMap<>();
 
