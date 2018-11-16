@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.eugrant.scheduled;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,14 +12,14 @@ import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.eugrant.scheduled.CsvUtils.readDataFromCsv;
 import static org.innovateuk.ifs.eugrant.scheduled.CsvUtils.writeDataToCsv;
 import static org.innovateuk.ifs.eugrant.scheduled.ScheduledEuGrantFileImporter.getUriFromString;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.innovateuk.ifs.util.CollectionFunctions.zipAndMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * A component to create a results file based upon a source EU Grant csv.
@@ -53,6 +54,7 @@ public class GrantResultsFileGenerator {
     ServiceResult<File> generateResultsFile(List<ServiceResult<EuGrantResource>> importResults, File originalFile) {
 
         return readDataFromCsv(originalFile).
+                andOnSuccess(this::filterOutEmptyRows).
                 andOnSuccess(originalData -> addImportResultsToOriginalData(originalData, importResults)).
                 andOnSuccess(this::createResultsFile);
     }
@@ -83,5 +85,11 @@ public class GrantResultsFileGenerator {
         File resultsFileFolder = new File(resultsFileUri);
         File resultsFile = new File(resultsFileFolder, "eu-grants-import-result-" + dateTimeSuffix + ".csv");
         return writeDataToCsv(data, resultsFile);
+    }
+
+    private ServiceResult<List<List<String>>> filterOutEmptyRows(List<List<String>> headersAndDataRows) {
+        Predicate<List<String>> emptyRow = row -> simpleAllMatch(row, StringUtils::isEmpty);
+        List<List<String>> filteredList = simpleFilterNot(headersAndDataRows, emptyRow);
+        return serviceSuccess(filteredList);
     }
 }

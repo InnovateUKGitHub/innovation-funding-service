@@ -600,6 +600,28 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around an allMatch function, to remove boilerplate from production code
+     */
+    public static <T> boolean simpleAllMatch(Collection<T> list, Predicate<T> filterFn) {
+        if (list == null || list.isEmpty()) {
+            return true;
+        }
+        return list.stream().allMatch(filterFn);
+    }
+
+    /**
+     * A simple wrapper around an allMatch function that takes an array, to remove boilerplate from production code
+     */
+    public static <T> boolean simpleAllMatch(T[] array, Predicate<T> filterFn) {
+
+        if (array == null || array.length == 0) {
+            return true;
+        }
+
+        return simpleAllMatch(asList(array), filterFn);
+    }
+
+    /**
      * A simple wrapper around a String joining function.  Returns a string of the given list, separated by the given
      * joinString
      */

@@ -33,7 +33,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RunWith(MockitoJUnitRunner.class)
 public class GrantResourceBuilderTest {
 
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d/M/yyyy");
 
     private static final Map<CsvHeader, String> UNIVERSITY_CSV_ROW = asMap(
             ORGANISATION_TYPE, "Research",
@@ -80,39 +80,22 @@ public class GrantResourceBuilderTest {
 
     @Test
     public void convertDataRowsToEuGrantResources() {
-
         List<Map<CsvHeader, String>> data = asList(UNIVERSITY_CSV_ROW, BUSINESS_CSV_ROW);
+        assertSuccessfulConversion(data);
+    }
 
-        EuActionType csaActionType = new EuActionType();
-        EuActionType smeActionType = new EuActionType();
-        EuActionTypeResource csaActionTypeResource = newEuActionTypeResource().withName("CSA").build();
-        EuActionTypeResource smeActionTypeResource = newEuActionTypeResource().withName("SME-1").build();
+    @Test
+    public void convertDataRowsToEuGrantResourcesWithNoLeadingZeroesOnDates() {
 
-        when(euActionTypeRepositoryMock.findOneByName("CSA")).thenReturn(Optional.of(csaActionType));
-        when(euActionTypeRepositoryMock.findOneByName("SME-1")).thenReturn(Optional.of(smeActionType));
-        when(euActionTypeMapperMock.mapToResource(csaActionType)).thenReturn(csaActionTypeResource);
-        when(euActionTypeMapperMock.mapToResource(smeActionType)).thenReturn(smeActionTypeResource);
+        Map<CsvHeader, String> overriddenStartAndEndDates = asMap(
+                PROJECT_START_DATE, "1/12/2018",
+                PROJECT_END_DATE, "28/2/2021");
 
-        ServiceResult<List<ServiceResult<EuGrantResource>>> results = builder.convertDataRowsToEuGrantResources(data);
+        List<Map<CsvHeader, String>> data = asList(
+                createRow(UNIVERSITY_CSV_ROW, overriddenStartAndEndDates),
+                BUSINESS_CSV_ROW);
 
-        assertThat(results.isSuccess()).isTrue();
-
-        verify(euActionTypeRepositoryMock).findOneByName("CSA");
-        verify(euActionTypeRepositoryMock).findOneByName("SME-1");
-        verify(euActionTypeMapperMock).mapToResource(csaActionType);
-        verify(euActionTypeMapperMock).mapToResource(smeActionType);
-
-        List<ServiceResult<EuGrantResource>> resourceResults = results.getSuccess();
-        assertThat(resourceResults).hasSize(2);
-
-        EuGrantResource grant1 = resourceResults.get(0).getSuccess();
-        Map<CsvHeader, String> originalRow1 = data.get(0);
-
-        EuGrantResource grant2 = resourceResults.get(1).getSuccess();
-        Map<CsvHeader, String> originalRow2 = data.get(1);
-
-        assertThatEuGrantResourceMatchesOriginalData(grant1, originalRow1, csaActionTypeResource, false);
-        assertThatEuGrantResourceMatchesOriginalData(grant2, originalRow2, smeActionTypeResource, true);
+        assertSuccessfulConversion(data);
     }
 
     @Test
@@ -156,8 +139,12 @@ public class GrantResourceBuilderTest {
     }
 
     private Map<CsvHeader, String> createRow(CsvHeader overridingHeader, String overridingValue) {
-        Map<CsvHeader, String> newRow = new HashMap<>(UNIVERSITY_CSV_ROW);
-        newRow.put(overridingHeader, overridingValue);
+        return createRow(UNIVERSITY_CSV_ROW, asMap(overridingHeader, overridingValue));
+    }
+
+    private Map<CsvHeader, String> createRow(Map<CsvHeader, String> originalRow, Map<CsvHeader, String> overridingHeadersAndValues) {
+        Map<CsvHeader, String> newRow = new HashMap<>(originalRow);
+        newRow.putAll(overridingHeadersAndValues);
         return newRow;
     }
 
@@ -193,5 +180,39 @@ public class GrantResourceBuilderTest {
 
         // the short code is created via the EuGrantService.submit() call
         assertThat(grant.getShortCode()).isNull();
+    }
+
+    private void assertSuccessfulConversion(List<Map<CsvHeader, String>> data) {
+
+        EuActionType csaActionType = new EuActionType();
+        EuActionType smeActionType = new EuActionType();
+        EuActionTypeResource csaActionTypeResource = newEuActionTypeResource().withName("CSA").build();
+        EuActionTypeResource smeActionTypeResource = newEuActionTypeResource().withName("SME-1").build();
+
+        when(euActionTypeRepositoryMock.findOneByName("CSA")).thenReturn(Optional.of(csaActionType));
+        when(euActionTypeRepositoryMock.findOneByName("SME-1")).thenReturn(Optional.of(smeActionType));
+        when(euActionTypeMapperMock.mapToResource(csaActionType)).thenReturn(csaActionTypeResource);
+        when(euActionTypeMapperMock.mapToResource(smeActionType)).thenReturn(smeActionTypeResource);
+
+        ServiceResult<List<ServiceResult<EuGrantResource>>> results = builder.convertDataRowsToEuGrantResources(data);
+
+        assertThat(results.isSuccess()).isTrue();
+
+        verify(euActionTypeRepositoryMock).findOneByName("CSA");
+        verify(euActionTypeRepositoryMock).findOneByName("SME-1");
+        verify(euActionTypeMapperMock).mapToResource(csaActionType);
+        verify(euActionTypeMapperMock).mapToResource(smeActionType);
+
+        List<ServiceResult<EuGrantResource>> resourceResults = results.getSuccess();
+        assertThat(resourceResults).hasSize(2);
+
+        EuGrantResource grant1 = resourceResults.get(0).getSuccess();
+        Map<CsvHeader, String> originalRow1 = data.get(0);
+
+        EuGrantResource grant2 = resourceResults.get(1).getSuccess();
+        Map<CsvHeader, String> originalRow2 = data.get(1);
+
+        assertThatEuGrantResourceMatchesOriginalData(grant1, originalRow1, csaActionTypeResource, false);
+        assertThatEuGrantResourceMatchesOriginalData(grant2, originalRow2, smeActionTypeResource, true);
     }
 }

@@ -32,7 +32,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Component
 public class GrantResourceBuilder {
 
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d/M/yyyy");
     private static final Pattern ACTION_TYPE_NAME_PATTERN = Pattern.compile("^\\((.+)\\).*$");
 
     private EuActionTypeRepository actionTypeRepository;

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.eugrant.scheduled;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
@@ -10,6 +11,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -33,6 +35,7 @@ public class GrantsRecordExtractor {
     ServiceResult<List<ServiceResult<EuGrantResource>>> processFile(File file) {
 
         return readDataFromCsv(file).
+            andOnSuccess(this::filterOutEmptyRows).
             andOnSuccess(this::mapCsvRowsToHeaders).
             andOnSuccess(grantResourceBuilder::convertDataRowsToEuGrantResources);
     }
@@ -78,5 +81,11 @@ public class GrantsRecordExtractor {
         return simpleToMap(asList(CsvHeader.values()),
                 Function.identity(),
                 header -> row.get(headersToColumnIndexes.get(header)));
+    }
+
+    private ServiceResult<List<List<String>>> filterOutEmptyRows(List<List<String>> headersAndDataRows) {
+        Predicate<List<String>> emptyRow = row -> simpleAllMatch(row, StringUtils::isEmpty);
+        List<List<String>> filteredList = simpleFilterNot(headersAndDataRows, emptyRow);
+        return serviceSuccess(filteredList);
     }
 }

@@ -50,6 +50,11 @@ public class GrantsRecordExtractorTest {
     }
 
     @Test
+    public void processFileEmptyRows() throws URISyntaxException {
+        assertCsvFilesAreProcessedSuccessfully("test-eu-grants-empty-rows.csv");
+    }
+
+    @Test
     public void processFileWithMissingColumns() throws URISyntaxException {
 
         URL testCsvUrl = currentThread().getContextClassLoader().getResource("test-eu-grants-missing-column.csv");
