@@ -825,38 +825,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void getProjectStatusResourceByProjectOtherDocumentsRejected() {
-        Long projectId = 2345L;
-
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
-
-        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
-
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
-        assertTrue(result.isSuccess());
-        assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
-        assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
-        assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
-
-        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
-        assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
-        assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
-
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
-
-
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
-        ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
-        assertTrue(resultFailure.isFailure());
-    }
-
-    @Test
     public void getProjectStatusProjectDocumentsNotFullyApproved() {
         Long projectId = 2345L;
         List<ProjectDocument> docs = newProjectDocument()
