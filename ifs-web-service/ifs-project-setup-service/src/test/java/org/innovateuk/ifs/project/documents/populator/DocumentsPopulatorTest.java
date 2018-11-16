@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.core.populator.BasicDetailsPopulator;
@@ -23,11 +24,13 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UNSET;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class DocumentsPopulatorTest extends BaseUnitTest {
@@ -47,10 +50,12 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
     private Long documentConfigId1 = 11L;
     private Long documentConfigId2 = 12L;
+    private Long collaborationAgreementId = 13L;
     private String documentConfigTitle1 = "Risk Register";
     private String documentConfigTitle2 = "Plan Document";
     private String documentConfigGuidance1 = "Guidance Risk Register";
     private String documentConfigGuidance2 = "Guidance Plan Document";
+    private String collaborationAgreement = "Collaboration agreement";
 
     private UserResource user;
 
@@ -64,10 +69,10 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
         List<org.innovateuk.ifs.competition.resource.ProjectDocumentResource> configuredProjectDocuments = org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder
                 .newProjectDocumentResource()
-                .withId(documentConfigId1, documentConfigId2)
-                .withTitle(documentConfigTitle1, documentConfigTitle2)
+                .withId(documentConfigId1, documentConfigId2, collaborationAgreementId)
+                .withTitle(documentConfigTitle1, documentConfigTitle2, collaborationAgreement)
                 .withGuidance(documentConfigGuidance1, documentConfigGuidance2)
-                .build(2);
+                .build(3);
 
         CompetitionResource competition = CompetitionResourceBuilder
                 .newCompetitionResource()
@@ -94,9 +99,12 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .build();
 
         BasicDetails basicDetails = new BasicDetails(project, application, competition);
+        OrganisationResource partnerOrganisationResource = newOrganisationResource().build();
 
         when(basicDetailsPopulator.populate(projectId)).thenReturn(basicDetails);
         when(projectService.isProjectManager(user.getId(), projectId)).thenReturn(true);
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(singletonList(partnerOrganisationResource));
+
     }
 
     @Test
@@ -127,5 +135,19 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
         assertNull(viewModel.getFileDetails());
         assertEquals(UPLOADED, viewModel.getStatus());
         assertTrue(viewModel.isProjectManager());
+    }
+
+    @Test
+    public void populateAllDocumentsWithMultiplePartnerOrganisation() {
+        List<OrganisationResource> partnerOrganisations = newOrganisationResource()
+                .withName("abc")
+                .build(4);
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
+
+        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId, user);
+
+        assertEquals(3, viewModel.getDocuments().size());
+
+        verify(projectService).getPartnerOrganisationsForProject(projectId);
     }
 }
