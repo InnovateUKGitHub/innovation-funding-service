@@ -22,6 +22,7 @@ import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
@@ -147,7 +148,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private Project p;
 
     @Before
-    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     public void setUp() {
 
         organisation = newOrganisation().
@@ -214,6 +214,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectUsers(pu).
                 withApplication(application).
                 withPartnerOrganisations(po).
+                withProjectDocuments(DocumentStatus.APPROVED).
                 withDateSubmitted(ZonedDateTime.now()).
                 withSpendProfileSubmittedDate(ZonedDateTime.now()).
                 build();

@@ -121,7 +121,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 originQuery);
     }
 
-    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     private SectionStatusList getSectionStatuses(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean isProjectManager) {
 
         CompetitionResource competition = basicDetails.getCompetition();
