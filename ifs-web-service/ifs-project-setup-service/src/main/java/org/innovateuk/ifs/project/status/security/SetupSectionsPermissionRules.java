@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -34,7 +33,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @PermissionRules
 @Component
-@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class SetupSectionsPermissionRules {
 
     private static final Log LOG = LogFactory.getLog(SetupSectionsPermissionRules.class);
