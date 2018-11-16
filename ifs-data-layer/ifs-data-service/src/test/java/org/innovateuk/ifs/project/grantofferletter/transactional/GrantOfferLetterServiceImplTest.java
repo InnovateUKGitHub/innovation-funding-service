@@ -806,7 +806,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withPostcode("SN1 1AA'")
                 .build();
         project = newProject()
-                .withProjectDocuments(DocumentStatus.APPROVED)
                 .withName("project 1")
                 .withApplication(app)
                 .withPartnerOrganisations(asList(po3, po, po2))
@@ -821,6 +820,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withProject(project)
                 .withStatus(DocumentStatus.APPROVED)
                 .build();
+
+        project.setProjectDocuments(singletonList(projectDocument));
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
 

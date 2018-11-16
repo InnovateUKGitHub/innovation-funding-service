@@ -106,15 +106,6 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return with (project -> project.setSpendProfileSubmittedDate(date));
     }
 
-    public ProjectBuilder withProjectDocuments(DocumentStatus status){
-        ProjectDocument projectDocument = ProjectDocumentBuilder
-                .newProjectDocument()
-                .withStatus(status)
-                .build();
-
-        return with (project -> project.setProjectDocuments(singletonList(projectDocument)));
-    }
-
     @Override
     protected void postProcess(int index, Project project) {
 
