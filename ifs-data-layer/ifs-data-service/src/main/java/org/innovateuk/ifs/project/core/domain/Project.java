@@ -60,6 +60,14 @@ public class Project implements ProcessActivity {
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="collaborationAgreementFileEntryId", referencedColumnName="id")
+    private FileEntry collaborationAgreement;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
+    private FileEntry exploitationPlan;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="signedGrantOfferFileEntryId", referencedColumnName = "id")
     private FileEntry signedGrantOfferLetter;
@@ -218,6 +226,22 @@ public class Project implements ProcessActivity {
 
     public void setGrantOfferLetterRejectionReason(String grantOfferLetterRejectionReason) {
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
+    }
+
+    public FileEntry getCollaborationAgreement() {
+        return collaborationAgreement;
+    }
+
+    public void setCollaborationAgreement(FileEntry collaborationAgreement) {
+        this.collaborationAgreement = collaborationAgreement;
+    }
+
+    public FileEntry getExploitationPlan() {
+        return exploitationPlan;
+    }
+
+    public void setExploitationPlan(FileEntry exploitationPlan) {
+        this.exploitationPlan = exploitationPlan;
     }
 
     public FileEntry getSignedGrantOfferLetter() {
