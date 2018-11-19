@@ -54,6 +54,8 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
     private long applicationId = 123L;
     private long sectionId = 456L;
     private long organisationId = 789L;
+    private String postcode = "S2 5AB";
+    private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
     @Before
     public void setupExpectations() {
@@ -88,13 +90,8 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
         verify(formPopulatorMock, times(1)).populate(applicationId, organisationId);
     }
 
-
     @Test
     public void update() throws Exception {
-
-        String postcode = "S2 5AB";
-
-        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
@@ -109,6 +106,30 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
                     .param("postcode", postcode))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(String.format("redirect:/application/%d/form/FINANCE", applicationId)))
+                .andReturn();
+
+        ApplicationFinanceResource applicationFinanceBeingUpdated = updatedApplicationFinanceCaptor.getValue();
+        assertThat(applicationFinanceBeingUpdated.getWorkPostcode()).isEqualTo(postcode);
+
+        verify(applicationFinanceRestServiceMock, times(1)).getApplicationFinance(applicationId, organisationId);
+        verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
+    }
+
+    @Test
+    public void autosave() throws Exception {
+
+        when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
+                restSuccess(applicationFinance));
+
+        ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = new ArgumentCaptor<>();
+
+        when(applicationFinanceRestServiceMock.update(eq(applicationFinance.getId()), updatedApplicationFinanceCaptor.capture())).thenReturn(
+                restSuccess(applicationFinance));
+
+        mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
+                "organisation/{organisationId}/section/{sectionId}/auto-save", applicationId, organisationId, sectionId)
+                .param("postcode", postcode))
+                .andExpect(status().isOk())
                 .andReturn();
 
         ApplicationFinanceResource applicationFinanceBeingUpdated = updatedApplicationFinanceCaptor.getValue();
