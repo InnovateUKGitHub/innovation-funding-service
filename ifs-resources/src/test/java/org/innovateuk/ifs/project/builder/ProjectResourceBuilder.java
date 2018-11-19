@@ -8,7 +8,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -65,14 +64,6 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with(project -> project.setAddress(address));
     }
 
-    public ProjectResourceBuilder withCollaborationAgreement(Long collaborationAgreement) {
-        return with (project -> project.setCollaborationAgreement(collaborationAgreement));
-    }
-
-    public ProjectResourceBuilder withExploitationPlan(Long exploitationPlan) {
-        return with (project -> project.setExploitationPlan(exploitationPlan));
-    }
-
     public ProjectResourceBuilder withSignedGrantOfferLetter(Long grantOfferLetter) {
         return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
     }
@@ -83,10 +74,6 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
 
     public ProjectResourceBuilder withAdditionalContractFile(Long additionalContractFile) {
         return with (project -> project.setAdditionalContractFile(additionalContractFile));
-    }
-
-    public ProjectResourceBuilder withDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
-        return with(project -> project.setDocumentsSubmittedDate(documentsSubmittedDate));
     }
 
     public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
