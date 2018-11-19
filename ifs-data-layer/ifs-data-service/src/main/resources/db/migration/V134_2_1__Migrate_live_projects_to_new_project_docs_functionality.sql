@@ -14,7 +14,6 @@ WHERE c.id IN (
 	LEFT JOIN document_config dc ON (c.id = dc.competition_id)
 	WHERE c.setup_complete = TRUE AND c.template = FALSE AND c.non_ifs = FALSE
 	AND ct.name != 'Expression of interest'
-	AND ct.name != 'The Prince''s Trust'
 	AND dc.competition_id IS NULL
 );
 
@@ -32,7 +31,6 @@ WHERE c.id IN (
 	LEFT JOIN document_config dc ON c.id = dc.competition_id
 	WHERE c.setup_complete = TRUE AND c.template = FALSE AND c.non_ifs = FALSE
 	AND ct.name != 'Expression of interest'
-	AND ct.name != 'The Prince''s Trust'
 	AND dc.title = 'Collaboration agreement'
 	AND NOT EXISTS (SELECT * FROM document_config dc WHERE dc.title != 'Collaboration agreement' AND dc.competition_id = c.id)
 );
@@ -79,9 +77,6 @@ INNER JOIN document_config dc ON a.competition = dc.competition_id
 WHERE dc.title = 'Exploitation plan'
 AND p.exploitation_plan_file_entry_id IS NOT NULL;
 
--- no no no! dont bloody do this! -- understand what this does.
-SET SQL_SAFE_UPDATES = 0;
-
 -- If collaboration agreement and exploitation plan have been submitted then update project document status
 
 UPDATE project_document
@@ -110,7 +105,7 @@ ALTER TABLE project
 ALTER TABLE project
   DROP FOREIGN KEY project_ibfk_2;
 
---  Drop old unused columns -- Comment these out once IFS-4756 is merged!
+--  Drop old unused columns
 
 ALTER TABLE project DROP COLUMN collaboration_agreement_file_entry_id;
 ALTER TABLE project DROP COLUMN exploitation_plan_file_entry_id;
