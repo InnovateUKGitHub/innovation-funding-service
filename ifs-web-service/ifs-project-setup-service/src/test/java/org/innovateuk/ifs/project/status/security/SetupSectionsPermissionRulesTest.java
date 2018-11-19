@@ -4,13 +4,11 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.*;
@@ -19,7 +17,6 @@ import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -49,7 +46,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<SetupSectionsPermissionRules> {
 
     @Mock
@@ -68,12 +64,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     private ProjectService projectServiceMock;
 
     @Mock
-    private OtherDocumentsService otherDocumentsServiceMock;
-
-    @Mock
-    private OrganisationService organisationServiceMock;
-
-    @Mock
     private OrganisationRestService organisationRestService;
 
     @Mock
@@ -88,13 +78,11 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
             build();
 
     private ProjectResource activeProject = newProjectResource().
-            withOtherDocumentsApproved(ApprovalType.UNSET).
             withProjectState(ProjectState.SETUP).
             withApplication(application).
             build();
 
     private ProjectResource withdrawnProject = newProjectResource().
-            withOtherDocumentsApproved(ApprovalType.UNSET).
             withProjectState(ProjectState.WITHDRAWN).
             withApplication(application).
             build();
@@ -172,11 +160,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(activeProject.getId(), 22L);
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canEditSpendProfileSection(organisation, projectOrganisationCompositeId.getOrganisationId()),
                 () -> rules.partnerCanEditSpendProfileSection(projectOrganisationCompositeId, user));
-    }
-
-    @Test
-    public void otherDocumentsSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessOtherDocumentsSection, () -> rules.partnerCanAccessOtherDocumentsSection(ProjectCompositeId.id(activeProject.getId()), user));
     }
 
     @Test
@@ -264,34 +247,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     public void editSpendProfileSectionAccessUnavailableForWithdrawnProject() {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(withdrawnProject.getId(), 22L);
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanEditSpendProfileSection(projectOrganisationCompositeId, user));
-    }
-
-    @Test
-    public void otherDocumentsSectionAccessUnavailableForWithdrawnProject() {
-        assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessOtherDocumentsSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
-    }
-
-    @Test
-    public void submitOtherDocumentsSectionSuccessfulAccessByProjectManager() {
-        
-        UserResource user = newUserResource().build();
-        when(projectServiceMock.getById(activeProject.getId())).thenReturn(activeProject);
-        when(projectServiceMock.isProjectManager(user.getId(), activeProject.getId())).thenReturn(true);
-        when(otherDocumentsServiceMock.isOtherDocumentSubmitAllowed(activeProject.getId())).thenReturn(true);
-        assertTrue(rules.projectManagerCanSubmitOtherDocumentsSection(ProjectCompositeId.id(activeProject.getId()), user));
-    }
-
-    @Test
-    public void submitOtherDocumentsSectionUnsuccessfulAccessByNonProjectManager() {
-        
-        UserResource user = newUserResource().build();
-        ProjectResource project = newProjectResource()
-                .withId(activeProject.getId())
-                .withOtherDocumentsApproved(ApprovalType.UNSET).build();
-        when(projectServiceMock.getById(activeProject.getId())).thenReturn(project);
-        when(projectServiceMock.isProjectManager(user.getId(), activeProject.getId())).thenReturn(false);
-        when(otherDocumentsServiceMock.isOtherDocumentSubmitAllowed(activeProject.getId())).thenReturn(true);
-        assertFalse(rules.projectManagerCanSubmitOtherDocumentsSection(ProjectCompositeId.id(activeProject.getId()), user));
     }
 
     @Test

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.status.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
@@ -122,7 +121,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 originQuery);
     }
 
-    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     private SectionStatusList getSectionStatuses(BasicDetails basicDetails,
                                                  ProjectTeamStatusResource teamStatus,
                                                  Optional<MonitoringOfficerResource> monitoringOfficer,
@@ -157,13 +155,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(), financeChecksAccess);
         SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
-        SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, isProjectManager);
         SectionStatus documentsStatus = sectionStatus.documentsSectionStatus(isProjectManager, competition.getProjectDocuments(), project.getProjectDocuments(), collaborationAgreementRequired);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(ownOrganisation.getGrantOfferLetterStatus(), isLeadPartner);
 
         return new SectionStatusList(projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus,
-                financeChecksStatus, spendProfileStatus, otherDocumentsStatus,
-                documentsStatus, grantOfferStatus);
+                financeChecksStatus, spendProfileStatus, documentsStatus, grantOfferStatus);
     }
 
     private boolean isLeadPartner(ProjectTeamStatusResource teamStatus, OrganisationResource organisation) {
@@ -185,13 +181,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(organisation);
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
         SectionAccess spendProfileAccess = statusAccessor.canAccessSpendProfileSection(organisation);
-        SectionAccess otherDocumentsAccess = statusAccessor.canAccessOtherDocumentsSection(organisation);
         SectionAccess documentsAccess = statusAccessor.canAccessDocumentsSection(organisation);
         SectionAccess grantOfferAccess = statusAccessor.canAccessGrantOfferLetterSection(organisation);
 
         return new SectionAccessList(companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess,
-                bankDetailsAccess, financeChecksAccess, spendProfileAccess,
-                otherDocumentsAccess, documentsAccess, grantOfferAccess);
+                bankDetailsAccess, financeChecksAccess, spendProfileAccess, documentsAccess, grantOfferAccess);
     }
 
     private boolean requiredProjectDetailsForMonitoringOfficerComplete(boolean partnerProjectLocationRequired, boolean isProjectDetailsSubmitted, ProjectTeamStatusResource teamStatus) {

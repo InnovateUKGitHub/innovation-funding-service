@@ -345,10 +345,10 @@ public class CompetitionSetupController {
 
     @PostMapping("/{competitionId}/section/terms-and-conditions")
     public String submitTermsAndConditionsSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm competitionSetupForm,
-                                                @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
-                                                ValidationHandler validationHandler,
-                                                @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                                Model model) {
+                                                         @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                                         ValidationHandler validationHandler,
+                                                         @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                         Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
@@ -390,7 +390,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -406,7 +406,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -423,7 +423,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -444,7 +444,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 

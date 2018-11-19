@@ -2,11 +2,13 @@ package org.innovateuk.ifs.management.competition.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
@@ -24,8 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
 
 @Controller
 public class CompetitionManagementDashboardController {
@@ -42,12 +49,16 @@ public class CompetitionManagementDashboardController {
 
     private BankDetailsRestService bankDetailsRestService;
 
+    private CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService;
+
     public CompetitionManagementDashboardController(CompetitionDashboardSearchService competitionDashboardSearchService,
                                                     CompetitionSetupRestService competitionSetupRestService,
-                                                    BankDetailsRestService bankDetailsRestService) {
+                                                    BankDetailsRestService bankDetailsRestService,
+                                                    CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService) {
         this.competitionDashboardSearchService = competitionDashboardSearchService;
         this.competitionSetupRestService = competitionSetupRestService;
         this.bankDetailsRestService = bankDetailsRestService;
+        this.competitionSetupStakeholderRestService = competitionSetupStakeholderRestService;
     }
 
     @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
@@ -133,32 +144,21 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "non-ifs";
     }
 
-    @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
-            "innovation lead and stakeholder roles are allowed to view the search page for competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
-    @GetMapping("/dashboard/search")
-    public String search(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
-                         @RequestParam(name = "page", defaultValue = "0") int page,
-                         Model model,
-                         UserResource user) {
-        String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
-        return searchCompetition(trimmedSearchQuery, page, model, user);
-    }
-
-    @SecuredBySpring(value = "READ", description = "The support users are allowed to view the application and competition search pages")
-    @PreAuthorize("hasAuthority('support')")
-    @GetMapping("/dashboard/support/search")
-    public String supportSearch(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
-                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
-                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                Model model,
-                                HttpServletRequest request,
-                                UserResource user) {
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, " +
+            "innovation lead, stakeholder, ifs admin and support users are allowed to view the application and competition search pages")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'ifs_administrator')")
+    @GetMapping("/dashboard/internal/search")
+    public String internalSearch(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
+                                 @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+                                 @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                 Model model,
+                                 HttpServletRequest request,
+                                 UserResource user) {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
         boolean isSearchNumeric = trimmedSearchQuery.chars().allMatch(Character::isDigit);
 
-        if (isSearchNumeric) {
-            return searchApplication(trimmedSearchQuery, page, pageSize, model, request);
+        if (isSearchNumeric && !trimmedSearchQuery.isEmpty()) {
+            return searchApplication(trimmedSearchQuery, page, pageSize, model, request, user);
         } else {
             return searchCompetition(trimmedSearchQuery, page, model, user);
         }
@@ -185,14 +185,15 @@ public class CompetitionManagementDashboardController {
     }
 
     private String searchCompetition(String searchQuery, int page, Model model, UserResource user) {
-        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(searchQuery, page));
-        model.addAttribute("searchQuery", searchQuery);
-        model.addAttribute("tabs", new DashboardTabsViewModel(user));
-
+        model.addAttribute(MODEL_ATTR,
+                new CompetitionSearchDashboardViewModel(
+                        competitionDashboardSearchService.searchCompetitions(searchQuery, page),
+                        searchQuery,
+                        isInternal(user)));
         return TEMPLATE_PATH + "search";
     }
 
-    private String searchApplication(String searchQuery, int page, int pageSize, Model model, HttpServletRequest request) {
+    private String searchApplication(String searchQuery, int page, int pageSize, Model model, HttpServletRequest request, UserResource user) {
         String existingSearchQuery = Objects.toString(request.getQueryString(), "");
 
         ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(searchQuery, page, pageSize);
@@ -201,7 +202,9 @@ public class CompetitionManagementDashboardController {
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
                         matchedApplications.getTotalElements(),
                         new Pagination(matchedApplications, "search?" + existingSearchQuery),
-                        searchQuery);
+                        searchQuery,
+                        isSupport(user));
+
         model.addAttribute("model", viewModel);
 
         return TEMPLATE_PATH + "application-search";

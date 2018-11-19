@@ -66,7 +66,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
 
         Application application = applicationRepository.findOne(1L);
 
-        Project project = new Project(null, application, null, null, null, "A name", null, ApprovalType.UNSET);
+        Project project = new Project(null, application, null, null, null, "A name", null);
 
         projectRepository.save(project);
 
@@ -116,7 +116,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
 
         Application application = applicationRepository.findOne(1L);
 
-        Project project = new Project(null, application, null, null, null, "A name", null, ApprovalType.UNSET);
+        Project project = new Project(null, application, null, null, null, "A name", null);
 
         projectRepository.save(project);
 
@@ -191,7 +191,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
 
         Application application = applicationRepository.findOne(1L);
 
-        Project project = new Project(null, application, null, null, null, "A name", null, ApprovalType.UNSET);
+        Project project = new Project(null, application, null, null, null, "A name", null);
 
         projectRepository.save(project);
 
@@ -262,7 +262,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
 
         Application application = applicationRepository.findOne(1L);
 
-        Project project = new Project(null, application, null, null, null, "A name", null, ApprovalType.UNSET);
+        Project project = new Project(null, application, null, null, null, "A name", null);
 
         projectRepository.save(project);
 

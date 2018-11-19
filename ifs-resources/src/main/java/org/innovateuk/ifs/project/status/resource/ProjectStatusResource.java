@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.status.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.user.resource.Role;
 
@@ -23,8 +22,6 @@ public class ProjectStatusResource {
     private ProjectActivityStates financeChecksStatus;
     private ProjectActivityStates spendProfileStatus;
     private ProjectActivityStates monitoringOfficerStatus;
-    @OtherDocsWindDown
-    private ProjectActivityStates otherDocumentsStatus;
     private ProjectActivityStates documentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
     private Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState;
@@ -35,9 +32,9 @@ public class ProjectStatusResource {
                                  Integer numberOfPartners, String projectLeadOrganisationName,
                                  ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus,
                                  ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus,
-                                 ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates otherDocumentsStatus,
-                                 ProjectActivityStates documentsStatus, ProjectActivityStates grantOfferLetterStatus,
-                                 Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState, boolean grantOfferLetterSent) {
+                                 ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates documentsStatus,
+                                 ProjectActivityStates grantOfferLetterStatus, Map<Role,
+                                 ProjectActivityStates> roleSpecificGrantOfferLetterState, boolean grantOfferLetterSent) {
         this.projectTitle = projectTitle;
         this.projectNumber = projectNumber;
         this.formattedProjectNumber = formattedProjectNumber;
@@ -50,7 +47,6 @@ public class ProjectStatusResource {
         this.financeChecksStatus = financeChecksStatus;
         this.spendProfileStatus = spendProfileStatus;
         this.monitoringOfficerStatus = monitoringOfficerStatus;
-        this.otherDocumentsStatus = otherDocumentsStatus;
         this.documentsStatus = documentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
         this.roleSpecificGrantOfferLetterState = roleSpecificGrantOfferLetterState;
@@ -127,16 +123,6 @@ public class ProjectStatusResource {
 
     public void setMonitoringOfficerStatus(ProjectActivityStates monitoringOfficerStatus) {
         this.monitoringOfficerStatus = monitoringOfficerStatus;
-    }
-
-    @OtherDocsWindDown
-    public ProjectActivityStates getOtherDocumentsStatus() {
-        return otherDocumentsStatus;
-    }
-
-    @OtherDocsWindDown
-    public void setOtherDocumentsStatus(ProjectActivityStates otherDocumentsStatus) {
-        this.otherDocumentsStatus = otherDocumentsStatus;
     }
 
     public ProjectActivityStates getDocumentsStatus() {
@@ -216,7 +202,6 @@ public class ProjectStatusResource {
                 .append(financeChecksStatus, that.financeChecksStatus)
                 .append(spendProfileStatus, that.spendProfileStatus)
                 .append(monitoringOfficerStatus, that.monitoringOfficerStatus)
-                .append(otherDocumentsStatus, that.otherDocumentsStatus)
                 .append(documentsStatus, that.documentsStatus)
                 .append(grantOfferLetterStatus, that.grantOfferLetterStatus)
                 .isEquals();
@@ -237,7 +222,6 @@ public class ProjectStatusResource {
                 .append(financeChecksStatus)
                 .append(spendProfileStatus)
                 .append(monitoringOfficerStatus)
-                .append(otherDocumentsStatus)
                 .append(documentsStatus)
                 .append(grantOfferLetterStatus)
                 .toHashCode();
@@ -258,7 +242,6 @@ public class ProjectStatusResource {
                 .append("financeChecksStatus", financeChecksStatus)
                 .append("spendProfileStatus", spendProfileStatus)
                 .append("monitoringOfficerStatus", monitoringOfficerStatus)
-                .append("otherDocumentsStatus", otherDocumentsStatus)
                 .append("documentsStatus", documentsStatus)
                 .append("grantOfferLetterStatus", grantOfferLetterStatus)
                 .toString();

@@ -50,7 +50,7 @@ public class ProjectResourceTest {
         assertEquals(projectResource.getAddress(), addressResource);
         assertEquals(projectResource.getName(), name);
         assertEquals(projectResource.getDurationInMonths(), duration);
-        assertEquals(projectResource.getApplication(), applicationResource.getId());
+        assertEquals(projectResource.getApplication(), (long) applicationResource.getId());
         assertEquals(projectResource.getProjectUsers(), projectUsers);
     }
 

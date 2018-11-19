@@ -99,11 +99,11 @@ Non pdf files not allowed for either document
     [Tags]
     Given the user clicks the button/link                            link = Collaboration agreement
     When the user uploads to the collaboration agreement question    ${text_file}
-    Then the user should see an error                                ${wrong_filetype_validation_error}
+    Then the user should see a field error                                ${wrong_filetype_validation_error}
     And the user clicks the button/link                              link = Back to document overview
     And the user clicks the button/link                              link = Exploitation plan
     When the user uploads to the exploitation plan question          ${text_file}
-    Then the user should see an error                                ${wrong_filetype_validation_error}
+    Then the user should see a field error                           ${wrong_filetype_validation_error}
     And the user should not see the text in the page                 ${text_file}
 
 PM can upload both documents
@@ -472,10 +472,10 @@ After rejection, non pdf files not allowed for either document
     Given the user navigates to the page     ${project_in_setup_page}
     And the user clicks the button/link      link = Other documents
     When the user uploads to the collaboration agreement question    ${text_file}
-    Then the user should see an error        ${wrong_filetype_validation_error}
+    Then the user should see a field error                     ${wrong_filetype_validation_error}
     When the user uploads to the exploitation plan question    ${text_file}
-    Then the user should see an error        ${wrong_filetype_validation_error}
-    And the user should not see the text in the page    ${text_file}
+    Then the user should see a field error                     ${wrong_filetype_validation_error}
+    And the user should not see the text in the page           ${text_file}
 
 After rejection, large pdfs not allowed for either document
     [Documentation]    INFUND-3011, INFUND-7342

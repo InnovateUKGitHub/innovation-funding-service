@@ -137,7 +137,7 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withOrganisation(organisationId).withGrantClaimPercentage(20).build();
         when(applicationFinanceMapperMock.mapToResource(applicationFinance)).thenReturn(applicationFinanceResource);
 
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisation.getOrganisationType().getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competitionId, organisation.getOrganisationType().getId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
         Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
 

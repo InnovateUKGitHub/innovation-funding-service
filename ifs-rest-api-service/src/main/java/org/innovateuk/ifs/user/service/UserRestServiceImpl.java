@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.user.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
@@ -29,7 +27,6 @@ import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 @Service
 public class UserRestServiceImpl extends BaseRestService implements UserRestService {
 
-    private static final Log LOG = LogFactory.getLog(UserRestServiceImpl.class);
 
     private String userRestURL = "/user";
 
@@ -50,23 +47,20 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<Void> checkPasswordResetHash(String hash) {
-        LOG.warn("checkPasswordResetHash");
 
         if(StringUtils.isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
-        LOG.warn("checkPasswordResetHash 2 " + userRestURL + "/"+ URL_CHECK_PASSWORD_RESET_HASH+"/"+hash);
         return getWithRestResultAnonymous(userRestURL + "/"+ URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
     }
 
     @Override
     public RestResult<Void> resetPassword(String hash, String password) {
-        LOG.warn("resetPassword");
+
 
         if(StringUtils.isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
-        LOG.warn("resetPassword 2 " + userRestURL + "/"+ URL_PASSWORD_RESET+"/"+hash+" body: "+password);
         return postWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, URL_PASSWORD_RESET, hash), password,  Void.class);
     }
 

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 
 import javax.validation.constraints.Digits;
@@ -17,20 +16,16 @@ public class ProjectResource {
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
 
     private Long id;
-    private Long application;
+    private long application;
+    private long competition;
     private LocalDate targetStartDate;
     private AddressResource address;
     private String name;
-    private ZonedDateTime documentsSubmittedDate;
     private ZonedDateTime offerSubmittedDate;
     private List<Long> projectUsers;
-    private Long collaborationAgreement;
-    private Long exploitationPlan;
     private Long signedGrantOfferLetter;
     private Long grantOfferLetter;
     private Long additionalContractFile;
-    @OtherDocsWindDown
-    private ApprovalType otherDocumentsApproved;
     private String grantOfferLetterRejectionReason;
     private ZonedDateTime spendProfileSubmittedDate;
     private ProjectState projectState;
@@ -38,11 +33,6 @@ public class ProjectResource {
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
-
-    @JsonIgnore
-    public boolean isPartnerDocumentsSubmitted(){
-        return documentsSubmittedDate != null;
-    }
 
     @JsonIgnore
     public boolean isOfferSubmitted(){
@@ -100,20 +90,20 @@ public class ProjectResource {
         this.projectUsers = projectUsers;
     }
 
-    public Long getApplication() {
+    public long getApplication() {
         return application;
     }
 
-    public void setApplication(Long application) {
+    public void setApplication(long application) {
         this.application = application;
     }
 
-    public ZonedDateTime getDocumentsSubmittedDate() {
-        return documentsSubmittedDate;
+    public long getCompetition() {
+        return competition;
     }
 
-    public void setDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
-        this.documentsSubmittedDate = documentsSubmittedDate;
+    public void setCompetition(long competition) {
+        this.competition = competition;
     }
 
     public ZonedDateTime getOfferSubmittedDate() {
@@ -122,22 +112,6 @@ public class ProjectResource {
 
     public void setOfferSubmittedDate(ZonedDateTime offerSubmittedDate) {
         this.offerSubmittedDate = offerSubmittedDate;
-    }
-
-    public Long getCollaborationAgreement() {
-        return collaborationAgreement;
-    }
-
-    public void setCollaborationAgreement(Long collaborationAgreement) {
-        this.collaborationAgreement = collaborationAgreement;
-    }
-
-    public Long getExploitationPlan() {
-        return exploitationPlan;
-    }
-
-    public void setExploitationPlan(Long exploitationPlan) {
-        this.exploitationPlan = exploitationPlan;
     }
 
     public Long getSignedGrantOfferLetter() {
@@ -162,16 +136,6 @@ public class ProjectResource {
 
     public void setGrantOfferLetter(Long grantOfferLetter) {
         this.grantOfferLetter = grantOfferLetter;
-    }
-
-    @OtherDocsWindDown
-    public ApprovalType getOtherDocumentsApproved() {
-        return otherDocumentsApproved;
-    }
-
-    @OtherDocsWindDown
-    public void setOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
-        this.otherDocumentsApproved = otherDocumentsApproved;
     }
 
     public String getGrantOfferLetterRejectionReason() {
@@ -220,15 +184,11 @@ public class ProjectResource {
                 .append(targetStartDate, that.targetStartDate)
                 .append(address, that.address)
                 .append(name, that.name)
-                .append(documentsSubmittedDate, that.documentsSubmittedDate)
                 .append(offerSubmittedDate, that.offerSubmittedDate)
                 .append(projectUsers, that.projectUsers)
-                .append(collaborationAgreement, that.collaborationAgreement)
-                .append(exploitationPlan, that.exploitationPlan)
                 .append(signedGrantOfferLetter, that.signedGrantOfferLetter)
                 .append(grantOfferLetter, that.grantOfferLetter)
                 .append(additionalContractFile, that.additionalContractFile)
-                .append(otherDocumentsApproved, that.otherDocumentsApproved)
                 .append(grantOfferLetterRejectionReason, that.grantOfferLetterRejectionReason)
                 .append(spendProfileSubmittedDate, that.spendProfileSubmittedDate)
                 .append(durationInMonths, that.durationInMonths)
@@ -245,15 +205,11 @@ public class ProjectResource {
                 .append(targetStartDate)
                 .append(address)
                 .append(name)
-                .append(documentsSubmittedDate)
                 .append(offerSubmittedDate)
                 .append(projectUsers)
-                .append(collaborationAgreement)
-                .append(exploitationPlan)
                 .append(signedGrantOfferLetter)
                 .append(grantOfferLetter)
                 .append(additionalContractFile)
-                .append(otherDocumentsApproved)
                 .append(grantOfferLetterRejectionReason)
                 .append(spendProfileSubmittedDate)
                 .append(durationInMonths)

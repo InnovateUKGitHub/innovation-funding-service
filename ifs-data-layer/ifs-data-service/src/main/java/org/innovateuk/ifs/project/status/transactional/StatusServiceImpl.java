@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.status.transactional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -137,7 +136,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 financeChecksStatus,
                 getSpendProfileStatus(project, financeChecksStatus),
                 getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus),
-                getOtherDocumentsStatus(project),
                 getDocumentsStatus(project),
                 getGrantOfferLetterStatus(project),
                 getRoleSpecificGrantOfferLetterState(project),
@@ -287,22 +285,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
-    @OtherDocsWindDown
-    private ProjectActivityStates getOtherDocumentsStatus(Project project) {
-
-        if (ApprovalType.REJECTED.equals(project.getOtherDocumentsApproved())) {
-            return REJECTED;
-        }
-        if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
-            return COMPLETE;
-        }
-        if (project.getDocumentsSubmittedDate() != null) {
-            return ACTION_REQUIRED;
-        }
-
-        return PENDING;
-    }
-
     private ProjectActivityStates getDocumentsStatus(Project project) {
 
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
@@ -391,7 +373,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private boolean documentsApproved(Project project) {
-        return ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved()) || COMPLETE.equals(getDocumentsStatus(project));
+        return ApprovalType.APPROVED.equals(COMPLETE.equals(getDocumentsStatus(project)));
     }
 
     @Override
@@ -440,7 +422,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : financeContactStatus;
         ProjectActivityStates monitoringOfficerStatus = isLead ? createMonitoringOfficerStatus(monitoringOfficer, projectDetailsStatus) : NOT_REQUIRED;
         ProjectActivityStates spendProfileStatus = isLead ? createLeadSpendProfileStatus(project, financeChecksStatus, spendProfile) : createSpendProfileStatus(financeChecksStatus, spendProfile);
-        ProjectActivityStates otherDocumentsStatus = isLead ? createOtherDocumentStatus(project) : NOT_REQUIRED;
         ProjectActivityStates documentsStatus = isLead ? createDocumentStatus(project) : NOT_REQUIRED;
         ProjectActivityStates grantOfferLetterStatus = isLead ? createLeadGrantOfferLetterStatus(project) : createGrantOfferLetterStatus(project);
 
@@ -458,7 +439,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 bankDetailsStatus,
                 financeChecksStatus,
                 spendProfileStatus,
-                otherDocumentsStatus,
                 documentsStatus,
                 grantOfferLetterStatus,
                 financeContactStatus,

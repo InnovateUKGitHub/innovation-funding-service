@@ -227,7 +227,7 @@ the user fills the organisation details with Project growth table
     the user navigates to Your-finances page                ${Application}
     the user clicks the button/link                         link = Your organisation
     the user enters text to a text field                    css = input[name$="month"]    12
-    and the user enters text to a text field                css = input[name$="year"]    2016
+    the user enters text to a text field                    css = input[name$="year"]    2016
     the user selects the radio button                       financePosition-organisationSize  ${org_size}
     the user enters text to a text field                    jQuery = td:contains("Annual turnover") + td input   5600
     the user enters text to a text field                    jQuery = td:contains("Annual profit") + td input    3000
@@ -338,16 +338,9 @@ the applicant edits the "economic benefit" question
 
 logged in user applies to competition
     [Arguments]  ${competition}  ${applicationType}
-    the user navigates to the page      ${frontDoor}
-    navigate to next page if not found  ${competition}
-    the user clicks the button/link     link = ${competition}
-    the user clicks the button/link     jQuery = a:contains("Start new application")
-    the user clicks the button/link     link = Apply with a different organisation.
-    the user selects the radio button   organisationTypeId  ${applicationType}
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user clicks the Not on companies house link
-    the user clicks the button/link            jQuery = button:contains("Save and continue")
-    the user clicks the button/link            id = application-question-save
+    the user select the competition and starts application    ${competition}
+    the user clicks the button/link                           jQuery = button:contains("Save and continue")
+    the user clicks the button/link                           id = application-question-save
 
 navigate to next page if not found
     [Arguments]  ${competition}

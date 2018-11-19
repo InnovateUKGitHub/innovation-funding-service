@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.status.security;
 
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -58,11 +57,6 @@ class SetupProgressChecker {
 
     public boolean isSpendProfileApproved() {
         return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
-    }
-
-    @OtherDocsWindDown
-    public boolean isOtherDocumentsApproved() {
-        return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getOtherDocumentsStatus());
     }
 
     public boolean isDocumentsApproved() {

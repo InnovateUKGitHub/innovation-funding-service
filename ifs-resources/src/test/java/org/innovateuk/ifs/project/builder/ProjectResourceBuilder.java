@@ -3,14 +3,11 @@ package org.innovateuk.ifs.project.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -55,20 +52,16 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return withArray((applicationId, project) -> project.setApplication(applicationId), application);
     }
 
+    public ProjectResourceBuilder withCompetition(Long... competitions) {
+        return withArray((competition, project) -> project.setCompetition(competition), competitions);
+    }
+
     public ProjectResourceBuilder withTargetStartDate(LocalDate... dates) {
         return withArray((date, project) -> project.setTargetStartDate(date), dates);
     }
 
     public ProjectResourceBuilder withAddress(AddressResource address) {
         return with(project -> project.setAddress(address));
-    }
-
-    public ProjectResourceBuilder withCollaborationAgreement(Long collaborationAgreement) {
-        return with (project -> project.setCollaborationAgreement(collaborationAgreement));
-    }
-
-    public ProjectResourceBuilder withExploitationPlan(Long exploitationPlan) {
-        return with (project -> project.setExploitationPlan(exploitationPlan));
     }
 
     public ProjectResourceBuilder withSignedGrantOfferLetter(Long grantOfferLetter) {
@@ -81,15 +74,6 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
 
     public ProjectResourceBuilder withAdditionalContractFile(Long additionalContractFile) {
         return with (project -> project.setAdditionalContractFile(additionalContractFile));
-    }
-
-    @OtherDocsWindDown
-    public ProjectResourceBuilder withOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
-        return with(project -> project.setOtherDocumentsApproved(otherDocumentsApproved));
-    }
-
-    public ProjectResourceBuilder withDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
-        return with(project -> project.setDocumentsSubmittedDate(documentsSubmittedDate));
     }
 
     public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {

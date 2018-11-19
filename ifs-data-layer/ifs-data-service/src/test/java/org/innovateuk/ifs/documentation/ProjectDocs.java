@@ -15,6 +15,7 @@ public class ProjectDocs {
     public static final FieldDescriptor[] projectResourceFields = {
             fieldWithPath("id").description("Id of the project"),
             fieldWithPath("application").description("Application that the project was created from"),
+            fieldWithPath("competition").description("Competition that the project was created from"),
             fieldWithPath("targetStartDate").description("Expected target start date for the project"),
             fieldWithPath("address").description("Address where the project is expected to be executed from"),
             fieldWithPath("durationInMonths").description("Duration that the project is expected to last"),
@@ -27,7 +28,6 @@ public class ProjectDocs {
             fieldWithPath("signedGrantOfferLetter").description("Id of the File Entry that contains the Signed Grant Offer Letter"),
             fieldWithPath("additionalContractFile").description("Id of the File Entry that contains the additional contract file"),
             fieldWithPath("grantOfferLetter").description("Id of the File Entry that contains the generated Grant Offer Letter"),
-            fieldWithPath("otherDocumentsApproved").description("Flag which indicates if Other Documents - Collaboration agreement and Exploitation plan, are approved or not"),
             fieldWithPath("projectDocuments").description("List of project documents for this project"),
             fieldWithPath("grantOfferLetterRejectionReason").description("Rejection reason when the Grant Offer Letter has been rejected"),
             fieldWithPath("spendProfileSubmittedDate").description("Flag which indicates if Spend Profile has been review and submitted by the Project Manager."),
@@ -47,7 +47,6 @@ public class ProjectDocs {
             fieldWithPath("financeChecksStatus").description("Status of the finance checks"),
             fieldWithPath("spendProfileStatus").description("Status of the spend profile"),
             fieldWithPath("monitoringOfficerStatus").description("Status of the monitoring officer"),
-            fieldWithPath("otherDocumentsStatus").description("Status of the other documents"),
             fieldWithPath("documentsStatus").description("Status of the project documents"),
             fieldWithPath("grantOfferLetterStatus").description("Status of the Grant Offer Letter status"),
             fieldWithPath("roleSpecificGrantOfferLetterState").description("Map of specific user role type to Grant Offer Letter status"),

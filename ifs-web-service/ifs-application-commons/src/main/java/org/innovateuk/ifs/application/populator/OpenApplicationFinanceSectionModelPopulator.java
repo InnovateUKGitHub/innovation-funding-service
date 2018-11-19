@@ -98,7 +98,7 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
                 applicantSection.getCompetition().getId(),
                 applicantSection.getApplication().getId()
         ));
-        FinanceModelManager financeModelManager = financeViewHandlerProvider.getFinanceModelManager(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType());
+        FinanceModelManager financeModelManager = financeViewHandlerProvider.getFinanceModelManager(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType());
         financeSectionViewModel.setFinanceViewModel(financeModelManager.getFinanceViewModel(
                 applicantSection.getApplication().getId(),
                 simpleMap(costsQuestions, ApplicantQuestionResource::getQuestion),
