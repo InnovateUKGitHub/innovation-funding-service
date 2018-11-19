@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,10 +22,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -128,7 +131,7 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
         mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
                 "organisation/{organisationId}/section/{sectionId}/auto-save", applicationId, organisationId, sectionId)
-                .param("postcode", postcode))
+                    .param("postcode", postcode))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -137,6 +140,42 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
         verify(applicationFinanceRestServiceMock, times(1)).getApplicationFinance(applicationId, organisationId);
         verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
+    }
+
+    @Test
+    public void markAsComplete() throws Exception {
+
+        when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
+                restSuccess(applicationFinance));
+
+        ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = new ArgumentCaptor<>();
+
+        when(applicationFinanceRestServiceMock.update(eq(applicationFinance.getId()), updatedApplicationFinanceCaptor.capture())).thenReturn(
+                restSuccess(applicationFinance));
+
+        ProcessRoleResource processRole = newProcessRoleResource().build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(processRole));
+
+        when(sectionServiceMock.markAsComplete(sectionId, applicationId, processRole.getId())).thenReturn(emptyList());
+
+        String viewUrl = String.format("redirect:/application/%d/form/your-project-location/" +
+                "organisation/%d/section/%d", applicationId, organisationId, sectionId);
+
+        mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
+                "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
+                    .param("postcode", postcode)
+                    .param("mark-as-complete", postcode))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(viewUrl))
+                .andReturn();
+
+        ApplicationFinanceResource applicationFinanceBeingUpdated = updatedApplicationFinanceCaptor.getValue();
+        assertThat(applicationFinanceBeingUpdated.getWorkPostcode()).isEqualTo(postcode);
+
+        verify(applicationFinanceRestServiceMock, times(1)).getApplicationFinance(applicationId, organisationId);
+        verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
+        verify(userRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
+        verify(sectionServiceMock, times(1)).markAsComplete(sectionId, applicationId, processRole.getId());
     }
 
     private Predicate<Object> futureMatcher(Object object) {
