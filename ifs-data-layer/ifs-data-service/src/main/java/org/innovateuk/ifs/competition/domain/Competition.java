@@ -134,6 +134,8 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     private Boolean stateAid;
 
+    private Boolean includeYourOrganisationSection;
+
     private Boolean includeJesForm;
 
     @Enumerated(EnumType.STRING)
@@ -745,6 +747,14 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     public void setStateAid(Boolean stateAid) {
         this.stateAid = stateAid;
+    }
+
+    public Boolean getIncludeYourOrganisationSection() {
+        return includeYourOrganisationSection;
+    }
+
+    public void setIncludeYourOrganisationSection(final Boolean includeYourOrganisationSection) {
+        this.includeYourOrganisationSection = includeYourOrganisationSection;
     }
 
     public ApplicationFinanceType getApplicationFinanceType() {

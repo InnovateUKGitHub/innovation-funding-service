@@ -1,12 +1,6 @@
 package org.innovateuk.ifs.form.resource;
 
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-
-import java.util.List;
 import java.util.Optional;
-
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 
 /**
  * This enum marks sections as a given type.
@@ -26,13 +20,6 @@ public enum SectionType {
         this.parent = parent;
     }
 
-    public static List<SectionType> sectionsNotRequiredForOrganisationType(Long organisationTypeId) {
-        if (OrganisationTypeEnum.getFromId(organisationTypeId).equals(OrganisationTypeEnum.RESEARCH)) {
-            return singletonList(ORGANISATION_FINANCES);
-        } else {
-            return emptyList();
-        }
-    }
     public Optional<SectionType> getParent() {
         return parent;
     }

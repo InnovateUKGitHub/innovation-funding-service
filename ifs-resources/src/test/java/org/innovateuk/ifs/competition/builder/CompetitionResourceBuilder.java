@@ -231,6 +231,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("stateAid", stateAid);
     }
 
+    public CompetitionResourceBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSection) {
+        return withArraySetFieldByReflection("includeYourOrganisationSection", includeYourOrganisationSection);
+    }
+
     public CompetitionResourceBuilder withGrantClaimMaximums(Set<Long>... grantClaimMaximums) {
         return withArraySetFieldByReflection("grantClaimMaximums", grantClaimMaximums);
     }
