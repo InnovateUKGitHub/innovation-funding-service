@@ -62,7 +62,8 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
     private String postcode = "S2 5AB";
     private String postcodeTooShort = "S2";
     private String postcodeTooShortUntrimmed = "S2   ";
-    private String postcodeTooLong = "S2";
+    private String postcodeNeedsTrimming = "S2 5AB            ";
+    private String postcodeTooLong = "12345678901";
 
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
@@ -103,6 +104,25 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void update() throws Exception {
+        assertUpdateSuccessful(postcode);
+    }
+
+    @Test
+    public void updatePostcodeTooShortButNoValidationYet() throws Exception {
+        assertUpdateSuccessful(postcodeTooShort);
+    }
+
+    @Test
+    public void updatePostcodeTooLongButNoValidationYet() throws Exception {
+        assertUpdateSuccessful(postcodeTooLong);
+    }
+
+    @Test
+    public void updatePostcodeWithTrimming() throws Exception {
+        assertUpdateSuccessful(postcodeNeedsTrimming);
+    }
+
+    private void assertUpdateSuccessful(String postcode) throws Exception {
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
@@ -114,13 +134,13 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
         mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
-                    .param("postcode", postcode))
+                .param("postcode", postcode))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(String.format("redirect:/application/%d/form/FINANCE", applicationId)))
                 .andReturn();
 
         ApplicationFinanceResource applicationFinanceBeingUpdated = updatedApplicationFinanceCaptor.getValue();
-        assertThat(applicationFinanceBeingUpdated.getWorkPostcode()).isEqualTo(postcode);
+        assertThat(applicationFinanceBeingUpdated.getWorkPostcode()).isEqualTo(postcode.trim());
 
         verify(applicationFinanceRestServiceMock, times(1)).getApplicationFinance(applicationId, organisationId);
         verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
@@ -130,6 +150,25 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void autosave() throws Exception {
+        assertAutosaveSuccessful(postcode);
+    }
+
+    @Test
+    public void autosavePostcodeTooShortButNoValidationYet() throws Exception {
+        assertAutosaveSuccessful(postcodeTooShort);
+    }
+
+    @Test
+    public void autosavePostcodeTooLongButNoValidationYet() throws Exception {
+        assertAutosaveSuccessful(postcodeTooLong);
+    }
+
+    @Test
+    public void autosaveWithTrimming() throws Exception {
+        assertAutosaveSuccessful(postcodeNeedsTrimming);
+    }
+
+    private void assertAutosaveSuccessful(String postcode) throws Exception {
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
@@ -146,7 +185,7 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
                 .andReturn();
 
         ApplicationFinanceResource applicationFinanceBeingUpdated = updatedApplicationFinanceCaptor.getValue();
-        assertThat(applicationFinanceBeingUpdated.getWorkPostcode()).isEqualTo(postcode);
+        assertThat(applicationFinanceBeingUpdated.getWorkPostcode()).isEqualTo(postcode.trim());
 
         verify(applicationFinanceRestServiceMock, times(1)).getApplicationFinance(applicationId, organisationId);
         verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
@@ -156,6 +195,15 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void markAsComplete() throws Exception {
+        assertMarkAsCompleteSuccessful(postcode);
+    }
+
+    @Test
+    public void markAsCompleteWithTrimming() throws Exception {
+        assertMarkAsCompleteSuccessful(postcodeNeedsTrimming);
+    }
+
+    private void assertMarkAsCompleteSuccessful(String postcode) throws Exception {
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
@@ -182,12 +230,51 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
                 .andReturn();
 
         ApplicationFinanceResource applicationFinanceBeingUpdated = updatedApplicationFinanceCaptor.getValue();
-        assertThat(applicationFinanceBeingUpdated.getWorkPostcode()).isEqualTo(postcode);
+        assertThat(applicationFinanceBeingUpdated.getWorkPostcode()).isEqualTo(postcode.trim());
 
         verify(applicationFinanceRestServiceMock, times(1)).getApplicationFinance(applicationId, organisationId);
         verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
         verify(userRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
         verify(sectionServiceMock, times(1)).markAsComplete(sectionId, applicationId, processRole.getId());
+
+        verifyNoMoreInteractionsWithMocks();
+    }
+
+    @Test
+    public void markAsCompletePostcodeTooShort() throws Exception {
+        assertPostcodeValidationErrorsWhenMarkingAsComplete(postcodeTooShort);
+    }
+
+    @Test
+    public void markAsCompletePostcodeTooShortUntrimmed() throws Exception {
+        assertPostcodeValidationErrorsWhenMarkingAsComplete(postcodeTooShortUntrimmed);
+    }
+
+    @Test
+    public void markAsCompletePostcodeTooLong() throws Exception {
+        assertPostcodeValidationErrorsWhenMarkingAsComplete(postcodeTooLong);
+    }
+
+    private void assertPostcodeValidationErrorsWhenMarkingAsComplete(String invalidPostcode) throws Exception {
+
+        YourProjectLocationViewModel viewModel =
+                new YourProjectLocationViewModel(false, "", "", applicationId, sectionId, true);
+
+        YourProjectLocationForm form = new YourProjectLocationForm(invalidPostcode.trim());
+
+        when(viewModelPopulatorMock.populate(organisationId, applicationId, sectionId, false)).thenReturn(viewModel);
+
+        mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
+                "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
+                .param("postcode", invalidPostcode)
+                .param("mark-as-complete", ""))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("application/sections/your-project-location/your-project-location"))
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(model().attribute("form", form))
+                .andExpect(model().attributeHasFieldErrorCode("form", "postcode", "APPLICATION_PROJECT_LOCATION_REQUIRED"));
+
+        verify(viewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, false);
 
         verifyNoMoreInteractionsWithMocks();
     }
@@ -203,7 +290,6 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
         mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
-                .param("postcode", postcode)
                 .param("mark-as-incomplete", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(viewUrl))
@@ -211,31 +297,6 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
         verify(userRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
         verify(sectionServiceMock, times(1)).markAsInComplete(sectionId, applicationId, processRole.getId());
-
-        verifyNoMoreInteractionsWithMocks();
-    }
-
-    @Test
-    public void markAsCompletePostcodeTooShort() throws Exception {
-
-        YourProjectLocationViewModel viewModel =
-                new YourProjectLocationViewModel(false, "", "", applicationId, sectionId, true);
-
-        YourProjectLocationForm form = new YourProjectLocationForm(postcodeTooShort);
-
-        when(viewModelPopulatorMock.populate(organisationId, applicationId, sectionId, false)).thenReturn(viewModel);
-
-        mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
-                "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
-                .param("postcode", postcodeTooShort)
-                .param("mark-as-complete", ""))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("application/sections/your-project-location/your-project-location"))
-                .andExpect(model().attribute("model", viewModel))
-                .andExpect(model().attribute("form", form))
-                .andExpect(model().attributeHasFieldErrorCode("form", "postcode", "APPLICATION_PROJECT_LOCATION_REQUIRED"));
-
-        verify(viewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, false);
 
         verifyNoMoreInteractionsWithMocks();
     }

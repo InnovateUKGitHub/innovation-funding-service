@@ -124,6 +124,8 @@ public class YourProjectLocationController extends AsyncAdaptor {
             ValidationHandler validationHandler,
             Model model) {
 
+        trimPostcodeInForm(form);
+
         Supplier<String> failureHandler = () -> {
             YourProjectLocationViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
             model.addAttribute("model", viewModel);
@@ -160,9 +162,15 @@ public class YourProjectLocationController extends AsyncAdaptor {
         return redirectToViewPage(applicationId, organisationId, sectionId);
     }
 
+    private void trimPostcodeInForm(YourProjectLocationForm form) {
+        form.setPostcode(form.getPostcode().trim());
+    }
+
     private void updatePostcode(long applicationId,
                                 long organisationId,
                                 YourProjectLocationForm form) {
+
+        trimPostcodeInForm(form);
 
         ApplicationFinanceResource finance =
                 applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
@@ -173,6 +181,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     }
 
     private List<Error> validateProjectLocation(String postcode) {
+
         if (postcode.length() >= MINIMUM_POSTCODE_LENGTH && postcode.length() <= MAXIMUM_POSTCODE_LENGTH) {
             return emptyList();
         }
