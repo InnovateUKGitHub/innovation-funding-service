@@ -301,7 +301,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
 
         return getDocumentsState(projectDocuments, projectDocuments.size(), expectedDocuments.size());
-
     }
 
     private ProjectActivityStates getDocumentsState(List<ProjectDocument> projectDocuments, int actualNumberOfDocuments, int expectedNumberOfDocuments) {
