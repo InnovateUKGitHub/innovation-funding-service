@@ -140,7 +140,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     @Test
     public void populateAllDocumentsWithMultiplePartnerOrganisation() {
         List<OrganisationResource> partnerOrganisations = newOrganisationResource()
-                .withName("abc")
+                .withName("Organisation1", "Organisation2", "Organisation3", "Organisation4")
                 .build(4);
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
 
