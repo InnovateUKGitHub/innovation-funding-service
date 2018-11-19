@@ -28,10 +28,6 @@ Resource          PS_Common.robot
 # This suite is using Competition: Internet of Things
 # and Application: Sensing & Control network using the lighting infrastructure
 
-# TODO actually check the downloading of the pdf files. In this suite is only checked that the link to the file is visible to the user.
-# But no actual download is happening. This suite used to click all the links and in that way increasing the amount of browser tabs open. This is now removed.
-# TODO IFS-2716
-
 *** Test Cases ***
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
@@ -278,7 +274,7 @@ IFS Admin can see applicant's response flagged in Query responses tab and mark d
     [Teardown]  the user collapses the section      a viability query's title
 
 Project finance user can view the response and uploaded files
-    [Documentation]    INFUND-4843
+    [Documentation]    INFUND-4843  IFS-2716
     [Tags]
     [Setup]  log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
@@ -286,6 +282,8 @@ Project finance user can view the response and uploaded files
     And the user expands the section      an eligibility query's title
     Then the user should see the element  jQuery = .govuk-heading-s:contains("Becky") + p:contains("This is some response text")
     And the user should see the element   jQuery = .panel li:nth-of-type(1) a:contains("${valid_pdf}")
+    And the user downloads the file       ${internal_finance_credentials["email"]}  ${server}/project-setup/project/${Queries_Application_Project}/finance-checks   ${DOWNLOAD_FOLDER}/${valid_pdf}
+    [Teardown]  remove the file from the operating system    ${valid_pdf}
 
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
@@ -370,10 +368,12 @@ Project finance can re-upload the file to notes
     Then the user should see the element    jQuery = form a:contains("${valid_pdf}")
 
 Project finance can view the file in notes
-    [Documentation]    INFUND-4845
+    [Documentation]    INFUND-4845  IFS-2716
     [Tags]
     Given the user should see the element  link = ${valid_pdf}
     Then the user should see the element   jQuery = button:contains("Save note")
+    And the user downloads the file        ${internal_finance_credentials["email"]}  ${server}/project-setup/project/${Queries_Application_Project}/finance-checks   ${DOWNLOAD_FOLDER}/${valid_pdf}
+    [Teardown]  remove the file from the operating system    ${valid_pdf}
 
 Project finance can upload more than one file to notes
     [Documentation]    INFUND-4845
