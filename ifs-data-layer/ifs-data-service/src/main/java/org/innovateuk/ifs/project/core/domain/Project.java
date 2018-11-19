@@ -220,22 +220,6 @@ public class Project implements ProcessActivity {
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
     }
 
-    public FileEntry getCollaborationAgreement() {
-        return collaborationAgreement;
-    }
-
-    public void setCollaborationAgreement(FileEntry collaborationAgreement) {
-        this.collaborationAgreement = collaborationAgreement;
-    }
-
-    public FileEntry getExploitationPlan() {
-        return exploitationPlan;
-    }
-
-    public void setExploitationPlan(FileEntry exploitationPlan) {
-        this.exploitationPlan = exploitationPlan;
-    }
-
     public FileEntry getSignedGrantOfferLetter() {
         return signedGrantOfferLetter;
     }
