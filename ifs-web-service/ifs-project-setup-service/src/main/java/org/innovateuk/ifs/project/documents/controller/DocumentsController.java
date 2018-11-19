@@ -16,12 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -42,11 +37,14 @@ public class DocumentsController {
 
     private static final String FORM_ATTR = "form";
 
-    @Autowired
-    DocumentsPopulator populator;
+    private DocumentsPopulator populator;
 
-    @Autowired
     private DocumentsRestService documentsRestService;
+
+    public DocumentsController(DocumentsPopulator populator, DocumentsRestService documentsRestService) {
+        this.populator = populator;
+        this.documentsRestService = documentsRestService;
+    }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DOCUMENTS_SECTION')")
     @GetMapping("/all")
@@ -84,13 +82,12 @@ public class DocumentsController {
                                  Model model,
                                  UserResource loggedInUser) {
 
-        return performActionOrBindErrorsToField(projectId, documentConfigId, validationHandler, model, loggedInUser, "document", form, () -> {
-
-            MultipartFile file = form.getDocument();
-
-            return documentsRestService.uploadDocument(projectId, documentConfigId, file.getContentType(), file.getSize(),
-                    file.getOriginalFilename(), getMultipartFileBytes(file));
-        });
+        return performActionOrBindErrorsToField(
+                projectId, documentConfigId, validationHandler, model, loggedInUser, "document", form, () -> {
+                    MultipartFile file = form.getDocument();
+                    return documentsRestService.uploadDocument(projectId, documentConfigId, file.getContentType(), file.getSize(),
+                            file.getOriginalFilename(), getMultipartFileBytes(file));
+                });
     }
 
     private String performActionOrBindErrorsToField(long projectId, long documentConfigId, ValidationHandler validationHandler, Model model,

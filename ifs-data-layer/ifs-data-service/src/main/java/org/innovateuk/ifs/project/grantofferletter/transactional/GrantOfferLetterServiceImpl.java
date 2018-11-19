@@ -75,7 +75,8 @@ import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROV
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
-public class GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOfferLetterService {
+public class
+GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOfferLetterService {
 
     private static final String GOL_CONTENT_TYPE = "application/pdf";
 

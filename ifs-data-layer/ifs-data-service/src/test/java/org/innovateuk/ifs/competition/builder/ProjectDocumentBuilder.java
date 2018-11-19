@@ -56,5 +56,3 @@ public class ProjectDocumentBuilder extends BaseBuilder<ProjectDocument, Project
         return withArray((guidance, p) -> setField("guidance", guidance, p), guidanceList);
     }
 }
-
-

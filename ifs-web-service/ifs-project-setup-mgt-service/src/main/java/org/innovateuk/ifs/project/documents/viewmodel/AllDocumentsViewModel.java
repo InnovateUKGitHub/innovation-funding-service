@@ -11,13 +11,13 @@ import java.util.List;
  */
 public class AllDocumentsViewModel {
 
-    private Long competitionId;
-    private Long applicationId;
-    private Long projectId;
+    private long competitionId;
+    private long applicationId;
+    private long projectId;
     private String projectName;
     private List<ProjectDocumentStatus> documents;
 
-    public AllDocumentsViewModel(Long competitionId, Long applicationId, Long projectId, String projectName, List<ProjectDocumentStatus> documents) {
+    public AllDocumentsViewModel(long competitionId, long applicationId, long projectId, String projectName, List<ProjectDocumentStatus> documents) {
         this.competitionId = competitionId;
         this.applicationId = applicationId;
         this.projectId = projectId;
@@ -25,7 +25,7 @@ public class AllDocumentsViewModel {
         this.documents = documents;
     }
 
-    public Long getCompetitionId() {
+    public long getCompetitionId() {
         return competitionId;
     }
 
@@ -33,7 +33,7 @@ public class AllDocumentsViewModel {
         this.competitionId = competitionId;
     }
 
-    public Long getApplicationId() {
+    public long getApplicationId() {
         return applicationId;
     }
 
@@ -41,7 +41,7 @@ public class AllDocumentsViewModel {
         this.applicationId = applicationId;
     }
 
-    public Long getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
