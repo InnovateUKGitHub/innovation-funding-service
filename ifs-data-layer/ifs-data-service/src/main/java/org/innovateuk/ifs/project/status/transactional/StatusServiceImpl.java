@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
@@ -19,6 +20,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStat
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -74,6 +76,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private PartnerOrganisationService partnerOrganisationService;
 
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId, String applicationSearchString) {
@@ -157,7 +162,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates getPartnerProjectLocationStatus(Project project) {
 
-        return simpleAnyMatch(project.getPartnerOrganisations(), partnerOrganisation -> StringUtils.isBlank(partnerOrganisation.getPostcode()))? PENDING : COMPLETE;
+        return simpleAnyMatch(project.getPartnerOrganisations(), partnerOrganisation -> StringUtils.isBlank(partnerOrganisation.getPostcode())) ? PENDING : COMPLETE;
 
     }
 
@@ -236,9 +241,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                                                              final boolean locationPerPartnerRequired,
                                                              final ProjectActivityStates partnerProjectLocationStatus) {
         return createMonitoringOfficerCompetitionStatus(getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject(),
-                                                        projectDetailsStatus,
-                                                        locationPerPartnerRequired,
-                                                        partnerProjectLocationStatus);
+                projectDetailsStatus,
+                locationPerPartnerRequired,
+                partnerProjectLocationStatus);
     }
 
     private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
@@ -266,11 +271,10 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         User user = loggedInUserSupplier.get();
 
         if (allRequiredDetailsComplete) {
-            if(monitoringOfficer.isPresent()) {
+            if (monitoringOfficer.isPresent()) {
                 return COMPLETE;
-            }
-            else {
-                if(isSupport(user) || isInnovationLead(user) || isStakeholder(user)){
+            } else {
+                if (isSupport(user) || isInnovationLead(user) || isStakeholder(user)) {
                     return NOT_STARTED;
                 } else {
                     return ACTION_REQUIRED;
@@ -283,22 +287,35 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates getDocumentsStatus(Project project) {
 
-
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
-        int expectedNumberOfDocuments = project.getApplication().getCompetition().getProjectDocuments().size();
-        int actualNumberOfDocuments = projectDocuments.size();
 
-        if (simpleAnyMatch(projectDocuments, projectDocument -> SUBMITTED.equals(projectDocument.getStatus()))){
+        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> expectedDocuments =
+                project.getApplication().getCompetition().getProjectDocuments();
+
+        List<PartnerOrganisationResource> partnerOrganisations =
+                partnerOrganisationService.getProjectPartnerOrganisations(project.getId()).getSuccess();
+
+        if (partnerOrganisations.size() == 1) {
+            expectedDocuments.removeIf(
+                    document -> document.getTitle().equals("Collaboration agreement"));
+        }
+
+        return getDocumentsState(projectDocuments, projectDocuments.size(), expectedDocuments.size());
+
+    }
+
+    private ProjectActivityStates getDocumentsState(List<ProjectDocument> projectDocuments, int actualNumberOfDocuments, int expectedNumberOfDocuments) {
+        if (simpleAnyMatch(projectDocuments, projectDocument -> SUBMITTED.equals(projectDocument.getStatus()))) {
             return ACTION_REQUIRED;
         }
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments
-                && matchAll(projectDocuments, projectDocument -> DocumentStatus.REJECTED.equals(projectDocument.getStatus()))){
+                && matchAll(projectDocuments, projectDocument -> DocumentStatus.REJECTED.equals(projectDocument.getStatus()))) {
             return REJECTED;
         }
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments
-                && matchAll(projectDocuments, projectDocument -> APPROVED.equals(projectDocument.getStatus()))){
+                && matchAll(projectDocuments, projectDocument -> APPROVED.equals(projectDocument.getStatus()))) {
             return COMPLETE;
         }
 
@@ -395,7 +412,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
-        boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(),partnerOrganisation.getId()).getSuccess();
+        boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(), partnerOrganisation.getId()).getSuccess();
         boolean isLead = partnerOrganisation.equals(leadOrganisation);
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);

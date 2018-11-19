@@ -77,10 +77,18 @@ public class SetupSectionStatus {
     }
 
     public SectionStatus documentsSectionStatus(final boolean isProjectManager,
-                                                final int expectedNumberOfDocuments,
-                                                List<ProjectDocumentResource> projectDocuments) {
+                                                List<org.innovateuk.ifs.competition.resource.ProjectDocumentResource> expectedDocuments,
+                                                List<ProjectDocumentResource> projectDocuments,
+                                                boolean collaborationAgreementRequired) {
 
         int actualNumberOfDocuments = projectDocuments.size();
+
+        if (!collaborationAgreementRequired) {
+            expectedDocuments.removeIf(
+                    document -> document.getTitle().equals("Collaboration agreement"));
+        }
+
+        int expectedNumberOfDocuments = expectedDocuments.size();
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
                 .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()))) {

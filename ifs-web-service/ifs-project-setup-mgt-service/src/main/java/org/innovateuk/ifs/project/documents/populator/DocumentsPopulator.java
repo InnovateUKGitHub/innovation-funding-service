@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
@@ -41,6 +42,14 @@ public class DocumentsPopulator {
         CompetitionResource competition = basicDetails.getCompetition();
 
         List<org.innovateuk.ifs.competition.resource.ProjectDocumentResource> configuredProjectDocuments = competition.getProjectDocuments();
+
+        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+
+        if (partnerOrganisations.size() == 1) {
+            configuredProjectDocuments.removeIf(
+                    document -> document.getTitle().equals("Collaboration agreement"));
+        }
+
         List<ProjectDocumentResource> projectDocuments = project.getProjectDocuments();
 
         List<ProjectDocumentStatus> documents = new ArrayList<>();
