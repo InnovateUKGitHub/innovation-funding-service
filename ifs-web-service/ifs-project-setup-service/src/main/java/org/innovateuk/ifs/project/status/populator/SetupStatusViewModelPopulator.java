@@ -96,14 +96,15 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                          boolean isProjectManager,
                                                          List<OrganisationResource> partnerOrganisations,
                                                          String originQuery) {
+
+        boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
+
         SectionAccessList sectionAccesses = getSectionAccesses(basicDetails, teamStatus);
-        SectionStatusList sectionStatuses = getSectionStatuses(basicDetails, teamStatus, monitoringOfficer, isProjectManager);
+        SectionStatusList sectionStatuses = getSectionStatuses(basicDetails, teamStatus, monitoringOfficer, isProjectManager, collaborationAgreementRequired);
 
         boolean pendingQueries = SectionStatus.FLAG.equals(sectionStatuses.getFinanceChecksStatus());
 
         boolean leadPartner = isLeadPartner(teamStatus, basicDetails.getOrganisation());
-        int partnerOrganisationsCount = partnerOrganisations.size();
-        boolean collaborationAgreementRequired = partnerOrganisationsCount > 1;
         boolean projectDocuments = basicDetails.getCompetition().getProjectDocuments().size() > 0;
 
         return new SetupStatusViewModel(
@@ -122,7 +123,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     }
 
     @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
-    private SectionStatusList getSectionStatuses(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean isProjectManager) {
+    private SectionStatusList getSectionStatuses(BasicDetails basicDetails,
+                                                 ProjectTeamStatusResource teamStatus,
+                                                 Optional<MonitoringOfficerResource> monitoringOfficer,
+                                                 boolean isProjectManager,
+                                                 boolean collaborationAgreementRequired) {
 
         CompetitionResource competition = basicDetails.getCompetition();
         OrganisationResource organisation = basicDetails.getOrganisation();
@@ -153,7 +158,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(), financeChecksAccess);
         SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
         SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, isProjectManager);
-        SectionStatus documentsStatus = sectionStatus.documentsSectionStatus(isProjectManager, competition.getProjectDocuments().size(), project.getProjectDocuments());
+        SectionStatus documentsStatus = sectionStatus.documentsSectionStatus(isProjectManager, competition.getProjectDocuments(), project.getProjectDocuments(), collaborationAgreementRequired);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(ownOrganisation.getGrantOfferLetterStatus(), isLeadPartner);
 
         return new SectionStatusList(projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus,
