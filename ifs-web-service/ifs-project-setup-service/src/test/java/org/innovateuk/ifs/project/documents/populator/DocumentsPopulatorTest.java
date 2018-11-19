@@ -150,4 +150,18 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
         verify(projectService).getPartnerOrganisationsForProject(projectId);
     }
+
+    @Test
+    public void populateAllDocumentsWithNoPartnerOrganisation() {
+        List<OrganisationResource> partnerOrganisations = newOrganisationResource()
+                .withName("abc")
+                .build(1);
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
+
+        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId, user);
+
+        assertEquals(2, viewModel.getDocuments().size());
+
+        verify(projectService).getPartnerOrganisationsForProject(projectId);
+    }
 }
