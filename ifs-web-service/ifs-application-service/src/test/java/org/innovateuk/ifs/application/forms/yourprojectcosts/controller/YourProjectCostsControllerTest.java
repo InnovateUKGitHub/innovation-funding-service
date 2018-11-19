@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.controller;
 
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
+import org.innovateuk.ifs.application.forms.saver.ApplicationSectionFinanceSaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.LabourRowForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.ApplicationYourProjectCostsFormPopulator;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,6 +70,9 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
     @Mock
     private YourProjectCostsFormValidator yourFundingFormValidator;
+
+    @Mock
+    private ApplicationSectionFinanceSaver completeSectionAction;
 
     @Test
     public void viewYourProjectCosts() throws Exception {
@@ -130,9 +135,10 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
     @Test
     public void complete() throws Exception {
+        ProcessRoleResource processRole = newProcessRoleResource().withId(PROCESS_ROLE_ID).build();
         when(saver.save(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()))).thenReturn(serviceSuccess());
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
-                .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
+                .thenReturn(restSuccess(processRole));
         when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}",
@@ -143,6 +149,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
         verify(saver).save(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()));
         verify(sectionStatusRestService).markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID);
+        verify(completeSectionAction).handleMarkProjectCostsAsComplete(processRole);
     }
 
 
