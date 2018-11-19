@@ -143,6 +143,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
 
         application = applications.get(0);
         project.setApplication(application.getId());
+        project.setCompetition(competitionId);
 
         industrialOrganisation = newOrganisationResource()
                 .withId(2L)
@@ -180,11 +181,11 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
         when(organisationRestService.getOrganisationById(academicOrganisation.getId())).thenReturn(restSuccess(academicOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
-        when(financeViewHandlerProvider.getProjectFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeViewHandlerProvider.getProjectFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(projectFinanceFormHandler);
+        when(financeViewHandlerProvider.getProjectFinanceModelManager(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeViewHandlerProvider.getProjectFinanceFormHandler(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(projectFinanceFormHandler);
 
-        when(financeUtilMock.isUsingJesFinances(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(Boolean.FALSE);
-        when(financeUtilMock.isUsingJesFinances(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(Boolean.TRUE);
+        when(financeUtilMock.isUsingJesFinances(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(Boolean.FALSE);
+        when(financeUtilMock.isUsingJesFinances(competitionResource, OrganisationTypeEnum.RESEARCH.getId())).thenReturn(Boolean.TRUE);
 
         ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().withFinanceFileEntry(123L).build();
         when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), 2L)).thenReturn(appFinanceResource);
@@ -244,8 +245,8 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
-        when(financeViewHandlerProvider.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeViewHandlerProvider.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(projectFinanceFormHandler);
+        when(financeViewHandlerProvider.getProjectFinanceModelManager(competitionResource, OrganisationTypeEnum.RESEARCH.getId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeViewHandlerProvider.getProjectFinanceFormHandler(competitionResource, OrganisationTypeEnum.RESEARCH.getId())).thenReturn(projectFinanceFormHandler);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), academicOrganisation.getId())).
@@ -265,8 +266,8 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
-        when(financeViewHandlerProvider.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeViewHandlerProvider.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(projectFinanceFormHandler);
+        when(financeViewHandlerProvider.getProjectFinanceModelManager(competitionResource, OrganisationTypeEnum.RESEARCH.getId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeViewHandlerProvider.getProjectFinanceFormHandler(competitionResource, OrganisationTypeEnum.RESEARCH.getId())).thenReturn(projectFinanceFormHandler);
 
         ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().build();
         when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), 1L)).thenReturn(appFinanceResource);

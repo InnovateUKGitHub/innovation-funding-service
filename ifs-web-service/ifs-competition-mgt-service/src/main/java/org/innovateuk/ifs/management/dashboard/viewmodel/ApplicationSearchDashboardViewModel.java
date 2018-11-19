@@ -13,55 +13,47 @@ import java.util.List;
  */
 public class ApplicationSearchDashboardViewModel {
 
-    private List<ApplicationResource> applications;
+    private final List<ApplicationResource> applications;
 
-    private long applicationCount;
+    private final long applicationCount;
 
-    private Pagination applicationPagination;
+    private final Pagination applicationPagination;
 
-    private String searchString;
+    private final String searchString;
 
-    public ApplicationSearchDashboardViewModel(List<ApplicationResource> applications, long applicationCount, Pagination applicationPagination, String searchString) {
+    private final boolean isSupport;
+
+    public ApplicationSearchDashboardViewModel(List<ApplicationResource> applications, long applicationCount, Pagination applicationPagination, String searchString, boolean isSupport) {
         this.applications = applications;
         this.applicationCount = applicationCount;
         this.applicationPagination = applicationPagination;
         this.searchString = searchString;
+        this.isSupport = isSupport;
     }
 
     public List<ApplicationResource> getApplications() {
         return applications;
     }
 
-    public void setApplications(List<ApplicationResource> applications) {
-        this.applications = applications;
-    }
-
     public long getApplicationCount() {
         return applicationCount;
-    }
-
-    public void setApplicationCount(long applicationCount) {
-        this.applicationCount = applicationCount;
     }
 
     public Pagination getApplicationPagination() {
         return applicationPagination;
     }
 
-    public void setApplicationPagination(Pagination applicationPagination) {
-        this.applicationPagination = applicationPagination;
-    }
-
     public String getSearchString() {
         return searchString;
     }
 
-    public void setSearchString(String searchString) {
-        this.searchString = searchString;
-    }
 
     public boolean isSearchStringPresent() {
         return StringUtils.isNotBlank(searchString);
+    }
+
+    public boolean isSupport() {
+        return isSupport;
     }
 
     @Override
@@ -77,6 +69,7 @@ public class ApplicationSearchDashboardViewModel {
                 .append(applications, viewModel.applications)
                 .append(applicationPagination, viewModel.applicationPagination)
                 .append(searchString, viewModel.searchString)
+                .append(isSupport, viewModel.isSupport)
                 .isEquals();
     }
 
@@ -87,6 +80,7 @@ public class ApplicationSearchDashboardViewModel {
                 .append(applicationCount)
                 .append(applicationPagination)
                 .append(searchString)
+                .append(isSupport)
                 .toHashCode();
     }
 }

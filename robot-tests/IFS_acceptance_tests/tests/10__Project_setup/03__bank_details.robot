@@ -54,7 +54,7 @@ Links to other sections in Project setup dependent on project details for partne
 
 Project Finance should not be able to access bank details page
     [Documentation]    INFUND-7090, INFUND-7109
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user      &{internal_finance_credentials}
     Given the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details    ${403_error_message}
     When the user navigates to the page        ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
@@ -62,7 +62,7 @@ Project Finance should not be able to access bank details page
 
 Bank details page
     [Documentation]    INFUND-3010, INFUND-6018, INFUND-7173
-    [Tags]
+    [Tags]  HappyPath
     Given log in as a different user        ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link    link = ${PS_BD_APPLICATION_TITLE}
     Then the user should see the element    css = ul li.require-action:nth-child(4)
@@ -105,7 +105,7 @@ Bank details client side validations
     And the user moves focus away from the element       name = accountNumber
     Then the user should not see the text in the page    Please enter an account number.
     And the user should not see the text in the page     Please correct this field
-    And the user should see an error                     Please enter a valid account number
+    And the user should see a field error                Please enter a valid account number
     When the user enters text to a text field            name = accountNumber    abcdefgh
     And the user moves focus away from the element       name = accountNumber
     Then the user should see the text in the page        Please enter an account number.
@@ -116,7 +116,7 @@ Bank details client side validations
     And the user should not see the text in the page     Please correct this field
     When the user enters text to a text field            name = sortCode    12345
     And the user moves focus away from the element       name = sortCode
-    Then the user should see an error                    Please enter a valid sort code.
+    Then the user should see a field error               Please enter a valid sort code.
     When the user enters text to a text field            name = sortCode    abcdef
     And the user moves focus away from the element       name = sortCode
     Then the user should see the text in the page        Please enter a sort code.
@@ -129,7 +129,7 @@ Bank details client side validations
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282
-    [Tags]
+    [Tags]  HappyPath
     When the user selects the radio button       addressType    ADD_NEW
     And the user enters text to a text field     name = addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link          jQuery = .govuk-button:contains("Find UK address")
@@ -155,7 +155,7 @@ Bank details experian validations
 
 Bank details submission
     [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109, INFUND-8688
-    [Tags]    Experian
+    [Tags]    Experian  HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given the user enters text to a text field        name = accountNumber  ${account_two}
     And the user enters text to a text field          name = sortCode  ${sortCode_two}
@@ -177,7 +177,7 @@ Bank details submission
 
 Submission of bank details for academic user
     [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018, INFUND-8688
-    [Tags]    Experian
+    [Tags]    Experian  HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given log in as a different user               ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
     When the user clicks the button/link           jQuery = .projects-in-setup a:contains("${PS_BD_APPLICATION_TITLE}")
@@ -227,7 +227,7 @@ Status updates correctly for internal user's table
 
 User sees error response for invalid bank details for non-lead partner
     [Documentation]   INFUND-8688
-    [Tags]
+    [Tags]  HappyPath
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link           jQuery = .projects-in-setup a:contains("${PS_BD_APPLICATION_TITLE}")
     Then the user clicks the button/link           link = Bank details
@@ -238,7 +238,7 @@ User sees error response for invalid bank details for non-lead partner
 
 Non lead partner submits bank details
     [Documentation]    INFUND-3010, INFUND-6018
-    [Tags]
+    [Tags]  HappyPath
     When the user enters text to a text field      name = accountNumber  ${account_one}
     Then the user enters text to a text field      name = sortCode  ${sortCode_one}
     When the user selects the radio button         addressType  ADD_NEW
@@ -262,7 +262,7 @@ Non lead partner submits bank details
 
 Bank details verified by Experian require no action by the Project Finance
     [Documentation]  IFS-2495
-    [Tags]  MySQL
+    [Tags]  MySQL  HappyPath
     [Setup]  log in as a different user      &{internal_finance_credentials}
     Given the bank details have been verified by the Experian  ${Vitruvius_Id}
     When the user navigates to the page      ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/organisation/${Vitruvius_Id}/review-bank-details
@@ -293,7 +293,7 @@ Project Finance can see the progress of partners bank details
 
 IFS Admin can see Bank Details
     [Documentation]    INFUND-4903, INFUND-4903, IFS-603, IFS-1881
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user                       &{ifs_admin_user_credentials}
     Given the user navigates to the page                      ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link                       link = ${PS_BD_Competition_Name}
@@ -324,7 +324,7 @@ Project Finance user can export bank details
 
 Project Finance approves Bank Details through the Bank Details list
     [Documentation]    IFS-2015 IFS-2398/2164
-    [Tags]
+    [Tags]  HappyPath
     Given log in as a different user        &{internal_finance_credentials}
     And the user navigates to the page      ${server}/management/dashboard/project-setup
     And the user clicks the button/link     jQuery = a:contains("Review bank details")

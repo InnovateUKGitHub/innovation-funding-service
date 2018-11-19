@@ -27,4 +27,3 @@ public interface CompetitionSetupStakeholderRestService {
 
     RestResult<List<UserResource>> findPendingStakeholderInvites(long competitionId);
 }
-

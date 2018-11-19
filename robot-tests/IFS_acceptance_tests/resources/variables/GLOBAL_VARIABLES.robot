@@ -27,7 +27,7 @@ ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    92,000
 
 ${manageExternalUsers}  ${server}/management/admin/external/users
 
-#Competitions and Applications Variables
+# Competitions and Applications Variables
 ${openCompetitionRTO_name}       Predicting market trends programme
 ${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
 ${openCompetitionRTOCloseDate}       ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
@@ -187,7 +187,15 @@ ${wrong_filetype_validation_error}    Unsupported file type.
 ${too_large_pdf_validation_error}    Please upload a smaller file
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}    This field cannot be left blank.
-${email_already_in_use}           This email address is already in use.
+${email_already_in_use}           This email address is already in use.${enter_a_first_name}                              Please enter a first name.
+${enter_a_last_name}                               Please enter a last name.
+${enter_a_valid_email}                             Please enter a valid email address.
+${enter_a_valid_date}                              Please enter a valid date.
+${enter_a_phone_number}                            Please enter a phone number.
+${enter_a_valid_phone_number}                      Please enter a valid phone number.
+${enter_a_phone_number_between_8_and_20_digits}    Please enter a valid phone number between 8 and 20 digits.
+${only_accept_whole_numbers_message}               This field can only accept whole numbers.
+${field_should_be_1_or_higher}                     This field should be 1 or higher.
 
 # Database variables
 ${database_name}    ifs

@@ -50,10 +50,10 @@ Companies House: Valid registration number
 Companies House: Empty company name field
     [Documentation]    INFUND-887
     [Tags]
-    Given the user should see the element        jQuery = h1 span:contains("Start new application")
-    When the user enters text to a text field    id = organisationSearchName    ${EMPTY}
-    And the user clicks the button/link          id = org-search
-    Then the user should see an error            Please enter an organisation name to search
+    Given the user should see the element         jQuery = h1 span:contains("Start new application")
+    When the user enters text to a text field     id = organisationSearchName    ${EMPTY}
+    And the user clicks the button/link           id = org-search
+    Then the user should see a field error        Please enter an organisation name to search
 
 Manually add the details and pass to the confirmation page
     [Documentation]    INFUND-888
