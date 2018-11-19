@@ -10,6 +10,7 @@ public class CompetitionSetupFinanceResource {
     private Long competitionId;
     private ApplicationFinanceType applicationFinanceType;
     private Boolean includeGrowthTable;
+    private Boolean includeYourOrganisationSection;
     private Boolean includeJesForm;
 
     public Long getCompetitionId() {
@@ -36,6 +37,14 @@ public class CompetitionSetupFinanceResource {
         this.includeGrowthTable = includeGrowthTable;
     }
 
+    public Boolean getIncludeYourOrganisationSection() {
+        return includeYourOrganisationSection;
+    }
+
+    public void setIncludeYourOrganisationSection(final Boolean includeYourOrganisationSection) {
+        this.includeYourOrganisationSection = includeYourOrganisationSection;
+    }
+
     public Boolean getIncludeJesForm() {
         return includeJesForm;
     }
@@ -46,21 +55,18 @@ public class CompetitionSetupFinanceResource {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
 
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         CompetitionSetupFinanceResource that = (CompetitionSetupFinanceResource) o;
 
         return new EqualsBuilder()
-                .append(includeGrowthTable, that.includeGrowthTable)
                 .append(competitionId, that.competitionId)
                 .append(applicationFinanceType, that.applicationFinanceType)
+                .append(includeGrowthTable, that.includeGrowthTable)
+                .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
+                .append(includeJesForm, that.includeJesForm)
                 .isEquals();
     }
 
@@ -70,6 +76,8 @@ public class CompetitionSetupFinanceResource {
                 .append(competitionId)
                 .append(applicationFinanceType)
                 .append(includeGrowthTable)
+                .append(includeYourOrganisationSection)
+                .append(includeJesForm)
                 .toHashCode();
     }
 
@@ -79,6 +87,8 @@ public class CompetitionSetupFinanceResource {
                 "competitionId=" + competitionId +
                 ", applicationFinanceType=" + applicationFinanceType +
                 ", includeGrowthTable=" + includeGrowthTable +
+                ", includeYourOrganisationSection=" + includeYourOrganisationSection +
+                ", includeJesForm=" + includeJesForm +
                 '}';
     }
 }

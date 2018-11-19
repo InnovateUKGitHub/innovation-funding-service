@@ -535,6 +535,7 @@ Application: Finances
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]
     When the user selects the radio button         includeGrowthTable  true
+    And the user selects the radio button          includeYourOrganisationSection  true
     And the user selects the radio button          includeJesForm  true
     And the user enters text to a text field       css = .editor  Funding rules for this competition are now entered.
     Then The user clicks the button/link           css = button[type="submit"]  #Save and close

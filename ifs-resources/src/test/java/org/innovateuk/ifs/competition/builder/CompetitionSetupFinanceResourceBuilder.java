@@ -31,6 +31,11 @@ public class CompetitionSetupFinanceResourceBuilder extends BaseBuilder<Competit
         return withArray((includeGrowthTable, competitionSetupFinance) -> competitionSetupFinance.setIncludeGrowthTable(includeGrowthTable), includeGrowthTables);
     }
 
+    public CompetitionSetupFinanceResourceBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSections) {
+        return withArray((includeYourOrganisationSection, competitionSetupFinance) ->
+                competitionSetupFinance.setIncludeYourOrganisationSection(includeYourOrganisationSection), includeYourOrganisationSections);
+    }
+
     public CompetitionSetupFinanceResourceBuilder withIncludeJesForm(Boolean... includeJesForms) {
         return withArray((includeJesForm, competitionSetupFinance) -> competitionSetupFinance.setIncludeJesForm(includeJesForm), includeJesForms);
     }

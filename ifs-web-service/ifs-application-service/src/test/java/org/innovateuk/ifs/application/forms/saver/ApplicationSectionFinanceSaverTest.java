@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +21,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_SECT
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link ApplicationSectionFinanceSaver}
@@ -48,16 +46,6 @@ public class ApplicationSectionFinanceSaverTest {
                                 .withCompetition(competitionId)
                                 .withType(SectionType.ORGANISATION_FINANCES)
                                 .build(1));
-    }
-
-    @Test
-    public void handleMarkAcademicFinancesAsNotRequired() {
-        saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.PUBLIC_SECTOR_OR_CHARITY.getId(), newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build(), 3L, competitionId, 7L);
-        saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.RESEARCH.getId(), newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build(), 3L, competitionId, 7L);
-
-        saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.RESEARCH.getId(), newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build(), 3L, competitionId, 7L);
-
-        verify(sectionService, times(1)).markAsNotRequired(anyLong(), anyLong(), anyLong());
     }
 
     @Test

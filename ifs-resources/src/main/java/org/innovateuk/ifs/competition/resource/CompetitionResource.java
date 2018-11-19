@@ -95,6 +95,7 @@ public class CompetitionResource {
 
     private boolean locationPerPartner = true;
     private Boolean stateAid;
+    private Boolean includeYourOrganisationSection;
 
     private Set<Long> grantClaimMaximums;
 
@@ -644,6 +645,14 @@ public class CompetitionResource {
         this.stateAid = stateAid;
     }
 
+    public Boolean getIncludeYourOrganisationSection() {
+        return includeYourOrganisationSection;
+    }
+
+    public void setIncludeYourOrganisationSection(final Boolean includeYourOrganisationSection) {
+        this.includeYourOrganisationSection = includeYourOrganisationSection;
+    }
+
     public Set<Long> getGrantClaimMaximums() {
         return grantClaimMaximums;
     }
@@ -779,6 +788,7 @@ public class CompetitionResource {
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
                 .append(stateAid, that.stateAid)
+                .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
                 .append(includeProjectGrowthTable, that.includeProjectGrowthTable)
@@ -845,6 +855,7 @@ public class CompetitionResource {
                 .append(termsAndConditions)
                 .append(locationPerPartner)
                 .append(stateAid)
+                .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)
                 .append(includeProjectGrowthTable)

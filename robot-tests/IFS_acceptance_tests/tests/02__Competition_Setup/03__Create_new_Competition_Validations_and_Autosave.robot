@@ -216,6 +216,7 @@ Application finances: validation empty
     And the user enters text to a text field                   css = .editor  Funding rules for this competition added
     And the user selects the radio button                      applicationFinanceType  STANDARD
     And the user selects the radio button                      includeGrowthTable  false
+    And the user selects the radio button                      includeYourOrganisationSection  true
     And the user selects the radio button                      includeJesForm  true
     And the user clicks the button/link                        jQuery = button:contains("Done")
 
