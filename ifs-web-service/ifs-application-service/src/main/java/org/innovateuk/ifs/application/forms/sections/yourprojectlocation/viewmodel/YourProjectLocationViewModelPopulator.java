@@ -51,13 +51,8 @@ public class YourProjectLocationViewModelPopulator {
     }
 
     private boolean isOpen(ApplicationResource application) {
-
-        if (application.isOpen()) {
-            return true;
-        } else {
-            CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-            return competition.isOpen();
-        }
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        return competition.isOpen() && application.isOpen();
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {

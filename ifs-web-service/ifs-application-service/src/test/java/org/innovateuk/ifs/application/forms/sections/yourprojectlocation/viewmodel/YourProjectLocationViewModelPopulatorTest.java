@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,9 +22,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.when;
 
-/**
- * TODO DW - document this class
- */
 @RunWith(MockitoJUnitRunner.class)
 public class YourProjectLocationViewModelPopulatorTest {
 
@@ -47,8 +45,63 @@ public class YourProjectLocationViewModelPopulatorTest {
         boolean internalUser = false;
         List<Long> sectionsMarkedAsComplete = asList(111L, sectionId, 333L);
         ApplicationState applicationState = ApplicationState.OPEN;
+        CompetitionStatus competitionState = CompetitionStatus.OPEN;
+
+        boolean expectedComplete = true;
+        boolean expectedOpen = true;
+        boolean expectedReadonly = true;
+
+        assertViewModelPopulatedOk(
+                organisationId,
+                sectionId,
+                internalUser,
+                sectionsMarkedAsComplete,
+                applicationState,
+                competitionState,
+                expectedComplete,
+                expectedOpen,
+                expectedReadonly);
+    }
+
+    @Test
+    public void populateCompetitionClosed() {
+
+        long organisationId = 123L;
+        long sectionId = 789L;
+        boolean internalUser = false;
+        List<Long> sectionsMarkedAsComplete = asList(111L, sectionId, 333L);
+        ApplicationState applicationState = ApplicationState.OPEN;
+        CompetitionStatus competitionState = CompetitionStatus.CLOSED;
+
+        boolean expectedComplete = true;
+        boolean expectedOpen = false;
+        boolean expectedReadonly = true;
+
+        assertViewModelPopulatedOk(
+                organisationId,
+                sectionId,
+                internalUser,
+                sectionsMarkedAsComplete,
+                applicationState,
+                competitionState,
+                expectedComplete,
+                expectedOpen,
+                expectedReadonly);
+    }
+
+    private void assertViewModelPopulatedOk(
+            long organisationId,
+            long sectionId,
+            boolean internalUser,
+            List<Long> sectionsMarkedAsComplete,
+            ApplicationState applicationState,
+            CompetitionStatus competitionStatus,
+            boolean expectedComplete,
+            boolean expectedOpen,
+            boolean expectedReadonly) {
 
         CompetitionResource competition = newCompetitionResource().
+                withCompetitionStatus(competitionStatus).
                 build();
 
         ApplicationResource application = newApplicationResource().
@@ -67,8 +120,8 @@ public class YourProjectLocationViewModelPopulatorTest {
         assertThat(viewModel.getApplicationName()).isEqualTo(application.getName());
         assertThat(viewModel.getFinancesUrl()).isEqualTo("/application/" + application.getId() + "/form/FINANCE");
         assertThat(viewModel.getSectionId()).isEqualTo(sectionId);
-        assertThat(viewModel.isComplete()).isEqualTo(true);
-        assertThat(viewModel.isOpen()).isEqualTo(true);
-        assertThat(viewModel.isReadOnly()).isEqualTo(true);
+        assertThat(viewModel.isComplete()).isEqualTo(expectedComplete);
+        assertThat(viewModel.isOpen()).isEqualTo(expectedOpen);
+        assertThat(viewModel.isReadOnly()).isEqualTo(expectedReadonly);
     }
 }
