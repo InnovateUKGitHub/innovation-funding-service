@@ -14,8 +14,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-import static com.google.common.primitives.Longs.asList;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -24,6 +25,24 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class YourProjectLocationViewModelPopulatorTest {
+
+    private static long applicationId = 9876L;
+    private static long organisationId = 5432L;
+    private static long sectionId = 1234L;
+
+    private static Consumer<YourProjectLocationViewModel> expectViewModelIsComplete = model -> assertThat(model.isComplete()).isTrue();
+    private static Consumer<YourProjectLocationViewModel> expectViewModelIsOpen = model -> assertThat(model.isOpen()).isTrue();
+    private static Consumer<YourProjectLocationViewModel> expectViewModelIsReadonly = model -> assertThat(model.isReadOnly()).isTrue();
+
+    private static Consumer<YourProjectLocationViewModel> expectViewModelIsIncomplete = model -> assertThat(model.isComplete()).isFalse();
+    private static Consumer<YourProjectLocationViewModel> expectViewModelIsClosed = model -> assertThat(model.isOpen()).isFalse();
+    private static Consumer<YourProjectLocationViewModel> expectViewModelIsEditable = model -> assertThat(model.isReadOnly()).isFalse();
+
+    private static Consumer<YourProjectLocationViewModel> expectedExternalUserFinanceUrl = model ->
+            assertThat(model.getFinancesUrl()).isEqualTo("/application/" + applicationId + "/form/FINANCE");
+
+    private static Consumer<YourProjectLocationViewModel> expectedInternalUserFinanceUrl = model ->
+            assertThat(model.getFinancesUrl()).isEqualTo("/application/" + applicationId + "/form/FINANCE/" + organisationId);
 
     @InjectMocks
     private YourProjectLocationViewModelPopulator populator;
@@ -40,71 +59,111 @@ public class YourProjectLocationViewModelPopulatorTest {
     @Test
     public void populate() {
 
-        long organisationId = 123L;
-        long sectionId = 789L;
+        boolean internalUser = false;
+        List<Long> sectionsMarkedAsComplete = asList(111L, 333L);
+        ApplicationState applicationState = ApplicationState.OPEN;
+        CompetitionStatus competitionState = CompetitionStatus.OPEN;
+
+        assertViewModelPopulatedOk(
+                internalUser,
+                sectionsMarkedAsComplete,
+                applicationState,
+                competitionState,
+                expectViewModelIsIncomplete,
+                expectViewModelIsOpen,
+                expectViewModelIsEditable,
+                expectedExternalUserFinanceUrl);
+    }
+
+    @Test
+    public void populateComplete() {
+
         boolean internalUser = false;
         List<Long> sectionsMarkedAsComplete = asList(111L, sectionId, 333L);
         ApplicationState applicationState = ApplicationState.OPEN;
         CompetitionStatus competitionState = CompetitionStatus.OPEN;
 
-        boolean expectedComplete = true;
-        boolean expectedOpen = true;
-        boolean expectedReadonly = true;
-
         assertViewModelPopulatedOk(
-                organisationId,
-                sectionId,
                 internalUser,
                 sectionsMarkedAsComplete,
                 applicationState,
                 competitionState,
-                expectedComplete,
-                expectedOpen,
-                expectedReadonly);
+                expectViewModelIsComplete,
+                expectViewModelIsOpen,
+                expectViewModelIsReadonly,
+                expectedExternalUserFinanceUrl);
     }
 
     @Test
     public void populateCompetitionClosed() {
 
-        long organisationId = 123L;
-        long sectionId = 789L;
         boolean internalUser = false;
-        List<Long> sectionsMarkedAsComplete = asList(111L, sectionId, 333L);
+        List<Long> sectionsMarkedAsComplete = asList(111L, 333L);
         ApplicationState applicationState = ApplicationState.OPEN;
         CompetitionStatus competitionState = CompetitionStatus.CLOSED;
 
-        boolean expectedComplete = true;
-        boolean expectedOpen = false;
-        boolean expectedReadonly = true;
-
         assertViewModelPopulatedOk(
-                organisationId,
-                sectionId,
                 internalUser,
                 sectionsMarkedAsComplete,
                 applicationState,
                 competitionState,
-                expectedComplete,
-                expectedOpen,
-                expectedReadonly);
+                expectViewModelIsIncomplete,
+                expectViewModelIsClosed,
+                expectViewModelIsReadonly,
+                expectedExternalUserFinanceUrl);
+    }
+
+    @Test
+    public void populateApplicationClosed() {
+
+        boolean internalUser = false;
+        List<Long> sectionsMarkedAsComplete = asList(111L, 333L);
+        ApplicationState applicationState = ApplicationState.SUBMITTED;
+        CompetitionStatus competitionState = CompetitionStatus.OPEN;
+
+        assertViewModelPopulatedOk(
+                internalUser,
+                sectionsMarkedAsComplete,
+                applicationState,
+                competitionState,
+                expectViewModelIsIncomplete,
+                expectViewModelIsClosed,
+                expectViewModelIsReadonly,
+                expectedExternalUserFinanceUrl);
+    }
+
+    @Test
+    public void populateForInternalUser() {
+
+        boolean internalUser = true;
+        List<Long> sectionsMarkedAsComplete = asList(111L, 333L);
+        ApplicationState applicationState = ApplicationState.OPEN;
+        CompetitionStatus competitionState = CompetitionStatus.OPEN;
+
+        assertViewModelPopulatedOk(
+                internalUser,
+                sectionsMarkedAsComplete,
+                applicationState,
+                competitionState,
+                expectViewModelIsIncomplete,
+                expectViewModelIsClosed,
+                expectViewModelIsReadonly,
+                expectedInternalUserFinanceUrl);
     }
 
     private void assertViewModelPopulatedOk(
-            long organisationId,
-            long sectionId,
             boolean internalUser,
             List<Long> sectionsMarkedAsComplete,
             ApplicationState applicationState,
             CompetitionStatus competitionStatus,
-            boolean expectedComplete,
-            boolean expectedOpen,
-            boolean expectedReadonly) {
+            Consumer<YourProjectLocationViewModel>... conditionalAssertions) {
 
         CompetitionResource competition = newCompetitionResource().
                 withCompetitionStatus(competitionStatus).
                 build();
 
         ApplicationResource application = newApplicationResource().
+                withId(applicationId).
                 withCompetition(competition.getId()).
                 withName("Lovely application").
                 withApplicationState(applicationState).
@@ -118,10 +177,8 @@ public class YourProjectLocationViewModelPopulatorTest {
 
         assertThat(viewModel.getApplicationId()).isEqualTo(application.getId());
         assertThat(viewModel.getApplicationName()).isEqualTo(application.getName());
-        assertThat(viewModel.getFinancesUrl()).isEqualTo("/application/" + application.getId() + "/form/FINANCE");
         assertThat(viewModel.getSectionId()).isEqualTo(sectionId);
-        assertThat(viewModel.isComplete()).isEqualTo(expectedComplete);
-        assertThat(viewModel.isOpen()).isEqualTo(expectedOpen);
-        assertThat(viewModel.isReadOnly()).isEqualTo(expectedReadonly);
+
+        asList(conditionalAssertions).forEach(p -> p.accept(viewModel));
     }
 }
