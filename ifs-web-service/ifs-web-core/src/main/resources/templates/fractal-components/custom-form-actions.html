@@ -1,29 +1,43 @@
-<h1 class="govuk-heading-xl">Custom form actions</h1>
+<div class="govuk-width-container">
 
-<h3 class="govuk-heading-s">Example when form is editable</h3>
+    <div class="govuk-inset-text">
+        <p class="govuk-body">
+            This is an IFS component.
+        </p>
+    </div>
 
-<div class="form-footer">
-  <div class="form-footer__actions"><a href="#" class="govuk-link">Mark as complete</a></div>
-  <div class="form-footer__info">
-    <span class="textarea-footer"></span>
-    <span class="update-label">Last updated: </span>
-    <span class="update-details">Today by you</span>
-    <span class="count-label">
-      <span aria-live="polite" class="count-down positive">Words remaining: 400</span>
-    </span>
-  </div>
-</div>
+    <h2 class="govuk-heading-s">Example when form is editable</h2>
 
-<h3 class="govuk-heading-s">Example when marked as complete</h3>
+    <div class="form-footer">
+        <div class="form-footer__actions">
+            <button id="application-question-complete" type="submit" name="mark_as_complete" class="govuk-button button-clear" value="634">Mark as complete
+            </button>
+        </div>
+        <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
+            <span class="textarea-footer"></span>
+            <span class="update-label">Last updated: </span>
+            <span class="update-details">5 July 1:57pm by you</span>
+            <span class="count-label">
+                <span class="count-down positive">Words remaining: 351</span>
+            </span>
+        </div>
+    </div>
 
-<div class="form-footer">
-  <div class="form-footer__actions"><a href="#" class="govuk-link">Edit</a></div>
-  <div class="form-footer__info">
-    <span class="textarea-footer"></span>
-    <span class="update-label">Last updated: </span>
-    <span class="update-details">Today by you</span>
-    <span class="count-label">
-      <span aria-live="polite" class="count-down positive">Words remaining: 400</span>
-    </span>
-  </div>
+    <h2 class="govuk-heading-s govuk-!-margin-top-9">Example when form is editable</h2>
+
+    <div class="form-footer">
+        <div class="form-footer__actions">
+            <button type="submit" name="mark_as_incomplete" value="634" class="govuk-button button-clear">Edit</button>
+        </div>
+        <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
+            <span class="textarea-footer"></span>
+            <span class="update-label">Last updated: </span>
+            <span class="update-details">5 July 1:57pm by you</span>
+            <span class="count-label">
+                <span class="count-down positive">Words remaining: 351</span>
+            </span>
+        </div>
+    </div>
+
+
 </div>
