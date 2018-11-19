@@ -143,7 +143,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     private ProjectDocument getProjectDocument(Project project, long documentConfigId) {
         return simpleFindAny(project.getProjectDocuments(), projectDocument -> projectDocument.getProjectDocument().getId().equals(documentConfigId))
-                .get();
+                .orElse(null);
     }
 
     @Override

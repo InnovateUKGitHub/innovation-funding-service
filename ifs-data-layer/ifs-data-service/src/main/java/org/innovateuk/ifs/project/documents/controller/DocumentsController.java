@@ -49,7 +49,6 @@ public class DocumentsController {
                                                         @RequestParam(value = "filename", required = false) String originalFilename,
                                                         HttpServletRequest request) {
 
-
         List<String> validMediaTypesForDocument = documentsService.getValidMediaTypesForDocument(documentConfigId).getSuccess();
 
         return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename,
