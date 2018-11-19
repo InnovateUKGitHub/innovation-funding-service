@@ -186,6 +186,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("stateAid", stateAid);
     }
 
+    public CompetitionBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSection) {
+        return withArraySetFieldByReflection("includeYourOrganisationSection", includeYourOrganisationSection);
+    }
+
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
         ZonedDateTime now = ZonedDateTime.now();
         if(READY_TO_OPEN.equals(status)) {
@@ -295,4 +299,9 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
         return withArraySetFieldByReflection("modifiedOn", modifiedOns);
     }
+
+    public CompetitionBuilder withIncludeJesForm(boolean... includeJesForms) {
+        return withArraySetFieldByReflection("includeJesForm", includeJesForms);
+    }
+
 }
