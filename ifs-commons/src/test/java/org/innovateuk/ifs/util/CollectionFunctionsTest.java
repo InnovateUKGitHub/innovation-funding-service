@@ -1137,8 +1137,43 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_simpleAnyMatch_withArray_nullList() {
+    public void test_simpleAnyMatch_withArray_nullArray() {
         assertFalse(simpleAnyMatch((Integer[]) null, i -> i > 2));
+    }
+
+    @Test
+    public void test_simpleAllMatch() {
+        assertTrue(simpleAllMatch(asList(1, 2, 3), i -> i > 0));
+    }
+
+    @Test
+    public void test_simpleAllMatch_noMatch() {
+        assertFalse(simpleAllMatch(asList(1, 2, 3), i -> i > 1));
+    }
+
+    @Test
+    public void test_simpleAllMatch_nullList() {
+        assertTrue(simpleAllMatch((List<Integer>) null, i -> i > 2));
+    }
+
+    @Test
+    public void test_simpleAllMatch_emptyList() {
+        assertTrue(simpleAllMatch(emptyList(), i -> i != null));
+    }
+
+    @Test
+    public void test_simpleAllMatch_withArray() {
+        assertTrue(simpleAllMatch(new Integer[] {1, 2, 3}, i -> i > 0));
+    }
+
+    @Test
+    public void test_simpleAllMatch_withArray_noMatch() {
+        assertFalse(simpleAllMatch(new Integer[] {1, 2}, i -> i > 1));
+    }
+
+    @Test
+    public void test_simpleAllMatch_withArray_nullArray() {
+        assertTrue(simpleAllMatch((Integer[]) null, i -> i > 2));
     }
 
     @Test
