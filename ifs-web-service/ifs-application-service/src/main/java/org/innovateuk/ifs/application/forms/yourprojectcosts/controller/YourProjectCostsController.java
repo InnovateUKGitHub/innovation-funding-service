@@ -3,18 +3,20 @@ package org.innovateuk.ifs.application.forms.yourprojectcosts.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.innovateuk.ifs.application.forms.saver.ApplicationSectionFinanceSaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.LabourForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.ApplicationYourProjectCostsFormPopulator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.AbstractYourProjectCostsSaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.ApplicationYourProjectCostsSaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsAutosaver;
-import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.AbstractYourProjectCostsSaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -25,6 +27,7 @@ import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.slf4j.Logger;
@@ -84,6 +87,8 @@ public class YourProjectCostsController extends AsyncAdaptor {
     @Autowired
     private OverheadFileRestService overheadFileRestService;
 
+    @Autowired
+    private ApplicationSectionFinanceSaver completeSectionAction;
 
     @GetMapping("/{applicantOrganisationId}")
     @SecuredBySpring(value = "MANAGEMENT_VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your Finances'")
@@ -140,8 +145,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, user));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId()))
-                        .getSuccess().forEach(validationHandler::addAnyErrors);
+                validationHandler.addAnyErrors(markAsComplete(sectionId, applicationId, user));
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });
@@ -286,6 +290,20 @@ public class YourProjectCostsController extends AsyncAdaptor {
     }
 
     private long getProcessRoleId(long applicationId, long userId) {
-        return userRestService.findProcessRole(userId, applicationId).getSuccess().getId();
+        return getProcessRole(applicationId, userId).getId();
+    }
+
+    private ProcessRoleResource getProcessRole(long applicationId, long userId) {
+        return userRestService.findProcessRole(userId, applicationId).getSuccess();
+    }
+
+    private ValidationMessages markAsComplete(long sectionId, long applicationId, UserResource user) {
+        ValidationMessages messages = new ValidationMessages();
+        ProcessRoleResource role = getProcessRole(applicationId, user.getId());
+        sectionStatusRestService.markAsComplete(sectionId, applicationId, role.getId()).getSuccess().forEach(messages::addAll);
+        if (!messages.hasErrors()) {
+            completeSectionAction.handleMarkProjectCostsAsComplete(role);
+        }
+        return messages;
     }
 }
