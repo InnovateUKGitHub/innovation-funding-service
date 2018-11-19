@@ -185,8 +185,8 @@
         <td class="govuk-table__cell govuk-table__cell--numeric"
             data-calculation-operations="/"
             th:attr="data-calculation-fields=|[id='__${path}__.gross'],[id='working-days-per-year']|,
-                                                     data-calculation-rawValue=${row.rate}"
-            th:text="'£' + ${#numbers.formatInteger(row.rate, 0, 'DEFAULT')}">
+                                                     data-calculation-rawValue=${row.rate == null ? 0 : row.rate}"
+            th:text="'£' + ${#numbers.formatInteger(row.rate == null ? 0 : row.rate, 0, 'DEFAULT')}">
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.days">

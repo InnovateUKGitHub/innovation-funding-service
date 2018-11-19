@@ -99,7 +99,7 @@ public class LabourCost extends AbstractFinanceRowItem {
 
     private BigDecimal getRatePerDay(Integer workingDaysPerYear) {
         if(grossEmployeeCost == null || workingDaysPerYear == null) {
-            return BigDecimal.ZERO;
+            return null;
         }
 
         if(workingDaysPerYear.equals(0)) {

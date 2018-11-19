@@ -150,7 +150,7 @@ public class YourFundingController {
                                            @PathVariable long applicationId,
                                            @PathVariable long sectionId,
                                            @ModelAttribute("form") YourFundingForm form,
-                                           @RequestParam("remove_other_funding") String costId) {
+                                           @RequestParam("remove_cost") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
         return viewYourFunding(model, applicationId, sectionId, user);

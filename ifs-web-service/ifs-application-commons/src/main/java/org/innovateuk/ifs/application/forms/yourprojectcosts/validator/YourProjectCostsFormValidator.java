@@ -65,7 +65,7 @@ public class YourProjectCostsFormValidator {
     }
 
     private void validateOverhead(OverheadForm overhead, ValidationHandler validationHandler) {
-        if (OverheadRateType.CUSTOM_RATE.equals(overhead.getRateType())) {
+        if (OverheadRateType.TOTAL.equals(overhead.getRateType())) {
             validateForm(overhead, validationHandler, "overhead.");
         }
     }

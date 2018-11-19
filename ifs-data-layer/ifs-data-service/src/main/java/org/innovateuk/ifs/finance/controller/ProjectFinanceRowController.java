@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.controller;
 
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -96,7 +97,9 @@ public class ProjectFinanceRowController {
         }
         return restSuccess(validationMessages);
     }
-    @DeleteMapping("/delete/{costId}")
+
+    @ZeroDowntime(reference = "IFS-3486", description = "Remove old mapping")
+    @DeleteMapping({"/delete/{costId}", "/{projectId}/organisation/{organisationId}/delete/{costId}"})
     public RestResult<Void> delete(@PathVariable("costId") final Long costId) {
         return projectFinanceRowService.deleteCost(costId).toDeleteResponse();
     }

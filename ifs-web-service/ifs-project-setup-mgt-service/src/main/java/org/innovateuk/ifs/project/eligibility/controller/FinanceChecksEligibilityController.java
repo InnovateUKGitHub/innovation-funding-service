@@ -2,17 +2,12 @@ package org.innovateuk.ifs.project.eligibility.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
@@ -24,15 +19,14 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
+import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
 import org.innovateuk.ifs.project.eligibility.saver.FinanceChecksEligibilityProjectCostsSaver;
 import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksProjectCostsViewModel;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
@@ -43,11 +37,9 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,8 +60,6 @@ import java.util.function.Supplier;
 public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     private static final String FORM_ATTR_NAME = "form";
-    private static final String ADD_COST = "add_cost";
-    private static final String QUESTION_ID = "questionId";
 
     @Autowired
     private FinanceCheckService financeCheckService;
@@ -78,19 +68,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private OpenProjectFinanceSectionModelPopulator openFinanceSectionModel;
-
-    @Autowired
     private SectionService sectionService;
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private ApplicationModelPopulator applicationModelPopulator;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -102,19 +83,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
-    private ProjectFinanceRowRestService projectFinanceRowRestService;
-
-    @Autowired
     private FinanceUtil financeUtil;
 
     @Autowired
     private FinanceService financeService;
-
-    @Autowired
-    private UserRestService userRestService;
-
-    @Autowired
-    private ApplicantRestService applicantRestService;
 
     @Autowired
     private FinanceChecksEligibilityProjectCostsFormPopulator formPopulator;
@@ -125,10 +97,13 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @Autowired
     private FinanceChecksEligibilityProjectCostsSaver yourProjectCostsSaver;
 
+    @Autowired
+    private ProjectFinanceChangesViewModelPopulator projectFinanceChangesViewModelPopulator;
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
-    public String viewEligibility(@P("projectId")@PathVariable("projectId") Long projectId,
-                                  @PathVariable("organisationId") Long organisationId,
+    public String viewEligibility(@PathVariable long projectId,
+                                  @PathVariable Long organisationId,
                                   @ModelAttribute(name = FORM_ATTR_NAME, binding = false) YourProjectCostsForm form,
                                   @RequestParam(value = "financeType", required = false) FinanceRowType rowType,
                                   BindingResult bindingResult,
@@ -139,7 +114,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, FinanceRowType rowType) {
         ProjectResource project = projectService.getById(projectId);
-        Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(project.getId()).getSuccess());
+        Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(project.getCompetition()).getSuccess());
         Future<OrganisationResource> organisation = async(() -> organisationRestService.getOrganisationById(organisationId).getSuccess());
         Future<OrganisationResource> leadOrganisation = async(() -> projectService.getLeadOrganisation(projectId));
         Future<EligibilityResource> eligibility = async(() -> projectFinanceService.getEligibility(projectId, organisationId));
@@ -188,8 +163,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save-eligibility")
-    public String projectFinanceFormSubmit(@P("projectId")@PathVariable("projectId") final Long projectId,
-                                           @PathVariable("organisationId") Long organisationId,
+    public String projectFinanceFormSubmit(@PathVariable final Long projectId,
+                                           @PathVariable Long organisationId,
                                            @RequestParam("save-eligibility") FinanceRowType type,
                                            @ModelAttribute(FORM_ATTR_NAME) YourProjectCostsForm form,
                                            BindingResult bindingResult,
@@ -206,9 +181,11 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         });
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping("remove-row/{rowId}")
     public @ResponseBody
-    String ajaxRemoveRow(UserResource user,
+    String ajaxRemoveRow(@PathVariable long projectId,
+                         @PathVariable long organisationId,
                          @PathVariable String rowId) throws JsonProcessingException {
         yourProjectCostsSaver.removeFinanceRow(rowId);
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
@@ -216,9 +193,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping("add-row/{rowType}")
     public String ajaxAddRow(Model model,
-                             UserResource user,
                              @PathVariable long projectId,
                              @PathVariable long organisationId,
                              @PathVariable FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
@@ -234,14 +211,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
     }
 
-    private FinanceRowItem addCost(CompetitionResource competitionResource, Long orgType, Long organisationId, Long projectId, Long questionId) {
-        return financeViewHandlerProvider.getProjectFinanceFormHandler(competitionResource, orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
-    }
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "confirm-eligibility")
-    public String confirmEligibility(@P("projectId")@PathVariable("projectId") Long projectId,
-                                     @PathVariable("organisationId") Long organisationId,
+    public String confirmEligibility(@PathVariable long projectId,
+                                     @PathVariable long organisationId,
                                      @ModelAttribute(FORM_ATTR_NAME) YourProjectCostsForm form,
                                      @SuppressWarnings("unused") BindingResult bindingResult,
                                      @ModelAttribute("eligibilityForm") FinanceChecksEligibilityForm eligibilityForm,
@@ -257,8 +230,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save-and-continue")
-    public String saveAndContinue(@P("projectId")@PathVariable("projectId") Long projectId,
-                                  @PathVariable("organisationId") Long organisationId,
+    public String saveAndContinue(@PathVariable long projectId,
+                                  @PathVariable Long organisationId,
                                   @ModelAttribute(FORM_ATTR_NAME) YourProjectCostsForm form,
                                   @ModelAttribute("eligibilityForm") FinanceChecksEligibilityForm eligibilityForm,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
@@ -273,7 +246,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping("/changes")
-    public String viewExternalEligibilityChanges(@P("projectId")@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, Model model, UserResource loggedInUser){
+    public String viewExternalEligibilityChanges(@PathVariable final Long projectId, @PathVariable final Long organisationId, Model model, UserResource loggedInUser){
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
@@ -305,10 +278,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager) financeViewHandlerProvider
-                .getProjectFinanceModelManager(competition, organisation.getOrganisationType()))
-                    .getProjectFinanceChangesViewModel(true, project, organisation, userId);
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = projectFinanceChangesViewModelPopulator
+                .getProjectFinanceChangesViewModel(true, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";
     }
