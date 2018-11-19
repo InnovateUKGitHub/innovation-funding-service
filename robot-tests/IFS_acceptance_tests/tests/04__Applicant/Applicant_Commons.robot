@@ -166,14 +166,14 @@ the user fills in Material
 
 the user fills in Capital usage
     the user clicks the button/link       jQuery = button:contains("Capital usage")
-    the user enters text to a text field  css = textarea.govuk-textarea[name^=capital_usage-description]  some description
+    the user enters text to a text field  css = textarea.govuk-textarea[name^=capitalUsageRows]  some description
     Click Element                         jQuery = label:contains("New")
     the user enters text to a text field  css = .form-finances-capital-usage-depreciation  10
     the user enters text to a text field  css = .form-finances-capital-usage-npv  5000
     the user enters text to a text field  css = .form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css = .form-finances-capital-usage-utilisation   100
     Set Focus To Element                  css = .section-total-summary > [data-mirror^="#section-total"]
-    textfield should contain              css = #capital_usage .form-row:nth-of-type(1) [readonly]  £4,975
+    textfield should contain              css = #section-total-capital-usage  £4,975
     the user clicks the button/link       jQuery = button:contains("Capital usage")
 
 the user fills in Subcontracting costs
