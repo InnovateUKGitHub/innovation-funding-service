@@ -374,16 +374,6 @@ the user should see that the funding depends on the research area
 the user should see his finances empty
     the user should see the element  jQuery = thead:contains("Total project costs") ~ *:contains("£0")
 
-the user decides about the growth table
-    [Arguments]  ${edit}  ${read}
-    the user should see the element   jQuery = h1:contains("Competition setup")
-    the user clicks the button/link   link = Application
-    the user fills in the Finances questions  ${edit}
-    the user clicks the button/link   link = Finances
-    the user should see the element   jQuery = dt:contains("Include project growth table") + dd:contains("${read}")
-    the user clicks the button/link   link = Application
-    the user clicks the button/link   link = Competition setup
-
 the user enters value to field
     [Arguments]  ${field}  ${value}
     the user enters text to a text field  jQuery = td:contains("${field}") + td input  ${value}

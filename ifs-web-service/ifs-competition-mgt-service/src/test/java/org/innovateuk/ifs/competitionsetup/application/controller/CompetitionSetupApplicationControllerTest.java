@@ -165,15 +165,17 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("financesRequired", String.valueOf(true)))
                 .andExpect(status().isOk())
-                .andExpect(model().errorCount(4))
+                .andExpect(model().errorCount(5))
                 .andExpect(model().attributeExists("competitionSetupForm"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "applicationFinanceType",
                         "NotNull"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeGrowthTable",
                         "FieldRequiredIf"))
-                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "fundingRules",
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeYourOrganisationSection",
                         "FieldRequiredIf"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeJesForm",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "fundingRules",
                         "FieldRequiredIf"));
 
         verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(CompetitionSetupForm.class),

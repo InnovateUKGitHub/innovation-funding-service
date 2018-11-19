@@ -45,11 +45,13 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
     public void save() {
         long competitionId = 1L;
         boolean isIncludeGrowthTable = false;
-        Boolean includeJesForm = true;
+        boolean isIncludeYourOrganisationSection = false;
+        boolean includeJesForm = true;
         CompetitionSetupFinanceResource compSetupFinanceRes = newCompetitionSetupFinanceResource()
                 .withCompetitionId(competitionId)
                 .withIncludeGrowthTable(isIncludeGrowthTable)
                 .withIncludeJesForm(includeJesForm)
+                .withIncludeYourOrganisationSection(isIncludeYourOrganisationSection)
                 .withApplicationFinanceType(STANDARD)
                 .build();
 
@@ -80,6 +82,8 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         // Assertions
         assertTrue(save.isSuccess());
         assertEquals(STANDARD, c.getApplicationFinanceType());
+        assertFalse(c.getIncludeProjectGrowthTable());
+        assertFalse(c.getIncludeYourOrganisationSection());
         assertEquals(isIncludeGrowthTable, !staffCountFormInput.getActive());
         assertEquals(isIncludeGrowthTable, !organisationTurnoverFormInput.getActive());
         assertEquals(isIncludeGrowthTable, financialYearEnd.getActive());
@@ -93,6 +97,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         Competition competition = newCompetition()
                 .withApplicationFinanceType(STANDARD)
                 .withIncludeProjectGrowthTable(true)
+                .withIncludeYourOrganisationSection(true)
                 .build();
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
@@ -100,37 +105,27 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
 
         assertEquals(STANDARD, result.getApplicationFinanceType());
         assertTrue(result.getIncludeGrowthTable());
+        assertTrue(result.getIncludeYourOrganisationSection());
     }
 
     @Test
     public void getForCompetition_noFinanceType() {
         Competition competition = newCompetition()
                 .withApplicationFinanceType(NO_FINANCES)
-                .withIncludeProjectGrowthTable(true)
+                .withIncludeProjectGrowthTable(false)
+                .withIncludeYourOrganisationSection(false)
                 .build();
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
         CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 
         assertEquals(NO_FINANCES, result.getApplicationFinanceType());
-        assertTrue(result.getIncludeGrowthTable());
+        assertFalse(result.getIncludeGrowthTable());
+        assertFalse(result.getIncludeYourOrganisationSection());
     }
 
     @Test
-    public void getForCompetition_nullFinanceType() {
-        Competition competition = newCompetition()
-                .withIncludeProjectGrowthTable(true)
-                .build();
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-
-        CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
-
-        assertNull(result.getApplicationFinanceType());
-        assertTrue(result.getIncludeGrowthTable());
-    }
-
-    @Test
-    public void getForCompetition_nullIncludeProjectGrowthTable() {
+    public void getForCompetition_nullFields() {
         Competition competition = newCompetition().build();
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
@@ -138,5 +133,6 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
 
         assertNull(result.getApplicationFinanceType());
         assertNull(result.getIncludeGrowthTable());
+        assertNull(result.getIncludeYourOrganisationSection());
     }
 }
