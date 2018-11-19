@@ -50,12 +50,9 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.REJECTED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isStakeholder;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -167,7 +164,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates getPartnerProjectLocationStatus(Project project) {
 
-        return simpleAnyMatch(project.getPartnerOrganisations(), partnerOrganisation -> StringUtils.isBlank(partnerOrganisation.getPostcode()))? PENDING : COMPLETE;
+        return simpleAnyMatch(project.getPartnerOrganisations(), partnerOrganisation -> StringUtils.isBlank(partnerOrganisation.getPostcode())) ? PENDING : COMPLETE;
 
     }
 
@@ -246,9 +243,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                                                              final boolean locationPerPartnerRequired,
                                                              final ProjectActivityStates partnerProjectLocationStatus) {
         return createMonitoringOfficerCompetitionStatus(getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject(),
-                                                        projectDetailsStatus,
-                                                        locationPerPartnerRequired,
-                                                        partnerProjectLocationStatus);
+                projectDetailsStatus,
+                locationPerPartnerRequired,
+                partnerProjectLocationStatus);
     }
 
     private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
@@ -276,11 +273,10 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         User user = loggedInUserSupplier.get();
 
         if (allRequiredDetailsComplete) {
-            if(monitoringOfficer.isPresent()) {
+            if (monitoringOfficer.isPresent()) {
                 return COMPLETE;
-            }
-            else {
-                if(isSupport(user) || isInnovationLead(user) || isStakeholder(user)){
+            } else {
+                if (isSupport(user) || isInnovationLead(user) || isStakeholder(user)) {
                     return NOT_STARTED;
                 } else {
                     return ACTION_REQUIRED;
@@ -309,7 +305,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates getDocumentsStatus(Project project) {
 
-
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
 
         List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> expectedDocuments =
@@ -323,21 +318,22 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                     document -> document.getTitle().equals("Collaboration agreement"));
         }
 
-        int expectedNumberOfDocuments = expectedDocuments.size();
+        return getDocumentsState(projectDocuments, projectDocuments.size(), expectedDocuments.size());
 
-        int actualNumberOfDocuments = projectDocuments.size();
+    }
 
-        if (simpleAnyMatch(projectDocuments, projectDocument -> SUBMITTED.equals(projectDocument.getStatus()))){
+    private ProjectActivityStates getDocumentsState(List<ProjectDocument> projectDocuments, int actualNumberOfDocuments, int expectedNumberOfDocuments) {
+        if (simpleAnyMatch(projectDocuments, projectDocument -> SUBMITTED.equals(projectDocument.getStatus()))) {
             return ACTION_REQUIRED;
         }
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments
-                && matchAll(projectDocuments, projectDocument -> DocumentStatus.REJECTED.equals(projectDocument.getStatus()))){
+                && matchAll(projectDocuments, projectDocument -> DocumentStatus.REJECTED.equals(projectDocument.getStatus()))) {
             return REJECTED;
         }
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments
-                && matchAll(projectDocuments, projectDocument -> APPROVED.equals(projectDocument.getStatus()))){
+                && matchAll(projectDocuments, projectDocument -> APPROVED.equals(projectDocument.getStatus()))) {
             return COMPLETE;
         }
 
@@ -434,7 +430,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
-        boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(),partnerOrganisation.getId()).getSuccess();
+        boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(), partnerOrganisation.getId()).getSuccess();
         boolean isLead = partnerOrganisation.equals(leadOrganisation);
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
