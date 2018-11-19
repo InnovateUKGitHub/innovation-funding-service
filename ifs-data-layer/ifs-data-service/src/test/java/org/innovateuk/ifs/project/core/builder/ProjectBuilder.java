@@ -7,9 +7,6 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.document.resource.DocumentStatus;
-import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
-import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -17,7 +14,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
@@ -52,14 +48,6 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     public ProjectBuilder withAddress(Address... address) {
         return withArray((add, project) -> project.setAddress(add), address);
-    }
-
-    public ProjectBuilder withCollaborationAgreement(FileEntry collaborationAgreement) {
-        return with (project -> project.setCollaborationAgreement(collaborationAgreement));
-    }
-
-    public ProjectBuilder withExploitationPlan(FileEntry exploitationPlan) {
-        return with (project -> project.setExploitationPlan(exploitationPlan));
     }
 
     public ProjectBuilder withSignedGrantOfferLetter(FileEntry grantOfferLetter) {

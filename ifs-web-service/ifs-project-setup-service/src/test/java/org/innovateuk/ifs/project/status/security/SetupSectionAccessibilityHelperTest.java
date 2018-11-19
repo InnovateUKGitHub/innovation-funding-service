@@ -208,7 +208,6 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     }
 
-    //OD = Other Documents
     @Test
     public void canAccessGrantOfferLetterSectionWhenODApprovedButDocsNotApproved() {
         doTest((helper, organisation) -> helper.canAccessGrantOfferLetterSection(organisation),

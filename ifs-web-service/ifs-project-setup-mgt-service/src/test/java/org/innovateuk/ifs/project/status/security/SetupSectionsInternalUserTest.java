@@ -352,7 +352,6 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
                 SetupProgressChecker::getRoleSpecificActivityState);
     }
 
-    //OD = Other Documents
     @Test
     public void checkAccessToGrantOfferLetterSendSectionWhenODNotApprovedButDocumentsApproved() {
         when(setupProgressCheckerMock.allDocumentsApproved()).thenReturn(true);

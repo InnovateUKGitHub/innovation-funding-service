@@ -17,7 +17,6 @@ import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -63,9 +62,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     @Mock
     private ProjectService projectServiceMock;
-
-    @Mock
-    private OrganisationService organisationServiceMock;
 
     @Mock
     private OrganisationRestService organisationRestService;
