@@ -165,7 +165,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
                                 YourProjectLocationForm form) {
 
         ApplicationFinanceResource finance =
-                applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+                applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
         finance.setWorkPostcode(form.getPostcode());
 
