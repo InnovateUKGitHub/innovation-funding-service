@@ -70,7 +70,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     @GetMapping
     @AsyncMethod
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
-    public String view(
+    public String viewPage(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,

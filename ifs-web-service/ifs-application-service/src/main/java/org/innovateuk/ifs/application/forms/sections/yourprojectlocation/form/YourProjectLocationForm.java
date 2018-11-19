@@ -7,7 +7,7 @@ public class YourProjectLocationForm {
 
     private String postcode;
 
-    YourProjectLocationForm(String postcode) {
+    public YourProjectLocationForm(String postcode) {
         this.postcode = postcode;
     }
 

@@ -15,7 +15,7 @@ public class YourProjectLocationViewModel {
     private boolean open;
     private boolean complete;
 
-    YourProjectLocationViewModel(
+    public YourProjectLocationViewModel(
             boolean complete,
             String financesUrl,
             String applicationName,
