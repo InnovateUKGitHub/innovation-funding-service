@@ -31,6 +31,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -57,7 +58,12 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
     private long applicationId = 123L;
     private long sectionId = 456L;
     private long organisationId = 789L;
+
     private String postcode = "S2 5AB";
+    private String postcodeTooShort = "S2";
+    private String postcodeTooShortUntrimmed = "S2   ";
+    private String postcodeTooLong = "S2";
+
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
     @Before
@@ -91,6 +97,8 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
         verify(viewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, internalUser);
         verify(formPopulatorMock, times(1)).populate(applicationId, organisationId);
+
+        verifyNoMoreInteractionsWithMocks();
     }
 
     @Test
@@ -116,6 +124,8 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
         verify(applicationFinanceRestServiceMock, times(1)).getApplicationFinance(applicationId, organisationId);
         verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
+
+        verifyNoMoreInteractionsWithMocks();
     }
 
     @Test
@@ -140,6 +150,8 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
         verify(applicationFinanceRestServiceMock, times(1)).getApplicationFinance(applicationId, organisationId);
         verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
+
+        verifyNoMoreInteractionsWithMocks();
     }
 
     @Test
@@ -176,6 +188,8 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
         verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
         verify(userRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
         verify(sectionServiceMock, times(1)).markAsComplete(sectionId, applicationId, processRole.getId());
+
+        verifyNoMoreInteractionsWithMocks();
     }
 
     @Test
@@ -197,6 +211,38 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
         verify(userRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
         verify(sectionServiceMock, times(1)).markAsInComplete(sectionId, applicationId, processRole.getId());
+
+        verifyNoMoreInteractionsWithMocks();
+    }
+
+    @Test
+    public void markAsCompletePostcodeTooShort() throws Exception {
+
+        YourProjectLocationViewModel viewModel =
+                new YourProjectLocationViewModel(false, "", "", applicationId, sectionId, true);
+
+        YourProjectLocationForm form = new YourProjectLocationForm(postcodeTooShort);
+
+        when(viewModelPopulatorMock.populate(organisationId, applicationId, sectionId, false)).thenReturn(viewModel);
+
+        mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
+                "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
+                .param("postcode", postcodeTooShort)
+                .param("mark-as-complete", ""))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("application/sections/your-project-location/your-project-location"))
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(model().attribute("form", form))
+                .andExpect(model().attributeHasFieldErrorCode("form", "postcode", "APPLICATION_PROJECT_LOCATION_REQUIRED"));
+
+        verify(viewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, false);
+
+        verifyNoMoreInteractionsWithMocks();
+    }
+
+    private void verifyNoMoreInteractionsWithMocks() {
+        verifyNoMoreInteractions(viewModelPopulatorMock, formPopulatorMock, applicationFinanceRestServiceMock,
+                sectionServiceMock, userRestServiceMock);
     }
 
     private Predicate<Object> futureMatcher(Object object) {
