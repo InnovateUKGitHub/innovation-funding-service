@@ -164,7 +164,7 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
         mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
                     .param("postcode", postcode)
-                    .param("mark-as-complete", postcode))
+                    .param("mark-as-complete", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(viewUrl))
                 .andReturn();
@@ -176,6 +176,27 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
         verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
         verify(userRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
         verify(sectionServiceMock, times(1)).markAsComplete(sectionId, applicationId, processRole.getId());
+    }
+
+    @Test
+    public void markAsIncomplete() throws Exception {
+
+        ProcessRoleResource processRole = newProcessRoleResource().build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(processRole));
+
+        String viewUrl = String.format("redirect:/application/%d/form/your-project-location/" +
+                "organisation/%d/section/%d", applicationId, organisationId, sectionId);
+
+        mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
+                "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
+                .param("postcode", postcode)
+                .param("mark-as-incomplete", ""))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(viewUrl))
+                .andReturn();
+
+        verify(userRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
+        verify(sectionServiceMock, times(1)).markAsInComplete(sectionId, applicationId, processRole.getId());
     }
 
     private Predicate<Object> futureMatcher(Object object) {
