@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
@@ -82,19 +81,6 @@ public class SetupSectionInternalUser {
         return NOT_ACCESSIBLE;
     }
 
-    @OtherDocsWindDown
-    public SectionAccess canAccessOtherDocumentsSection(UserResource userResource) {
-        if(!projectSetupProgressChecker.isOtherDocumentsSubmitted() && !(projectSetupProgressChecker.isOtherDocumentsApproved() || projectSetupProgressChecker.isOtherDocumentsRejected())) {
-            return NOT_ACCESSIBLE;
-        }
-
-        if((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.isOtherDocumentsApproved()){
-            return NOT_ACCESSIBLE;
-        }
-
-        return ACCESSIBLE;
-    }
-
     public SectionAccess canAccessDocumentsSection(UserResource userResource) {
 
         if((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.allDocumentsApproved()){
@@ -129,7 +115,7 @@ public class SetupSectionInternalUser {
     }
 
     private boolean documentsApproved() {
-        return projectSetupProgressChecker.isOtherDocumentsApproved() || projectSetupProgressChecker.allDocumentsApproved();
+        return projectSetupProgressChecker.allDocumentsApproved();
     }
 
     public SectionAccess canAccessFinanceChecksQueriesSection(UserResource userResource) {

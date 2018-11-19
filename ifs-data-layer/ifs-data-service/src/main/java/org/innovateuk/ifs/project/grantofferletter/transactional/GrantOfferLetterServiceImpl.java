@@ -8,7 +8,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
@@ -31,7 +30,6 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
@@ -360,22 +358,11 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         }
     }
 
-    @OtherDocsWindDown
     private boolean isProjectReadyForGrantOffer(Long projectId) {
         Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
         ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccess();
 
-        return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && documentsApproved(project1) && project1.getGrantOfferLetter() == null).orElse(false);
-    }
-
-    @OtherDocsWindDown
-    private boolean documentsApproved(Project project) {
-        return otherDocumentsApproved(project) || allProjectDocumentsApproved(project);
-    }
-
-    @OtherDocsWindDown
-    private boolean otherDocumentsApproved(Project project) {
-        return ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved());
+        return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && allProjectDocumentsApproved(project1) && project1.getGrantOfferLetter() == null).orElse(false);
     }
 
     private boolean allProjectDocumentsApproved(Project project) {

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 
 import javax.validation.constraints.Digits;
@@ -30,8 +29,6 @@ public class ProjectResource {
     private Long signedGrantOfferLetter;
     private Long grantOfferLetter;
     private Long additionalContractFile;
-    @OtherDocsWindDown
-    private ApprovalType otherDocumentsApproved;
     private String grantOfferLetterRejectionReason;
     private ZonedDateTime spendProfileSubmittedDate;
     private ProjectState projectState;
@@ -173,16 +170,6 @@ public class ProjectResource {
         this.grantOfferLetter = grantOfferLetter;
     }
 
-    @OtherDocsWindDown
-    public ApprovalType getOtherDocumentsApproved() {
-        return otherDocumentsApproved;
-    }
-
-    @OtherDocsWindDown
-    public void setOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
-        this.otherDocumentsApproved = otherDocumentsApproved;
-    }
-
     public String getGrantOfferLetterRejectionReason() {
         return grantOfferLetterRejectionReason;
     }
@@ -237,7 +224,6 @@ public class ProjectResource {
                 .append(signedGrantOfferLetter, that.signedGrantOfferLetter)
                 .append(grantOfferLetter, that.grantOfferLetter)
                 .append(additionalContractFile, that.additionalContractFile)
-                .append(otherDocumentsApproved, that.otherDocumentsApproved)
                 .append(grantOfferLetterRejectionReason, that.grantOfferLetterRejectionReason)
                 .append(spendProfileSubmittedDate, that.spendProfileSubmittedDate)
                 .append(durationInMonths, that.durationInMonths)
@@ -262,7 +248,6 @@ public class ProjectResource {
                 .append(signedGrantOfferLetter)
                 .append(grantOfferLetter)
                 .append(additionalContractFile)
-                .append(otherDocumentsApproved)
                 .append(grantOfferLetterRejectionReason)
                 .append(spendProfileSubmittedDate)
                 .append(durationInMonths)

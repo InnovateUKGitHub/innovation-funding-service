@@ -44,11 +44,11 @@ Large pdf uploads not allowed
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
     [Tags]  HappyPath
-    Given the user navigates to the page  ${DASHBOARD_URL}
-    And the user clicks the button/link   link = Academic robot test application
-    And the user clicks the button/link   link = 5. Technical approach
-    When the user uploads the file        css = .inputfile    ${text_file}
-    Then the user should see a field and summary error          Your upload must be a PDF.
+    Given the user navigates to the page                  ${DASHBOARD_URL}
+    And the user clicks the button/link                   link = Academic robot test application
+    And the user clicks the button/link                   link = 5. Technical approach
+    When the user uploads the file                        css = .inputfile    ${text_file}
+    Then the user should see a field and summary error    ${wrong_filetype_validation_error}
 
 Lead applicant can upload a pdf file
     [Documentation]    INFUND-832  IFS-2327

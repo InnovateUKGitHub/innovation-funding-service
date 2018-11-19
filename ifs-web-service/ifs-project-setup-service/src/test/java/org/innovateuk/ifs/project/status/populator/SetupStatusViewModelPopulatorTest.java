@@ -5,7 +5,6 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -19,7 +18,6 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
@@ -61,7 +59,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
@@ -133,7 +130,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         partnerStatusFlagChecks.put("bankDetailsStatus", SectionStatus.EMPTY);
         partnerStatusFlagChecks.put("financeChecksStatus", SectionStatus.EMPTY);
         partnerStatusFlagChecks.put("spendProfileStatus", SectionStatus.EMPTY);
-        partnerStatusFlagChecks.put("otherDocumentsStatus", SectionStatus.EMPTY);
         partnerStatusFlagChecks.put("documentsStatus", SectionStatus.EMPTY);
         partnerStatusFlagChecks.put("grantOfferLetterStatus", SectionStatus.EMPTY);
     }
@@ -200,7 +196,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("otherDocumentsStatus", SectionStatus.FLAG),
                 Pair.of("documentsStatus", SectionStatus.FLAG));
 
         assertFalse(viewModel.isProjectComplete());
@@ -1212,7 +1207,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
+        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         List<ProjectUserResource> projectUsers = newProjectUserResource()
@@ -1253,7 +1248,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
+        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
@@ -1280,7 +1275,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).build();
+        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
@@ -1500,7 +1495,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertTrue(partnerStatusFlagChecks.get("bankDetailsStatus") == viewModel.getBankDetailsStatus());
         assertTrue(partnerStatusFlagChecks.get("financeChecksStatus") == viewModel.getFinanceChecksStatus());
         assertTrue(partnerStatusFlagChecks.get("spendProfileStatus") == viewModel.getSpendProfileStatus());
-        assertTrue(partnerStatusFlagChecks.get("otherDocumentsStatus") == viewModel.getOtherDocumentsStatus());
         assertTrue(partnerStatusFlagChecks.get("documentsStatus") == viewModel.getDocumentsStatus());
         assertTrue(partnerStatusFlagChecks.get("grantOfferLetterStatus") == viewModel.getGrantOfferLetterStatus());
     }

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.status.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.status.controller.StatusController;
@@ -39,7 +38,6 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
     private StatusService statusServiceMock;
 
     @Test
-    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     public void getCompetitionStatus() throws Exception {
         Long competitionId = 1L;
         String applicationSearchString = "12";
@@ -57,7 +55,6 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         withBankDetailsStatus(PENDING, NOT_REQUIRED, COMPLETE).
                         withFinanceChecksStatus(PENDING, NOT_STARTED, COMPLETE).
                         withSpendProfileStatus(PENDING, ACTION_REQUIRED, COMPLETE).
-                        withOtherDocumentsStatus(PENDING, PENDING, COMPLETE).
                         withGrantOfferLetterStatus(PENDING, PENDING, PENDING).
                         build(3)).
                 build();
@@ -130,7 +127,6 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                 ));
     }
 
-    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
     private ProjectTeamStatusResource buildTeamStatus() {
         ProjectPartnerStatusResource projectLeadStatusResource = newProjectPartnerStatusResource().withIsLeadPartner(true).build();
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);
@@ -149,11 +145,6 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
         partnerStatuses.get(0).setBankDetailsStatus(PENDING);
         partnerStatuses.get(1).setBankDetailsStatus(ProjectActivityStates.NOT_REQUIRED);
         partnerStatuses.get(2).setBankDetailsStatus(ProjectActivityStates.NOT_STARTED);
-
-        projectLeadStatusResource.setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(0).setOtherDocumentsStatus(PENDING);
-        partnerStatuses.get(1).setOtherDocumentsStatus(PENDING);
-        partnerStatuses.get(2).setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
 
         projectLeadStatusResource.setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(0).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);

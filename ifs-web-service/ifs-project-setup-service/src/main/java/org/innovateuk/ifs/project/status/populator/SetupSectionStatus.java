@@ -1,18 +1,14 @@
 package org.innovateuk.ifs.project.status.populator;
 
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
-import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
 import static org.innovateuk.ifs.sections.SectionStatus.*;
 
 /**
@@ -77,20 +73,6 @@ public class SetupSectionStatus {
             return TICK;
         } else {
             return EMPTY;
-        }
-    }
-
-    @OtherDocsWindDown(additionalComments = "References to other documents should be removed")
-    public SectionStatus otherDocumentsSectionStatus(final ProjectResource project,
-                                                     final boolean isProjectManager) {
-        if (project.isPartnerDocumentsSubmitted() && APPROVED.equals(project.getOtherDocumentsApproved())) {
-            return TICK;
-        } else if (isProjectManager && (!project.isPartnerDocumentsSubmitted() || REJECTED.equals(project.getOtherDocumentsApproved()))) {
-            return FLAG;
-        } else if (!isProjectManager && !project.isPartnerDocumentsSubmitted()) {
-            return EMPTY;
-        } else {
-            return HOURGLASS;
         }
     }
 

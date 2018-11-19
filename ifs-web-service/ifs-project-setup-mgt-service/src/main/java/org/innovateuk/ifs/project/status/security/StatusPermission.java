@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.status.security;
 
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 
 /**
@@ -13,8 +12,6 @@ public class StatusPermission {
     private Boolean canAccessBankDetails;
     private Boolean canAccessFinanceChecks;
     private Boolean canAccessSpendProfile;
-    @OtherDocsWindDown
-    private Boolean canAccessOtherDocuments;
     private Boolean canAccessDocuments;
     private Boolean canAccessGrantOfferLetter;
     private Boolean canAccessGrantOfferLetterSend;
@@ -22,8 +19,7 @@ public class StatusPermission {
 
     public StatusPermission(Boolean canAccessCompaniesHouse, Boolean canAccessProjectDetails,
                                     Boolean canAccessMonitoringOfficer, Boolean canAccessBankDetails,
-                                    Boolean canAccessFinanceChecks, Boolean canAccessSpendProfile,
-                                    Boolean canAccessOtherDocuments, Boolean canAccessDocuments,
+                                    Boolean canAccessFinanceChecks, Boolean canAccessSpendProfile, Boolean canAccessDocuments,
                                     Boolean canAccessGrantOfferLetter, Boolean canAccessGrantOfferLetterSend,
                                     ProjectActivityStates grantOfferLetterActivityState) {
         this.canAccessCompaniesHouse = canAccessCompaniesHouse;
@@ -32,7 +28,6 @@ public class StatusPermission {
         this.canAccessBankDetails = canAccessBankDetails;
         this.canAccessFinanceChecks = canAccessFinanceChecks;
         this.canAccessSpendProfile = canAccessSpendProfile;
-        this.canAccessOtherDocuments = canAccessOtherDocuments;
         this.canAccessDocuments = canAccessDocuments;
         this.canAccessGrantOfferLetter = canAccessGrantOfferLetter;
         this.canAccessGrantOfferLetterSend = canAccessGrantOfferLetterSend;
@@ -61,11 +56,6 @@ public class StatusPermission {
 
     public Boolean getCanAccessSpendProfile() {
         return canAccessSpendProfile;
-    }
-
-    @OtherDocsWindDown
-    public Boolean getCanAccessOtherDocuments() {
-        return canAccessOtherDocuments;
     }
 
     public Boolean getCanAccessDocuments() {

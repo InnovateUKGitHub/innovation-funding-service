@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
@@ -105,34 +104,6 @@ public class SetupSectionsPermissionRules {
             "section when the lead partner submits the project spendprofile")
     public boolean stakeholderCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isStakeholder);
-    }
-
-    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "An internal user can access the Other Documents " +
-            "section when the lead partner submits the documents")
-    @OtherDocsWindDown
-    public boolean internalCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isInternalAdmin);
-    }
-
-    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A support user can access the Other Documents " +
-            "section when the lead partner submits the documents")
-    @OtherDocsWindDown
-    public boolean supportCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isSupport);
-    }
-
-    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "An innovation lead user can access the Other Documents " +
-            "section when the lead partner submits the documents")
-    @OtherDocsWindDown
-    public boolean innovationLeadCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isInnovationLead);
-    }
-
-    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A stakeholder can access the Other Documents " +
-            "section when the lead partner submits the documents")
-    @OtherDocsWindDown
-    public boolean stakeholderCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isStakeholder);
     }
 
     @PermissionRule(value = "ACCESS_DOCUMENTS_SECTION", description = "Comp admin or project finance users can access the Documents section")

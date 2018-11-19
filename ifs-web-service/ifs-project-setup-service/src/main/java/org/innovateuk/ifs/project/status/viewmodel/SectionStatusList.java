@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
-import org.innovateuk.ifs.commons.OtherDocsWindDown;
 import org.innovateuk.ifs.sections.SectionStatus;
 
 import static org.innovateuk.ifs.sections.SectionStatus.TICK;
@@ -8,8 +7,6 @@ import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 /**
  * A convenient container for multiple Project Setup sections' current statuses
  */
-
-@OtherDocsWindDown(additionalComments = "References to other documents should be removed")
 public class SectionStatusList {
 
     private SectionStatus projectDetailsStatus;
@@ -17,19 +14,17 @@ public class SectionStatusList {
     private SectionStatus bankDetailsStatus;
     private SectionStatus financeChecksStatus;
     private SectionStatus spendProfileStatus;
-    private SectionStatus otherDocumentsStatus;
     private SectionStatus documentsStatus;
     private SectionStatus grantOfferLetterStatus;
 
     public SectionStatusList(SectionStatus projectDetailsStatus, SectionStatus monitoringOfficerStatus, SectionStatus bankDetailsStatus,
-                             SectionStatus financeChecksStatus, SectionStatus spendProfileStatus, SectionStatus otherDocumentsStatus,
+                             SectionStatus financeChecksStatus, SectionStatus spendProfileStatus,
                              SectionStatus documentsStatus, SectionStatus grantOfferLetterStatus) {
         this.projectDetailsStatus = projectDetailsStatus;
         this.monitoringOfficerStatus = monitoringOfficerStatus;
         this.bankDetailsStatus = bankDetailsStatus;
         this.financeChecksStatus = financeChecksStatus;
         this.spendProfileStatus = spendProfileStatus;
-        this.otherDocumentsStatus = otherDocumentsStatus;
         this.documentsStatus = documentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
     }
@@ -52,10 +47,6 @@ public class SectionStatusList {
 
     public SectionStatus getSpendProfileStatus() {
         return spendProfileStatus;
-    }
-
-    public SectionStatus getOtherDocumentsStatus() {
-        return otherDocumentsStatus;
     }
 
     public SectionStatus getDocumentsStatus() {
