@@ -74,7 +74,6 @@ public class YourProjectCostsSectionPopulatorTest {
 
     @Mock
     private MessageSource messageSource;
-
     private CompetitionResource competition;
     private OrganisationResource organisation;
     private QuestionResource costQuestion;
@@ -89,7 +88,10 @@ public class YourProjectCostsSectionPopulatorTest {
 
     @Before
     public void setUp() {
-        competition = newCompetitionResource().withCollaborationLevel(SINGLE).build();
+        competition = newCompetitionResource()
+                .withCollaborationLevel(SINGLE)
+                .withIncludeJesForm(true)
+                .build();
 
         organisation = newOrganisationResource().build();
 
@@ -129,7 +131,7 @@ public class YourProjectCostsSectionPopulatorTest {
         organisation.setOrganisationType(BUSINESS.getId());
         section.getCompetition().setApplicationFinanceType(STANDARD_WITH_VAT);
 
-        when(financeViewHandlerProvider.getFinanceModelManager(BUSINESS.getId())).thenReturn(financeModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(competition, BUSINESS.getId())).thenReturn(financeModelManager);
         when(messageSource.getMessage("ifs.question.yourProjectCosts.description", null, Locale.getDefault()))
                 .thenReturn("Your project costs question description");
 
@@ -160,7 +162,7 @@ public class YourProjectCostsSectionPopulatorTest {
         organisation.setOrganisationType(BUSINESS.getId());
         section.getCompetition().setApplicationFinanceType(STANDARD_WITH_VAT);
 
-        when(financeViewHandlerProvider.getFinanceModelManager(BUSINESS.getId())).thenReturn(financeModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(competition, BUSINESS.getId())).thenReturn(financeModelManager);
         when(messageSource.getMessage("ifs.question.yourProjectCosts.collaborative.description", null,
                 Locale.getDefault()))
                 .thenReturn("Your project costs question collaborative description");
@@ -187,7 +189,7 @@ public class YourProjectCostsSectionPopulatorTest {
                 .build(1)
         );
 
-        when(financeViewHandlerProvider.getFinanceModelManager(RESEARCH.getId())).thenReturn(financeModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(competition, RESEARCH.getId())).thenReturn(financeModelManager);
         when(messageSource.getMessage("ifs.question.yourProjectCosts.description", null, Locale.getDefault()))
                 .thenReturn("Your project costs question description");
 

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -46,17 +47,9 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     private ApplicationSectionFinanceSaver financeSaver;
     private ApplicationQuestionFileSaver fileSaver;
     private ApplicationQuestionNonFileSaver nonFileSaver;
+    private CompetitionRestService competitionRestService;
 
-    public ApplicationSectionSaver(OrganisationService organisationService,
-                                   FinanceViewHandlerProvider financeViewHandlerProvider,
-                                   UserRestService userRestService,
-                                   SectionService sectionService,
-                                   QuestionRestService questionRestService,
-                                   CookieFlashMessageFilter cookieFlashMessageFilter,
-                                   OverheadFileSaver overheadFileSaver,
-                                   ApplicationSectionFinanceSaver financeSaver,
-                                   ApplicationQuestionFileSaver fileSaver,
-                                   ApplicationQuestionNonFileSaver nonFileSaver) {
+    public ApplicationSectionSaver(OrganisationService organisationService, FinanceViewHandlerProvider financeViewHandlerProvider, UserRestService userRestService, SectionService sectionService, QuestionRestService questionRestService, CookieFlashMessageFilter cookieFlashMessageFilter, OverheadFileSaver overheadFileSaver, ApplicationSectionFinanceSaver financeSaver, ApplicationQuestionFileSaver fileSaver, ApplicationQuestionNonFileSaver nonFileSaver, CompetitionRestService competitionRestService) {
         this.organisationService = organisationService;
         this.financeViewHandlerProvider = financeViewHandlerProvider;
         this.userRestService = userRestService;
@@ -67,6 +60,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         this.financeSaver = financeSaver;
         this.fileSaver = fileSaver;
         this.nonFileSaver = nonFileSaver;
+        this.competitionRestService = competitionRestService;
     }
 
     public ValidationMessages saveApplicationForm(ApplicationResource application,
@@ -95,7 +89,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
             errors.addAll(fileSaver.saveFileUploadQuestionsIfAny(questions, request.getParameterMap(), request, applicationId, processRole.getId()));
 
             Long organisationType = organisationService.getOrganisationType(userId, applicationId);
-            ValidationMessages saveErrors = financeViewHandlerProvider.getFinanceFormHandler(organisationType).update(request, userId, applicationId, competitionId);
+            ValidationMessages saveErrors = financeViewHandlerProvider.getFinanceFormHandler(competitionRestService.getCompetitionById(competitionId).getSuccess(), organisationType).update(request, userId, applicationId, competitionId);
 
             if (overheadFileSaver.isOverheadFileRequest(request)) {
                 errors.addAll(overheadFileSaver.handleOverheadFileRequest(request));

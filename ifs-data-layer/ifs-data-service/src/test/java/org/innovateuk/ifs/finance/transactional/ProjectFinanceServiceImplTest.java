@@ -152,7 +152,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
 
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competition.getId(), OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
         when(projectFinanceRowRepositoryMock.findOne(costItemId)).thenReturn(materialCost);
 

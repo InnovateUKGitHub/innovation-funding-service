@@ -30,7 +30,7 @@ public abstract class AbstractCostPopulator<M extends AbstractCostViewModel> ext
 
             FinanceRowCostCategory category = organisationFinances.getFinanceOrganisationDetails(viewModel.getFinanceRowType());
             if (viewModel.getQuestion().getType().equals(QuestionType.COST)) {
-                FinanceRowItem costItem = financeViewHandlerProvider.getFinanceFormHandler(resource.getCurrentApplicant().getOrganisation().getOrganisationType()).addCostWithoutPersisting(resource.getApplication().getId(), resource.getCurrentUser().getId(), viewModel.getQuestion().getId());
+                FinanceRowItem costItem = financeViewHandlerProvider.getFinanceFormHandler(resource.getCompetition(), resource.getCurrentApplicant().getOrganisation().getOrganisationType()).addCostWithoutPersisting(resource.getApplication().getId(), resource.getCurrentUser().getId(), viewModel.getQuestion().getId());
                 category.addCost(costItem);
             }
             viewModel.setCostCategory(category);

@@ -27,7 +27,8 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     private ProjectProcessRepository projectProcessRepository;
 
     @Mappings({
-            @Mapping(target = "projectState", ignore = true)
+            @Mapping(target = "projectState", ignore = true),
+            @Mapping(target = "competition", source = "application.competition.id")
     })
     @Override
     public abstract ProjectResource mapToResource(Project project);

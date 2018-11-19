@@ -14,7 +14,8 @@ public class ProjectResource {
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
 
     private Long id;
-    private Long application;
+    private long application;
+    private long competition;
     private LocalDate targetStartDate;
     private AddressResource address;
     private String name;
@@ -95,12 +96,20 @@ public class ProjectResource {
         this.projectUsers = projectUsers;
     }
 
-    public Long getApplication() {
+    public long getApplication() {
         return application;
     }
 
-    public void setApplication(Long application) {
+    public void setApplication(long application) {
         this.application = application;
+    }
+
+    public long getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(long competition) {
+        this.competition = competition;
     }
 
     public ZonedDateTime getDocumentsSubmittedDate() {

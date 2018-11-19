@@ -69,7 +69,7 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
                 section.allQuestions()
                         .filter(question -> QuestionType.COST.equals(question.getQuestion().getType()))
                         .collect(Collectors.toList());
-        financeViewHandlerProvider.getFinanceModelManager(
+        financeViewHandlerProvider.getFinanceModelManager(section.getCompetition(),
                 section.getCurrentApplicant().getOrganisation().getOrganisationType()
         )
                 .addOrganisationFinanceDetails(
@@ -142,7 +142,7 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
                 section.getCurrentApplicant().getOrganisation().getId()
         );
         boolean viewModelIsReadOnly = readOnly || completedSectionIds.contains(section.getSection().getId());
-        if (section.getCurrentApplicant().isResearch()) {
+        if (section.getCompetition().showJesFinances(section.getCurrentApplicant().getOrganisation().getOrganisationType())) {
             return new JesYourProjectCostsSectionViewModel(
                     section,
                     Collections.emptyList(),
