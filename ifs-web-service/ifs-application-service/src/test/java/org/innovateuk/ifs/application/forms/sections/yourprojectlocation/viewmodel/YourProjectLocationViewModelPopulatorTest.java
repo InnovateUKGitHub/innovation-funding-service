@@ -26,22 +26,22 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class YourProjectLocationViewModelPopulatorTest {
 
-    private static long applicationId = 9876L;
-    private static long organisationId = 5432L;
-    private static long sectionId = 1234L;
+    private long applicationId = 9876L;
+    private long organisationId = 5432L;
+    private long sectionId = 1234L;
 
-    private static Consumer<YourProjectLocationViewModel> expectViewModelIsComplete = model -> assertThat(model.isComplete()).isTrue();
-    private static Consumer<YourProjectLocationViewModel> expectViewModelIsOpen = model -> assertThat(model.isOpen()).isTrue();
-    private static Consumer<YourProjectLocationViewModel> expectViewModelIsReadonly = model -> assertThat(model.isReadOnly()).isTrue();
+    private Consumer<YourProjectLocationViewModel> expectViewModelIsComplete = model -> assertThat(model.isComplete()).isTrue();
+    private Consumer<YourProjectLocationViewModel> expectViewModelIsOpen = model -> assertThat(model.isOpen()).isTrue();
+    private Consumer<YourProjectLocationViewModel> expectViewModelIsReadonly = model -> assertThat(model.isReadOnly()).isTrue();
 
-    private static Consumer<YourProjectLocationViewModel> expectViewModelIsIncomplete = model -> assertThat(model.isComplete()).isFalse();
-    private static Consumer<YourProjectLocationViewModel> expectViewModelIsClosed = model -> assertThat(model.isOpen()).isFalse();
-    private static Consumer<YourProjectLocationViewModel> expectViewModelIsEditable = model -> assertThat(model.isReadOnly()).isFalse();
+    private Consumer<YourProjectLocationViewModel> expectViewModelIsIncomplete = model -> assertThat(model.isComplete()).isFalse();
+    private Consumer<YourProjectLocationViewModel> expectViewModelIsClosed = model -> assertThat(model.isOpen()).isFalse();
+    private Consumer<YourProjectLocationViewModel> expectViewModelIsEditable = model -> assertThat(model.isReadOnly()).isFalse();
 
-    private static Consumer<YourProjectLocationViewModel> expectedExternalUserFinanceUrl = model ->
+    private Consumer<YourProjectLocationViewModel> expectedExternalUserFinanceUrl = model ->
             assertThat(model.getFinancesUrl()).isEqualTo("/application/" + applicationId + "/form/FINANCE");
 
-    private static Consumer<YourProjectLocationViewModel> expectedInternalUserFinanceUrl = model ->
+    private Consumer<YourProjectLocationViewModel> expectedInternalUserFinanceUrl = model ->
             assertThat(model.getFinancesUrl()).isEqualTo("/application/" + applicationId + "/form/FINANCE/" + organisationId);
 
     @InjectMocks
@@ -151,7 +151,8 @@ public class YourProjectLocationViewModelPopulatorTest {
                 expectedInternalUserFinanceUrl);
     }
 
-    private void assertViewModelPopulatedOk(
+    @SafeVarargs
+    private final void assertViewModelPopulatedOk(
             boolean internalUser,
             List<Long> sectionsMarkedAsComplete,
             ApplicationState applicationState,
