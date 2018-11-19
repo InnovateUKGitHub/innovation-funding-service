@@ -80,7 +80,7 @@ Lead organisation server-side validations
     And The user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
     And The user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(2) input    @test.co.uk
     And the user clicks the button/link       css = [id^="invite-collaborator"]
-    Then The user should see a field and summary error  Please enter a valid email address.
+    Then The user should see a field and summary error  ${enter_a_valid_email}
     And The user should see a field and summary error   Please enter a name.
 
 Lead organisation client-side validations
@@ -124,15 +124,15 @@ Partner organisation Server-side validations
     ...
     ...    INFUND-7979
     [Tags]
-   # Given the user clicks the button/link      jQuery = a:contains('Add a collaborator organisation')
-    When The user enters text to a text field  name = organisationName    ${EMPTY}
-    And The user enters text to a text field   name = applicants[0].name    ${EMPTY}
-    And The user enters text to a text field   name = applicants[0].email    ${EMPTY}
+    When The user enters text to a text field             name = organisationName    ${EMPTY}
+    And The user enters text to a text field              name = applicants[0].name    ${EMPTY}
+    And The user enters text to a text field              name = applicants[0].email    ${EMPTY}
     And browser validations have been disabled
-    And the user clicks the button/link        jQuery = .govuk-button:contains("Add organisation and invite applicants")
-    Then the user should see an error          An organisation name is required.
-    And the user should see an error           Please enter a name.
-    And the user should see an error           Please enter an email address.
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Add organisation and invite applicants")
+    Then the user should see a field and summary error    An organisation name is required.
+    #TODO remove below uncommented once IFS-4760 is done.
+    #And the user should see a field and summary error     Please enter a name.
+    #And the user should see a field and summary error     Please enter an email address.
     [Teardown]  the user goes back to the previous page
 
 Partner organisation Client-side validations

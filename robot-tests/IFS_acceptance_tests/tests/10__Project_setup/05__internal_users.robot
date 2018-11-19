@@ -34,7 +34,7 @@ Resource          PS_Common.robot
 
 Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300, IFS-1881
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     When the user clicks the button/link    link = ${PROJECT_SETUP_COMPETITION_NAME}
@@ -51,7 +51,7 @@ Project Finance has a dashboard and can see projects in PS
 
 Pr Finance can visit an application and navigate back
     [Documentation]  IFS-544
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page  ${internal_competition_status}
     When the user clicks the button/link  link = ${PROJECT_SETUP_APPLICATION_1}
     Then the user should see the element  jQuery = h1:contains("Application overview")
@@ -70,7 +70,7 @@ Pr Finance can visit an application and navigate back
 # Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
 Other internal users cannot see Bank details or Finance checks
     [Documentation]    INFUND-4903, INFUND-5720, IFS-1881
-    [Tags]    Experian
+    [Tags]    Experian  HappyPath
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     # This is added to HappyPath because CompAdmin should NOT have access to Bank details
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}

@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.management.application.list.controller;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationsForm;
 import org.innovateuk.ifs.management.application.list.populator.*;
+import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationsForm;
+import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.management.navigation.NavigationOrigin;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -156,8 +156,8 @@ public class CompetitionManagementApplicationsController {
     @PreAuthorize("hasAuthority('ifs_administrator')")
     @PostMapping("/mark-successful/application/{applicationId}")
     public String markApplicationAsSuccessful(
-                                              @PathVariable("competitionId") long competitionId,
-                                              @PathVariable("applicationId") long applicationId)  {
+            @PathVariable("competitionId") long competitionId,
+            @PathVariable("applicationId") long applicationId) {
         checkCompetitionIsOpen(competitionId);
         applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccess();
         projectRestService.createProjectFromApplicationId(applicationId).getSuccess();

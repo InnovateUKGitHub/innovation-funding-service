@@ -235,12 +235,20 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("stateAid", stateAid);
     }
 
+    public CompetitionResourceBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSection) {
+        return withArraySetFieldByReflection("includeYourOrganisationSection", includeYourOrganisationSection);
+    }
+
     public CompetitionResourceBuilder withGrantClaimMaximums(Set<Long>... grantClaimMaximums) {
         return withArraySetFieldByReflection("grantClaimMaximums", grantClaimMaximums);
     }
 
     public CompetitionResourceBuilder withNonFinanceType(boolean... nonFinanceTypes) {
         return withArraySetFieldByReflection("nonFinanceType", nonFinanceTypes);
+    }
+
+    public CompetitionResourceBuilder withIncludeJesForm(Boolean... includeJesForms) {
+        return withArray((includeJesForm, competitionSetupFinance) -> setField("includeJesForm", includeJesForm, competitionSetupFinance), includeJesForms);
     }
 
     public CompetitionResourceBuilder withIncludeProjectGrowthTable(Boolean... includeProjectGrowthTable) {

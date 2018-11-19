@@ -87,9 +87,9 @@ Large pdfs not allowed for either document
 Non pdf files not allowed for either document
     [Documentation]    INFUND-3011
     When the user uploads to the collaboration agreement question    ${text_file}
-    Then the user should see an error                                ${wrong_filetype_validation_error}
+    Then the user should see a field error                           ${wrong_filetype_validation_error}
     When the user uploads to the exploitation plan question          ${text_file}
-    Then the user should see an error                                ${wrong_filetype_validation_error}
+    Then the user should see a field error                           ${wrong_filetype_validation_error}
     And the user should not see the text in the page                 ${text_file}
 
 
@@ -428,14 +428,14 @@ After rejection, non-lead partner cannot upload either document
 After rejection, non pdf files not allowed for either document
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page     ${project_in_setup_page}
-    And the user clicks the button/link      link = Other documents
+    [Setup]    log in as a different user                     ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
+    Given the user navigates to the page                      ${project_in_setup_page}
+    And the user clicks the button/link                       link = Other documents
     When the user uploads to the collaboration agreement question    ${text_file}
-    Then the user should see an error        ${wrong_filetype_validation_error}
+    Then the user should see a field error                     ${wrong_filetype_validation_error}
     When the user uploads to the exploitation plan question    ${text_file}
-    Then the user should see an error        ${wrong_filetype_validation_error}
-    And the user should not see the text in the page    ${text_file}
+    Then the user should see a field error                     ${wrong_filetype_validation_error}
+    And the user should not see the text in the page           ${text_file}
 
 After rejection, large pdfs not allowed for either document
     [Documentation]    INFUND-3011, INFUND-7342
