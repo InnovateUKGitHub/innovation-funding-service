@@ -444,7 +444,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(partnerOrganisationService.getProjectPartnerOrganisations(projects.get(1).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(1))));
         when(partnerOrganisationService.getProjectPartnerOrganisations(projects.get(2).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(2))));
 
-
         ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId, applicationSearchString);
 
         assertTrue(result.isSuccess());
@@ -918,7 +917,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusProjectDocumentsPending() {
-        Long projectId = 2345L;
+        long projectId = 2345L;
         List<ProjectDocument> docs = newProjectDocument()
                 .withStatus(DocumentStatus.APPROVED)
                 .build(1);
