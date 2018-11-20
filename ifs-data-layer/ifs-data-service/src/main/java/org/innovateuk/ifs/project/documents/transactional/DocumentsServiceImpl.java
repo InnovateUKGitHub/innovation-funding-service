@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.documents.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.domain.FileType;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -192,10 +195,26 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         if (UPLOADED.equals(projectDocumentToBeSubmitted.getStatus())) {
             projectDocumentToBeSubmitted.setStatus(SUBMITTED);
             projectDocumentRepository.save(projectDocumentToBeSubmitted);
+            if (allDocumentsSubmitted(project)) {
+                project.setDocumentsSubmittedDate(ZonedDateTime.now());
+                projectRepository.save(project);
+            }
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED);
         }
+    }
+
+    private boolean allDocumentsSubmitted(Project project) {
+        List<PartnerOrganisation> projectOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
+        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> expectedDocuments = projectDocumentConfigRepository.findByCompetitionId(project.getApplication().getCompetition().getId());
+
+        if (projectOrganisations.size() == 1) {
+            expectedDocuments.removeIf(
+                    document -> document.getTitle().equals("Collaboration agreement"));
+        }
+
+        return project.getProjectDocuments().size() == expectedDocuments.size();
     }
 
     @Override

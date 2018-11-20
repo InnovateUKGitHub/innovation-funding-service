@@ -40,13 +40,14 @@ public class DocumentsController {
 
     private static final String FORM_ATTR = "form";
 
-    @Autowired
     private DocumentsPopulator populator;
 
-    @Autowired
     private DocumentsRestService documentsRestService;
 
+    public DocumentsController() {
+    }
 
+    @Autowired
     public DocumentsController(DocumentsPopulator populator, DocumentsRestService documentsRestService) {
         this.populator = populator;
         this.documentsRestService = documentsRestService;
