@@ -40,10 +40,8 @@ public class DocumentsController {
 
     private static final String FORM_ATTR = "form";
 
-    @Autowired
     private DocumentsPopulator populator;
 
-    @Autowired
     private DocumentsRestService documentsRestService;
 
     public DocumentsController() {
