@@ -39,7 +39,7 @@ public class ProjectTest {
         durationInMonths = 12L;
         name = "My Project";
 
-        project = new Project(id, application, startDate, address, durationInMonths, name, documentsSubmittedDate);
+        project = new Project(id, application, startDate, address, durationInMonths, name, documentsSubmittedDate, ApprovalType.UNSET);
     }
 
     @Test

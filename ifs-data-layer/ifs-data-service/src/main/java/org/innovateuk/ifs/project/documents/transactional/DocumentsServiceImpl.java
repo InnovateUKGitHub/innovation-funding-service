@@ -12,12 +12,15 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,9 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     @Autowired
     private ProjectDocumentRepository projectDocumentRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Autowired
     private ProjectWorkflowHandler projectWorkflowHandler;
@@ -182,6 +188,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         if (UPLOADED.equals(projectDocumentToBeSubmitted.getStatus())) {
             projectDocumentToBeSubmitted.setStatus(SUBMITTED);
             projectDocumentRepository.save(projectDocumentToBeSubmitted);
+            setOtherDocsApproved(project);
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED);
@@ -216,6 +223,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
             projectDocument.setStatus(decision.getApproved() ? APPROVED : REJECTED);
             projectDocument.setStatusComments(!decision.getApproved() ? decision.getRejectionReason() : null);
             projectDocumentRepository.save(projectDocument);
+            setOtherDocsApproved(project);
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED);
@@ -225,5 +233,17 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     private ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
         return grantOfferLetterService.generateGrantOfferLetterIfReady(projectId)
                 .andOnFailure(() -> serviceFailure(GRANT_OFFER_LETTER_GENERATION_FAILURE));
+    }
+
+    private void setOtherDocsApproved(Project project) {
+        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
+
+        if (projectDocuments.stream().allMatch(document -> document.getStatus().equals(DocumentStatus.APPROVED))) {
+            project.setOtherDocumentsApproved(ApprovalType.APPROVED);
+        } else if(projectDocuments.stream().anyMatch(document -> document.getStatus().equals(DocumentStatus.REJECTED))){
+            project.setOtherDocumentsApproved(ApprovalType.REJECTED);
+        }
+
+        projectRepository.save(project);
     }
 }

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -84,6 +85,10 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     public ProjectBuilder withPartnerOrganisations(List<PartnerOrganisation>... partnerOrganisations) {
         return withArray((orgs, project) -> project.setPartnerOrganisations(orgs), partnerOrganisations);
+    }
+
+    public ProjectBuilder withOtherDocumentsApproved(ApprovalType... approved){
+        return withArray((approval, project) -> project.setOtherDocumentsApproved(approval), approved);
     }
 
     public ProjectBuilder withOfferSubmittedDate(ZonedDateTime... dates){
