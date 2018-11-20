@@ -37,11 +37,14 @@ public class DocumentsController {
 
     private static final String FORM_ATTR = "form";
 
-    @Autowired
     private DocumentsPopulator populator;
 
-    @Autowired
     private DocumentsRestService documentsRestService;
+
+    public DocumentsController(DocumentsPopulator populator, DocumentsRestService documentsRestService) {
+        this.populator = populator;
+        this.documentsRestService = documentsRestService;
+    }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DOCUMENTS_SECTION')")
     @GetMapping("/all")

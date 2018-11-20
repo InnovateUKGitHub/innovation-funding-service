@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class DocumentsControllerTest extends BaseControllerMockMVCTest<DocumentsController> {
 
     @Mock
-    DocumentsPopulator populator;
+    private DocumentsPopulator populator;
 
     @Mock
     private DocumentsRestService documentsRestService;
@@ -164,7 +164,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
     @Override
     protected DocumentsController supplyControllerUnderTest() {
-        return new DocumentsController();
+        return new DocumentsController(populator, documentsRestService);
     }
 }
 
