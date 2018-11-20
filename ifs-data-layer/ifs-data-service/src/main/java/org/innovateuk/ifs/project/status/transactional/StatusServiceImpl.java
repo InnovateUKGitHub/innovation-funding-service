@@ -268,12 +268,12 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectActivityStates getMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer,
                                                              final boolean allRequiredDetailsComplete) {
 
-        User user = loggedInUserSupplier.get();
 
         if (allRequiredDetailsComplete) {
             if (monitoringOfficer.isPresent()) {
                 return COMPLETE;
             } else {
+                User user = loggedInUserSupplier.get();
                 if (isSupport(user) || isInnovationLead(user) || isStakeholder(user)) {
                     return NOT_STARTED;
                 } else {
@@ -372,7 +372,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private boolean documentsApproved(Project project) {
-        return ApprovalType.APPROVED.equals(COMPLETE.equals(getDocumentsStatus(project)));
+        return COMPLETE.equals(getDocumentsStatus(project));
     }
 
     @Override
