@@ -14,6 +14,7 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -29,6 +30,7 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
@@ -38,6 +40,7 @@ import org.innovateuk.ifs.project.grantofferletter.model.*;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
@@ -95,6 +98,9 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private PartnerOrganisationService partnerOrganisationService;
 
     @Autowired
     private SpendProfileService spendProfileService;
@@ -367,8 +373,17 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     private boolean allProjectDocumentsApproved(Project project) {
         Competition competition = project.getApplication().getCompetition();
-        int expectedNumberOfDocuments = competition.getProjectDocuments().size();
+        List<ProjectDocument> expectedDocuments = competition.getProjectDocuments();
         int actualNumberOfDocuments = project.getProjectDocuments().size();
+
+        List<PartnerOrganisationResource> partnerOrganisations = partnerOrganisationService.getProjectPartnerOrganisations(project.getId()).getSuccess();
+
+        if (partnerOrganisations.size() == 1) {
+            expectedDocuments.removeIf(
+                    document -> document.getTitle().equals("Collaboration agreement"));
+        }
+
+        int expectedNumberOfDocuments = expectedDocuments.size();
 
         return actualNumberOfDocuments == expectedNumberOfDocuments && project.getProjectDocuments().stream()
                 .allMatch(projectDocumentResource -> APPROVED.equals(projectDocumentResource.getStatus()));
