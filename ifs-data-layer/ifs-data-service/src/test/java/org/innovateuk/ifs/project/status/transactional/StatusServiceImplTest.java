@@ -236,7 +236,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 build();
 
-
         Long projectId = 123L;
         project = newProject().
                 withId(projectId).
@@ -942,8 +941,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .build(2);
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().build(2);
         competition.setProjectDocuments(newCompetitionProjectDocument().withTitle("Collaboration agreement", "Exploitation plan").build(2));
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.REJECTED, Boolean.FALSE,
-                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now(), false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
         project.setProjectDocuments(docs);
         project.setApplication(application);
 
@@ -967,8 +965,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
 
         competition.setProjectDocuments(newCompetitionProjectDocument().withTitle("Collaboration agreement", "Exploitation plan").build(2));
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.REJECTED, Boolean.FALSE,
-                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now(), false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED,  Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
         project.setProjectDocuments(docs);
         project.setApplication(application);
 
