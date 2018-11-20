@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class YourProjectLocationViewModelPopulator {
     private CompetitionRestService competitionRestService;
     private SectionService sectionService;
 
+    @Autowired
     public YourProjectLocationViewModelPopulator(
             ApplicationRestService applicationRestService,
             CompetitionRestService competitionRestService,

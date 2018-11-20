@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form;
 
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +13,7 @@ public class YourProjectLocationFormPopulator {
 
     private ApplicationFinanceRestService applicationFinanceRestService;
 
+    @Autowired
     YourProjectLocationFormPopulator(ApplicationFinanceRestService applicationFinanceRestService) {
         this.applicationFinanceRestService = applicationFinanceRestService;
     }
