@@ -8,26 +8,26 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Academic organisations search
     [Documentation]    INFUND-1231
-    [Tags]
-    Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com  ${BUSINESS_TYPE_ID}
+    [Tags]  HappyPath
+    Given we create a new user                            ${openCompetitionBusinessRTO}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com  ${BUSINESS_TYPE_ID}
     And logout as user
-    Given the lead applicant invites a registered user  ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
-    When the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation   2
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Yes, accept invitation")
-    When the user selects the radio button              organisationType    2
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Save and continue")
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Search")
-    Then the user should see an error                   Please enter an organisation name to search.
-    When the user enters text to a text field           id = organisationSearchName    abcd
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Search")
-    Then the user should see the text in the page       No results found.
-    When the user enters text to a text field           id = organisationSearchName    !!
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Search")
-    Then the user should see the text in the page       No results found.
+    Given the lead applicant invites a registered user    ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
+    When the user reads his email and clicks the link     ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation   2
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Yes, accept invitation")
+    When the user selects the radio button                organisationType    2
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Save and continue")
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Search")
+    Then the user should see a field error                Please enter an organisation name to search.
+    When the user enters text to a text field             id = organisationSearchName    abcd
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Search")
+    Then the user should see the text in the page         No results found.
+    When the user enters text to a text field             id = organisationSearchName    !!
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Search")
+    Then the user should see the text in the page         No results found.
 
 Accept invitation as academic
     [Documentation]    INFUND-1166, INFUND-917, INFUND-2450, INFUND-2256
-    [Tags]
+    [Tags]  HappyPath
 #    The search results are specific to Research Organisation type
     Given the research user finds org in companies house    Warwick  University of Warwick
     And the invited user fills the create account form  Steven  Gerrard
@@ -39,7 +39,6 @@ Accept invitation as academic
     And the user clicks the button/link                 link = Your finances
     Then the user should see the element                link = Your project costs
     And the user should not see the element             link = Your organisation
-    And the user should not see the element             jQuery = h3:contains("Your funding")
     When the user clicks the button/link                link = Your project costs
     Then the user should not see the text in the page   Labour
     And the user should not see an error in the page

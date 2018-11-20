@@ -426,7 +426,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectDetailsStartDateViewModel viewModel = (ProjectDetailsStartDateViewModel) model.get("model");
 
         assertEquals(project.getId(), viewModel.getProjectId());
-        assertEquals(project.getApplication(), viewModel.getApplicationId());
+        assertEquals(project.getApplication(), (long) viewModel.getApplicationId());
         assertEquals(project.getName(), viewModel.getProjectName());
         assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));
 
@@ -801,7 +801,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectDetailsAddressViewModel viewModel = (ProjectDetailsAddressViewModel) model.get("model");
         assertEquals(project.getId(), viewModel.getProjectId());
         assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(project.getApplication(), viewModel.getApplicationId());
+        assertEquals(project.getApplication(), (long) viewModel.getApplicationId());
         assertNull(viewModel.getOperatingAddress());
         assertEquals(addressResource, viewModel.getRegisteredAddress());
         assertNull(viewModel.getProjectAddress());

@@ -31,7 +31,7 @@ Resource          ../../10__Project_setup/PS_Common.robot
 *** Test Cases ***
 Submit button disabled when application is incomplete
     [Documentation]    INFUND-927, IFS-942, IFS-753
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Log in as a different user                ${submit_bus_email}  ${correct_password}
     Given the user navigates to the page               ${DASHBOARD_URL}
     When the user clicks the button/link               link = ${application_bus_name}
@@ -49,7 +49,7 @@ Submit button disabled when application is incomplete
 
 Applicant has read only view on review and submit page
     [Documentation]    INFUND-7405, INFUND-8599
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page                  ${DASHBOARD_URL}
     And the user clicks the button/link                   link = ${application_bus_name}
     When the applicant completes the application details  ${application_bus_name}  ${tomorrowday}  ${month}  ${nextyear}
@@ -69,7 +69,7 @@ Your Project costs section is read-only once application is marked as complete
 
 Submit flow business lead (complete application)
     [Documentation]    INFUND-205, INFUND-9058, INFUND-1887, INFUND-3107, INFUND-4010, IFS-942
-    [Tags]
+    [Tags]  HappyPath
     Given log in as a different user                        ${submit_bus_email}  ${correct_password}
     And the user clicks the button/link                     link = ${application_bus_name}
     And the user should see the text in the element         css = .message-alert  Now your application is complete, you need to review and then submit.
@@ -85,16 +85,16 @@ Submit flow business lead (complete application)
 Satisfaction survey:validations
     #The survey needs to be set to enabled in gradle.properties
     [Documentation]  IFS-3603
-    [Tags]  survey
+    [Tags]  survey  HappyPath
     Given the user clicks the button/link                 link = Finished
     When the user clicks the button/link                  css = button[type="submit"]  #Send feedback
     Then the user should see a field and summary error    Please select a level of satisfaction.
-    And the user should see a field and summary error     This field cannot be left blank.
+    And the user should see a field and summary error     ${empty_field_warning_message}
 
 Applicant submit satisfaction survey after submitting application
     #The survey needs to be set to enabled in gradle.properties
     [Documentation]  IFS-3603
-    [Tags]  survey
+    [Tags]  survey  HappyPath
     Given the user selects the radio button      satisfaction  5
     When the user enters text to a text field    name = comments  Very satisfied
     Then the user clicks the button/link         css = button[type="submit"]  #Send feedback
@@ -130,10 +130,11 @@ RTO lead has read only view after submission
     Given the user navigates to the page                   ${DASHBOARD_URL}
     And the user clicks the button/link                    link = ${application_rto_name}
     When the applicant completes the application details   ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
-    Then the user clicks the button/link                   link = Your finances
+    And the user fills in the organisation information     ${application_rto_name}  ${SMALL_ORGANISATION_SIZE}
+    And the user clicks the button/link                    link = Your funding
+    And the user marks your funding section as complete
     And the user enters the project location
     When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css = .govuk-details__summary[aria-expanded="false"]
-    Then the user clicks the button/link                   jQuery = button:contains("Not requesting funding")
     And the user puts zero project costs
     When the user clicks the button/link                   link = Return to application overview
     And the user clicks the button/link                    link = Review and submit

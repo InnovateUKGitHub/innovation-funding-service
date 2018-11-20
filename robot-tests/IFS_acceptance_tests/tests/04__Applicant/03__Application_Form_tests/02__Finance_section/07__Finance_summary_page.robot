@@ -71,15 +71,15 @@ Your Finance includes Finance summary table for lead applicant
     [Tags]
     [Setup]  log in as a different user            &{lead_applicant_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the finance summary table in Your Finances has correct values for lead  £72,611  30%  0  8,000,000  0
+    Then the finance summary table in Your Finances has correct values for lead  £72,611  0%  0  8,000,000  0
     And the user clicks the button/link            link = Return to application overview
 
 Your Finance includes Finance summary table for collaborator
-     [Documentation]    INFUND-6893
-     [Tags]
-     [Setup]  log in as a different user           &{collaborator2_credentials}
+    [Documentation]    INFUND-6893
+    [Tags]
+    [Setup]  log in as a different user            &{collaborator2_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the finance summary table in Your Finances has correct values for collaborator
+    Then the finance summary table in Your Finances has correct values for collaborator  £990  0  0  0  990
     And The user clicks the button/link            link = Return to application overview
 
 Red warning should show when the finances are incomplete
@@ -124,11 +124,11 @@ Finance summary has total marked as complete
     [Documentation]  IFS-3821
     Given the user clicks the button/link    link = Finances overview
     Then the user should see the element     css = .table-total-tick[src*="icon-tick"]
-    [Teardown]  logout as user
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]
+    [Setup]  logout as user
     Given Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
     When log in as a different user                ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Then the user navigates to Your-finances page  Academic robot test application
@@ -157,7 +157,7 @@ Alert should not show If research participation is below the maximum level
 
 Support User can see the read only finance summary
     [Documentation]  IFS-401
-    [Tags]  Support
+    [Tags]  Support  HappyPath
     [Setup]  log in as a different user       &{support_user_credentials}
     Given the user navigates to the finances of the application
     When the user should see the element      jQuery = .finance-summary tbody tr:nth-of-type(1) th:contains("View finances")
@@ -166,7 +166,7 @@ Support User can see the read only finance summary
 
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
-    [Tags]  Support
+    [Tags]  Support  HappyPath
     Given the user clicks the button/link  link = Your project costs
     When the user verifies labour, overhead costs and materials
     Then the user verifies captial usage, subcontracting, travel and other costs
@@ -192,7 +192,7 @@ Support User can see the read only view of Your funding
 
 Innovation lead can see read only summary link for each partner
     [Documentation]  IFS-802
-    [Tags]  InnovationLead
+    [Tags]  InnovationLead  HappyPath
     [Setup]  log in as a different user     &{innovation_lead_two}
     When the user navigates to the page     ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link     link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
@@ -203,20 +203,20 @@ Innovation lead can see read only summary link for each partner
 
 Innovation lead can see read only summary for lead
     [Documentation]  IFS-802
-    [Tags]  InnovationLead
+    [Tags]  InnovationLead  HappyPath
     [Setup]  The user clicks the button/link          css = .finance-summary tbody tr:nth-of-type(1) th a
     When the user should see the text in the page     Please complete your project finances.
     Then the finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
 Innovation lead can see read only summary for collaborator
     [Documentation]  IFS-802
-    [Tags]  InnovationLead
+    [Tags]  InnovationLead  HappyPath
     When the user navigates to the page             ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link             link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section                Finances summary
     When the user clicks the button/link            jQuery = .finance-summary tbody tr:contains("EGGS") th a
     And the user should see the text in the page    Please complete your project finances.
-    Then the finance summary table in Your Finances has correct values for collaborator
+    Then the finance summary table in Your Finances has correct values for collaborator  £990  100  990  0  0
 
 Innovation lead can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-802
@@ -251,6 +251,7 @@ Innovation lead can see read only view of Your funding
 
 IFS Admin views the finance summary
     [Documentation]  IFS-3609
+    [Tags]  HappyPath
     [Setup]  log in as a different user     &{ifs_admin_user_credentials}
     Given the user navigates to the finances of the application
     When the user clicks the button/link    link = View finances
@@ -283,7 +284,7 @@ the finance summary table in Your Finances has correct values for lead
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  Funding level (%)
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
@@ -293,16 +294,17 @@ the finance summary table in Your Finances has correct values for lead
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
 
 the finance summary table in Your Finances has correct values for collaborator
+    [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  £990
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  Funding level (%)
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  990
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(3)  ${funding_sought}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  0
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(4)  ${other_funding}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  0
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(5)  ${contribution}
 
 the contribution to project and funding sought should be 0 and not a negative number
     the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
@@ -329,7 +331,7 @@ Lead enters a valid research participation value
     wait for autosave
     the user enters text to a text field              css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input  1000
     wait for autosave
-    the user selects the checkbox                     id = stateAidAgreed
+    the user selects the checkbox                     stateAidAgreed
     the user clicks the button/link                   jQuery = button:contains('Mark as complete')
     wait for autosave
 
@@ -351,7 +353,8 @@ the user fills in the funding information with bigger amount
     [Arguments]  ${Application}
     the user navigates to Your-finances page  ${Application}
     the user clicks the button/link           link = Your funding
-    the user enters text to a text field      css = [name^="finance-grantclaimpercentage"]  30
+    the user selects the radio button         requestingFunding   true
+    the user enters text to a text field      css = [name^="grantClaimPercentage"]  30
     click element                             jQuery = label:contains("Yes")
     the user enters text to a text field      css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input  8000000
     the user enters text to a text field      css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input  test2
@@ -416,9 +419,11 @@ the user navigates to the finances of the application
     the user expands the section     Finances summary
 
 the academic user marks finances as complete
-    log in as a different user                &{collaborator2_credentials}
-    the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    log in as a different user                 &{collaborator2_credentials}
+    the user navigates to Your-finances page   ${OPEN_COMPETITION_APPLICATION_2_NAME}
     the user clicks the button/link            link = Your project costs
     the user selects the checkbox              termsAgreed
     the user clicks the button/link            jQuery = button:contains("Mark as complete")
     the user enters the project location
+    the user clicks the button/link            link = Your funding
+    the user marks your funding section as complete

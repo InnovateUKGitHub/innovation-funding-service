@@ -55,9 +55,9 @@ Companies House: Invalid company name
 Companies House: Empty company name field
     [Documentation]  IFS-4072
     [Tags]
-    When the user enters text to a text field      id = organisationSearchName    ${EMPTY}
-    Then the user clicks the button/link           id = org-search
-    And the user should see an error               Enter an organisation name to search.
+    When the user enters text to a text field             id = organisationSearchName    ${EMPTY}
+    Then the user clicks the button/link                  id = org-search
+    And the user should see a field and summary error     Enter an organisation name to search.
 
 Companies House: Valid registration number
     [Documentation]  IFS-4072
@@ -105,7 +105,7 @@ Funding details fill in details
     [Tags]
     When the user enters text to a text field      id = grantAgreementNumber            123456
     Then the user enters text to a text field      id = participantId                   123456789
-    And the user selects the option from the drop-down menu                             12   id=actionType  #(IA) Innovation action
+    And the user selects the index from the drop-down menu                              12   id=actionType  #(IA) Innovation action
     And the user enters text to a text field       id = projectName                     (IA) Innovation action
     And the user enters text to a text field       id = startDateMonth                  10
     And the user enters text to a text field       id = startDateYear                   2010

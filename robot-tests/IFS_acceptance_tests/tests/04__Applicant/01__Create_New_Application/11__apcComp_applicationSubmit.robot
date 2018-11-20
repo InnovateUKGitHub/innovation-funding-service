@@ -13,7 +13,6 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
-
 *** Variables ***
 ${apcCompetitionTitle}  Advanced Propulsion Centre Competition
 ${apcApplicationTitle}  Advanced Propulsion Centre Application

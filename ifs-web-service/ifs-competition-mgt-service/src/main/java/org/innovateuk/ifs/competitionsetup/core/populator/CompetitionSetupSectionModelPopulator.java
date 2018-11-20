@@ -8,9 +8,9 @@ import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 /**
  * implementations of this interface will populate the model for the relevant competition setup section.
  */
-public interface CompetitionSetupSectionModelPopulator {
+public interface CompetitionSetupSectionModelPopulator<T extends CompetitionSetupViewModel> {
 
     CompetitionSetupSection sectionToPopulateModel();
 
-    CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource);
+    T populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource);
 }

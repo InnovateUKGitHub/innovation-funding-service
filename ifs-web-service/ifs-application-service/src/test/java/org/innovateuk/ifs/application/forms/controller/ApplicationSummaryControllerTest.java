@@ -234,4 +234,17 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         assertTrue(model.isSupport());
 
     }
+
+    @Test
+    public void applicationFeedbackWhenLoggedInAsNonSupport() throws Exception {
+
+        setLoggedInUser(applicant);
+
+        ApplicationResource app = applications.get(0);
+        when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(true));
+
+        mockMvc.perform(get("/application/{applicationId}/summary", app.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/" + app.getId() + "/feedback"));
+    }
 }

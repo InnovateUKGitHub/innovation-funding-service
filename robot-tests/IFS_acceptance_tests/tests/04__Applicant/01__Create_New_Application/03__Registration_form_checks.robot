@@ -26,10 +26,10 @@ Your details: Server-side validations
     [Tags]
     [Setup]    Applicant goes to the registration form
     When the user enters the details and clicks the create account  O'Brian Elliot-Murray  O'Dean Elliot-Manor  ${valid_email}  ${blacklisted_password}
-    Then the user should see an error                               Password is too weak.
+    Then the user should see a field and summary error              Password is too weak.
     When the user enters the details and clicks the create account  !@£$  &*(^  ${valid_email}  ${correct_password}
-    Then the user should see an error                               Invalid first name.
-    And the user should see an error                                Invalid last name.
+    Then the user should see a field and summary error              Invalid first name.
+    And the user should see a field and summary error               Invalid last name.
     When the user enters text to a text field                       id = firstName    ${EMPTY}
     And the user enters text to a text field                        id = lastName    ${EMPTY}
     And the user enters text to a text field                        id = phoneNumber    ${EMPTY}
@@ -37,12 +37,11 @@ Your details: Server-side validations
     And the user enters text to a text field                        id = password    ${EMPTY}
     And browser validations have been disabled
     And the user clicks the button/link                             css = [name="create-account"]
-    Then the user should see an error                               Please enter a first name.
-    And the user should see an error                                We were unable to create your account
-    And the user should see an error                                Please enter a last name.
-    And the user should see an error                                Please enter a phone number.
-    And the user should see an error                                Please enter a valid email address.
-    And the user should see an error                                Please enter your password.
+    Then the user should see a field and summary error              ${enter_a_first_name}
+    And the user should see a field and summary error               ${enter_a_last_name}
+    And the user should see a field and summary error               ${enter_a_phone_number}
+    And the user should see a field and summary error               ${enter_a_valid_email}
+    And the user should see a field and summary error               Please enter your password.
 
 Your details: client-side password hint validation
     [Documentation]    -INFUND-9293
@@ -78,16 +77,16 @@ Your details: client-side validation
     Then the user should not see an error in the page
 
 User can not login with the invalid email
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    the user navigates to the page          ${SERVER}
     Then the user cannot login with the invalid email  ${invalid_email_no_at}
 
 Email duplication check
     [Documentation]    INFUND-886
-    [Tags]
+    [Tags]  HappyPath
     Given Applicant goes to the registration form
-    When the user enters the details and clicks the create account  John  Smith  ${lead_applicant}  ${correct_password}
-    Then the user should see an error          The email address is already registered with us. Please sign into your account
+    When the user enters the details and clicks the create account   John  Smith  ${lead_applicant}  ${correct_password}
+    Then the user should see a field and summary error               The email address is already registered with us. Please sign into your account
 
 User can not verify email with invalid hash
     [Documentation]  IFS-4298
@@ -103,7 +102,7 @@ the user cannot login with the invalid email
     Input Password                            id = password  ${correct_password}
     Click Button                              css = button[name="_eventId_proceed"]
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    The user should see the text in the page    Please enter a valid e-mail address
-    Run Keyword If    '${status}' == 'FAIL'   The user should see the text in the page    Please enter a valid email address
+    Run Keyword If    '${status}' == 'FAIL'   The user should see the text in the page    ${enter_a_valid_email}
     Execute Javascript                        jQuery('form').attr('novalidate','novalidate');
     Click Button                              css = button[name="_eventId_proceed"]
     The user should see the text in the page  ${unsuccessful_login_message}

@@ -71,7 +71,7 @@ public class ApplicationPrintPopulatorTest {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Mock
-    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;;
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Mock
     private SectionService sectionService;

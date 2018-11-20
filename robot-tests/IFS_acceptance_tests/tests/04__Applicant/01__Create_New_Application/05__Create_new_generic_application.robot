@@ -21,26 +21,26 @@ User can edit the assesed question
 
 CompAdmin creates a new Generic competition
     [Documentation]  IFS-3261
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user                &{Comp_admin1_credentials}
     The competition admin creates a competition for    4  ${competitionName}  Generic
 
 Requesting the id of this Competition and moving to Open
     [Documentation]  IFS-3261
     ...   retrieving the id of the competition so that we can use it in urls
-    [Tags]  MySQL
+    [Tags]  MySQL  HappyPath
     ${competitionId} =  get comp id from comp title  ${competitionName}
     Set suite variable  ${competitionId}
     The competition moves to Open state  ${competitionId}
 
 Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Documentation]  IFS-1012  IFS-2879
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Log in as a different user             becky.mason@gmail.com  ${short_password}
     Given logged in user applies to competition     ${competitionName}   4
     When the user clicks the button/link            link = Application details
     Then the user fills in the Application details  Application Ts&Cs  ${tomorrowday}  ${month}  ${nextyear}
-    When the user clicks the button/link            link = View the grant terms and conditions
+    When the user clicks the button/link            link = View the competition terms and conditions
     Then the user should see the element            jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
 
 *** Keywords ***
