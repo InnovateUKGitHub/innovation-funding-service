@@ -13,13 +13,13 @@ public class DocumentViewModel {
     private long projectId;
     private String projectName;
     private long applicationId;
-    private Long documentConfigId;
+    private long documentConfigId;
     private String title;
     private FileDetailsViewModel fileDetails;
     private DocumentStatus status;
     private String statusComments;
 
-    public DocumentViewModel(long projectId, String projectName, Long applicationId, Long documentConfigId,
+    public DocumentViewModel(long projectId, String projectName, long applicationId, long documentConfigId,
                              String title, FileDetailsViewModel fileDetails, DocumentStatus status, String statusComments) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -35,7 +35,7 @@ public class DocumentViewModel {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(long projectId) {
         this.projectId = projectId;
     }
 
@@ -51,11 +51,11 @@ public class DocumentViewModel {
         return applicationId;
     }
 
-    public Long getDocumentConfigId() {
+    public long getDocumentConfigId() {
         return documentConfigId;
     }
 
-    public void setDocumentConfigId(Long documentConfigId) {
+    public void setDocumentConfigId(long documentConfigId) {
         this.documentConfigId = documentConfigId;
     }
 
@@ -86,7 +86,6 @@ public class DocumentViewModel {
     public String getStatusComments() {
         return statusComments;
     }
-
 
     @Override
     public boolean equals(Object o) {

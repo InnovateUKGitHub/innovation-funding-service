@@ -315,41 +315,44 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         Competition competition = newCompetition().withId(competitionId).build();
 
-        /**
-         * Create 3 organisations:
-         * 2 Business, 1 Academic
-         ***/
-        OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
-        List<Organisation> organisations = newOrganisation().withOrganisationType(businessOrganisationType).build(2);
+        OrganisationType businessOrganisationType = newOrganisationType()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS)
+                .build();
+
+        OrganisationType academicOrganisationType = newOrganisationType()
+                .withOrganisationType(OrganisationTypeEnum.RESEARCH)
+                .build();
+
+        List<Organisation> organisations = newOrganisation()
+                .withOrganisationType(businessOrganisationType)
+                .build(2);
         organisations.add(newOrganisation().withOrganisationType(academicOrganisationType).build());
 
-
-        /**
-         * Create 3 users, one for each organisation
-         */
         List<User> users = newUser().build(3);
 
-        /**
-         * Create 3 applications, one for each org, with process roles
-         */
-        List<ProcessRole> applicantProcessRoles = newProcessRole().withUser(users.get(0), users.get(1), users.get(2)).withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.APPLICANT).withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).build(3);
-        List<Application> applications = newApplication().withCompetition(competition).withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2)).build(3);
+        List<ProcessRole> applicantProcessRoles = newProcessRole()
+                .withUser(users.get(0), users.get(1), users.get(2))
+                .withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.APPLICANT)
+                .withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId())
+                .build(3);
 
-        /**
-         * Create 3 project with 3 Project Users from 3 different organisations with associated applications
-         */
-        List<ProjectUser> projectUsers = newProjectUser().withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
-        List<Project> projects = newProject().withApplication(applications.get(0), applications.get(1), applications.get(2)).withProjectUsers(projectUsers).build(3);
+        List<Application> applications = newApplication()
+                .withCompetition(competition)
+                .withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2))
+                .build(3);
 
-        /**
-         * Create 3 bank detail records, one for each organisation
-         */
-        List<BankDetails> bankDetails = newBankDetails().withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2))
+                .build(3);
 
-        /**
-         * Build spend profile object for use with one of the partners
-         */
+        List<Project> projects = newProject()
+                .withApplication(applications.get(0), applications.get(1), applications.get(2)).withProjectUsers(projectUsers)
+                .build(3);
+
+        List<BankDetails> bankDetails = newBankDetails()
+                .withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2))
+                .build(3);
+
         SpendProfile spendProfile = newSpendProfile().build();
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().withOrganisation(organisations.get(0), organisations.get(1)).build(3);
@@ -440,6 +443,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(partnerOrganisationService.getProjectPartnerOrganisations(projects.get(0).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(0))));
         when(partnerOrganisationService.getProjectPartnerOrganisations(projects.get(1).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(1))));
         when(partnerOrganisationService.getProjectPartnerOrganisations(projects.get(2).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(2))));
+
 
         ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId, applicationSearchString);
 
@@ -537,7 +541,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         long organisationId = 123L;
 
         Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE,  true);
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, true);
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
@@ -838,7 +842,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, ACTION_REQUIRED);
-//        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -963,7 +967,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
 
         competition.setProjectDocuments(newCompetitionProjectDocument().withTitle("Collaboration agreement", "Exploitation plan").build(2));
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED,  Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
         project.setProjectDocuments(docs);
         project.setApplication(application);
 
