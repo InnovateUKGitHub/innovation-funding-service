@@ -315,46 +315,23 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         Competition competition = newCompetition().withId(competitionId).build();
 
-        /**
-         * Create 3 organisations:
-         * 2 Business, 1 Academic
-         ***/
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
         OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
         List<Organisation> organisations = newOrganisation().withOrganisationType(businessOrganisationType).build(2);
         organisations.add(newOrganisation().withOrganisationType(academicOrganisationType).build());
 
-
-        /**
-         * Create 3 users, one for each organisation
-         */
         List<User> users = newUser().build(3);
 
-        /**
-         * Create 3 applications, one for each org, with process roles
-         */
         List<ProcessRole> applicantProcessRoles = newProcessRole().withUser(users.get(0), users.get(1), users.get(2)).withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.APPLICANT).withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).build(3);
         List<Application> applications = newApplication().withCompetition(competition).withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2)).build(3);
 
-        /**
-         * Create 3 project with 3 Project Users from 3 different organisations with associated applications
-         */
         List<ProjectUser> projectUsers = newProjectUser().withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
         List<Project> projects = newProject().withApplication(applications.get(0), applications.get(1), applications.get(2)).withProjectUsers(projectUsers).build(3);
 
-        /**
-         * Create 3 bank detail records, one for each organisation
-         */
         List<BankDetails> bankDetails = newBankDetails().withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
 
-        /**
-         * Build spend profile object for use with one of the partners
-         */
         SpendProfile spendProfile = newSpendProfile().build();
-
-        /**
-         * Create 3 partner organisations and resources
-         */
+        
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().withOrganisation(organisations.get(0), organisations.get(1)).build(3);
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().withId(partnerOrganisations.get(0).getId(), partnerOrganisations.get(1).getId(), partnerOrganisations.get(2).getId()).build(3);
 
