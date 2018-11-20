@@ -46,8 +46,6 @@ public class Project implements ProcessActivity {
 
     private String name;
 
-    private ZonedDateTime documentsSubmittedDate;
-
     private ZonedDateTime offerSubmittedDate;
 
     private String grantOfferLetterRejectionReason;
@@ -59,14 +57,6 @@ public class Project implements ProcessActivity {
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="collaborationAgreementFileEntryId", referencedColumnName="id")
-    private FileEntry collaborationAgreement;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
-    private FileEntry exploitationPlan;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="signedGrantOfferFileEntryId", referencedColumnName = "id")
@@ -97,7 +87,6 @@ public class Project implements ProcessActivity {
         this.address = address;
         this.durationInMonths = durationInMonths;
         this.name = name;
-        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public void addProjectUser(ProjectUser projectUser) {
@@ -204,14 +193,6 @@ public class Project implements ProcessActivity {
         this.partnerOrganisations.addAll(partnerOrganisations);
     }
 
-    public ZonedDateTime getDocumentsSubmittedDate() {
-        return documentsSubmittedDate;
-    }
-
-    public void setDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
-        this.documentsSubmittedDate = documentsSubmittedDate;
-    }
-
     public ZonedDateTime getOfferSubmittedDate() {
         return offerSubmittedDate;
     }
@@ -226,22 +207,6 @@ public class Project implements ProcessActivity {
 
     public void setGrantOfferLetterRejectionReason(String grantOfferLetterRejectionReason) {
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
-    }
-
-    public FileEntry getCollaborationAgreement() {
-        return collaborationAgreement;
-    }
-
-    public void setCollaborationAgreement(FileEntry collaborationAgreement) {
-        this.collaborationAgreement = collaborationAgreement;
-    }
-
-    public FileEntry getExploitationPlan() {
-        return exploitationPlan;
-    }
-
-    public void setExploitationPlan(FileEntry exploitationPlan) {
-        this.exploitationPlan = exploitationPlan;
     }
 
     public FileEntry getSignedGrantOfferLetter() {

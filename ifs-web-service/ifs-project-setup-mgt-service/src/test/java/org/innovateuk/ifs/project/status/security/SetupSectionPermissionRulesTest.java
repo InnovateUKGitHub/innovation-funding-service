@@ -14,7 +14,6 @@ import org.innovateuk.ifs.util.TriFunction;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -157,7 +156,11 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
     }
 
     private boolean doTestApproveDocumentsAccess(Role role) {
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
+
+        UserResource user = newUserResource()
+                .withRoleGlobal(role)
+                .build();
+
         return rules.internalAdminUserCanApproveDocuments(ProjectCompositeId.id(1L), user);
     }
 }
