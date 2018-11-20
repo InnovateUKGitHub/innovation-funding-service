@@ -1180,7 +1180,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+        project = newProjectResource().withApplication(application).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
@@ -1207,7 +1207,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+        project = newProjectResource().withApplication(application).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         List<ProjectUserResource> projectUsers = newProjectUserResource()
@@ -1248,7 +1248,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+        project = newProjectResource().withApplication(application).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
@@ -1275,7 +1275,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+        project = newProjectResource().withApplication(application).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
