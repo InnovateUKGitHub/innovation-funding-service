@@ -35,12 +35,7 @@ IFS.core.financeRowForm = (function () {
         cache: false
       }).done(function (data) {
         var target = jQuery(addRowButton.data('repeatable-rowcontainer'))
-        var emptyRow = target.find('[name*="[empty]"]')
-        if (emptyRow.length) {
-          emptyRow.closest('[data-repeatable-row]').before(data)
-        } else {
-          target.append(data)
-        }
+        target.append(data)
         addRowButton.prevAll('.govuk-hint').remove()
         jQuery('body').trigger('updateSerializedFormState')
       })

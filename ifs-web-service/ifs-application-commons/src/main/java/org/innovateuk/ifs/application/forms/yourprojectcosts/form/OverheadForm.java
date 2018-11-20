@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.form;
 
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
@@ -11,7 +12,9 @@ import javax.validation.groups.Default;
 import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.TOTAL;
 
+@FieldRequiredIf(required = "totalSpreadsheet", argument = "useSpreadsheetOption", predicate = true, message = NOT_BLANK_MESSAGE)
 public class OverheadForm {
 
     private Long costId;
@@ -83,5 +86,9 @@ public class OverheadForm {
 
     public void setCostId(Long costId) {
         this.costId = costId;
+    }
+
+    public boolean isUseSpreadsheetOption() {
+        return TOTAL.equals(rateType);
     }
 }

@@ -29,6 +29,8 @@
                     <label class="govuk-label" th:for="working-days-per-year">
                         Working days per year
                     </label>
+                    <th:block
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=labour.workingDaysPerYear)"/>
                     <input type="number" class="govuk-input govuk-input--width-4"
                            id="working-days-per-year" th:field="*{labour.workingDaysPerYear}"
                            th:errorclass="govuk-input--error"
@@ -409,13 +411,16 @@
                                    class="govuk-label">
                                 Enter the total cost of overheads as calculated in the spreadsheet &pound;
                             </label>
+                            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead.totalSpreadsheet)"/>
                             <input id="overhead.totalSpreadsheet"
                                    th:field="*{overhead.totalSpreadsheet}"
+                                   th:errorclass="govuk-input--error"
                                    type="number"
                                    class="govuk-input govuk-input--width-10 alignright"
                                    min="0"
                                    max="999999999"
-                                   step="1"/>
+                                   step="1"
+                                   required="required"/>
                             <input type="hidden"
                                    readonly="readonly"
                                    id="total-overhead-calculated"
@@ -425,7 +430,6 @@
                                    th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
                         </div>
                     </th:block>
-                    <!-- INTERNAL VIEW OF UPLOADED SPREADSHEET -->
                 </div>
             </th:block>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />

@@ -94,7 +94,6 @@ public abstract class AbstractYourProjectCostsSaver {
         messages.addAll(getFinanceRowService().update(labourCostCategory.getWorkingDaysPerYearCostItem()).getSuccess());
         messages.addAll(saveRows(labourForm.getRows(), finance));
         return messages;
-
     }
 
     private ValidationMessages saveOverheads(OverheadForm overhead, BaseFinanceResource finance) {
@@ -102,7 +101,10 @@ public abstract class AbstractYourProjectCostsSaver {
         Overhead overheadCost = (Overhead) overheadCostCategory.getCosts().stream().findFirst().get();
 
         overheadCost.setRateType(overhead.getRateType());
-        overheadCost.setRate(overhead.getRateType().equals(OverheadRateType.TOTAL) ? overhead.getTotalSpreadsheet() : 0);
+
+        if (overhead.getRateType().equals(OverheadRateType.TOTAL)) {
+            overheadCost.setRate(overhead.getTotalSpreadsheet());
+        }
 
         return getFinanceRowService().update(overheadCost).getSuccess();
     }
