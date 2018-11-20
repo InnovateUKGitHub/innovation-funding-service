@@ -29,40 +29,20 @@ public class AllDocumentsViewModel {
         return competitionId;
     }
 
-    public void setCompetitionId(Long competitionId) {
-        this.competitionId = competitionId;
-    }
-
     public long getApplicationId() {
         return applicationId;
-    }
-
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
     }
 
     public long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
     public String getProjectName() {
         return projectName;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
     public List<ProjectDocumentStatus> getDocuments() {
         return documents;
-    }
-
-    public void setDocuments(List<ProjectDocumentStatus> documents) {
-        this.documents = documents;
     }
 
     @Override

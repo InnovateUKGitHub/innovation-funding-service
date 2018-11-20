@@ -35,16 +35,8 @@ public class DocumentViewModel {
         return projectId;
     }
 
-    public void setProjectId(long projectId) {
-        this.projectId = projectId;
-    }
-
     public String getProjectName() {
         return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
     }
 
     public long getApplicationId() {
@@ -55,32 +47,16 @@ public class DocumentViewModel {
         return documentConfigId;
     }
 
-    public void setDocumentConfigId(long documentConfigId) {
-        this.documentConfigId = documentConfigId;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public FileDetailsViewModel getFileDetails() {
         return fileDetails;
     }
 
-    public void setFileDetails(FileDetailsViewModel fileDetails) {
-        this.fileDetails = fileDetails;
-    }
-
     public DocumentStatus getStatus() {
         return status;
-    }
-
-    public void setStatus(DocumentStatus status) {
-        this.status = status;
     }
 
     public String getStatusComments() {
