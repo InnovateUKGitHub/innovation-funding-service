@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -65,7 +66,7 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (allInternalUsers.contains(user)) {
+            if (isInternal(user)) {
                 assertTrue(rules.internalUserCanDownloadDocument(project, user));
             } else {
                 assertFalse(rules.internalUserCanDownloadDocument(project, user));

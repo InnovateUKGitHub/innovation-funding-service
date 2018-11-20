@@ -22,6 +22,9 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindAny;
 
+/**
+ * Populator for the list of Documents page
+ */
 @Component
 public class DocumentsPopulator {
 

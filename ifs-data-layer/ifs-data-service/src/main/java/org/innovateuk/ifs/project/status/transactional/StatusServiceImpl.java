@@ -85,9 +85,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         Competition competition = competitionRepository.findOne(competitionId);
         List<Project> projects = projectRepository.searchByCompetitionIdAndApplicationIdLikeAndProjectStateNotIn(competitionId, applicationSearchString, singleton(ProjectState.WITHDRAWN));
         List<ProjectStatusResource> projectStatuses = projectStatuses(projects);
-        boolean projectDocuments = competition.getProjectDocuments().size() > 0;
         CompetitionProjectsStatusResource competitionProjectsStatusResource
-                = new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectDocuments, projectStatuses);
+                = new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectStatuses);
 
         return ServiceResult.serviceSuccess(competitionProjectsStatusResource);
     }
