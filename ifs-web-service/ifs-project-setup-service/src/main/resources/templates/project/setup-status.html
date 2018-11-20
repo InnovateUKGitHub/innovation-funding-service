@@ -76,16 +76,16 @@
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectDetailsStatus.getSectionStatus()})"/>
                 </li>
                    <!--/* ========================= Documents ========================= */-->
-                <li th:if="${model.projectDocuments}" th:class="${model.DocumentsSection.notAccessible} ? 'read-only'" th:classappend="${model.DocumentsStatus.getSectionStatus()}">
+                <li th:if="${model.projectDocuments}" th:class="${model.documentsSection.notAccessible} ? 'read-only'" th:classappend="${model.DocumentsStatus.getSectionStatus()}">
                     <div class="task">
                         <h2 class="govuk-heading-s">
-                            <a th:if="${model.DocumentsSection.accessible and not model.projectComplete}"
+                            <a th:if="${model.documentsSection.accessible and not model.projectComplete}"
                                th:href="@{/project/{id}/document/all(id=${model.projectId})}"
                                class="govuk-link">Documents</a>
                             <a th:if="${model.projectComplete}"
                                th:href="@{/project/{id}/document/readonly(id=${model.projectId})}"
                                class="govuk-link">Documents</a>
-                            <th:block th:if="${model.DocumentsSection.notAccessible}">Documents</th:block>
+                            <th:block th:if="${model.documentsSection.notAccessible}">Documents</th:block>
                         </h2>
 
                         <th:block th:if="${model.projectManager}">
@@ -96,8 +96,8 @@
                         </th:block>
                     </div>
                     <th:block
-                        th:insert="project/fragments :: project-setup-status-indicator(${model.DocumentsStatus.getSectionStatus()})"
-                        th:if="${model.DocumentsSection.accessible}"/>
+                        th:insert="project/fragments :: project-setup-status-indicator(${model.documentsStatus.getSectionStatus()})"
+                        th:if="${model.documentsSection.accessible}"/>
                 </li>
                 <!--/* ========================= Monitoring Officer ========================= */-->
                 <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : 'waiting'}">
