@@ -28,6 +28,7 @@ public class ProjectResource {
     private Long grantOfferLetter;
     private Long additionalContractFile;
     private String grantOfferLetterRejectionReason;
+    private ApprovalType otherDocumentsApproved;
     private ZonedDateTime spendProfileSubmittedDate;
     private ProjectState projectState;
     private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
@@ -155,6 +156,14 @@ public class ProjectResource {
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
     }
 
+    public ApprovalType getOtherDocumentsApproved() {
+        return otherDocumentsApproved;
+    }
+
+    public void setOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
+        this.otherDocumentsApproved = otherDocumentsApproved;
+    }
+
     public ZonedDateTime getSpendProfileSubmittedDate() {
         return spendProfileSubmittedDate;
     }
@@ -203,6 +212,7 @@ public class ProjectResource {
                 .append(spendProfileSubmittedDate, that.spendProfileSubmittedDate)
                 .append(durationInMonths, that.durationInMonths)
                 .append(projectState, that.projectState)
+                .append(otherDocumentsApproved, that.otherDocumentsApproved)
                 .append(projectDocuments, that.projectDocuments)
                 .isEquals();
     }
@@ -225,6 +235,7 @@ public class ProjectResource {
                 .append(spendProfileSubmittedDate)
                 .append(durationInMonths)
                 .append(projectState)
+                .append(otherDocumentsApproved)
                 .append(projectDocuments)
                 .toHashCode();
     }
