@@ -116,4 +116,3 @@ public class DocumentsControllerTest extends BaseFileControllerMockMVCTest<Docum
         verify(documentsServiceMock).documentDecision(projectId, documentConfigId, decision);
     }
 }
-

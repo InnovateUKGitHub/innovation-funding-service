@@ -109,5 +109,3 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
         return DocumentsService.class;
     }
 }
-
-
