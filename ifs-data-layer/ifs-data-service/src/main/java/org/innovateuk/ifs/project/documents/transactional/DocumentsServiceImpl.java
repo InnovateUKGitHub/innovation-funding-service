@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.documents.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.domain.FileType;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
@@ -28,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -188,11 +191,26 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         if (UPLOADED.equals(projectDocumentToBeSubmitted.getStatus())) {
             projectDocumentToBeSubmitted.setStatus(SUBMITTED);
             projectDocumentRepository.save(projectDocumentToBeSubmitted);
-            setOtherDocsApproved(project);
+            if (allDocumentsSubmitted(project)) {
+                project.setDocumentsSubmittedDate(ZonedDateTime.now());
+                projectRepository.save(project);
+            }
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED);
         }
+    }
+
+    private boolean allDocumentsSubmitted(Project project) {
+        List<PartnerOrganisation> projectOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
+        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> expectedDocuments = projectDocumentConfigRepository.findByCompetitionId(project.getApplication().getCompetition().getId());
+
+        if (projectOrganisations.size() == 1) {
+            expectedDocuments.removeIf(
+                    document -> document.getTitle().equals("Collaboration agreement"));
+        }
+
+        return project.getProjectDocuments().size() == expectedDocuments.size();
     }
 
     @Override
@@ -223,7 +241,9 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
             projectDocument.setStatus(decision.getApproved() ? APPROVED : REJECTED);
             projectDocument.setStatusComments(!decision.getApproved() ? decision.getRejectionReason() : null);
             projectDocumentRepository.save(projectDocument);
-            setOtherDocsApproved(project);
+            if (allDocumentsSubmitted(project)) {
+                setOtherDocsApproved(project);
+            }
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED);
@@ -240,10 +260,10 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
         if (projectDocuments.stream().allMatch(document -> document.getStatus().equals(DocumentStatus.APPROVED))) {
             project.setOtherDocumentsApproved(ApprovalType.APPROVED);
+            projectRepository.save(project);
         } else if(projectDocuments.stream().anyMatch(document -> document.getStatus().equals(DocumentStatus.REJECTED))){
             project.setOtherDocumentsApproved(ApprovalType.REJECTED);
+            projectRepository.save(project);
         }
-
-        projectRepository.save(project);
     }
 }

@@ -49,6 +49,8 @@ public class Project implements ProcessActivity {
 
     private String name;
 
+    private ZonedDateTime documentsSubmittedDate;
+
     private ZonedDateTime offerSubmittedDate;
 
     private String grantOfferLetterRejectionReason;
@@ -95,6 +97,7 @@ public class Project implements ProcessActivity {
         this.durationInMonths = durationInMonths;
         this.name = name;
         this.otherDocumentsApproved = otherDocumentsApproved;
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public void addProjectUser(ProjectUser projectUser) {
@@ -199,6 +202,14 @@ public class Project implements ProcessActivity {
     public void setPartnerOrganisations(List<PartnerOrganisation> partnerOrganisations) {
         this.partnerOrganisations.clear();
         this.partnerOrganisations.addAll(partnerOrganisations);
+    }
+
+    public ZonedDateTime getDocumentsSubmittedDate() {
+        return documentsSubmittedDate;
+    }
+
+    public void setDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public ZonedDateTime getOfferSubmittedDate() {

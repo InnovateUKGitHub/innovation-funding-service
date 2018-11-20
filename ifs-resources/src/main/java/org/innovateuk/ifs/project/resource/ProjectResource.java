@@ -21,6 +21,7 @@ public class ProjectResource {
     private LocalDate targetStartDate;
     private AddressResource address;
     private String name;
+    private ZonedDateTime documentsSubmittedDate;
     private ZonedDateTime offerSubmittedDate;
     private List<Long> projectUsers;
     private Long signedGrantOfferLetter;
@@ -105,6 +106,14 @@ public class ProjectResource {
 
     public void setCompetition(long competition) {
         this.competition = competition;
+    }
+
+    public ZonedDateTime getDocumentsSubmittedDate() {
+        return documentsSubmittedDate;
+    }
+
+    public void setDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public ZonedDateTime getOfferSubmittedDate() {
@@ -193,6 +202,7 @@ public class ProjectResource {
                 .append(targetStartDate, that.targetStartDate)
                 .append(address, that.address)
                 .append(name, that.name)
+                .append(documentsSubmittedDate, that.documentsSubmittedDate)
                 .append(offerSubmittedDate, that.offerSubmittedDate)
                 .append(projectUsers, that.projectUsers)
                 .append(signedGrantOfferLetter, that.signedGrantOfferLetter)
@@ -215,6 +225,7 @@ public class ProjectResource {
                 .append(targetStartDate)
                 .append(address)
                 .append(name)
+                .append(documentsSubmittedDate)
                 .append(offerSubmittedDate)
                 .append(projectUsers)
                 .append(signedGrantOfferLetter)
