@@ -11,23 +11,23 @@ import java.util.List;
  */
 public class AllDocumentsViewModel {
 
-    private Long projectId;
+    private long projectId;
     private String projectName;
     private List<ProjectDocumentStatus> documents;
     private boolean projectManager;
 
-    public AllDocumentsViewModel(Long projectId, String projectName, List<ProjectDocumentStatus> documents, boolean projectManager) {
+    public AllDocumentsViewModel(long projectId, String projectName, List<ProjectDocumentStatus> documents, boolean projectManager) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.documents = documents;
         this.projectManager = projectManager;
     }
 
-    public Long getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(long projectId) {
         this.projectId = projectId;
     }
 

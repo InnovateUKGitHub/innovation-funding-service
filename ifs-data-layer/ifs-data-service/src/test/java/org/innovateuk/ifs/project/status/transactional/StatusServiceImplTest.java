@@ -182,7 +182,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
 
     @Mock
-    private PartnerOrganisationService partnerOrganisationService;
+    private PartnerOrganisationService partnerOrganisationServiceMock;
 
     @Mock
     private FinanceCheckService financeCheckServiceMock;
@@ -440,9 +440,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(spendProfileServiceMock.getSpendProfileStatus(projects.get(1).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
         when(spendProfileServiceMock.getSpendProfileStatus(projects.get(2).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
 
-        when(partnerOrganisationService.getProjectPartnerOrganisations(projects.get(0).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(0))));
-        when(partnerOrganisationService.getProjectPartnerOrganisations(projects.get(1).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(1))));
-        when(partnerOrganisationService.getProjectPartnerOrganisations(projects.get(2).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(2))));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projects.get(0).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(0))));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projects.get(1).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(1))));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projects.get(2).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(2))));
 
 
         ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId, applicationSearchString);
@@ -729,7 +729,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, false);
 
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(partnerOrganisationService.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrg)));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrg)));
 
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -948,7 +948,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         project.setApplication(application);
 
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(partnerOrganisationService.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -972,7 +972,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         project.setApplication(application);
 
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(partnerOrganisationService.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(singletonList(partnerOrganisationResource)));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(singletonList(partnerOrganisationResource)));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -1131,7 +1131,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
         when(organisationRepositoryMock.findOne(processRole.getOrganisationId())).thenReturn(organisation);
-        when(partnerOrganisationService.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
         when(spendProfileServiceMock.getSpendProfileStatus(projectId)).thenReturn(serviceSuccess(spendProfileStatus));
         when(golWorkflowHandlerMock.isApproved(project)).thenReturn(golIsApproved);
         when(golWorkflowHandlerMock.isRejected(project)).thenReturn(golRejected);

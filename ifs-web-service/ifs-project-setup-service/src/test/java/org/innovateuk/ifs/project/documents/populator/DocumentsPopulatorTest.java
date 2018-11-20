@@ -45,12 +45,12 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     private ProjectService projectService;
 
 
-    private Long projectId = 1L;
+    private long projectId = 1L;
     private String projectName = "Project 12";
 
-    private Long documentConfigId1 = 11L;
-    private Long documentConfigId2 = 12L;
-    private Long collaborationAgreementId = 13L;
+    private long documentConfigId1 = 11L;
+    private long documentConfigId2 = 12L;
+    private long collaborationAgreementId = 13L;
     private String documentConfigTitle1 = "Risk Register";
     private String documentConfigTitle2 = "Plan Document";
     private String documentConfigGuidance1 = "Guidance Risk Register";
@@ -63,7 +63,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     public void setup() {
 
         super.setup();
-        Long competitionId = 12L;
+        long competitionId = 12L;
 
         user = UserResourceBuilder.newUserResource().build();
 

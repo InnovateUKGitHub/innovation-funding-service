@@ -10,16 +10,16 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
  */
 public class DocumentViewModel {
 
-    private Long projectId;
+    private long projectId;
     private String projectName;
-    private Long documentConfigId;
+    private long documentConfigId;
     private String title;
     private String guidance;
     private FileDetailsViewModel fileDetails;
     private DocumentStatus status;
     private boolean projectManager;
 
-    public DocumentViewModel(Long projectId, String projectName, Long documentConfigId, String title, String guidance,
+    public DocumentViewModel(long projectId, String projectName, long documentConfigId, String title, String guidance,
                              FileDetailsViewModel fileDetails, DocumentStatus status, boolean projectManager) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -31,11 +31,11 @@ public class DocumentViewModel {
         this.projectManager = projectManager;
     }
 
-    public Long getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(long projectId) {
         this.projectId = projectId;
     }
 
@@ -47,11 +47,11 @@ public class DocumentViewModel {
         this.projectName = projectName;
     }
 
-    public Long getDocumentConfigId() {
+    public long getDocumentConfigId() {
         return documentConfigId;
     }
 
-    public void setDocumentConfigId(Long documentConfigId) {
+    public void setDocumentConfigId(long documentConfigId) {
         this.documentConfigId = documentConfigId;
     }
 

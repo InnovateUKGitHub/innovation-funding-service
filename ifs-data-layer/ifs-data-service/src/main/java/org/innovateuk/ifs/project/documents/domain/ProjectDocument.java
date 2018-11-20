@@ -17,6 +17,9 @@ import javax.validation.constraints.NotNull;
 
 import static javax.persistence.EnumType.STRING;
 
+/**
+ * Stores document for a project.
+ */
 @Entity
 public class ProjectDocument {
 

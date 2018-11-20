@@ -17,11 +17,11 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindAny;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
 public class DocumentsPopulator {
@@ -52,13 +52,9 @@ public class DocumentsPopulator {
 
         List<ProjectDocumentResource> projectDocuments = project.getProjectDocuments();
 
-        List<ProjectDocumentStatus> documents = new ArrayList<>();
-
-        for (org.innovateuk.ifs.competition.resource.ProjectDocumentResource configuredDocument : configuredProjectDocuments) {
-            documents.add(new ProjectDocumentStatus(configuredDocument.getId(),
-                    configuredDocument.getTitle(),
-                    getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
-        }
+        List<ProjectDocumentStatus> documents = simpleMap(configuredProjectDocuments, configuredDocument ->
+                new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
+                        getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
         return new AllDocumentsViewModel(competition.getId(), basicDetails.getApplication().getId(), projectId, project.getName(), documents);
     }
