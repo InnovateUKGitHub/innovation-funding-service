@@ -90,7 +90,7 @@
         <th:block th:if="${model.isShowSubmitDocumentsButton()}">
             <form th:action="@{/project/{id}/document/config/{documentConfigId}(documentConfigId=${model.documentConfigId}, id=${model.projectId})}" method="post">
               <div>
-                <button data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit">Submit</button>
+                <button data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit" id="submitDocumentButton">Submit</button>
               </div>
             </form>
         </th:block>
