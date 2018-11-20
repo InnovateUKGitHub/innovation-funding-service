@@ -3,10 +3,16 @@ package org.innovateuk.ifs.grant.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.sil.grant.resource.Forecast;
@@ -17,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +42,9 @@ public class GrantServiceImpl implements GrantService {
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
     private GrantEndpoint grantEndpoint;
 
     @Override
@@ -51,6 +61,7 @@ public class GrantServiceImpl implements GrantService {
         grant.setDuration(project.getDurationInMonths());
         Context context = new Context()
                 .withProjectId(project.getId())
+                .withApplicationId(applicationId)
                 .withStartDate(project.getTargetStartDate());
         grant.setParticipants(
                 project.getOrganisations().stream()
@@ -73,6 +84,15 @@ public class GrantServiceImpl implements GrantService {
                     + organisation.getId() + " does not have a spend profile.  All organisations MUST "
                     + "have a spend profile to send grant");
         }
+        SpendProfileCalculations grantCalculator = new SpendProfileCalculations(spendProfile.get());
+        participant.setOverheadRate(grantCalculator.getOverheadPercentage());
+
+        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
+                context.getApplicationId(), organisation.getId()
+        );
+
+        participant.setCapLimit(BigDecimal.valueOf(applicationFinance.getMaximumFundingLevel() / 100.0));
+
         participant.setForecasts(
                 spendProfile.get().getSpendProfileFigures().getCosts().stream()
                 .map(c -> toForecast(context, c)).collect(Collectors.toSet())
@@ -100,10 +120,16 @@ public class GrantServiceImpl implements GrantService {
 
     private static class Context {
         private long projectId;
+        private long applicationId;
         private LocalDate startDate;
 
         Context withProjectId(long projectId) {
             this.projectId = projectId;
+            return this;
+        }
+
+        Context withApplicationId(long applicationId) {
+            this.applicationId = applicationId;
             return this;
         }
 
@@ -114,6 +140,10 @@ public class GrantServiceImpl implements GrantService {
 
         long getProjectId() {
             return projectId;
+        }
+
+        long getApplicationId() {
+            return applicationId;
         }
 
         LocalDate getStartDate() {

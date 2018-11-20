@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.sil.grant.resource;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 public class Participant {
@@ -8,9 +9,9 @@ public class Participant {
     private String role;
     private String contactEmail;
     private int size;
-    private String capLimit;
-    private String awardRate;
-    private String overheadRate;
+    private BigDecimal capLimit;
+    private BigDecimal awardRate;
+    private BigDecimal overheadRate;
     private String status;
     private Set<Forecast> forecasts;
 
@@ -54,27 +55,27 @@ public class Participant {
         this.size = size;
     }
 
-    public String getCapLimit() {
+    public BigDecimal getCapLimit() {
         return capLimit;
     }
 
-    public void setCapLimit(String capLimit) {
+    public void setCapLimit(BigDecimal capLimit) {
         this.capLimit = capLimit;
     }
 
-    public String getAwardRate() {
+    public BigDecimal getAwardRate() {
         return awardRate;
     }
 
-    public void setAwardRate(String awardRate) {
+    public void setAwardRate(BigDecimal awardRate) {
         this.awardRate = awardRate;
     }
 
-    public String getOverheadRate() {
+    public BigDecimal getOverheadRate() {
         return overheadRate;
     }
 
-    public void setOverheadRate(String overheadRate) {
+    public void setOverheadRate(BigDecimal overheadRate) {
         this.overheadRate = overheadRate;
     }
 
