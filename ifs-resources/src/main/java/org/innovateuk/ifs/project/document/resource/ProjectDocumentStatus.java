@@ -3,6 +3,10 @@ package org.innovateuk.ifs.project.document.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/*
+ * This class is for getting the status of project document.
+ */
+
 public class ProjectDocumentStatus {
 
     private Long documentConfigId;
