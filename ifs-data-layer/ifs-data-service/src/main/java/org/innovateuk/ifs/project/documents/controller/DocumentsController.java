@@ -32,6 +32,9 @@ public class DocumentsController {
     @Autowired
     private DocumentsService documentsService;
 
+    public DocumentsController() {
+    }
+
     @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
