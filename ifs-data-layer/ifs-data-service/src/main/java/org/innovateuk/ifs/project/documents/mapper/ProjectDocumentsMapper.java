@@ -23,12 +23,5 @@ public abstract class ProjectDocumentsMapper extends BaseMapper<ProjectDocument,
 
     @Override
     public abstract ProjectDocument mapToDomain(ProjectDocumentResource projectDocumentResource);
-
-    public Long mapProjectToId(ProjectDocument object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }
 
