@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
-<th:block th:fragment="read-only(model)"  th:with="competition=${model.competition}">
+<th:block th:fragment="read-only(model)" th:with="competition=${model.competition}">
 
     <th:block th:if="${model.complete and !model.applicationIsClosed}">
         <div class="success-alert govuk-!-margin-bottom-6">
@@ -11,15 +11,23 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <dl class="govuk-list govuk-!-font-size-16">
-                <dt>Competition name</dt>
-                <dd th:text="${competition.name}"></dd>
+                <th:block th:if="${model.applicationIsClosed}">
+                    <dt>Competition name</dt>
+                    <dd th:text="${competition.name}"></dd>
+                </th:block>
+                <th:block th:unless="${model.applicationIsClosed}">
+                    <dt>Application title</dt>
+                    <dd th:text="${model.application.name}"></dd>
+                </th:block>
                 <dt>When do you wish to start your project?</dt>
                 <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
                 <dd th:unless="${model.application.startDate}"><span class="invisible">Not specified</span></dd>
                 <dt>Duration in months</dt>
                 <dd><th:block th:text="${model.application.durationInMonths}"/> months</dd>
-                <dt>Innovation area</dt>
-                <dd th:text="${model.application.innovationArea.name} ?: 'Not listed'"></dd>
+                <th:block th:if="${model.canSelectInnovationArea}">
+                    <dt>Innovation area</dt>
+                    <dd th:text="${model.application.innovationArea.name} ?: 'Not listed'"></dd>
+                </th:block>
                 <th:block th:unless="${model.application.resubmission == null}">
                     <dt>Is this application a resubmission?</dt>
                     <dd th:text="${model.application.resubmission ? 'Yes' : 'No'}"></dd>
