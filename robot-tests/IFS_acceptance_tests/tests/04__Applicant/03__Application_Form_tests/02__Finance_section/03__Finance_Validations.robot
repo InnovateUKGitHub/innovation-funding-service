@@ -158,27 +158,22 @@ Capital usage server side
     And the user enters text to a text field   css = .form-finances-capital-usage-utilisation    50.58
     And the user enters text to a text field   css = .form-finances-capital-usage-depreciation    ${EMPTY}
     And the user clicks the button/link        jQuery = button:contains("Mark as complete")
-    Then the user should see a summary error   ${field_should_be_1_or_higher}
-    And the user should see a summary error    ${field_should_be_1_or_higher}
-    And the user should see a summary error    ${field_should_be_1_or_higher}
-    [Teardown]    Remove row    jQuery = button:contains("Capital usage")    jQuery = #capital_usage button:contains("Remove")
+    Then the user should see a summary error   ${empty_field_warning_message}
+    [Teardown]    Remove row    jQuery = button:contains("Capital usage")    jQuery = #capital-usage button:contains("Remove")
 
 Subcontracting costs client side
     [Documentation]    INFUND-844
     Given the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
-    When the user enters text to a text field   css = #collapsible-4 .form-row:nth-child(1) input[id="formInput[cost-1847-cost]"]    ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id="formInput[cost-1847-name]"]   ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id="formInput[cost-1847-country]"]   ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) textarea[id="formInput[cost-1847-role]"]   ${EMPTY}
+    When the user enters text to a text field   css = #collapsible-4 .form-row:nth-child(1) input[id$="cost"]    ${EMPTY}
+    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id$="name"]   ${EMPTY}
+    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id$="country"]   ${EMPTY}
+    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) textarea[id$="role"]   ${EMPTY}
     Then the user should see a field error      ${empty_field_warning_message}
-    And the user should see a field error       ${empty_field_warning_message}
-    And the user should see a field error       ${empty_field_warning_message}
-    And the user should see a field error       ${empty_field_warning_message}
 
 Subcontracting costs server side
     [Documentation]    INFUND-844
-    When the user enters text to a text field            css = #collapsible-4 .form-row:nth-child(1) input[id="formInput[cost-1847-cost]"]    -100
-    And the user enters text to a text field             css = #collapsible-4 .form-row:nth-child(1) input[id="formInput[cost-1847-name]"]     ${EMPTY}
+    When the user enters text to a text field            css = #collapsible-4 .form-row:nth-child(1) input[id$="cost"]    -100
+    And the user enters text to a text field             css = #collapsible-4 .form-row:nth-child(1) input[id$="name"]     ${EMPTY}
     And the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   ${field_should_be_1_or_higher}
     And the user should see a field and summary error    ${empty_field_warning_message}
