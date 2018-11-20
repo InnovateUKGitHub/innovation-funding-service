@@ -5,7 +5,6 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
@@ -62,9 +61,6 @@ public class BankDetailsController extends AddressLookupBaseController {
         if(bankDetailsResourceRestResult.isSuccess()) {
             BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccess();
             populateExitingBankDetailsInForm(bankDetailsResource, form);
-        } else {
-            ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(projectResource.getApplication(), organisationResource.getId()).getSuccess();
-            form.getAddressForm().setPostcodeInput(finance.getWorkPostcode());
         }
         return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser, false);
     }

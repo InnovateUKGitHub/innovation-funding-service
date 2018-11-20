@@ -3,8 +3,6 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
@@ -41,9 +39,6 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
 
-    @Autowired
-    private ApplicationFinanceRestService applicationFinanceRestService;
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @GetMapping("/{projectId}/details/project-address")
     public String viewAddress(@PathVariable("projectId") final Long projectId,
@@ -52,12 +47,8 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
 
         ProjectResource project = projectService.getById(projectId);
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
         if (project.getAddress() != null && project.getAddress().getId() != null) {
-            form.getAddressForm().setPostcodeInput(project.getAddress().getPostcode());
-        } else {
-            ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(project.getApplication(), leadOrganisation.getId()).getSuccess();
-            form.getAddressForm().setPostcodeInput(finance.getWorkPostcode());
+            form.getAddressForm().editAddress(project.getAddress());
         }
 
         model.addAttribute("model", projectDetailsAddressViewModel);

@@ -21,12 +21,20 @@ public class ValidAddressFormValidator implements ConstraintValidator<ValidAddre
             if (value.isManualAddressEntry()) {
                 valid = isAddressValid(value.getManualAddress(), context);
             } else if (value.isPostcodeAddressEntry()) {
-                valid = true;
+                if (value.getSelectedPostcodeIndex() < 0) {
+                    context.disableDefaultConstraintViolation();
+                    context
+                        .buildConstraintViolationWithTemplate("{validation.standard.address.select.required}")
+                        .addPropertyNode("selectedPostcodeIndex").addConstraintViolation();
+                    valid = false;
+                } else {
+                    valid = true;
+                }
             } else {
                 valid = false;
                 context.disableDefaultConstraintViolation();
                 context
-                        .buildConstraintViolationWithTemplate("{validation.field.must.not.be.blank}")
+                        .buildConstraintViolationWithTemplate("{validation.standard.address.required}")
                         .addPropertyNode("postcodeInput").addConstraintViolation();
             }
         } else if (value.getAction().equals(AddressForm.Action.SEARCH_POSTCODE) &&
@@ -34,7 +42,7 @@ public class ValidAddressFormValidator implements ConstraintValidator<ValidAddre
             valid = false;
             context.disableDefaultConstraintViolation();
             context
-                    .buildConstraintViolationWithTemplate("{validation.field.must.not.be.blank}")
+                    .buildConstraintViolationWithTemplate("{validation.standard.address.search.postcode.required}")
                     .addPropertyNode("postcodeInput").addConstraintViolation();
         } else {
             valid = true;

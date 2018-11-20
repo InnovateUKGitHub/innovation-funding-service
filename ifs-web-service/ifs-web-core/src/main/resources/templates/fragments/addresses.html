@@ -17,7 +17,7 @@
                 <input id="addressForm.postcodeInput"
                        class="govuk-input govuk-input--width-10"
                        th:field="*{addressForm.postcodeInput}"
-                       th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}')} ? 'govuk-input--error'"
+                       th:errorclass="govuk-input--error"
                        type="text" />
                 <button type="submit" id="postcode-lookup" class="govuk-button govuk-!-margin-0" name="addressForm.action" value="SEARCH_POSTCODE">Find UK address</button>
             </div>
@@ -47,15 +47,39 @@
                     </th:block>
                     <select id="addressForm.selectedPostcodeIndex"
                             class="govuk-select govuk-!-width-one-half"
-                            th:field="*{addressForm.selectedPostcodeIndex}">
+                            th:field="*{addressForm.selectedPostcodeIndex}"
+                            required="required"
+                            th:attr="data-required-errormessage=#{validation.standard.address.select.required}">
+                        <option th:value="-1" th:text="${form.addressForm.postcodeResults.size() + ' addresses found'}" th:selected="${form.addressForm.selectedPostcodeIndex == null}"></option>
                         <option th:value="${status.index}"
                                 th:each="address,status : ${form.addressForm.postcodeResults}"
                                 th:text="${address.combinedString}"></option>
                     </select>
                 </div>
+
+                <th:block th:if="${form.addressForm.postcodeResults != null}">
+                    <input type="hidden"
+                           th:field="*{addressForm.postcodeResults[__${status.index}__].addressLine1}"
+                           th:each="address,status : ${form.addressForm.postcodeResults}" />
+                    <input type="hidden"
+                           th:field="*{addressForm.postcodeResults[__${status.index}__].addressLine2}"
+                           th:each="address,status : ${form.addressForm.postcodeResults}" />
+                    <input type="hidden"
+                           th:field="*{addressForm.postcodeResults[__${status.index}__].addressLine3}"
+                           th:each="address,status : ${form.addressForm.postcodeResults}" />
+                    <input type="hidden"
+                           th:field="*{addressForm.postcodeResults[__${status.index}__].town}"
+                           th:each="address,status : ${form.addressForm.postcodeResults}" />
+                    <input type="hidden"
+                           th:field="*{addressForm.postcodeResults[__${status.index}__].county}"
+                           th:each="address,status : ${form.addressForm.postcodeResults}" />
+                    <input type="hidden"
+                           th:field="*{addressForm.postcodeResults[__${status.index}__].postcode}"
+                           th:each="address,status : ${form.addressForm.postcodeResults}" />
+                </th:block>
             </th:block>
 
-            <button type="submit" class="button-clear" name="addressForm.action" value="ENTER_MANUAL">Enter address manually</button>
+            <button th:unless="${form.addressForm.manualAddressEntry}" type="submit" class="button-clear" name="addressForm.action" value="ENTER_MANUAL">Enter address manually</button>
         </fieldset>
         <fieldset id="address-details" class="govuk-fieldset govuk-!-margin-top-6" th:if="${form.addressForm.manualAddressEntry}">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m"

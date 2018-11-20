@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -78,7 +79,8 @@ public class ProjectDetailsAddressControllerTest extends BaseControllerMockMVCTe
         assertEquals(project.getApplication(), viewModel.getApplicationId());
 
         ProjectDetailsAddressForm form = (ProjectDetailsAddressForm) model.get(FORM_ATTR_NAME);
-        assertEquals(form.getAddressForm().getPostcodeInput(), addressResource.getPostcode());
+        assertTrue(form.getAddressForm().isManualAddressEntry());
+        assertEquals(form.getAddressForm().getManualAddress().getPostcode(), addressResource.getPostcode());
     }
 
     @Test

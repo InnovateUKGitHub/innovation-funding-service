@@ -109,15 +109,16 @@ public class AddressForm {
         return addressType == AddressType.POSTCODE_LOOKUP;
     }
 
-
     public void validateAction(BindingResult bindingResult) {
         if (action == Action.SEARCH_POSTCODE) {
             if (isNullOrEmpty(postcodeInput)) {
-                bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
+                bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.address.search.postcode.required");
             }
         }
     }
 
-
-
+    public void editAddress(AddressResource address) {
+        addressType = AddressType.MANUAL_ENTRY;
+        manualAddress = address;
+    }
 }
