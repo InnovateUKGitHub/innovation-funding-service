@@ -286,4 +286,3 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
         return new DocumentsController(populator, documentsRestService);
     }
 }
-
