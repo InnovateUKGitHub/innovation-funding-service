@@ -11,9 +11,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.function.Supplier;
 
-/**
- * Transactional and secure service for Project Documents processing work
- */
 public interface DocumentsService {
 
     @SecuredBySpring(value = "GET_VALID_MEDIA_TYPES", description = "Any authenticated user can get valid media types for a document")

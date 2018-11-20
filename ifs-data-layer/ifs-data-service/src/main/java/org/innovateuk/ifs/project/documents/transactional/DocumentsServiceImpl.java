@@ -31,25 +31,14 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_DELETED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.REJECTED;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindAny;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-/**
- * Transactional and secure service for Project Documents processing work
- */
 public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements DocumentsService {
 
     @Autowired
@@ -74,6 +63,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     private static final String SPREADSHEET_FILE_TYPE = "Spreadsheet";
     private static final String PDF_MEDIA_TYPE = "application/pdf";
     private static final List<String> SPREADSHEET_MEDIA_TYPE_LIST = Arrays.asList("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.oasis.opendocument.spreadsheet");
+
     @Override
     public ServiceResult<List<String>> getValidMediaTypesForDocument(long documentConfigId) {
         return getProjectDocumentConfig(documentConfigId)
@@ -132,7 +122,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
             FileEntry fileEntry = getFileEntry(project, documentConfigId);
 
             return fileService.getFileByFileEntryId(fileEntry.getId())
-                .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
+                    .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
         });
     }
 
@@ -157,9 +147,9 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     public ServiceResult<Void> deleteDocument(long projectId, long documentConfigId) {
         return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
-                                .andOnSuccess(() -> deleteProjectDocument(project, documentConfigId))
-                                .andOnSuccess(() -> deleteFile(project, documentConfigId))
-                            );
+                        .andOnSuccess(() -> deleteProjectDocument(project, documentConfigId))
+                        .andOnSuccess(() -> deleteFile(project, documentConfigId))
+                );
     }
 
     private ServiceResult<Void> deleteProjectDocument(Project project, long documentConfigId) {
@@ -204,10 +194,10 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
         return validateProjectDocumentDecision(decision)
                 .andOnSuccess(() -> find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
-                andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
-                        .andOnSuccess(() -> applyDocumentDecision(project, documentConfigId, decision))
-                        .andOnSuccess(() -> generateGrantOfferLetterIfReady(projectId))
-                ));
+                        andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
+                                .andOnSuccess(() -> applyDocumentDecision(project, documentConfigId, decision))
+                                .andOnSuccess(() -> generateGrantOfferLetterIfReady(projectId))
+                        ));
     }
 
     private ServiceResult<Void> validateProjectDocumentDecision(ProjectDocumentDecision decision) {
@@ -223,8 +213,8 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         ProjectDocument projectDocument = getProjectDocument(project, documentConfigId);
 
         if (SUBMITTED.equals(projectDocument.getStatus())) {
-            projectDocument.setStatus(decision.getApproved()? APPROVED : REJECTED);
-            projectDocument.setStatusComments(!decision.getApproved()? decision.getRejectionReason() : null);
+            projectDocument.setStatus(decision.getApproved() ? APPROVED : REJECTED);
+            projectDocument.setStatusComments(!decision.getApproved() ? decision.getRejectionReason() : null);
             projectDocumentRepository.save(projectDocument);
             return serviceSuccess();
         } else {
