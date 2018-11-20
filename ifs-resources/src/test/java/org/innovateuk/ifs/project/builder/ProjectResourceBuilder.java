@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -85,6 +86,10 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
 
     public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
         return withArray((userList, project) -> project.setProjectUsers(userList), projectUsers);
+    }
+
+    public ProjectResourceBuilder withDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
+        return with(project -> project.setDocumentsSubmittedDate(documentsSubmittedDate));
     }
 
     public ProjectResourceBuilder withProjectDocuments(List<ProjectDocumentResource>... projectDocuments) {
