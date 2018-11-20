@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,6 +39,10 @@ public class DocumentsController {
 
     private DocumentsRestService documentsRestService;
 
+    public DocumentsController() {
+    }
+
+    @Autowired
     public DocumentsController(DocumentsPopulator populator, DocumentsRestService documentsRestService) {
         this.populator = populator;
         this.documentsRestService = documentsRestService;
