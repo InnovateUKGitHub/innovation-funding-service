@@ -181,7 +181,7 @@
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
             <div>
-                <button class="govuk-button" name="submitDocument" type="submit">Submit</button>
+                <button class="govuk-button" id="submitDocumentButtonConfirm" name="submitDocument" type="submit">Submit</button>
                 <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
