@@ -130,9 +130,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
     private FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
 
     @Before
-    public void setUp() {
-
-        super.setUp();
+    public void setupData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

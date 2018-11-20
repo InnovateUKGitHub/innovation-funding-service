@@ -1,17 +1,15 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel.YourProjectLocationViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel.YourProjectLocationViewModelPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -24,18 +22,15 @@ import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest<YourProjectLocationController> {
+public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCTest<YourProjectLocationController> {
 
     @Mock
     private YourProjectLocationViewModelPopulator viewModelPopulatorMock;
@@ -52,9 +47,6 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
     @Mock
     private UserRestService userRestServiceMock;
 
-    @Mock
-    private AsyncFuturesGenerator futuresGeneratorMock;
-
     private long applicationId = 123L;
     private long sectionId = 456L;
     private long organisationId = 789L;
@@ -67,15 +59,18 @@ public class YourProjectLocationControllerTest extends BaseControllerMockMVCTest
 
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
-    @Before
-    public void setupExpectations() {
-        setupAsyncExpectations(futuresGeneratorMock);
+    @Test
+    public void viewPage() throws Exception {
+        assertViewPageSuccessful(false);
     }
 
     @Test
-    public void viewPage() throws Exception {
+    public void viewPageInternalUser() throws Exception {
+        setLoggedInUser(stakeholder);
+        assertViewPageSuccessful(true);
+    }
 
-        boolean internalUser = false;
+    private void assertViewPageSuccessful(boolean internalUser) throws Exception {
 
         YourProjectLocationViewModel viewModel =
                 new YourProjectLocationViewModel(false, "", "", applicationId, sectionId, true);

@@ -139,11 +139,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Before
-    @Override
-    public void setUp() {
-
-        // Process mock annotations
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

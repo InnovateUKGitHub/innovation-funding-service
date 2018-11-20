@@ -65,10 +65,8 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
         return new ReviewInviteController();
     }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         when(rejectionReasonRestService.findAllActive()).thenReturn(restSuccess(rejectionReasons));
     }
 

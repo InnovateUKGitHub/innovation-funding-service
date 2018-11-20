@@ -39,8 +39,6 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-project-location/organisation/{organisationId}/section/{sectionId}")
-@SecuredBySpring(value = "PROJECT_LOCATION_APPLICANT",
-        description = "Applicants can all fill out the Project Location section of the application.")
 public class YourProjectLocationController extends AsyncAdaptor {
 
     private static final String VIEW_PAGE = "application/sections/your-project-location/your-project-location";
@@ -67,9 +65,15 @@ public class YourProjectLocationController extends AsyncAdaptor {
         this.userRestService = userRestService;
     }
 
+    // for ByteBuddy
+    YourProjectLocationController() {
+
+    }
+
     @GetMapping
     @AsyncMethod
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @SecuredBySpring(value = "VIEW_PROJECT_LOCATION", description = "Applicants and internal users can view the Your project location page")
     public String viewPage(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
@@ -91,6 +95,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     @PostMapping
     @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "UPDATE_PROJECT_LOCATION", description = "Applicants can update their project location")
     public String update(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
@@ -102,6 +107,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     @PostMapping("/auto-save")
     @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "UPDATE_PROJECT_LOCATION", description = "Applicants can update their project location")
     public @ResponseBody
     JsonNode autosave(
             @PathVariable("applicationId") long applicationId,
@@ -114,6 +120,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     @PostMapping(params = "mark-as-complete")
     @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "MARK_PROJECT_LOCATION_AS_COMPLETE", description = "Applicants can mark their project location as complete")
     public String markAsComplete(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
@@ -151,6 +158,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     @PostMapping(params = "mark-as-incomplete")
     @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "MARK_PROJECT_LOCATION_AS_INCOMPLETE", description = "Applicants can mark their project location as incomplete")
     public String markAsIncomplete(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,

@@ -66,7 +66,6 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withRolesGlobal(singletonList(Role.APPLICANT))
             .withUID("2aerg234-aegaeb-23aer").build();
 
-
     protected UserResource assessor = newUserResource().withId(3L)
             .withFirstName("Clark")
             .withLastName("Baker")
@@ -126,11 +125,9 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     protected UserResource loggedInUser = applicant;
 
     @Before
-    public void setUp() {
+    public void logInUserBeforeTests() {
 
-        super.setup();
-
-        mockMvc = setupMockMvc(controller, () -> getLoggedInUser(), env, messageSource);
+        mockMvc = setupMockMvc(controller, this::getLoggedInUser, env, messageSource);
 
         setLoggedInUser(loggedInUser);
     }

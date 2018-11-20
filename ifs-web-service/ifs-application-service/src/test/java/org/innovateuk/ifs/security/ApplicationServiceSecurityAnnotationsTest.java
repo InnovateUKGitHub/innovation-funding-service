@@ -8,13 +8,14 @@ import org.innovateuk.ifs.benchmark.BenchmarkController;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.CollectionFunctions.union;
 
 public class ApplicationServiceSecurityAnnotationsTest extends AbstractWebServiceSecurityAnnotationsTest {
 
     @Override
     protected List<Class<?>> additionalExcludedClasses() {
-        return union(asList(BenchmarkController.class), additionalClasses());
+        return union(singletonList(BenchmarkController.class), additionalClasses());
     }
 
     protected List<Class<?>> additionalClasses() {

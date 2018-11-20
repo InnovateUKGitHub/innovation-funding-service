@@ -138,8 +138,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

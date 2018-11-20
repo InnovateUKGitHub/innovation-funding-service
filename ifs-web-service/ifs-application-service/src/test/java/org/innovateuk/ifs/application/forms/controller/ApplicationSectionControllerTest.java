@@ -110,6 +110,10 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
+    @Mock
+    @SuppressWarnings("unused")
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
+
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
@@ -123,9 +127,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Before
-    @Override
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
