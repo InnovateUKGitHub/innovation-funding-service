@@ -6,12 +6,14 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static javax.persistence.EnumType.STRING;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -46,6 +49,8 @@ public class Project implements ProcessActivity {
 
     private String name;
 
+    private ZonedDateTime documentsSubmittedDate;
+
     private ZonedDateTime offerSubmittedDate;
 
     private String grantOfferLetterRejectionReason;
@@ -70,6 +75,10 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
+    @NotNull
+    @Enumerated(STRING)
+    private ApprovalType otherDocumentsApproved = ApprovalType.UNSET;
+
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SpendProfile> spendProfiles;
 
@@ -79,7 +88,7 @@ public class Project implements ProcessActivity {
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
-                   Long durationInMonths, String name, ZonedDateTime documentsSubmittedDate) {
+                   Long durationInMonths, String name, ZonedDateTime documentsSubmittedDate, ApprovalType otherDocumentsApproved ) {
 
         this.id = id;
         this.application = application;
@@ -87,6 +96,8 @@ public class Project implements ProcessActivity {
         this.address = address;
         this.durationInMonths = durationInMonths;
         this.name = name;
+        this.otherDocumentsApproved = otherDocumentsApproved;
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public void addProjectUser(ProjectUser projectUser) {
@@ -193,6 +204,14 @@ public class Project implements ProcessActivity {
         this.partnerOrganisations.addAll(partnerOrganisations);
     }
 
+    public ZonedDateTime getDocumentsSubmittedDate() {
+        return documentsSubmittedDate;
+    }
+
+    public void setDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
+        this.documentsSubmittedDate = documentsSubmittedDate;
+    }
+
     public ZonedDateTime getOfferSubmittedDate() {
         return offerSubmittedDate;
     }
@@ -231,6 +250,15 @@ public class Project implements ProcessActivity {
 
     public void setGrantOfferLetter(FileEntry grantOfferLetter) {
         this.grantOfferLetter = grantOfferLetter;
+    }
+
+    @NotNull
+    public ApprovalType getOtherDocumentsApproved() {
+        return otherDocumentsApproved;
+    }
+
+    public void setOtherDocumentsApproved(@NotNull ApprovalType otherDocumentsApproved) {
+        this.otherDocumentsApproved = otherDocumentsApproved;
     }
 
     public ZonedDateTime getSpendProfileSubmittedDate() {

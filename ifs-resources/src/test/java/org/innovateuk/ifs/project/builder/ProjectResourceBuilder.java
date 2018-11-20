@@ -4,10 +4,12 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -64,6 +66,8 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with(project -> project.setAddress(address));
     }
 
+
+
     public ProjectResourceBuilder withSignedGrantOfferLetter(Long grantOfferLetter) {
         return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
     }
@@ -76,8 +80,16 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with (project -> project.setAdditionalContractFile(additionalContractFile));
     }
 
+    public ProjectResourceBuilder withOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
+        return with(project -> project.setOtherDocumentsApproved(otherDocumentsApproved));
+    }
+
     public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
         return withArray((userList, project) -> project.setProjectUsers(userList), projectUsers);
+    }
+
+    public ProjectResourceBuilder withDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
+        return with(project -> project.setDocumentsSubmittedDate(documentsSubmittedDate));
     }
 
     public ProjectResourceBuilder withProjectDocuments(List<ProjectDocumentResource>... projectDocuments) {

@@ -21,12 +21,14 @@ public class ProjectResource {
     private LocalDate targetStartDate;
     private AddressResource address;
     private String name;
+    private ZonedDateTime documentsSubmittedDate;
     private ZonedDateTime offerSubmittedDate;
     private List<Long> projectUsers;
     private Long signedGrantOfferLetter;
     private Long grantOfferLetter;
     private Long additionalContractFile;
     private String grantOfferLetterRejectionReason;
+    private ApprovalType otherDocumentsApproved;
     private ZonedDateTime spendProfileSubmittedDate;
     private ProjectState projectState;
     private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
@@ -106,6 +108,14 @@ public class ProjectResource {
         this.competition = competition;
     }
 
+    public ZonedDateTime getDocumentsSubmittedDate() {
+        return documentsSubmittedDate;
+    }
+
+    public void setDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
+        this.documentsSubmittedDate = documentsSubmittedDate;
+    }
+
     public ZonedDateTime getOfferSubmittedDate() {
         return offerSubmittedDate;
     }
@@ -146,6 +156,14 @@ public class ProjectResource {
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
     }
 
+    public ApprovalType getOtherDocumentsApproved() {
+        return otherDocumentsApproved;
+    }
+
+    public void setOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
+        this.otherDocumentsApproved = otherDocumentsApproved;
+    }
+
     public ZonedDateTime getSpendProfileSubmittedDate() {
         return spendProfileSubmittedDate;
     }
@@ -184,6 +202,7 @@ public class ProjectResource {
                 .append(targetStartDate, that.targetStartDate)
                 .append(address, that.address)
                 .append(name, that.name)
+                .append(documentsSubmittedDate, that.documentsSubmittedDate)
                 .append(offerSubmittedDate, that.offerSubmittedDate)
                 .append(projectUsers, that.projectUsers)
                 .append(signedGrantOfferLetter, that.signedGrantOfferLetter)
@@ -193,6 +212,7 @@ public class ProjectResource {
                 .append(spendProfileSubmittedDate, that.spendProfileSubmittedDate)
                 .append(durationInMonths, that.durationInMonths)
                 .append(projectState, that.projectState)
+                .append(otherDocumentsApproved, that.otherDocumentsApproved)
                 .append(projectDocuments, that.projectDocuments)
                 .isEquals();
     }
@@ -205,6 +225,7 @@ public class ProjectResource {
                 .append(targetStartDate)
                 .append(address)
                 .append(name)
+                .append(documentsSubmittedDate)
                 .append(offerSubmittedDate)
                 .append(projectUsers)
                 .append(signedGrantOfferLetter)
@@ -214,6 +235,7 @@ public class ProjectResource {
                 .append(spendProfileSubmittedDate)
                 .append(durationInMonths)
                 .append(projectState)
+                .append(otherDocumentsApproved)
                 .append(projectDocuments)
                 .toHashCode();
     }

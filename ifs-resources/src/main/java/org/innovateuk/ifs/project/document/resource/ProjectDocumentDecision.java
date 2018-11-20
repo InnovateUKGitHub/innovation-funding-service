@@ -3,6 +3,10 @@ package org.innovateuk.ifs.project.document.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/*
+ *  Provides methods for project document that have been approved and the reason for rejection.
+ */
+
 public class ProjectDocumentDecision {
 
     private Boolean approved;

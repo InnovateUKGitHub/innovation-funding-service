@@ -16,12 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -44,6 +39,10 @@ public class DocumentsController {
 
     private DocumentsRestService documentsRestService;
 
+    public DocumentsController() {
+    }
+
+    @Autowired
     public DocumentsController(DocumentsPopulator populator, DocumentsRestService documentsRestService) {
         this.populator = populator;
         this.documentsRestService = documentsRestService;
