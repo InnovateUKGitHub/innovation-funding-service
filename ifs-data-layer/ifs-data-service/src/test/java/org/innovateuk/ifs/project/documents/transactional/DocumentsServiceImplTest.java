@@ -2,8 +2,10 @@ package org.innovateuk.ifs.project.documents.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.builder.FileTypeBuilder;
@@ -11,7 +13,9 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
@@ -32,6 +36,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED;
@@ -40,13 +45,16 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_P
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DOCUMENT_NOT_YET_UPLOADED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.REJECTED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UNSET;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
+import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -62,11 +70,14 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     private Long projectDocumentId = 3L;
     private Long fileEntryId = 5L;
 
-
     private Project project;
+    private Application application;
+    private Competition competition;
     private ProjectDocument projectDocument;
+    private List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> competitionDocuments;
     private org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument;
     private FileEntry fileEntry;
+    private List<PartnerOrganisation> partnerOrganisations;
 
     @Mock
     private ProjectRepository projectRepositoryMock;
@@ -82,6 +93,9 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
     @Mock
     private GrantOfferLetterService grantOfferLetterServiceMock;
+
+    @Mock
+    private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
 
     @Before
     public void setUp() {
@@ -103,17 +117,32 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         fileEntry = newFileEntry().withId(fileEntryId).build();
 
-        projectDocument = ProjectDocumentBuilder.newProjectDocument()
+        projectDocument = newProjectDocument()
                 .withId(projectDocumentId)
                 .withProjectDocument(configuredProjectDocument)
                 .withFileEntry(fileEntry)
                 .build();
 
+        partnerOrganisations = newPartnerOrganisation()
+                .build(2);
+
+        competition = newCompetition().build();
+
+        application = newApplication()
+                .withCompetition(competition)
+                .build();
+
+        competitionDocuments = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder.newCompetitionProjectDocument()
+                .build(1);
+
         project.setProjectDocuments(singletonList(projectDocument));
+        project.setApplication(application);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(projectDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(configuredProjectDocument);
+        when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
+        when(projectDocumentConfigRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(competitionDocuments);
     }
 
     @Test

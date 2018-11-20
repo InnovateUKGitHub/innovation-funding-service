@@ -237,10 +237,17 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 build();
 
         long projectId = 123L;
+
+        List<ProjectDocument> projectDocuments = newProjectDocument()
+                .withProject(project)
+                .withStatus(DocumentStatus.APPROVED)
+                .build(1);
+
         project = newProject().
                 withId(projectId).
                 withApplication(application).
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
+                withProjectDocuments(projectDocuments).
                 build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
@@ -275,13 +282,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withDateSubmitted(ZonedDateTime.now()).
                 withSpendProfileSubmittedDate(ZonedDateTime.now()).
                 build();
-
-        ProjectDocument projectDocument = ProjectDocumentBuilder
-                .newProjectDocument()
-                .withProject(project)
-                .withStatus(DocumentStatus.APPROVED)
-                .build();
-        project.setProjectDocuments(singletonList(projectDocument));
 
         puResource = newProjectUserResource().
                 withProject(p.getId()).
@@ -714,7 +714,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, REJECTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
-
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
         assertTrue(resultFailure.isFailure());
@@ -730,7 +729,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
         when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrg)));
-
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -1098,8 +1096,13 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                                                 boolean locationPerPartnerRequired) {
 
         long competitionId = 112L;
+
+        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> competitionDocuments
+                = newCompetitionProjectDocument().withTitle("document").build(1);
+
         Competition competition = CompetitionBuilder.newCompetition()
                 .withId(competitionId)
+                .withProjectDocuments(competitionDocuments)
                 .withLocationPerPartner(locationPerPartnerRequired)
                 .build();
 
@@ -1115,10 +1118,17 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 build();
         PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
         PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().withId(partnerOrganisation.getId()).build();
+
+        List<ProjectDocument> projectDocuments = newProjectDocument()
+                .withProject(project)
+                .withStatus(DocumentStatus.APPROVED)
+                .build(1);
+
         Project project = newProject().
                 withId(projectId).
                 withApplication(application).
                 withPartnerOrganisations(asList(partnerOrganisation)).
+                withProjectDocuments(projectDocuments).
                 build();
 
         BankDetails bankDetail = newBankDetails().withProject(project).build();
