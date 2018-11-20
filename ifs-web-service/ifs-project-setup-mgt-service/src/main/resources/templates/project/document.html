@@ -10,7 +10,6 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Documents',linkUrl=@{/project/{id}/document/all/(id=${model.projectId})}" />
@@ -35,7 +34,6 @@
             <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED'}">
                 <p class="govuk-heading-s govuk-!-margin-top-0">You have rejected this document. Please contact the Project Manager to explain your decision.</p>
             </div>
-
              
             <th:block th:unless="${model.fileDetails == null}">
                 <h2 class="govuk-heading-m">File uploaded</h2>
