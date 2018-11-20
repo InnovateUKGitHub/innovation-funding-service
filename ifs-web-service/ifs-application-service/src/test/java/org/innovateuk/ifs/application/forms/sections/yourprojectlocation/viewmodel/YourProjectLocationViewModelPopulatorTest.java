@@ -48,13 +48,13 @@ public class YourProjectLocationViewModelPopulatorTest {
     private YourProjectLocationViewModelPopulator populator;
 
     @Mock
-    private ApplicationRestService applicationRestService;
+    private ApplicationRestService applicationRestServiceMock;
 
     @Mock
-    private CompetitionRestService competitionRestService;
+    private CompetitionRestService competitionRestServiceMock;
 
     @Mock
-    private SectionService sectionService;
+    private SectionService sectionServiceMock;
 
     @Test
     public void populate() {
@@ -170,9 +170,9 @@ public class YourProjectLocationViewModelPopulatorTest {
                 withApplicationState(applicationState).
                 build();
 
-        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(sectionService.getCompleted(application.getId(), organisationId)).thenReturn(sectionsMarkedAsComplete);
+        when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(sectionServiceMock.getCompleted(application.getId(), organisationId)).thenReturn(sectionsMarkedAsComplete);
 
         YourProjectLocationViewModel viewModel = populator.populate(organisationId, application.getId(), sectionId, internalUser);
 
