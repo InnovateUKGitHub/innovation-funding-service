@@ -5,13 +5,10 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmo
  */
 public class YourProjectLocationViewModel {
 
-    // for the view
     private String financesUrl;
     private String applicationName;
-    // and for autosave url
     private long applicationId;
     private long sectionId;
-    // for mark as complete
     private boolean open;
     private boolean complete;
 
