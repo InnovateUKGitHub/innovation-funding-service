@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -155,11 +156,23 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(), financeChecksAccess);
         SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
-        SectionStatus documentsStatus = sectionStatus.documentsSectionStatus(isProjectManager, competition.getProjectDocuments(), project.getProjectDocuments(), collaborationAgreementRequired);
+        SectionStatus documentsStatus = sectionStatus.documentsSectionStatus(isProjectManager, getCompetitionDocuments(competition, collaborationAgreementRequired), project.getProjectDocuments());
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(ownOrganisation.getGrantOfferLetterStatus(), isLeadPartner);
 
         return new SectionStatusList(projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus,
                 financeChecksStatus, spendProfileStatus, documentsStatus, grantOfferStatus);
+    }
+
+    private List<ProjectDocumentResource> getCompetitionDocuments(CompetitionResource competition, boolean collaborationAgreementRequired) {
+
+        List<ProjectDocumentResource> competitionDocuments = competition.getProjectDocuments();
+
+        if (!collaborationAgreementRequired) {
+            competitionDocuments.removeIf(
+                    document -> document.getTitle().equals("Collaboration agreement"));
+        }
+
+        return competitionDocuments;
     }
 
     private boolean isLeadPartner(ProjectTeamStatusResource teamStatus, OrganisationResource organisation) {

@@ -109,4 +109,3 @@ ALTER TABLE project
 
 ALTER TABLE project DROP COLUMN collaboration_agreement_file_entry_id;
 ALTER TABLE project DROP COLUMN exploitation_plan_file_entry_id;
-ALTER TABLE project DROP COLUMN other_documents_approved;
