@@ -24,4 +24,3 @@ public abstract class ProjectDocumentsMapper extends BaseMapper<ProjectDocument,
     @Override
     public abstract ProjectDocument mapToDomain(ProjectDocumentResource projectDocumentResource);
 }
-
