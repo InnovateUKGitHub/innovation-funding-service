@@ -1,4 +1,4 @@
--- IFS-4631 Migrate all competitions to new configurable documents excluding princes trust and Expression of interest
+-- IFS-4631 Migrate all competitions to new configurable documents excluding Expression of interest
 
 INSERT INTO document_config
 (competition_id, title, guidance, editable, enabled, type)
