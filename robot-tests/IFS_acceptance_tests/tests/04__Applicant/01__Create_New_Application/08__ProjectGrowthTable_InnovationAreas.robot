@@ -164,14 +164,14 @@ Organisation client side validation when no
     [Tags]
     Given the user selects medium organisation size
     When the user enters text to a text field           jQuery = .govuk-hint:contains("Your turnover from the last financial year") + + input  ${empty}
-    And the user moves focus to the element             jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input
+    And Set Focus To Element                            jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input
     Then the user should see a field and summary error  ${empty_field_warning_message}
     And the user enters text to a text field            jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input  ${empty}
-    When the user moves focus to the element            jQuery = button:contains("Mark as complete")
+    When Set Focus To Element                           jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error  ${empty_field_warning_message}
     When the user enters text to a text field           jQuery = .govuk-hint:contains("Your turnover from the last financial year") + + input  150
     And the user enters text to a text field            jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input  0
-    And the user moves focus to the element             jQuery = button:contains("Mark as complete")
+    And Set Focus To Element                            jQuery = button:contains("Mark as complete")
     Then the user should not see the element            css = .govuk-error-message
 
 Mark Organisation as complete when no
@@ -233,7 +233,7 @@ Organisation client side validation when yes
     And the user enters value to field                        Annual turnover    ${EMPTY}
     Then the user should see a field and summary error        ${empty_field_warning_message}
     When the user enters value to field                       Annual turnover    8.5
-    And the user moves focus to the element                   jQuery = td:contains("Annual profit") + td input
+    And Set Focus To Element                                  jQuery = td:contains("Annual profit") + td input
     Then the user should see a field and summary error        ${only_accept_whole_numbers_message}
     And the user enters value to field                        Annual profit    -5
     When the user enters value to field                       Annual export    ${empty}
