@@ -39,7 +39,7 @@ public class DocumentPermissionRules extends BasePermissionRules {
         return isProjectManager(project.getId(), user.getId());
     }
 
-    @PermissionRule(value = "APPROVE_DOCUMENT", description = "Comp admin or project finance users can approve or reject document")
+    @PermissionRule(value = "REVIEW_DOCUMENT", description = "Comp admin or project finance users can approve or reject document")
     public boolean internalAdminCanApproveDocument(ProjectResource project, UserResource user) {
         return isInternalAdmin(user);
     }
