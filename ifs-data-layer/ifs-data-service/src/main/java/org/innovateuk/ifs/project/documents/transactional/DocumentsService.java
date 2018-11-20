@@ -32,7 +32,7 @@ public interface DocumentsService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'SUBMIT_DOCUMENT')")
     ServiceResult<Void> submitDocument(long projectId, long documentConfigId);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'APPROVE_DOCUMENT')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'REVIEW_DOCUMENT')")
     ServiceResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision);
 
 }
