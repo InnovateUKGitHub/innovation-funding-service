@@ -46,6 +46,8 @@ public class DocumentsController {
     @Autowired
     private DocumentsRestService documentsRestService;
 
+    public DocumentsController() {
+    }
 
     public DocumentsController(DocumentsPopulator populator, DocumentsRestService documentsRestService) {
         this.populator = populator;

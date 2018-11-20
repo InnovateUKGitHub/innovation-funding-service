@@ -10,16 +10,16 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
  */
 public class DocumentViewModel {
 
-    private Long projectId;
+    private long projectId;
     private String projectName;
-    private Long applicationId;
+    private long applicationId;
     private Long documentConfigId;
     private String title;
     private FileDetailsViewModel fileDetails;
     private DocumentStatus status;
     private String statusComments;
 
-    public DocumentViewModel(Long projectId, String projectName, Long applicationId, Long documentConfigId,
+    public DocumentViewModel(long projectId, String projectName, Long applicationId, Long documentConfigId,
                              String title, FileDetailsViewModel fileDetails, DocumentStatus status, String statusComments) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -31,7 +31,7 @@ public class DocumentViewModel {
         this.statusComments = statusComments;
     }
 
-    public Long getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
@@ -47,7 +47,7 @@ public class DocumentViewModel {
         this.projectName = projectName;
     }
 
-    public Long getApplicationId() {
+    public long getApplicationId() {
         return applicationId;
     }
 

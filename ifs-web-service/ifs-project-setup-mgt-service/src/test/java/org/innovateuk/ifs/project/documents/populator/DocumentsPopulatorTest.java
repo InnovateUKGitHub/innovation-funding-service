@@ -14,21 +14,17 @@ import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder;
 import org.innovateuk.ifs.project.documents.viewmodel.AllDocumentsViewModel;
 import org.innovateuk.ifs.project.documents.viewmodel.DocumentViewModel;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UNSET;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
 import static org.junit.Assert.assertEquals;
@@ -50,10 +46,10 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     @Mock
     private CompetitionRestService competitionRestService;
 
-    private Long competitionId = 18L;
-    private Long applicationId = 19L;
+    private long competitionId = 18L;
+    private long applicationId = 19L;
 
-    private Long projectId = 1L;
+    private long projectId = 1L;
     private String projectName = "Project 12";
 
     private Long documentConfigId1 = 11L;
