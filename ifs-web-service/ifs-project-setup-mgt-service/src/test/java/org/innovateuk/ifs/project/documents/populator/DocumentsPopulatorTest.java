@@ -112,9 +112,9 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
         AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId);
 
-        assertEquals(competitionId.longValue(), viewModel.getCompetitionId());
-        assertEquals(applicationId.longValue(), viewModel.getApplicationId());
-        assertEquals(projectId.longValue(), viewModel.getProjectId());
+        assertEquals(competitionId, viewModel.getCompetitionId());
+        assertEquals(applicationId, viewModel.getApplicationId());
+        assertEquals(projectId, viewModel.getProjectId());
         assertEquals(projectName, viewModel.getProjectName());
         assertEquals(2, viewModel.getDocuments().size());
         assertEquals(documentConfigTitle1, viewModel.getDocuments().get(0).getTitle());
