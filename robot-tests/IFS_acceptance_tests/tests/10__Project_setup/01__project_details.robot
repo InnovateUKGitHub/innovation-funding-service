@@ -213,10 +213,10 @@ Inviting project manager client side validations
     [Documentation]    INFUND-3483, INFUND-6882
     [Tags]
     When the user enters text to a text field            id = name-project-manager    John Smith
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name.
     When the user enters text to a text field            id = email-project-manager    test
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name.
     And the user should see the text in the page         ${enter_a_valid_email}
     When the user selects the radio button               projectManager    projectManager1
@@ -224,7 +224,7 @@ Inviting project manager client side validations
     And the user should not see the text in the page     Please enter a valid name.
     When the user selects the radio button               projectManager    new
     And the user enters text to a text field             id = email-project-manager    test@example.com
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page     Please enter a valid name.
     And the user should not see an error in the page
@@ -398,14 +398,14 @@ Inviting finance contact client side validations
     [Documentation]    INFUND-3483
     [Tags]
     When the user enters text to a text field            id = name-finance-contact    John Smith
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save finance contact")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
     When the user enters text to a text field            id = email-finance-contact    test
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save finance contact")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
     And the user should see the text in the page         ${enter_a_valid_email}
     When the user enters text to a text field            id = email-finance-contact    test@example.com
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save finance contact")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page     Please enter a valid name.
 
@@ -496,8 +496,8 @@ Validation for project location
     [Setup]  log in as a different user                 &{lead_applicant_credentials}
     Given the user navigates to the page                ${project_in_setup_details_page}
     Given the user clicks the button/link               jQuery = #project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
-    And the user moves focus to the element             id = postcode
-    Set Focus To Element                                link = Contact us
+    And Set Focus To Element                            id = postcode
+    And Set Focus To Element                            link = Contact us
     And the user should see a field error               ${empty_field_warning_message}
     When the user clicks the button/link                css = button[type = "submit"]
     Then the user should see a field and summary error  ${empty_field_warning_message}
