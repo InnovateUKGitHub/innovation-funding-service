@@ -1,16 +1,30 @@
 package org.innovateuk.ifs.sil.grant.resource;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.innovateuk.ifs.sil.grant.resource.json.LocalDateDeserializer;
+import org.innovateuk.ifs.sil.grant.resource.json.LocalDateSerializer;
+import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeDeserializer;
+import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeSerializer;
+
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
 public class Grant {
     private long id;
-    private String competitionCode;
+    private long competitionCode;
     private String title;
     private String summary;
     private String publicDescription;
+
+    @JsonProperty("golDate")
+    @JsonSerialize(using = ZonedDateTimeSerializer.class)
+    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime grantOfferLetterDate;
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate startDate;
     private long duration;
     private Set<Participant> participants;
@@ -23,11 +37,11 @@ public class Grant {
         this.id = id;
     }
 
-    public String getCompetitionCode() {
+    public long getCompetitionCode() {
         return competitionCode;
     }
 
-    public void setCompetitionCode(String competitionCode) {
+    public void setCompetitionCode(long competitionCode) {
         this.competitionCode = competitionCode;
     }
 

@@ -1,5 +1,12 @@
 package org.innovateuk.ifs.sil.grant.resource;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.innovateuk.ifs.sil.grant.resource.json.PercentageDeserializer;
+import org.innovateuk.ifs.sil.grant.resource.json.PercentageSerializer;
+import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeDeserializer;
+import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeSerializer;
+
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -10,8 +17,15 @@ public class Participant {
     private String contactRole;
     private String contactEmail;
     private int size;
+
+    @JsonSerialize(using = PercentageSerializer.class)
+    @JsonDeserialize(using = PercentageDeserializer.class)
     private BigDecimal capLimit;
+    @JsonSerialize(using = PercentageSerializer.class)
+    @JsonDeserialize(using = PercentageDeserializer.class)
     private BigDecimal awardRate;
+    @JsonSerialize(using = PercentageSerializer.class)
+    @JsonDeserialize(using = PercentageDeserializer.class)
     private BigDecimal overheadRate;
     private Set<Forecast> forecasts;
 

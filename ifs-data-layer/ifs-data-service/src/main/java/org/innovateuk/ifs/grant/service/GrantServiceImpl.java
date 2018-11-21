@@ -76,7 +76,7 @@ public class GrantServiceImpl implements GrantService {
         Project project = projectRepository.findOneByApplicationId(applicationId);
         Grant grant = new Grant();
         grant.setId(project.getId());
-        grant.setCompetitionCode(project.getApplication().getCompetition().getCode());
+        grant.setCompetitionCode(project.getApplication().getCompetition().getId());
         grant.setTitle(project.getName());
         grant.setGrantOfferLetterDate(project.getOfferSubmittedDate());
         grant.setStartDate(project.getTargetStartDate());
