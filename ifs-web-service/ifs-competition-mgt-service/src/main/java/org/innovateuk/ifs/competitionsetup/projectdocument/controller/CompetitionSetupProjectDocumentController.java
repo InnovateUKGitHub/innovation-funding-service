@@ -32,9 +32,7 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/project-document")
@@ -68,10 +66,12 @@ public class CompetitionSetupProjectDocumentController {
     private FileTypeRestService fileTypeRestService;
 
     @GetMapping("/landing-page")
-    public String projectDocumentLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+    public String projectDocumentLandingPage(Model model,
+                                             @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                             @ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form,
+                                             BindingResult bindingResult) {
 
         Redirect redirect = doViewProjectDocument(model, competitionId);
-
         return redirect.redirect ? redirect.url : "competition/setup";
     }
 
@@ -93,28 +93,29 @@ public class CompetitionSetupProjectDocumentController {
         }
 
         model.addAttribute("model", competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT));
-        model.addAttribute(LANDING_FORM_ATTR_NAME, new LandingPageForm());
 
         return redirect;
     }
 
     @PostMapping("/landing-page")
-    public String saveProjectDocumentLandingPage( @ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form,
+    public String saveProjectDocumentLandingPage( @ModelAttribute(LANDING_FORM_ATTR_NAME) @Valid LandingPageForm form,
                                                   BindingResult bindingResult,
                                                   ValidationHandler validationHandler,
                                                   @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                   Model model) {
 
-        Supplier<String> failureView = () -> projectDocumentLandingPage(model, competitionId);
+        Supplier<String> failureView = () -> projectDocumentLandingPage(model, competitionId, form, bindingResult);
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId;
 
-        List<ProjectDocumentResource> projectDocumentResources =  competitionSetupProjectDocumentRestService.findByCompetitionId(competitionId).getSuccess();
-        projectDocumentResources.forEach(projectDocumentResource -> enableOrDisableProjectDocument(projectDocumentResource, form.getEnabledIds()));
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            List<ProjectDocumentResource> projectDocumentResources =  competitionSetupProjectDocumentRestService.findByCompetitionId(competitionId).getSuccess();
+            projectDocumentResources.forEach(projectDocumentResource -> enableOrDisableProjectDocument(projectDocumentResource, form.getEnabledIds()));
 
-        RestResult<List<ProjectDocumentResource>> updateResult = competitionSetupProjectDocumentRestService.save(projectDocumentResources);
+            RestResult<List<ProjectDocumentResource>> updateResult = competitionSetupProjectDocumentRestService.save(projectDocumentResources);
 
-        return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                failNowOrSucceedWith(failureView, successView);
+            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, successView);
+                });
     }
 
     private void enableOrDisableProjectDocument(ProjectDocumentResource projectDocumentResource, Set<Long> enabledIds) {
