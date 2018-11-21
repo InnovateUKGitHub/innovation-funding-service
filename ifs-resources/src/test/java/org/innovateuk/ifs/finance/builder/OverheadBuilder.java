@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -24,10 +22,6 @@ public class OverheadBuilder extends BaseBuilder<Overhead, OverheadBuilder> {
 
     public OverheadBuilder withName(String... value) {
         return withArraySetFieldByReflection("name", value);
-    }
-
-    public OverheadBuilder withCalculationFile(Optional<FileEntryResource>... value) {
-        return withArraySetFieldByReflection("calculationFile", value);
     }
 
     public OverheadBuilder withRate(Integer... value) {
