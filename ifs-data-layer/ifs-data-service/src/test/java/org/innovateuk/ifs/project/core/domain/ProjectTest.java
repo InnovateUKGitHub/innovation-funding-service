@@ -50,6 +50,7 @@ public class ProjectTest {
         assertEquals(project.getAddress(), address);
         assertEquals(project.getDurationInMonths(), durationInMonths);
         assertEquals(project.getName(), name);
+        assertEquals(project.getDocumentsSubmittedDate(), documentsSubmittedDate);
     }
 
     @Test

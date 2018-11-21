@@ -25,12 +25,18 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * This rest controller is used to handle project documents, i.e, upload, delete, submit, and so on.
+ */
 @RestController
 @RequestMapping("/project/{projectId}/document")
 public class DocumentsController {
 
     @Autowired
     private DocumentsService documentsService;
+
+    public DocumentsController() {
+    }
 
     @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
@@ -42,7 +48,7 @@ public class DocumentsController {
     private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
     @PostMapping(value = "/config/{documentConfigId}/upload", produces = "application/json")
-    public RestResult<FileEntryResource> uploadDocument(@PathVariable(value = "projectId") long projectId,
+    public RestResult<FileEntryResource> uploadDocument(@PathVariable("projectId") long projectId,
                                                         @PathVariable("documentConfigId") long documentConfigId,
                                                         @RequestHeader(value = "Content-Type", required = false) String contentType,
                                                         @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -59,35 +65,35 @@ public class DocumentsController {
 
     @GetMapping("/config/{documentConfigId}/file-contents")
     @ResponseBody
-    public ResponseEntity<Object> getFileContents(@PathVariable(value = "projectId") long projectId,
+    public ResponseEntity<Object> getFileContents(@PathVariable("projectId") long projectId,
                                                   @PathVariable("documentConfigId") long documentConfigId) throws IOException {
 
         return fileControllerUtils.handleFileDownload(() -> documentsService.getFileContents(projectId, documentConfigId));
     }
 
     @GetMapping(value = "/config/{documentConfigId}/file-entry-details", produces = "application/json")
-    public RestResult<FileEntryResource> getFileEntryDetails(@PathVariable(value = "projectId") long projectId,
+    public RestResult<FileEntryResource> getFileEntryDetails(@PathVariable("projectId") long projectId,
                                                              @PathVariable("documentConfigId") long documentConfigId) throws IOException {
 
         return documentsService.getFileEntryDetails(projectId, documentConfigId).toGetResponse();
     }
 
     @DeleteMapping(value = "/config/{documentConfigId}/delete", produces = "application/json")
-    public RestResult<Void> deleteDocument(@PathVariable(value = "projectId") long projectId,
+    public RestResult<Void> deleteDocument(@PathVariable("projectId") long projectId,
                                            @PathVariable("documentConfigId") long documentConfigId) throws IOException {
 
         return documentsService.deleteDocument(projectId, documentConfigId).toDeleteResponse();
     }
 
     @PostMapping("/config/{documentConfigId}/submit")
-    public RestResult<Void> submitDocument(@PathVariable(value = "projectId") long projectId,
+    public RestResult<Void> submitDocument(@PathVariable("projectId") long projectId,
                                            @PathVariable("documentConfigId") long documentConfigId) {
 
         return documentsService.submitDocument(projectId, documentConfigId).toPostResponse();
     }
 
     @PostMapping("/config/{documentConfigId}/decision")
-    public RestResult<Void> documentDecision(@PathVariable(value = "projectId") long projectId,
+    public RestResult<Void> documentDecision(@PathVariable("projectId") long projectId,
                                              @PathVariable("documentConfigId") long documentConfigId,
                                              @RequestBody final ProjectDocumentDecision decision) {
 

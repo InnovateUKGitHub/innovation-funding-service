@@ -13,13 +13,13 @@ public class DocumentViewModel {
     private long projectId;
     private String projectName;
     private long applicationId;
-    private Long documentConfigId;
+    private long documentConfigId;
     private String title;
     private FileDetailsViewModel fileDetails;
     private DocumentStatus status;
     private String statusComments;
 
-    public DocumentViewModel(long projectId, String projectName, Long applicationId, Long documentConfigId,
+    public DocumentViewModel(long projectId, String projectName, long applicationId, long documentConfigId,
                              String title, FileDetailsViewModel fileDetails, DocumentStatus status, String statusComments) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -35,58 +35,33 @@ public class DocumentViewModel {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
     public String getProjectName() {
         return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
     }
 
     public long getApplicationId() {
         return applicationId;
     }
 
-    public Long getDocumentConfigId() {
+    public long getDocumentConfigId() {
         return documentConfigId;
-    }
-
-    public void setDocumentConfigId(Long documentConfigId) {
-        this.documentConfigId = documentConfigId;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public FileDetailsViewModel getFileDetails() {
         return fileDetails;
-    }
-
-    public void setFileDetails(FileDetailsViewModel fileDetails) {
-        this.fileDetails = fileDetails;
     }
 
     public DocumentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(DocumentStatus status) {
-        this.status = status;
-    }
-
     public String getStatusComments() {
         return statusComments;
     }
-
 
     @Override
     public boolean equals(Object o) {

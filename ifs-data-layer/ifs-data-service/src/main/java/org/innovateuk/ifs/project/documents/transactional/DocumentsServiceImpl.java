@@ -40,6 +40,8 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindAny;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -70,8 +72,6 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     private static final String PDF_FILE_TYPE = "PDF";
     private static final String SPREADSHEET_FILE_TYPE = "Spreadsheet";
-    private static final String PDF_MEDIA_TYPE = "application/pdf";
-    private static final List<String> SPREADSHEET_MEDIA_TYPE_LIST = Arrays.asList("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.oasis.opendocument.spreadsheet");
 
     @Override
     public ServiceResult<List<String>> getValidMediaTypesForDocument(long documentConfigId) {
@@ -89,10 +89,10 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         for (FileType fileType : fileTypes) {
             switch (fileType.getName()) {
                 case PDF_FILE_TYPE:
-                    validMediaTypes.add(PDF_MEDIA_TYPE);
+                    validMediaTypes.addAll(PDF.getMediaTypes());
                     break;
                 case SPREADSHEET_FILE_TYPE:
-                    validMediaTypes.addAll(SPREADSHEET_MEDIA_TYPE_LIST);
+                    validMediaTypes.addAll(SPREADSHEET.getMediaTypes());
                     break;
             }
         }

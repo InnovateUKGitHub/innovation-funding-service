@@ -25,6 +25,7 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
@@ -37,6 +38,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEven
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
@@ -87,9 +89,11 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE;
 import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
@@ -124,6 +128,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private GrantOfferLetterIndustrialFinanceTable industrialFinanceTable;
     private GrantOfferLetterAcademicFinanceTable academicFinanceTable;
     private GrantOfferLetterFinanceTotalsTable totalsTable;
+    private List<PartnerOrganisationResource> partnerOrganisationsResource;
 
     private Address address;
 
@@ -170,6 +175,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
     @Mock
     private NotificationService notificationServiceMock;
+
+    @Mock
+    private PartnerOrganisationService partnerOrganisationServiceMock;
     
     @Mock
     private SystemNotificationSource systemNotificationSource;
@@ -195,7 +203,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         nonAcademicUnfunded = newOrganisation().withOrganisationType(BUSINESS).withName("Org4").build();
         organisationResources = newOrganisationResource().build(4);
 
-        Competition competition = newCompetition().build();
+        Competition competition = newCompetition()
+                .build();
 
         address = newAddress().withAddressLine1("test1")
                 .withAddressLine2("test2")
@@ -236,6 +245,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         partnerOrganisations.add(partnerOrganisation2);
         partnerOrganisations.add(partnerOrganisation3);
 
+        partnerOrganisationsResource = newPartnerOrganisationResource().build(2);
+
         project = newProject().
                 withId(projectId).
                 withPartnerOrganisations(partnerOrganisations).
@@ -264,6 +275,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(industrialFinanceTablePopulatorMock.createTable(anyMap())).thenReturn(industrialFinanceTable);
         when(academicFinanceTablePopulatorMock.createTable(anyMap())).thenReturn(academicFinanceTable);
         when(financeTotalsTablePopulatorMock.createTable(anyMap(), anyLong())).thenReturn(totalsTable);
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(anyLong())).thenReturn(serviceSuccess(partnerOrganisationsResource));
     }
 
     @Test
@@ -508,7 +520,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void rtestRemoveSignedGrantOfferLetterFileEntryProjectLive() {
+    public void removeSignedGrantOfferLetterFileEntryProjectLive() {
 
         UserResource internalUserResource = newUserResource().build();
         User internalUser = newUser().withId(internalUserResource.getId()).build();
@@ -598,8 +610,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         comp.setProjectDocuments(singletonList(configuredProjectDocument));
         project.getApplication().setCompetition(comp);
 
-        ProjectDocument projectDocument = ProjectDocumentBuilder
-                .newProjectDocument()
+        ProjectDocument projectDocument =
+                newProjectDocument()
                 .withProject(project)
                 .withStatus(DocumentStatus.APPROVED)
                 .build();
@@ -653,8 +665,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o1).build();
         PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o1).withLeadOrganisation(true).build();
         Project project = newProject().withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
-        ProjectDocument projectDocument = ProjectDocumentBuilder
-                .newProjectDocument()
+        ProjectDocument projectDocument =
+                newProjectDocument()
                 .withProject(project)
                 .withStatus(DocumentStatus.REJECTED)
                 .build();
@@ -761,8 +773,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     private void setupOrganisationsForGrantOfferLetter(Organisation o1, Organisation o2, Organisation o3, ApplicationFinanceResource af1, ApplicationFinanceResource af2, ApplicationFinanceResource af3) {
+
+        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> projectDocuments
+                = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder.newCompetitionProjectDocument().build(1);
+
         Competition comp = newCompetition()
                 .withName("Test Comp<")
+                .withProjectDocuments(projectDocuments)
                 .build();
 
         User u = newUser()
@@ -815,8 +832,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withTargetStartDate(LocalDate.now())
                 .build();
 
-        ProjectDocument projectDocument = ProjectDocumentBuilder
-                .newProjectDocument()
+        ProjectDocument projectDocument =
+                newProjectDocument()
                 .withProject(project)
                 .withStatus(DocumentStatus.APPROVED)
                 .build();

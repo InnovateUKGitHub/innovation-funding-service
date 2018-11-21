@@ -16,13 +16,11 @@ import static java.util.function.Function.identity;
 public class CompetitionProjectsStatusResource {
     private Long competitionNumber;
     private String competitionName;
-    private boolean projectDocuments;
     private List<ProjectStatusResource> projectStatusResources;
 
-    public CompetitionProjectsStatusResource(Long competitionNumber, String competitionName, boolean projectDocuments, List<ProjectStatusResource> projectStatusResources) {
+    public CompetitionProjectsStatusResource(Long competitionNumber, String competitionName, List<ProjectStatusResource> projectStatusResources) {
         this.competitionNumber = competitionNumber;
         this.competitionName = competitionName;
-        this.projectDocuments = projectDocuments;
         this.projectStatusResources = projectStatusResources;
     }
 
@@ -46,14 +44,6 @@ public class CompetitionProjectsStatusResource {
         this.competitionName = competitionName;
     }
 
-    public boolean isProjectDocuments() {
-        return projectDocuments;
-    }
-
-    public void setProjectDocuments(boolean projectDocuments) {
-        this.projectDocuments = projectDocuments;
-    }
-
     public List<ProjectStatusResource> getProjectStatusResources() {
         return ofNullable(projectStatusResources).map(identity()).orElse(new ArrayList<>());
     }
@@ -73,7 +63,6 @@ public class CompetitionProjectsStatusResource {
         return new EqualsBuilder()
                 .append(competitionNumber, that.competitionNumber)
                 .append(competitionName, that.competitionName)
-                .append(projectDocuments, that.projectDocuments)
                 .append(projectStatusResources, that.projectStatusResources)
                 .isEquals();
     }
@@ -83,7 +72,6 @@ public class CompetitionProjectsStatusResource {
         return new HashCodeBuilder(17, 37)
                 .append(competitionNumber)
                 .append(competitionName)
-                .append(projectDocuments)
                 .append(projectStatusResources)
                 .toHashCode();
     }
@@ -93,7 +81,6 @@ public class CompetitionProjectsStatusResource {
         return new ToStringBuilder(this)
                 .append("competitionNumber", competitionNumber)
                 .append("competitionName", competitionName)
-                .append("projectDocuments", projectDocuments)
                 .append("projectStatusResources", projectStatusResources)
                 .toString();
     }
