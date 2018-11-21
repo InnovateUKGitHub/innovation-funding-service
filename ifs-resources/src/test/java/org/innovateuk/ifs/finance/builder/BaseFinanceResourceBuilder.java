@@ -12,11 +12,9 @@ import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.CapitalUsageBuilder.newCapitalUsage;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
@@ -80,7 +78,6 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                     newOverhead().
                             withId(1L).
                             withRateType(OverheadRateType.TOTAL).
-                            withCalculationFile(Optional.of(newFileEntryResource().withName("filename").build())).
                             withRate(1000).
                             build(1)).
                     build(),

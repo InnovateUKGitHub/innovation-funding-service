@@ -1,19 +1,28 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.populator;
 
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.builder.BaseFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
+import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractYourProjectCostsFormPopulatorTest {
+
+    @Mock
+    private OverheadFileRestService overheadFileRestService;
 
     @InjectMocks
     private AbstractYourProjectCostsFormPopulator target = new AbstractYourProjectCostsFormPopulator() {
@@ -31,6 +40,7 @@ public class AbstractYourProjectCostsFormPopulatorTest {
     @Test
     public void populate() {
         YourProjectCostsForm form = new YourProjectCostsForm();
+        when(overheadFileRestService.getOverheadFileDetails(any())).thenReturn(RestResult.restSuccess(newFileEntryResource().withName("filename").build()));
 
         target.populateForm(form, 1L, 2L);
 
