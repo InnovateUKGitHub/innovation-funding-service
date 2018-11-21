@@ -171,7 +171,7 @@ the applicant fills the 'capital usage' field
     the user enters text to a text field    css = .form-row:nth-child(1) .form-finances-capital-usage-residual-value    900
     the user enters text to a text field    css = .form-finances-capital-usage-utilisation    100
     the user enters text to a text field    css = .form-finances-capital-usage-depreciation    11
-    the user enters text to a text field    css = .form-row:nth-child(1) [name^="capital_usage-description"]    Test
+    the user enters text to a text field    css = .form-row:nth-child(1) [name$="item"]    Test
     the user clicks the button/link         jQuery = .form-row:nth-child(1) label:contains(Existing)
     wait for autosave
     Set Focus To Element                    jQuery = button:contains(Add another asset)
@@ -181,8 +181,8 @@ the applicant fills the 'capital usage' field
     the user enters text to a text field    css = .form-row:nth-child(2) .form-finances-capital-usage-residual-value    900
     the user enters text to a text field    css = .form-row:nth-child(2) .form-finances-capital-usage-utilisation    100
     the user enters text to a text field    css = .form-row:nth-child(2) .form-finances-capital-usage-depreciation    10
-    the user enters text to a text field    css = .form-row:nth-child(2) [name^="capital_usage-description"]    Test
-    the user clicks the button/link         jQuery = .form-row:nth-child(2) label:contains(Existing)
+    the user enters text to a text field    css = .form-row:nth-child(2) [name$="item"]    Test
+    the user clicks the button twice        jQuery = .form-row:nth-child(2) label:contains("Existing")
     Set Focus To Element                    jQuery = button:contains("Capital usage")
 
 the applicant fills the 'capital usage' field to a negative value
@@ -192,8 +192,8 @@ the applicant fills the 'capital usage' field to a negative value
     the user enters text to a text field    css = .form-row:nth-child(1) .form-finances-capital-usage-residual-value    9000
     the user enters text to a text field    css = .form-finances-capital-usage-utilisation    100
     the user enters text to a text field    css = .form-finances-capital-usage-depreciation    11
-    the user enters text to a text field    css = .form-row:nth-child(1) [name^="capital_usage-description"]    Test
-    the user clicks the button/link         jQuery = .form-row:nth-child(1) label:contains(Existing)
+    the user enters text to a text field    css = .form-row:nth-child(1) [name$="item"]    Test
+    the user clicks the button twice        jQuery = .form-row:nth-child(1) label:contains("Existing")
     Set Focus To Element                    jQuery = button:contains("Capital usage")
 
 the Applicant fills the Travel fields

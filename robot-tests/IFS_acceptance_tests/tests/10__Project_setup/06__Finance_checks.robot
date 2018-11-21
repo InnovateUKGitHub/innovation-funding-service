@@ -106,7 +106,6 @@ Validation on duration of Project
     [Tags]
     Given the user clicks the button/link               link = Edit
     And Set Focus To Element                            id = durationInMonths
-    When Set Focus To Element                           link = Contact us
     Then the user should see a field error              ${empty_field_warning_message}
     When the user clicks the button/link                jQuery = button:contains("Save and return to finances")
     Then the user should see a field and summary error  ${empty_field_warning_message}
@@ -515,7 +514,7 @@ Finance checks eligibility
     And the user reloads the page
     When the user expands the section                Capital usage
     And the user clicks the button/link              jQuery = section:nth-of-type(4) a:contains("Edit")
-    When the user enters text to a text field        css = section:nth-of-type(4) #capital_usage div:nth-child(1) div:nth-of-type(6) input   200
+    When the user enters text to a text field        css = section:nth-of-type(4) #capital-usage div:nth-child(1) div:nth-of-type(6) input   200
     Then the user should see a field error           This field should be 100 or lower
     And the user collapses the section               Capital usage
     And the user reloads the page
@@ -530,7 +529,7 @@ Finance checks eligibility
     When the user clicks the button/link             jQuery = section:nth-of-type(7) button:contains("Other costs")
     And the user clicks the button/link              jQuery = section:nth-of-type(7) a:contains("Edit")
     When the user clicks the button/link             jQuery = section:nth-of-type(7) button[name = add_cost]
-    And the user enters text to a text field         css = #other-costs-table tr:nth-child(2) td:nth-child(2) input  5000
+    And the user enters text to a text field         css = #other-costs-table tr:nth-child(2) td:nth-child(3) input  5000
     When the user clicks the button/link             css = section:nth-of-type(7) .govuk-button[name = "save-eligibility"]
 #    Then the user should see a field error           ${empty_field_warning_message}
     When the user clicks the button/link             link = Finance checks
@@ -1120,6 +1119,7 @@ Project finance user adds, modifies and removes labour rows
     And the user adds data into labour row         5  test 1  1450  100
     Then verify percentage and total               1    3%    £5,886
     When the user clicks the button/link           jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(2) button:contains('Remove')
+    And the user clears the text from the element  jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossEmployeeCost"]
     And the user enters text to a text field       jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossEmployeeCost"]    100
     And the user clicks the button/link            css = section:nth-of-type(1) .govuk-button[name = save-eligibility]
     Then verify percentage and total               1    2%    £4,748
@@ -1202,14 +1202,14 @@ verify total costs of project
 
 verify percentage and total
     [Arguments]  ${section}  ${percentage}  ${total}
-    the user should see the text in the element    css = section:nth-of-type(${section}) span[data-mirror*='#section-percentage']    ${percentage}
+   # the user should see the text in the element    css = section:nth-of-type(${section}) span[data-mirror*='#section-percentage']    ${percentage}
     the user should see the text in the element    css = section:nth-of-type(${section}) span[data-mirror*='#section-total']    ${total}
 
 the user adds data into labour row
     [Arguments]  ${row_number}  ${descrption}  ${salary}  ${days}
-    the user enters text to a text field        css = .labour-costs-table tr:nth-of-type(${row_number}) td:nth-of-type(1) input    ${descrption}
-    the user enters text to a text field        css = .labour-costs-table tr:nth-of-type(${row_number}) td:nth-of-type(2) input    ${salary}
-    the user enters text to a text field        css = .labour-costs-table tr:nth-of-type(${row_number}) td:nth-of-type(4) input    ${days}
+    the user enters text to a text field        css = #labour-costs-table tr:nth-of-type(${row_number}) td:nth-of-type(1) input    ${descrption}
+    the user enters text to a text field        css = #labour-costs-table tr:nth-of-type(${row_number}) td:nth-of-type(2) input    ${salary}
+    the user enters text to a text field        css = #labour-costs-table tr:nth-of-type(${row_number}) td:nth-of-type(4) input    ${days}
 
 the user adds data into materials row
     [Arguments]  ${row_number}  ${item}  ${qty}  ${cost_of_item}
@@ -1219,12 +1219,12 @@ the user adds data into materials row
 
 the user adds capital usage data into row
     [Arguments]  ${row_number}  ${description}  ${net_value}  ${residual_value}  ${utilization}
-    the user enters text to a text field        css = #capital_usage div:nth-child(${row_number}) div:nth-of-type(1) textarea   ${description}
-    Click Element                               css = #capital_usage div:nth-child(${row_number}) div:nth-of-type(2) label:nth-of-type(1)
-    the user enters text to a text field        css = #capital_usage div:nth-child(${row_number}) div:nth-of-type(3) input    12
-    the user enters text to a text field        css = #capital_usage div:nth-child(${row_number}) div:nth-of-type(4) input  ${net_value}
-    the user enters text to a text field        css = #capital_usage div:nth-child(${row_number}) div:nth-of-type(5) input   ${residual_value}
-    the user enters text to a text field        css = #capital_usage div:nth-child(${row_number}) div:nth-of-type(6) input   ${utilization}
+    the user enters text to a text field        css = #capital-usage div:nth-child(${row_number}) div:nth-of-type(1) textarea   ${description}
+    Click Element                               css = #capital-usage div:nth-child(${row_number}) div:nth-of-type(2) label:nth-of-type(1)
+    the user enters text to a text field        css = #capital-usage div:nth-child(${row_number}) div:nth-of-type(3) input    12
+    the user enters text to a text field        css = #capital-usage div:nth-child(${row_number}) div:nth-of-type(4) input  ${net_value}
+    the user enters text to a text field        css = #capital-usage div:nth-child(${row_number}) div:nth-of-type(5) input   ${residual_value}
+    the user enters text to a text field        css = #capital-usage div:nth-child(${row_number}) div:nth-of-type(6) input   ${utilization}
 
 the user adds subcontracting data into row
     [Arguments]  ${row_number}  ${name}  ${cost}
@@ -1243,14 +1243,14 @@ Project finance user amends labour details in eligibility for lead
     When the user clicks the button/link            jQuery = section:nth-of-type(1) button:contains("Labour")
     Then the user should see the element            jQuery = section:nth-of-type(1) button span:contains("2%")
     When the user clicks the button/link            jQuery = section:nth-of-type(1) a:contains("Edit")
-    Then the user should see the element            css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    When the user enters text to a text field       css = [name^="labour-labourDaysYearly"]    230
+    Then the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
+    And the user enters text to a text field        id = working-days-per-year    230
     And the user adds data into labour row          1  test  120000  100
     Then verify percentage and total                1    21%    £53,648
     When the user clicks the button/link            jQuery = section:nth-of-type(1) button:contains("Add another role")
     And the user adds data into labour row          4    test    14500    100
     Then verify percentage and total                1    23%    £59,952
-    When the user clicks the button/link            css = .labour-costs-table tr:nth-of-type(2) td:last-of-type button
+    When the user clicks the button/link            css = #labour-costs-table tr:nth-of-type(2) td:last-of-type button
     Then verify percentage and total                1    23%    £59,430
     When the user clicks the button/link            css = section:nth-of-type(1) .govuk-button[name = save-eligibility]
     Then verify total costs of project              £257,252
@@ -1282,7 +1282,7 @@ Project finance user amends capital usage details in eligibility for lead
     When the user clicks the button/link            jQuery = section:nth-of-type(4) button[name = add_cost]
     And the user adds capital usage data into row   2    test    10600    500    50
     Then verify percentage and total                4    4%    £10,100
-    When the user clicks the button/link            css = section:nth-of-type(4) #capital_usage div:nth-child(2) button
+    When the user clicks the button/link            css = section:nth-of-type(4) #capital-usage div:nth-child(2) button
     Then verify percentage and total                4    2%    £5,050
     When the user clicks the button/link            css = .govuk-button[name = save-eligibility]
     Then verify total costs of project              £241,550
@@ -1324,14 +1324,14 @@ Project finance user amends other costs details in eligibility for lead
     When the user expands the section               Other costs
     Then verify percentage and total                7    1%    £1,100
     When the user clicks the button/link            jQuery = section:nth-of-type(7) a:contains("Edit")
-    And the user enters text to a text field        css = #other-costs-table tr:nth-child(1) td:nth-child(1) textarea    some other costs
-    And the user enters text to a text field        css = #other-costs-table tr:nth-child(1) td:nth-child(2) input    5000
+    And the user enters text to a text field        css = #other-costs-table tr:nth-child(1) td:nth-child(2) textarea    some other costs
+    And the user enters text to a text field        css = #other-costs-table tr:nth-child(1) td:nth-child(3) input    5000
     Then verify percentage and total                7    3%    £5,000
     When the user clicks the button/link            jQuery = section:nth-of-type(7) button[name = add_cost]
-    And the user enters text to a text field        jQuery = #other-costs-table tr:nth-child(2) td:nth-child(1) textarea    some other costs
-    And the user enters text to a text field        jQuery = #other-costs-table tr:nth-child(2) td:nth-child(2) input    5750
+    And the user enters text to a text field        jQuery = #other-costs-table tr:nth-child(2) td:nth-child(2) textarea    some other costs
+    And the user enters text to a text field        jQuery = #other-costs-table tr:nth-child(2) td:nth-child(3) input    5750
     Then verify percentage and total                7    6%    £10,750
-    When the user should see the element            css = #other-costs-table tr:nth-of-type(2) td:nth-of-type(3) button
+    When the user should see the element            css = #other-costs-table tr:nth-of-type(2) td:nth-of-type(4) button
     When the user clicks the button/link            jQuery = .govuk-button[name = save-eligibility]
     Then verify total costs of project              £175,830
     And the user should see the element             jQuery = section:nth-of-type(7) a:contains("Edit")
