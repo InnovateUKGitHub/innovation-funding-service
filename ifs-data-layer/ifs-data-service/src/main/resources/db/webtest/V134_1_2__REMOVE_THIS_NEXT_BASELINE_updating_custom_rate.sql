@@ -1,0 +1,1 @@
+update finance_row set item = 'TOTAL' where item = 'CUSTOM_RATE';
