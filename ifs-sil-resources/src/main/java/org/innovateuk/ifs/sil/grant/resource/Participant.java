@@ -5,8 +5,9 @@ import java.util.Set;
 
 public class Participant {
     private long id;
-    private String type;
-    private String role;
+    private String orgType;
+    private String orgProjectRole;
+    private String contactRole;
     private String contactEmail;
     private int size;
     private BigDecimal capLimit;
@@ -23,20 +24,28 @@ public class Participant {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public String getOrgProjectRole() {
+        return orgProjectRole;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setOrgProjectRole(String orgProjectRole) {
+        this.orgProjectRole = orgProjectRole;
     }
 
-    public String getRole() {
-        return role;
+    public String getOrgType() {
+        return orgType;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setOrgType(String orgType) {
+        this.orgType = orgType;
+    }
+
+    public String getContactRole() {
+        return contactRole;
+    }
+
+    public void setContactRole(String contactRole) {
+        this.contactRole = contactRole;
     }
 
     public String getContactEmail() {
