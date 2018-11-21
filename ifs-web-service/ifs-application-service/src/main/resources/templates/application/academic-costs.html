@@ -97,48 +97,45 @@
                                min="0"
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
+                               step="1"
                                th:errorclass="govuk-input--error" />
                     </div>
                 </div>
-            </fieldset>
-                <!--/*
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')} ? 'govuk-form-group--error'">
 
-                    <label class="govuk-label" th:for="formInput[cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -cost]">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('incurredTravel')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" th:for="incurredTravel">
                         <span>Travel &amp; subsistence </span>
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+ academicFinance.incurredTravelAndSubsistence?.id+'-cost'})" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=incurredTravel)"/>
                     </label>
                     <div>
                         <input class="govuk-input"
-                               th:id="formInput[cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -cost]"
-                               th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence"
+                               th:field="*{incurredTravel}"
                                type="number"
                                data-prevent-input-non-number
-                               ifs:nonZeroValue="${academicFinance.incurredTravelAndSubsistence?.numberValue}"
                                min="0"
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
-                               th:readonly="${readonly}"
-                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')}? 'govuk-input--error'"/>
+                               step="1"
+                               th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
-                <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="formInput[cost- + ${academicFinance.incurredOtherCosts?.id} + -cost]">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('incurredOtherCosts')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" th:for="incurredOtherCosts">
                         <span>Other costs</span>
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.incurredOtherCosts?.id+'-cost'})" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=incurredOtherCosts)"/>
                     </label>
                     <div>
                         <input class="govuk-input"
-                               th:id="formInput[cost- + ${academicFinance.incurredOtherCosts?.id} + -cost]"
-                               th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs"
+                               th:field="*{incurredOtherCosts}"
                                type="number"
                                data-prevent-input-non-number
-                               ifs:nonZeroValue="${academicFinance.incurredOtherCosts?.numberValue}"
                                min="0"
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
-                               th:readonly="${readonly}"
-                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')}? 'govuk-input--error'" />
+                               step="1"
+                               th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
                 <div class="govuk-form-group">
@@ -148,12 +145,10 @@
                     <div>
                         <input class="govuk-input"
                                id="subtotal-resources"
-                               th:attr="data-calculation-fields=|[id='formInput[cost-${academicFinance.incurredOtherCosts?.id}-cost]'],
-                       [id='formInput[cost-${academicFinance.incurredTravelAndSubsistence?.id}-cost]'],
-                       [id='formInput[cost-${academicFinance.incurredStaff?.id}-cost]']|"
+                               data-calculation-fields="#incurredStaff,#incurredTravel,#incurredOtherCosts"
                                data-calculation-operations="+"
                                readonly="readonly"
-                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalIncurred(),0, 'DEFAULT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(form.getTotalIncurred(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
             </fieldset>
@@ -165,61 +160,58 @@
                 </legend>
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-4" />
 
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="formInput[cost- + ${academicFinance.allocatedInvestigators?.id} + -cost]">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('allocatedInvestigators')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" th:for="allocatedInvestigators">
                         <span>Investigators</span>
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedInvestigators?.id+'-cost'})" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=allocatedInvestigators)"/>
                     </label>
                     <div>
                         <input class="govuk-input"
-                               th:id="formInput[cost- + ${academicFinance.allocatedInvestigators?.id} + -cost]"
-                               th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators"
+                               th:field="*{allocatedInvestigators}"
                                type="number"
                                data-prevent-input-non-number
-                               ifs:nonZeroValue="${academicFinance.allocatedInvestigators?.numberValue}"
                                min="0"
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
-                               th:readonly="${readonly}"
-                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')}? 'govuk-input--error'"/>
+                               step="1"
+                               th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="formInput[cost- + ${academicFinance.allocatedEstatesCosts?.id} + -cost]">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('allocatedEstateCosts')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" th:for="allocatedEstateCosts">
                         <span>Estates Costs</span>
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedEstatesCosts?.id+'-cost'})" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=allocatedEstateCosts)"/>
                     </label>
                     <div>
                         <input class="govuk-input"
-                               th:id="formInput[cost- + ${academicFinance.allocatedEstatesCosts?.id} + -cost]"
-                               th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs"
+                               th:field="*{allocatedEstateCosts}"
                                type="number"
                                data-prevent-input-non-number
-                               ifs:nonZeroValue="${academicFinance.allocatedEstatesCosts?.numberValue}"
                                min="0"
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
-                               th:readonly="${readonly}"
-                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')}? 'govuk-input--error'"/>
+                               step="1"
+                               th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="formInput[cost- + ${academicFinance.allocatedOtherCosts?.id} + -cost]">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('allocatedOtherCosts')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" th:for="allocatedOtherCosts">
                         <span>Other costs</span>
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedOtherCosts?.id+'-cost'})" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=allocatedOtherCosts)"/>
                     </label>
                     <div>
                         <input class="govuk-input"
-                               th:id="formInput[cost- + ${academicFinance.allocatedOtherCosts?.id} + -cost]"
-                               th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs"
+                               th:field="*{allocatedOtherCosts}"
                                type="number"
                                data-prevent-input-non-number
-                               ifs:nonZeroValue="${academicFinance.allocatedOtherCosts?.numberValue}"
                                min="0"
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
-                               th:readonly="${readonly}"
-                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'govuk-input--error'"/>
+                               step="1"
+                               th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
                 <div class="govuk-form-group">
@@ -228,12 +220,10 @@
                     </label>
                     <div>
                         <input class="govuk-input"
-                               th:attr="data-calculation-fields=|[id='formInput[cost-${academicFinance.allocatedInvestigators?.id}-cost]'],
-                       [id='formInput[cost-${academicFinance.allocatedEstatesCosts?.id}-cost]'],
-                       [id='formInput[cost-${academicFinance.allocatedOtherCosts?.id}-cost]']|"
+                               data-calculation-fields="#allocatedInvestigators,#allocatedEstateCosts,#allocatedOtherCosts"
                                data-calculation-operations="+"
                                readonly="readonly" id="subtotal-directly-allocated"
-                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalAllocated(),0, 'DEFAULT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(form.getTotalAllocated(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
             </fieldset>
@@ -241,23 +231,22 @@
 
             <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
                 <legend class="govuk-visually-hidden">Indirect costs</legend>
-                <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="formInput[cost- + ${academicFinance.indirectCosts?.id} + -cost]">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('indirectCosts')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" th:for="indirectCosts">
                         <span>Indirect costs</span>
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.indirectCosts?.id+'-cost'})" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=indirectCosts)"/>
                     </label>
                     <div>
                         <input class="govuk-input"
-                               th:id="formInput[cost- + ${academicFinance.indirectCosts?.id} + -cost]"
-                               th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs"
+                               th:field="*{indirectCosts}"
                                type="number"
                                data-prevent-input-non-number
-                               ifs:nonZeroValue="${academicFinance.indirectCosts?.numberValue}"
                                min="0"
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
-                               th:readonly="${readonly}"
-                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')}? 'govuk-input--error'" />
+                               step="1"
+                               th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
             </fieldset>
@@ -267,42 +256,40 @@
                     <h2 class="govuk-fieldset__heading">Exceptions</h2>
                 </legend>
                 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-4" />
-                <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="formInput[cost- + ${academicFinance.exceptionsStaff?.id} + -cost]">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('exceptionsStaff')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" th:for="exceptionsStaff">
                         <span>Staff</span>
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsStaff?.id+'-cost'})" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=exceptionsStaff)"/>
                     </label>
                     <div>
                         <input class="govuk-input"
-                               th:id="formInput[cost- + ${academicFinance.exceptionsStaff?.id} + -cost]"
-                               th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff"
+                               th:field="*{exceptionsStaff}"
                                type="number"
                                data-prevent-input-non-number
-                               ifs:nonZeroValue="${academicFinance.exceptionsStaff?.numberValue}"
                                min="0"
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
-                               th:readonly="${readonly}"
-                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')}? 'govuk-input--error'" />
+                               step="1"
+                               th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" th:for="formInput[cost- + ${academicFinance.exceptionsOtherCosts?.id} + -cost]">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('exceptionsOtherCosts')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="exceptionsOtherCosts">
                         <span>Other costs</span>
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsOtherCosts?.id+'-cost'})" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=exceptionsOtherCosts)"/>
                     </label>
                     <div>
                         <input class="govuk-input"
-                               th:id="formInput[cost- + ${academicFinance.exceptionsOtherCosts?.id} + -cost]"
-                               th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs"
+                               th:field="*{exceptionsOtherCosts}"
                                type="number"
                                data-prevent-input-non-number
-                               ifs:nonZeroValue="${academicFinance.exceptionsOtherCosts?.numberValue}"
                                min="0"
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
-                               th:readonly="${readonly}"
-                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')}? 'govuk-input--error'" />
+                               step="1"
+                               th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
                 <div class="govuk-form-group">
@@ -312,11 +299,10 @@
                     <div>
                         <input id="subtotal-exceptions"
                                class="govuk-input"
-                               th:attr="data-calculation-fields=|[id='formInput[cost-${academicFinance.exceptionsStaff?.id}-cost]'],
-                                [id='formInput[cost-${academicFinance.exceptionsOtherCosts?.id}-cost]']|"
+                               data-calculation-fields="#exceptionsStaff,#exceptionsOtherCosts"
                                data-calculation-operations="+"
                                readonly="readonly"
-                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalExceptions(),0, 'DEFAULT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(form.getTotalExceptions(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
                 <div class="govuk-form-group totals">
@@ -329,20 +315,28 @@
                                data-calculation-operations="+"
                                id="total"
                                readonly="readonly"
-                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotal(),0, 'DEFAULT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(form.getTotal(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
             </fieldset>
 
 
             <div class="upload-section">
-                <h3 th:if="${viewmode=='edit'}" class="govuk-heading-s govuk-!-margin-0" th:text="${formInput.getDescription()}">Upload a pdf copy of the Je-S output form once you have a status of 'With Council'.</h3>
-                <h3 th:if="${viewmode=='readonly'}" class="govuk-heading-s govuk-!-margin-0" th:text="'Download Je-S form'">Download Je-S form</h3>
-                <p class="govuk-body" th:if="${viewmode=='edit'}" ifs:utext="${question.description}"></p>
-                <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" th:with="autoSaveOff=true" />
+                <h3 th:unless="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">Upload a pdf copy of the Je-S output form once you have a status of 'With Council'.</h3>
+                <h3 th:if="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">Download Je-S form</h3>
+                <p th:unless="${model.readOnly}" class="govuk-body">
+                    <a target="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system">How do I create my Je-S output?</a>
+                </p>
+                <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
+                                    @{/application/{applicationId}/form/{applicationFinanceId}/finance-download(applicationId=${model.applicationId},applicationFinanceId=${model.applicationFinanceId})},
+                                    ${form.filename},
+                                    jesFile,
+                                    jesFile,
+                                    true,
+                                    remove_jes,
+                                    upload_jes)"/>
             </div>
 
-            */-->
 
             <div class="form-footer" th:if="${model.open}">
                 <div class="form-footer__actions">

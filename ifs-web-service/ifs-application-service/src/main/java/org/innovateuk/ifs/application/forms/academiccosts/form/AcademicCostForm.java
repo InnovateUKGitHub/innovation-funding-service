@@ -21,7 +21,7 @@ public class AcademicCostForm {
     private BigDecimal exceptionsStaff;
     private BigDecimal exceptionsOtherCosts;
 
-    private MultipartFile jesfile;
+    private MultipartFile jesFile;
     private String filename;
 
     public String getTsbReference() {
@@ -104,12 +104,12 @@ public class AcademicCostForm {
         this.exceptionsOtherCosts = exceptionsOtherCosts;
     }
 
-    public MultipartFile getJesfile() {
-        return jesfile;
+    public MultipartFile getJesFile() {
+        return jesFile;
     }
 
-    public void setJesfile(MultipartFile jesfile) {
-        this.jesfile = jesfile;
+    public void setJesFile(MultipartFile jesFile) {
+        this.jesFile = jesFile;
     }
 
     public String getFilename() {
@@ -118,6 +118,23 @@ public class AcademicCostForm {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    /* View logic */
+    public BigDecimal getTotalIncurred() {
+        return incurredStaff.add(incurredTravel).add(incurredOtherCosts);
+    }
+
+    public BigDecimal getTotalAllocated() {
+        return allocatedInvestigators.add(allocatedEstateCosts).add(allocatedOtherCosts);
+    }
+
+    public BigDecimal getTotalExceptions() {
+        return exceptionsStaff.add(exceptionsOtherCosts);
+    }
+
+    public BigDecimal getTotal() {
+        return getTotalIncurred().add(getTotalAllocated()).add(indirectCosts).add(getTotalExceptions());
     }
 
 }

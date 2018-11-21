@@ -6,6 +6,8 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +25,15 @@ public class AcademicCostViewModelPopulator {
     private CompetitionRestService competitionRestService;
     private SectionService sectionService;
     private OrganisationRestService organisationRestService;
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
-    public AcademicCostViewModelPopulator(ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, SectionService sectionService, OrganisationRestService organisationRestService) {
+    public AcademicCostViewModelPopulator(ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, SectionService sectionService, OrganisationRestService organisationRestService, ApplicationFinanceRestService applicationFinanceRestService) {
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
         this.sectionService = sectionService;
         this.organisationRestService = organisationRestService;
+        this.applicationFinanceRestService = applicationFinanceRestService;
     }
 
     public AcademicCostViewModel populate(long organisationId, long applicationId, long sectionId, boolean internalUser) {
@@ -41,6 +45,8 @@ public class AcademicCostViewModelPopulator {
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
+        ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
@@ -54,6 +60,7 @@ public class AcademicCostViewModelPopulator {
                 organisation.getName(),
                 applicationId,
                 sectionId,
+                finance.getId(),
                 includeVat,
                 open,
                 complete);
