@@ -81,12 +81,10 @@
                             </th>
                             <th:block th:insert="project/fragments :: project-status-table(${project.projectDetailsStatus}, 'project-details')" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
 
-                            <th:block th:if="${model.competitionProjectsStatusResource.isProjectDocuments()}">
-                                <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessDocuments}"
-                                          th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/document/all'}" />
-                                 <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessDocuments}"
-                                          th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents')" />
-                            </th:block>
+                            <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessDocuments}"
+                                      th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/document/all'}" />
+                            <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessDocuments}"
+                                      th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents')" />
 
                             <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
                                       th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO')" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
