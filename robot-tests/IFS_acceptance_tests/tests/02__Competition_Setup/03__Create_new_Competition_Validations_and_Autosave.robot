@@ -216,6 +216,7 @@ Application finances: validation empty
     And the user enters text to a text field                   css = .editor  Funding rules for this competition added
     And the user selects the radio button                      applicationFinanceType  STANDARD
     And the user selects the radio button                      includeGrowthTable  false
+    And the user selects the radio button                      includeYourOrganisationSection  true
     And the user selects the radio button                      includeJesForm  true
     And the user clicks the button/link                        jQuery = button:contains("Done")
 
@@ -284,10 +285,6 @@ Custom suite setup
     Set suite variable  ${nextYear}
     ${tomorrowMonthWord} =  get tomorrow month as word
     set suite variable  ${tomorrowMonthWord}
-
-the user moves focus and waits for autosave
-    Set Focus To Element    link=Sign out
-    Wait For Autosave
 
 the validation error above the question should be visible
     [Arguments]    ${QUESTION}    ${ERROR}
@@ -430,10 +427,10 @@ the user should see the correct details in the funding information form
 
 the user should see the correct details in the eligibility form
     the user sees that the radio button is selected     singleOrCollaborative    single
-    the user should see that the checkbox is selected   research-categories-33
-    the user should see that the checkbox is selected   research-categories-34
-    the user should see that the checkbox is selected   research-categories-35
-    the user should see that the checkbox is selected   lead-applicant-type-1  # business
+    Checkbox Should Be Selected   research-categories-33
+    Checkbox Should Be Selected   research-categories-34
+    Checkbox Should Be Selected   research-categories-35
+    Checkbox Should Be Selected   lead-applicant-type-1  # business
     Page Should Contain    50%
     the user sees that the radio button is selected    resubmission    no
 

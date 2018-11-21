@@ -1,0 +1,132 @@
+<div class="govuk-width-container">
+
+    <div class="govuk-inset-text">
+        <p class="govuk-body">
+            This is a standard GDS component. Examples and code can be found at:<br />
+            <a href="https://design-system.service.gov.uk/components/table/" class="govuk-link">https://design-system.service.gov.uk/components/table/</a>
+        </p>
+    </div>
+
+    <h2 class="govuk-heading-m">Example 1. Competition setup, milestones</h2>
+
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col" id="milestone">Milestone</th>
+            <th class="govuk-table__header" scope="col">Time</th>
+            <th class="govuk-table__header" scope="col">Weekday</th>
+            <th class="govuk-table__header" scope="col">Date</th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell">1. Open date</td>
+            <td class="govuk-table__cell">
+            </td>
+            <td class="govuk-table__cell">Wed</td>
+            <td class="govuk-table__cell">8 July 2020</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell">2. Briefing event</td>
+            <td class="govuk-table__cell">
+            </td>
+            <td class="govuk-table__cell">Sat</td>
+            <td class="govuk-table__cell">18 July 2020</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell">3. Submission date</td>
+            <td class="govuk-table__cell">
+                12:00 pm
+            </td>
+            <td class="govuk-table__cell">Tue</td>
+            <td class="govuk-table__cell">28 July 2020</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2 class="govuk-heading-m govuk-!-margin-top-9">Example 2. Competition management</h2>
+
+    <div class="govuk-body govuk-grid-row sorting">
+        <div class="govuk-grid-column-one-half">
+            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold">14</span>
+            <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">applications</span>
+        </div>
+        <div class="govuk-grid-column-one-half alignright">
+            <label for="sort-by" class="govuk-label display-inline">Sort by</label>
+            <select id="sort-by" name="sort" class="js-auto-submit govuk-select govuk-input--width-20">
+                <option value="id">Application no.</option>
+                <option value="lead">Lead</option>
+                <option value="percentageComplete">Percentage complete</option>
+            </select>
+            <button type="submit" class="button-secondary govuk-!-margin-0 js-hidden visuallyhidden">Sort</button>
+        </div>
+    </div>
+    <div class="table-overflow">
+        <table class="govuk-table" id="application-list">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Application number</th>
+                <th class="govuk-table__header" scope="col">Project title</th>
+                <th class="govuk-table__header" scope="col">Lead</th>
+                <th class="govuk-table__header" scope="col">Innovation area</th>
+                <th class="govuk-table__header" scope="col">Status</th>
+                <th scope="col" class="govuk-table__header alignright" style="width: 10%">Percentage complete</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row filtered-result">
+                <td class="govuk-table__cell">
+                    <a href="/management/competition/17/application/125?origin=ALL_APPLICATIONS" class="govuk-link">125</a>
+                </td>
+                <td class="govuk-table__cell">Home monitoring using adaptive optics</td>
+                <td class="govuk-table__cell">Abbydale Optics</td>
+                <td class="govuk-table__cell">Not listed</td>
+                <td class="govuk-table__cell">Started</td>
+                <td class="govuk-table__cell alignright">0</td>
+            </tr>
+            <tr class="govuk-table__row filtered-result">
+                <td class="govuk-table__cell">
+                    <a href="/management/competition/17/application/126?origin=ALL_APPLICATIONS" class="govuk-link">126</a>
+                </td>
+                <td class="govuk-table__cell">Networking home IOT devices</td>
+                <td class="govuk-table__cell">Quantum Electronics</td>
+                <td class="govuk-table__cell">Digital manufacturing</td>
+                <td class="govuk-table__cell">Started</td>
+                <td class="govuk-table__cell alignright">0</td>
+            </tr>
+            <tr class="govuk-table__row filtered-result">
+                <td class="govuk-table__cell">
+                    <a href="/management/competition/17/application/127?origin=ALL_APPLICATIONS" class="govuk-link">127</a>
+                </td>
+                <td class="govuk-table__cell">New algorithms to improve machine efficiency</td>
+                <td class="govuk-table__cell">Floating Point</td>
+                <td class="govuk-table__cell">Not listed</td>
+                <td class="govuk-table__cell">Started</td>
+                <td class="govuk-table__cell alignright">0</td>
+            </tr>
+            <tr class="govuk-table__row filtered-result">
+                <td class="govuk-table__cell">
+                    <a href="/management/competition/17/application/128?origin=ALL_APPLICATIONS" class="govuk-link">128</a>
+                </td>
+                <td class="govuk-table__cell">GPS adaptions for remote drone protocols</td>
+                <td class="govuk-table__cell">Express Coordinates</td>
+                <td class="govuk-table__cell">Digital manufacturing</td>
+                <td class="govuk-table__cell">Started</td>
+                <td class="govuk-table__cell alignright">0</td>
+            </tr>
+            <tr class="govuk-table__row filtered-result">
+                <td class="govuk-table__cell">
+                    <a href="/management/competition/17/application/129?origin=ALL_APPLICATIONS" class="govuk-link">129</a>
+                </td>
+                <td class="govuk-table__cell">Implementing large scale engineering on the small scale</td>
+                <td class="govuk-table__cell">Enterprise Engineering</td>
+                <td class="govuk-table__cell">Not listed</td>
+                <td class="govuk-table__cell">Started</td>
+                <td class="govuk-table__cell alignright">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
