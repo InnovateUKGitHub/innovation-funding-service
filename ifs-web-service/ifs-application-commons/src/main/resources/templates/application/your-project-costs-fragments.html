@@ -392,11 +392,17 @@
                                     calculation spreadsheet.ods (10KB)</a></li>
                             </ul>
                         </div>
-                        <div class="upload-section govuk-!-margin-top-6">
-                            <h3 class="govuk-heading-s govuk-!-margin-0">Upload your completed spreadsheet</h3>
-                            <div class="govuk-form-group">
+                    </th:block>
+                    <div class="upload-section govuk-!-margin-top-6">
+                        <h3 th:unless="${model.internal}" class="govuk-heading-s govuk-!-margin-0">Upload your completed spreadsheet</h3>
 
-                                <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
+                        <div class="govuk-form-group">
+                            <th:block th:if="${model.internal and form.overhead.filename == null}">
+                                <p class="govuk-body">The applicant has not uploaded a file.</p>
+                            </th:block>
+                            <th:block th:unless="${model.internal and form.overhead.filename == null}">
+                                <p th:if="${model.internal}" class="govuk-body">The applicant has uploaded a completed overhead costs spreadsheet.</p>
+                                <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly or model.internal ? 'readonly' : 'edit'},
                                     @{${'/application/download/overheadfile/'+form.overhead.costId}},
                                     ${form.overhead.filename},
                                     overhead.file,
@@ -404,32 +410,32 @@
                                     true,
                                     removeOverheadFile,
                                     uploadOverheadFile)"/>
-                            </div>
+                            </th:block>
                         </div>
-                        <div class="govuk-form-group alignright inline">
-                            <label for="overhead.totalSpreadsheet"
-                                   class="govuk-label">
-                                Enter the total cost of overheads as calculated in the spreadsheet &pound;
-                            </label>
-                            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead.totalSpreadsheet)"/>
-                            <input id="overhead.totalSpreadsheet"
-                                   th:field="*{overhead.totalSpreadsheet}"
-                                   th:errorclass="govuk-input--error"
-                                   type="number"
-                                   class="govuk-input govuk-input--width-10 alignright"
-                                   min="0"
-                                   max="999999999"
-                                   step="1"
-                                   required="required"/>
-                            <input type="hidden"
-                                   readonly="readonly"
-                                   id="total-overhead-calculated"
-                                   data-calculation-fields="[id='overhead.totalSpreadsheet'],1"
-                                   data-calculation-operations="*"
-                                   th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
-                                   th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
-                        </div>
-                    </th:block>
+                    </div>
+                    <div class="govuk-form-group alignright inline">
+                        <label for="overhead.totalSpreadsheet"
+                               class="govuk-label" th:text="${model.internal ? 'Total cost of overheads &pound;' : 'Enter the total cost of overheads as calculated in the spreadsheet &pound;' }">
+                            Enter the total cost of overheads as calculated in the spreadsheet &pound;
+                        </label>
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead.totalSpreadsheet)"/>
+                        <input id="overhead.totalSpreadsheet"
+                               th:field="*{overhead.totalSpreadsheet}"
+                               th:errorclass="govuk-input--error"
+                               type="number"
+                               class="govuk-input govuk-input--width-10 alignright"
+                               min="0"
+                               max="999999999"
+                               step="1"
+                               required="required"/>
+                        <input type="hidden"
+                               readonly="readonly"
+                               id="total-overhead-calculated"
+                               data-calculation-fields="[id='overhead.totalSpreadsheet'],1"
+                               data-calculation-operations="*"
+                               th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
+                               th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
+                    </div>
                 </div>
             </th:block>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />

@@ -35,7 +35,7 @@ public class OverheadForm {
     public OverheadForm(Overhead overhead) {
         this.rateType = overhead.getRateType();
         this.totalSpreadsheet = overhead.getRate();
-        this.filename = overhead.getCalculationFile().map(FileEntryResource::getName).orElse("");
+        this.filename = overhead.getCalculationFile().map(FileEntryResource::getName).orElse(null);
         this.total = overhead.getTotal();
         this.costId = overhead.getId();
     }

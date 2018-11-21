@@ -39,7 +39,7 @@ public class YourProjectCostsFormValidator {
                 validateLabour(form.getLabour(), validationHandler);
                 break;
             case OVERHEADS:
-                validateOverhead(form.getOverhead(), validationHandler);
+                validateOverhead(form.getOverhead(), validationHandler, false);
                 break;
             case CAPITAL_USAGE:
                 validateRows(form.getCapitalUsageRows(), "capitalUsageRows[%s].", validationHandler);
@@ -61,7 +61,7 @@ public class YourProjectCostsFormValidator {
 
     public void validate(YourProjectCostsForm form, ValidationHandler validationHandler) {
         validateLabour(form.getLabour(), validationHandler);
-        validateOverhead(form.getOverhead(), validationHandler);
+        validateOverhead(form.getOverhead(), validationHandler, true);
         validateRows(form.getMaterialRows(), "materialRows[%s].", validationHandler);
         validateRows(form.getCapitalUsageRows(), "capitalUsageRows[%s].", validationHandler);
         validateRows(form.getSubcontractingRows(), "subcontractingRows[%s].", validationHandler);
@@ -69,15 +69,15 @@ public class YourProjectCostsFormValidator {
         validateRows(form.getOtherRows(), "otherRows[%s].", validationHandler);
     }
 
-    private void validateOverhead(OverheadForm overhead, ValidationHandler validationHandler) {
+    private void validateOverhead(OverheadForm overhead, ValidationHandler validationHandler, boolean validateFile) {
         if (OverheadRateType.TOTAL.equals(overhead.getRateType())) {
             validateForm(overhead, validationHandler, "overhead.");
-            boolean hasOverheadFile = overheadFileRestService.getOverheadFileDetails(overhead.getCostId()).isSuccess();
-
-            if (!hasOverheadFile) {
-                validationHandler.addAnyErrors(new ValidationMessages(fieldError("overhead.file", null, "validation.finance.overhead.file.required")));
+            if (validateFile) {
+                boolean hasOverheadFile = overheadFileRestService.getOverheadFileDetails(overhead.getCostId()).isSuccess();
+                if (!hasOverheadFile) {
+                    validationHandler.addAnyErrors(new ValidationMessages(fieldError("overhead.file", null, "validation.finance.overhead.file.required")));
+                }
             }
-
         }
     }
 
