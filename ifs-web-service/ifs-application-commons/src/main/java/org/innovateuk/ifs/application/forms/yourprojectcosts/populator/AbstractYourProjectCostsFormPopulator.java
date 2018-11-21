@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.populator;
 
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.*;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
+import org.innovateuk.ifs.finance.service.OverheadFileRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -14,6 +17,9 @@ import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.Abstrac
 import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
 public abstract class AbstractYourProjectCostsFormPopulator {
+
+    @Autowired
+    private OverheadFileRestService overheadFileRestService;
 
     public void populateForm(YourProjectCostsForm form, long targetId, Long organisationId) {
         BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
@@ -40,7 +46,8 @@ public abstract class AbstractYourProjectCostsFormPopulator {
     private OverheadForm overhead(BaseFinanceResource finance) {
         OverheadCostCategory costCategory = (OverheadCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS);
         Overhead overhead = costCategory.getCosts().stream().findFirst().map(Overhead.class::cast).orElseGet(Overhead::new);
-        return new OverheadForm(overhead);
+        String filename = overheadFileRestService.getOverheadFileDetails(overhead.getId()).getOptionalSuccessObject().map(FileEntryResource::getName).orElse(null);
+        return new OverheadForm(overhead, filename);
     }
 
 

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.form;
 
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,10 +31,10 @@ public class OverheadForm {
     public OverheadForm() {
     }
 
-    public OverheadForm(Overhead overhead) {
+    public OverheadForm(Overhead overhead, String filename) {
         this.rateType = overhead.getRateType();
         this.totalSpreadsheet = overhead.getRate();
-        this.filename = overhead.getCalculationFile().map(FileEntryResource::getName).orElse(null);
+        this.filename = filename;
         this.total = overhead.getTotal();
         this.costId = overhead.getId();
     }

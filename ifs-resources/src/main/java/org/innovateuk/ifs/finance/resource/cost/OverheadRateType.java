@@ -3,8 +3,7 @@ package org.innovateuk.ifs.finance.resource.cost;
 public enum OverheadRateType{
     NONE(null, null, "None"),
     DEFAULT_PERCENTAGE(20, "defaultPercentage", "Default %"),
-    TOTAL(null, "total", "Custom Amount"),
-    CUSTOM_RATE(null, "customRate", "Custom Rate");
+    TOTAL(null, "total", "Custom Amount");
 
     private final Integer rate;
     private final String name;

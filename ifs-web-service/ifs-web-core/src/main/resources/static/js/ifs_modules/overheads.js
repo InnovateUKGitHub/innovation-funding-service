@@ -48,12 +48,17 @@ IFS.core.overheads = (function () {
       }
     },
     setOverheadSectionElementValue: function () {
-      var totalElements = jQuery(s.radios).closest('section.collapsible').find('[data-mirror]')
+      var totalElements = jQuery(s.radios).closest('section.collapsible').find('[data-mirror], [data-calculation-format="percentage"]')
       totalElements.each(function () {
         var totalEl = jQuery(this)
-        // total in section header we mirror the total directly
-        IFS.core.mirrorElements.updateElement(totalEl, '[data-current-overhead-total]')
-        IFS.core.mirrorElements.bindMirrorElement(totalEl, '[data-current-overhead-total]')
+        if (totalEl.is('[data-calculation-format="percentage"]')) {
+          // percentage total in section header update the calculation
+          totalEl.attr('data-calculation-fields', '100, #total-cost, [data-current-overhead-total]')
+        } else {
+          // total in section header we mirror the total directly
+          IFS.core.mirrorElements.updateElement(totalEl, '[data-current-overhead-total]')
+          IFS.core.mirrorElements.bindMirrorElement(totalEl, '[data-current-overhead-total]')
+        }
       })
     }
   }
