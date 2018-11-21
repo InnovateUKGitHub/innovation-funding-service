@@ -98,7 +98,6 @@ Overhead cost client side
 Overhead cost server side
     [Documentation]    INFUND-844
     Given the user selects the checkbox        agree-terms-page
-    And The user enters text to a text field   id = overhead.totalSpreadsheet  40
     When the user clicks the button/link       jQuery = button:contains("Mark as complete")
     Then The user should see a summary error   You should upload a completed overheads spreadsheet.
 
