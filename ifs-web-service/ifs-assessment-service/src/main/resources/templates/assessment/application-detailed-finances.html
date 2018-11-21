@@ -50,7 +50,7 @@
                     </table>
                 </div>
 
-                <th:block th:unless="${financeView == 'academic-finance'}" th:with="model=${costsViewModel}">
+                <th:block th:unless="${financeView == 'academic-finance'}" th:with="model=${costsViewModel}" th:object="${form}">
                     <h2 class="govuk-heading-m">Detailed finances</h2>
 
                     <th:block th:insert="application/your-project-costs-fragments :: labour" />

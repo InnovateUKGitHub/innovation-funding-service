@@ -81,7 +81,7 @@ public class YourProjectCostsAutosaver {
             case "gross":
                 cost.setGrossEmployeeCost(new BigDecimal(value));
                 break;
-            case "fundingAmount":
+            case "days":
                 cost.setLabourDays(Integer.parseInt(value));
                 break;
             default:
