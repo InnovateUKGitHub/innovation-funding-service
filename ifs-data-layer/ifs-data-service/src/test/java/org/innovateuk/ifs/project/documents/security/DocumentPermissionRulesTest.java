@@ -119,7 +119,7 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (SecurityRuleUtil.isInternalAdmin(user)) {
+            if (SecurityRuleUtil.isInternalAdmin(user) || SecurityRuleUtil.isIFSAdmin(user)) {
                 assertTrue(rules.internalAdminCanApproveDocument(project, user));
             } else {
                 assertFalse(rules.internalAdminCanApproveDocument(project, user));
