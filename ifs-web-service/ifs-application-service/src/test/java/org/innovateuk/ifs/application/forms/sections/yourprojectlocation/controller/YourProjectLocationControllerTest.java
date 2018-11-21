@@ -57,6 +57,8 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     private String postcodeNeedsTrimming = "S2 5AB            ";
     private String postcodeTooLong = "12345678901";
 
+    private String yourFinancesRedirectUrl = String.format("redirect:/application/%d/form/FINANCE", applicationId);
+
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
     @Test
@@ -131,7 +133,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
                 .param("postcode", postcode))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(String.format("redirect:/application/%d/form/FINANCE", applicationId)))
+                .andExpect(view().name(yourFinancesRedirectUrl))
                 .andReturn();
 
         ApplicationFinanceResource applicationFinanceBeingUpdated = updatedApplicationFinanceCaptor.getValue();
@@ -213,15 +215,12 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
         when(sectionServiceMock.markAsComplete(sectionId, applicationId, processRole.getId())).thenReturn(emptyList());
 
-        String viewUrl = String.format("redirect:/application/%d/form/your-project-location/" +
-                "organisation/%d/section/%d", applicationId, organisationId, sectionId);
-
         mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
                     .param("postcode", postcode)
                     .param("mark-as-complete", ""))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(viewUrl))
+                .andExpect(view().name(yourFinancesRedirectUrl))
                 .andReturn();
 
         ApplicationFinanceResource applicationFinanceBeingUpdated = updatedApplicationFinanceCaptor.getValue();

@@ -70,10 +70,10 @@
             </th:block>
             <div class="form-footer" th:if="${model.open}">
                 <div class="form-footer__actions">
-                    <button id="mark-as-complete" th:unless="${model.readOnly}" type="submit" name="mark-as-complete"
+                    <button id="mark_as_complete" th:unless="${model.readOnly}" type="submit" name="mark-as-complete"
                             class="button-clear" value="true">Mark as complete
                     </button>
-                    <button th:if="${model.complete}" type="submit" name="mark-as-incomplete" class="button-clear" value="true"
+                    <button id="mark_as_incomplete" th:if="${model.complete}" type="submit" name="mark-as-incomplete" class="button-clear" value="true"
                             th:text="${'Edit your project location'}">Edit
                     </button>
                 </div>

@@ -150,7 +150,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
             validationMessages.forEach(validationHandler::addAnyErrors);
 
-            return validationHandler.failNowOrSucceedWith(failureHandler, () -> redirectToViewPage(applicationId, organisationId, sectionId));
+            return validationHandler.failNowOrSucceedWith(failureHandler, () -> redirectToYourFinances(applicationId));
         };
 
         return validationHandler.
