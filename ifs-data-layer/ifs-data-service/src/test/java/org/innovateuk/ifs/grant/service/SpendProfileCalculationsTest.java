@@ -19,8 +19,8 @@ public class SpendProfileCalculationsTest {
     private static final CostCategory OVERHEADS = newCostCategory().withName("Overheads").build();
     private static final CostCategory LABOUR = newCostCategory().withName("Labour").build();
 
-    private static final BigDecimal FIFTY_PERCENT = new BigDecimal(0.5);
-    private static final BigDecimal HUNDRED_PERCENT =  BigDecimal.ONE;
+    private static final BigDecimal FIFTY_PERCENT = BigDecimal.valueOf(50);
+    private static final BigDecimal HUNDRED_PERCENT =  BigDecimal.valueOf(100);
 
     @Test
     public void testOverheadCalculationFifty() {
