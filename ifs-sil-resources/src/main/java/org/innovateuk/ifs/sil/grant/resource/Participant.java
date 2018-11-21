@@ -13,7 +13,6 @@ public class Participant {
     private BigDecimal capLimit;
     private BigDecimal awardRate;
     private BigDecimal overheadRate;
-    private String status;
     private Set<Forecast> forecasts;
 
     public long getId() {
@@ -86,14 +85,6 @@ public class Participant {
 
     public void setOverheadRate(BigDecimal overheadRate) {
         this.overheadRate = overheadRate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Set<Forecast> getForecasts() {

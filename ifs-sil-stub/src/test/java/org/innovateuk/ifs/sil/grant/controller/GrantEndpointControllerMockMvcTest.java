@@ -4,12 +4,14 @@ import org.innovateuk.ifs.sil.AbstractEndpointControllerMockMvcTest;
 import org.innovateuk.ifs.sil.grant.resource.Forecast;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.resource.Participant;
+import org.innovateuk.ifs.sil.grant.resource.Period;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,15 +41,23 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
 
     private Participant createParticipant() {
         Participant participant = new Participant();
-        participant.setForecasts(createForecasts(LocalDate.of(2018, 10,1 ),12,
+        participant.setForecasts(createForecasts(Arrays.asList("Overheads", "Other"),12,
                 BigDecimal.valueOf(50_000)));
         return participant;
     }
 
-    private Set<Forecast> createForecasts(LocalDate start, int durationInMonths, BigDecimal total) {
-        BigDecimal value = total.divide(BigDecimal.valueOf(durationInMonths), 6, BigDecimal.ROUND_UP);
-        return Stream.iterate(0L, i -> i + 1).limit(durationInMonths)
-                .map(i -> new Forecast().start(start).end(start.plus(i + 1, MONTHS)).value(value))
+    private Set<Forecast> createForecasts(List<String> costCategories,
+                                          int durationInMonths, BigDecimal total) {
+        BigDecimal value = total.divide(BigDecimal.valueOf(durationInMonths * costCategories.size()),
+                6, BigDecimal.ROUND_UP);
+        return costCategories.stream().map(category ->
+                new Forecast().costCategory(category).periods(createPeriods(durationInMonths, value)))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Period> createPeriods(int durationInMonths, BigDecimal value) {
+        return Stream.iterate(0, i -> i + 1).limit(durationInMonths)
+                .map(i -> new Period().month(i + 1).value(value))
                 .collect(Collectors.toSet());
     }
 

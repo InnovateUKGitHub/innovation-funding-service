@@ -14,11 +14,21 @@ public class Period {
         this.month = month;
     }
 
+    public Period month(int month) {
+        setMonth(month);
+        return this;
+    }
+
     public BigDecimal getValue() {
         return value;
     }
 
     public void setValue(BigDecimal value) {
         this.value = value;
+    }
+
+    public Period value(BigDecimal value) {
+        setValue(value);
+        return this;
     }
 }

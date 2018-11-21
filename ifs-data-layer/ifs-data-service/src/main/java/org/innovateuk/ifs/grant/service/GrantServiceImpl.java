@@ -84,13 +84,13 @@ public class GrantServiceImpl implements GrantService {
         List<FormInputResponse> formInputResponses = formInputResponseRepository.findByApplicationId(applicationId);
         grant.setSummary(formInputResponses.stream()
                 .filter(response -> "project summary"
-                        .equals(response.getFormInput().getDescription()))
+                        .equalsIgnoreCase(response.getFormInput().getDescription()))
                 .findFirst()
                 .map(FormInputResponse::getValue)
                 .orElse(NO_PROJECT_SUMMARY));
-        grant.setSummary(formInputResponses.stream()
+        grant.setPublicDescription(formInputResponses.stream()
                 .filter(response -> "public description"
-                        .equals(response.getFormInput().getDescription()))
+                        .equalsIgnoreCase(response.getFormInput().getDescription()))
                 .findFirst()
                 .map(FormInputResponse::getValue)
                 .orElse(NO_PUBLIC_DESCRIPTION));
@@ -115,14 +115,16 @@ public class GrantServiceImpl implements GrantService {
         participant.setOrgType(organisation.getOrganisationType().getName());
         participant.setOrgProjectRole(partnerOrganisation.isLeadOrganisation() ? "lead" : "collaborator");
         participant.setSize(organisation.getUsers().size());
-        organisation.getProcessRoles().stream()
-                .filter(role -> role.getRole() == FINANCE_CONTACT)
-                .findFirst()
+        partnerOrganisation.getProject().getProjectUsers(projectUser ->
+                projectUser.getOrganisation().getId().equals(organisation.getId())
+                        && projectUser.getRole().isFinanceContact()
+        ).stream().findFirst()
                 .ifPresent(processRole -> {
                             participant.setContactEmail(processRole.getUser().getEmail());
                             participant.setContactRole(processRole.getRole().getName());
                         }
                 );
+
         Optional<SpendProfile> spendProfile = spendProfileRepository
                 .findOneByProjectIdAndOrganisationId(context.getProjectId(), organisation.getId());
         if (!spendProfile.isPresent()) {
@@ -175,7 +177,10 @@ public class GrantServiceImpl implements GrantService {
                 .findFirst()
                 .orElseThrow(IllegalStateException::new)
                 .getCostCategory().getName());
-        forecast.setPeriods(costs.stream().map(this::toPeriod).collect(Collectors.toSet()));
+        forecast.setPeriods(costs
+                .stream()
+                .map(this::toPeriod)
+                .collect(Collectors.toSet()));
         return forecast;
     }
 
