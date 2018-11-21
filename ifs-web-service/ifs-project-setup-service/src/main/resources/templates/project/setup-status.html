@@ -83,7 +83,7 @@
                                th:href="@{/project/{id}/document/all(id=${model.projectId})}"
                                class="govuk-link">Documents</a>
                             <a th:if="${model.projectComplete}"
-                               th:href="@{/project/{id}/document/readonly(id=${model.projectId})}"
+                               th:href="@{/project/{id}/document/all(id=${model.projectId})}"
                                class="govuk-link">Documents</a>
                             <th:block th:if="${model.documentsSection.notAccessible}">Documents</th:block>
                         </h2>
