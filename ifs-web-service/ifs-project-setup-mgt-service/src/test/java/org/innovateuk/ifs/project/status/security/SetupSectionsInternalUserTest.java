@@ -20,9 +20,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -74,15 +72,15 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     }
 
     private UserResource getSupportUser(){
-        return newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
+        return newUserResource().withRoleGlobal(SUPPORT).build();
     }
 
     private UserResource getInnovationLeadUser(){
-        return newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
+        return newUserResource().withRoleGlobal(INNOVATION_LEAD).build();
     }
 
     private UserResource stakeholderUser(){
-        return newUserResource().withRolesGlobal(singletonList(STAKEHOLDER)).build();
+        return newUserResource().withRoleGlobal(STAKEHOLDER).build();
     }
 
     private UserResource compAdmin(){
@@ -91,7 +89,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void supportUserCanAccessIfMonitoringOfficerSubmitted() {
-        UserResource supportUser = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
+        UserResource supportUser = newUserResource().withRoleGlobal(SUPPORT).build();
 
         when(setupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(true);
         when(setupProgressCheckerMock.isMonitoringOfficerSubmitted()).thenReturn(true);
@@ -105,7 +103,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void innovationLeadUserCanAccessIfMonitoringOfficerSubmitted() {
-        UserResource supportUser = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
+        UserResource supportUser = newUserResource().withRolesGlobal(singletonList(INNOVATION_LEAD)).build();
 
         when(setupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(true);
         when(setupProgressCheckerMock.isMonitoringOfficerSubmitted()).thenReturn(true);
