@@ -527,7 +527,7 @@ the user removes existing and uploads new grant offer letter
 the user tries to reject without a reason he should get a validation message
     the user selects the radio button     approvalType  rejectGOL
     the user enters text to a text field  id = gol-reject-reason  ${empty}
-    the user moves focus to the element   link = Dashboard
+    Set Focus To Element                  link = Dashboard
     the user should see a field error     ${empty_field_warning_message}
 
 the user rejects the GOL and sees the successful status
