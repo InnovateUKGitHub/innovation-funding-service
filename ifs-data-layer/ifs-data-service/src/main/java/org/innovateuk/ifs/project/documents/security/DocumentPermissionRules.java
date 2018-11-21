@@ -7,8 +7,8 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
+
 
 @PermissionRules
 @Component
@@ -39,9 +39,8 @@ public class DocumentPermissionRules extends BasePermissionRules {
         return isProjectManager(project.getId(), user.getId());
     }
 
-    @PermissionRule(value = "REVIEW_DOCUMENT", description = "Comp admin or project finance users can approve or reject document")
+    @PermissionRule(value = "REVIEW_DOCUMENT", description = "Comp admin, project finance and IFS admin users can approve or reject document")
     public boolean internalAdminCanApproveDocument(ProjectResource project, UserResource user) {
-        return isInternalAdmin(user);
+        return isInternalAdmin(user) || isIFSAdmin(user);
     }
 }
-
