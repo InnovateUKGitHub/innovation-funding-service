@@ -86,7 +86,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     }
 
     private UserResource compAdmin(){
-        return newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build();
+        return newUserResource().withRoleGlobal(COMP_ADMIN).build();
     }
 
     @Test
