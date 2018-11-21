@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class YourProjectLocationFormPopulator {
 
-    private ApplicationFinanceRestService applicationFinanceRestService;
+    private final ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
     YourProjectLocationFormPopulator(ApplicationFinanceRestService applicationFinanceRestService) {

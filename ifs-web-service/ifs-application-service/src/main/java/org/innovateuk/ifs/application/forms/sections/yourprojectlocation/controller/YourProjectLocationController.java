@@ -46,11 +46,11 @@ public class YourProjectLocationController extends AsyncAdaptor {
     private static final int MINIMUM_POSTCODE_LENGTH = 3;
     private static final int MAXIMUM_POSTCODE_LENGTH = 10;
 
-    private YourProjectLocationViewModelPopulator viewModelPopulator;
-    private YourProjectLocationFormPopulator formPopulator;
-    private ApplicationFinanceRestService applicationFinanceRestService;
-    private SectionService sectionService;
-    private UserRestService userRestService;
+    private final YourProjectLocationViewModelPopulator viewModelPopulator;
+    private final YourProjectLocationFormPopulator formPopulator;
+    private final ApplicationFinanceRestService applicationFinanceRestService;
+    private final SectionService sectionService;
+    private final UserRestService userRestService;
 
     @Autowired
     YourProjectLocationController(
@@ -69,7 +69,11 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     // for ByteBuddy
     YourProjectLocationController() {
-
+        this.viewModelPopulator = null;
+        this.formPopulator = null;
+        this.applicationFinanceRestService = null;
+        this.sectionService = null;
+        this.userRestService = null;
     }
 
     @GetMapping

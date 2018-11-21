@@ -18,9 +18,9 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @Component
 public class YourProjectLocationViewModelPopulator {
 
-    private ApplicationRestService applicationRestService;
-    private CompetitionRestService competitionRestService;
-    private SectionService sectionService;
+    private final ApplicationRestService applicationRestService;
+    private final CompetitionRestService competitionRestService;
+    private final SectionService sectionService;
 
     @Autowired
     public YourProjectLocationViewModelPopulator(
