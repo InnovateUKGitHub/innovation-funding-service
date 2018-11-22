@@ -1,0 +1,85 @@
+
+<!-- =================Section: Milestones (4) =========================== -->
+<th:block th:fragment="section-content">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to save section.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
+    </div>
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Completion stage',size='govuk-heading-xl'" />
+
+    <div class="govuk-body panel">
+        <p class="govuk-body">Select the stage at which the competition is complete for Innovate UK.</p>
+        <p class="govuk-body">You do not need to run stages 9 to 11.</p>
+    </div>
+
+    <form th:action="@{'completion-stage/edit'}"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
+          th:attr="data-competition=${model.general.competition.id}" data-section="milestones"
+          method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+
+        <div th:if="${model.general.editable}" id="section-4-edit">
+
+            <ul class="govuk-list govuk-!-padding-0 govuk-!-margin-0 govuk-!-margin-bottom-2">
+
+                <li th:each="milestone : ${model.nonSelectableMilestones}" th:text="${milestone.milestoneDescription}"
+                    class="govuk-!-margin-bottom-4">1. Milestone name</li>
+            </ul>
+
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-visually-hidden">
+                        Please select the completion stage
+                    </legend>
+
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input"
+                                   id="radio-1" type="radio" required="required" value='13'
+                                   data-required-errormessage="Select a completion stage."
+                                   name="completionStage"
+                                   th:checked="${competitionSetupForm.selectedCompletionStage == model.releaseFeedbackCompletionStage}" />
+                            <label class="govuk-label govuk-radios__label" for="radio-1">
+                                13. Release feedback
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input"
+                                   id="radio-2" type="radio" required="required" value='14'
+                                   data-required-errormessage="Select a completion stage."
+                                   name="completionStage"
+                                   th:checked="${competitionSetupForm.selectedCompletionStage == model.projectSetupCompletionStage}" />
+                            <label class="govuk-label govuk-radios__label" for="radio-2">
+                                14. Project setup
+                            </label>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+
+            <button type="submit" class="govuk-button">
+                Done
+            </button>
+
+        </div>
+    </form>
+
+    <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button govuk-!-margin-top-6">Edit</button>
+
+    <ul class="govuk-list pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to previous part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='eligibility')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Eligibility</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${model.general.competition.id},sectionPath='application')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Application</span>
+            </a>
+        </li>
+    </ul>
+</th:block>

@@ -3,7 +3,27 @@ package org.innovateuk.ifs.competitionsetup.core.viewmodel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
 public class GeneralSetupViewModel {
+
+    private static final List<CompetitionSetupSection> PUBLISH_SECTIONS = asList(
+            CompetitionSetupSection.INITIAL_DETAILS,
+            CompetitionSetupSection.CONTENT,
+            CompetitionSetupSection.COMPLETION_STAGE);
+
+    private static final List<CompetitionSetupSection> COMPETITION_SETUP_SECTIONS = asList(
+            CompetitionSetupSection.TERMS_AND_CONDITIONS,
+            CompetitionSetupSection.ADDITIONAL_INFO,
+            CompetitionSetupSection.ELIGIBILITY,
+            CompetitionSetupSection.APPLICATION_FORM);
+
+    private static final List<CompetitionSetupSection> ASSESSMENT_SECTIONS = singletonList(
+            CompetitionSetupSection.ASSESSORS);
+
     private boolean editable;
     private CompetitionResource competition;
     private CompetitionSetupSection currentSection;
@@ -60,5 +80,17 @@ public class GeneralSetupViewModel {
 
     public boolean currentSectionIsHome() {
         return currentSection.equals(CompetitionSetupSection.HOME);
+    }
+
+    public static List<CompetitionSetupSection> getPublishSections() {
+        return PUBLISH_SECTIONS;
+    }
+
+    public static List<CompetitionSetupSection> getCompetitionSetupSections() {
+        return COMPETITION_SETUP_SECTIONS;
+    }
+
+    public static List<CompetitionSetupSection> getAssessmentSections() {
+        return ASSESSMENT_SECTIONS;
     }
 }
