@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(Parameterized.class)
 public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControllerMockMvcTest<GrantEndpointController> {
-    private static final boolean OUTPUT_TEST_JSON = true;
+    private static final boolean OUTPUT_TEST_JSON = false;
     private static final String OUTPUT_DIRECTORY = "./build/tmp/grant-json";
 
     protected GrantEndpointController supplyControllerUnderTest() {
