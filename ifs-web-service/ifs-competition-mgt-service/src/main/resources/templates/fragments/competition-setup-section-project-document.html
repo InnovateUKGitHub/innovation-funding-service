@@ -2,6 +2,11 @@
 <!-- =================Section:Project Documents (10) =========================== -->
 <th:block th:fragment="section-content">
 
+    <div th:if="${#fields.hasErrors('${landingPageForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to save section.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(landingPageForm)" />
+    </div>
+
     <th:block th:with="competitionTitle=${#strings.isEmpty(model.general.competition.name)} ? |${model.general.competition.id}: $#{ifs.competition.no_title}| : |${model.general.competition.id}: ${model.general.competition.name}|">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents in project setup',subTitle=${competitionTitle},size='govuk-heading-xl'" />
     </th:block>
@@ -16,8 +21,12 @@
           method="post" novalidate="novalidate">
 
         <div th:if="${model.general.editable}">
-            <div class="govuk-form-group">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('enabledIds')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
+                    <legend id="enabledIds"></legend>
+                    <th:block th:if="${#fields.hasErrors('enabledIds')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('enabledIds')}" th:text="${err}"></span>
+                    </th:block>
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item" th:each="document : ${model.general.competition.projectDocuments}" >
                             <input th:value="${document.id}"
@@ -25,10 +34,13 @@
                                     name="enabledIds"
                                     class="govuk-checkboxes__input"
                                     th:id="${'projectdocument-enabled-' + document.id}"
-                                    th:checked="${document.enabled}" />
+                                    th:checked="${document.enabled}"
+                                    required="required"
+                                    th:attr="data-required-errormessage=#{competition.setup.documents.required}"/>
                             <label th:for=${checkboxId} class="govuk-label govuk-checkboxes__label">
                                 <span th:text=${document.title}>document_title</span>
-                                 <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}"
+                                 <a th:if="${document.editable}"
+                                    th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}"
                                     class="govuk-link govuk-!-margin-left-4">Edit</a>
                             </label>
                         </div>
@@ -46,14 +58,4 @@
         </div>
 
     </form>
-
-    <ul class="govuk-list pagination">
-        <li class="prev">
-            <a rel="prev" title="Navigate to prev part"
-               th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${model.general.competition.id},sectionPath='public-content')}">
-                <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Public content</span>
-            </a>
-        </li>
-    </ul>
 </th:block>
