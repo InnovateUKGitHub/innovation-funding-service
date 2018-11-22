@@ -58,14 +58,4 @@
         </div>
 
     </form>
-
-    <ul class="govuk-list pagination">
-        <li class="prev">
-            <a rel="prev" title="Navigate to prev part"
-               th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${model.general.competition.id},sectionPath='public-content')}">
-                <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Public content</span>
-            </a>
-        </li>
-    </ul>
 </th:block>
