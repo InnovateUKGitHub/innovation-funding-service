@@ -85,8 +85,8 @@ Existing assessor: Reject invitation from Dashboard
     And the user selects the radio button                   acceptInvitation  false
     And The user enters multiple strings into a text field  id = rejectComment  a${SPACE}  102
     And The user clicks the button/link                     jQuery = button:contains("Confirm")
-    Then the user should see an error                       The reason cannot be blank.
-    And the user should see an error                        Maximum word count exceeded. Please reduce your word count to 100.
+    Then the user should see a field and summary error      The reason cannot be blank.
+    And the user should see a field and summary error       Maximum word count exceeded. Please reduce your word count to 100.
     And the assessor fills all fields with valid inputs
     And The user clicks the button/link                     jQuery = button:contains("Confirm")
     And the user should see the element                     jQuery = p:contains("Thank you for letting us know you are unable to assess applications within this competition.")

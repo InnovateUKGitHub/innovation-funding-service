@@ -10,27 +10,32 @@ import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGene
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.DefaultProjectCostSection;
-import org.innovateuk.ifs.application.viewmodel.section.StandardYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.JesYourProjectCostsSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.StandardYourProjectCostsSectionViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
@@ -38,17 +43,17 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuild
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
-/**
- * Tests for {@link YourProjectCostsSectionPopulator}
- */
 @RunWith(MockitoJUnitRunner.class)
 public class YourProjectCostsSectionPopulatorTest {
 
@@ -67,92 +72,141 @@ public class YourProjectCostsSectionPopulatorTest {
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
+    @Mock
+    private MessageSource messageSource;
+    private CompetitionResource competition;
+    private OrganisationResource organisation;
+    private QuestionResource costQuestion;
+    private ApplicantSectionResource costSection;
+    private List<ApplicantQuestionResource> costApplicantQuestions;
+    private ApplicantSectionResource section;
+    private ApplicationForm form;
+    private Model model;
+    private BindingResult bindingResult;
+    private AbstractFormInputViewModel formInputViewModel;
+    private FinanceModelManager financeModelManager;
 
-    @Test
-    public void testPopulateBusiness() {
-        QuestionResource costQuestion = newQuestionResource().withType(QuestionType.COST).build();
-        ApplicantSectionResource costSection = newApplicantSectionResource()
-                .withApplicantQuestions(
-                        newApplicantQuestionResource().withQuestion(costQuestion).build(1)
-                ).build();
-
-        ApplicantSectionResource section = newApplicantSectionResource()
-                .withCurrentApplicant(newApplicantResource().withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build())
-                .withCurrentUser(newUserResource().build())
-                .withCompetition(newCompetitionResource()
-                        .withApplicationFinanceType(STANDARD_WITH_VAT)
-                        .build())
-                .withApplication(newApplicationResource().build())
-                .withApplicantQuestions(newApplicantQuestionResource().withQuestion(newQuestionResource().withType(QuestionType.GENERAL).build()).build(1))
-                .withApplicantChildrenSections(asList(costSection))
-                .withSection(newSectionResource().build())
+    @Before
+    public void setUp() {
+        competition = newCompetitionResource()
+                .withCollaborationLevel(SINGLE)
+                .withIncludeJesForm(true)
                 .build();
-        ApplicationForm form = mock(ApplicationForm.class);
-        Model model = mock(Model.class);
-        BindingResult bindingResult = mock(BindingResult.class);
-        AbstractFormInputViewModel formInputViewModel = mock(AbstractFormInputViewModel.class);
-        FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
-        when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
-        when(formInputViewModelGenerator.fromSection(section, costSection, form, false)).thenReturn(asList(formInputViewModel));
-        when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
-        StandardYourProjectCostsSectionViewModel viewModel = (StandardYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
+        organisation = newOrganisationResource().build();
 
-        assertThat(viewModel.isSection(), equalTo(true));
-        assertThat(viewModel.isComplete(), equalTo(false));
-        assertThat(viewModel.getDefaultProjectCostSections().size(), equalTo(1));
-        assertThat(viewModel.isIncludeVat(), equalTo(true));
-        DefaultProjectCostSection costSectionViewModel = viewModel.getDefaultProjectCostSections().get(0);
-        assertThat(costSectionViewModel.getApplicantResource(), equalTo(section));
-        assertThat(costSectionViewModel.getApplicantSection(), equalTo(costSection));
-        assertThat(costSectionViewModel.getCostViews(), equalTo(asList(formInputViewModel)));
+        costQuestion = newQuestionResource().withType(QuestionType.COST).build();
 
-
-        verify(financeModelManager).addOrganisationFinanceDetails(model, section.getApplication().getId(), asList(costQuestion), section.getCurrentUser().getId(), form, section.getCurrentApplicant().getOrganisation().getId());
-    }
-
-    @Test
-    public void testPopulateResearch() {
-        QuestionResource costQuestion = newQuestionResource().withType(QuestionType.COST).build();
-        FormInputResource fileUpload = newFormInputResource().withType(FormInputType.FINANCE_UPLOAD).build();
-        ApplicantQuestionResource costApplicantQuestion = newApplicantQuestionResource()
+        costApplicantQuestions = newApplicantQuestionResource()
                 .withQuestion(costQuestion)
-                .withApplicantFormInputs(
-                        newApplicantFormInputResource()
-                                .withFormInput(fileUpload)
-                                .build(1)
-                )
+                .build(1);
+
+        costSection = newApplicantSectionResource()
+                .withApplicantQuestions(costApplicantQuestions)
                 .build();
 
-        ApplicantSectionResource costSection = newApplicantSectionResource()
-                .withApplicantQuestions(asList(costApplicantQuestion))
-                .build();
-
-        ApplicantSectionResource section = newApplicantSectionResource()
-                .withCurrentApplicant(newApplicantResource().withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build()).build())
+        section = newApplicantSectionResource()
+                .withCurrentApplicant(newApplicantResource().withOrganisation(organisation).build())
                 .withCurrentUser(newUserResource().build())
-                .withCompetition(newCompetitionResource().build())
+                .withCompetition(competition)
                 .withApplication(newApplicationResource().build())
                 .withApplicantQuestions(newApplicantQuestionResource().withQuestion(newQuestionResource().withType(QuestionType.GENERAL).build()).withApplicantFormInputs(Collections.emptyList()).build(1))
                 .withApplicantChildrenSections(asList(costSection))
                 .withSection(newSectionResource().build())
                 .build();
-        ApplicationForm form = mock(ApplicationForm.class);
-        Model model = mock(Model.class);
-        BindingResult bindingResult = mock(BindingResult.class);
-        AbstractFormInputViewModel formInputViewModel = mock(AbstractFormInputViewModel.class);
-        FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
-        when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
+        form = mock(ApplicationForm.class);
+        model = mock(Model.class);
+        bindingResult = mock(BindingResult.class);
+        formInputViewModel = mock(AbstractFormInputViewModel.class);
+        financeModelManager = mock(FinanceModelManager.class);
+
+        when(sectionService.getCompleted(section.getApplication().getId(),
+                section.getCurrentApplicant().getOrganisation().getId())).thenReturn(Collections.emptyList());
         when(formInputViewModelGenerator.fromSection(section, costSection, form, false)).thenReturn(asList(formInputViewModel));
-        when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
-        JesYourProjectCostsSectionViewModel viewModel = (JesYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model, bindingResult, true, Optional.empty(), true);
+    }
 
-        assertThat(viewModel.isSection(), equalTo(true));
-        assertThat(viewModel.isComplete(), equalTo(false));
-        assertThat(viewModel.getFinanceUploadFormInput(), equalTo(fileUpload));
-        assertThat(viewModel.getFinanceUploadQuestion(), equalTo(costQuestion));
+    @Test
+    public void populate_businessOrgType() {
+        organisation.setOrganisationType(BUSINESS.getId());
+        section.getCompetition().setApplicationFinanceType(STANDARD_WITH_VAT);
 
-        verify(financeModelManager).addOrganisationFinanceDetails(model, section.getApplication().getId(), asList(costQuestion), section.getCurrentUser().getId(), form, section.getCurrentApplicant().getOrganisation().getId());
+        when(financeViewHandlerProvider.getFinanceModelManager(competition, BUSINESS.getId())).thenReturn(financeModelManager);
+        when(messageSource.getMessage("ifs.question.yourProjectCosts.description", null, Locale.getDefault()))
+                .thenReturn("Your project costs question description");
+
+        StandardYourProjectCostsSectionViewModel viewModel =
+                (StandardYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form,
+                        model, bindingResult, false, Optional.empty(), false);
+
+        assertThat(viewModel.isSection()).isTrue();
+        assertThat(viewModel.isComplete()).isFalse();
+        assertThat(viewModel.getDefaultProjectCostSections().size()).isEqualTo(1);
+        assertThat(viewModel.isIncludeVat()).isTrue();
+        DefaultProjectCostSection costSectionViewModel = viewModel.getDefaultProjectCostSections().get(0);
+        assertThat(costSectionViewModel.getApplicantResource()).isEqualTo(section);
+        assertThat(costSectionViewModel.getApplicantSection()).isEqualTo(costSection);
+        assertThat(costSectionViewModel.getCostViews()).isEqualTo(asList(formInputViewModel));
+        assertThat(viewModel.getQuestion().getDescription()).isEqualTo("Your project costs question description");
+
+        verify(messageSource, only()).getMessage("ifs.question.yourProjectCosts.description", null,
+                Locale.getDefault());
+        verify(financeModelManager).addOrganisationFinanceDetails(model, section.getApplication().getId(),
+                asList(costQuestion), section.getCurrentUser().getId(), form,
+                section.getCurrentApplicant().getOrganisation().getId());
+    }
+
+    @Test
+    public void populate_collaborativeCompetition() {
+        competition.setCollaborationLevel(COLLABORATIVE);
+        organisation.setOrganisationType(BUSINESS.getId());
+        section.getCompetition().setApplicationFinanceType(STANDARD_WITH_VAT);
+
+        when(financeViewHandlerProvider.getFinanceModelManager(competition, BUSINESS.getId())).thenReturn(financeModelManager);
+        when(messageSource.getMessage("ifs.question.yourProjectCosts.collaborative.description", null,
+                Locale.getDefault()))
+                .thenReturn("Your project costs question collaborative description");
+
+        StandardYourProjectCostsSectionViewModel viewModel =
+                (StandardYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form,
+                        model, bindingResult, false, Optional.empty(), false);
+
+        assertThat(viewModel.getQuestion().getDescription()).isEqualTo("Your project costs question " +
+                "collaborative description");
+
+        verify(messageSource, only()).getMessage("ifs.question.yourProjectCosts.collaborative.description", null,
+                Locale.getDefault());
+    }
+
+    @Test
+    public void populate_researchOrgType() {
+        organisation.setOrganisationType(RESEARCH.getId());
+
+        FormInputResource fileUpload = newFormInputResource().withType(FormInputType.FINANCE_UPLOAD).build();
+
+        costApplicantQuestions.get(0).setApplicantFormInputs(newApplicantFormInputResource()
+                .withFormInput(fileUpload)
+                .build(1)
+        );
+
+        when(financeViewHandlerProvider.getFinanceModelManager(competition, RESEARCH.getId())).thenReturn(financeModelManager);
+        when(messageSource.getMessage("ifs.question.yourProjectCosts.description", null, Locale.getDefault()))
+                .thenReturn("Your project costs question description");
+
+        JesYourProjectCostsSectionViewModel viewModel =
+                (JesYourProjectCostsSectionViewModel) yourProjectCostsSectionPopulator.populate(section, form, model,
+                        bindingResult, true, Optional.empty(), true);
+
+        assertThat(viewModel.isSection()).isTrue();
+        assertThat(viewModel.isComplete()).isFalse();
+        assertThat(viewModel.getFinanceUploadFormInput()).isEqualTo(fileUpload);
+        assertThat(viewModel.getFinanceUploadQuestion()).isEqualTo(costQuestion);
+        assertThat(viewModel.getQuestion().getDescription()).isEqualTo("Your project costs question description");
+
+        verify(messageSource, only()).getMessage("ifs.question.yourProjectCosts.description", null,
+                Locale.getDefault());
+        verify(financeModelManager).addOrganisationFinanceDetails(model, section.getApplication().getId(),
+                asList(costQuestion), section.getCurrentUser().getId(), form,
+                section.getCurrentApplicant().getOrganisation().getId());
     }
 }

@@ -29,7 +29,9 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
     public ServiceResult<Void> save(CompetitionSetupFinanceResource compSetupFinanceRes) {
         return getCompetition(compSetupFinanceRes.getCompetitionId()).andOnSuccess(competition -> {
             competition.setApplicationFinanceType(compSetupFinanceRes.getApplicationFinanceType());
+            competition.setIncludeJesForm(compSetupFinanceRes.getIncludeJesForm());
             competition.setIncludeProjectGrowthTable(compSetupFinanceRes.getIncludeGrowthTable());
+            competition.setIncludeYourOrganisationSection(compSetupFinanceRes.getIncludeYourOrganisationSection());
             return isNoFinances(competition) ? serviceSuccess() : activateFormInputs(compSetupFinanceRes);
         });
     }
@@ -70,7 +72,9 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
         CompetitionSetupFinanceResource competitionSetupFinanceResource = new CompetitionSetupFinanceResource();
         competitionSetupFinanceResource.setCompetitionId(competition.getId());
         competitionSetupFinanceResource.setApplicationFinanceType(competition.getApplicationFinanceType());
+        competitionSetupFinanceResource.setIncludeJesForm(competition.getIncludeJesForm());
         competitionSetupFinanceResource.setIncludeGrowthTable(competition.getIncludeProjectGrowthTable());
+        competitionSetupFinanceResource.setIncludeYourOrganisationSection(competition.getIncludeYourOrganisationSection());
         return competitionSetupFinanceResource;
     }
 }

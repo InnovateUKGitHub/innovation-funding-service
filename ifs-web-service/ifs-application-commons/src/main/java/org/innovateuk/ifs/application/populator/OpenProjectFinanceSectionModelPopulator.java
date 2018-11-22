@@ -81,6 +81,6 @@ public class OpenProjectFinanceSectionModelPopulator extends BaseOpenFinanceSect
         List<ApplicantQuestionResource> costsQuestions = applicantSection.questionsWithType(QuestionType.COST);
 
         financeSectionViewModel.setFinanceOverviewViewModel(projectFinanceOverviewModelManager.getFinanceDetailsViewModel(applicantSection.getCompetition().getId(), projectResource.getId()));
-        financeSectionViewModel.setFinanceViewModel(financeViewHandlerProvider.getProjectFinanceModelManager(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType()).getFinanceViewModel(projectResource.getId(), costsQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()), applicantSection.getCurrentApplicant().getProcessRole().getUser(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
+        financeSectionViewModel.setFinanceViewModel(financeViewHandlerProvider.getProjectFinanceModelManager(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType()).getFinanceViewModel(projectResource.getId(), costsQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()), applicantSection.getCurrentApplicant().getProcessRole().getUser(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
     }
 }

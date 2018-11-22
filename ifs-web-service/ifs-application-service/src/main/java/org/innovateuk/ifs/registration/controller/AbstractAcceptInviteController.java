@@ -1,17 +1,12 @@
 package org.innovateuk.ifs.registration.controller;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 
 public class AbstractAcceptInviteController {
@@ -50,24 +45,4 @@ public class AbstractAcceptInviteController {
         }
         return true;
     }
-
-    /**
-     * Get the most import address of the organisation. If there is a operating address, use that otherwise just get the first one.
-     */
-    protected final AddressResource getOrganisationAddress(OrganisationResource organisation) {
-        AddressResource address = null;
-        if (organisation.getAddresses().size() == 1) {
-            address = organisation.getAddresses().get(0).getAddress();
-        } else if (!organisation.getAddresses().isEmpty()) {
-            Optional<OrganisationAddressResource> addressOptional = organisation.getAddresses().stream().filter(a -> OrganisationAddressType.OPERATING.equals(OrganisationAddressType.valueOf(a.getAddressType().getName()))).findAny();
-            if (addressOptional.isPresent()) {
-                address = addressOptional.get().getAddress();
-            } else {
-                address = organisation.getAddresses().get(0).getAddress();
-            }
-        }
-        return address;
-    }
-
-
 }

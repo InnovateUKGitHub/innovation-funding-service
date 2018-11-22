@@ -121,7 +121,6 @@ ${PS_EF_APPLICATION_PROJECT}    ${project_ids["${PS_EF_APPLICATION_TITLE}"]}
 ${PS_EF_APPLICATION_LEAD_ORGANISATION_ID}    ${Ntag_Id}
 ${PS_EF_APPLICATION_LEAD_ORGANISATION_NAME}  ${Ntag_Name}
 ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}      steven.hicks@ntag.example.com
-${PS_EF_APPLICATION_PM_EMAIL}                steven.hicks@ntag.example.com
 ${PS_EF_APPLICATION_PARTNER_EMAIL}           robert.perez@jetpulse.example.com
 ${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
 
@@ -220,17 +219,17 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user              &{internal_finance_credentials}
     the user navigates to the page          ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
-    the user moves focus to the element     css = label[for = "app-row-1"]
+    Set Focus To Element                    css = label[for = "app-row-1"]
     the user selects the checkbox           app-row-1
-    the user moves focus to the element     css = label[for = "app-row-2"]
+    Set Focus To Element                    css = label[for = "app-row-2"]
     the user selects the checkbox           app-row-2
     the user clicks the button/link         jQuery = button:contains("Successful")
     the user should see the element         jQuery = td:contains("Successful")
     the user clicks the button/link         jQuery = a:contains("Competition")
     the user clicks the button/link         jQuery = a:contains("Manage funding notifications")
-    the user moves focus to the element     css = label[for = "app-row-103"]
+    Set Focus To Element                    css = label[for = "app-row-103"]
     the user selects the checkbox           app-row-103
-    the user moves focus to the element     css = label[for = "app-row-104"]
+    Set Focus To Element                    css = label[for = "app-row-104"]
     the user selects the checkbox           app-row-104
     the user clicks the button/link         jQuery = .govuk-button:contains("Write and send email")
     the internal sends the descision notification email to all applicants  EmailTextBody
@@ -243,9 +242,12 @@ lead partner navigates to project and fills project details
 project lead submits project address
 #Used in 12__ATI_compCreationToSubmission
     [Arguments]  ${project_id}
-    the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-address
-    the user selects the radio button  addressType  OPERATING
-    the user clicks the button/link    css = #main-content > form > button  #Save project address
+    the user navigates to the page                ${server}/project-setup/project/${project_id}/details/project-address
+    the user selects the radio button             addressType  ADD_NEW
+    the user enters text to a text field          id = addressForm.postcodeInput   BS14NT
+    the user clicks the button/link               jQuery = .govuk-button:contains("Find UK address")
+    the user clicks the button/link               jQuery = button:contains("Use selected address")
+    the user clicks the button/link               css = #main-content > form > button  #Save project address
 
 project lead submits project details
     [Arguments]  ${project_id}
@@ -335,7 +337,7 @@ project finance approves Viability for
     the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
     the user selects the checkbox        costs-reviewed
     the user selects the checkbox        project-viable
-    the user moves focus to the element  link = Contact us
+    Set Focus To Element                 link = Contact us
     the user selects the option from the drop-down menu  Green  id = rag-rating
     the user clicks the button/link      css = #confirm-button
     the user clicks the button/link      jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")

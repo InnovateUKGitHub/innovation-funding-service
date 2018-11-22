@@ -87,9 +87,9 @@ Large pdfs not allowed for either document
 Non pdf files not allowed for either document
     [Documentation]    INFUND-3011
     When the user uploads to the collaboration agreement question    ${text_file}
-    Then the user should see an error                                ${wrong_filetype_validation_error}
+    Then the user should see a field error                           ${wrong_filetype_validation_error}
     When the user uploads to the exploitation plan question          ${text_file}
-    Then the user should see an error                                ${wrong_filetype_validation_error}
+    Then the user should see a field error                           ${wrong_filetype_validation_error}
     And the user should not see the text in the page                 ${text_file}
 
 
@@ -385,7 +385,7 @@ After rejection, non-lead partner cannot view both documents
     [Tags]
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user moves focus to the element  css = ul li:nth-child(2)
+    Then Set Focus To Element              css = ul li:nth-child(2)
     And the user should see the element    css = #main-content ul > li:nth-child(2) .msg-progress
     And the user clicks the button/link    link = Other documents
     And the user clicks the button/link    link = ${valid_pdf}
@@ -429,14 +429,14 @@ After rejection, non-lead partner cannot upload either document
 After rejection, non pdf files not allowed for either document
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page     ${project_in_setup_page}
-    And the user clicks the button/link      link = Other documents
+    [Setup]    log in as a different user                     ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
+    Given the user navigates to the page                      ${project_in_setup_page}
+    And the user clicks the button/link                       link = Other documents
     When the user uploads to the collaboration agreement question    ${text_file}
-    Then the user should see an error        ${wrong_filetype_validation_error}
+    Then the user should see a field error                     ${wrong_filetype_validation_error}
     When the user uploads to the exploitation plan question    ${text_file}
-    Then the user should see an error        ${wrong_filetype_validation_error}
-    And the user should not see the text in the page    ${text_file}
+    Then the user should see a field error                     ${wrong_filetype_validation_error}
+    And the user should not see the text in the page           ${text_file}
 
 After rejection, large pdfs not allowed for either document
     [Documentation]    INFUND-3011, INFUND-7342
@@ -525,7 +525,7 @@ Project finance can see zero funding for partner in bank details
     And log in as a different user                      &{collaborator1_credentials}
     And the user navigates to the page                  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-checks/eligibility
     Then the user should see the text in the element    css = .table-overview tr:nth-child(1) td:nth-child(2)    £200,903    # Total costs
-    And the user should see the text in the element     css = .table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
+    And the user should see the text in the element     css = .table-overview tr:nth-child(1) td:nth-child(3)     0%          # Funding level (%)
     And the user should see the text in the element     css = .table-overview tr:nth-child(1) td:nth-child(4)     0         # Funding sought
     When log in as a different user                     &{internal_finance_credentials}
     And the user navigates to the page                  ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details

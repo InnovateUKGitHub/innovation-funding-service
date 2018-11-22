@@ -3,10 +3,7 @@ package org.innovateuk.ifs.competitionsetup.application.sectionupdater;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceRestService;
 import org.innovateuk.ifs.competitionsetup.application.form.FinanceForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.FINANCES;
 
@@ -54,13 +52,20 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
         FinanceForm form = (FinanceForm) competitionSetupForm;
 
         if (competition.isFinanceType()) {
+            // TODO IFS-4143 this can be moved within the check for form.getApplicationFinanceType() != NO_FINANCES
+            // TODO ...any answer to the funding rules question will then be cleared when NO_FINANCES is selected
             updateFundingRulesQuestion(form.getFundingRules(), competition.getId());
         }
 
         CompetitionSetupFinanceResource competitionSetupFinanceResource = new CompetitionSetupFinanceResource();
         competitionSetupFinanceResource.setCompetitionId(competition.getId());
         competitionSetupFinanceResource.setApplicationFinanceType(form.getApplicationFinanceType());
-        competitionSetupFinanceResource.setIncludeGrowthTable(form.getIncludeGrowthTable());
+
+        if (form.getApplicationFinanceType() != NO_FINANCES) {
+            competitionSetupFinanceResource.setIncludeGrowthTable(form.getIncludeGrowthTable());
+            competitionSetupFinanceResource.setIncludeYourOrganisationSection(form.getIncludeYourOrganisationSection());
+            competitionSetupFinanceResource.setIncludeJesForm(form.getIncludeJesForm());
+        }
 
         return competitionSetupFinanceRestService.save(competitionSetupFinanceResource).toServiceResult();
     }

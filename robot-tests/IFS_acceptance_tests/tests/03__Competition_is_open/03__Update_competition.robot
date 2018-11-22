@@ -306,7 +306,7 @@ the user moves the competition back again
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
     the user clicks the button/link    jQuery = button:contains("Done")   # this action  is marking appication section complete
     the user clicks the button/link    link = Competition setup
-    the user clicks the button/link    link = Complete
+    the user clicks the button/link    link = Complete setup
     the user clicks the button/link    css = button[type="submit"]
     the user closes the browser
 
@@ -360,11 +360,11 @@ the user resets the milestone data
 
 if textarea is empty the proper validation messages are shown
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the text in the element  css = .editor  Funding rules for this competition are now entered.
-    run keyword if  '${status}'=='FAIL'  Run keywords  the user moves focus to the element  css = .editor
-    ...                                           AND  the user moves focus to the element  css = .govuk-button[type="submit"]
-    ...                                           AND  the user should see a field error  This field cannot be left blank
+    run keyword if  '${status}'=='FAIL'  Run keywords  Set Focus To Element     css = .editor
+    ...                                           AND  Set Focus To Element     css = .govuk-button[type="submit"]
+    ...                                           AND  the user should see a field error  ${empty_field_warning_message}
     ...                                           AND  the user clicks the button/link  css = .govuk-button[type="submit"]
-    ...                                           AND  the user should see a field and summary error  This field cannot be left blank
+    ...                                           AND  the user should see a field and summary error  ${empty_field_warning_message}
     ...                                           AND  the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
 
 the user resets the milestone data for milestone

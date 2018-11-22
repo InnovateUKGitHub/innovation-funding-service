@@ -140,7 +140,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
                 FinanceRowType costType = costTypeForQuestion(question);
                 if (costType != null) {
                     FinanceRowCostCategory category = applicationFinanceResource.getFinanceOrganisationDetails(costType);
-                    FinanceRowItem costItem = financeViewHandlerProvider.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, userId, question.getId());
+                    FinanceRowItem costItem = financeViewHandlerProvider.getFinanceFormHandler(competition, organisationType).addCostWithoutPersisting(applicationId, userId, question.getId());
                     category.addCost(costItem);
                 }
             }

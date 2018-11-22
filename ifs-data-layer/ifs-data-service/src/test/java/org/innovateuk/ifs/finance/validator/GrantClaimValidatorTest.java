@@ -79,8 +79,7 @@ public class GrantClaimValidatorTest {
 
 		validator.validate(claim, bindingResult);
 
-		verifyError("validation.field.percentage.max.value.or.lower", 30);
-
+		verifyError("validation.finance.grant.claim.percentage.max", 30);
 	}
 
 	@Test

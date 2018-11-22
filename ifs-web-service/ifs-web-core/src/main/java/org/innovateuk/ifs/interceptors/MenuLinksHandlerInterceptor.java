@@ -24,12 +24,12 @@ import static org.innovateuk.ifs.user.resource.Role.*;
  */
 public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
 
-    public static final String USER_DASHBOARD_LINK="userDashboardLink";
-    public static final String USER_LOGOUT_LINK="logoutUrl";
-    public static final String USER_PROFILE_LINK="userProfileLink";
-    public static final String ASSESSOR_PROFILE_URL="/assessment/profile/details";
-    public static final String USER_PROFILE_URL="/profile/view";
-    public static final String SHOW_MANAGE_USERS_LINK_ATTR="showManageUsersLink";
+    public static final String USER_DASHBOARD_LINK = "userDashboardLink";
+    public static final String USER_LOGOUT_LINK = "logoutUrl";
+    public static final String USER_PROFILE_LINK = "userProfileLink";
+    public static final String ASSESSOR_PROFILE_URL = "/assessment/profile/details";
+    public static final String USER_PROFILE_URL = "/profile/view";
+    public static final String SHOW_MANAGE_USERS_LINK_ATTR = "showManageUsersLink";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -42,7 +42,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-        if(modelAndView!=null && !(modelAndView.getView() instanceof RedirectView || modelAndView.getViewName().startsWith("redirect:") )) {
+        if (modelAndView != null && !(modelAndView.getView() instanceof RedirectView || modelAndView.getViewName().startsWith("redirect:"))) {
             addUserDashboardLink(request, modelAndView);
             addUserProfileLink(request, modelAndView);
             addLogoutLink(modelAndView, logoutUrl);
@@ -56,10 +56,40 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void addUserProfileLink(HttpServletRequest request, ModelAndView modelAndView) {
-        String profileUrl = getUserProfileUrl(request);
-        modelAndView.getModelMap().addAttribute(USER_PROFILE_LINK, profileUrl);
+        Optional<String> profileUrl = getUserProfileUrl(request);
+        profileUrl.ifPresent(url -> modelAndView.getModelMap().addAttribute(USER_PROFILE_LINK, url));
     }
 
+    private Optional<String> getUserProfileUrl(HttpServletRequest request) {
+        UserAuthentication authentication = (UserAuthentication) userAuthenticationService.getAuthentication(request);
+        if (authentication != null) {
+            Optional<SimpleGrantedAuthority> simpleGrantedAuthority = (Optional<SimpleGrantedAuthority>) authentication.getAuthorities().stream().findFirst();
+            if (simpleGrantedAuthority.isPresent()) {
+                UserResource user = authentication.getDetails();
+
+                //multiple roles
+                if (user.hasMoreThanOneRoleOf(ASSESSOR, APPLICANT, STAKEHOLDER)) {
+                    String role = cookieUtil.getCookieValue(request, "role");
+                    if (!role.isEmpty()) {
+                        if (ASSESSOR.getName().equals(role)) {
+                            return Optional.of(ASSESSOR_PROFILE_URL);
+                        } else if (APPLICANT.getName().equals(role)) {
+                            return Optional.of(USER_PROFILE_URL);
+                        } else if (STAKEHOLDER.getName().equals(role)) {
+                            return Optional.empty();
+                        }
+                    }
+                }
+                if (user.hasRole(ASSESSOR)) {
+                    return Optional.of(ASSESSOR_PROFILE_URL);
+                }
+                if (user.hasRole(APPLICANT)) {
+                    return Optional.of(USER_PROFILE_URL);
+                }
+            }
+        }
+        return Optional.empty();
+    }
     private void addShowManageUsersAttribute(HttpServletRequest request, ModelAndView modelAndView) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasRole(IFS_ADMINISTRATOR));
@@ -74,14 +104,14 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
      */
     private String getUserDashboardUrl(HttpServletRequest request) {
         UserAuthentication authentication = (UserAuthentication) userAuthenticationService.getAuthentication(request);
-        if(authentication!=null) {
-            Optional<SimpleGrantedAuthority> simpleGrantedAuthority = (Optional<SimpleGrantedAuthority>)authentication.getAuthorities().stream().findFirst();
-            if(simpleGrantedAuthority.isPresent()) {
+        if (authentication != null) {
+            Optional<SimpleGrantedAuthority> simpleGrantedAuthority = (Optional<SimpleGrantedAuthority>) authentication.getAuthorities().stream().findFirst();
+            if (simpleGrantedAuthority.isPresent()) {
                 UserResource user = authentication.getDetails();
                 String role = cookieUtil.getCookieValue(request, "role");
                 if (!role.isEmpty()) {
                     Optional<Role> r = user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst();
-                    if(r.isPresent()) {
+                    if (r.isPresent()) {
                         String url = r.get().getUrl();
                         if (url != null) {
                             return "/" + url;
@@ -92,35 +122,5 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
             }
         }
         return "/";
-    }
-
-    private String getUserProfileUrl(HttpServletRequest request) {
-        UserAuthentication authentication = (UserAuthentication) userAuthenticationService.getAuthentication(request);
-        if(authentication!=null) {
-            Optional<SimpleGrantedAuthority> simpleGrantedAuthority = (Optional<SimpleGrantedAuthority>)authentication.getAuthorities().stream().findFirst();
-            if(simpleGrantedAuthority.isPresent()) {
-                UserResource user = authentication.getDetails();
-
-                //multiple roles
-                if (user.hasRoles(ASSESSOR, APPLICANT)) {
-                  String role = cookieUtil.getCookieValue(request, "role");
-                  if (!role.isEmpty()) {
-                      if("assessor".equals(role)) {
-                        return ASSESSOR_PROFILE_URL;
-                      }
-                      if("applicant".equals(role)) {
-                        return USER_PROFILE_URL;
-                      }
-                  }
-                }
-                if (user.hasRole(ASSESSOR)) {
-                  return ASSESSOR_PROFILE_URL;
-                }
-                if (user.hasRole(APPLICANT)) {
-                  return USER_PROFILE_URL;
-                }
-            }
-        }
-        return "";
     }
 }
