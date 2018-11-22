@@ -45,7 +45,7 @@ public class GrantResourceBuilderTest {
             CONTACT_TELEPHONE_NUMBER, "01234 567890",
             GRANT_AGREEMENT_NUMBER, "111222",
             PIC, "998592400",
-            ACTION_TYPE, "(CSA) Coordination and support action",
+            ACTION_TYPE, "CSA",
             PROJECT_NAME, "An interesting project 1",
             PROJECT_START_DATE, "01/12/2018",
             PROJECT_END_DATE, "28/02/2021",
@@ -62,7 +62,7 @@ public class GrantResourceBuilderTest {
             CONTACT_TELEPHONE_NUMBER, "09876 543210",
             GRANT_AGREEMENT_NUMBER, "333444",
             PIC, "999763772",
-            ACTION_TYPE, "(SME-1) SME Instrument phase 1",
+            ACTION_TYPE, "SME-1",
             PROJECT_NAME, "An interesting project 2",
             PROJECT_START_DATE, "30/01/2018",
             PROJECT_END_DATE, "01/04/2022",
@@ -103,18 +103,17 @@ public class GrantResourceBuilderTest {
 
         List<Map<CsvHeader, String>> data = asList(
                 createRow(CsvHeader.ORGANISATION_TYPE, "Invalid organisation type"),
-                createRow(CsvHeader.ACTION_TYPE, "Invalid action type format"),
-                createRow(CsvHeader.ACTION_TYPE, "(UNK) nown action type"),
+                createRow(CsvHeader.ACTION_TYPE, "UNK"),
                 createRow(CsvHeader.PROJECT_EU_FUNDING_CONTRIBUTION, "Invalid number"),
                 createRow(CsvHeader.PROJECT_START_DATE, "Invalid start date"),
                 createRow(CsvHeader.PROJECT_END_DATE, "Invalid end date"));
 
         EuActionType csaActionType = new EuActionType();
         EuActionTypeResource csaActionTypeResource = newEuActionTypeResource().withName("CSA").build();
-        when(euActionTypeRepositoryMock.findOneByName("CSA")).thenReturn(Optional.of(csaActionType));
+        when(euActionTypeRepositoryMock.findOneByNameIgnoreCase("CSA")).thenReturn(Optional.of(csaActionType));
         when(euActionTypeMapperMock.mapToResource(csaActionType)).thenReturn(csaActionTypeResource);
 
-        when(euActionTypeRepositoryMock.findOneByName("UNK")).thenReturn(Optional.empty());
+        when(euActionTypeRepositoryMock.findOneByNameIgnoreCase("UNK")).thenReturn(Optional.empty());
 
         ServiceResult<List<ServiceResult<EuGrantResource>>> results = builder.convertDataRowsToEuGrantResources(data);
 
@@ -128,14 +127,13 @@ public class GrantResourceBuilderTest {
 
         assertThat(errors).containsExactly(
                 new Error("Unable to find an Organisation Type with name \"Invalid organisation type\"", BAD_REQUEST),
-                new Error("Unable to extract action type name from string \"Invalid action type format\"", BAD_REQUEST),
-                new Error("Unable to find an Action Type with name \"UNK\"", BAD_REQUEST),
+                new Error("Unable to find an Action Type with code \"UNK\"", BAD_REQUEST),
                 new Error("Failed to convert string \"Invalid number\" to number", BAD_REQUEST),
                 new Error("Failed to convert string \"Invalid start date\" to date", BAD_REQUEST),
                 new Error("Failed to convert string \"Invalid end date\" to date", BAD_REQUEST));
 
-        verify(euActionTypeRepositoryMock, atLeastOnce()).findOneByName("CSA");
-        verify(euActionTypeRepositoryMock).findOneByName("UNK");
+        verify(euActionTypeRepositoryMock, atLeastOnce()).findOneByNameIgnoreCase("CSA");
+        verify(euActionTypeRepositoryMock).findOneByNameIgnoreCase("UNK");
     }
 
     private Map<CsvHeader, String> createRow(CsvHeader overridingHeader, String overridingValue) {
@@ -189,8 +187,8 @@ public class GrantResourceBuilderTest {
         EuActionTypeResource csaActionTypeResource = newEuActionTypeResource().withName("CSA").build();
         EuActionTypeResource smeActionTypeResource = newEuActionTypeResource().withName("SME-1").build();
 
-        when(euActionTypeRepositoryMock.findOneByName("CSA")).thenReturn(Optional.of(csaActionType));
-        when(euActionTypeRepositoryMock.findOneByName("SME-1")).thenReturn(Optional.of(smeActionType));
+        when(euActionTypeRepositoryMock.findOneByNameIgnoreCase("CSA")).thenReturn(Optional.of(csaActionType));
+        when(euActionTypeRepositoryMock.findOneByNameIgnoreCase("SME-1")).thenReturn(Optional.of(smeActionType));
         when(euActionTypeMapperMock.mapToResource(csaActionType)).thenReturn(csaActionTypeResource);
         when(euActionTypeMapperMock.mapToResource(smeActionType)).thenReturn(smeActionTypeResource);
 
@@ -198,8 +196,8 @@ public class GrantResourceBuilderTest {
 
         assertThat(results.isSuccess()).isTrue();
 
-        verify(euActionTypeRepositoryMock).findOneByName("CSA");
-        verify(euActionTypeRepositoryMock).findOneByName("SME-1");
+        verify(euActionTypeRepositoryMock).findOneByNameIgnoreCase("CSA");
+        verify(euActionTypeRepositoryMock).findOneByNameIgnoreCase("SME-1");
         verify(euActionTypeMapperMock).mapToResource(csaActionType);
         verify(euActionTypeMapperMock).mapToResource(smeActionType);
 

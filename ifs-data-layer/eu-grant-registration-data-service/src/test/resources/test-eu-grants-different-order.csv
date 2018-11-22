@@ -1,3 +1,3 @@
 Organisation name,Registration number (Companies House),Organisation type,Full name,Job title,Participant identification code (PIC),Email,Telephone,Grant agreement number,Type of action,Project name,Project start date,Project end date,EU funding contribution for above project (EUR),Is your organisation the project co-ordinator on this project?
-The University of Sheffield,,Research,Bob Bobbins,Project manager,998592400,bob.bobbins@example.com,01234 567890,111222,(CSA) Coordination and support action,An interesting project 1,01/12/2018,28/02/2021,132470.07,BENEFICIARY
-Empire Ltd,123456789,Business,Steve Smith,Project administrator,999763772,steve.smith@example.com,09876 543210,333444,(SME-1) SME Instrument phase 1,An interesting project 2,30/01/2018,01/04/2022,437766.84,COORDINATOR
+The University of Sheffield,,Research,Bob Bobbins,Project manager,998592400,bob.bobbins@example.com,01234 567890,111222,CSA,An interesting project 1,01/12/2018,28/02/2021,132470.07,BENEFICIARY
+Empire Ltd,123456789,Business,Steve Smith,Project administrator,999763772,steve.smith@example.com,09876 543210,333444,SME-1,An interesting project 2,30/01/2018,01/04/2022,437766.84,COORDINATOR

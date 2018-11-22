@@ -16,8 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -33,12 +31,12 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class GrantResourceBuilder {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d/M/yyyy");
-    private static final Pattern ACTION_TYPE_NAME_PATTERN = Pattern.compile("^\\((.+)\\).*$");
 
     private EuActionTypeRepository actionTypeRepository;
     private EuActionTypeMapper actionTypeMapper;
 
-    GrantResourceBuilder(@Autowired EuActionTypeRepository actionTypeRepository, @Autowired EuActionTypeMapper actionTypeMapper) {
+    @Autowired
+    GrantResourceBuilder(EuActionTypeRepository actionTypeRepository, EuActionTypeMapper actionTypeMapper) {
         this.actionTypeRepository = actionTypeRepository;
         this.actionTypeMapper = actionTypeMapper;
     }
@@ -136,23 +134,13 @@ public class GrantResourceBuilder {
 
     private ServiceResult<EuActionTypeResource> getActionType(Map<CsvHeader, String> dataRow) {
 
-        String actionTypeString = dataRow.get(ACTION_TYPE);
+        String actionTypeCode = dataRow.get(ACTION_TYPE);
 
-        Matcher matcher = ACTION_TYPE_NAME_PATTERN.matcher(actionTypeString);
-
-        if (!matcher.find()) {
-            Error extractionError = new Error("Unable to extract action type name from string \"" +
-                    actionTypeString + "\"", BAD_REQUEST);
-            return serviceFailure(extractionError);
-        }
-
-        String actionTypeName = matcher.group(1);
-
-        Optional<EuActionType> matchingActionType = actionTypeRepository.findOneByName(actionTypeName);
+        Optional<EuActionType> matchingActionType = actionTypeRepository.findOneByNameIgnoreCase(actionTypeCode);
 
         return matchingActionType.map(type -> serviceSuccess(actionTypeMapper.mapToResource(type))).
                orElseGet(() -> serviceFailure(new Error("Unable to find an Action Type " +
-                       "with name \"" + actionTypeName+ "\"", BAD_REQUEST)));
+                       "with code \"" + actionTypeCode + "\"", BAD_REQUEST)));
     }
 
     private ServiceResult<EuContactResource> createContact(Map<CsvHeader, String> dataRow) {

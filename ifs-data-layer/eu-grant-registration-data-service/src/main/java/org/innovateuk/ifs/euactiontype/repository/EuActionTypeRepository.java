@@ -10,5 +10,5 @@ public interface EuActionTypeRepository extends CrudRepository<EuActionType, Lon
 
     List<EuActionType> findAllByOrderByPriorityAsc();
 
-    Optional<EuActionType> findOneByName(String name);
+    Optional<EuActionType> findOneByNameIgnoreCase(String name);
 }

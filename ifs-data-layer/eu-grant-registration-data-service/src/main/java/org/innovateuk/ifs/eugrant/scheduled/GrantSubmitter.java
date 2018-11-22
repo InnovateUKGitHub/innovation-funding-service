@@ -14,7 +14,8 @@ public class GrantSubmitter {
 
     private EuGrantService grantService;
 
-    GrantSubmitter(@Autowired EuGrantService grantService) {
+    @Autowired
+    GrantSubmitter(EuGrantService grantService) {
         this.grantService = grantService;
     }
 

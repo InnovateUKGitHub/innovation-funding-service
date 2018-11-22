@@ -45,12 +45,13 @@ public class ScheduledEuGrantFileImporter {
     private GrantsImportResultHandler grantsImportResultHandler;
     private WebUserSecuritySetter webUserSecuritySetter;
 
-    ScheduledEuGrantFileImporter(@Autowired GrantsFileHandler grantsFileHandler,
-                                 @Autowired GrantsRecordExtractor grantsRecordsExtractor,
-                                 @Autowired GrantSubmitter grantSubmitter,
-                                 @Autowired GrantResultsFileGenerator resultsFileGenerator,
-                                 @Autowired GrantsImportResultHandler grantsImportResultHandler,
-                                 @Autowired WebUserSecuritySetter webUserSecuritySetter) {
+    @Autowired
+    ScheduledEuGrantFileImporter(GrantsFileHandler grantsFileHandler,
+                                 GrantsRecordExtractor grantsRecordsExtractor,
+                                 GrantSubmitter grantSubmitter,
+                                 GrantResultsFileGenerator resultsFileGenerator,
+                                 GrantsImportResultHandler grantsImportResultHandler,
+                                 WebUserSecuritySetter webUserSecuritySetter) {
 
         this.grantsFileHandler = grantsFileHandler;
         this.grantsRecordsExtractor = grantsRecordsExtractor;

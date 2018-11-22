@@ -84,7 +84,7 @@ public class GrantsRecordExtractorTest {
                         COMPANIES_HOUSE_REGISTRATION_NUMBER, "", CONTACT_FULL_NAME, "Bob Bobbins",
                         CONTACT_JOB_TITLE, "Project manager", CONTACT_EMAIL_ADDRESS, "bob.bobbins@example.com",
                         CONTACT_TELEPHONE_NUMBER, "01234 567890", GRANT_AGREEMENT_NUMBER, "111222",
-                        PIC, "998592400", ACTION_TYPE, "(CSA) Coordination and support action",
+                        PIC, "998592400", ACTION_TYPE, "CSA",
                         PROJECT_NAME, "An interesting project 1", PROJECT_START_DATE, "01/12/2018",
                         PROJECT_END_DATE, "28/02/2021", PROJECT_EU_FUNDING_CONTRIBUTION, "132470.07",
                         PROJECT_COORDINATOR, "BENEFICIARY"),
@@ -93,7 +93,7 @@ public class GrantsRecordExtractorTest {
                         COMPANIES_HOUSE_REGISTRATION_NUMBER, "123456789", CONTACT_FULL_NAME, "Steve Smith",
                         CONTACT_JOB_TITLE, "Project administrator", CONTACT_EMAIL_ADDRESS, "steve.smith@example.com",
                         CONTACT_TELEPHONE_NUMBER, "09876 543210", GRANT_AGREEMENT_NUMBER, "333444",
-                        PIC, "999763772", ACTION_TYPE, "(SME-1) SME Instrument phase 1",
+                        PIC, "999763772", ACTION_TYPE, "SME-1",
                         PROJECT_NAME, "An interesting project 2", PROJECT_START_DATE, "30/01/2018",
                         PROJECT_END_DATE, "01/04/2022", PROJECT_EU_FUNDING_CONTRIBUTION, "437766.84",
                         PROJECT_COORDINATOR, "COORDINATOR")
