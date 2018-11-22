@@ -34,7 +34,7 @@
             <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED'}">
                 <p class="govuk-heading-s govuk-!-margin-top-0">You have rejected this document. Please contact the Project Manager to explain your decision.</p>
             </div>
-             
+
             <th:block th:unless="${model.fileDetails == null}">
                 <h2 class="govuk-heading-m">File uploaded</h2>
                 <p class="govuk-body uploaded-file">
@@ -53,7 +53,6 @@
             <th:block th:if="${model.status.name() == 'SUBMITTED'}">
 
                 <h2 class="govuk-heading-m govuk-!-margin-top-6">Review document</h2>
-                <p class="govuk-body">Please review this document and submit a response to the Project Manager.</p>
                  <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
                         <legend id="radio-review" class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -106,7 +105,7 @@
                                    data-switches-button-status="#submit-button"
                             ></textarea>
                         </div>
-                    </div> 
+                    </div>
                 </div>
 
                 <button class="govuk-button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
