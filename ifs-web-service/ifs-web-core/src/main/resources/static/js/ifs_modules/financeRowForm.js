@@ -72,15 +72,19 @@ IFS.core.financeRowForm = (function () {
       // transforms unpersisted rows to persisted rows by updating the name attribute
       if (name.indexOf('[empty]') !== -1) {
         var path = IFS.core.financeRowForm.getPathToEmptyRow(name)
+        var row = false
         jQuery('[name^="' + path + '"]').each(function () {
           var input = jQuery(this)
           if (input.attr('name').endsWith('costId')) {
             input.val(newFieldId)
           }
           input.attr('name', input.attr('name').replace('[empty]', '[' + newFieldId + ']'))
+          if (!row) {
+            row = input.closest('[data-repeatable-row]')
+          }
         })
         // update remove button
-        jQuery('[name="remove_cost"][value*="empty"]').val(newFieldId)
+        row.find('[name="remove_cost"]').val(newFieldId)
       }
     },
     getPathToEmptyRow: function (name) {

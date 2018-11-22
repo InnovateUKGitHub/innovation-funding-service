@@ -93,8 +93,7 @@ Travel and subsistence
     [Tags]  HappyPath
     When the Applicant fills the Travel fields
     Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £2,000  jQuery = button:contains("Travel and subsistence") [data-mirror^="#section-total"]  £2,000
-    And the user clicks the button twice         css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
-    exit tests
+    And the user clicks the button/link          css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
     Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £1,000  jQuery = button:contains("Travel and subsistence") [data-mirror^="#section-total"]  £1,000
     [Teardown]  the user clicks the button/link  jQuery = button:contains("Travel and subsistence")
