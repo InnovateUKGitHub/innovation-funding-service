@@ -1198,7 +1198,7 @@ the rag rating updates on the finance check page for partner for eligibility
 
 verify total costs of project
     [Arguments]    ${total_costs}
-    the user should see the text in the element      css = .table-overview tbody tr:nth-child(1) td:nth-child(2)     ${total_costs}
+    Textfield should contain      css = .total-cost input     ${total_costs}
 
 verify percentage and total
     [Arguments]  ${section}  ${percentage}  ${total}
@@ -1269,6 +1269,7 @@ Project finance user amends materials details in eligibility for lead
     When the user clicks the button/link            jQuery = #material-costs-table tr:nth-of-type(2) button:contains('Remove')
     Then verify percentage and total                3    34%    £80,000
     When the user clicks the button/link            css = .govuk-button[name = save-eligibility]
+    exit tests
     Then verify total costs of project              £237,052
     And the user should see the element             jQuery = section:nth-of-type(3) a:contains("Edit")
     And the user should not see the element         css = .govuk-button[name = save-eligibility]
