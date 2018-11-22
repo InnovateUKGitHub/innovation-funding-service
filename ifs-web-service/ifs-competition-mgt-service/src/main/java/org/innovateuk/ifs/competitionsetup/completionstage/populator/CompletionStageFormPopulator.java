@@ -16,11 +16,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompletionStageFormPopulator implements CompetitionSetupFormPopulator {
 
-    @Autowired
     private MilestoneRestService milestoneRestService;
+    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
     @Autowired
-    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+    public CompletionStageFormPopulator(MilestoneRestService milestoneRestService, CompetitionSetupMilestoneService competitionSetupMilestoneService) {
+        this.milestoneRestService = milestoneRestService;
+        this.competitionSetupMilestoneService = competitionSetupMilestoneService;
+    }
 
     @Override
     public CompetitionSetupSection sectionToFill() {

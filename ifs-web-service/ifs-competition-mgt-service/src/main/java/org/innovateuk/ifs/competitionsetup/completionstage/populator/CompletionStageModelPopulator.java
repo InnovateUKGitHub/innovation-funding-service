@@ -21,7 +21,6 @@ public class CompletionStageModelPopulator implements CompetitionSetupSectionMod
 
     @Override
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
-
         return new CompletionStageViewModel(generalViewModel);
     }
 }
