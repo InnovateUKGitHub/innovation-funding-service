@@ -56,6 +56,18 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     String SEARCH_BY_ID_LIKE = " SELECT a from Application a " +
             " WHERE str(a.id) LIKE CONCAT('%', :searchString, '%') ";
 
+    String APPLICATION_SEARCH_BY_USER_ID_AND_INNOVATION_LEAD_ROLE = "SELECT a from Application a " +
+            "INNER JOIN InnovationLead cp " +
+            "ON cp.competition.id = a.competition.id " +
+            "WHERE cp.user.id = :userId " +
+            "AND str(a.id) LIKE CONCAT('%', :searchString, '%')";
+
+    String APPLICATION_SEARCH_BY_USER_ID_AND_STAKEHOLDER_ROLE = "SELECT a from Application a " +
+            "INNER JOIN Stakeholder cp " +
+            "ON cp.competition.id = a.competition.id " +
+            "WHERE cp.user.id = :userId " +
+            "AND str(a.id) LIKE CONCAT('%', :searchString, '%')";
+
     String FIND_BY_ASSESSMENT = "SELECT app FROM Application app " +
             "INNER JOIN Assessment ass ON ass.target.id = app.id " +
             "WHERE ass.id = :assessmentId";
@@ -73,6 +85,16 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     @Query(SEARCH_BY_ID_LIKE)
     Page<Application> searchByIdLike(@Param("searchString") String searchString, Pageable pageable);
+
+    @Query(value = APPLICATION_SEARCH_BY_USER_ID_AND_INNOVATION_LEAD_ROLE)
+    Page<Application> searchApplicationsByUserIdAndInnovationLeadRole(@Param("userId") long userId,
+                                                                      @Param("searchString") String searchString,
+                                                                      Pageable pageable);
+
+    @Query(value = APPLICATION_SEARCH_BY_USER_ID_AND_STAKEHOLDER_ROLE)
+    Page<Application> searchApplicationsByUserIdAndStakeholderRole(@Param("userId") long userId,
+                                                                   @Param("searchString") String searchString,
+                                                                   Pageable pageable);
 
     List<Application> findByCompetitionId(long competitionId);
 

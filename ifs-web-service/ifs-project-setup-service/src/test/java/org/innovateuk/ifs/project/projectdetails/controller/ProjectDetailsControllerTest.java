@@ -396,7 +396,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectDetailsStartDateViewModel viewModel = (ProjectDetailsStartDateViewModel) model.get("model");
 
         assertEquals(project.getId(), viewModel.getProjectId());
-        assertEquals(project.getApplication(), viewModel.getApplicationId());
+        assertEquals(project.getApplication(), (long) viewModel.getApplicationId());
         assertEquals(project.getName(), viewModel.getProjectName());
         assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));
 
@@ -725,7 +725,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andReturn();
     }
 
-    @Test
     public void testFinanceContactInviteNotYetAccepted() throws Exception {
 
         long applicationId = 16L;

@@ -6,6 +6,7 @@ Documentation   IFS-4189 Add/Remove Stakeholders
 ...             IFS-4314 Stakeholder invite email
 ...
 ...             IFS-4252 Stakeholder registration
+Force Tags      HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
 
@@ -27,7 +28,7 @@ The internal user cannot invite a Stakeholder when they have triggered the email
     [Documentation]  IFS-4190
     [Tags]
     When the user triggers the email validation
-    Then the user should see a field and summary error    Please enter a valid email address.
+    Then the user should see a field and summary error    ${enter_a_valid_email}
 
 The internal user cannot invite users with an Innovate UK email as Stakeholders
     [Documentation]  IFS-4190
@@ -95,6 +96,24 @@ The Stakeholder can search for a competition
     When the user clicks the button/link          id = searchsubmit
     And the user clicks the button/link           link = ${openProgrammeCompetitionName}
     Then the user should see the element          jQuery = h1:contains("${openProgrammeCompetitionId}: ${openProgrammeCompetitionName}")
+    [Teardown]  The user clicks the button/link   link = Dashboard
+
+The Stakeholder can search for application
+    [Documentation]  IFS-4564
+    [Tags]
+    Given the user enters text to a text field    searchQuery  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    When the user clicks the button/link          id = searchsubmit
+    And the user clicks the button/link           link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    Then the user should see the element          jQuery = span:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+    [Teardown]  The user clicks the button/link   link = Dashboard
+
+The Stakeholder cannot search for unassigned applications
+    [Documentation]  IFS-4564
+    [Tags]
+    Given the user enters text to a text field    searchQuery  ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    When the user clicks the button/link          id = searchsubmit
+    Then the user should see the element          jQuery = p:contains("0") strong:contains("${OPEN_COMPETITION_APPLICATION_1_NUMBER}")
+    [Teardown]  The user clicks the button/link   link = Dashboard
 
 The internal user removes a Stakeholder from the competition
     [Documentation]  IFS-4189
@@ -118,9 +137,9 @@ the user triggers the name validation
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
 
 the user should see the name validation messages
-    the user should see a field and summary error    Please enter a first name.
+    the user should see a field and summary error    ${enter_a_first_name}
     the user should see a field and summary error    Your first name should have at least 2 characters.
-    the user should see a field and summary error    Please enter a last name.
+    the user should see a field and summary error    ${enter_a_last_name}
     the user should see a field and summary error    Your last name should have at least 2 characters.
 
 the user triggers the email validation

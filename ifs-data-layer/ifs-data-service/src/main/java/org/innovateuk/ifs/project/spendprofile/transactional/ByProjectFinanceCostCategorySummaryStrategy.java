@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
@@ -51,6 +53,9 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     @Autowired
     private OrganisationService organisationService;
 
+    @Autowired
+    private CompetitionService competitionService;
+
     @Override
     public ServiceResult<SpendProfileCostCategorySummaries> getCostCategorySummaries(Long projectId, Long organisationId) {
 
@@ -62,8 +67,8 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
 
     private ServiceResult<SpendProfileCostCategorySummaries> createCostCategorySummariesWithCostCategoryType(
             Long projectId, Long organisationId, ProjectResource project, OrganisationResource organisation, ProjectFinanceResource finances) {
-
-        boolean useAcademicFinances = financeUtil.isUsingJesFinances(organisation.getOrganisationType());
+        CompetitionResource competition = competitionService.getCompetitionById(project.getCompetition()).getSuccess();
+        boolean useAcademicFinances = financeUtil.isUsingJesFinances(competition, organisation.getOrganisationType());
 
         return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(projectId, organisationId).andOnSuccessReturn(
                 costCategoryType ->

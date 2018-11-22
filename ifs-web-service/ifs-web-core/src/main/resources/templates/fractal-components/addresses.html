@@ -1,0 +1,101 @@
+<div class="govuk-width-container">
+
+    <div class="govuk-inset-text">
+        <p class="govuk-body">This is a GDS pattern. Example and code can be found at:<br />
+            <a class="govuk-link" href="https://design-system.service.gov.uk/patterns/addresses/">https://design-system.service.gov.uk/patterns/addresses/</a>
+        </p>
+    </div>
+
+    <form action="#">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="useSearchResultAddress">
+                <h2 class="govuk-fieldset__heading">Address example</h2>
+            </legend>
+            <span class="govuk-hint">This is the address your organisation works from</span>
+
+            <div class="govuk-form-group">
+                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.postcodeInput">
+                    Postcode
+                </label>
+                <input id="addressForm.postcodeInput" class="govuk-input govuk-!-width-one-half" type="text"
+                       name="addressForm.postcodeInput" value="S117PF">
+                <button type="submit" id="postcode-lookup" class="govuk-button govuk-!-margin-0" name="search-address">
+                    Find UK address
+                </button>
+            </div>
+
+            <div class="govuk-form-group" id="select-address-block">
+                <label class="govuk-label govuk-label--s" for="addressForm.selectedPostcodeIndex">
+                    Select your address
+                </label>
+
+                <select id="addressForm.selectedPostcodeIndex" class="govuk-select govuk-!-width-one-half"
+                        name="addressForm.selectedPostcodeIndex">
+                    <option value="0">S11 7PF, 1 Mylor Road, Sheffield</option>
+                    <option value="1">S11 7PF, 2 Mylor Road, Sheffield</option>
+                    <option value="2">S11 7PF, 2A Mylor Road, Sheffield</option>
+                    <option value="3">S11 7PF, 3 Mylor Road, Sheffield</option>
+                    <option value="4">S11 7PF, 4 Mylor Road, Sheffield</option>
+                    <option value="5">S11 7PF, 5 Mylor Road, Sheffield</option>
+                    <option value="6">S11 7PF, 6 Mylor Road, Sheffield</option>
+                    <option value="7">S11 7PF, 7 Mylor Road, Sheffield</option>
+                </select>
+                <button type="submit" class="govuk-button govuk-!-margin-0" name="select-address">Use selected address
+                </button>
+            </div>
+            <button type="submit" class="button-clear govuk-!-margin-top-6" name="manual-address">Enter address manually</button>
+        </fieldset>
+        <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
+    </form>
+
+    <form action="#" class="govuk-!-margin-top-9">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="useSearchResultAddress">
+                <h2 class="govuk-fieldset__heading">Manual address input example</h2>
+            </legend>
+            <div class="govuk-form-group">
+                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.selectedPostcode.addressLine1">
+                    Street
+                </label>
+
+                <input id="addressForm.selectedPostcode.addressLine1" class="govuk-input govuk-!-width-one-half" type="text" required="required" data-required-errormessage="The first line of the address cannot be blank." name="addressForm.selectedPostcode.addressLine1" value="">
+            </div>
+            <div class="govuk-form-group">
+                <label class="govuk-label govuk-visually-hidden" for="addressForm.selectedPostcode.addressLine2">
+                    Street line 2
+                </label>
+
+                <input id="addressForm.selectedPostcode.addressLine2" class="govuk-input govuk-!-width-one-half" type="text" name="addressForm.selectedPostcode.addressLine2" value="">
+            </div>
+            <div class="govuk-form-group">
+                <label class="govuk-label govuk-visually-hidden" for="addressForm.selectedPostcode.addressLine3">
+                    Street line 3
+                </label>
+
+                <input id="addressForm.selectedPostcode.addressLine3" class="govuk-input govuk-!-width-one-half" type="text" name="addressForm.selectedPostcode.addressLine3" value="">
+            </div>
+            <div class="govuk-form-group">
+                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.selectedPostcode.town">
+                    Town
+                </label>
+
+                <input id="addressForm.selectedPostcode.town" class="govuk-input govuk-!-width-one-half" type="text" required="required" data-required-errormessage="The town cannot be blank." name="addressForm.selectedPostcode.town" value="">
+            </div>
+            <div class="govuk-form-group">
+                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.selectedPostcode.county">
+                    County
+                </label>
+
+                <input id="addressForm.selectedPostcode.county" class="govuk-input govuk-!-width-one-half" type="text" name="addressForm.selectedPostcode.county" value="">
+            </div>
+            <div class="govuk-form-group">
+                <label class="govuk-label govuk-!-font-weight-bold" for="addressForm.selectedPostcode.postcode">
+                    Postcode
+                </label>
+
+                <input id="addressForm.selectedPostcode.postcode" class="govuk-input govuk-!-width-one-half" type="text" required="required" data-required-errormessage="The postcode cannot be blank." name="addressForm.selectedPostcode.postcode" value="">
+            </div>
+        </fieldset>
+        <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
+    </form>
+</div>
