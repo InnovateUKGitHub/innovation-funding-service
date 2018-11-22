@@ -151,7 +151,7 @@
 </th:block>
 
 <th:block th:fragment="labour_row (id, row)">
-    <tr th:with="path=${'labour.rows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+    <tr th:with="path=${'labour.rows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.role">
@@ -629,7 +629,7 @@
 
 <th:block th:fragment="materials_row (id, row)">
     <tr th:with="path=${'materialRows[__${id}__]'}" class="govuk-table__row form-group-row-validated"
-        th:attr="data-repeatable-row=${path}">
+        th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.item">
@@ -830,7 +830,7 @@
 </th:block>
 
 <th:block th:fragment="capital_usage_row (id, row)">
-    <div class="form-row" th:with="path=${'capitalUsageRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+    <div class="form-row" th:with="path=${'capitalUsageRows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <div class="govuk-form-group">
             <label class="govuk-label govuk-label--s"
@@ -1008,7 +1008,7 @@
             <th:block th:each="entry : *{capitalUsageRows}" th:with="cost=${entry.value}">
                 <tr class="govuk-table__row" th:unless="${cost.blank}">
                     <td class="govuk-table__cell" th:text="${cost.item}"></td>
-                    <td class="govuk-table__cell" th:text="${cost.newItem ? 'Existing' : 'New'}"></td>
+                    <td class="govuk-table__cell" th:text="${cost.newItem ? 'New' : 'Existing'}"></td>
                     <td class="govuk-table__cell" th:text="${cost.deprecation}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric"
                         th:text="${#numbers.formatInteger(cost.netValue, 0, 'DEFAULT')}"></td>
@@ -1125,7 +1125,7 @@
 </th:block>
 
 <th:block th:fragment="subcontracting_costs_row (id, row)">
-    <div class="form-row" th:with="path=${'subcontractingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+    <div class="form-row" th:with="path=${'subcontractingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <div class="govuk-form-group">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.name">
@@ -1325,7 +1325,7 @@
 
 <th:block th:fragment="travel_row (id, row)">
     <tr class="govuk-table__row form-group-row-validated" th:with="path=${'travelRows[__${id}__]'}"
-        th:attr="data-repeatable-row=${path}">
+        th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.item">
@@ -1521,7 +1521,7 @@
 </th:block>
 
 <th:block th:fragment="other_costs_row (id, row)">
-    <tr class="form-group-row-validated" th:with="path=${'otherRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+    <tr class="form-group-row-validated" th:with="path=${'otherRows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.description">

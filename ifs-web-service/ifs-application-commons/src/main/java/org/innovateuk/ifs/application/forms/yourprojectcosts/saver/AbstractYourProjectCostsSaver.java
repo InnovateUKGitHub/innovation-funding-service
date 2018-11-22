@@ -104,6 +104,8 @@ public abstract class AbstractYourProjectCostsSaver {
 
         if (overhead.getRateType().equals(OverheadRateType.TOTAL)) {
             overheadCost.setRate(overhead.getTotalSpreadsheet());
+        } else {
+            overheadCost.setRate(overhead.getRateType().getRate());
         }
 
         return getFinanceRowService().update(overheadCost).getSuccess();
