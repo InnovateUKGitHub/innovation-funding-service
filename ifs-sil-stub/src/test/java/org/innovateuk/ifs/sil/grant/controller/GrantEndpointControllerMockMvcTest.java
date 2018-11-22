@@ -71,7 +71,7 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
     }
 
     @Parameterized.Parameters
-    public static Collection<Parameter> data() {
+    public static Collection<Parameter> parameters() {
         /*
          * Note that we are firing these test grants onto the SIL stub, which at the moment is
          * just testing our JSON serialisation and SIL stub implementation.   This gives us test data.  When

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.sil.grant.resource;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.sil.grant.resource.json.LocalDateDeserializer;
 import org.innovateuk.ifs.sil.grant.resource.json.LocalDateSerializer;
 import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeDeserializer;
@@ -40,6 +41,11 @@ public class Grant {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Grant id(long id) {
+        setId(id);
+        return this;
     }
 
     public long getCompetitionCode() {
@@ -109,5 +115,10 @@ public class Grant {
 
     public void setParticipants(Set<Participant> participants) {
         this.participants = participants;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }
