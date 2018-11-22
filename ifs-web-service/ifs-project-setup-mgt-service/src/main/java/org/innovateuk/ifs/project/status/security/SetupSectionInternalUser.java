@@ -123,7 +123,7 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksNotesSection(UserResource userResource) {
-        return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACcompetition-setup-section-project-document.htmlCESSIBLE;
+        return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
 
