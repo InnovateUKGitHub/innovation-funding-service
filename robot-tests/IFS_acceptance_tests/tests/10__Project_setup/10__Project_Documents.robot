@@ -103,7 +103,7 @@ Non pdf files not allowed for either document
     [Tags]
     Given the user clicks the button/link                            link = Collaboration agreement
     When the user uploads to the collaboration agreement/exploitation plan    ${text_file}
-    Then the user should see a field error                                ${wrong_filetype_validation_error}
+    Then the user should see a field error                           ${wrong_filetype_validation_error}
     And the user clicks the button/link                              link = Back to document overview
     And the user clicks the button/link                              link = Exploitation plan
     When the user uploads to the collaboration agreement/exploitation plan      ${text_file}
@@ -240,9 +240,9 @@ PM can upload both documents after they have been removed
     Given the user navigates to the page                     ${project_in_setup_page}/document/all
     And the user clicks the button/link                      link = Collaboration agreement
     When the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
-    Then the user should see the text in the page             ${valid_pdf}
-    And the user clicks the button/link                       link = Back to document overview
-    When the user clicks the button/link                      link = Exploitation plan
+    Then the user should see the text in the page            ${valid_pdf}
+    And the user clicks the button/link                      link = Back to document overview
+    When the user clicks the button/link                     link = Exploitation plan
     And the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
     Then the user should not see an error in the page
 
@@ -341,9 +341,9 @@ Non-lead partner can still view both documents after submitting
     Then the user clicks the button/link        link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link = View the status of partners
-    And the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
+    When the user navigates to the page         ${project_in_setup_page}
+    And the user clicks the button/link         link = View the status of partners
+    And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
 
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621, IFS-1881
@@ -373,40 +373,14 @@ CompAdmin rejects both documents
 Partners can see the documents rejected
     [Documentation]    INFUND-5559, INFUND-5424, INFUND-7342, IFS-218
     [Tags]
-    Given log in as a different user         ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
-    And the user navigates to the page       ${project_in_setup_page}/document/all
-    And the user clicks the button/link      link = Collaboration agreement
-    Then the user should see the element     jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
-    And the user should see the element      jQuery = button:contains("Remove")
-    And the user should not see the element  jQuery = label:contains("Upload")
-    When the user clicks the button/link     link = Return to documents
-    And the user clicks the button/link      link = Exploitation plan
-    Then the user should see the element     jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
-    And the user should see the element      jQuery = button:contains("Remove")
-    And the user should not see the element  jQuery = label:contains("Upload")
-    Given log in as a different user         &{lead_applicant_credentials}
-    And the user navigates to the page       ${project_in_setup_page}/document/all
-    And the user clicks the button/link      link = Collaboration agreement
-    Then the user should see the element     jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
-    And the user should not see the element  jQuery = .govuk-button:contains("Remove")
-    When the user clicks the button/link     link = Return to documents
-    And the user clicks the button/link      link = Exploitation plan
-    Then the user should see the element     jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
-    And the user should not see the element  jQuery = button:contains("Remove")
-    Given log in as a different user         &{collaborator2_credentials}
-    And the user navigates to the page       ${project_in_setup_page}/document/all
-    And the user clicks the button/link      link = Collaboration agreement
-    Then the user should see the element     jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
-    When the user clicks the button/link     link = Return to documents
-    And the user clicks the button/link      link = Exploitation plan
-    Then the user should see the element     jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
-    Given log in as a different user         &{collaborator1_credentials}
-    And the user navigates to the page       ${project_in_setup_page}/document/all
-    When the user clicks the button/link      link = Collaboration agreement
-    Then the user should see the element     jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
-    When the user clicks the button/link     link = Return to documents
-    And the user clicks the button/link      link = Exploitation plan
-    Then the user should see the element     jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
+    When log in as a different user              ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
+    Then Partners can see both documents rejected
+    When log in as a different user              &{lead_applicant_credentials}
+    Then Partners can see both documents rejected
+    When log in as a different user              &{collaborator2_credentials}
+    Then Partners can see both documents rejected
+    When log in as a different user              &{collaborator1_credentials}
+    Then Partners can see both documents rejected
 
 After rejection, status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011, INFUND-7342
@@ -418,8 +392,8 @@ After rejection, status in the dashboard remains action required after uploads
 Project Manager can remove the offending documents
     [Documentation]    INFUND-7342
     [Tags]
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page     ${project_in_setup_page}/document/all
+    [Setup]    log in as a different user     ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
+    Given the user navigates to the page      ${project_in_setup_page}/document/all
     When the user clicks the button/link      link = Collaboration agreement
     And the user clicks the button/link       name = deleteDocument
     Then the user should not see the element  link = ${valid_pdf}
@@ -459,10 +433,10 @@ After rejection PM can upload both documents when both documents are removed
 After rejection, mandatory document submission
     [Documentation]    INFUND-3011, INFUND-6152, INFUND-7342
     [Tags]
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
+    [Setup]    log in as a different user   ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
-    Given the user navigates to the page     ${project_in_setup_page}
-    And the user clicks the button/link      link = Documents
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link     link = Documents
     And the user reloads the page
     And the user clicks the button/link     link = Collaboration agreement
     When the user clicks the button/link    id = submitDocumentButton
@@ -494,45 +468,25 @@ Project finance can see zero funding for partner in bank details
 CompAdmin approves both documents
     [Documentation]    INFUND-4621, INFUND-5507, INFUND-7345
     [Tags]
-    [Setup]    Log in as a different user   &{Comp_admin1_credentials}
+    [Setup]    Log in as a different user       &{Comp_admin1_credentials}
     Given the user navigates to the page        ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/document/all
     When the user clicks the button/link        link = Collaboration agreement
-    Then compAdmin approve uploaded documents
+    Then internal user approve uploaded documents
     And the user clicks the button/link         link = Return to documents
     When the user clicks the button/link        link = Exploitation plan
-    Then compAdmin approve uploaded documents
+    Then internal user approve uploaded documents
 
 Partners can see the documents approved
     [Documentation]    INFUND-5559, INFUND-5424, INFUND-7345
     [Tags]
-     Given log in as a different user         ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
-     And the user navigates to the page       ${project_in_setup_page}/document/all
-     And the user clicks the button/link      link = Collaboration agreement
-     Then the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
-     When the user clicks the button/link     link = Return to documents
-     And the user clicks the button/link      link = Exploitation plan
-     Then the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
-     Given log in as a different user         &{lead_applicant_credentials}
-     And the user navigates to the page       ${project_in_setup_page}/document/all
-     And the user clicks the button/link      link = Collaboration agreement
-     Then the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
-     When the user clicks the button/link     link = Return to documents
-     And the user clicks the button/link      link = Exploitation plan
-     Then the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
-     Given log in as a different user         &{collaborator2_credentials}
-     And the user navigates to the page       ${project_in_setup_page}/document/all
-     And the user clicks the button/link      link = Collaboration agreement
-     Then the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
-     When the user clicks the button/link     link = Return to documents
-     And the user clicks the button/link      link = Exploitation plan
-     Then the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
-     Given log in as a different user         &{collaborator1_credentials}
-     And the user navigates to the page       ${project_in_setup_page}/document/all
-     When the user clicks the button/link     link = Collaboration agreement
-     Then the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
-     When the user clicks the button/link     link = Return to documents
-     And the user clicks the button/link      link = Exploitation plan
-     Then the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
+     When log in as a different user         ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}  #Project Manager
+     Then Partners can see both documents approved
+     When log in as a different user         &{lead_applicant_credentials}
+     Then Partners can see both documents approved
+     When log in as a different user         &{collaborator2_credentials}
+     Then Partners can see both documents approved
+     When log in as a different user         &{collaborator1_credentials}
+     Then Partners can see both documents approved
 
 CompAdmin can see Project status updated
     [Documentation]    INFUND-2610
@@ -580,7 +534,7 @@ CompAdmin sees uploaded file and approves it
     And the user clicks the button/link         link = Exploitation plan
     When the user clicks the button/link        link = ${valid_pdf}
     Then the user should see the file without error
-    And compAdmin approve uploaded documents
+    And internal user approve uploaded documents
 
 Sole applicant can see documents approval
     [Documentation]    IFS-1864
@@ -631,8 +585,20 @@ compAdmin reject uploaded documents
     the user clicks the button/link             id = reject-document
     the user should see the element             jQuery = p:contains("You have rejected this document. Please contact the Project Manager to explain your decision.")
 
-compAdmin approve uploaded documents
-    the user selects the radio button      approved   true
-    the user clicks the button/link        id = submit-button
-    the user clicks the button/link        id = accept-document
-    the user should see the element        jQuery = p:contains("You have approved this document.")
+Partners can see both documents rejected
+    the user navigates to the page       ${project_in_setup_page}/document/all
+    the user clicks the button/link      link = Collaboration agreement
+    the user should see the element      jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
+    the user should not see the element  jQuery = label:contains("Upload")
+    the user clicks the button/link      link = Return to documents
+    the user clicks the button/link      link = Exploitation plan
+    the user should see the element      jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
+    the user should not see the element  jQuery = label:contains("Upload")
+
+Partners can see both documents approved
+    the user navigates to the page      ${project_in_setup_page}/document/all
+    the user clicks the button/link     link = Collaboration agreement
+    the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
+    the user clicks the button/link     link = Return to documents
+    the user clicks the button/link     link = Exploitation plan
+    the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")

@@ -495,7 +495,7 @@ Verify support users permissions in project setup tab
     Given the user clicks the button/link    jQuery = a:contains("Project setup")
     When the user clicks the button/link     link = ${PS_MD_Competition_Name}
     Then the user should see the element     jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(1).status.ok a  # Project details
-    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(2).status.ok a  # Other documents
+    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(2).status.ok a  # Documents
     And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(3).status.ok a  # Monitoring officer
     And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(4).status.ok    # Bank details
     And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(5).status.ok    # Finance checks
@@ -511,8 +511,8 @@ the user uploads a file
 all the other sections of the project are completed (except spend profile approval)
     the user logs-in in new browser              &{internal_finance_credentials}
     project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
-    project manager submits other documents      ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}  ${PS_GOL_APPLICATION_PROJECT}
-    project finance approves other documents     ${PS_GOL_APPLICATION_PROJECT}
+    project manager submits both documents       ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}  ${PS_GOL_APPLICATION_PROJECT}
+    project finance approves both documents      ${PS_GOL_APPLICATION_PROJECT}
     project finance generates the Spend Profile  ${Gabtype_Id}  ${Kazio_Id}  ${Cogilith_Id}  ${PS_GOL_APPLICATION_PROJECT}
     log in as a different user                   ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     all partners submit their Spend Profile
