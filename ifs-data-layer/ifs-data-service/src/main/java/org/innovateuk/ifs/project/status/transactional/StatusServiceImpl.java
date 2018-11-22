@@ -288,15 +288,17 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
 
-        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> expectedDocuments =
-                project.getApplication().getCompetition().getProjectDocuments();
+        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> expectedDocuments = project.getApplication().getCompetition().getProjectDocuments();
 
         List<PartnerOrganisationResource> partnerOrganisations =
                 partnerOrganisationService.getProjectPartnerOrganisations(project.getId()).getSuccess();
 
         if (partnerOrganisations.size() == 1) {
-            expectedDocuments.removeIf(
-                    document -> document.getTitle().equals("Collaboration agreement"));
+
+            List<String> documentNames = expectedDocuments.stream().map(document -> document.getTitle()).collect(Collectors.toList());
+            if (documentNames.contains("Collaboration agreement")) {
+                return getDocumentsState(projectDocuments, projectDocuments.size(), expectedDocuments.size() - 1);
+            }
         }
 
         return getDocumentsState(projectDocuments, projectDocuments.size(), expectedDocuments.size());
