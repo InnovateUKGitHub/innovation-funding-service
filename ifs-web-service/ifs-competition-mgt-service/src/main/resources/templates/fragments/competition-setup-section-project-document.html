@@ -23,6 +23,7 @@
         <div th:if="${model.general.editable}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('enabledIds')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
+                    <legend id="enabledIds"></legend>
                     <th:block th:if="${#fields.hasErrors('enabledIds')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('enabledIds')}" th:text="${err}"></span>
                     </th:block>
