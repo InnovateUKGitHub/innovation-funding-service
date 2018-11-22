@@ -24,8 +24,8 @@ public class GrantJsonTest {
         in.setGrantOfferLetterDate(OFFER_DATE);
         in.setStartDate(START_DATE);
         String json = new ObjectMapper().writeValueAsString(in);
-        assertThat(json, containsString("\"golDate\":\"2018/01/02\""));
-        assertThat(json, containsString("\"startDate\":\"2019/03/04\""));
+        assertThat(json, containsString("\"golDate\":\"02/01/2018\""));
+        assertThat(json, containsString("\"startDate\":\"04/03/2019\""));
         Grant out = new ObjectMapper().readValue(json, Grant.class);
         assertThat(out.getGrantOfferLetterDate().getYear(), equalTo(2018));
         assertThat(out.getStartDate().getYear(), equalTo(2019));

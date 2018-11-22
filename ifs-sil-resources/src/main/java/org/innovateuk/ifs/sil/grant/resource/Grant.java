@@ -13,10 +13,14 @@ import java.time.ZonedDateTime;
 import java.util.Set;
 
 public class Grant {
+    @JsonProperty("ifsAppNumber")
     private long id;
     private long competitionCode;
+    @JsonProperty("projectTitle")
     private String title;
+    @JsonProperty("projectSummary")
     private String summary;
+    @JsonProperty("publicDesc")
     private String publicDescription;
 
     @JsonProperty("golDate")
@@ -27,6 +31,7 @@ public class Grant {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate startDate;
     private long duration;
+    @JsonProperty("participant")
     private Set<Participant> participants;
 
     public long getId() {

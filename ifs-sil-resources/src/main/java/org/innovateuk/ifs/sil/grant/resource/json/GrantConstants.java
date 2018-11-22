@@ -7,5 +7,5 @@ class GrantConstants {
     private GrantConstants() {
     }
     static final ZoneId GMT = ZoneId.of("GMT");
-    static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd").withZone(GMT);
+    static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy").withZone(GMT);
 }

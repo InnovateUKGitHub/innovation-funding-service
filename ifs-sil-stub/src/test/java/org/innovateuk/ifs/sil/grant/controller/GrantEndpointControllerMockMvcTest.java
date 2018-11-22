@@ -57,7 +57,7 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
 
     private Set<Period> createPeriods(int durationInMonths, BigDecimal value) {
         return Stream.iterate(0, i -> i + 1).limit(durationInMonths)
-                .map(i -> new Period().month(i + 1).value(value))
+                .map(i -> new Period().month(i + 1).value(value.longValue()))
                 .collect(Collectors.toSet());
     }
 

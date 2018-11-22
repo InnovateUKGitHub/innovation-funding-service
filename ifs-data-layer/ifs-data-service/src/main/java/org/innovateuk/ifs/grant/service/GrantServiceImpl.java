@@ -75,7 +75,7 @@ public class GrantServiceImpl implements GrantService {
         LOG.info("Sending project : " + applicationId);
         Project project = projectRepository.findOneByApplicationId(applicationId);
         Grant grant = new Grant();
-        grant.setId(project.getId());
+        grant.setId(applicationId);
         grant.setCompetitionCode(project.getApplication().getCompetition().getId());
         grant.setTitle(project.getName());
         grant.setGrantOfferLetterDate(project.getOfferSubmittedDate());
@@ -114,12 +114,12 @@ public class GrantServiceImpl implements GrantService {
         participant.setId(organisation.getId());
         participant.setOrgType(organisation.getOrganisationType().getName());
         participant.setOrgProjectRole(partnerOrganisation.isLeadOrganisation() ? "lead" : "collaborator");
-        participant.setSize(organisation.getUsers().size());
         partnerOrganisation.getProject().getProjectUsers(projectUser ->
                 projectUser.getOrganisation().getId().equals(organisation.getId())
                         && projectUser.getRole().isFinanceContact()
         ).stream().findFirst()
                 .ifPresent(processRole -> {
+                            participant.setContactId(processRole.getUser().getId());
                             participant.setContactEmail(processRole.getUser().getEmail());
                             participant.setContactRole(processRole.getRole().getName());
                         }
@@ -151,6 +151,7 @@ public class GrantServiceImpl implements GrantService {
          */
         ProjectFinance projectFinance = projectFinanceRepository
                 .findByProjectIdAndOrganisationId(context.getProjectId(), organisation.getId());
+        participant.setSize(projectFinance.getOrganisationSize().name());
         List<ProjectFinanceRow> projectFinanceRows = projectFinanceRowRepository.findByTargetId(projectFinance.getId());
         BigDecimal awardPercentage = projectFinanceRows.stream()
                 .filter(row -> GRANT_CLAIM_IDENTIFIER.equals(row.getName()))
@@ -187,7 +188,7 @@ public class GrantServiceImpl implements GrantService {
     private Period toPeriod(Cost cost) {
         Period period = new Period();
         period.setMonth(cost.getCostTimePeriod().getOffsetAmount());
-        period.setValue(cost.getValue());
+        period.setValue(cost.getValue().longValue());
         return period;
     }
 

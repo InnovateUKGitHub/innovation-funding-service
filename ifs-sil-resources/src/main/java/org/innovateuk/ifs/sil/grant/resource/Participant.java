@@ -1,22 +1,24 @@
 package org.innovateuk.ifs.sil.grant.resource;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.innovateuk.ifs.sil.grant.resource.json.PercentageDeserializer;
 import org.innovateuk.ifs.sil.grant.resource.json.PercentageSerializer;
-import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeDeserializer;
-import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeSerializer;
 
 import java.math.BigDecimal;
 import java.util.Set;
 
 public class Participant {
+    @JsonProperty("orgId")
     private long id;
     private String orgType;
     private String orgProjectRole;
+    private long contactId;
     private String contactRole;
     private String contactEmail;
-    private int size;
+    @JsonProperty("orgSize")
+    private String size;
 
     @JsonSerialize(using = PercentageSerializer.class)
     @JsonDeserialize(using = PercentageDeserializer.class)
@@ -27,6 +29,7 @@ public class Participant {
     @JsonSerialize(using = PercentageSerializer.class)
     @JsonDeserialize(using = PercentageDeserializer.class)
     private BigDecimal overheadRate;
+    @JsonProperty("forecast")
     private Set<Forecast> forecasts;
 
     public long getId() {
@@ -53,6 +56,14 @@ public class Participant {
         this.orgType = orgType;
     }
 
+    public long getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(long contactId) {
+        this.contactId = contactId;
+    }
+
     public String getContactRole() {
         return contactRole;
     }
@@ -69,11 +80,11 @@ public class Participant {
         this.contactEmail = contactEmail;
     }
 
-    public int getSize() {
+    public String getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(String size) {
         this.size = size;
     }
 
