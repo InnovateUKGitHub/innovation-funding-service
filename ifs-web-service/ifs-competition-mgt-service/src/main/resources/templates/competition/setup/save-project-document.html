@@ -112,7 +112,7 @@
                </th:block>
                <th:form th:if="${form.projectDocumentId}">
                   <p>
-                     <button type="submit" data-js-modal="modal-confirm-document-remove" formnovalidate name="removeDocument" class="button-clear">Remove</button>
+                     <button type="submit" th:if="${form.editable}" data-js-modal="modal-confirm-document-remove" formnovalidate name="removeDocument" class="button-clear">Remove</button>
                   </p>
                </th:form>
                <th:block th:insert="fragments/modals :: modal-confirm-document-remove" />
