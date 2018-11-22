@@ -397,10 +397,10 @@
                             <th:block th:if="${model.internal and form.overhead.filename == null}">
                                 <p class="govuk-body">The applicant has not uploaded a file.</p>
                             </th:block>
-                            <th:block th:unless="${model.internal and form.overhead.filename == null}">
+                            <th:block th:unless="${form.overhead.filename == null}">
                                 <p th:if="${model.internal}" class="govuk-body">The applicant has uploaded a completed overhead costs spreadsheet.</p>
                                 <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly or model.internal ? 'readonly' : 'edit'},
-                                    @{${'/application/download/overheadfile/'+form.overhead.costId}},
+                                    @{'/application/download/overheadfile/{overheadId}(overheadId=${form.overhead.costId})},
                                     ${form.overhead.filename},
                                     overhead.file,
                                     overhead.file,

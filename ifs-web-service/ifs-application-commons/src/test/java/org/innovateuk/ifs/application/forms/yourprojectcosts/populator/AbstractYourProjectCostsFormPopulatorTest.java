@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.yourprojectcosts.populator;
 
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.builder.BaseFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
@@ -12,6 +13,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -34,6 +37,11 @@ public class AbstractYourProjectCostsFormPopulatorTest {
         @Override
         protected boolean shouldAddEmptyRow() {
             return true;
+        }
+
+        @Override
+        protected Optional<FileEntryResource> overheadFile(long costId) {
+            return overheadFileRestService.getOverheadFileDetails(costId).getOptionalSuccessObject();
         }
     };
 
