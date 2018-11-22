@@ -89,12 +89,12 @@ Bank account number and sort code validations client side
     [Tags]
     When the user enters text to a text field        id = accountNumber    1234567
     And the user enters text to a text field         id = sortCode    12345
-    And the user moves focus to the element          link = Cancel bank account changes
+    And Set Focus To Element                         link = Cancel bank account changes
     Then the user should see the text in the page    Please enter a valid account number
     And the user should see the text in the page     Please enter a valid sort code
     When the user enters text to a text field        id = accountNumber    123456789
     And the user enters text to a text field         id = sortCode    1234567
-    And the user moves focus to the element          link = Cancel bank account changes
+    And Set Focus To Element                         link = Cancel bank account changes
     Then the user sees the text in the element       id = accountNumber    ${empty}    # Account numbers more than 8 numbers not allowed, so the input is not accepted
     And the user sees the text in the element        id = sortCode    ${empty}    # Sort codes more than 6 numbers not allowed, so the input is not accepted
     And the user should not see an error in the page
@@ -116,7 +116,7 @@ Project Finance cancels bank details changes
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     When the user clicks the button/link                      link = Change bank account details
     Then the text box should be editable                      id = organisationName
-    And the user moves focus to the element                   css = [id = "addressForm.selectedPostcode.addressLine1"]
+    And Set Focus To Element                                  css = [id = "addressForm.selectedPostcode.addressLine1"]
     Then the user sees the text in the text field             css = [id = "addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
     When the user clicks the button/link                      id = modal-change-bank-details
     And the user clicks the button/link                       jQuery = .button-clear:contains("Cancel")
