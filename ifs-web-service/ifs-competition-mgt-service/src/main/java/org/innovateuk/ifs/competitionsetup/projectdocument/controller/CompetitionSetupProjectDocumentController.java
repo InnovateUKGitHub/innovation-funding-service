@@ -75,7 +75,7 @@ public class CompetitionSetupProjectDocumentController {
         return redirect.redirect ? redirect.url : "competition/setup";
     }
 
-    private Redirect doViewProjectDocument(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+    private Redirect doViewProjectDocument(Model model, long competitionId) {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         Redirect redirect = new Redirect(false);
