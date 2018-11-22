@@ -38,8 +38,7 @@
                                     th:attr="data-required-errormessage=#{competition.setup.documents.required}"/>
                             <label th:for=${checkboxId} class="govuk-label govuk-checkboxes__label">
                                 <span th:text=${document.title}>document_title</span>
-                                 <a th:if="${document.editable}"
-                                    th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}"
+                                 <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}"
                                     class="govuk-link govuk-!-margin-left-4">Edit</a>
                             </label>
                         </div>

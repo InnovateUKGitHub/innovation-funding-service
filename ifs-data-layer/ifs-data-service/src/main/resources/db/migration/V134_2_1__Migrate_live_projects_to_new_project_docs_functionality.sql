@@ -12,7 +12,7 @@ WHERE c.id IN (
 	SELECT c.id FROM competition c
 	LEFT JOIN competition_type ct ON (c.competition_type_id = ct.id)
 	LEFT JOIN document_config dc ON (c.id = dc.competition_id)
-	WHERE c.setup_complete = TRUE AND c.template = FALSE AND c.non_ifs = FALSE
+	WHERE c.template = FALSE AND c.non_ifs = FALSE
 	AND ct.name != 'Expression of interest'
 	AND dc.competition_id IS NULL
 );
@@ -29,7 +29,7 @@ WHERE c.id IN (
 	SELECT c.id FROM competition c
 	LEFT JOIN competition_type ct ON (c.competition_type_id = ct.id)
 	LEFT JOIN document_config dc ON c.id = dc.competition_id
-	WHERE c.setup_complete = TRUE AND c.template = FALSE AND c.non_ifs = FALSE
+	WHERE c.template = FALSE AND c.non_ifs = FALSE
 	AND ct.name != 'Expression of interest'
 	AND dc.title = 'Collaboration agreement'
 	AND NOT EXISTS (SELECT * FROM document_config dc WHERE dc.title != 'Collaboration agreement' AND dc.competition_id = c.id)

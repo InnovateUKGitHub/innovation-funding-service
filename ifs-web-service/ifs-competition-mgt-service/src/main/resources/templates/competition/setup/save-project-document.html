@@ -39,13 +39,16 @@
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
                         </th:block>
                      </label>
-                     <input id="title"
+                     <input
+                        id="title"
                         class="govuk-input govuk-input--width-10"
                         th:errorclass="govuk-input--error"
                         type="text"
                         th:field="${form.title}"
+                        th:disabled="${form.editable ? 'false' : 'true'}"
                         required="required"
                         th:attr="data-required-errormessage=#{validation.standard.title.required}" />
+                      <input th:if="${!form.editable}" type="hidden" th:field="${form.title}"/>
                   </div>
 
                   <div class="govuk-form-group" th:classappend="${#fields.hasErrors('acceptedFileTypesId')} ? 'govuk-form-group--error'">
