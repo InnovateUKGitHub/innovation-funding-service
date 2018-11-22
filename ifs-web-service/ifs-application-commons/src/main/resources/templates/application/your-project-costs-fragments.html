@@ -394,20 +394,18 @@
                         <h3 th:unless="${model.internal}" class="govuk-heading-s govuk-!-margin-0">Upload your completed spreadsheet</h3>
 
                         <div class="govuk-form-group">
-                            <th:block th:if="${model.internal and form.overhead.filename == null}">
-                                <p class="govuk-body">The applicant has not uploaded a file.</p>
+                            <th:block th:if="${model.internal}">
+                                <p th:if="${form.overhead.filename == null}" class="govuk-body">The applicant has not uploaded a file.</p>
+                                <p th:if="${form.overhead.filename != null}" class="govuk-body">The applicant has uploaded a completed overhead costs spreadsheet.</p>
                             </th:block>
-                            <th:block th:unless="${form.overhead.filename == null}">
-                                <p th:if="${model.internal}" class="govuk-body">The applicant has uploaded a completed overhead costs spreadsheet.</p>
-                                <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly or model.internal ? 'readonly' : 'edit'},
-                                    @{'/application/download/overheadfile/{overheadId}(overheadId=${form.overhead.costId})},
-                                    ${form.overhead.filename},
-                                    overhead.file,
-                                    overhead.file,
-                                    true,
-                                    removeOverheadFile,
-                                    uploadOverheadFile)"/>
-                            </th:block>
+                            <th:block th:unless="${model.internal and form.overhead.filename == null}" th:insert="question-type/types :: fileupload-fragment(${model.internal ? 'readonly' : 'edit'},
+                                @{'/application/download/overheadfile/{overheadId}(overheadId=${form.overhead.costId})},
+                                ${form.overhead.filename},
+                                overhead.file,
+                                overhead.file,
+                                true,
+                                removeOverheadFile,
+                                uploadOverheadFile)"/>
                         </div>
                     </div>
                     <div class="govuk-form-group alignright inline">
