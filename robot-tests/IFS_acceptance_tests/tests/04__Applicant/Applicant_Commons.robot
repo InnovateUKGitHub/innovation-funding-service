@@ -162,8 +162,7 @@ the user fills in Capital usage
     the user enters text to a text field  css = .form-finances-capital-usage-npv  5000
     the user enters text to a text field  css = .form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css = .form-finances-capital-usage-utilisation   100
-    Set Focus To Element                  css = .section-total-summary > [data-mirror^="#section-total"]
-    the user should see the text in the element  css = #capital-usage ~ .section-total-summary  £4,975
+    textfield should contain              css = #capital-usage .form-row:nth-of-type(1) [readonly="readonly"]  £4,975
     the user clicks the button/link       jQuery = button:contains("Capital usage")
 
 the user fills in Subcontracting costs

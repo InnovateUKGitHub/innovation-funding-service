@@ -269,13 +269,13 @@ Custom suite setup
     The user logs-in in new browser  &{lead_applicant_credentials}
 
 the finance summary calculations should be correct
-    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("£349,046")
+    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("£328,571")
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("58,793")
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("502,468")
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("140,632")
 
 the finance Funding breakdown calculations should be correct
-    the user should see the element  jQuery = .project-cost-breakdown th:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") + td:contains("£147,153")
+    the user should see the element  jQuery = .project-cost-breakdown th:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") + td:contains("£126,678")
     the user should see the element  jQuery = .project-cost-breakdown th:contains("${organisationLudlowName}") + td:contains("£200,903")
     the user should see the element  jQuery = .project-cost-breakdown th:contains("${organisationEggsName}") + td:contains("£990")
     the user should see the element  jQuery = .project-cost-breakdown th:contains("Total") + td:contains("£349,046")

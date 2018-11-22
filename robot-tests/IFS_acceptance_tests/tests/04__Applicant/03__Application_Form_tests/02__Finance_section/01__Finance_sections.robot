@@ -129,10 +129,9 @@ Applicant chooses Calculate overheads option
     When the user clicks the button/link                    link = Your project costs
     Then the user should see the text in the page           ${excel_file}
     And the user clicks the button/link                     jQuery = button:contains("Edit your project costs")
-    And the user clicks the button/link                     css = button[name="overheadfiledelete"]
+    And the user clicks the button/link                     css = button[name="removeOverheadFile"]
     When the user selects the checkbox                      stateAidAgreed
     And the user clicks the button/link                     jQuery = button:contains("Mark as complete")
-    Then the user should see a summary error                You cannot mark as complete.
 
 *** Keywords ***
 Custom Suite Setup

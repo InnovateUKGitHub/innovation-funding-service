@@ -67,10 +67,10 @@ Capital usage
     [Tags]  HappyPath
     When the applicant fills the 'capital usage' field
     Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £200  jQuery = button:contains("Capital usage") [data-mirror^="#section-total"]  £200
-    And the user clicks the button/link                 css = #capital_usage [data-repeatable-row]:nth-child(1) button
+    And the user clicks the button/link                 css = #capital-usage [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
     Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £100  jQuery = button:contains("Capital usage") [data-mirror^="#section-total"]  £100
-    And the user clicks the button/link                 css = #capital_usage [data-repeatable-row]:nth-child(1) button
+    And the user clicks the button/link                 css = #capital-usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link       jQuery = button:contains("Capital usage")
 
 Capital usage - negative total
@@ -78,7 +78,7 @@ Capital usage - negative total
     [Tags]  HappyPath
     When the applicant fills the 'capital usage' field to a negative value
     Then Totals should be correct                  jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £0  jQuery = button:contains("Capital usage") [data-mirror^="#section-total"]  £0
-    And the user clicks the button/link            css = #capital_usage [data-repeatable-row]:nth-child(1) button
+    And the user clicks the button/link            css = #capital-usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link  jQuery = button:contains("Capital usage")
 
 Subcontracting costs
@@ -93,7 +93,8 @@ Travel and subsistence
     [Tags]  HappyPath
     When the Applicant fills the Travel fields
     Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £2,000  jQuery = button:contains("Travel and subsistence") [data-mirror^="#section-total"]  £2,000
-    And the user clicks the button/link          css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
+    And the user clicks the button twice         css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
+    exit tests
     And the user reloads the page
     Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £1,000  jQuery = button:contains("Travel and subsistence") [data-mirror^="#section-total"]  £1,000
     [Teardown]  the user clicks the button/link  jQuery = button:contains("Travel and subsistence")
@@ -115,12 +116,11 @@ Custom Suite Setup
 the Applicant fills in the Labour costs for two rows
     the user clicks the button/link            jQuery = button:contains("Labour")
     the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    the user clears the text from the element  id = working-days-per-year
     the user enters text to a text field       id = working-days-per-year    230
     the user enters text to a text field       css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
     the user enters text to a text field       css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
     the user enters text to a text field       css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
-    the user moves focus to the element        jQuery = button:contains('Add another role')
+    Set Focus to Element                       jQuery = button:contains('Add another role')
     the user clicks the button/link            jQuery = button:contains('Add another role')
     the user should see the element            css = #labour-costs-table tr:nth-of-type(2) td:nth-of-type(4) input
     the user enters text to a text field       css = #labour-costs-table tr:nth-of-type(2) td:nth-of-type(2) input    120000
@@ -129,9 +129,8 @@ the Applicant fills in the Labour costs for two rows
 
 the applicant edits the working days field
     the user should see the element            id = working-days-per-year
-    the user clears the text from the element  id = working-days-per-year
     the user enters text to a text field       id = working-days-per-year    250
-    the user moves focus to the element        jQuery = button:contains("Labour")
+    Set Focus to Element                       jQuery = button:contains("Labour")
     wait for autosave
 
 the Applicant fills the Materials fields
@@ -151,17 +150,16 @@ the Applicant fills the Materials fields
 the applicant edits the Subcontracting costs section
     the user clicks the button/link             jQuery = button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
-    the user enters text to a text field        css = #collapsible-4 .form-row:nth-child(1) [name^="subcontracting-subcontractingCost"]   100
-    the user enters text to a text field        css = .form-row:nth-child(1) [name^="subcontracting-name"]    test1
-    the user enters text to a text field        css = .form-row:nth-child(1) [name^="subcontracting-country-"]    test2
-    Set Focus To Element                        jQuery = button:contains(Add another subcontractor)
+    the user enters text to a text field        css = #collapsible-4 .form-row:nth-child(1) [name$=".cost"]   100
+    the user enters text to a text field        css = #collapsible-4 .form-row:nth-child(1) [name$=".name"]    test1
+    the user enters text to a text field        css = #collapsible-4 .form-row:nth-child(1) [name$=".country"]    test2
     the user clicks the button/link             jQuery = button:contains(Add another subcontractor)
     the user should see the element             css = #collapsible-4 .form-row:nth-child(2)
-    the user enters text to a text field        css = .form-row:nth-child(2) [name^="subcontracting-name"]    test1
-    the user enters text to a text field        css = .form-row:nth-child(2) [name^="subcontracting-country-"]    test2
-    the user enters text to a text field        css = .form-row:nth-child(2) [name^="subcontracting-role"]    test3
-    the user enters text to a text field        css = #collapsible-4 .form-row:nth-child(2) [name^="subcontracting-subcontractingCost"]   100
-    the user enters text to a text field        css = #collapsible-4 .form-row:nth-child(1) [name^="subcontracting-name"]    test
+    the user enters text to a text field        css = .form-row:nth-child(2) [name$=".name"]    test1
+    the user enters text to a text field        css = .form-row:nth-child(2) [name$=".country"]    test2
+    the user enters text to a text field        css = .form-row:nth-child(2) [name$=".role"]    test3
+    the user enters text to a text field        css = #collapsible-4 .form-row:nth-child(2) [name$=".cost"]   100
+    the user enters text to a text field        css = #collapsible-4 .form-row:nth-child(1) [name$=".name"]    test
     Set Focus To Element                        jQuery = button:contains("Subcontracting costs")
 
 the applicant fills the 'capital usage' field
