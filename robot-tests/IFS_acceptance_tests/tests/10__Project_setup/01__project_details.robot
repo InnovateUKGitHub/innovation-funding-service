@@ -86,7 +86,7 @@ Status updates correctly for internal user's table    # This uses the Elbow grea
     When the user clicks the button/link    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting a
     Then the user should see the element    jQuery = h1:contains("Project details")
     And the user clicks the button/link     link = Projects in setup
-#    And the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting
+    And the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting
     And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(2)  # Project details
 
 Non-lead partner can see the project setup page
@@ -523,7 +523,6 @@ Lead partner can see the status update when all Project details are submitted
     When the user clicks the button/link   link = View the status of partners
     Then the user should see the element   id = table-project-status
     And the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
-    And the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
 
 Project details links are still enabled after submission
     [Documentation]    INFUND-3381
@@ -696,11 +695,11 @@ the user should see the project setup stages
     the user should see the element    jQuery = h2:contains("Bank details")
     the user should see the element    jQuery = h2:contains("Finance checks")
     the user should see the element    jQuery = h2:contains("Spend profile")
-    the user should see the element    link = Other documents
+    the user should see the element    link = Documents
     the user should see the element    jQuery = h2:contains("Grant offer letter")
 
 the competition admin should see the status of each project setup stage
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)                       # Other Documents
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)                       # Documents
     the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4)                       # Monitoring Officer
     the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)                       # Bank details
     the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action    # Finance checks
