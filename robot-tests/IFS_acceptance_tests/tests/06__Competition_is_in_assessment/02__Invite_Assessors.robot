@@ -168,7 +168,7 @@ Invite non-registered assessors server side validations
 Invite non-registered users
     [Documentation]    INFUND-6411 INFUND-6448
     [Tags]
-    When the user moves focus to the element                 jQuery = .govuk-button:contains("Add assessors to list")
+    When Set Focus To Element                                jQuery = .govuk-button:contains("Add assessors to list")
     And the user enters text to a text field                 css = #invite-table tr:nth-of-type(1) td:nth-of-type(1) input   Olivier Giroud
     And the user should not see the element                  jQuery = label:contains("Please enter a name.")    #check for the client side validation
     And the user enters text to a text field                 css = #invite-table tr:nth-of-type(1) td:nth-of-type(2) input   ${test_mailbox_one}+OlivierGiroud@gmail.com

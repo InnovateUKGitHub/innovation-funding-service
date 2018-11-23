@@ -26,7 +26,11 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.model.*;
@@ -35,6 +39,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEven
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
@@ -85,9 +90,11 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE;
 import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
@@ -122,6 +129,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private GrantOfferLetterIndustrialFinanceTable industrialFinanceTable;
     private GrantOfferLetterAcademicFinanceTable academicFinanceTable;
     private GrantOfferLetterFinanceTotalsTable totalsTable;
+    private List<PartnerOrganisationResource> partnerOrganisationsResource;
 
     private Address address;
 
@@ -168,6 +176,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
     @Mock
     private NotificationService notificationServiceMock;
+
+    @Mock
+    private PartnerOrganisationService partnerOrganisationServiceMock;
     
     @Mock
     private SystemNotificationSource systemNotificationSource;
@@ -196,7 +207,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         nonAcademicUnfunded = newOrganisation().withOrganisationType(BUSINESS).withName("Org4").build();
         organisationResources = newOrganisationResource().build(4);
 
-        Competition competition = newCompetition().build();
+        Competition competition = newCompetition()
+                .build();
 
         address = newAddress().withAddressLine1("test1")
                 .withAddressLine2("test2")
@@ -237,6 +249,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         partnerOrganisations.add(partnerOrganisation2);
         partnerOrganisations.add(partnerOrganisation3);
 
+        partnerOrganisationsResource = newPartnerOrganisationResource().build(2);
+
         project = newProject().
                 withId(projectId).
                 withPartnerOrganisations(partnerOrganisations).
@@ -265,10 +279,11 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(industrialFinanceTablePopulatorMock.createTable(anyMap())).thenReturn(industrialFinanceTable);
         when(academicFinanceTablePopulatorMock.createTable(anyMap())).thenReturn(academicFinanceTable);
         when(financeTotalsTablePopulatorMock.createTable(anyMap(), anyLong())).thenReturn(totalsTable);
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(anyLong())).thenReturn(serviceSuccess(partnerOrganisationsResource));
     }
 
     @Test
-    public void testCreateSignedGrantOfferLetterFileEntry() {
+    public void createSignedGrantOfferLetterFileEntry() {
         assertCreateFile(
                 project::getSignedGrantOfferLetter,
                 (fileToCreate, inputStreamSupplier) ->
@@ -276,7 +291,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testCreateGrantOfferLetterFileEntry() {
+    public void createGrantOfferLetterFileEntry() {
         assertCreateFile(
                 project::getGrantOfferLetter,
                 (fileToCreate, inputStreamSupplier) ->
@@ -284,7 +299,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testCreateAdditionalContractFileEntry() {
+    public void createAdditionalContractFileEntry() {
         assertCreateFile(
                 project::getAdditionalContractFile,
                 (fileToCreate, inputStreamSupplier) ->
@@ -292,49 +307,49 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testGetAdditionalContractFileEntryDetails() {
+    public void getAdditionalContractFileEntryDetails() {
         assertGetFileDetails(
                 project::setAdditionalContractFile,
                 () -> service.getAdditionalContractFileEntryDetails(123L));
     }
 
     @Test
-    public void testGetGrantOfferLetterFileEntryDetails() {
+    public void getGrantOfferLetterFileEntryDetails() {
         assertGetFileDetails(
                 project::setGrantOfferLetter,
                 () -> service.getGrantOfferLetterFileEntryDetails(123L));
     }
 
     @Test
-    public void testGetSignedGrantOfferLetterFileEntryDetails() {
+    public void getSignedGrantOfferLetterFileEntryDetails() {
         assertGetFileDetails(
                 project::setSignedGrantOfferLetter,
                 () -> service.getSignedGrantOfferLetterFileEntryDetails(123L));
     }
 
     @Test
-    public void testGetAdditionalContractFileContents() {
+    public void getAdditionalContractFileContents() {
         assertGetFileContents(
                 project::setAdditionalContractFile,
                 () -> service.getAdditionalContractFileAndContents(123L));
     }
 
     @Test
-    public void testGetGrantOfferLetterFileContents() {
+    public void getGrantOfferLetterFileContents() {
         assertGetFileContents(
                 project::setGrantOfferLetter,
                 () -> service.getGrantOfferLetterFileAndContents(123L));
     }
 
     @Test
-    public void testGetSignedGrantOfferLetterFileContents() {
+    public void getSignedGrantOfferLetterFileContents() {
         assertGetFileContents(
                 project::setSignedGrantOfferLetter,
                 () -> service.getSignedGrantOfferLetterFileAndContents(123L));
     }
 
     @Test
-    public void testUpdateSignedGrantOfferLetterFileEntry() {
+    public void updateSignedGrantOfferLetterFileEntry() {
         when(golWorkflowHandlerMock.isSent(any())).thenReturn(true);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         assertUpdateFile(
@@ -344,7 +359,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testUpdateSignedGrantOfferLetterFileEntryProjectLive() {
+    public void updateSignedGrantOfferLetterFileEntryProjectLive() {
 
         FileEntryResource fileToUpdate = newFileEntryResource().build();
         Supplier<InputStream> inputStreamSupplier = () -> null;
@@ -358,7 +373,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testUpdateSignedGrantOfferLetterFileEntryGolNotSent() {
+    public void updateSignedGrantOfferLetterFileEntryGolNotSent() {
 
         FileEntryResource fileToUpdate = newFileEntryResource().build();
         Supplier<InputStream> inputStreamSupplier = () -> null;
@@ -372,7 +387,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testSubmitGrantOfferLetterFailureNoSignedGolFile() {
+    public void submitGrantOfferLetterFailureNoSignedGolFile() {
 
         ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
 
@@ -381,7 +396,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testSubmitGrantOfferLetterFailureCannotReachSignedState() {
+    public void submitGrantOfferLetterFailureCannotReachSignedState() {
         project.setSignedGrantOfferLetter(mock(FileEntry.class));
 
         when(golWorkflowHandlerMock.sign(any())).thenReturn(false);
@@ -393,7 +408,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testSubmitGrantOfferLetterSuccess() {
+    public void submitGrantOfferLetterSuccess() {
         project.setSignedGrantOfferLetter(mock(FileEntry.class));
 
         when(golWorkflowHandlerMock.sign(any())).thenReturn(true);
@@ -405,7 +420,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testGenerateGrantOfferLetter() {
+    public void generateGrantOfferLetter() {
         assertGenerateFile(
                 fileEntryResource ->
                         service.generateGrantOfferLetter(123L, fileEntryResource));
@@ -418,7 +433,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testRemoveGrantOfferLetterFileEntry() {
+    public void removeGrantOfferLetterFileEntry() {
 
         UserResource internalUserResource = newUserResource().build();
         User internalUser = newUser().withId(internalUserResource.getId()).build();
@@ -442,7 +457,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testRemoveGrantOfferLetterFileEntryProjectLive() {
+    public void removeGrantOfferLetterFileEntryProjectLive() {
 
         UserResource internalUserResource = newUserResource().build();
         User internalUser = newUser().withId(internalUserResource.getId()).build();
@@ -463,7 +478,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testRemoveGrantOfferLetterFileEntryButWorkflowRejected() {
+    public void removeGrantOfferLetterFileEntryButWorkflowRejected() {
 
         UserResource internalUserResource = newUserResource().build();
         User internalUser = newUser().withId(internalUserResource.getId()).build();
@@ -487,7 +502,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testRemoveSignedGrantOfferLetterFileEntry() {
+    public void removeSignedGrantOfferLetterFileEntry() {
 
         UserResource externalUser = newUserResource().build();
         setLoggedInUser(externalUser);
@@ -509,7 +524,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testRemoveSignedGrantOfferLetterFileEntryProjectLive() {
+    public void removeSignedGrantOfferLetterFileEntryProjectLive() {
 
         UserResource internalUserResource = newUserResource().build();
         User internalUser = newUser().withId(internalUserResource.getId()).build();
@@ -536,7 +551,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testGenerateGrantOfferLetterIfReadySuccess() {
+    public void generateGrantOfferLetterIfReadySuccess() {
 
         setupGolTemplate();
 
@@ -573,6 +588,60 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
+    public void generateGrantOfferLetterIfReadyWhenProjectDocumentsAndDocsApproved() {
+
+        setupGolTemplate();
+
+        Organisation o1 = organisation(BUSINESS, "OrgLeader&");
+        Organisation o2 = organisation(BUSINESS, "Org2\"");
+        Organisation o3 = organisation(BUSINESS, "Org3<");
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withGrantClaimPercentage(30)
+                .withApplication(456L)
+                .withOrganisation(3L)
+                .build();
+
+        setupOrganisationsForGrantOfferLetter(o1, o2, o3, applicationFinanceResource, applicationFinanceResource, applicationFinanceResource);
+
+        Competition comp = newCompetition().withName("Test Comp<").build();
+        org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
+                .newCompetitionProjectDocument()
+                .withCompetition(comp)
+                .withTitle("Risk Register")
+                .withGuidance("Guidance for Risk Register")
+                .build();
+        comp.setProjectDocuments(singletonList(configuredProjectDocument));
+        project.getApplication().setCompetition(comp);
+
+        ProjectDocument projectDocument =
+                newProjectDocument()
+                .withProject(project)
+                .withStatus(DocumentStatus.APPROVED)
+                .build();
+        project.setProjectDocuments(singletonList(projectDocument));
+
+        Map<String, Object> templateArgs = setupTemplateArguments();
+
+        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
+
+        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
+
+        verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
+        verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
+
+        verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
+        verify(costRepositoryMock, times(3)).findByCostGroupId(anyLong());
+        verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
+        verify(academicFinanceTablePopulatorMock).createTable(anyMap());
+        verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());
+
+        assertTrue(checkGolTemplate());
+        assertTrue(result.isSuccess());
+        assertTrue(compareTemplate(templateArgs, templateArgsCaptor.getAllValues().get(0)));
+    }
+
+    @Test
     public void testGenerateGrantOfferLetterFailureSpendProfilesNotApproved() {
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.REJECTED));
@@ -582,16 +651,30 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testGenerateGrantOfferLetterOtherDocsNotApproved() {
+    public void generateGrantOfferLetterProjectDocumentsAndDocsNotApproved() {
 
         Competition comp = newCompetition().withName("Test Comp").build();
+        org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
+                .newCompetitionProjectDocument()
+                .withCompetition(comp)
+                .withTitle("Risk Register")
+                .withGuidance("Guidance for Risk Register")
+                .build();
+        comp.setProjectDocuments(singletonList(configuredProjectDocument));
+
         Organisation o1 = newOrganisation().withName("OrgLeader").build();
         User u = newUser().withFirstName("ab").withLastName("cd").build();
         ProcessRole leadAppProcessRole = newProcessRole().withOrganisationId(o1.getId()).withUser(u).withRole(Role.LEADAPPLICANT).build();
         Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
         ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o1).build();
         PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o1).withLeadOrganisation(true).build();
-        Project project = newProject().withOtherDocumentsApproved(ApprovalType.REJECTED).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
+        Project project = newProject().withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
+        ProjectDocument projectDocument =
+                newProjectDocument()
+                .withProject(project)
+                .withStatus(DocumentStatus.REJECTED)
+                .build();
+        project.setProjectDocuments(singletonList(projectDocument));
 
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
@@ -601,7 +684,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testGenerateGrantOfferLetterNoProject() {
+    public void generateGrantOfferLetterNoProject() {
 
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(projectRepositoryMock.findOne(123L)).thenReturn(null);
@@ -694,8 +777,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     private void setupOrganisationsForGrantOfferLetter(Organisation o1, Organisation o2, Organisation o3, ApplicationFinanceResource af1, ApplicationFinanceResource af2, ApplicationFinanceResource af3) {
+
+        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> projectDocuments
+                = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder.newCompetitionProjectDocument().build(1);
+
         Competition comp = newCompetition()
                 .withName("Test Comp<")
+                .withProjectDocuments(projectDocuments)
                 .build();
 
         User u = newUser()
@@ -738,8 +826,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withTown("Swindon&")
                 .withPostcode("SN1 1AA'")
                 .build();
-        Project project = newProject()
-                .withOtherDocumentsApproved(ApprovalType.APPROVED)
+        project = newProject()
                 .withName("project 1")
                 .withApplication(app)
                 .withPartnerOrganisations(asList(po3, po, po2))
@@ -748,6 +835,14 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withAddress(address)
                 .withTargetStartDate(LocalDate.now())
                 .build();
+
+        ProjectDocument projectDocument =
+                newProjectDocument()
+                .withProject(project)
+                .withStatus(DocumentStatus.APPROVED)
+                .build();
+
+        project.setProjectDocuments(singletonList(projectDocument));
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
 
@@ -758,7 +853,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testSendGrantOfferLetterNoGol() {
+    public void sendGrantOfferLetterNoGol() {
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newProjectInvite().build()).build(1);
         Project p = newProject()
@@ -778,7 +873,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testSendGrantOfferLetterSendFails() {
+    public void sendGrantOfferLetterSendFails() {
 
         List<ProjectUser> pu = newProjectUser()
                 .withRole(PROJECT_MANAGER)
@@ -838,7 +933,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testSendGrantOfferLetterNoProject() {
+    public void sendGrantOfferLetterNoProject() {
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
 
@@ -848,7 +943,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testSendGrantOfferLetterSuccess() {
+    public void sendGrantOfferLetterSuccess() {
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newProjectInvite().build()).build(1);
@@ -901,7 +996,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testSendGrantOfferLetterFailure() {
+    public void sendGrantOfferLetterFailure() {
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newProjectInvite().build()).build(1);
@@ -939,7 +1034,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetterRejectionSuccess() {
+    public void approveOrRejectSignedGrantOfferLetterRejectionSuccess() {
         User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
         setLoggedInUser(newUserResource().withId(u.getId()).build());
 
@@ -965,7 +1060,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetterWhenGOLRejectionFailure() {
+    public void approveOrRejectSignedGrantOfferLetterWhenGOLRejectionFailure() {
         User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
         setLoggedInUser(newUserResource().withId(u.getId()).build());
 
@@ -991,7 +1086,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetterApprovalSuccess() {
+    public void approveOrRejectSignedGrantOfferLetterApprovalSuccess() {
 
         User user = newUser()
                 .withFirstName("A")
@@ -1057,7 +1152,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetterEnsureDuplicateEmailsAreNotSent() {
+    public void approveOrRejectSignedGrantOfferLetterEnsureDuplicateEmailsAreNotSent() {
 
         User user = newUser()
                 .withFirstName("A")
@@ -1133,7 +1228,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetterWhenProjectGOLApprovalFailure() {
+    public void approveOrRejectSignedGrantOfferLetterWhenProjectGOLApprovalFailure() {
         User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
         setLoggedInUser(newUserResource().withId(u.getId()).build());
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(nonAcademicUnfunded).withInvite(newProjectInvite().build()).build(1);
@@ -1162,7 +1257,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetterWhenGOLApprovalFailure() {
+    public void approveOrRejectSignedGrantOfferLetterWhenGOLApprovalFailure() {
         User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
         setLoggedInUser(newUserResource().withId(u.getId()).build());
 
@@ -1188,7 +1283,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetterWhenGOLNotReadyToApprove() {
+    public void approveOrRejectSignedGrantOfferLetterWhenGOLNotReadyToApprove() {
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         project.setGrantOfferLetter(golFile);
@@ -1207,7 +1302,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetterWhenGOLRejectedButRejectionReasonIsAllWhitespaces() {
+    public void approveOrRejectSignedGrantOfferLetterWhenGOLRejectedButRejectionReasonIsAllWhitespaces() {
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.REJECTED, "          ");
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
@@ -1217,7 +1312,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetterWhenGOLRejectedButRejectionReasonIsEmpty() {
+    public void approveOrRejectSignedGrantOfferLetterWhenGOLRejectedButRejectionReasonIsEmpty() {
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.REJECTED, "");
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
@@ -1227,7 +1322,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetterWhenGOLRejectedButNoRejectionReason() {
+    public void approveOrRejectSignedGrantOfferLetterWhenGOLRejectedButNoRejectionReason() {
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.REJECTED, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
@@ -1237,7 +1332,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetterWhenGOLNeitherApprovedNorRejected() {
+    public void aproveOrRejectSignedGrantOfferLetterWhenGOLNeitherApprovedNorRejected() {
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(null, null);
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
@@ -1247,7 +1342,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testGetGrantOfferLetterStateWhenProjectDoesNotExist() {
+    public void getGrantOfferLetterStateWhenProjectDoesNotExist() {
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
 
@@ -1258,7 +1353,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void testGetGrantOfferLetterState() {
+    public void getGrantOfferLetterState() {
 
         GrantOfferLetterStateResource state = GrantOfferLetterStateResource.stateInformationForPartnersView(GrantOfferLetterState.SENT, GrantOfferLetterEvent.GOL_SENT);
 

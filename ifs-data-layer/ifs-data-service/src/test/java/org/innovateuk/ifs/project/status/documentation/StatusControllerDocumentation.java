@@ -55,7 +55,6 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         withBankDetailsStatus(PENDING, NOT_REQUIRED, COMPLETE).
                         withFinanceChecksStatus(PENDING, NOT_STARTED, COMPLETE).
                         withSpendProfileStatus(PENDING, ACTION_REQUIRED, COMPLETE).
-                        withOtherDocumentsStatus(PENDING, PENDING, COMPLETE).
                         withGrantOfferLetterStatus(PENDING, PENDING, PENDING).
                         build(3)).
                 build();
@@ -146,11 +145,6 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
         partnerStatuses.get(0).setBankDetailsStatus(PENDING);
         partnerStatuses.get(1).setBankDetailsStatus(ProjectActivityStates.NOT_REQUIRED);
         partnerStatuses.get(2).setBankDetailsStatus(ProjectActivityStates.NOT_STARTED);
-
-        projectLeadStatusResource.setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(0).setOtherDocumentsStatus(PENDING);
-        partnerStatuses.get(1).setOtherDocumentsStatus(PENDING);
-        partnerStatuses.get(2).setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
 
         projectLeadStatusResource.setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
         partnerStatuses.get(0).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);

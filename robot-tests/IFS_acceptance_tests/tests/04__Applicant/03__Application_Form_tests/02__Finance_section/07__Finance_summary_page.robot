@@ -327,7 +327,7 @@ Lead enters a valid research participation value
     the user should see the element                   css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field              css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input  Test
     wait for autosave
-    the user enters large text to a text field        css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input  1200000000
+    The user enters text to a text field              css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input  1200000000
     wait for autosave
     the user enters text to a text field              css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input  1000
     wait for autosave

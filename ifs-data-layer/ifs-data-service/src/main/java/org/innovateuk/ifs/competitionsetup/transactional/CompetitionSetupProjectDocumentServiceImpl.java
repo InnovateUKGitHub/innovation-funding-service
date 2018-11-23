@@ -4,9 +4,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.competitionsetup.mapper.ProjectDocumentMapper;
-import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentRepository;
+import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,7 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     private ProjectDocumentMapper projectDocumentMapper;
 
     @Autowired
-    private ProjectDocumentRepository projectDocumentRepository;
+    private ProjectDocumentConfigRepository projectDocumentConfigRepository;
 
     @Override
     @Transactional
@@ -38,7 +39,7 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
 
             ProjectDocument projectDocument = projectDocumentMapper.mapToDomain(projectDocumentResource);
 
-            ProjectDocument savedProjectDocument = projectDocumentRepository.save(projectDocument);
+            ProjectDocument savedProjectDocument = projectDocumentConfigRepository.save(projectDocument);
             return serviceSuccess(projectDocumentMapper.mapToResource(savedProjectDocument));
         });
     }
@@ -57,7 +58,7 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
             List<ProjectDocument> projectDocuments = simpleMap(projectDocumentResources,
                     projectDocumentResource -> projectDocumentMapper.mapToDomain(projectDocumentResource));
 
-            List<ProjectDocument> savedProjectDocuments = (List<ProjectDocument>) projectDocumentRepository.save(projectDocuments);
+            List<ProjectDocument> savedProjectDocuments = (List<ProjectDocument>) projectDocumentConfigRepository.save(projectDocuments);
             return serviceSuccess(simpleMap(savedProjectDocuments, savedProjectDocument -> projectDocumentMapper.mapToResource(savedProjectDocument)));
         });
     }
@@ -72,21 +73,21 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     @Override
     @Transactional
     public ServiceResult<ProjectDocumentResource> findOne(long id) {
-        ProjectDocument projectDocument = projectDocumentRepository.findOne(id);
+        ProjectDocument projectDocument = projectDocumentConfigRepository.findOne(id);
         return serviceSuccess(projectDocumentMapper.mapToResource(projectDocument));
     }
 
     @Override
     @Transactional
     public ServiceResult<List<ProjectDocumentResource>> findByCompetitionId(long competitionId) {
-        List<ProjectDocument> projectDocuments = projectDocumentRepository.findByCompetitionId(competitionId);
+        List<ProjectDocument> projectDocuments = projectDocumentConfigRepository.findByCompetitionId(competitionId);
         return serviceSuccess(simpleMap(projectDocuments, projectDocument -> projectDocumentMapper.mapToResource(projectDocument)));
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> delete(long id) {
-        projectDocumentRepository.delete(id);
+        projectDocumentConfigRepository.delete(id);
         return serviceSuccess();
     }
 }

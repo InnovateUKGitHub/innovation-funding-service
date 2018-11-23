@@ -13,6 +13,7 @@ import java.util.Optional;
 /**
  * A view model that backs the Project Status page
  */
+
 public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;
@@ -29,6 +30,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private SectionAccessList sectionAccesses;
     private SectionStatusList sectionStatuses;
     private boolean collaborationAgreementRequired;
+    private boolean projectDocuments;
     private boolean projectManager;
     private boolean pendingQuery;
     private String originQuery;
@@ -43,6 +45,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 SectionAccessList sectionAccesses,
                                 SectionStatusList sectionStatuses,
                                 boolean collaborationAgreementRequired,
+                                boolean projectDocuments,
                                 boolean projectManager,
                                 boolean pendingQuery,
                                 String originQuery) {
@@ -61,6 +64,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.sectionStatuses = sectionStatuses;
         this.projectComplete = sectionStatuses.isProjectComplete();
         this.collaborationAgreementRequired = collaborationAgreementRequired;
+        this.projectDocuments = projectDocuments;
         this.projectManager = projectManager;
         this.pendingQuery = pendingQuery;
         this.originQuery = originQuery;
@@ -126,8 +130,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return sectionAccesses.getSpendProfileSection();
     }
 
-    public SectionAccess getOtherDocumentsSection() {
-        return sectionAccesses.getOtherDocumentsSection();
+    public SectionAccess getDocumentsSection() {
+        return sectionAccesses.getDocumentsSection();
     }
 
     public SectionAccess getGrantOfferLetterSection() {
@@ -152,8 +156,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return sectionStatuses.getSpendProfileStatus();
     }
 
-    public SectionStatus getOtherDocumentsStatus() {
-        return sectionStatuses.getOtherDocumentsStatus();
+    public SectionStatus getDocumentsStatus() {
+        return sectionStatuses.getDocumentsStatus();
     }
 
     public SectionStatus getGrantOfferLetterStatus() {
@@ -173,6 +177,10 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isCollaborationAgreementRequired() { return collaborationAgreementRequired; }
+
+    public boolean isProjectDocuments() {
+        return projectDocuments;
+    }
 
     public boolean isProjectManager() { return projectManager; }
 
