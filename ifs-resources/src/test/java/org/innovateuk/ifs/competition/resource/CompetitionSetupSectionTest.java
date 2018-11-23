@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.junit.Assert.*;
 
 public class CompetitionSetupSectionTest {
@@ -87,6 +88,7 @@ public class CompetitionSetupSectionTest {
 
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withSetupComplete(true)
+				.withCompetitionStatus(OPEN)
 				.withStartDate(tomorrow)
 				.withFundersPanelDate(tomorrow)
 				.build();
