@@ -4,7 +4,16 @@ INSERT INTO document_config
 (competition_id, title, guidance, editable, enabled, type)
 SELECT c.id AS competition_id,
 'Collaboration agreement' AS title,
-'Enter guidance for Collaboration agreement' AS guidance,
+'<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>
+
+ <p>Please allow enough time to complete this document before your project start date.</p>
+
+ <p>Guidance on completing a collaboration agreement can be found on the <a target="_blank" href="http://www.ipo.gov.uk/lambert">Lambert Agreement website</a>.</p>
+
+ <p>Your collaboration agreement must be:</p>
+ <ul class="list-bullet"><li>in portable document format (PDF)</li>
+ <li>legible at 100% magnification</li>
+ <li>less than 10MB in file size</li></ul>' AS guidance,
 false AS editable,
 true AS enabled,
 'ProjectDocument' AS type FROM competition c
@@ -21,7 +30,19 @@ INSERT INTO document_config
 (competition_id, title, guidance, editable, enabled, type)
 SELECT c.id AS competition_id,
 'Exploitation plan' AS title,
-'Enter guidance for Exploitation plan' AS guidance,
+'<p>This is a confirmation of your overall plan, setting out the business case for your project. This plan will change during the lifetime of the project.</p>
+
+ <p>It should also describe partner activities that will exploit the results of the project so that:</p>
+ <ul class="list-bullet"><li>changes in the commercial environment can be monitored and accounted for</li>
+ <li>adequate resources are committed to exploitation</li>
+ <li>exploitation can be monitored by the stakeholders</li></ul>
+
+ <p>You can download an <a href="/files/exploitation_plan.doc" class="govuk-link">exploitation plan template</a>.</p>
+
+ <p>The uploaded exploitation plan must be:</p>
+ <ul class="list-bullet"><li>in portable document format (PDF)</li>
+ <li>legible at 100% magnification</li>
+ <li>less than 10MB in file size</li></ul>' AS guidance,
 false AS editable,
 true AS enabled,
 'ProjectDocument' AS type FROM competition c

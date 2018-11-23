@@ -47,10 +47,10 @@
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">What should I include?</span>
                 </summary>
-                <div class="govuk-details__text">
-                    <th:block th:text=${model.guidance}>
+                <div class="govuk-details__text wysiwyg-styles">
+                    <p class="govuk-body" ifs:utext=${model.guidance}>
                         GUIDANCE FOR DOCUMENT
-                    </th:block>
+                    </p>
                 </div>
             </details>
 
