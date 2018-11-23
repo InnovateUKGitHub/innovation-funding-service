@@ -106,6 +106,7 @@ Validation on duration of Project
     [Tags]
     Given the user clicks the button/link               link = Edit
     And Set Focus To Element                            id = durationInMonths
+    When Set Focus To Element                           link = Contact us
     Then the user should see a field error              ${empty_field_warning_message}
     When the user clicks the button/link                jQuery = button:contains("Save and return to finances")
     Then the user should see a field and summary error  ${empty_field_warning_message}
@@ -1331,7 +1332,7 @@ Project finance user amends other costs details in eligibility for lead
     And the user enters text to a text field        jQuery = #other-costs-table tr:nth-child(2) td:nth-child(2) textarea    some other costs
     And the user enters text to a text field        jQuery = #other-costs-table tr:nth-child(2) td:nth-child(3) input    5750
     Then verify percentage and total                7    6%    £10,750
-    When the user should see the element            css = #other-costs-table tr:nth-of-type(2) td:nth-of-type(4) button
+    When the user should see the element            css = #other-costs-table tr:nth-child(2) button
     When the user clicks the button/link            jQuery = .govuk-button[name = save-eligibility]
     Then verify total costs of project              £175,830
     And the user should see the element             jQuery = section:nth-of-type(7) a:contains("Edit")
