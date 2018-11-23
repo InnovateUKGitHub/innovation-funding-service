@@ -34,7 +34,7 @@
                                     name="enabledIds"
                                     class="govuk-checkboxes__input"
                                     th:id="${'projectdocument-enabled-' + document.id}"
-                                    th:checked="${document.enabled}" />
+                                    th:checked="${document.enabled}"
                                     required="required"
                                     th:attr="data-required-errormessage=#{competition.setup.documents.required}"/>
                             <label th:for=${checkboxId} class="govuk-label govuk-checkboxes__label">
