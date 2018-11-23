@@ -1,7 +1,7 @@
--- IFS-4494 - Create grant status table
+-- IFS-4494 - Create grant process table
 -- Add a new table file_type
 
-CREATE TABLE `grant_status` (
+CREATE TABLE `grant_process` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`application_id` bigint(20) NOT NULL,
 	`sent_requested` datetime NOT NULL,

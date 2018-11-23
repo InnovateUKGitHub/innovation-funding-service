@@ -40,11 +40,16 @@ import static org.mockito.Mockito.when;
  * Tests around the {@link GrantServiceImpl}.
  */
 public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> {
+    private static final long APPLICATION_ID = 9L;
+
     @Mock
     private GrantEndpoint grantEndpoint;
 
     @Mock
     private ProjectRepository projectRepository;
+
+    @Mock
+    private GrantProcessService grantProcessService;
 
     @Mock
     protected GrantMapper grantMapper;
@@ -61,16 +66,17 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
                 .withDuration(12L)
                 .withApplication(
                         newApplication()
-                                .withId(9L)
+                                .withId(APPLICATION_ID)
                                 .withCompetition(
                                         newCompetition().withId(2L).build())
                                 .build()).build();
         long applicationId = project.getApplication().getId();
         when(projectRepository.findOneByApplicationId(applicationId)).thenReturn(project);
-        when(grantMapper.mapToGrant(any())).thenReturn(new Grant().id(9));
+        when(grantMapper.mapToGrant(any())).thenReturn(new Grant().id(APPLICATION_ID));
         ServiceResult<Void> result = service.sendProject(applicationId);
         assertThat(result.isSuccess(), equalTo(true));
         verify(grantEndpoint).send(LambdaMatcher.createLambdaMatcher(matchGrant(project)));
+        //verify(grantProcessService).sendSucceeded(LambdaMatcher.createLambdaMatcher(it -> it == APPLICATION_ID));
     }
 
     private Predicate<Grant> matchGrant(Project project) {

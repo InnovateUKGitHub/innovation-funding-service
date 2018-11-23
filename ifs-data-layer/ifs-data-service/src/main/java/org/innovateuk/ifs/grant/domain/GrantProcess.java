@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.time.ZonedDateTime;
 
 @Entity
-public class GrantStatus {
+public class GrantProcess {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CONTACT_NOT_UPDATED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_PROCESS_SEND_FAILED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -39,7 +39,7 @@ public class RestGrantEndpoint implements GrantEndpoint {
                         Void.class, Void.class, HttpStatus.OK, HttpStatus.ACCEPTED);
         if (response.isLeft()){
             LOG.debug("Sent grant NOK : " + grant);
-            return serviceFailure(new Error(CONTACT_NOT_UPDATED));
+            return serviceFailure(new Error(GRANT_PROCESS_SEND_FAILED));
         } else {
             LOG.debug("Sent grant OK : " + grant);
             return serviceSuccess();

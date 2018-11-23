@@ -20,7 +20,7 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.grant.service.GrantStatusService;
+import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -105,7 +105,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private FileTemplateRenderer fileTemplateRenderer;
 
     @Autowired
-    private GrantStatusService grantStatusService;
+    private GrantProcessService grantProcessService;
 
     @Autowired
     private GrantOfferLetterWorkflowHandler golWorkflowHandler;
@@ -563,7 +563,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
         }
-        grantStatusService.sendRequested(project.getApplication().getId());
+        grantProcessService.sendRequested(project.getApplication().getId());
 
         return notifyProjectIsLive(project.getId());
     }
