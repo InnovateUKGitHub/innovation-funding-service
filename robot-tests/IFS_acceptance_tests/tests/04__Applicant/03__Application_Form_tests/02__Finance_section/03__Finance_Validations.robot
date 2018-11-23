@@ -83,7 +83,7 @@ Labour server side
     And the user clicks the button/link         jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   ${field_should_be_1_or_higher}
     And the user should see a field and summary error    ${empty_field_warning_message}
-   # And the user should see a field and summary error    This field should be 365 or lower
+    And the user should see a field and summary error    This field should be 365 or lower
     [Teardown]    Run keywords    the user enters text to a text field    id = working-days-per-year    21
     ...    AND    Remove row    jQuery = button:contains("Labour")    jQuery = #labour-costs-table button:contains("Remove")
 
