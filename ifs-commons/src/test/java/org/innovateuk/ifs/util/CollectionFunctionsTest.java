@@ -10,6 +10,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
 import static java.util.function.Function.identity;
 import static org.apache.commons.lang3.tuple.Pair.of;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -414,6 +415,21 @@ public class CollectionFunctionsTest {
     @Test
     public void test_simpleFilterNot_nullElements() {
         assertEquals(asList(123, null, 456), CollectionFunctions.simpleFilterNot(asList(123, null, 456, 789), i -> i != null && i > 456));
+    }
+
+    @Test
+    public void simpleFindAnyWithNullList() {
+        assertEquals(empty(), CollectionFunctions.simpleFindAny(null, i -> true));
+    }
+
+    @Test
+    public void simpleFindAnyWithNullElements() {
+        assertEquals(Optional.of(789), CollectionFunctions.simpleFindAny(asList(123, null, 455, 789), i -> i != null && i > 456));
+    }
+
+    @Test
+    public void simpleFindAny() {
+        assertEquals(Optional.of(789), CollectionFunctions.simpleFindAny(asList(123, 789, 455, 112), i -> i != null && i > 456));
     }
 
     @Test

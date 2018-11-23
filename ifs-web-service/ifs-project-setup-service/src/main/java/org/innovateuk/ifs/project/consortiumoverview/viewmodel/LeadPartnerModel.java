@@ -9,7 +9,6 @@ public class LeadPartnerModel extends ConsortiumMemberStatusModel {
         final ConsortiumPartnerStatus bankDetailsStatus,
         final ConsortiumPartnerStatus financeChecksStatus,
         final ConsortiumPartnerStatus spendProfileStatus,
-        final ConsortiumPartnerStatus otherDocumentsStatus,
         final ConsortiumPartnerStatus grantOfferLetterStatus) {
 
         this.name = partnerName;
@@ -18,7 +17,6 @@ public class LeadPartnerModel extends ConsortiumMemberStatusModel {
         this.bankDetailsStatus = bankDetailsStatus;
         this.financeChecksStatus = financeChecksStatus;
         this.spendProfileStatus = spendProfileStatus;
-        this.otherDocumentsStatus = otherDocumentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
     }
 }

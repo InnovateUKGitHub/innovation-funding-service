@@ -25,5 +25,12 @@ public abstract class BaseProjectSetupControllerSecurityTest<ControllerType> ext
         );
     }
 
+    protected void assertSecured(Runnable invokeControllerFn, Consumer<SetupSectionsPermissionRules> verification) {
+        assertAccessDenied(
+                invokeControllerFn::run,
+                () -> verification.accept(verify(permissionRules, times(1)))
+        );
+    }
+
     protected abstract Consumer<SetupSectionsPermissionRules> getVerification();
 }

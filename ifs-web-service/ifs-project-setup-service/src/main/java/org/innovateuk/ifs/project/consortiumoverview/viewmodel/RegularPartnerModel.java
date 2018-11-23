@@ -18,7 +18,6 @@ public class RegularPartnerModel extends ConsortiumMemberStatusModel {
         this.spendProfileStatus = spendProfileStatus;
 
         this.monitoringOfficerStatus = NOT_REQUIRED;
-        this.otherDocumentsStatus = NOT_REQUIRED;
         this.grantOfferLetterStatus = NOT_REQUIRED;
     }
 }

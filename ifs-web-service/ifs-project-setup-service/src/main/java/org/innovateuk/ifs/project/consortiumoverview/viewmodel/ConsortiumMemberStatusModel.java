@@ -11,7 +11,6 @@ public abstract class ConsortiumMemberStatusModel {
     ConsortiumPartnerStatus bankDetailsStatus;
     ConsortiumPartnerStatus financeChecksStatus;
     ConsortiumPartnerStatus spendProfileStatus;
-    ConsortiumPartnerStatus otherDocumentsStatus;
     ConsortiumPartnerStatus grantOfferLetterStatus;
 
     public String getName() {
@@ -38,10 +37,6 @@ public abstract class ConsortiumMemberStatusModel {
         return spendProfileStatus;
     }
 
-    public ConsortiumPartnerStatus getOtherDocumentsStatus() {
-        return otherDocumentsStatus;
-    }
-
     public ConsortiumPartnerStatus getGrantOfferLetterStatus() {
         return grantOfferLetterStatus;
     }
@@ -65,7 +60,6 @@ public abstract class ConsortiumMemberStatusModel {
             .append(this.bankDetailsStatus, rhs.bankDetailsStatus)
             .append(this.financeChecksStatus, rhs.financeChecksStatus)
             .append(this.spendProfileStatus, rhs.spendProfileStatus)
-            .append(this.otherDocumentsStatus, rhs.otherDocumentsStatus)
             .append(this.grantOfferLetterStatus, rhs.grantOfferLetterStatus)
             .isEquals();
     }
@@ -79,7 +73,6 @@ public abstract class ConsortiumMemberStatusModel {
             .append(bankDetailsStatus)
             .append(financeChecksStatus)
             .append(spendProfileStatus)
-            .append(otherDocumentsStatus)
             .append(grantOfferLetterStatus)
             .toHashCode();
     }
@@ -93,7 +86,6 @@ public abstract class ConsortiumMemberStatusModel {
             .append("\n\tbankDetailsStatus", bankDetailsStatus)
             .append("\n\tfinanceChecksStatus", financeChecksStatus)
             .append("\n\tspendProfileStatus", spendProfileStatus)
-            .append("\n\totherDocumentsStatus", otherDocumentsStatus)
             .append("\n\tgrantOfferLetterStatus", grantOfferLetterStatus)
             .append("\n","")
             .toString();
