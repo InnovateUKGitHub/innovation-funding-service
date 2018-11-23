@@ -96,7 +96,7 @@ Bank account number and sort code validations client side
     And the user sees the text in the element        id = sortCode    ${empty}    # Sort codes more than 6 numbers not allowed, so the input is not accepted
     And the user should not see an error in the page
 
-Bank account number and sort code validations server side
+BanProject Finance can see the progress of partners bank detailsk account number and sort code validations server side
     [Documentation]    INFUND-4054
     [Tags]
      When the user enters text to a text field      id = accountNumber  123
@@ -173,7 +173,7 @@ Lead partner can see that bank details has been approved
     Then the user should see the element           css = ul li.complete:nth-child(4)
     When the user clicks the button/link           link = View the status of partners
     And the user should see the text in the page   Project team status
-    And the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+    And the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
 
 Other internal users cannot access this page
     [Documentation]    INFUND-3763
