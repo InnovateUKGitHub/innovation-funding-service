@@ -11,6 +11,8 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
+import org.innovateuk.ifs.grant.domain.GrantStatus;
+import org.innovateuk.ifs.grant.repository.GrantStatusRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -50,6 +52,12 @@ public class GrantServiceImpl implements GrantService {
     private ProjectRepository projectRepository;
 
     @Autowired
+    private GrantStatusRepository grantStatusRepository;
+
+    @Autowired
+    private GrantStatusService grantStatusService;
+
+    @Autowired
     private GrantEndpoint grantEndpoint;
 
     @Autowired
@@ -64,15 +72,16 @@ public class GrantServiceImpl implements GrantService {
                         projectRepository.findOneByApplicationId(applicationId)
                 )
         );
+        grantStatusService.sendSucceeded(applicationId);
         return serviceSuccess();
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> sendReadyProjects() {
-        List<Project> readyProjects = projectRepository.findReadyToSend();
-        LOG.info("Sending " + readyProjects.size() + " projects");
-        readyProjects.forEach(it -> sendProject(it.getApplication().getId()));
+        List<GrantStatus> readyToSend = grantStatusService.findReadyToSend();
+        LOG.info("Sending " + readyToSend.size() + " projects");
+        readyToSend.forEach(it -> sendProject(it.getApplicationId()));
         return serviceSuccess();
     }
 }

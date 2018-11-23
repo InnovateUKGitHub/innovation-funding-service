@@ -4,11 +4,10 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 
 public interface GrantService {
-    @NotSecured(value = "Anyone can send grant data", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "Only called by scheduled process", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> sendProject(final Long applicationId);
 
-    @NotSecured(value = "Anyone can send grant data", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "Only called by scheduled process", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> sendReadyProjects();
-
 }
 

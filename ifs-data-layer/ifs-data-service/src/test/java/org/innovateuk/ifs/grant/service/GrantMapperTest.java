@@ -62,7 +62,7 @@ public class GrantMapperTest {
     private static final LocalDate DEFAULT_START_DATE = LocalDate.of(2018, 1,2);
     private static final ZonedDateTime DEFAULT_GOL_DATE = ZonedDateTime
             .of(LocalDate.of(2018, 3,4), LocalTime.MIDNIGHT, ZoneId.of("GMT"));
-    private static final boolean OUTPUT_TEST_JSON = false;
+    private static final boolean OUTPUT_TEST_JSON = true;
     private static final String OUTPUT_DIRECTORY = "./build/tmp/grant-mapper-json";
 
     @Mock
