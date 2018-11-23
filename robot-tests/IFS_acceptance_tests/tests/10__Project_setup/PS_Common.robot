@@ -243,8 +243,10 @@ project lead submits project address
 #Used in 12__ATI_compCreationToSubmission
     [Arguments]  ${project_id}
     the user navigates to the page                ${server}/project-setup/project/${project_id}/details/project-address
-    the user sees the text in the text field      id = addressForm.postcodeInput  BS1 4NT
-    the user clicks the button/link               jQuery = button:contains("Save project address")
+    the user enters text to a text field          id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link               jQuery = button:contains("Find UK address")
+    the user selects the index from the drop-down menu  0  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link               jQuery = button:contains("Save address")
 
 project lead submits project details
     [Arguments]  ${project_id}
