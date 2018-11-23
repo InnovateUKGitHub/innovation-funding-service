@@ -64,8 +64,8 @@ Support user cannot access spend profile until it is approved
     [Tags]  HappyPath
     [Setup]  log in as a different user                                   &{support_user_credentials}
     Given the user navigates to the page                                  ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
-    Then the user should see the element                                  jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(5).status.action  # Spend profile status
-    And the user should not see the element                               jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(5).status.action a  # Spend profile link
+    Then the user should see the element                                  jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(6).status.action  # Spend profile status
+    And the user should not see the element                               jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(6).status.action a  # Spend profile link
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/finance-check-overview  ${403_error_message}
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/spend-profile/approval  ${403_error_message}
@@ -75,7 +75,7 @@ GOL not generated before spend profiles have been approved
     [Tags]  HappyPath
     [Setup]    log in as a different user                                 &{Comp_admin1_credentials}
     When the user navigates to the page                                   ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
-    Then the user should not see the element                              css = #table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action
+    Then the user should not see the element                              css = #table-project-status tr:nth-of-type(7) td:nth-of-type(8).status.action
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send    ${403_error_message}
     [Teardown]    proj finance approves the spend profiles                ${PS_GOL_APPLICATION_PROJECT}
 
@@ -85,19 +85,19 @@ Status updates correctly for internal user's table
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should see the element    css = #table-project-status tr:nth-of-type(7) td:nth-of-type(1).status.ok       # Project details
-    And the user should see the element     css = #table-project-status tr:nth-of-type(7) td:nth-of-type(2).status.ok       # MO
-    And the user should see the element     css = #table-project-status tr:nth-of-type(7) td:nth-of-type(3).status.ok       # Bank details
-    And the user should see the element     css = #table-project-status tr:nth-of-type(7) td:nth-of-type(4).status.ok       # Finance checks
-    And the user should see the element     css = #table-project-status tr:nth-of-type(7) td:nth-of-type(5).status.ok       # Spend Profile
-    And the user should see the element     css = #table-project-status tr:nth-of-type(7) td:nth-of-type(6).status.ok       # Other Docs
-    And the user should see the element     css = #table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action   # GOL
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(7) > td:nth-child(3) > a     # Other documents
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(7) > td:nth-child(4) > a     # Monitoring officer
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(7) > td:nth-child(5)         # Bank details
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(7) > td:nth-child(6)         # Finance checks
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(7) > td:nth-child(7) > a     # Spend profile
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(7) > td:nth-child(4) > a     # GOL
 
 IFS Admin user selects the grant offer letter
     [Documentation]  INFUND-6377, INFUND-6048, IFS-603
     [Tags]  HappyPath
     [Setup]  log in as a different user          &{ifs_admin_user_credentials}
     Given the user navigates to the page         ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
-    When the user clicks the button/link         css = #table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a
+    When the user clicks the button/link         css = #table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a  # GOL
     Then the user navigates to the page          ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user should see the element          jQuery = h2:contains("Grant offer letter")
     And the user opens the link in new window    grant_offer_letter.pdf
@@ -190,7 +190,7 @@ PM can view the grant offer letter page
     And the user goes back to the previous page
     When the user clicks the button/link             link = View the status of partners
     Then the user should see the text in the page    Project team status
-    And the user should see the element              css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
+    And the user should see the element              css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)  # GOL
 
 Partners should not be able to send the Grant Offer
     [Documentation]    INFUND-4851, INFUND-6133
@@ -495,16 +495,13 @@ Verify support users permissions in project setup tab
     Given the user clicks the button/link    jQuery = a:contains("Project setup")
     When the user clicks the button/link     link = ${PS_MD_Competition_Name}
     Then the user should see the element     jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(1).status.ok a  # Project details
-    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(2).status.ok a  # MO
-    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(3).status.ok    # Bank details
-    And the user should not see the element  jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(3).status.ok a  # Bank details link
-    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(4).status.ok    # Finance checks
-    And the user should not see the element  jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(4).status.ok a  # Finance checks link
-    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(5).status.ok a  # Spend profile
-    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(6).status.ok a  # Other docs
+    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(2).status.ok a  # Documents
+    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(3).status.ok a  # Monitoring officer
+    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(4).status.ok    # Bank details
+    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(5).status.ok    # Finance checks
+    And the user should see the element      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(6).status.ok a  # Spend profile
     And the user clicks the button/link      jQuery = tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(7).status.ok a  # GOL
     And the user should see the element      jQuery = .success-alert h2:contains("These documents have been approved.")
-
 
 *** Keywords ***
 the user uploads a file
@@ -514,8 +511,8 @@ the user uploads a file
 all the other sections of the project are completed (except spend profile approval)
     the user logs-in in new browser              &{internal_finance_credentials}
     project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
-    project manager submits other documents      ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}  ${PS_GOL_APPLICATION_PROJECT}
-    project finance approves other documents     ${PS_GOL_APPLICATION_PROJECT}
+    project manager submits both documents       ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}  ${PS_GOL_APPLICATION_PROJECT}
+    project finance approves both documents      ${PS_GOL_APPLICATION_PROJECT}
     project finance generates the Spend Profile  ${Gabtype_Id}  ${Kazio_Id}  ${Cogilith_Id}  ${PS_GOL_APPLICATION_PROJECT}
     log in as a different user                   ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     all partners submit their Spend Profile

@@ -66,8 +66,8 @@ public class ProjectStatusResourceBuilder extends BaseBuilder<ProjectStatusResou
         return withArray((monitoringOfficerStatus, psr) -> setField("monitoringOfficerStatus", monitoringOfficerStatus, psr), monitoringOfficerStatuses);
     }
 
-    public ProjectStatusResourceBuilder withOtherDocumentsStatus(ProjectActivityStates... otherDocumentsStatuses) {
-        return withArray((otherDocumentsStatus, psr) -> setField("otherDocumentsStatus", otherDocumentsStatus, psr), otherDocumentsStatuses);
+    public ProjectStatusResourceBuilder withDocumentsStatus(ProjectActivityStates... documentsStatuses) {
+        return withArray((documentsStatus, psr) -> setField("documentsStatus", documentsStatus, psr), documentsStatuses);
     }
 
     public ProjectStatusResourceBuilder withGrantOfferLetterStatus(ProjectActivityStates... grantOfferLetterStatuses) {

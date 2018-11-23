@@ -138,32 +138,17 @@
     </div>
 </th:block>
 
-<!-- Save partner documents -->
-<th:block th:fragment="modal-partner-documents">
-    <div class="modal-partner-documents" role="dialog" aria-hidden="true">
-        <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="govuk-heading-m">Submit documents</h2>
-        <p class="govuk-body">Are you sure that you wish to submit your documents to Innovate UK?</p>
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
-            <div>
-                <button class="govuk-button" id="submit-other-documents" name="submit-other-documents" type="submit">Submit</button>
-                <button type="button" class="js-close button-clear">Cancel</button>
-            </div>
-        </form>
-    </div>
-</th:block>
-
 <!-- Save partner document -->
-<th:block th:fragment="modal-partner-document">
-    <div class="modal-partner-document" role="dialog" aria-hidden="true">
+<th:block th:fragment="modal-configured-partner-document">
+    <div class="modal-configured-partner-document" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m">Submit document</h2>
-        <p class="govuk-body">Are you sure that you wish to submit your document to Innovate UK?</p>
+        <p class="govuk-body">Your document will be submitted to us to be reviewed.</p>
+        <p class="govuk-body">You will not be able to make changes after this point.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
             <div>
-                <button class="govuk-button" name="submit-other-documents" type="submit">Submit</button>
+                <button class="govuk-button" id="submitDocumentButtonConfirm" name="submitDocument" type="submit">Submit</button>
                 <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
@@ -197,26 +182,12 @@
     </div>
 </th:block>
 
-<!-- Accept documents on review -->
-<th:block th:fragment="modal-accept-docs">
-    <div class="modal-accept-docs" role="dialog" aria-hidden="true">
-        <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="govuk-heading-m">Accept documents</h2>
-        <p class="govuk-body">Once accepted the project team can complete any remaining stages of project setup.</p>
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <div>
-            <button class="govuk-button" id="accept-documents" name="approved" value="true">Accept documents</button>
-            <button type="button" class="js-close button-clear">Cancel</button>
-        </div>
-    </div>
-</th:block>
-
 <!-- accept document on review -->
-<th:block th:fragment="modal-accept-doc">
-    <div class="modal-accept-doc" role="dialog" aria-hidden="true">
+<th:block th:fragment="modal-accept-configured-doc">
+    <div class="modal-accept-configured-doc" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="govuk-heading-m">Accept document</h2>
-        <p class="govuk-body">Once accepted the project team can complete any remaining stages of project setup.</p>
+        <h2 class="govuk-heading-m">Approve document</h2>
+        <p class="govuk-body">Please contact the Project Manager to explain your decision.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
             <button class="govuk-button" id="accept-document" name="approved" value="true">Accept document</button>
@@ -225,39 +196,22 @@
     </div>
 </th:block>
 
-<!-- Reject documents on review -->
-<th:block th:fragment="modal-reject-docs">
-    <div class="modal-reject-docs warning-modal" role="dialog" aria-hidden="true">
+<!-- Reject document on review -->
+<th:block th:fragment="modal-reject-configured-doc">
+    <div class="modal-reject-configured-doc warning-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
-            <h2 class="govuk-heading-m">Reject documents</h2>
-            <p class="govuk-body">If rejected, the Project Manager will be told along with the reason for rejection.
-                New versions of the documents need to be provided before the project can begin.</p>
+            <h2 class="govuk-heading-m">Reject document</h2>
+            <p class="govuk-body">Please contact the Project Manager to explain your decision so they can upload a revised version.</p>
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
-            <button class="govuk-button" id="reject-documents" name="approved" value="false">Reject documents</button>
+            <button class="govuk-button" id="reject-document" name="rejected" value="false">Reject document</button>
             <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
 
-<!-- Reject document on review -->
-<th:block th:fragment="modal-reject-doc">
-    <div class="modal-reject-doc warning-modal" role="dialog" aria-hidden="true">
-        <th:block th:insert="fragments/modals :: close-button" />
-        <div class="modal-content">
-            <h2 class="govuk-heading-m">Reject document</h2>
-            <p class="govuk-body">If rejected, the Project Manager will be told along with the reason for rejection.
-                A new version of the document needs to be provided before the project can begin.</p>
-        </div>
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <div>
-            <button class="govuk-button" id="reject-document" name="approved" value="false">Reject document</button>
-            <button type="button" class="js-close button-clear">Cancel</button>
-        </div>
-    </div>
-</th:block>
 
 <!-- Confirmation on finance checks -->
 <th:block th:fragment="approve-eligibility-modal">
