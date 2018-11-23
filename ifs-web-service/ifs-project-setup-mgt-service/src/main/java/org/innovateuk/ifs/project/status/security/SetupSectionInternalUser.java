@@ -81,12 +81,9 @@ public class SetupSectionInternalUser {
         return NOT_ACCESSIBLE;
     }
 
-    public SectionAccess canAccessOtherDocumentsSection(UserResource userResource) {
-        if(!projectSetupProgressChecker.isOtherDocumentsSubmitted() && !(projectSetupProgressChecker.isOtherDocumentsApproved() || projectSetupProgressChecker.isOtherDocumentsRejected())) {
-            return NOT_ACCESSIBLE;
-        }
+    public SectionAccess canAccessDocumentsSection(UserResource userResource) {
 
-        if((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.isOtherDocumentsApproved()){
+        if((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.allDocumentsApproved()){
             return NOT_ACCESSIBLE;
         }
 
@@ -102,7 +99,7 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
-        if(projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
+        if(documentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
             if(isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
                 if(projectSetupProgressChecker.isGrantOfferLetterApproved()){
                     return ACCESSIBLE;
@@ -115,6 +112,10 @@ public class SetupSectionInternalUser {
         }
 
         return NOT_ACCESSIBLE;
+    }
+
+    private boolean documentsApproved() {
+        return projectSetupProgressChecker.allDocumentsApproved();
     }
 
     public SectionAccess canAccessFinanceChecksQueriesSection(UserResource userResource) {

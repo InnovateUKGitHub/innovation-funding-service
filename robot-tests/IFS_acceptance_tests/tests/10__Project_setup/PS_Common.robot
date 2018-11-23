@@ -305,22 +305,29 @@ the project finance user approves bank details for
     the user clicks the button/link           jQuery = .govuk-button:contains("Approve bank account details")
     the user clicks the button/link           jQuery = .govuk-button:contains("Approve account")
 
-project manager submits other documents
+project manager submits both documents
     [Arguments]  ${email}  ${password}  ${project}
-    log in as a different user       ${email}  ${password}
-    the user navigates to the page   ${server}/project-setup/project/${project}/partner/documents
-    choose file                      name = collaborationAgreement    ${upload_folder}/testing.pdf
-    choose file                      name = exploitationPlan    ${upload_folder}/testing.pdf
-    the user reloads the page
-    the user clicks the button/link  jQuery = .govuk-button:contains("Submit documents")
-    the user clicks the button/link  jQuery = .govuk-button:contains("Submit")
+    log in as a different user          ${email}  ${password}
+    the user navigates to the page      ${server}/project-setup/project/${project}/document/all
+    the user clicks the button/link     link = Collaboration agreement
+    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+    the user clicks the button/link     link = Exploitation plan
+    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
 
-project finance approves other documents
+project finance approves both documents
     [Arguments]  ${project}
-    log in as a different user       &{internal_finance_credentials}
-    the user navigates to the page   ${SERVER}/project-setup-management/project/${project}/partner/documents
-    the user clicks the button/link  jQuery = .govuk-button:contains("Accept documents")
-    the user clicks the button/link  jQuery = .modal-accept-docs .govuk-button:contains("Accept documents")
+    log in as a different user             &{internal_finance_credentials}
+    the user navigates to the page         ${SERVER}/project-setup-management/project/${project}/document/all
+    the user clicks the button/link        link = Collaboration agreement
+    internal user approve uploaded documents
+    the user clicks the button/link         link = Return to documents
+    the user clicks the button/link         link = Exploitation plan
+    internal user approve uploaded documents
 
 project finance generates the Spend Profile
     [Arguments]  ${lead}  ${partner}  ${academic_partner}  ${project}
@@ -399,3 +406,9 @@ the user changes the start date
     the user clicks the button/link         link = Target start date
     the user enters text to a text field    id = projectStartDate_year  ${year}
     the user clicks the button/link         jQuery = .govuk-button:contains("Save")
+
+internal user approve uploaded documents
+    the user selects the radio button      approved   true
+    the user clicks the button/link        id = submit-button
+    the user clicks the button/link        id = accept-document
+    the user should see the element        jQuery = p:contains("You have approved this document.")

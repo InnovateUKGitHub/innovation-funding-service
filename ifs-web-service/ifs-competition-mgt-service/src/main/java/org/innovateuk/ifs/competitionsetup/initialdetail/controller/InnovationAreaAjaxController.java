@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competitionsetup.initialdetail.controller;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competitionsetup.core.util.CompetitionSpecialSectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +22,12 @@ import java.util.List;
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = InnovationAreaAjaxController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class InnovationAreaAjaxController {
+
     @Autowired
     private CategoryRestService categoryRestService;
 
     /* AJAX Function */
-    @ZeroDowntime(reference = "IFS-4701", description = "remove /getInnovationArea/{innovationSectorId")
-    @GetMapping({"/getInnovationArea/{innovationSectorId}", "/get-innovation-areas/{innovationSectorId}"})
+    @GetMapping("/get-innovation-areas/{innovationSectorId}")
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
 
