@@ -13,7 +13,7 @@
         <p class="govuk-body">You do not need to run stages 9 to 11.</p>
     </div>
 
-    <form th:action="@{'completion-stage/edit'}"
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
           th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           th:attr="data-competition=${model.general.competition.id}" data-section="milestones"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
@@ -35,9 +35,10 @@
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input"
-                                   id="radio-1" type="radio" required="required" value='13'
+                                   id="release-feedback-completion-stage" type="radio" required="required"
+                                   th:value='${model.releaseFeedbackCompletionStage}'
                                    data-required-errormessage="Select a completion stage."
-                                   name="completionStage"
+                                   name="selectedCompletionStage"
                                    th:checked="${competitionSetupForm.selectedCompletionStage == model.releaseFeedbackCompletionStage}" />
                             <label class="govuk-label govuk-radios__label" for="radio-1">
                                 13. Release feedback
@@ -45,9 +46,10 @@
                         </div>
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input"
-                                   id="radio-2" type="radio" required="required" value='14'
+                                   id="project-setup-completion-stage" type="radio" required="required" value='14'
+                                   th:value='${model.projectSetupCompletionStage}'
                                    data-required-errormessage="Select a completion stage."
-                                   name="completionStage"
+                                   name="selectedCompletionStage"
                                    th:checked="${competitionSetupForm.selectedCompletionStage == model.projectSetupCompletionStage}" />
                             <label class="govuk-label govuk-radios__label" for="radio-2">
                                 14. Project setup
@@ -65,7 +67,13 @@
         </div>
     </form>
 
-    <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button govuk-!-margin-top-6">Edit</button>
+    <form th:if="${!model.general.editable && !model.general.state.preventEdit}"
+          th:action="@{('completion-stage/edit')}"
+          method="post">
+
+        <button class="govuk-button govuk-!-margin-top-6">Edit</button>
+
+    </form>
 
     <ul class="govuk-list pagination">
         <li class="prev">

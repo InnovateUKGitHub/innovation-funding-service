@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
@@ -61,6 +62,11 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
         });
 
         return milestoneRestService.updateMilestones(updatedMilestones).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage) {
+        return milestoneRestService.updateCompletionStage(competitionId, completionStage).toServiceResult();
     }
 
     @Override

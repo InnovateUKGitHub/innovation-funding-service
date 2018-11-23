@@ -143,6 +143,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     private Boolean includeProjectGrowthTable;
 
+    @Enumerated(EnumType.STRING)
     private CompetitionCompletionStage completionStage;
 
     public Competition() {

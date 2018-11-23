@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
@@ -51,5 +52,12 @@ public class MilestoneController {
     @PutMapping("/")
     public RestResult<Void> saveMilestone(@RequestBody final MilestoneResource milestone) {
         return milestoneService.updateMilestone(milestone).toPutResponse();
+    }
+
+    @PutMapping("/competition/{competitionId}/completion-stage")
+    public RestResult<Void> saveMilestone(@PathVariable("competitionId") long competitionId,
+                                          @RequestParam final CompetitionCompletionStage completionStage) {
+
+        return milestoneService.updateCompletionStage(competitionId, completionStage).toPutResponse();
     }
 }
