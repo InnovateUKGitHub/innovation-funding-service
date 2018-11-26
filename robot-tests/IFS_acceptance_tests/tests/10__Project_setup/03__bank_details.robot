@@ -85,15 +85,15 @@ Bank details server side validations
     And the user clicks the button/link   id = submit-bank-details
     Then the user should see a field and summary error  Please enter a valid account number.
     And the user should see a field and summary error   Please enter a valid sort code.
-    And the user should see a field and summary error   You need to select an address before you can continue.
+    And the user should see a field and summary error   Search using a valid postcode or enter the address manually.
 
 The user enters bank details, wants to manually enter their address, leaves the address empty and submits
     [Documentation]  IFS-2731
     [Tags]
     Given the user enters text to a text field    name = accountNumber    24681012
     And the user enters text to a text field      name = sortCode         36912
-    When the user selects the radio button        addressType             ADD_NEW
-    And the user clicks the button/link           css = button[name = "manual-address"]        #Enter address manually
+    #When the user selects the radio button        addressType             ADD_NEW
+    And the user clicks the button/link           css = button[name = "addressForm.action"]        #Enter address manually
     Then the user clicks the button/link          jQuery = button:contains("Submit bank account details")
     And the user clicks the button/link           id = submit-bank-details
     And the user should see a summary error       The first line of the address cannot be blank.
@@ -126,20 +126,20 @@ Bank details client side validations
     And the user moves focus away from the element       name = sortCode
     Then the user should not see the text in the page    Please enter a sort code.
     And the user should not see the text in the page     Please enter a valid sort code.
-    When the user selects the radio button               addressType    REGISTERED
-    Then the user should not see the text in the page    You need to select an address before you can continue.
+    #When the user selects the radio button               addressType    REGISTERED
+    Then the user should not see the text in the page    Search using a valid postcode or enter the address manually.
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282
     [Tags]  HappyPath
-    When the user selects the radio button       addressType    ADD_NEW
+    #When the user selects the radio button       addressType    ADD_NEW
     And the user enters text to a text field     name = addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link          jQuery = .govuk-button:contains("Find UK address")
     Then the user should see the element         css = .govuk-form-group--error
     When the user enters text to a text field    name = addressForm.postcodeInput    BS14NT/
     And the user clicks the button/link          jQuery = .govuk-button:contains("Find UK address")
     Then the user should see the element         name = addressForm.selectedPostcodeIndex
-    When the user selects the radio button       addressType    ADD_NEW
+    #When the user selects the radio button       addressType    ADD_NEW
     And the user enters text to a text field     id = addressForm.postcodeInput    BS14NT
     And the user clicks the button/link          id = postcode-lookup
     Then the user should see the element         css = #select-address-block
