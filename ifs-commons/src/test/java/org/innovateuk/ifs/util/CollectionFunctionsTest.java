@@ -12,16 +12,19 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
+import static java.util.Optional.empty;
 import static java.util.function.Function.identity;
 import static org.apache.commons.lang3.tuple.Pair.of;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 import static org.junit.Assert.*;
 
+/**
+ *
+ */
 public class CollectionFunctionsTest {
 
     @Test
-    public void test_simpleGroupBy(){
+    public void simpleGroupBy(){
         Map<String, String> map = new HashMap<>();
         map.put("formInput[1].MMYYYY.year", "2001");
         map.put("formInput[1].MMYYYY.month", "11");
@@ -31,7 +34,9 @@ public class CollectionFunctionsTest {
         map.put("formInput[3].MMYYYY.month", "11");
 
         // Method under test.
-        Map<String, Map<String, String>> simpleGroupBy = simpleGroupBy(map, key -> key.replace(".MMYYYY.month", "").replace(".MMYYYY.year", ""));
+        Map<String, Map<String, String>> simpleGroupBy =
+                CollectionFunctions.simpleGroupBy(map, key -> key.replace(".MMYYYY.month", "").replace(".MMYYYY.year", ""));
+
         assertEquals(3, simpleGroupBy.size());
         // formInput[1]
         assertNotNull(simpleGroupBy.get("formInput[1]"));
@@ -50,13 +55,15 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_simpleGroupByNull(){
+    public void simpleGroupByNull(){
         Map<String, String> map = new HashMap<>();
         map.put("formInput[1].MMYYYY.year", null);
         map.put("formInput[1].MMYYYY.month", null);
 
         // Method under test.
-        Map<String, Map<String, String>> simpleGroupBy = simpleGroupBy(map, key -> key.replace(".MMYYYY.month", "").replace(".MMYYYY.year", ""));
+        Map<String, Map<String, String>> simpleGroupBy =
+                CollectionFunctions.simpleGroupBy(map, key -> key.replace(".MMYYYY.month", "").replace(".MMYYYY.year", ""));
+
         assertEquals(1, simpleGroupBy.size());
         // formInput[1]
         assertNotNull(simpleGroupBy.get("formInput[1]"));
@@ -64,53 +71,58 @@ public class CollectionFunctionsTest {
         assertNull(simpleGroupBy.get("formInput[1]").get("formInput[1].MMYYYY.month"));
     }
 
+
     @Test
-    public void test_flattenLists() {
+    public void flattenLists() {
 
         List<List<Integer>> deepList = asList(asList(1, 2, 3), asList(4, 5), singletonList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 4, 5, 6);
 
-        assertEquals(expectedFlatList, flattenLists(deepList));
+        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
     }
 
     @Test
-    public void test_flattenLists_nullSafe() {
+    public void flattenLists_nullSafe() {
 
         List<List<Integer>> deepList = asList(asList(1, 2, 3), null, singletonList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 6);
 
-        assertEquals(expectedFlatList, flattenLists(deepList));
+        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
     }
 
     @Test
-    public void test_flattenLists_emptyElements() {
+    public void flattenLists_emptyElements() {
 
         List<List<Integer>> deepList = asList(asList(1, 2, 3), emptyList(), singletonList(6));
         List<Integer> expectedFlatList = asList(1, 2, 3, 6);
 
-        assertEquals(expectedFlatList, flattenLists(deepList));
+        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
     }
 
     @Test
-    public void test_flattenLists_allEmpty() {
+    public void flattenLists_allEmpty() {
 
         List<List<Integer>> deepList = asList(emptyList(), emptyList(), emptyList());
         List<Integer> expectedFlatList = emptyList();
 
-        assertEquals(expectedFlatList, flattenLists(deepList));
+        assertEquals(expectedFlatList, CollectionFunctions.flattenLists(deepList));
     }
 
     @Test
-    public void test_flattenSets() {
+    public void flattenSets() {
 
-        Set<Set<Integer>> deepList = asLinkedSet(asLinkedSet(1, 2, 3), asLinkedSet(4, 5), singleton(6));
-        Set<Integer> expectedFlatList = asLinkedSet(1, 2, 3, 4, 5, 6);
+        Set<Set<Integer>> deepList = CollectionFunctions.asLinkedSet(
+                        CollectionFunctions.asLinkedSet(1, 2, 3),
+                        CollectionFunctions.asLinkedSet(4, 5),
+                        singleton(6));
 
-        assertEquals(expectedFlatList, flattenSets(deepList));
+        Set<Integer> expectedFlatList = CollectionFunctions.asLinkedSet(1, 2, 3, 4, 5, 6);
+
+        assertEquals(expectedFlatList, CollectionFunctions.flattenSets(deepList));
     }
 
     @Test
-    public void test_combineLists() {
+    public void combineLists() {
 
         List<Integer> list1 = asList(1, 2, 3);
         List<Integer> list2 = asList(4, 5);
@@ -118,11 +130,11 @@ public class CollectionFunctionsTest {
 
         List<Integer> expectedCombinedList = asList(1, 2, 3, 4, 5, 6);
 
-        assertEquals(expectedCombinedList, combineLists(list1, list2, list3));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(list1, list2, list3));
     }
 
     @Test
-    public void test_combineLists_nullSafe() {
+    public void combineLists_nullSafe() {
 
         List<Integer> list1 = null;
         List<Integer> list2 = asList(4, 5);
@@ -130,11 +142,11 @@ public class CollectionFunctionsTest {
 
         List<Integer> expectedCombinedList = asList(4, 5, 6);
 
-        assertEquals(expectedCombinedList, combineLists(list1, list2, list3));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(list1, list2, list3));
     }
 
     @Test
-    public void test_combineLists_emptyElements() {
+    public void combineLists_emptyElements() {
 
         List<Integer> list1 = emptyList();
         List<Integer> list2 = asList(4, 5);
@@ -142,52 +154,52 @@ public class CollectionFunctionsTest {
 
         List<Integer> expectedCombinedList = asList(4, 5, 6);
 
-        assertEquals(expectedCombinedList, combineLists(list1, list2, list3));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(list1, list2, list3));
     }
 
     @Test
-    public void test_combineListsWithListAndVarargs() {
+    public void combineListsWithListAndVarargs() {
 
         List<Integer> list = asList(1, 2, 3);
         List<Integer> expectedCombinedList = asList(1, 2, 3, 4, 5, 6);
-        assertEquals(expectedCombinedList, combineLists(list, 4, 5, 6));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(list, 4, 5, 6));
     }
 
     @Test
-    public void test_combineListsWithListAndVarargsNullSafe() {
+    public void combineListsWithListAndVarargsNullSafe() {
         List<Integer> expectedCombinedList = asList(4, 5, 6);
-        assertEquals(expectedCombinedList, combineLists(null, 4, 5, 6));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(null, 4, 5, 6));
     }
 
     @Test
-    public void test_combineListsWithElementAndVarargs() {
+    public void combineListsWithElementAndVarargs() {
         List<Integer> expectedCombinedList = asList(1, 2, 3, 4, 5, 6);
-        assertEquals(expectedCombinedList, combineLists(1, 2, 3, 4, 5, 6));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(1, 2, 3, 4, 5, 6));
     }
 
     @Test
-    public void test_combineListsWithElementAndVarargsEmptyVarargs() {
+    public void combineListsWithElementAndVarargsEmptyVarargs() {
         List<Integer> expectedCombinedList = singletonList(1);
-        assertEquals(expectedCombinedList, combineLists(1));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(1));
     }
 
     @Test
-    public void test_combineListsWithElementAndVarargsNullElementSafe() {
+    public void combineListsWithElementAndVarargsNullElementSafe() {
         List<Integer> expectedCombinedList = asList(2, 3, 4, 5, 6);
-        assertEquals(expectedCombinedList, combineLists(null, 2, 3, 4, 5, 6));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(null, 2, 3, 4, 5, 6));
     }
 
     @Test
-    public void test_combineListsWithElementAndList() {
+    public void combineListsWithElementAndList() {
 
         List<Integer> list = asList(1, 2, 3);
 
         List<Integer> expectedCombinedList = asList(0, 1, 2, 3);
-        assertEquals(expectedCombinedList, combineLists(0, list));
+        assertEquals(expectedCombinedList, CollectionFunctions.combineLists(0, list));
     }
 
     @Test
-    public void test_forEachWithIndex() {
+    public void forEachWithIndex() {
 
         final List<Integer> indicesSeen = new ArrayList<>();
         final List<String> valuesSeen = new ArrayList<>();
@@ -203,7 +215,7 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_forEachWithIndex_nullSafe() {
+    public void forEachWithIndex_nullSafe() {
 
         final List<Integer> indicesSeen = new ArrayList<>();
         final List<String> valuesSeen = new ArrayList<>();
@@ -219,7 +231,7 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_forEachWithIndex_emptyValues() {
+    public void forEachWithIndex_emptyValues() {
 
         final List<Integer> indicesSeen = new ArrayList<>();
         final List<String> valuesSeen = new ArrayList<>();
@@ -235,7 +247,7 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_mapWithIndex() {
+    public void mapWithIndex() {
 
         final List<Integer> indicesSeen = new ArrayList<>();
         final List<String> valuesToIterateOver = asList("string 1", "string 2", "string 3");
@@ -251,7 +263,7 @@ public class CollectionFunctionsTest {
 
 
     @Test
-    public void test_mapWithIndex_nullSafe() {
+    public void mapWithIndex_nullSafe() {
 
         final List<Integer> indicesSeen = new ArrayList<>();
         final List<String> valuesToIterateOver = asList("string 1", null, "string 3");
@@ -267,7 +279,7 @@ public class CollectionFunctionsTest {
 
 
     @Test
-    public void test_mapWithIndex_emptyElements() {
+    public void mapWithIndex_emptyElements() {
 
         final List<Integer> indicesSeen = new ArrayList<>();
         final List<String> valuesToIterateOver = emptyList();
@@ -282,7 +294,7 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_reverse() {
+    public void reverse() {
 
         List<String> originalList = asList("string 1", "another string 2", "string 3");
         List<String> reversed = CollectionFunctions.reverse(originalList);
@@ -290,7 +302,7 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_reverse_nullElements() {
+    public void reverse_nullElements() {
 
         List<String> originalList = asList(null, null, "string 3");
         List<String> reversed = CollectionFunctions.reverse(originalList);
@@ -298,29 +310,29 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_reverse_nullSafe() {
+    public void reverse_nullSafe() {
         assertEquals(new ArrayList<>(), CollectionFunctions.reverse(null));
     }
 
     @Test
-    public void test_reverse_empty() {
+    public void reverse_empty() {
         assertEquals(new ArrayList<>(), CollectionFunctions.reverse(new ArrayList<>()));
     }
 
     @Test
-    public void test_getOnlyElement() {
+    public void getOnlyElement() {
         assertEquals("hi there", CollectionFunctions.getOnlyElement(singletonList("hi there")));
     }
 
     @Test
-    public void test_nullElement() {
+    public void nullElement() {
         List<Object> nullElementList = new ArrayList<>();
         nullElementList.add(null);
         assertNull(CollectionFunctions.getOnlyElement(nullElementList));
     }
 
     @Test
-    public void test_getOnlyElement_tooManyElements() {
+    public void getOnlyElement_tooManyElements() {
         try {
             CollectionFunctions.getOnlyElement(asList("hi there", "goodbye!"));
             fail("Should have thrown an IllegalArgumentException as there were too many elements");
@@ -330,7 +342,7 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_getOnlyElement_notEnoughElements() {
+    public void getOnlyElement_notEnoughElements() {
         try {
             CollectionFunctions.getOnlyElement(emptyList());
             fail("Should have thrown an IllegalArgumentException as there weren't enough elements");
@@ -340,7 +352,7 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_getOnlyElement_notEnoughElements_nullList() {
+    public void getOnlyElement_notEnoughElements_nullList() {
         try {
             CollectionFunctions.getOnlyElement(null);
             fail("Should have thrown an IllegalArgumentException as there weren't enough elements (null list)");
@@ -350,37 +362,37 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_simpleMap() {
-        assertEquals(asList("123 string", "456 string"), simpleMap(asList(123, 456), i -> i + " string"));
+    public void simpleMap() {
+        assertEquals(asList("123 string", "456 string"), CollectionFunctions.simpleMap(asList(123, 456), i -> i + " string"));
     }
 
     @Test
-    public void test_simpleMap_nullList() {
-        assertEquals(emptyList(), simpleMap((List<?>) null, i -> i + " string"));
+    public void simpleMap_nullList() {
+        assertEquals(emptyList(), CollectionFunctions.simpleMap((List<?>) null, i -> i + " string"));
     }
 
     @Test
-    public void test_simpleMap_nullElements() {
-        assertEquals(asList("123 string", "null string"), simpleMap(asList(123, null), i -> i + " string"));
+    public void simpleMap_nullElements() {
+        assertEquals(asList("123 string", "null string"), CollectionFunctions.simpleMap(asList(123, null), i -> i + " string"));
     }
 
     @Test
-    public void test_simpleMap_withArray() {
-        assertEquals(asList("123 string", "456 string"), simpleMap(new Integer[] {123, 456}, i -> i + " string"));
+    public void simpleMap_withArray() {
+        assertEquals(asList("123 string", "456 string"), CollectionFunctions.simpleMap(new Integer[] {123, 456}, i -> i + " string"));
     }
 
     @Test
-    public void test_simpleMap_withMap() {
+    public void simpleMap_withMap() {
 
         Map<Integer, String> map = new HashMap<>();
         map.put(1, "a");
         map.put(2, "b");
 
-        assertEquals(asList("1a", "2b"), simpleMap(map, (key, value) -> key + value));
+        assertEquals(asList("1a", "2b"), CollectionFunctions.simpleMap(map, (key, value) -> key + value));
     }
 
     @Test
-    public void test_simpleMapKey() {
+    public void simpleMapKey() {
 
         Map<Integer, String> map = new HashMap<>();
         map.put(1, "a");
@@ -390,11 +402,11 @@ public class CollectionFunctionsTest {
         expected.put(2, "a");
         expected.put(4, "b");
 
-        assertEquals(expected, simpleMapKey(map, key -> key * 2));
+        assertEquals(expected, CollectionFunctions.simpleMapKey(map, key -> key * 2));
     }
 
     @Test
-    public void test_simpleMapValue() {
+    public void simpleMapValue() {
 
         Map<Integer, String> map = new HashMap<>();
         map.put(1, "a");
@@ -404,11 +416,11 @@ public class CollectionFunctionsTest {
         expected.put(1, "a!");
         expected.put(2, "b!");
 
-        assertEquals(expected, simpleMapValue(map, value -> value  + "!"));
+        assertEquals(expected, CollectionFunctions.simpleMapValue(map, value -> value  + "!"));
     }
 
     @Test
-    public void test_simpleMapEntry() {
+    public void simpleMapEntry() {
 
         Map<Integer, String> map = new HashMap<>();
         map.put(1, "a");
@@ -418,103 +430,106 @@ public class CollectionFunctionsTest {
         expected.put("2a!", "4a?");
         expected.put("4b!", "8b?");
 
-        assertEquals(expected, simpleMapEntry(map,
+        assertEquals(expected, CollectionFunctions.simpleMapEntry(map,
                 entry -> entry.getKey() * 2 + entry.getValue() + "!",
                 entry -> entry.getKey() * 4 + entry.getValue() + "?"));
     }
 
     @Test
-    public void test_simpleMapWithIndex() {
+    public void simpleMapWithIndex() {
         assertEquals(asList("123 string 0", "456 string 1"),
-                simpleMapWithIndex(asList(123, 456), (element, index) -> element + " string " + index));
+                CollectionFunctions.simpleMapWithIndex(asList(123, 456), (element, index) -> element + " string " + index));
     }
 
     @Test
-    public void test_simpleMapWithIndex_emptyList() {
+    public void simpleMapWithIndex_emptyList() {
         assertEquals(emptyList(),
-                simpleMapWithIndex(emptyList(), (element, index) -> element + " string " + index));
+                CollectionFunctions.simpleMapWithIndex(emptyList(), (element, index) -> element + " string " + index));
     }
 
     @Test
-    public void test_simpleMapWithIndex_withArray() {
+    public void simpleMapWithIndex_withArray() {
         assertEquals(asList("123 string 0", "456 string 1"),
-                simpleMapWithIndex(new Integer[] {123, 456}, (element, index) -> element + " string " + index));
+                CollectionFunctions.simpleMapWithIndex(new Integer[] {123, 456}, (element, index) -> element + " string " + index));
     }
 
     @Test
-    public void test_simpleMapArray() {
+    public void simpleMapArray() {
         assertEquals(new String[] {"123 string", "456 string"},
-                simpleMapArray(new Integer[] {123, 456}, element -> element + " string", String.class));
+                CollectionFunctions.simpleMapArray(new Integer[] {123, 456}, element -> element + " string", String.class));
     }
 
     @Test
-    public void test_simpleMapArray_nullArray() {
+    public void simpleMapArray_nullArray() {
         assertEquals(new String[] {},
-                simpleMapArray(null, element -> element + " string ", String.class));
+                CollectionFunctions.simpleMapArray(null, element -> element + " string ", String.class));
     }
 
     @Test
-    public void test_simpleMapArray_emptyArray() {
+    public void simpleMapArray_emptyArray() {
         assertEquals(new String[] {},
-                simpleMapArray(new String[] {}, element -> element + " string ", String.class));
+                CollectionFunctions.simpleMapArray(new String[] {}, element -> element + " string ", String.class));
     }
 
     @Test
-    public void test_simpleMapSet() {
-        assertEquals(asLinkedSet("123 string", "456 string"), simpleMapSet(asLinkedSet(123, 456), i -> i + " string"));
+    public void simpleMapSet() {
+        assertEquals(CollectionFunctions.asLinkedSet("123 string", "456 string"),
+                CollectionFunctions.simpleMapSet(CollectionFunctions.asLinkedSet(123, 456), i -> i + " string"));
     }
 
     @Test
-    public void test_simpleMapSet_null() {
-        assertEquals(emptySet(), simpleMapSet((Set<?>) null, i -> i + " string"));
+    public void simpleMapSet_null() {
+        assertEquals(emptySet(), CollectionFunctions.simpleMapSet((Set<?>) null, i -> i + " string"));
     }
 
     @Test
-    public void test_simpleMapSet_withList() {
-        assertEquals(asLinkedSet("123 string", "456 string"), simpleMapSet(asList(123, 456), i -> i + " string"));
+    public void simpleMapSet_withList() {
+        assertEquals(CollectionFunctions.asLinkedSet("123 string", "456 string"),
+                CollectionFunctions.simpleMapSet(asList(123, 456), i -> i + " string"));
     }
 
     @Test
-    public void test_simpleMapSet_withEmptyList() {
-        assertEquals(emptySet(), simpleMapSet(emptyList(), i -> i + " string"));
+    public void simpleMapSet_withEmptyList() {
+        assertEquals(emptySet(), CollectionFunctions.simpleMapSet(emptyList(), i -> i + " string"));
     }
 
     @Test
-    public void test_simpleMapSet_withArray() {
-        assertEquals(asLinkedSet("123 string", "456 string"), simpleMapSet(new Integer[] {123, 456}, i -> i + " string"));
+    public void simpleMapSet_withArray() {
+        assertEquals(CollectionFunctions.asLinkedSet("123 string", "456 string"),
+                CollectionFunctions.simpleMapSet(new Integer[] {123, 456}, i -> i + " string"));
     }
 
     @Test
-    public void test_simpleMapSet_withEmptyArray() {
-        assertEquals(emptySet(), simpleMapSet(new Integer[] {}, i -> i + " string"));
+    public void simpleMapSet_withEmptyArray() {
+        assertEquals(emptySet(), CollectionFunctions.simpleMapSet(new Integer[] {}, i -> i + " string"));
     }
 
     @Test
-    public void test_simpleToLinkedHashSetWithCollection() {
+    public void simpleToLinkedHashSetWithCollection() {
         assertEquals(new LinkedHashSet<>(asList("123 string", "456 string")),
                 CollectionFunctions.simpleToLinkedHashSet(asList(123, 456), i -> i + " string"));
     }
 
     @Test
-    public void test_simpleToLinkedHashSetWithCollection_nullList() {
+    public void simpleToLinkedHashSetWithCollection_nullList() {
         assertEquals(new LinkedHashSet<String>(),
                 CollectionFunctions.simpleToLinkedHashSet((List<?>) null, i -> i + " string"));
     }
 
     @Test
-    public void test_arrayToLinkedHashSetWithCollection_nullElements() {
+    public void arrayToLinkedHashSetWithCollection_nullElements() {
         assertEquals(new LinkedHashSet<>(asList("123 string", "null string")),
                 CollectionFunctions.simpleToLinkedHashSet(asList(123, null), i -> i + " string"));
     }
 
     @Test
-    public void test_toLinkedHashSetWithArray() {
+    public void toLinkedHashSetWithArray() {
         assertEquals(new LinkedHashSet<>(asList("123 string", "456 string")),
                 CollectionFunctions.simpleToLinkedHashSet(new Integer[]{123, 456}, i -> i + " string"));
     }
 
     @Test
-    public void test_arrayToLinkedHashSetWithArray_nullArray() {
+    public void arrayToLinkedHashSetWithArray_nullArray() {
         String[] stringArray = null;
 
         assertEquals(new LinkedHashSet<String>(),
@@ -522,54 +537,69 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_simpleToLinkedHashSetWithArray_nullElements() {
+    public void simpleToLinkedHashSetWithArray_nullElements() {
         assertEquals(new LinkedHashSet<>(asList("123 string", "null string")),
                 CollectionFunctions.simpleToLinkedHashSet(new Integer[]{123, null}, i -> i + " string"));
     }
 
     @Test
-    public void test_simpleFilter() {
-        assertEquals(singletonList(789), simpleFilter(asList(123, 456, 789), i -> i > 456));
+    public void simpleFilter() {
+        assertEquals(singletonList(789), CollectionFunctions.simpleFilter(asList(123, 456, 789), i -> i > 456));
     }
 
     @Test
-    public void test_simpleFilter_nullList() {
-        assertEquals(emptyList(), simpleFilter((Collection<?>)null, i -> false));
+    public void simpleFilter_nullList() {
+        assertEquals(emptyList(), CollectionFunctions.simpleFilter((Collection<?>)null, i -> false));
     }
 
     @Test
-    public void test_simpleFilter_nullElements() {
-        assertEquals(singletonList(789), simpleFilter(asList(123, null, 456, 789), i -> i != null && i > 456));
+    public void simpleFilter_nullElements() {
+        assertEquals(singletonList(789), CollectionFunctions.simpleFilter(asList(123, null, 456, 789), i -> i != null && i > 456));
     }
 
     @Test
-    public void test_simpleFilterNot() {
-        assertEquals(asList(123, 456), simpleFilterNot(asList(123, 456, 789), i -> i > 456));
+    public void simpleFilterNot() {
+        assertEquals(asList(123, 456), CollectionFunctions.simpleFilterNot(asList(123, 456, 789), i -> i > 456));
     }
 
     @Test
-    public void test_simpleFilterNot_nullList() {
-        assertEquals(emptyList(), simpleFilterNot((List<?>)null, i -> false));
+    public void simpleFilterNot_nullList() {
+        assertEquals(emptyList(), CollectionFunctions.simpleFilterNot((List<?>)null, i -> false));
     }
 
     @Test
-    public void test_simpleFilterNot_nullElements() {
-        assertEquals(asList(123, null, 456), simpleFilterNot(asList(123, null, 456, 789), i -> i != null && i > 456));
+    public void simpleFilterNot_nullElements() {
+        assertEquals(asList(123, null, 456), CollectionFunctions.simpleFilterNot(asList(123, null, 456, 789), i -> i != null && i > 456));
     }
 
     @Test
-    public void test_simpleFilter_withArray() {
-        assertEquals(singletonList(789), simpleFilter(new Integer[] {123, 456, 789}, i -> i > 456));
+    public void simpleFindAnyWithNullList() {
+        assertEquals(empty(), CollectionFunctions.simpleFindAny(null, i -> true));
     }
 
     @Test
-    public void test_simpleFilter_withEmptyArray() {
-        assertEquals(emptyList(), simpleFilter((Integer[]) null, i -> i > 456));
+    public void simpleFindAnyWithNullElements() {
+        assertEquals(Optional.of(789), CollectionFunctions.simpleFindAny(asList(123, null, 455, 789), i -> i != null && i > 456));
+    }
+
+    @Test
+    public void simpleFindAny() {
+        assertEquals(Optional.of(789), CollectionFunctions.simpleFindAny(asList(123, 789, 455, 112), i -> i != null && i > 456));
+    }
+
+    @Test
+    public void simpleFilter_withArray() {
+        assertEquals(singletonList(789), CollectionFunctions.simpleFilter(new Integer[] {123, 456, 789}, i -> i > 456));
+    }
+
+    @Test
+    public void simpleFilter_withEmptyArray() {
+        assertEquals(emptyList(), CollectionFunctions.simpleFilter((Integer[]) null, i -> i > 456));
     }
 
     @Test
     public void testToLinkedMap() {
-        List<String> orderedList = Arrays.asList("1", "2", "3", "4", "5");
+        List<String> orderedList = asList("1", "2", "3", "4", "5");
         Map<String, String> orderedMap = orderedList.stream().collect(CollectionFunctions.toLinkedMap(item -> item, item -> item + item));
         int index = 0;
         for (Entry<String, String> entry : orderedMap.entrySet()) {
@@ -583,33 +613,33 @@ public class CollectionFunctionsTest {
 
     @Test(expected = IllegalStateException.class)
     public void testToLinkedMapDuplicateEntry() {
-        List<String> orderedList = Arrays.asList("1", "2", "3", "4", "5", "4");
+        List<String> orderedList = asList("1", "2", "3", "4", "5", "4");
         orderedList.stream().collect(CollectionFunctions.toLinkedMap(item -> item, item -> item + item));
     }
 
     @Test
-    public void test_simpleJoiner() {
-        assertEquals("123, 456, 789", simpleJoiner(asList(123, 456, 789), ", "));
+    public void simpleJoiner() {
+        assertEquals("123, 456, 789", CollectionFunctions.simpleJoiner(asList(123, 456, 789), ", "));
     }
 
     @Test
-    public void test_simpleJoiner_nullList() {
-        assertEquals("", simpleJoiner(null, ", "));
+    public void simpleJoiner_nullList() {
+        assertEquals("", CollectionFunctions.simpleJoiner(null, ", "));
     }
 
     @Test
-    public void test_simpleJoiner_nullElements() {
-        assertEquals("123, , 789", simpleJoiner(asList(123, null, 789), ", "));
+    public void simpleJoiner_nullElements() {
+        assertEquals("123, , 789", CollectionFunctions.simpleJoiner(asList(123, null, 789), ", "));
     }
 
     @Test
-    public void test_simpleJoiner_withTransformer() {
-        assertEquals("123!, 456!, 789!", simpleJoiner(asList(123, 456, 789), i -> i + "!", ", "));
+    public void simpleJoiner_withTransformer() {
+        assertEquals("123!, 456!, 789!", CollectionFunctions.simpleJoiner(asList(123, 456, 789), i -> i + "!", ", "));
     }
 
     @Test
-    public void test_simpleJoiner_withTransformer_nullList() {
-        assertEquals("", simpleJoiner(null, i -> i + "!", ", "));
+    public void simpleJoiner_withTransformer_nullList() {
+        assertEquals("", CollectionFunctions.simpleJoiner(null, i -> i + "!", ", "));
     }
 
     @Test
@@ -655,22 +685,23 @@ public class CollectionFunctionsTest {
     @Test
     public void simpleToLinkedMapWhenInputListIsNull() {
 
-        Map<Integer, Integer> toLinkedMap = simpleToLinkedMap(null, identity(), identity());
+        Map<Integer, Integer> toLinkedMap = CollectionFunctions.simpleToLinkedMap(null, identity(), identity());
         assertTrue(toLinkedMap.isEmpty());
     }
 
     @Test
     public void simpleToLinkedMapWhenInputListIsEmpty() {
 
-        Map<Integer, Integer> toLinkedMap = simpleToLinkedMap(Collections.EMPTY_LIST, identity(), identity());
+        Map<Integer, Integer> toLinkedMap = CollectionFunctions.simpleToLinkedMap(emptyList(), identity(), identity());
         assertTrue(toLinkedMap.isEmpty());
     }
 
     @Test
-    public void test_simpleToLinkedMap() {
+    public void simpleToLinkedMap() {
 
-        List<Integer> inputList = Arrays.asList(1, 2, 3, 4, 5, 6);
-        Map<Integer, String> toLinkedMap = simpleToLinkedMap(inputList, element -> element + 10, element -> element + " value");
+        List<Integer> inputList = asList(1, 2, 3, 4, 5, 6);
+        Map<Integer, String> toLinkedMap =
+                CollectionFunctions.simpleToLinkedMap(inputList, element -> element + 10, element -> element + " value");
 
         // Assertion
         int index = 0;
@@ -688,14 +719,15 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_simpleLinkedMapKeyAndValue() {
+    public void simpleLinkedMapKeyAndValue() {
 
         Map<Integer, String> inputMap = new LinkedHashMap<>();
         inputMap.put(1, "Test1");
         inputMap.put(2, "Test2");
         inputMap.put(3, "Test3");
 
-        Map<Integer, String> toLinkedMap = simpleLinkedMapKeyAndValue(inputMap, element -> element + 10, element -> element + " value");
+        Map<Integer, String> toLinkedMap =
+                CollectionFunctions.simpleLinkedMapKeyAndValue(inputMap, element -> element + 10, element -> element + " value");
 
         // Assertion
         int inputKey = 1;
@@ -713,14 +745,14 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_simpleLinkedMapKey() {
+    public void simpleLinkedMapKey() {
 
         Map<Integer, String> inputMap = new LinkedHashMap<>();
         inputMap.put(1, "Test1");
         inputMap.put(2, "Test2");
         inputMap.put(3, "Test3");
 
-        Map<Integer, String> toLinkedMap = simpleLinkedMapKey(inputMap, element -> element + 10);
+        Map<Integer, String> toLinkedMap = CollectionFunctions.simpleLinkedMapKey(inputMap, element -> element + 10);
 
         // Assertion
         int inputKey = 1;
@@ -738,14 +770,14 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_simpleLinkedMapValue() {
+    public void simpleLinkedMapValue() {
 
         Map<Integer, String> inputMap = new LinkedHashMap<>();
         inputMap.put(1, "Test1");
         inputMap.put(2, "Test2");
         inputMap.put(3, "Test3");
 
-        Map<Integer, String> toLinkedMap = simpleLinkedMapValue(inputMap, element -> element + " value");
+        Map<Integer, String> toLinkedMap = CollectionFunctions.simpleLinkedMapValue(inputMap, element -> element + " value");
 
         // Assertion
         int inputKey = 1;
@@ -766,7 +798,7 @@ public class CollectionFunctionsTest {
     public void testFindPermutations() {
 
         List<List<String>> permutations = CollectionFunctions.findPermutations(asList("a", "b", "c"));
-        assertEquals(3 * 2 * 1, permutations.size());
+        assertEquals(3 * 2, permutations.size());
 
         List<List<String>> expectedPermutations = asList(
                 asList("a", "b", "c"),
@@ -775,73 +807,70 @@ public class CollectionFunctionsTest {
                 asList("a", "c", "b"),
                 asList("b", "c", "a"),
                 asList("c", "b", "a"));
+
         expectedPermutations.forEach(expected -> assertTrue(permutations.contains(expected)));
     }
 
     @Test
-    public void test_removeElement() {
+    public void removeElement() {
         List<String> tokens = asList("a", "b", "c");
-        assertEquals(asList("a", "c"), removeElement(tokens, 1));
+        assertEquals(asList("a", "c"), CollectionFunctions.removeElement(tokens, 1));
         assertEquals(asList("a", "b", "c"), tokens);
     }
 
     @Test
-    public void test_removeDuplicates() {
+    public void removeDuplicates() {
         List<String> tokens = asList("a", "b", "c", "b", "e", "c");
-        assertEquals(asList("a", "b", "c", "e"), removeDuplicates(tokens));
+        assertEquals(asList("a", "b", "c", "e"), CollectionFunctions.removeDuplicates(tokens));
         assertEquals(asList("a", "b", "c", "b", "e", "c"), tokens);
     }
 
     @Test
-    public void test_removeDuplicates_nullList() {
-        assertEquals(emptyList(), removeDuplicates(null));
+    public void sort() {
+        assertEquals(asList("a", "b", "c"), CollectionFunctions.sort(asList("b", "c", "a")));
     }
 
     @Test
-    public void test_sort() {
-        assertEquals(asList("a", "b", "c"), sort(asList("b", "c", "a")));
+    public void sort_nullSafe() {
+        assertEquals(emptyList(), CollectionFunctions.sort(null));
     }
 
     @Test
-    public void test_sort_nullSafe() {
-        assertEquals(emptyList(), sort(null));
+    public void sortWithComparator() {
+        assertEquals(asList("c", "b", "a"), CollectionFunctions.sort(asList("b", "c", "a"), Comparator.reverseOrder()));
     }
 
     @Test
-    public void test_sortWithComparator() {
-        assertEquals(asList("c", "b", "a"), sort(asList("b", "c", "a"), (s1, s2) -> s2.compareTo(s1)));
-    }
-
-    @Test
-    public void test_sortWithComparator_nullSafe() {
-        assertEquals(emptyList(), sort((List<String>) null, (s1, s2) -> s2.compareTo(s1)));
+    public void sortWithComparator_nullSafe() {
+        assertEquals(emptyList(), CollectionFunctions.sort((List<String>) null, Comparator.reverseOrder()));
     }
 
     @Test
     public void testSimplePartition() {
-        Pair<List<String>, List<String>> partitioned = simplePartition(asList("a1", "b1", "a2", "c1"), string -> string.startsWith("a"));
+        Pair<List<String>, List<String>> partitioned = CollectionFunctions.simplePartition(asList("a1", "b1", "a2", "c1"), string -> string.startsWith("a"));
         assertEquals(asList("a1", "a2"), partitioned.getLeft());
         assertEquals(asList("b1", "c1"), partitioned.getRight());
     }
 
     @Test
     public void testSimplePartition_NullSafe() {
-        Pair<List<String>, List<String>> partitioned = simplePartition(null, string -> string.startsWith("a"));
+        Pair<List<String>, List<String>> partitioned = CollectionFunctions.simplePartition(null, string -> string.startsWith("a"));
         assertEquals(emptyList(), partitioned.getLeft());
         assertEquals(emptyList(), partitioned.getRight());
     }
+
 
     @Test
     public void testContainsAllEqualsFunction(){
         List<Pair<Integer, String>> containingList = asList(of(1, "two"), of(2, "pair"));
         List<String> containedList = asList("two", "pair");
-        List<String> anotherSmallerContainedList = asList("two");
-        List<String> isNotContainedList = asList("not present");
-        assertTrue(containsAll(containingList, containedList, (s,t) -> s.getRight() == t));
-        assertTrue(containsAll(containedList,containingList, (s,t) ->  s == t.getRight()));
-        assertTrue(containsAll(containingList, anotherSmallerContainedList, (s,t) -> s.getRight() == t));
-        assertFalse(containsAll(anotherSmallerContainedList, containingList, (s,t) ->  s == t.getRight()));
-        assertFalse(containsAll(containingList, isNotContainedList, (s,t) -> s.getRight() == t));
+        List<String> anotherSmallerContainedList = singletonList("two");
+        List<String> isNotContainedList = singletonList("not present");
+        assertTrue(containsAll(containingList, containedList, (s,t) -> Objects.equals(s.getRight(), t)));
+        assertTrue(containsAll(containedList,containingList, (s,t) -> Objects.equals(s, t.getRight())));
+        assertTrue(containsAll(containingList, anotherSmallerContainedList, (s,t) -> Objects.equals(s.getRight(), t)));
+        assertFalse(containsAll(anotherSmallerContainedList, containingList, (s,t) -> Objects.equals(s, t.getRight())));
+        assertFalse(containsAll(containingList, isNotContainedList, (s,t) -> Objects.equals(s.getRight(), t)));
     }
 
     @Test
@@ -854,9 +883,9 @@ public class CollectionFunctionsTest {
     public void testContainsAll(){
         List<Pair<Integer, String>> containingList = asList(of(1, "two"), of(2, "pair"));
         List<Pair<String, Integer>> containedList = asList(of("two", 8), of("pair", 57));
-        List<Pair<String, Integer>> isNotContainedList = asList(of("not present", 8));
-        assertTrue(containsAll(containingList, s -> s.getRight(), containedList, s -> s.getLeft()));
-        assertFalse(containsAll(containingList, s -> s.getRight(), isNotContainedList, s -> s.getLeft()));
+        List<Pair<String, Integer>> isNotContainedList = singletonList(of("not present", 8));
+        assertTrue(containsAll(containingList, Pair::getRight, containedList, Pair::getLeft));
+        assertFalse(containsAll(containingList, Pair::getRight, isNotContainedList, Pair::getLeft));
     }
 
     @Test
@@ -893,7 +922,7 @@ public class CollectionFunctionsTest {
         assertEquals(firstLabel, sortedMap.firstKey());
         assertEquals(sortedMap.get(firstLabel), asList(firstEntry, secondEntry, fourthEntry));
         assertEquals(secondLabel, sortedMap.lastKey());
-        assertEquals(sortedMap.get(secondLabel), asList(thirdEntry));
+        assertEquals(sortedMap.get(secondLabel), singletonList(thirdEntry));
     }
 
 
@@ -923,59 +952,60 @@ public class CollectionFunctionsTest {
         String[] strings = {"a", "b", "c", "c"};
         Set<String> expected = newHashSet(asList("A", "B", "C"));
 
-        Set<String> actual = simpleMapSet(strings, String::toUpperCase);
+        Set<String> actual = CollectionFunctions.simpleMapSet(strings, String::toUpperCase);
 
         assertEquals(expected, actual);
     }
 
     @Test
-    public void test_zip() {
+    public void zip() {
 
         List<String> list1 = asList("a", "b", "c");
         List<Integer> list2 = asList(1, 2, 3);
         List<String> results = new ArrayList<>();
 
-        zip(list1, list2, (string, integer) -> results.add(string + integer));
+        CollectionFunctions.zip(list1, list2, (string, integer) -> results.add(string + integer));
 
         assertEquals(asList("a1", "b2", "c3"), results);
     }
 
     @Test
-    public void test_zipWithIndex() {
+    public void zipWithIndex() {
 
         List<String> list1 = asList("a", "b", "c");
         List<Integer> list2 = asList(1, 2, 3);
         List<String> results = new ArrayList<>();
 
-        zipWithIndex(list1, list2, (string, integer, index) -> results.add(string + integer + "" + index));
+        CollectionFunctions.zipWithIndex(list1, list2, (string, integer, index) -> results.add(string + integer + "" + index));
 
         assertEquals(asList("a10", "b21", "c32"), results);
     }
 
     @Test
-    public void test_zipAndMap() {
+    public void zipAndMap() {
 
         List<String> list1 = asList("a", "b", "c");
         List<Integer> list2 = asList(1, 2, 3);
 
-        List<String> results = zipAndMap(list1, list2, (string, integer) -> string + integer);
+        List<String> results = CollectionFunctions.zipAndMap(list1, list2, (string, integer) -> string + integer);
 
         assertEquals(asList("a1", "b2", "c3"), results);
     }
 
     @Test
-    public void test_zipAndMapWithIndex() {
+    public void zipAndMapWithIndex() {
 
         List<String> list1 = asList("a", "b", "c");
         List<Integer> list2 = asList(1, 2, 3);
 
-        List<String> results = zipAndMapWithIndex(list1, list2, (string, integer, index) -> string + integer + "" + index);
+        List<String> results =
+                CollectionFunctions.zipAndMapWithIndex(list1, list2, (string, integer, index) -> string + integer + "" + index);
 
         assertEquals(asList("a10", "b21", "c32"), results);
     }
 
     @Test
-    public void test_simpleFilter_withMap() {
+    public void simpleFilter_withMap() {
 
         Map<Integer, String> map = new LinkedHashMap<>();
         map.put(1, "1");
@@ -983,7 +1013,7 @@ public class CollectionFunctionsTest {
         map.put(3, "3");
         map.put(4, "4");
 
-        Map<Integer, String> filtered = simpleFilter(map, key -> key < 3);
+        Map<Integer, String> filtered = CollectionFunctions.simpleFilter(map, key -> key < 3);
 
         Map<Integer, String> expectedFilteredMap = new LinkedHashMap<>();
         expectedFilteredMap.put(1, "1");
@@ -993,7 +1023,7 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_simpleFilter_withMap_biPredicate() {
+    public void simpleFilter_withMap_biPredicate() {
 
         Map<Integer, String> map = new LinkedHashMap<>();
         map.put(1, "1");
@@ -1001,7 +1031,7 @@ public class CollectionFunctionsTest {
         map.put(3, "3");
         map.put(4, "4");
 
-        Map<Integer, String> filtered = simpleFilter(map, (key, value) -> key < 3);
+        Map<Integer, String> filtered = CollectionFunctions.simpleFilter(map, (key, value) -> key < 3);
 
         Map<Integer, String> expectedFilteredMap = new LinkedHashMap<>();
         expectedFilteredMap.put(1, "1");
@@ -1011,7 +1041,7 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_simpleFilterNot_withMap() {
+    public void simpleFilterNot_withMap() {
 
         Map<Integer, String> map = new LinkedHashMap<>();
         map.put(1, "1");
@@ -1019,7 +1049,7 @@ public class CollectionFunctionsTest {
         map.put(3, "3");
         map.put(4, "4");
 
-        Map<Integer, String> filtered = simpleFilterNot(map, key -> key < 3);
+        Map<Integer, String> filtered = CollectionFunctions.simpleFilterNot(map, key -> key < 3);
 
         Map<Integer, String> expectedFilteredMap = new LinkedHashMap<>();
         expectedFilteredMap.put(3, "3");
@@ -1029,186 +1059,186 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_and() {
+    public void and() {
 
         List<Integer> list = asList(1, 2, 3, 4, 5, 6, 7, 8);
 
-        Predicate<Integer> compoundPredicate = and(
+        Predicate<Integer> compoundPredicate = CollectionFunctions.and(
                 i -> i > 3,
                 i -> (i % 2) == 0);
 
-        List<Integer> filtered = simpleFilter(list, compoundPredicate);
+        List<Integer> filtered = CollectionFunctions.simpleFilter(list, compoundPredicate);
         assertEquals(asList(4, 6, 8), filtered);
     }
 
     @Test
-    public void test_getOnlyElementOrEmpty() {
-        assertEquals(Optional.of(1), getOnlyElementOrEmpty(singletonList(1)));
+    public void getOnlyElementOrEmpty() {
+        assertEquals(Optional.of(1), CollectionFunctions.getOnlyElementOrEmpty(singletonList(1)));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void test_getOnlyElementOrEmpty_MoreThanOneElement() {
-        getOnlyElementOrEmpty(asList(1, 2));
+    public void getOnlyElementOrEmpty_MoreThanOneElement() {
+        CollectionFunctions.getOnlyElementOrEmpty(asList(1, 2));
     }
 
     @Test
-    public void test_getOnlyElementOrEmpty_emptyList() {
-        assertEquals(Optional.empty(), getOnlyElementOrEmpty(emptyList()));
+    public void getOnlyElementOrEmpty_emptyList() {
+        assertEquals(Optional.empty(), CollectionFunctions.getOnlyElementOrEmpty(emptyList()));
     }
 
     @Test
-    public void test_getOnlyElementOrEmpty_nullList() {
-        assertEquals(Optional.empty(), getOnlyElementOrEmpty(null));
+    public void getOnlyElementOrEmpty_nullList() {
+        assertEquals(Optional.empty(), CollectionFunctions.getOnlyElementOrEmpty(null));
     }
 
     @Test
-    public void test_pairsToMap() {
+    public void pairsToMap() {
 
         Map<Integer, String> expected = new LinkedHashMap<>();
         expected.put(1, "a");
         expected.put(2, "b");
 
-        assertEquals(expected, pairsToMap(asList(Pair.of(1, "a"), Pair.of(2, "b"))));
+        assertEquals(expected, CollectionFunctions.pairsToMap(asList(Pair.of(1, "a"), Pair.of(2, "b"))));
     }
 
     @Test
-    public void test_simpleFindFirst() {
-        assertEquals(Optional.of(3), simpleFindFirst(asList(1, 2, 3), i -> i > 2));
+    public void simpleFindFirst() {
+        assertEquals(Optional.of(3), CollectionFunctions.simpleFindFirst(asList(1, 2, 3), i -> i > 2));
     }
 
     @Test
-    public void test_simpleFindFirst_notFound() {
-        assertEquals(Optional.empty(), simpleFindFirst(asList(1, 2, 3), i -> i > 3));
+    public void simpleFindFirst_notFound() {
+        assertEquals(Optional.empty(), CollectionFunctions.simpleFindFirst(asList(1, 2, 3), i -> i > 3));
     }
 
     @Test
-    public void test_simpleFindFirst_nullList() {
-        assertEquals(Optional.empty(), simpleFindFirst((List<Integer>) null, i -> i > 2));
+    public void simpleFindFirst_nullList() {
+        assertEquals(Optional.empty(), CollectionFunctions.simpleFindFirst((List<Integer>) null, i -> i > 2));
     }
 
     @Test
-    public void test_simpleFindFirst_withArray() {
-        assertEquals(Optional.of(3), simpleFindFirst(new Integer[] {1, 2, 3}, i -> i > 2));
+    public void simpleFindFirst_withArray() {
+        assertEquals(Optional.of(3), CollectionFunctions.simpleFindFirst(new Integer[] {1, 2, 3}, i -> i > 2));
     }
 
     @Test
-    public void test_simpleFindFirst_withNullArray() {
-        assertEquals(Optional.empty(), simpleFindFirst((Integer[]) null, i -> i > 2));
+    public void simpleFindFirst_withNullArray() {
+        assertEquals(Optional.empty(), CollectionFunctions.simpleFindFirst((Integer[]) null, i -> i > 2));
     }
 
     @Test
-    public void test_simpleFindFirstMandatory() {
-        assertEquals(Integer.valueOf(3), simpleFindFirstMandatory(asList(1, 2, 3), i -> i > 2));
+    public void simpleFindFirstMandatory() {
+        assertEquals(Integer.valueOf(3), CollectionFunctions.simpleFindFirstMandatory(asList(1, 2, 3), i -> i > 2));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void test_simpleFindFirstMandatory_withNullList() {
-        simpleFindFirstMandatory((List<Integer>) null, i -> i > 2);
+    public void simpleFindFirstMandatory_withNullList() {
+        CollectionFunctions.simpleFindFirstMandatory((List<Integer>) null, i -> i > 2);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void test_simpleFindFirstMandatory_withNoMatchingElement() {
-        simpleFindFirstMandatory(asList(1, 2), i -> i > 2);
+    public void simpleFindFirstMandatory_withNoMatchingElement() {
+        CollectionFunctions.simpleFindFirstMandatory(asList(1, 2), i -> i > 2);
     }
 
     @Test
-    public void test_simpleAnyMatch() {
-        assertTrue(simpleAnyMatch(asList(1, 2, 3), i -> i > 2));
+    public void simpleAnyMatch() {
+        assertTrue(CollectionFunctions.simpleAnyMatch(asList(1, 2, 3), i -> i > 2));
     }
 
     @Test
-    public void test_simpleAnyMatch_noMatch() {
-        assertFalse(simpleAnyMatch(asList(1, 2), i -> i > 2));
+    public void simpleAnyMatch_noMatch() {
+        assertFalse(CollectionFunctions.simpleAnyMatch(asList(1, 2), i -> i > 2));
     }
 
     @Test
-    public void test_simpleAnyMatch_nullList() {
-        assertFalse(simpleAnyMatch((List<Integer>) null, i -> i > 2));
+    public void simpleAnyMatch_nullList() {
+        assertFalse(CollectionFunctions.simpleAnyMatch((List<Integer>) null, i -> i > 2));
     }
 
     @Test
-    public void test_simpleAnyMatch_withArray() {
-        assertTrue(simpleAnyMatch(new Integer[] {1, 2, 3}, i -> i > 2));
+    public void simpleAnyMatch_withArray() {
+        assertTrue(CollectionFunctions.simpleAnyMatch(new Integer[] {1, 2, 3}, i -> i > 2));
     }
 
     @Test
-    public void test_simpleAnyMatch_withArray_noMatch() {
-        assertFalse(simpleAnyMatch(new Integer[] {1, 2}, i -> i > 2));
+    public void simpleAnyMatch_withArray_noMatch() {
+        assertFalse(CollectionFunctions.simpleAnyMatch(new Integer[] {1, 2}, i -> i > 2));
     }
 
     @Test
-    public void test_simpleAnyMatch_withArray_nullArray() {
-        assertFalse(simpleAnyMatch((Integer[]) null, i -> i > 2));
+    public void simpleAnyMatch_withArray_nullArray() {
+        assertFalse(CollectionFunctions.simpleAnyMatch((Integer[]) null, i -> i > 2));
     }
 
     @Test
-    public void test_simpleAllMatch() {
-        assertTrue(simpleAllMatch(asList(1, 2, 3), i -> i > 0));
+    public void simpleAllMatch() {
+        assertTrue(CollectionFunctions.simpleAllMatch(asList(1, 2, 3), i -> i > 0));
     }
 
     @Test
-    public void test_simpleAllMatch_noMatch() {
-        assertFalse(simpleAllMatch(asList(1, 2, 3), i -> i > 1));
+    public void simpleAllMatch_noMatch() {
+        assertFalse(CollectionFunctions.simpleAllMatch(asList(1, 2, 3), i -> i > 1));
     }
 
     @Test
-    public void test_simpleAllMatch_nullList() {
-        assertTrue(simpleAllMatch((List<Integer>) null, i -> i > 2));
+    public void simpleAllMatch_nullList() {
+        assertTrue(CollectionFunctions.simpleAllMatch((List<Integer>) null, i -> i > 2));
     }
 
     @Test
-    public void test_simpleAllMatch_emptyList() {
-        assertTrue(simpleAllMatch(emptyList(), i -> i != null));
+    public void simpleAllMatch_emptyList() {
+        assertTrue(CollectionFunctions.simpleAllMatch(emptyList(), i -> i != null));
     }
 
     @Test
-    public void test_simpleAllMatch_withArray() {
-        assertTrue(simpleAllMatch(new Integer[] {1, 2, 3}, i -> i > 0));
+    public void simpleAllMatch_withArray() {
+        assertTrue(CollectionFunctions.simpleAllMatch(new Integer[] {1, 2, 3}, i -> i > 0));
     }
 
     @Test
-    public void test_simpleAllMatch_withArray_noMatch() {
-        assertFalse(simpleAllMatch(new Integer[] {1, 2}, i -> i > 1));
+    public void simpleAllMatch_withArray_noMatch() {
+        assertFalse(CollectionFunctions.simpleAllMatch(new Integer[] {1, 2}, i -> i > 1));
     }
 
     @Test
-    public void test_simpleAllMatch_withArray_nullArray() {
-        assertTrue(simpleAllMatch((Integer[]) null, i -> i > 2));
+    public void simpleAllMatch_withArray_nullArray() {
+        assertTrue(CollectionFunctions.simpleAllMatch((Integer[]) null, i -> i > 2));
     }
 
     @Test
-    public void test_nullSafe() {
-        BinaryOperator<Integer> nullSafeAdder = nullSafe((Integer o1, Integer o2) -> o1 + o2);
+    public void nullSafe() {
+        BinaryOperator<Integer> nullSafeAdder = CollectionFunctions.nullSafe((Integer o1, Integer o2) -> o1 + o2);
         Integer reduction = Stream.of(null, null, null, 4, null, 6, 7).reduce(nullSafeAdder).get();
         assertEquals(17, reduction.intValue());
     }
 
     @Test
-    public void test_asListOfPairs() {
+    public void asListOfPairs() {
 
         List<Pair<String, Integer>> expected =
                 asList(Pair.of("a", 1), Pair.of("b", 2), Pair.of("c", 3));
 
-        assertEquals(expected, asListOfPairs("a", 1, "b", 2, "c", 3));
+        assertEquals(expected, CollectionFunctions.asListOfPairs("a", 1, "b", 2, "c", 3));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void test_asListOfPairs_unevenEntries() {
-        asListOfPairs("a", 1, "b", 2, "c");
+    public void asListOfPairs_unevenEntries() {
+        CollectionFunctions.asListOfPairs("a", 1, "b", 2, "c");
     }
 
     @Test
-    public void test_nOf() {
-        assertEquals(asList("a", "a", "a", "a", "a"), nOf(5, "a"));
+    public void nOf() {
+        assertEquals(asList("a", "a", "a", "a", "a"), CollectionFunctions.nOf(5, "a"));
     }
 
     @Test
-    public void test_flattenOptional() {
+    public void flattenOptional() {
 
         List<Optional<Integer>> listOfOptionals = asList(
                 Optional.of(1), Optional.empty(), Optional.of(3), Optional.of(4), Optional.empty());
 
-        assertEquals(asList(1, 3, 4), flattenOptional(listOfOptionals));
+        assertEquals(asList(1, 3, 4), CollectionFunctions.flattenOptional(listOfOptionals));
     }
 }
 

@@ -6,6 +6,10 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.List;
 
+/*
+ *  Resource for project document.
+ */
+
 public class ProjectDocumentResource {
 
     private Long id;
