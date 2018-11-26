@@ -78,6 +78,11 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ", description = "Stakeholders can view everyone")
+    public boolean stakeholdersCanViewEveryone(UserResource userToView, UserResource user) {
+        return isStakeholder(user);
+    }
+
     @PermissionRule(value = "READ_USER_ORGANISATION", description = "Internal support users can view all users and associated organisations")
     public boolean internalUsersCanViewUserOrganisation(UserOrganisationResource userToView, UserResource user) {
         return isInternal(user);

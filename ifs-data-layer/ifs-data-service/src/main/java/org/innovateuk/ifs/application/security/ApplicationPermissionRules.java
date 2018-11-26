@@ -48,9 +48,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isAssessor(applicationResource.getId(), user) || isPanelAssessor(applicationResource.getId(), user) || isInterviewAssessor(applicationResource.getId(), user);
     }
 
-    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The internal users can see the participation percentage for applications they assess")
-    public boolean internalUsersCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
-        return isInternal(user);
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The internal users and stakeholders can see the participation percentage for applications they assess")
+    public boolean internalUsersAndStakeholdersCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
+        return isInternal(user) || isStakeholder(user);
     }
 
     @PermissionRule(value = "READ_FINANCE_DETAILS",

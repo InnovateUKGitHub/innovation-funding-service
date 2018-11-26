@@ -255,9 +255,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void internalUsersCanSeeTheResearchParticipantPercentageInApplications() {
-        assertTrue(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, compAdmin));
-        assertTrue(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, projectFinanceUser()));
-        assertFalse(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, leadOnApplication1));
+        assertTrue(rules.internalUsersAndStakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, compAdmin));
+        assertTrue(rules.internalUsersAndStakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, projectFinanceUser()));
+        assertFalse(rules.internalUsersAndStakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, leadOnApplication1));
     }
 
     @Test
