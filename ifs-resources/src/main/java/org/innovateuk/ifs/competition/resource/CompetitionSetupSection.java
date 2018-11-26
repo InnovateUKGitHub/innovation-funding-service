@@ -9,6 +9,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -120,7 +121,28 @@ public enum CompetitionSetupSection {
         return previousSection;
     }
 
+    public Optional<CompetitionSetupSection> getNextSection() {
+
+        return simpleFindFirst(CompetitionSetupSection.values(), section ->
+                section.getPreviousSection().equals(Optional.of(this)));
+    }
+
+    public List<CompetitionSetupSection> getAllNextSections() {
+        return getAllNextSections(this);
+    }
+
     private static CompetitionSetupSection getFirstSectionInChain(CompetitionSetupSection section) {
         return section.getPreviousSection().map(CompetitionSetupSection::getFirstSectionInChain).orElse(section);
+    }
+
+    /**
+     * Recurse from an initial section, gathering its next section (if any), and then the next section's
+     * next section, and so on
+     */
+    private static List<CompetitionSetupSection> getAllNextSections(CompetitionSetupSection parentSection) {
+
+        return parentSection.getNextSection().map(next ->
+                combineLists(next, getAllNextSections(next))).
+                orElse(emptyList());
     }
 }

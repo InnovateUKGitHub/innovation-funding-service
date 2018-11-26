@@ -40,11 +40,6 @@ public class MenuViewModel extends CompetitionSetupViewModel {
         return sectionIsComplete(setupSection) && !generalSetupViewModel.getCompetition().isSetupAndLive();
     }
 
-    public String getTargetPathForSection(CompetitionSetupSection setupSection) {
-        boolean markedAsComplete = sectionIsComplete(setupSection);
-        return markedAsComplete ? setupSection.getPostMarkCompletePath() : setupSection.getPath();
-    }
-
     private boolean sectionIsComplete(CompetitionSetupSection setupSection) {
         return statuses.getOrDefault(setupSection, false);
     }

@@ -36,7 +36,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
@@ -239,24 +238,13 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<SetupStatusResource> markSectionIncomplete(Long competitionId, CompetitionSetupSection section) {
 
-        List<CompetitionSetupSection> allSectionsToMarkIncomplete = combineLists(section, getAllPreviousSections(section));
+        List<CompetitionSetupSection> allSectionsToMarkIncomplete = combineLists(section, section.getAllNextSections());
 
         List<ServiceResult<SetupStatusResource>> markIncompleteResults = simpleMap(allSectionsToMarkIncomplete,
                 sectionToMarkIncomplete -> setSectionIncompleteAndUpdate(competitionId, sectionToMarkIncomplete));
 
         ServiceResult<List<SetupStatusResource>> combinedResult = aggregate(markIncompleteResults);
         return combinedResult.andOnSuccessReturn(resultsList -> resultsList.get(0));
-    }
-
-    /**
-     * Recurse from an initial section, gathering its previous section (if any), and then the previous section's
-     * previous section, and so on
-     */
-    private List<CompetitionSetupSection> getAllPreviousSections(CompetitionSetupSection parentSection) {
-
-        return parentSection.getPreviousSection().map(previous ->
-                combineLists(previous, getAllPreviousSections(previous))).
-                orElse(emptyList());
     }
 
     private ServiceResult<SetupStatusResource> setSectionIncompleteAndUpdate(Long competitionId, CompetitionSetupSection section) {
