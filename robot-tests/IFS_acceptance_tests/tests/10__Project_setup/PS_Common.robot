@@ -244,7 +244,8 @@ project lead submits project address
     [Arguments]  ${project_id}
     the user navigates to the page                ${server}/project-setup/project/${project_id}/details/project-address
     the user enters text to a text field          id = addressForm.postcodeInput  BS1 4NT
-    the user clicks the button/link               jQuery = button:contains("Find UK address")
+    the user clicks the button/link               id = postcode-lookup
+    #the user clicks the button/link               jQuery = button:contains("Find UK address")
     the user selects the index from the drop-down menu  0  id=addressForm.selectedPostcodeIndex
     the user clicks the button/link               jQuery = button:contains("Save address")
 
