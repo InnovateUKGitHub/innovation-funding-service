@@ -88,7 +88,7 @@ Lead organisation client-side validations
     [Tags]
     When The user enters text to a text field      css = tr:nth-of-type(2) td:nth-of-type(1) input    Florian
     And The user enters text to a text field       css = tr:nth-of-type(2) td:nth-of-type(2) input    florian21@florian.com
-    And the user moves focus to the element        css = button[name="executeStagedInvite"]
+    And Set Focus To Element                       css = button[name="executeStagedInvite"]
     Then the user cannot see a validation error in the page
 
 Lead organisation already used email
@@ -130,9 +130,8 @@ Partner organisation Server-side validations
     And browser validations have been disabled
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Add organisation and invite applicants")
     Then the user should see a field and summary error    An organisation name is required.
-    #TODO remove below uncommented once IFS-4760 is done.
-    #And the user should see a field and summary error     Please enter a name.
-    #And the user should see a field and summary error     Please enter an email address.
+    And the user should see a field and summary error     Please enter a name.
+    And the user should see a field and summary error     Please enter an email address.
     [Teardown]  the user goes back to the previous page
 
 Partner organisation Client-side validations

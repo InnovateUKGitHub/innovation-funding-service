@@ -65,7 +65,7 @@
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
                                         <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}"
                                               th:text="${err}"
-                                              class="error-message">Please enter a name.</span>
+                                              class="govuk-error-message">Please enter a name.</span>
                                     </th:block>
                                     <input type="text"
                                            th:id="applicants[__${applicantStat.index}__].name"
@@ -82,7 +82,7 @@
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
                                             <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}"
                                                   th:text="${err}"
-                                                  class="error-message"> Please enter an email address.</span>
+                                                  class="govuk-error-message"> Please enter an email address.</span>
                                     </th:block>
                                     <input type="email"
                                            th:id="applicants[__${applicantStat.index}__].email"

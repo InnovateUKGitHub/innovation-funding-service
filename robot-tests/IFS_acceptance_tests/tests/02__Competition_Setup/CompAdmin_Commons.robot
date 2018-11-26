@@ -97,17 +97,16 @@ the user fills in the CS Milestones
     the user clicks the button/link              link = Competition setup
     the user should see the element              jQuery = div:contains("Milestones") ~ .task-status-complete
 
-# TODO IFS-4609 Uncomment when this functionality is enabled.
-#the user fills in the CS Documents in other projects
-#    the user clicks the button/link          link = Documents in project setup
-#    the user clicks the button/link          link = Add document type
-#    the user enters text to a text field     id = title    Test document type
-#    the user clicks the button/link          jQuery = span:contains("PDF")
-#    the user clicks the button/link          jQuery = span:contains("Spreadsheet")
-#    the user enters text to a text field     css = .editor    Guidance test.
-#    the user clicks the button/link          css = button[type = "submit"]
-#    the user should see the element          jQuery = span:contains("Test document type")
-#    the user clicks the button/link          link = Competition setup
+the user fills in the CS Documents in other projects
+    the user clicks the button/link          link = Documents
+    the user clicks the button/link          link = Add document type
+    the user enters text to a text field     id = title    Test document type
+    the user clicks the button/link          jQuery = span:contains("PDF")
+    the user clicks the button/link          jQuery = span:contains("Spreadsheet")
+    the user enters text to a text field     css = .editor    Guidance test.
+    the user clicks the button/link          css = button[type = "submit"]
+    the user should see the element          jQuery = span:contains("Test document type")
+    the user clicks the button/link          link = Competition setup
 
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
@@ -395,3 +394,7 @@ The project finance user is able to download the Overheads file
     [Arguments]   ${ProjectID}  ${organisationId}
     the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
     remove the file from the operating system     ${excel_file}
+
+the user moves focus and waits for autosave
+    Set Focus To Element    link=GOV.UK
+    Wait For Autosave

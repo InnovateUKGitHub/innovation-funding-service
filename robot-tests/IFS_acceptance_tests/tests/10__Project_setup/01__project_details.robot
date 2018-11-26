@@ -82,11 +82,12 @@ Status updates correctly for internal user's table    # This uses the Elbow grea
     [Tags]
     Given the user navigates to the page    ${internal_competition_status}
     And the competition admin should see the status of each project setup stage
-    #Internal user can view project details via the clickable 'hour glass' for Project details
+    # Internal user can view project details via the clickable 'hour glass' for Project details
     When the user clicks the button/link    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting a
     Then the user should see the element    jQuery = h1:contains("Project details")
     And the user clicks the button/link     link = Projects in setup
-    And the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting
+    And the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(2)  # Project details
 
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805, INFUND-7432
@@ -213,10 +214,10 @@ Inviting project manager client side validations
     [Documentation]    INFUND-3483, INFUND-6882
     [Tags]
     When the user enters text to a text field            id = name-project-manager    John Smith
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name.
     When the user enters text to a text field            id = email-project-manager    test
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name.
     And the user should see the text in the page         ${enter_a_valid_email}
     When the user selects the radio button               projectManager    projectManager1
@@ -224,7 +225,7 @@ Inviting project manager client side validations
     And the user should not see the text in the page     Please enter a valid name.
     When the user selects the radio button               projectManager    new
     And the user enters text to a text field             id = email-project-manager    test@example.com
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page     Please enter a valid name.
     And the user should not see an error in the page
@@ -398,14 +399,14 @@ Inviting finance contact client side validations
     [Documentation]    INFUND-3483
     [Tags]
     When the user enters text to a text field            id = name-finance-contact    John Smith
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save finance contact")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
     When the user enters text to a text field            id = email-finance-contact    test
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save finance contact")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
     And the user should see the text in the page         ${enter_a_valid_email}
     When the user enters text to a text field            id = email-finance-contact    test@example.com
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save finance contact")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page     Please enter a valid name.
 
@@ -496,8 +497,8 @@ Validation for project location
     [Setup]  log in as a different user                 &{lead_applicant_credentials}
     Given the user navigates to the page                ${project_in_setup_details_page}
     Given the user clicks the button/link               jQuery = #project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
-    And the user moves focus to the element             id = postcode
-    Set Focus To Element                                link = Contact us
+    And Set Focus To Element                            id = postcode
+    And Set Focus To Element                            link = Contact us
     And the user should see a field error               ${empty_field_warning_message}
     When the user clicks the button/link                css = button[type = "submit"]
     Then the user should see a field and summary error  ${empty_field_warning_message}
@@ -522,7 +523,6 @@ Lead partner can see the status update when all Project details are submitted
     When the user clicks the button/link   link = View the status of partners
     Then the user should see the element   id = table-project-status
     And the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
-    And the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
 
 Project details links are still enabled after submission
     [Documentation]    INFUND-3381
@@ -695,16 +695,16 @@ the user should see the project setup stages
     the user should see the element    jQuery = h2:contains("Bank details")
     the user should see the element    jQuery = h2:contains("Finance checks")
     the user should see the element    jQuery = h2:contains("Spend profile")
-    the user should see the element    link = Other documents
+    the user should see the element    link = Documents
     the user should see the element    jQuery = h2:contains("Grant offer letter")
 
 the competition admin should see the status of each project setup stage
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(2).status             # Monitoring officer
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(3).status             # Bank details
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action      # Finance checks
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(5).status             # Spend Profile
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting     # Other Docs
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status             # GOL
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)                       # Documents
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4)                       # Monitoring Officer
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)                       # Bank details
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action    # Finance checks
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)                       # Spend Profile
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(8)                       # GOL
 
 the competition admin should see that their Project details aren't completed
     the user should see the element    jQuery = p:contains("These project details were supplied by the lead partner on behalf of the project.")

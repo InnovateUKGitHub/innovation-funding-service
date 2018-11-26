@@ -231,14 +231,14 @@ public class SetupSectionAccessibilityHelper {
         return userOrganisation.getId().equals(organisationIdFromUrl);
     }
 
-    public SectionAccess canAccessOtherDocumentsSection(OrganisationResource organisation) {
+    public SectionAccess canAccessDocumentsSection(OrganisationResource organisation) {
 
         if (setupProgressChecker.isLeadPartnerOrganisation(organisation)) {
             return ACCESSIBLE;
         }
 
         if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Non-lead Partners are unable to access Other Documents section until their Companies House information " +
+                "Non-lead Partners are unable to access Documents section until their Companies House information " +
                         "is complete")) {
             return ACCESSIBLE;
         }
@@ -248,12 +248,17 @@ public class SetupSectionAccessibilityHelper {
 
     public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
 
-        if (setupProgressChecker.isSpendProfileApproved() && setupProgressChecker.isOtherDocumentsApproved()
-                && setupProgressChecker.isGrantOfferLetterAvailable() && setupProgressChecker.isGrantOfferLetterSent()) {
+        if (setupProgressChecker.isSpendProfileApproved() && documentsApproved()
+                && setupProgressChecker.isGrantOfferLetterAvailable()
+                && setupProgressChecker.isGrantOfferLetterSent()) {
             return ACCESSIBLE;
         }
 
         return NOT_ACCESSIBLE;
+    }
+
+    private boolean documentsApproved() {
+        return setupProgressChecker.isDocumentsApproved();
     }
 
     public boolean isSpendProfileGenerated() {
