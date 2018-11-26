@@ -8,9 +8,9 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Completion stage',size='govuk-heading-xl'" />
 
-    <div class="govuk-body panel">
+    <div th:if="${model.general.editable}" class="govuk-body panel govuk-!-margin-bottom-6">
         <p class="govuk-body">Select the stage at which the competition is complete for Innovate UK.</p>
-        <p class="govuk-body">You do not need to run stages 9 to 11.</p>
+        <p class="govuk-body govuk-!-margin-bottom-0">You do not need to run stages 9 to 11.</p>
     </div>
 
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
@@ -22,8 +22,12 @@
 
             <ul class="govuk-list govuk-!-padding-0 govuk-!-margin-0 govuk-!-margin-bottom-2">
 
-                <li th:each="milestone : ${model.nonSelectableMilestones}" th:text="${milestone.milestoneDescription}"
-                    class="govuk-!-margin-bottom-4">1. Milestone name</li>
+                <li th:each="milestone : ${model.nonSelectableMilestones}" class="govuk-radios__item">
+                    <span class="govuk-label govuk-radios__label"
+                          th:text="${milestone.milestoneDescription}">
+                        1. Milestone name
+                    </span>
+                </li>
             </ul>
 
             <div class="govuk-form-group">
@@ -66,6 +70,28 @@
 
         </div>
     </form>
+
+    <th:block th:unless="${model.general.editable}">
+        <ul class="govuk-list govuk-!-padding-0 govuk-!-margin-0 govuk-!-margin-bottom-6">
+            <li th:each="milestone : ${model.nonSelectableMilestones}"
+                th:text="${milestone.milestoneDescription}"
+                class="govuk-!-margin-bottom-4">
+                1. Milestone name
+            </li>
+            <th:block th:if="${competitionSetupForm.selectedCompletionStage == model.releaseFeedbackCompletionStage}">
+                <li class="govuk-!-margin-bottom-4">13. Release feedback</li>
+                <li class="govuk-!-margin-bottom-4"><s class="govuk-hint">14. Project setup</s></li>
+            </th:block>
+            <th:block th:if="${competitionSetupForm.selectedCompletionStage == model.projectSetupCompletionStage}">
+                <li class="govuk-!-margin-bottom-4">13. Release feedback</li>
+                <li class="govuk-!-margin-bottom-4">14. Project setup</li>
+            </th:block>
+        </ul>
+
+        <a href="/edit" class="govuk-button">Edit</a>
+        <a href="/milestones" class="govuk-button govuk-!-margin-left-4">Milestones</a>
+
+    </th:block>
 
     <ul class="govuk-list pagination">
         <li class="prev">
