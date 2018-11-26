@@ -464,17 +464,17 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         doAnswer((invocation) -> {
             YourProjectCostsForm form = (YourProjectCostsForm) invocation.getArguments()[0];
             form.getLabour().getRows().put(rowId, row);
-            return row;
-        }).when(yourProjectCostsSaver).addRowForm(any(YourProjectCostsForm.class), eq(type), eq(projectId), eq(organisationId));
+            return form.getLabour().getRows().entrySet().iterator().next();
+        }).when(yourProjectCostsSaver).addRowForm(any(YourProjectCostsForm.class), eq(type));
 
         mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/add-row/{type}",
                 projectId, organisationId, type))
                 .andExpect(view().name("application/your-project-costs-fragments :: ajax_labour_row"))
                 .andExpect(model().attribute("row", row))
-                .andExpect(model().attribute("id", Long.valueOf(rowId)))
+                .andExpect(model().attribute("id", rowId))
                 .andExpect(status().isOk());
 
-        verify(yourProjectCostsSaver).addRowForm(any(YourProjectCostsForm.class), eq(type), eq(projectId), eq(organisationId));
+        verify(yourProjectCostsSaver).addRowForm(any(YourProjectCostsForm.class), eq(type));
     }
 
     @Test

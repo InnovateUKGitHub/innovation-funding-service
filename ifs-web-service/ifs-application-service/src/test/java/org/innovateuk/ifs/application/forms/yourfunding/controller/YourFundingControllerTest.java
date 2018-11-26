@@ -248,7 +248,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
                 APPLICATION_ID, SECTION_ID))
                 .andExpect(view().name("application/your-funding-fragments :: ajax_other_funding_row"))
                 .andExpect(model().attribute("row", row))
-                .andExpect(model().attribute("id", Long.valueOf(rowId)))
+                .andExpect(model().attribute("id", rowId))
                 .andExpect(status().isOk());
 
         verify(saver).addOtherFundingRow(any());
