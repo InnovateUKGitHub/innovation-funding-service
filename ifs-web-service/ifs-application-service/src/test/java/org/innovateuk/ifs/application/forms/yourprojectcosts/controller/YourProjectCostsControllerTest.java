@@ -184,7 +184,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
-        verify(saver).addRowForm(any(YourProjectCostsForm.class), eq(type), eq(APPLICATION_ID), eq(getLoggedInUser()));
+        verify(saver).addRowForm(any(YourProjectCostsForm.class), eq(type));
     }
 
     @Test
@@ -241,7 +241,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
             YourProjectCostsForm form = (YourProjectCostsForm) invocation.getArguments()[0];
             form.getLabour().getRows().put(rowId, row);
             return row;
-        }).when(saver).addRowForm(any(YourProjectCostsForm.class), eq(type), eq(APPLICATION_ID), eq(loggedInUser));
+        }).when(saver).addRowForm(any(YourProjectCostsForm.class), eq(type));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}/add-row/{type}",
                 APPLICATION_ID, SECTION_ID, type))
@@ -250,7 +250,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
                 .andExpect(model().attribute("id", Long.valueOf(rowId)))
                 .andExpect(status().isOk());
 
-        verify(saver).addRowForm(any(YourProjectCostsForm.class), eq(type), eq(APPLICATION_ID), eq(loggedInUser));
+        verify(saver).addRowForm(any(YourProjectCostsForm.class), eq(type));
     }
 
 

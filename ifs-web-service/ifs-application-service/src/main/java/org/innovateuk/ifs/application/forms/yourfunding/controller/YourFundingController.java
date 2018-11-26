@@ -140,7 +140,7 @@ public class YourFundingController {
                                         @PathVariable long sectionId,
                                         @ModelAttribute("form") YourFundingForm form) {
 
-        saver.addOtherFundingRow(form, applicationId, user);
+        saver.addOtherFundingRow(form);
         return viewYourFunding(model, applicationId, sectionId, user);
     }
 
@@ -179,12 +179,10 @@ public class YourFundingController {
     }
 
     @PostMapping("add-row")
-    public String ajaxAddRow(Model model,
-                             UserResource user,
-                             @PathVariable long applicationId) {
+    public String ajaxAddRow(Model model) {
         YourFundingForm form = new YourFundingForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
-        saver.addOtherFundingRow(form, applicationId, user);
+        saver.addOtherFundingRow(form);
         OtherFundingRowForm row = form.getOtherFundingRows().entrySet().iterator().next().getValue();
         model.addAttribute("form", form);
         model.addAttribute("id", row.getCostId());

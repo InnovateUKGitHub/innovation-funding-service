@@ -5,9 +5,14 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public abstract class AbstractCostRowForm<F extends FinanceRowItem> {
-    public static final String UNSAVED_ROW_ID = "unsaved-";
+    public static final String UNSAVED_ROW_PREFIX = "unsaved-";
+
+    public static String generateUnsavedRowId() {
+        return UNSAVED_ROW_PREFIX + UUID.randomUUID().toString();
+    }
 
     private Long costId;
 

@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_ID;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 
 @Component
 public class YourProjectCostsAutosaver {
@@ -218,7 +218,7 @@ public class YourProjectCostsAutosaver {
     }
 
     private <R extends FinanceRowItem> R getCost(String id, ApplicationFinanceResource finance, Class<R> clazz) throws IllegalAccessException, InstantiationException {
-        if (id.startsWith(UNSAVED_ROW_ID)) {
+        if (id.startsWith(UNSAVED_ROW_PREFIX)) {
             return (R) financeRowRestService.addWithResponse(finance.getId(), clazz.newInstance()).getSuccess();
         } else {
             return (R) financeRowRestService.getCost(Long.valueOf(id)).getSuccess();

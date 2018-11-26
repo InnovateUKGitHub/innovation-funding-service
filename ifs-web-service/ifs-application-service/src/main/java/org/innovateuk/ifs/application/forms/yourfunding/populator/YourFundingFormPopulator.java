@@ -22,12 +22,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Function;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_ID;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
 @Component
@@ -65,7 +64,7 @@ public class YourFundingFormPopulator {
             OtherFunding otherFunding = (OtherFunding) cost;
             return new OtherFundingRowForm(otherFunding);
         }).collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-        rows.put(UNSAVED_ROW_ID + UUID.randomUUID().toString(), new OtherFundingRowForm());
+        rows.put(generateUnsavedRowId(), new OtherFundingRowForm());
 
         form.setRequestingFunding(requestingFunding);
         form.setGrantClaimPercentage(fundingLevel);

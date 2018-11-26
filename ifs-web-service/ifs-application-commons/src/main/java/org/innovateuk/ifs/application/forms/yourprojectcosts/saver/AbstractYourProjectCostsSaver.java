@@ -18,10 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
-import java.util.UUID;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_ID;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -117,7 +117,7 @@ public abstract class AbstractYourProjectCostsSaver {
         ValidationMessages messages = new ValidationMessages();
 
         rows.forEach((id, row) -> {
-            if (id.startsWith(UNSAVED_ROW_ID)) {
+            if (id.startsWith(UNSAVED_ROW_PREFIX)) {
                 if (!row.isBlank()) {
                     FinanceRowItem result = getFinanceRowService().addWithResponse(finance.getId(), row.toCost()).getSuccess();
                     messages.addAll(getFinanceRowService().update(result)); //TODO these two rest calls really could be a single one if the response contained the validation messages.
@@ -136,7 +136,7 @@ public abstract class AbstractYourProjectCostsSaver {
     }
 
     public void removeFinanceRow(String id) {
-        if (!id.startsWith(UNSAVED_ROW_ID)) {
+        if (!id.startsWith(UNSAVED_ROW_PREFIX)) {
             getFinanceRowService().delete(Long.valueOf(id)).getSuccess();
         }
     }
@@ -144,7 +144,7 @@ public abstract class AbstractYourProjectCostsSaver {
     public <R extends AbstractCostRowForm> Map.Entry<String, R> addRowForm(YourProjectCostsForm form, FinanceRowType rowType) throws IllegalAccessException, InstantiationException {
         Class<R> clazz = newRowFromType(rowType);
         R row = clazz.newInstance();
-        String costId = UNSAVED_ROW_ID + UUID.randomUUID().toString();
+        String costId = generateUnsavedRowId();
         Map<String, R> map = getRowsFromType(form, rowType);
         map.put(costId, row);
         return map.entrySet().stream().filter(entry -> entry.getKey().equals(costId)).findFirst().get();

@@ -23,10 +23,10 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.UUID;
 
 import static java.lang.Long.parseLong;
-import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_ID;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -64,9 +64,9 @@ public class YourFundingSaver {
         }
     }
 
-    public void addOtherFundingRow(YourFundingForm form, long applicationId, UserResource user) {
+    public void addOtherFundingRow(YourFundingForm form) {
         OtherFundingRowForm rowForm = new OtherFundingRowForm();
-        form.getOtherFundingRows().put(UNSAVED_ROW_ID + UUID.randomUUID().toString(), rowForm);
+        form.getOtherFundingRows().put(generateUnsavedRowId(), rowForm);
     }
 
     public void removeOtherFundingRowForm(YourFundingForm form, String costId) {
@@ -75,7 +75,7 @@ public class YourFundingSaver {
     }
 
     public void removeOtherFundingRow(String costId) {
-        if (!costId.startsWith(UNSAVED_ROW_ID)) {
+        if (!costId.startsWith(UNSAVED_ROW_PREFIX)) {
             financeRowRestService.delete(parseLong(costId));
         }
     }
@@ -95,7 +95,7 @@ public class YourFundingSaver {
                 String rowField = field.substring(field.indexOf("].") + 2);
                 OtherFunding cost;
 
-                if (id.startsWith(UNSAVED_ROW_ID)) {
+                if (id.startsWith(UNSAVED_ROW_PREFIX)) {
                     cost = (OtherFunding) financeRowRestService.addWithResponse(finance.getId(), new OtherFunding()).getSuccess();
                 } else {
                     cost = (OtherFunding) financeRowRestService.getCost(Long.valueOf(id)).getSuccess();
@@ -138,7 +138,7 @@ public class YourFundingSaver {
         messages.addAll(financeRowRestService.update(otherFundingCategory.getOtherFunding()).getSuccess());
         if (form.getOtherFunding()) {
             form.getOtherFundingRows().forEach((id, cost) -> {
-                if (id.startsWith(UNSAVED_ROW_ID)) {
+                if (id.startsWith(UNSAVED_ROW_PREFIX)) {
                     if (!cost.isBlank()) {
                         messages.addAll(financeRowRestService.add(finance.getId(), form.getOtherFundingQuestionId(), cost.toCost()).getSuccess());
                     }
