@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competitionsetup.completionstage.sectionupdater;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
@@ -26,7 +25,7 @@ public class CompletionStageSectionUpdater extends AbstractSectionUpdater implem
     }
 
     @Autowired
-    public CompletionStageSectionUpdater(MilestoneRestService milestoneRestService, CompetitionSetupMilestoneService competitionSetupMilestoneService) {
+    public CompletionStageSectionUpdater(CompetitionSetupMilestoneService competitionSetupMilestoneService) {
         this.competitionSetupMilestoneService = competitionSetupMilestoneService;
     }
 

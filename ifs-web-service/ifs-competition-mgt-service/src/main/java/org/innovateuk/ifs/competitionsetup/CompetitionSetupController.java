@@ -134,7 +134,7 @@ public class CompetitionSetupController {
                     if (!competition.isSetupAndLive()) {
                         competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
                     }
-                    return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
+                    return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPostMarkIncompletePath();
                 }
         );
     }
@@ -313,7 +313,9 @@ public class CompetitionSetupController {
                                                  Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.COMPLETION_STAGE, model);
+
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition,
+                CompetitionSetupSection.COMPLETION_STAGE, model);
     }
 
     @PostMapping("/{competitionId}/section/milestones")
@@ -496,7 +498,7 @@ public class CompetitionSetupController {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        Supplier<String> successView = () -> "redirect:/competition/setup/" + competition.getId() + "/section/" + section.getPath();
+        Supplier<String> successView = () -> "redirect:/competition/setup/" + competition.getId() + "/section/" + section.getPostMarkCompletePath();
         Supplier<String> failureView = () -> {
             model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
             return "competition/setup";

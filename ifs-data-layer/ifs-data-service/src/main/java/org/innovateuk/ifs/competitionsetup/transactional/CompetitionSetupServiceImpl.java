@@ -38,7 +38,10 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.util.ReflectionUtils.*;
 
@@ -226,7 +229,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<SetupStatusResource> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
         SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, section.getClass().getName(), section.getId(), Optional.empty());
-        setupStatus.setCompleted(Boolean.TRUE);
+        setupStatus.setCompleted(true);
 
         return setupStatusService.saveSetupStatus(setupStatus);
     }
@@ -234,9 +237,19 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<SetupStatusResource> markSectionIncomplete(Long competitionId, CompetitionSetupSection section) {
-        SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, section.getClass().getName(), section.getId(), Optional.empty());
-        setupStatus.setCompleted(Boolean.FALSE);
 
+        List<CompetitionSetupSection> allSectionsToMarkIncomplete = combineLists(section, section.getDependantSections());
+
+        List<ServiceResult<SetupStatusResource>> markIncompleteResults = simpleMap(allSectionsToMarkIncomplete,
+                sectionToMarkIncomplete -> setSectionIncompleteAndUpdate(competitionId, sectionToMarkIncomplete));
+
+        ServiceResult<List<SetupStatusResource>> combinedResult = aggregate(markIncompleteResults);
+        return combinedResult.andOnSuccessReturn(resultsList -> resultsList.get(0));
+    }
+
+    private ServiceResult<SetupStatusResource> setSectionIncompleteAndUpdate(Long competitionId, CompetitionSetupSection section) {
+        SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, section.getClass().getName(), section.getId(), Optional.empty());
+        setupStatus.setCompleted(false);
         return setupStatusService.saveSetupStatus(setupStatus);
     }
 
@@ -244,7 +257,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<SetupStatusResource> markSubsectionComplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
         SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, subsection.getClass().getName(), subsection.getId(), Optional.of(parentSection));
-        setupStatus.setCompleted(Boolean.TRUE);
+        setupStatus.setCompleted(true);
 
         return setupStatusService.saveSetupStatus(setupStatus);
     }
@@ -253,7 +266,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<SetupStatusResource> markSubsectionIncomplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
         SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, subsection.getClass().getName(), subsection.getId(), Optional.of(parentSection));
-        setupStatus.setCompleted(Boolean.FALSE);
+        setupStatus.setCompleted(false);
 
         return setupStatusService.saveSetupStatus(setupStatus);
     }

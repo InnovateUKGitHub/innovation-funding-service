@@ -67,14 +67,6 @@
         </div>
     </form>
 
-    <form th:if="${!model.general.editable && !model.general.state.preventEdit}"
-          th:action="@{('completion-stage/edit')}"
-          method="post">
-
-        <button class="govuk-button govuk-!-margin-top-6">Edit</button>
-
-    </form>
-
     <ul class="govuk-list pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to previous part"
