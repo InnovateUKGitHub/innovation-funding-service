@@ -9,7 +9,6 @@ import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.security.WebUserSecuritySetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -22,7 +21,8 @@ import java.util.regex.Pattern;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -61,7 +61,9 @@ public class ScheduledEuGrantFileImporter {
         this.webUserSecuritySetter = webUserSecuritySetter;
     }
 
-    @Scheduled(cron = "${ifs.eu.data.service.grant.importer.cron.expression}")
+    // TODO IFS-4655 - temporarily disabled scheduled job from running so it can be merged pending
+    // a free environment to test on
+    //    @Scheduled(cron = "${ifs.eu.data.service.grant.importer.cron.expression}")
     void importEuGrantsFile() {
 
         ServiceResult<File> sourceFileCheck = grantsFileHandler.getSourceFileIfExists();
