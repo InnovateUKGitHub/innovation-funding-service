@@ -87,7 +87,7 @@
                 </th:block>
             </ul>
 
-            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button govuk-!-margin-top-6">Edit</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
             <a th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${model.general.competition.id},sectionPath='milestones')}"
                class="govuk-button govuk-!-margin-left-4">Milestones</a>
 
