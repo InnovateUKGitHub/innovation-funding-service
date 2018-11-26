@@ -77,7 +77,6 @@ public abstract class AbstractAsyncWaitMockMVCTest<ControllerType> extends BaseC
         when(futuresGeneratorMock.async(isA(String.class), isA(ExceptionThrowingSupplier.class))).thenAnswer(futureSupplierAnswer);
         when(futuresGeneratorMock.async(isA(ExceptionThrowingRunnable.class))).thenAnswer(futureConsumerAnswer);
         when(futuresGeneratorMock.async(isA(String.class), isA(ExceptionThrowingRunnable.class))).thenAnswer(futureConsumerAnswer);
-
     }
 
     /**

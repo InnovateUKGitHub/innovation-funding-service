@@ -42,8 +42,7 @@ IFS.core.financeRowForm = (function () {
     },
     removeRow: function (el, event) {
       var removeButton = jQuery(el)
-      var rowValue = removeButton.val()
-      var id = rowValue.split(',')[0]
+      var id = removeButton.val()
       event.preventDefault()
       jQuery.ajaxProtected({
         url: IFS.core.financeRowForm.getUrl(el) + '/remove-row/' + id,

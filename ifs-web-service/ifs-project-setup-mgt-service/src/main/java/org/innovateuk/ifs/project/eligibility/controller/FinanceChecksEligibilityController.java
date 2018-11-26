@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRo
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -103,6 +104,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
+    @AsyncMethod
     public String viewEligibility(@PathVariable long projectId,
                                   @PathVariable Long organisationId,
                                   @ModelAttribute(name = FORM_ATTR_NAME, binding = false) YourProjectCostsForm form,
@@ -214,6 +216,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "confirm-eligibility")
+    @AsyncMethod
     public String confirmEligibility(@PathVariable long projectId,
                                      @PathVariable long organisationId,
                                      @ModelAttribute(FORM_ATTR_NAME) YourProjectCostsForm form,
@@ -231,6 +234,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save-and-continue")
+    @AsyncMethod
     public String saveAndContinue(@PathVariable long projectId,
                                   @PathVariable Long organisationId,
                                   @ModelAttribute(FORM_ATTR_NAME) YourProjectCostsForm form,

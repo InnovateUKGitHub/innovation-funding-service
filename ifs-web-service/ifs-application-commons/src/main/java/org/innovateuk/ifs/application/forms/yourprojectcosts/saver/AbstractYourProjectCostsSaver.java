@@ -130,8 +130,14 @@ public abstract class AbstractYourProjectCostsSaver {
         return messages;
     }
 
-    public void removeRowFromForm(YourProjectCostsForm form, FinanceRowType type, String id) {
-        getRowsFromType(form, type).remove(id);
+    public void removeRowFromForm(YourProjectCostsForm form, String id) {
+        //Try to remove key from all the maps. Will have a random uuid attached.
+        form.getLabour().getRows().remove(id);
+        form.getMaterialRows().remove(id);
+        form.getCapitalUsageRows().remove(id);
+        form.getSubcontractingRows().remove(id);
+        form.getTravelRows().remove(id);
+        form.getOtherRows().remove(id);
         removeFinanceRow(id);
     }
 

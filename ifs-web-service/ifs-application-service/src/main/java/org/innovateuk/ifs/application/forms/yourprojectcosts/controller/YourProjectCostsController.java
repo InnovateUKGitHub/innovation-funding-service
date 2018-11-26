@@ -15,6 +15,7 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCo
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -43,7 +44,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -93,6 +93,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
     @GetMapping("/{applicantOrganisationId}")
     @SecuredBySpring(value = "MANAGEMENT_VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your Finances'")
     @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @AsyncMethod
     public String managementViewYourProjectCosts(Model model,
                                             UserResource user,
                                             @PathVariable long applicationId,
@@ -167,10 +168,8 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                 @PathVariable long applicationId,
                                 @PathVariable long sectionId,
                                 @ModelAttribute("form") YourProjectCostsForm form,
-                                @RequestParam("remove_cost") List<String> removeRequest) {
-        String id = removeRequest.get(0);
-        FinanceRowType type = FinanceRowType.valueOf(removeRequest.get(1));
-        saver.removeRowFromForm(form, type, id);
+                                @RequestParam("remove_cost") String removeId) {
+        saver.removeRowFromForm(form, removeId);
         return viewYourProjectCosts(form, model, applicationId, sectionId, user);
 
     }
