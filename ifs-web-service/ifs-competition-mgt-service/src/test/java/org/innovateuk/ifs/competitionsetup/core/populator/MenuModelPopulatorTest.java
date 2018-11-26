@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.core.populator;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -20,6 +19,7 @@ import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -43,8 +43,11 @@ public class MenuModelPopulatorTest {
 
 	@Before
     public void setup() {
-        Map<CompetitionSetupSection, Optional<Boolean>> statuses = asMap(CompetitionSetupSection.INITIAL_DETAILS, true, CompetitionSetupSection.CONTENT, false);
-        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(statuses));
+        Map<CompetitionSetupSection, Optional<Boolean>> statuses = asMap(
+        		CompetitionSetupSection.INITIAL_DETAILS, Optional.of(true),
+				CompetitionSetupSection.CONTENT, Optional.of(false));
+
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(restSuccess(statuses));
     }
 
 	@Test
