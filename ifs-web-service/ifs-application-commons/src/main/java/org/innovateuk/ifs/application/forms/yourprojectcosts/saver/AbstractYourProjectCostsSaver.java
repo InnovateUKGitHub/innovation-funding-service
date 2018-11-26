@@ -147,7 +147,7 @@ public abstract class AbstractYourProjectCostsSaver {
         String costId = UNSAVED_ROW_ID + UUID.randomUUID().toString();
         Map<String, R> map = getRowsFromType(form, rowType);
         map.put(costId, row);
-        return map.entrySet().stream().filter(entry -> entry.getKey().equals(costId)).findFirst().get()
+        return map.entrySet().stream().filter(entry -> entry.getKey().equals(costId)).findFirst().get();
     }
 
     private <R extends AbstractCostRowForm> Map<String, R> getRowsFromType(YourProjectCostsForm form, FinanceRowType type) {
