@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-<th:block th:fragment="company-address-details">
+
+<th:block th:fragment="address-details">
     <div id="manual-company-input">
         <fieldset class="govuk-fieldset">
             <legend th:if="${legend}" class="govuk-visually-hidden" th:text="${legend}" />
@@ -135,7 +136,6 @@
     </div>
 </th:block>
 
-
 <th:block th:fragment="organisation-details-minimal">
     <fieldset class="govuk-fieldset">
         <legend class="govuk-visually-hidden" th:text="${selectedOrganisation.name} + ''">? Organisation</legend>
@@ -175,18 +175,6 @@
                 <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.county}"></div>
                 <div class="govuk-body" th:text="${selectedOrganisation?.organisationAddress?.postcode}"></div>
             </div>
-
-            <div th:if="${confirmDetails == true
-                            and organisationForm.useSearchResultAddress == false
-                            and organisationForm.addressForm.selectedPostcode != null}">
-                <h3 class="govuk-heading-s">Operating Address</h3>
-                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.addressLine1}"></div>
-                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.addressLine2}"></div>
-                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.addressLine3}"></div>
-                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.town}"></div>
-                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.county}"></div>
-                <div class="govuk-body govuk-!-margin-0" th:text="${organisationForm.addressForm.selectedPostcode?.postcode}"></div>
-            </div>
         </div>
     </fieldset>
 </th:block>
@@ -214,12 +202,12 @@
 </th:block>
 
 <th:block th:fragment="organisation-name">
-    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationName}') and form.addressForm.triedToSave} ? 'govuk-form-group--error'">
+    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationName}') and organisationForm.triedToSave} ? 'govuk-form-group--error'">
         <label class="govuk-label"
                for="org-name">
             Organisation name
         </label>
-        <span class="govuk-error-message" th:if="${#fields.hasErrors('*{organisationName}') and form.addressForm.triedToSave}" th:errors="*{organisationName}"></span>
+        <span class="govuk-error-message" th:if="${#fields.hasErrors('*{organisationName}') and organisationForm.triedToSave}" th:errors="*{organisationName}"></span>
         <input class="govuk-input"
                id="org-name"
                th:field="*{organisationName}"

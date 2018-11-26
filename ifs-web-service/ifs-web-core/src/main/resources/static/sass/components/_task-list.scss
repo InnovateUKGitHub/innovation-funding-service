@@ -129,12 +129,22 @@
       right: 0;
 
       span {
-
         @extend %icon-tick;
         @include govuk-font(16);
         background-size: 14px;
-        background-position: left center;
         color: $govuk-button-colour;
+        font-weight: bold;
+      }
+    }
+
+    .task-status-rejected {
+      @extend .task-status;
+      right: 0;
+
+      span {
+        @extend %icon-cross-action;
+        @include govuk-font(16);
+        color: $govuk-error-colour;
         font-weight: bold;
       }
     }
@@ -144,11 +154,18 @@
       right: 0;
 
       span {
-
         @extend %action-required;
         @include govuk-font(16);
-        background-size: 14px;
-        background-position: left center;
+        font-weight: bold;
+      }
+    }
+
+    .task-status-info {
+      @extend .task-status;
+      right: 0;
+
+      span {
+        color: $govuk-secondary-text-colour;
         font-weight: bold;
       }
     }
@@ -164,6 +181,38 @@
 
     &:last-child {
       border-bottom: 1px solid $govuk-border-colour;
+    }
+  }
+}
+
+.govuk-grid-column-one-half {
+  .task-list {
+    > li {
+      .task {
+        @include media-down(tablet) {
+          width: 100%;
+        }
+
+        width: 33%;
+      }
+
+      .notification {
+        @include media-down(tablet) {
+          width: 100%;
+          padding-left: 0;
+        }
+
+        width: 45%;
+        color: $govuk-button-colour;
+      }
+
+      .task-status {
+        @include media-down(tablet) {
+          position: static;
+          margin: 10px 0;
+          text-align: right;
+        }
+      }
     }
   }
 }

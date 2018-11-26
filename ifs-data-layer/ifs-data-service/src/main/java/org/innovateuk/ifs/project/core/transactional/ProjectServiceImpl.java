@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.core.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
+import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
@@ -43,8 +43,6 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PA
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-
-;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
@@ -96,7 +94,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 .map(this::createSingletonProjectFromApplicationId)
                 .collect(toList());
 
-        boolean anyProjectCreationFailed = simpleAnyMatch(projectCreationResults, BaseEitherBackedResult::isFailure);
+        boolean anyProjectCreationFailed = simpleAnyMatch(projectCreationResults, BaseFailingOrSucceedingResult::isFailure);
 
         return  anyProjectCreationFailed ?
                 serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS) : serviceSuccess();

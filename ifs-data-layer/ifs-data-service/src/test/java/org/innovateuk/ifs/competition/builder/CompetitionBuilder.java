@@ -8,7 +8,9 @@ import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.user.domain.User;
@@ -47,12 +49,12 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> competition.setSections(sections));
     }
 
-    public CompetitionBuilder withSetupComplete(boolean setupComplete) {
-        return with(competition -> setField("setupComplete", setupComplete, competition));
+    public CompetitionBuilder withSetupComplete(boolean... setupComplete) {
+        return withArraySetFieldByReflection("setupComplete", setupComplete);
     }
 
-    public CompetitionBuilder withLocationPerPartner(boolean locationPerPartner) {
-        return with(competition -> setField("locationPerPartner", locationPerPartner, competition));
+    public CompetitionBuilder withLocationPerPartner(boolean... locationPerPartner) {
+        return withArraySetFieldByReflection("locationPerPartner", locationPerPartner);
     }
 
     public CompetitionBuilder withStartDate(ZonedDateTime startDate) {
@@ -149,6 +151,11 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((date, competition) -> competition.closeAssessment(date), dates);
     }
 
+    public CompetitionBuilder withCollaborationLevel(CollaborationLevel... collaborationLevels) {
+        return withArray((collaborationLevel, competition) ->
+                competition.setCollaborationLevel(collaborationLevel), collaborationLevels);
+    }
+
     public CompetitionBuilder withAssessorCount(Integer... assessorCounts) {
         return withArraySetFieldByReflection("assessorCount", assessorCounts);
     }
@@ -178,6 +185,14 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withStateAid(Boolean... stateAid) {
         return withArraySetFieldByReflection("stateAid", stateAid);
+    }
+
+    public CompetitionBuilder withProjectDocuments(List<ProjectDocument>... projectDocuments) {
+        return withArraySetFieldByReflection("projectDocuments", projectDocuments);
+    }
+
+    public CompetitionBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSection) {
+        return withArraySetFieldByReflection("includeYourOrganisationSection", includeYourOrganisationSection);
     }
 
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
@@ -270,6 +285,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((competition, leadTechnologist) -> setField("leadTechnologist", competition, leadTechnologist), leadTechnologists);
     }
 
+    public CompetitionBuilder withIncludeProjectGrowthTable(Boolean... includeProjectGrowthTable) {
+        return withArraySetFieldByReflection("includeProjectGrowthTable", includeProjectGrowthTable);
+    }
+
     public CompetitionBuilder withCreatedBy(User... users) {
         return withArraySetFieldByReflection("createdBy", users);
     }
@@ -285,4 +304,9 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
         return withArraySetFieldByReflection("modifiedOn", modifiedOns);
     }
+
+    public CompetitionBuilder withIncludeJesForm(boolean... includeJesForms) {
+        return withArraySetFieldByReflection("includeJesForm", includeJesForms);
+    }
+
 }

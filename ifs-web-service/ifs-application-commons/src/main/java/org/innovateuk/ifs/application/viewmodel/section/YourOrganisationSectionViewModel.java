@@ -4,6 +4,10 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,10 +18,22 @@ import java.util.stream.Collectors;
  * Your organisation section view model.
  */
 public class YourOrganisationSectionViewModel extends AbstractSectionViewModel {
+
+    private boolean isBusinessOrganisation;
+    private boolean stateAidEligibility;
     private boolean complete;
 
-    public YourOrganisationSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
+    public YourOrganisationSectionViewModel(ApplicantSectionResource applicantResource,
+                                            List<AbstractFormInputViewModel> formInputViewModels,
+                                            NavigationViewModel navigationViewModel,
+                                            boolean allReadOnly,
+                                            Optional<Long> applicantOrganisationId,
+                                            boolean readOnlyAllApplicantApplicationFinances,
+                                            boolean isBusinessOrganisation,
+                                            boolean stateAidEligibility) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
+        this.isBusinessOrganisation = isBusinessOrganisation;
+        this.stateAidEligibility = stateAidEligibility;
     }
 
     public boolean isComplete() {
@@ -26,6 +42,14 @@ public class YourOrganisationSectionViewModel extends AbstractSectionViewModel {
 
     public void setComplete(boolean complete) {
         this.complete = complete;
+    }
+
+    public boolean isBusinessOrganisation() {
+        return isBusinessOrganisation;
+    }
+
+    public boolean isStateAidEligibility() {
+        return stateAidEligibility;
     }
 
     public AbstractFormInputViewModel getOrganisationSizeFormInputViewModel() {

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
@@ -11,6 +12,7 @@ import java.util.Set;
  */
 public class LandingPageForm extends BaseBindingResultTarget {
 
+    @NotNull(message = "{competition.setup.documents.required}")
     private Set<Long> enabledIds;
 
     public Set<Long> getEnabledIds() {

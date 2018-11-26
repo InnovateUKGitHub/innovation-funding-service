@@ -17,14 +17,14 @@ Resource          ../../resources/defaultResources.robot
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!
 
 *** Variables ***
-${localEmailInvtedUser}   ifs.innovationLead@innovateuk.test
-${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.gov.uk
+${localEmailInvtedUser}   ifs.innovationLead@innovateuk.ukri.test
+${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.ukri.org
 ${invalidEmail}           test@test.com
 
 *** Test Cases ***
 Administrator can navigate to manage users page
     [Documentation]    INFUND-604
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  The user logs-in in new browser  &{ifs_admin_user_credentials}
     When the user clicks the button/link      link = Manage users
     Then the user should see the element      jQuery = h1:contains("Manage users")
@@ -41,7 +41,7 @@ Administrator can see the read only view of internal user profile
 
 Project finance user cannot navigate to manage users page
     [Documentation]  INFUND-604
-    [Tags]
+    [Tags]  HappyPath
     User cannot see manage users page   &{Comp_admin1_credentials}
     User cannot see manage users page   &{internal_finance_credentials}
 
@@ -52,14 +52,17 @@ Server side validation for invite new internal user
     Given the user navigates to the page                ${server}/management/admin/users/active
     And the user clicks the button/link                 link = Invite a new internal user
     And the user clicks the button/link                 jQuery = button:contains("Send invite")
-    Then The user should see a field and summary error  Please enter a first name.
-    And The user should see a field and summary error   Please enter a last name.
+    Then The user should see a field and summary error  ${enter_a_first_name}
+    And The user should see a field and summary error   ${enter_a_last_name}
     And The user should see a field and summary error   Please enter an email address.
 
 The user must use an Innovate UK email
     [Documentation]  IFS-1944
-    [Tags]
-    Given the user enters text to a text field            id = firstName  Support
+    [Tags]  HappyPath
+    [Setup]  Log in as a different user                   &{ifs_admin_user_credentials}
+    Given the user navigates to the page                  ${server}/management/admin/users/active
+    And the user clicks the button/link                   link = Invite a new internal user
+    And the user enters text to a text field              id = firstName  Support
     And the user enters text to a text field              id = lastName  User
     When the user enters text to a text field             id = emailAddress  ${invalidEmail}
     And the user clicks the button/link                   jQuery = button:contains("Send invite")
@@ -71,18 +74,18 @@ Client side validations for invite new internal user
     [Tags]
     Given the user navigates to the page       ${server}/management/admin/invite-user
     When the user enters text to a text field  id = firstName  A
-    Then the user should not see the element   jQuery = .govuk-error-message:contains("Please enter a first name.")
+    Then the user should not see the element   jQuery = .govuk-error-message:contains("${enter_a_first_name}")
     And the user should see the element        jQuery = .govuk-error-message:contains("Your first name should have at least 2 characters.")
     When the user enters text to a text field  id = lastName  D
-    Then the user should not see the element   jQuery = .govuk-error-message:contains("Please enter a last name.")
+    Then the user should not see the element   jQuery = .govuk-error-message:contains("${enter_a_last_name}")
     And the user should see the element        jQuery = .govuk-error-message:contains("Your last name should have at least 2 characters.")
     When the user enters text to a text field  id = emailAddress  astle
     Then the user should not see the element   jQuery = .govuk-error-message:contains("Please enter an email address.")
-    And the user should see the element        jQuery = .govuk-error-message:contains("Please enter a valid email address.")
+    And the user should see the element        jQuery = .govuk-error-message:contains("${enter_a_valid_email}")
 
 Administrator can successfully invite a new user
     [Documentation]  IFS-27 IFS-983
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page                     ${server}/management/admin/invite-user
     When the user enters text to a text field                id = firstName  Support
     And the user enters text to a text field                 id = lastName  User
@@ -93,7 +96,7 @@ Administrator can successfully invite a new user
 
 Administrator can successfully finish the rest of the invitation
     [Documentation]  IFS-27  IFS-983  IFS-2412  IFS-2842
-    [Tags]
+    [Tags]  HappyPath
     Given the user should see the element                     jQuery = h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
     And the user should see the element                      jQuery = a[aria-selected]:contains("Pending")
@@ -107,7 +110,7 @@ Administrator can successfully finish the rest of the invitation
 
 Invited user can receive the invitation
     [Documentation]  IFS-642
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the guest user opens the browser
     The invitee reads his email and clicks the link  Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
 
@@ -115,14 +118,14 @@ Account creation validation checks - Blank
     [Documentation]  IFS-643
     [Tags]
     Given the user clicks the button/link   jQuery = .govuk-button:contains("Create account")
-    And the user should see a field and summary error   Please enter a first name.
-    And the user should see a field and summary error   Please enter a last name.
+    And the user should see a field and summary error   ${enter_a_first_name}
+    And the user should see a field and summary error   ${enter_a_last_name}
     And The user should see a field and summary error   Password must be at least 8 characters
     When the user enters text to a text field  css = #firstName  New
     And the user enters text to a text field   css = #lastName  Administrator
     And the user enters text to a text field   css = #password  ${correct_password}
     Then the user should see the element       jQuery = h3:contains("Email") + p:contains("ifs.innovationLead@innovateuk")
-    Focus                                      css = #lastName
+    Set Focus To Element                                        css = #lastName
     And the user cannot see a validation error in the page
 
 Account creation validation checks - Lowercase password
@@ -191,19 +194,19 @@ Server side validation for edit internal user details
     Given the user enters text to a text field  id = firstName  ${empty}
     And the user enters text to a text field    id = lastName  ${empty}
     When the user clicks the button/link        jQuery = button:contains("Save and return")
-    Then the user should see a field error      Please enter a first name.
+    Then the user should see a field error      ${enter_a_first_name}
     And the user should see a field error       Your first name should have at least 2 characters.
-    And the user should see a field error       Please enter a last name.
+    And the user should see a field error       ${enter_a_last_name}
     And the user should see a field error       Your last name should have at least 2 characters.
 
 Client side validations for edit internal user details
     [Documentation]  IFS-18
     [Tags]
     Given the user enters text to a text field  id = firstName  A
-    Then the user should not see the element    jQuery = .govuk-error-message:contains("Please enter a first name.")
+    Then the user should not see the element    jQuery = .govuk-error-message:contains("${enter_a_first_name}")
     And the user should see the element         jQuery = .govuk-error-message:contains("Your first name should have at least 2 characters.")
     When the user enters text to a text field   id = lastName  D
-    Then the user should not see the element    jQuery = .govuk-error-message:contains("Please enter a last name.")
+    Then the user should not see the element    jQuery = .govuk-error-message:contains("${enter_a_last_name}")
     And the user should see the element         jQuery = .govuk-error-message:contains("Your last name should have at least 2 characters.")
 
 Administrator can successfully edit internal user details
@@ -272,28 +275,28 @@ User cannot see manage users page
     the user navigates to the page and gets a custom error message  ${USER_MGMT_URL}  ${403_error_message}
 
 the user fills in the email address for the invitee
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  the user enters text to a text field  id = emailAddress  ${localEmailInvtedUser}
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  the user enters text to a text field  id = emailAddress  ${remoteEmailInvtedUser}
 
 The invitee reads his email and clicks the link
     [Arguments]  ${title}  ${pattern}
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  The user reads his email and clicks the link  ${localEmailInvtedUser}  ${title}  ${pattern}
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  The user reads his email and clicks the link  ${remoteEmailInvtedUser}  ${title}  ${pattern}
 
 the invited user logs in
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  Logging in and Error Checking  ${localEmailInvtedUser}  ${correct_password}
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  Logging in and Error Checking  ${remoteEmailInvtedUser}  ${correct_password}
 
 the user verifies pending tab content
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  the user should see the element  jQuery = td:contains("Support User") ~ td:contains("IFS Administrator") ~ td:contains("${localEmailInvtedUser}")
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  the user should see the element  jQuery = td:contains("Support User") ~ td:contains("IFS Administrator") ~ td:contains("${remoteEmailInvtedUser}")
 
 the user navigates to the View internal user details
@@ -302,15 +305,15 @@ the user navigates to the View internal user details
     the user clicks the button/link  link = ${user}
 
 the deactivated user is not able to login
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  the user cannot login with their new details  ${localEmailInvtedUser}  ${correct_password}
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  the user cannot login with their new details  ${remoteEmailInvtedUser}  ${correct_password}
 
 the re-activated user tries to login
-    # Locally the accepted domain is innovateuk.test
+    # Locally the accepted domain is innovateuk.ukri.test
     run keyword if  ${docker} == 1  log in as a different user  ${localEmailInvtedUser}  ${correct_password}
-    # On production the accepted domain is innovateuk.gov.uk
+    # On production the accepted domain is innovateuk.ukri.org
     run keyword if  ${docker}!= 1  log in as a different user  ${remoteEmailInvtedUser}  ${correct_password}
 
 the user resends the invite

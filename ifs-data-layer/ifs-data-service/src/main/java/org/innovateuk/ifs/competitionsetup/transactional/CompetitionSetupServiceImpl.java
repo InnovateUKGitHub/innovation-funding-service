@@ -217,7 +217,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return setupStatuses.stream()
                 .filter(setupStatusResource ->
                         setupStatusResource.getClassName().equals(className) &&
-                        setupStatusResource.getClassPk().equals(classPk))
+                                setupStatusResource.getClassPk().equals(classPk))
                 .map(SetupStatusResource::getCompleted)
                 .findAny();
     }
@@ -259,7 +259,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private SetupStatusResource findOrCreateSetupStatusResource(Long competitionId, String sectionClassName, Long sectionId, Optional<CompetitionSetupSection> parentSection) {
-        Optional<SetupStatusResource> setupStatusOpt = setupStatusService.findSetupStatusAndTarget(sectionClassName, sectionId,Competition.class.getName(), competitionId)
+        Optional<SetupStatusResource> setupStatusOpt = setupStatusService.findSetupStatusAndTarget(sectionClassName, sectionId, Competition.class.getName(), competitionId)
                 .getOptionalSuccessObject();
 
         return setupStatusOpt.orElseGet(() -> createNewSetupStatus(competitionId, sectionClassName, sectionId, parentSection));
@@ -270,13 +270,13 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         parentSectionOpt.ifPresent(parentSection -> {
             Optional<SetupStatusResource> parentSetupStatusOpt =
-                    setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(),Competition.class.getName(), competitionId)
-                    .getOptionalSuccessObject();
+                    setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId)
+                            .getOptionalSuccessObject();
 
             newSetupStatusResource.setParentId(
                     parentSetupStatusOpt
-                        .orElseGet(() -> markSectionIncomplete(competitionId, parentSection).getSuccess())
-                        .getId()
+                            .orElseGet(() -> markSectionIncomplete(competitionId, parentSection).getSuccess())
+                            .getId()
             );
         });
 
@@ -378,12 +378,33 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private ProjectDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
-        return new ProjectDocument(competition, "Collaboration agreement", "Enter guidance for Collaboration agreement",
+        return new ProjectDocument(competition, "Collaboration agreement", "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
+                "\n" +
+                "<p>Please allow enough time to complete this document before your project start date.</p>\n" +
+                "\n" +
+                "<p>Guidance on completing a collaboration agreement can be found on the <a target=\"_blank\" href=\"http://www.ipo.gov.uk/lambert\">Lambert Agreement website</a>.</p>\n" +
+                "\n" +
+                "<p>Your collaboration agreement must be:</p>\n" +
+                "<ul class=\"list-bullet\"><li>in portable document format (PDF)</li>\n" +
+                "<li>legible at 100% magnification</li>\n" +
+                "<li>less than 10MB in file size</li></ul>",
                 false, true, fileTypes);
     }
 
     private ProjectDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
-        return new ProjectDocument(competition, "Exploitation plan", "Enter guidance for Exploitation plan",
+        return new ProjectDocument(competition, "Exploitation plan", "<p>This is a confirmation of your overall plan, setting out the business case for your project. This plan will change during the lifetime of the project.</p>\n" +
+                "\n" +
+                "<p>It should also describe partner activities that will exploit the results of the project so that:</p>\n" +
+                "<ul class=\"list-bullet\"><li>changes in the commercial environment can be monitored and accounted for</li>\n" +
+                "<li>adequate resources are committed to exploitation</li>\n" +
+                "<li>exploitation can be monitored by the stakeholders</li></ul>\n" +
+                "\n" +
+                "<p>You can download an <a href=\"/files/exploitation_plan.doc\" class=\"govuk-link\">exploitation plan template</a>.</p>\n" +
+                "\n" +
+                "<p>The uploaded exploitation plan must be:</p>\n" +
+                "<ul class=\"list-bullet\"><li>in portable document format (PDF)</li>\n" +
+                "<li>legible at 100% magnification</li>\n" +
+                "<li>less than 10MB in file size</li></ul>",
                 false, true, fileTypes);
     }
 

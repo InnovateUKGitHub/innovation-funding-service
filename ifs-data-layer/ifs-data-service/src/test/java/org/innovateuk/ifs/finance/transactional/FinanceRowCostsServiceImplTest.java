@@ -113,7 +113,7 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
                 .withType(metaFieldType).build();
 
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(application.getCompetition().getId(), organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
     }
 
 
@@ -125,7 +125,7 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
         when(organisationRepositoryMock.findOne(456L)).thenReturn(organisation);
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(application.getCompetition().getId(), OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
         ApplicationFinance newFinance = new ApplicationFinance(application, organisation);
 

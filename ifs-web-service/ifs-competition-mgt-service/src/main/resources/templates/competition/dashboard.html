@@ -1,21 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
+<th:block th:fragment="dashboard-search-bar">
+    <form role="search"
+          method="get"
+          id="searchform"
+          th:with="internalUser=${model.getTabs().isInternalUser()}"
+          th:action="@{/dashboard/internal/search}">
+        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})"
+                  th:with="showSearch=${model.counts.liveCount > 0}"/>
+    </form>
+</th:block>
+
 <div th:fragment="comp-dashboard-header(searchQuery)">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <th:block th:insert="fragments/layout :: page-title"
-                      th:with="pageTitle=${setPageTitle == null ? 'All competitions' : setPageTitle},size='govuk-heading-l'" />
+                      th:with="pageTitle=${setPageTitle == null ? 'All competitions' : setPageTitle},size='govuk-heading-l'"/>
         </div>
         <div class="govuk-grid-column-one-half alignright">
             <div class="form-search" th:if="${showSearch == null || showSearch == true}">
                 <label class="govuk-visually-hidden" for="searchQuery">Search for:</label>
-                <input th:type="${searchType == 'applications' ? 'number' : 'text'}"
+                <input type="text"
                        th:value="${searchQuery}"
-                       th:name="${searchType == 'applications' ? 'searchString' : 'searchQuery'}"
+                       th:name="${'searchQuery'}"
                        id="searchQuery"
                        class="search-query"
-                       th:placeholder="${searchType == 'applications' ? 'Search applications' : 'Search competitions'}"/>
+                       placeholder="Search for a competition name or application number"/>
                 <input type="submit" id="searchsubmit" value="Search" class="btn"/>
             </div>
         </div>
@@ -25,23 +36,28 @@
 <th:block th:fragment="comp-dashboard-navigation(selectedTab, counts, tabs)">
     <ul class="govuk-tabs__list">
         <li id="section-1" class="govuk-tabs__list-item" th:if="${tabs.live()}">
-            <a th:href="@{'/dashboard/live'}" th:text="'Live ('+${counts.liveCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'live' ? true : false}"></a>
+            <a th:href="@{'/dashboard/live'}" th:text="'Live ('+${counts.liveCount}+')'" class="govuk-tabs__tab"
+               th:attr="aria-selected=${selectedTab == 'live' ? true : false}"></a>
         </li>
 
         <li id="section-2" class="govuk-tabs__list-item" th:if="${tabs.upcoming()}">
-            <a th:href="@{'/dashboard/upcoming'}" th:text="'Upcoming ('+${counts.upcomingCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'upcoming' ? true : false}"></a>
+            <a th:href="@{'/dashboard/upcoming'}" th:text="'Upcoming ('+${counts.upcomingCount}+')'"
+               class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'upcoming' ? true : false}"></a>
         </li>
 
         <li id="section-3" class="govuk-tabs__list-item" th:if="${tabs.nonIFS()}">
-            <a th:href="@{'/dashboard/non-ifs'}" th:text="'Non-IFS ('+${counts.nonIfsCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'non-ifs' ? true : false}"></a>
+            <a th:href="@{'/dashboard/non-ifs'}" th:text="'Non-IFS ('+${counts.nonIfsCount}+')'" class="govuk-tabs__tab"
+               th:attr="aria-selected=${selectedTab == 'non-ifs' ? true : false}"></a>
         </li>
 
         <li id="section-4" class="govuk-tabs__list-item" th:if="${tabs.projectSetup()}">
-            <a th:href="@{'/dashboard/project-setup'}" th:text="'Project setup ('+${counts.projectSetupCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'projectSetup' ? true : false}"></a>
+            <a th:href="@{'/dashboard/project-setup'}" th:text="'Project setup ('+${counts.projectSetupCount}+')'"
+               class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'projectSetup' ? true : false}"></a>
         </li>
 
         <li id="section-5" class="govuk-tabs__list-item" th:if="${tabs.previous()}">
-            <a th:href="@{'/dashboard/previous'}" th:text="'Previous ('+${counts.feedbackReleasedCount}+')'" class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'previous' ? true : false}"></a>
+            <a th:href="@{'/dashboard/previous'}" th:text="'Previous ('+${counts.feedbackReleasedCount}+')'"
+               class="govuk-tabs__tab" th:attr="aria-selected=${selectedTab == 'previous' ? true : false}"></a>
         </li>
     </ul>
 </th:block>
@@ -52,32 +68,32 @@
             <a th:href="@{'/non-ifs-competition/setup/'+${competition.id}}"
                th:if="${nonIfs}"
                class="govuk-link">
-                <th:block th:insert="competition/dashboard :: competition-name" />
+                <th:block th:insert="competition/dashboard :: competition-name"/>
             </a>
             <th:block th:unless="${nonIfs}">
                 <th:block th:if="${customLink}">
                     <a th:href="@{${customLink}}"
                        class="govuk-link">
-                        <th:block th:insert="competition/dashboard :: competition-name" />
+                        <th:block th:insert="competition/dashboard :: competition-name"/>
                     </a>
                 </th:block>
                 <th:block th:unless="${customLink}">
                     <th:block th:if="${projectSetup}">
                         <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}"
                            class="govuk-link">
-                            <th:block th:insert="competition/dashboard :: competition-name" />
+                            <th:block th:insert="competition/dashboard :: competition-name"/>
                         </a>
                     </th:block>
                     <th:block th:unless="${projectSetup}">
                         <a th:href="@{'/competition/setup/'+${competition.id}}"
                            th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}"
                            class="govuk-link">
-                            <th:block th:insert="competition/dashboard :: competition-name" />
+                            <th:block th:insert="competition/dashboard :: competition-name"/>
                         </a>
                         <th:block th:if="${competition.competitionStatus.inFlight}">
                             <a th:href="@{${competition.topLevelNavigationLink}}"
                                class="govuk-link">
-                                <th:block th:insert="competition/dashboard :: competition-name" />
+                                <th:block th:insert="competition/dashboard :: competition-name"/>
                             </a>
                         </th:block>
                     </th:block>
@@ -86,9 +102,11 @@
         </h3>
     </div>
     <div class="govuk-grid-column-two-thirds">
-        <div class="govuk-grid-column-one-third"><p class="govuk-body" th:text="${competition.competitionTypeName}"></p></div>
+        <div class="govuk-grid-column-one-third"><p class="govuk-body" th:text="${competition.competitionTypeName}"></p>
+        </div>
         <div class="govuk-grid-column-one-third">
-            <p class="govuk-body" th:unless="${competition.innovationAreaNames.size() > 5}" th:text="${#strings.setJoin(competition.innovationAreaNames, ', ')}"></p>
+            <p class="govuk-body" th:unless="${competition.innovationAreaNames.size() > 5}"
+               th:text="${#strings.setJoin(competition.innovationAreaNames, ', ')}"></p>
             <p class="govuk-body" th:if="${competition.innovationAreaNames.size() > 5}">Multiple innovation areas</p>
         </div>
         <div class="govuk-grid-column-one-third"><p class="govuk-body" th:text="${cell4}"></p></div>

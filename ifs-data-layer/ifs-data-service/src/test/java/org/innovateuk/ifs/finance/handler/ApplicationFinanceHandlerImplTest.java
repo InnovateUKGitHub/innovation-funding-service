@@ -31,6 +31,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
@@ -111,7 +112,7 @@ public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
         when(applicationFinanceMapperMock.mapToResource(appFinanceResearchOrg)).thenReturn(appFinanceResourceResearchOrg);
         when(applicationFinanceMapperMock.mapToResource(appFinanceBusinessOrg)).thenReturn(appFinanceResourceBusinessOrg);
 
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(anyLong())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(eq(competition.getId()), anyLong())).thenReturn(organisationFinanceDefaultHandlerMock);
         when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(appFinanceResearchOrg.getId(), competition)).thenReturn(researchOrgFinances);
         when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(appFinanceBusinessOrg.getId(), competition)).thenReturn(businessOrgFinances);
     }

@@ -3,7 +3,6 @@
 
     <!--/*
         Note: Below empty fragment is need because empty questions have started appearing after merge from developement.
-        TODO: Remove it once the cause for it is known. INFUND-4833
     */-->
     <th:block th:fragment="empty (viewmode)"></th:block>
 
@@ -176,7 +175,7 @@
                            th:id="${'cost-other_funding-'+costIdentifier+'-date'}"
                            placeholder="MM-YYYY"
                            pattern="(0[1-9]|1[012])-[0-9]{4}"
-                           th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid}"
+                           th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
                            maxlength="7"
                            th:value="${rejectedValue != null ? rejectedValue : cost.securedDate}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-input--error'"
@@ -282,7 +281,7 @@
                         <th class="govuk-table__header" scope="col">Partner</th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total costs</th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">
-                            % Grant
+                            Funding level (%)
                         </th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
                             Funding sought (&pound;)

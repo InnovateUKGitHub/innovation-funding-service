@@ -19,14 +19,14 @@
 
                 <h2 class="govuk-heading-m">Finances summary</h2>
                 <div class="govuk-form-group finances-summary">
-                    <div style="overflow: auto;">
+                    <div class="table-overflow">
                         <table class="govuk-table">
                             <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
                                     <td class="govuk-table__cell" />
                                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
                                     <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">
-                                        &percnt; Grant
+                                        Funding level (%)
                                     </th>
                                     <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
                                         Funding sought (&pound;)
@@ -68,7 +68,7 @@
                                         </td>
                                     </th:block>
                                 </tr>
-                                <tr class="govuk-table__row">
+                                <tr class="govuk-table__row" th:if="${model.collaborativeProject}">
                                     <th class="govuk-table__header" scope="row">Total</th>
                                     <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
                                         &pound;<th:block th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />

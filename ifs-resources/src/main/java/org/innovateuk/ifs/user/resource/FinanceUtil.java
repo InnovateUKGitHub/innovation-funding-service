@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.user.resource;
 
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FinanceUtil {
 
-    public boolean isUsingJesFinances(long organisationType) {
-        return OrganisationTypeEnum.RESEARCH.getId() == organisationType;
+    public boolean isUsingJesFinances(CompetitionResource competition, long organisationType) {
+        return competition.showJesFinances(organisationType);
     }
 }

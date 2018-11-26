@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -133,8 +134,14 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     private Boolean stateAid;
 
+    private Boolean includeYourOrganisationSection;
+
+    private Boolean includeJesForm;
+
     @Enumerated(EnumType.STRING)
     private ApplicationFinanceType applicationFinanceType;
+
+    private Boolean includeProjectGrowthTable;
 
     public Competition() {
         setupComplete = false;
@@ -642,6 +649,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         setMilestoneDate(MilestoneType.ASSESSORS_NOTIFIED, date);
     }
 
+    public boolean isNonFinanceType() {
+        return sections.stream().noneMatch(section -> SectionType.FINANCE.equals(section.getType()));
+    }
+
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
@@ -738,12 +749,36 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         this.stateAid = stateAid;
     }
 
+    public Boolean getIncludeYourOrganisationSection() {
+        return includeYourOrganisationSection;
+    }
+
+    public void setIncludeYourOrganisationSection(final Boolean includeYourOrganisationSection) {
+        this.includeYourOrganisationSection = includeYourOrganisationSection;
+    }
+
     public ApplicationFinanceType getApplicationFinanceType() {
         return applicationFinanceType;
     }
 
     public void setApplicationFinanceType(final ApplicationFinanceType applicationFinanceType) {
         this.applicationFinanceType = applicationFinanceType;
+    }
+
+    public Boolean getIncludeJesForm() {
+        return includeJesForm;
+    }
+
+    public void setIncludeJesForm(Boolean includeJesForm) {
+        this.includeJesForm = includeJesForm;
+    }
+
+    public Boolean getIncludeProjectGrowthTable() {
+        return includeProjectGrowthTable;
+    }
+
+    public void setIncludeProjectGrowthTable(final Boolean includeProjectGrowthTable) {
+        this.includeProjectGrowthTable = includeProjectGrowthTable;
     }
 }
 

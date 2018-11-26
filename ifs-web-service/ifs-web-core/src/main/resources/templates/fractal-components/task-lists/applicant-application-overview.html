@@ -1,116 +1,127 @@
-<h1 class="govuk-heading-xl">Example - Applicant overview</h1>
+<div class="govuk-width-container">
 
-<section>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application questions</h2>
-  <p class="govuk-body">These are the questions which will be marked by the assessors.</p>
-</section>
-
-<ul class="task-list">
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">1. Business opportunity</a></h3>
+    <div class="govuk-inset-text">
+        <p class="govuk-body">
+            This is an IFS component.
+        </p>
+        <p class="govuk-body">
+            The IFS task list includes a 'assign to' component that is not in the standard GDS pattern for task lists.
+        </p>
     </div>
-    <div class="assign-container action-required">
-      <span class="action-required">Assigned to</span>
-      <div class="assign-button-container">
-        <div class="assign-button">
-          <span class="action-required">You</span>
+
+    <section>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application questions</h2>
+      <p class="govuk-body">These are the questions which will be marked by the assessors.</p>
+    </section>
+
+    <ul class="task-list">
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">1. Business opportunity</a></h3>
         </div>
-        {{ render '@assign-list' }}
-      </div>
-    </div>
-    <div class="task-status-incomplete">
-      <span>Incomplete</span>
-    </div>
-  </li>
-
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">2. Potential market</a></h3>
-    </div>
-    <div class="assign-container action-required">
-      <span class="secondary-notification">Assigned to</span>
-      <div class="assign-button-container">
-        <div class="assign-button">
-          <span class="secondary-notification">Jessica Doe</span>
+        <div class="assign-container action-required">
+          <span class="action-required">Assigned to</span>
+          <div class="assign-button-container">
+            <div class="assign-button">
+              <span class="action-required">You</span>
+            </div>
+            {{ render '@assign-list' }}
+          </div>
         </div>
-        {{ render '@assign-list' }}
-      </div>
-    </div>
-    <div class="task-status-incomplete">
-      <span>Incomplete</span>
-    </div>
-  </li>
+        <div class="task-status-incomplete">
+          <span>Incomplete</span>
+        </div>
+      </li>
 
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">3. Project exploitation</a></h3>
-    </div>
-    <div class="task-status-complete">
-      <span>Complete</span>
-    </div>
-  </li>
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">2. Potential market</a></h3>
+        </div>
+        <div class="assign-container action-required">
+          <span class="secondary-notification">Assigned to</span>
+          <div class="assign-button-container">
+            <div class="assign-button">
+              <span class="secondary-notification">Jessica Doe</span>
+            </div>
+            {{ render '@assign-list' }}
+          </div>
+        </div>
+        <div class="task-status-incomplete">
+          <span>Incomplete</span>
+        </div>
+      </li>
 
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">4. Economic benefit</a></h3>
-    </div>
-    <div class="task-status-complete">
-      <span>Complete</span>
-    </div>
-  </li>
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">3. Project exploitation</a></h3>
+        </div>
+        <div class="task-status-complete">
+          <span>Complete</span>
+        </div>
+      </li>
 
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">5. Technical approach</a></h3>
-    </div>
-    <div class="task-status-complete">
-      <span>Complete</span>
-    </div>
-  </li>
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">4. Economic benefit</a></h3>
+        </div>
+        <div class="task-status-complete">
+          <span>Complete</span>
+        </div>
+      </li>
 
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">6. Innovation</a></h3>
-    </div>
-    <div class="task-status-complete">
-      <span>Complete</span>
-    </div>
-  </li>
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">5. Technical approach</a></h3>
+        </div>
+        <div class="task-status-complete">
+          <span>Complete</span>
+        </div>
+      </li>
 
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">7. Risks</a></h3>
-    </div>
-    <div class="task-status-complete">
-      <span>Complete</span>
-    </div>
-  </li>
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">6. Innovation</a></h3>
+        </div>
+        <div class="task-status-complete">
+          <span>Complete</span>
+        </div>
+      </li>
 
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">8. Project team</a></h3>
-    </div>
-    <div class="task-status-complete">
-      <span>Complete</span>
-    </div>
-  </li>
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">7. Risks</a></h3>
+        </div>
+        <div class="task-status-complete">
+          <span>Complete</span>
+        </div>
+      </li>
 
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">9. Funding</a></h3>
-    </div>
-    <div class="task-status-complete">
-      <span>Complete</span>
-    </div>
-  </li>
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">8. Project team</a></h3>
+        </div>
+        <div class="task-status-complete">
+          <span>Complete</span>
+        </div>
+      </li>
 
-  <li>
-    <div class="task">
-      <h3 class="govuk-heading-s"><a href="#" class="govuk-link">10. Adding value</a></h3>
-    </div>
-    <div class="task-status-complete">
-      <span>Complete</span>
-    </div>
-  </li>
-</ul>
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">9. Funding</a></h3>
+        </div>
+        <div class="task-status-complete">
+          <span>Complete</span>
+        </div>
+      </li>
+
+      <li>
+        <div class="task">
+          <h3 class="govuk-heading-s"><a href="#" class="govuk-link">10. Adding value</a></h3>
+        </div>
+        <div class="task-status-complete">
+          <span>Complete</span>
+        </div>
+      </li>
+    </ul>
+
+</div>

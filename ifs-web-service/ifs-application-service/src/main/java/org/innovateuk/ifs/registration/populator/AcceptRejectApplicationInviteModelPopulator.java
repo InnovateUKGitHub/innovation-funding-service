@@ -9,15 +9,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class AcceptRejectApplicationInviteModelPopulator {
 
-    public AcceptRejectApplicationInviteViewModel populateModel(ApplicationInviteResource invite, InviteOrganisationResource inviteOrganisation) {
-
-        String inviteOrganisationName = invite.getInviteOrganisationNameConfirmedSafe();
-        String competitionName = invite.getCompetitionName();
+    public AcceptRejectApplicationInviteViewModel populateModel(ApplicationInviteResource invite,
+                                                                InviteOrganisationResource inviteOrganisation) {
         long competitionId = invite.getCompetitionId();
-        String leadApplicantName = invite.getLeadApplicant();
-        String leadApplicantEmail = invite.getLeadApplicantEmail();
+        String competitionName = invite.getCompetitionName();
         String leadOrganisationName = invite.getLeadOrganisation();
+        String leadApplicantName = invite.getLeadApplicant();
+        String inviteOrganisationName = invite.getInviteOrganisationNameConfirmedSafe();
+        String leadApplicantEmail = invite.getLeadApplicantEmail();
         boolean inviteOrganisationExists = inviteOrganisation.getOrganisation() != null;
-        return new AcceptRejectApplicationInviteViewModel(leadApplicantName, leadApplicantEmail, leadOrganisationName, inviteOrganisationName, competitionName, competitionId, inviteOrganisationExists);
+        boolean leadOrganisation = invite.getLeadOrganisationId().equals(inviteOrganisation.getOrganisation());
+
+        return new AcceptRejectApplicationInviteViewModel(competitionId, competitionName, leadOrganisationName,
+                leadApplicantName, inviteOrganisationName, leadApplicantEmail, inviteOrganisationExists,
+                leadOrganisation);
     }
 }

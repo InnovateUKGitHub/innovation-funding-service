@@ -168,7 +168,7 @@ Invite non-registered assessors server side validations
 Invite non-registered users
     [Documentation]    INFUND-6411 INFUND-6448
     [Tags]
-    When the user moves focus to the element                 jQuery = .govuk-button:contains("Add assessors to list")
+    When Set Focus To Element                                jQuery = .govuk-button:contains("Add assessors to list")
     And the user enters text to a text field                 css = #invite-table tr:nth-of-type(1) td:nth-of-type(1) input   Olivier Giroud
     And the user should not see the element                  jQuery = label:contains("Please enter a name.")    #check for the client side validation
     And the user enters text to a text field                 css = #invite-table tr:nth-of-type(1) td:nth-of-type(2) input   ${test_mailbox_one}+OlivierGiroud@gmail.com
@@ -234,15 +234,15 @@ Custom Suite Setup
 
 The key statistics are calculated
     #Calculation of the Invited Assessors
-    ${INVITED_ASSESSORS} =     Get matching xpath count    //table/tbody/tr
+    ${INVITED_ASSESSORS} =     Get Element Count    //table/tbody/tr
     ${INVITED_COUNT} =     Get text    css = div:nth-child(1) > div > span
     Should Be Equal As Integers    ${INVITED_ASSESSORS}    ${INVITED_COUNT}
     #Calculation of the Accepted Assessors
-    ${ACCEPTED_ASSESSORS} =     Get matching xpath count    //*[text() = "Invite accepted"]
+    ${ACCEPTED_ASSESSORS} =     Get Element Count    //*[text() = "Invite accepted"]
     ${ACCEPTED_COUNT} =     Get text    css = div:nth-child(2) > div > span
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${ACCEPTED_ASSESSORS}
     #Calculation of the declined Assessors
-    ${DECLINED_ASSESSORS} =     Get matching xpath count    //*[text() = "Invite declined"]
+    ${DECLINED_ASSESSORS} =     Get Element Count    //*[text() = "Invite declined"]
     ${DECLINED_COUNT} =     Get text    css = div:nth-child(3) > div > span
     Should Be Equal As Integers    ${DECLINED_ASSESSORS}    ${DECLINED_COUNT}
 

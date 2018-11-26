@@ -41,7 +41,7 @@
                      th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="govuk-!-margin-top-6"/>
             </div>
             <div class="govuk-grid-column-one-half">
-                <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the grant terms and conditions</a>
+                <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the competition terms and conditions</a>
             </div>
         </div>
         <div class="govuk-!-margin-bottom-6">
@@ -50,7 +50,7 @@
             </div>
         </div>
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post" class="application-overview">
-            <th:block th:each="section,iteration : ${model.section.sections.values()}">
+            <th:block th:each="section,iteration : ${model.section.sections}">
                 <section th:id="'section-'+${section.id}">
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${section.name}" />
                     <p class="govuk-body" th:text="${section.description}"></p>
@@ -63,21 +63,23 @@
                             <li th:each="childSection : ${model.section.subSections.get(section.id)}">
                                 <div class="task">
                                     <h3 class="govuk-heading-s">
-                                        <a th:href="'/application/'+${model.applicationId}+'/form/section/'+${childSection.id}"
-                                           th:text="${childSection.getName()}"
+                                        <a th:href="@{/application/{applicationId}/form/section/{sectionId}(applicationId=${model.applicationId},sectionId=${childSection.id})}"
+                                           th:text="${childSection.name}"
                                            class="govuk-link" />
                                     </h3>
                                 </div>
-                                <th:block th:if="${model.user.userIsLeadApplicant or childSection.id.equals(model.financeSectionId)}">
-                                    <div th:unless="${model.isFinanceSectionComplete(childSection)}"
-                                         class="task-status-incomplete">
-                                        <span>Incomplete</span>
-                                    </div>
-                                    <div th:if="${model.isFinanceSectionComplete(childSection)}"
-                                         class="task-status-complete">
-                                        <span>Complete</span>
-                                        </div>
-                                </th:block>
+                                <div
+                                    th:if="${childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).FINANCE}"
+                                    th:with="complete=${model.completed.financeSectionComplete}"
+                                    th:class="${complete} ? 'task-status-complete' : 'task-status-incomplete'">
+                                    <span th:text="${complete} ? 'Complete' : 'Incomplete'"/>
+                                </div>
+                                <div
+                                    th:if="${model.user.userIsLeadApplicant && childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).OVERVIEW_FINANCES}"
+                                    th:with="complete=${model.completed.financeOverviewSectionComplete}"
+                                    th:class="${complete} ? 'task-status-complete' : 'task-status-incomplete'">
+                                    <span th:text="${complete} ? 'Complete' : 'Incomplete'"/>
+                                </div>
                             </li>
                         </th:block>
                     </ul>

@@ -62,7 +62,7 @@ public class SpendProfile {
         this.spendProfileFigures = new CostGroup(SPEND_PROFILE_DESCRIPTION, spendProfileFigures);
         this.generatedBy = generatedBy;
         this.generatedDate = generatedDate;
-        this.markedAsComplete = markedAsComplete;;
+        this.markedAsComplete = markedAsComplete;
     }
 
     public Long getId() {

@@ -78,7 +78,7 @@
 
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
-                            <label for="sort-by" class="govuk-label display-inline">Sort by</label>
+                            <label for="sort-by" class="govuk-label govuk-!-display-inline">Sort by</label>
                             <select id="sort-by"
                                     name="sort"
                                     class="js-auto-submit govuk-select govuk-input--width-20">
@@ -99,7 +99,7 @@
                                 <th class="govuk-table__header" scope="col">Lead</th>
                                 <th class="govuk-table__header" scope="col">Innovation area</th>
                                 <th class="govuk-table__header" scope="col">Status</th>
-                                <th scope="col" class="govuk-table__header alignright" style="width: 10%">Percentage complete</th>
+                                <th scope="col" class="govuk-table__header alignright small-column">Percentage complete</th>
                             </tr>
                         </thead>
                         <tbody class="govuk-table__body">
@@ -112,7 +112,7 @@
                                 </th:block>
                                 <th:block th:if="${model.support && (row.status.equalsIgnoreCase('Started') || row.status.equalsIgnoreCase('In Progress'))}">
                                     <td class="govuk-table__cell">
-                                        <a th:href="'/application/' + ${row.id} + '/summary'"
+                                        <a th:href="'/application/' + ${row.id} + '/summary' + ${originQuery}"
                                            th:text="${row.id}" class="govuk-link">194731</a>
                                     </td>
                                 </th:block>

@@ -61,7 +61,7 @@ public abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     }
 
     protected void addUserDetails(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
-        Boolean userIsLeadApplicant = applicantSection.getCurrentApplicant().getProcessRole().getRoleName().equals(Role.LEADAPPLICANT.getName());
+        boolean userIsLeadApplicant = applicantSection.getCurrentApplicant().getProcessRole().getRoleName().equals(Role.LEADAPPLICANT.getName());
         UserResource leadApplicant = applicantSection.getApplicants().stream()
                 .filter(ApplicantResource::isLead)
                 .map(ApplicantResource::getProcessRole)
@@ -133,6 +133,10 @@ public abstract class BaseSectionModelPopulator extends BaseModelPopulator {
 
     protected void addSectionsMarkedAsComplete(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(applicantSection.getApplication().getId());
+        addSectionsMarkedAsComplete(viewModel, applicantSection, completedSectionsByOrganisation);
+    }
+
+    protected void addSectionsMarkedAsComplete(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection, Map<Long, Set<Long>> completedSectionsByOrganisation) {
         Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(applicantSection.getCurrentApplicant().getOrganisation().getId());
         viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
     }

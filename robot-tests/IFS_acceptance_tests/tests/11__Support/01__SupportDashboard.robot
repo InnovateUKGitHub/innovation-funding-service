@@ -6,15 +6,18 @@ Documentation     IFS-188 Stakeholder views – Support team
 ...               IFS-1841 Basic view of all 'external' IFS users
 ...
 ...               IFS-2904 CSS Search by application number
+...
+...               IFS-3072 Search by either application number or competition name across each Competition management tab
 Suite Setup       The user logs-in in new browser  &{support_user_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Support  CompAdmin
+Force Tags        Support  CompAdmin  HappyPath
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${invitedCollaborator}  stuart@empire.com
-${competitionName}      Networking home IOT devices
+${applicationName}      Networking home IOT devices
+${competitionName}      Photonics for Research
 
 *** Test Cases ***
 Support dashboard
@@ -37,6 +40,12 @@ Back navigation is to dashboard
     And the user should see the element    jQuery = a:contains("Project setup")
     And the user should see the element    jQuery = a:contains("Previous")
 
+Support user is able to search for competition
+    [Documentation]  IFS-3072
+    [Tags]
+    When the user navigates to the page       ${server}/management/dashboard/project-setup
+    Then the user enters the competition name into the search field
+
 Support user is able to search for an Application
     [Documentation]  IFS-2904
     [Tags]
@@ -50,7 +59,7 @@ Support user is able to search active external users
     When the user is searching for external users  dustin  Email
     Then the user should see the element           jQuery = td:contains("Kazio") ~ td:contains("worth.email.test+dustin@gmail.com") + td:contains("Verified")
     And the user clicks the button/link            link = Clear
-    When the user is searching for external users  Empire  ORGANISATION_NAME
+    When the user is searching for external users  Empire  Organisation name
     Then the user should see the element           jQuery = td:contains("${EMPIRE_LTD_NAME}") + td:contains("Business") + td:contains("${EMPIRE_LTD_ID}") + td:contains("${lead_applicant_credentials["email"]}")
     And the user clicks the button/link            link = Clear
 
@@ -92,7 +101,7 @@ the support user should be able to see him as
     the user logs out if they are logged in
 
 the invitee has accepted the invitation but has not yet verified his account
-    the user reads his email and clicks the link    ${invitedCollaborator}  Invitation to collaborate in ${openCompetitionRTO_name}  to participate in an application  2
+    the user reads his email and clicks the link    ${invitedCollaborator}  Invitation to contribute in ${openCompetitionRTO_name}  to participate in an application  2
     the user clicks the button/link                 link = Yes, accept invitation
     the user clicks the button/link                 link = Confirm and continue
     the invited user fills the create account form  Stuart  Minions
@@ -102,7 +111,12 @@ the invitee verifies his account
     the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
 
 the user enters the application id into the search field
-    ${applicationID} =  get application id by name    ${competitionName}
+    ${applicationID} =  get application id by name    ${applicationName}
     the user enters text to a text field              id = searchQuery  ${applicationID}
     the user clicks the button/link                   id = searchsubmit
     the user should see the element                   jQuery = td:contains("${applicationID}")
+
+the user enters the competition name into the search field
+    the user enters text to a text field              id = searchQuery  ${competitionName}
+    the user clicks the button/link                   id = searchsubmit
+    the user should see the element                   jQuery = a div:contains("${competitionName}")
