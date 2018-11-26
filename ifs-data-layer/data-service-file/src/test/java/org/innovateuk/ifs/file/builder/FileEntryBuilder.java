@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class FileEntryBuilder extends BaseBuilder<FileEntry, FileEntryBuilder> {
 
@@ -22,6 +23,10 @@ public class FileEntryBuilder extends BaseBuilder<FileEntry, FileEntryBuilder> {
     @Override
     protected FileEntryBuilder createNewBuilderWithActions(List<BiConsumer<Integer, FileEntry>> actions) {
         return new FileEntryBuilder(actions);
+    }
+
+    public FileEntryBuilder withId(Long... ids) {
+        return withArray((id, i) -> setField("id", id, i), ids);
     }
 
     public FileEntryBuilder withMediaType(String mediaType) {
