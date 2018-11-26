@@ -57,9 +57,12 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page       Supporting information
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page       Digital manufacturing
-    And the user should see the text in the page       Empire Road
-    And the user should see the text in the page       Sheffield
-    And the user should see the text in the page       S1 2ED
+    And the user should see the text in the page       Montrose House 1
+    And the user should see the text in the page       Clayhill Park
+    And the user should see the text in the page       Cheshire West and Chester
+    And the user should see the text in the page       Neston
+    And the user should see the text in the page       Cheshire
+    And the user should see the text in the page       CH64 3RU
     And the user should see the text in the element    jQuery = p:nth-child(11)    1 Jan ${nextyear}
     And the user should see the text in the page       Elmo Chenault
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
@@ -75,9 +78,12 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the page       Supporting information
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page       Digital manufacturing
-    And the user should see the text in the page       Empire Road
-    And the user should see the text in the page       Sheffield
-    And the user should see the text in the page       S1 2ED
+    And the user should see the text in the page       Montrose House 1
+    And the user should see the text in the page       Clayhill Park
+    And the user should see the text in the page       Cheshire West and Chester
+    And the user should see the text in the page       Neston
+    And the user should see the text in the page       Cheshire
+    And the user should see the text in the page       CH64 3RU
     And the user should see the text in the element    jQuery = p:nth-child(11)    1 Jan ${nextyear}
     And the user should see the text in the page       Elmo Chenault
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
@@ -283,8 +289,11 @@ the lead partner fills in project details
     the user enters text to a text field      id = projectStartDate_year    ${nextyear}
     the user clicks the button/link           css = button[type = "submit"]
     the user clicks the button/link           link = Correspondence address
-    the user selects the radio button         addressType    REGISTERED
-    the user clicks the button/link           jQuery = .govuk-button:contains("Save project address")
+    #the user selects the radio button         addressType    REGISTERED
+    the user enters text to a text field          id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link               id = postcode-lookup
+    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link           jQuery = .govuk-button:contains("Save address")
     the user clicks the button/link           link = Project Manager
     the user selects the radio button         projectManager  projectManager2
     the user clicks the button/link           id = save
