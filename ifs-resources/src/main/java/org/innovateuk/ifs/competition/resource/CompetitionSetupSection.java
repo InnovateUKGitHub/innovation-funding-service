@@ -114,7 +114,7 @@ public enum CompetitionSetupSection {
     }
 
     public String getPostMarkIncompletePath() {
-        return getFirstSectionInChain(this).getPath();
+        return getPath();
     }
 
     public Optional<CompetitionSetupSection> getPreviousSection() {
@@ -129,10 +129,6 @@ public enum CompetitionSetupSection {
 
     public List<CompetitionSetupSection> getAllNextSections() {
         return getAllNextSections(this);
-    }
-
-    private static CompetitionSetupSection getFirstSectionInChain(CompetitionSetupSection section) {
-        return section.getPreviousSection().map(CompetitionSetupSection::getFirstSectionInChain).orElse(section);
     }
 
     /**
