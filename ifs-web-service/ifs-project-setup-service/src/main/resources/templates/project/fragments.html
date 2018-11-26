@@ -8,11 +8,11 @@
     </th>
 
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.projectDetailsStatus})" />
+    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.documentsStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.monitoringOfficerStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.bankDetailsStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.financeChecksStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.spendProfileStatus})" />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.otherDocumentsStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})" />
 </th:block>
 
