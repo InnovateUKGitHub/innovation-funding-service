@@ -292,30 +292,50 @@ function blockUntilServiceIsUp() {
         sleep 15
     done
 
+    RETRIES=0
     UNREADY_PODS=1
     while [ ${UNREADY_PODS} -ne "0" ]
     do
-        if [ ${DEPLOY_PODS} -eq "0" ]; then
-            if [ ${ERRORRED_PODS} -ne "0" ]; then
-                echo "$ERRORRED_PODS pods stuck in error state.."
-                exit 1
-            fi
-        else
-            if [ ${ERRORRED_DEPLOY_PODS} -ne "0" ]; then
-                echo "$ERRORRED_DEPLOY_PODS deploy pods stuck in error state.."
-                exit 1
-            fi
-        fi
-
         UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
         ERRORRED_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep Error | wc -l)
         DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | wc -l)
         ERRORRED_DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | grep Error | wc -l)
+        ERRORRED_CRASHLOOPING_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep -E "CrashLoopBackOff|Error" | wc -l)
+
+        if [ ${DEPLOY_PODS} -eq "0" ]; then
+            if [ ${ERRORRED_PODS} -ne "0" ]; then
+                echo "$ERRORRED_PODS pods stuck in error state.."
+                POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep Error | awk '{ print $1 }')
+                oc logs ${SVC_ACCOUNT_CLAUSE} $POD
+                exit 1
+            fi
+        else
+            if [ ${ERRORRED_DEPLOY_PODS} -ne "0" ]; then
+                if [ "$RETRIES" -lt 1 ]; then
+                    echo "$ERRORRED_DEPLOY_PODS deploy pods in error state.. Retrying"
+                    RETRIES=$((RETRIES + 1))
+                    POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | grep Error | awk '{ print $1 }')
+                    oc deploy ${SVC_ACCOUNT_CLAUSE} --retry dc/${POD%-1-deploy}
+                else
+                    echo "$ERRORRED_DEPLOY_PODS deploy pods stuck in error state after $RETRIES retries.. Exiting"
+                    exit 1
+                fi
+            fi
+
+            if [ ${ERRORRED_CRASHLOOPING_PODS} -ne "0" ]; then
+                POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep -E "CrashLoopBackOff|Error" | awk '{ print $1 }')
+                SINCE=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep -E "CrashLoopBackOff|Error" | awk '{ print $5 }')
+                echo "$POD is crashlooping for ${SINCE%m} minutes. Pod logs are:"
+                if [ ${SINCE%m} -gt "5" ]; then
+                    oc ${SVC_ACCOUNT_CLAUSE} logs $POD
+                fi
+            fi
+        fi
 
         oc get pods ${SVC_ACCOUNT_CLAUSE}
         echo "$UNREADY_PODS pods still not ready.."
         
-        sleep 5s
+        sleep 10s
     done
     oc get routes ${SVC_ACCOUNT_CLAUSE}
 }
