@@ -7,7 +7,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import java.math.BigDecimal;
 
 public abstract class AbstractCostRowForm<F extends FinanceRowItem> {
-    public static final String EMPTY_ROW_ID = "empty";
+    public static final String UNSAVED_ROW_ID = "unsaved-";
 
     private Long costId;
 

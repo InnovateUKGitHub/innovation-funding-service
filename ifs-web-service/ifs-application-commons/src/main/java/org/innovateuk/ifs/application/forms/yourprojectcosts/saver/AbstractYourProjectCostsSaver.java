@@ -18,8 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
+import java.util.UUID;
 
-import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.EMPTY_ROW_ID;
+import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_ID;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -103,7 +105,7 @@ public abstract class AbstractYourProjectCostsSaver {
         overheadCost.setRateType(overhead.getRateType());
 
         if (overhead.getRateType().equals(OverheadRateType.TOTAL)) {
-            overheadCost.setRate(overhead.getTotalSpreadsheet());
+            overheadCost.setRate(ofNullable(overhead.getTotalSpreadsheet()).orElse(0));
         } else {
             overheadCost.setRate(overhead.getRateType().getRate());
         }
@@ -111,12 +113,11 @@ public abstract class AbstractYourProjectCostsSaver {
         return getFinanceRowService().update(overheadCost).getSuccess();
     }
 
-
     private <R extends AbstractCostRowForm> ValidationMessages saveRows(Map<String, R> rows, BaseFinanceResource finance) {
         ValidationMessages messages = new ValidationMessages();
 
         rows.forEach((id, row) -> {
-            if (EMPTY_ROW_ID.equals(id)) {
+            if (id.startsWith(UNSAVED_ROW_ID)) {
                 if (!row.isBlank()) {
                     FinanceRowItem result = getFinanceRowService().addWithResponse(finance.getId(), row.toCost()).getSuccess();
                     messages.addAll(getFinanceRowService().update(result)); //TODO these two rest calls really could be a single one if the response contained the validation messages.
@@ -135,21 +136,18 @@ public abstract class AbstractYourProjectCostsSaver {
     }
 
     public void removeFinanceRow(String id) {
-        if (!EMPTY_ROW_ID.equals(id)) {
+        if (!id.startsWith(UNSAVED_ROW_ID)) {
             getFinanceRowService().delete(Long.valueOf(id)).getSuccess();
         }
     }
 
-    public <R extends AbstractCostRowForm> R addRowForm(YourProjectCostsForm form, FinanceRowType rowType, long targetId, long organisationId) throws IllegalAccessException, InstantiationException {
-        BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
-
+    public <R extends AbstractCostRowForm> Map.Entry<String, R> addRowForm(YourProjectCostsForm form, FinanceRowType rowType) throws IllegalAccessException, InstantiationException {
         Class<R> clazz = newRowFromType(rowType);
         R row = clazz.newInstance();
-        Long costId = getFinanceRowService().addWithResponse(finance.getId(), row.toCost()).getSuccess().getId();
-        row.setCostId(costId);
+        String costId = UNSAVED_ROW_ID + UUID.randomUUID().toString();
         Map<String, R> map = getRowsFromType(form, rowType);
-        map.put(String.valueOf(costId), row);
-        return row;
+        map.put(costId, row);
+        return map.entrySet().stream().filter(entry -> entry.getKey().equals(costId)).findFirst().get()
     }
 
     private <R extends AbstractCostRowForm> Map<String, R> getRowsFromType(YourProjectCostsForm form, FinanceRowType type) {

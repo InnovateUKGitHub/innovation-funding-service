@@ -70,15 +70,17 @@ IFS.core.financeRowForm = (function () {
     },
     persistUnsavedRow: function (name, newFieldId) {
       // transforms unpersisted rows to persisted rows by updating the name attribute
-      if (name.indexOf('[empty]') !== -1) {
-        var path = IFS.core.financeRowForm.getPathToEmptyRow(name)
+      var start = name.indexOf('[unsaved-')
+      if (start !== -1) {
+        var unsavedId = name.substring(start + 1, name.indexOf(']', start))
+        var path = name.substring(0, name.indexOf(']', start) + 1)
         var row = false
         jQuery('[name^="' + path + '"]').each(function () {
           var input = jQuery(this)
           if (input.attr('name').endsWith('costId')) {
             input.val(newFieldId)
           }
-          input.attr('name', input.attr('name').replace('[empty]', '[' + newFieldId + ']'))
+          input.attr('name', input.attr('name').replace(unsavedId, newFieldId))
           if (!row) {
             row = input.closest('[data-repeatable-row]')
           }
@@ -86,9 +88,6 @@ IFS.core.financeRowForm = (function () {
         // update remove button
         row.find('[name="remove_cost"]').val(newFieldId)
       }
-    },
-    getPathToEmptyRow: function (name) {
-      return name.substring(0, name.indexOf('[empty]') + '[empty]'.length)
     }
   }
 })()

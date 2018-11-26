@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.application.forms.yourfunding.form;
 
+import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
+
 import java.math.BigDecimal;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-public class OtherFundingRowForm {
-
-    private Long costId;
+public class OtherFundingRowForm extends AbstractCostRowForm<OtherFunding> {
 
     private String source;
 
@@ -16,19 +18,11 @@ public class OtherFundingRowForm {
 
     public OtherFundingRowForm() {}
 
-    public OtherFundingRowForm(Long costId, String source, String date, BigDecimal fundingAmount) {
-        this.costId = costId;
-        this.source = source;
-        this.date = date;
-        this.fundingAmount = fundingAmount;
-    }
-
-    public Long getCostId() {
-        return costId;
-    }
-
-    public void setCostId(Long costId) {
-        this.costId = costId;
+    public OtherFundingRowForm(OtherFunding otherFunding) {
+        super(otherFunding);
+        this.source = otherFunding.getFundingSource();
+        this.date = otherFunding.getSecuredDate();
+        this.fundingAmount = otherFunding.getFundingAmount();
     }
 
     public String getSource() {
@@ -55,7 +49,18 @@ public class OtherFundingRowForm {
         this.fundingAmount = fundingAmount;
     }
 
+    @Override
     public boolean isBlank() {
-        return isNullOrEmpty(source) && isNullOrEmpty(date) && fundingAmount == null && costId == null;
+        return isNullOrEmpty(source) && isNullOrEmpty(date) && fundingAmount == null;
+    }
+
+    @Override
+    public FinanceRowType getRowType() {
+        return FinanceRowType.OTHER_FUNDING;
+    }
+
+    @Override
+    public OtherFunding toCost() {
+        return new OtherFunding(getCostId(), null, getSource(), getDate(), getFundingAmount());
     }
 }

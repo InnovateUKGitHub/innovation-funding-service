@@ -183,7 +183,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                 @ModelAttribute("form") YourProjectCostsForm form,
                                 @RequestParam("add_cost") FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
 
-        saver.addRowForm(form, rowType, applicationId, user);
+        saver.addRowForm(form, rowType);
         return viewYourProjectCosts(form, model, applicationId, sectionId, user);
     }
 
@@ -233,15 +233,14 @@ public class YourProjectCostsController extends AsyncAdaptor {
 
     @PostMapping("add-row/{rowType}")
     public String ajaxAddRow(Model model,
-                             UserResource user,
-                             @PathVariable long applicationId,
                              @PathVariable FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
         YourProjectCostsForm form = new YourProjectCostsForm();
         form.setLabour(new LabourForm());
-        AbstractCostRowForm row = saver.addRowForm(form, rowType, applicationId, user);
+        Map.Entry<String, AbstractCostRowForm> map = saver.addRowForm(form, rowType);
+
         model.addAttribute("form", form);
-        model.addAttribute("id", row.getCostId());
-        model.addAttribute("row", row);
+        model.addAttribute("id", map.getKey());
+        model.addAttribute("row", map.getValue());
         return String.format("application/your-project-costs-fragments :: ajax_%s_row", rowType.name().toLowerCase());
     }
 

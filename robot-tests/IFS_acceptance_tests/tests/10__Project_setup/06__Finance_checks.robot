@@ -554,7 +554,6 @@ Project Finance user can edit and save Lead Partner's 20% of labour costs option
     And the user clicks the button/link         css = [data-target = "overhead-default-percentage"] label
     Then verify percentage and total            2    6%   £11,886
     When the user clicks the button/link        css = .govuk-button[name = "save-eligibility"]
-    Then the user should see the text in the element        css = section:nth-of-type(2) span[class = 'finance-total']:nth-of-type(3) span    20%
     And the user should see the text in the element         css = section:nth-of-type(2) span[class = 'finance-total']:nth-of-type(1)   £11,886
     And the user should see the element         jQuery = section:nth-of-type(2) a:contains("Edit")
     Then verify total costs of project          £187,717
@@ -578,7 +577,7 @@ Project Finance user can edit and save Lead Partner's calculate overheads option
     Then the user should see the element         jQuery = section:nth-of-type(2) button span:contains("0%")
     And the user should see the element          jQuery = section:nth-of-type(2) button span:contains("£0")
     When the user clicks the button/link         jQuery = section:nth-of-type(2) a:contains("Edit")
-    And the user enters text to a text field     css = section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
+    And the user enters text to a text field     id = overhead.totalSpreadsheet  ${empty}
     And the user clicks the button/link          css = .govuk-button[name = "save-eligibility"]
     And the user clicks the button/link          jQuery = .button-secondary:contains("Return to finance checks")
 
@@ -587,7 +586,7 @@ Project Finance user can enter overhead values for Lead Partner manually
     [Tags]
     When the user clicks the button/link         css = a.eligibility-0
     And the user clicks the button/link          jQuery = section:nth-of-type(2) a:contains("Edit")
-    And the user enters text to a text field     css = section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
+    And the user enters text to a text field     id = overhead.totalSpreadsheet  1954
     Then the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
     Then verify percentage and total             2    1%   £1,954
     When the user clicks the button/link         jQuery = section:nth-of-type(2) button:contains("Overhead costs")
@@ -701,7 +700,6 @@ Project Finance user can edit and save partner's 20% of labour costs option
     And the user clicks the button/link         css = [data-target = "overhead-default-percentage"] label
     Then verify percentage and total            2    6%   £11,886
     When the user clicks the button/link        css = .govuk-button[name = "save-eligibility"]
-    Then the user should see the text in the element        css = section:nth-of-type(2) span[class = 'finance-total']:nth-of-type(3) span    20%
     And the user should see the text in the element         css = section:nth-of-type(2) span[class = 'finance-total']:nth-of-type(1)   £11,886
     And the user should see the element         jQuery = section:nth-of-type(2) a:contains("Edit")
     Then verify total costs of project          £187,717
@@ -725,14 +723,14 @@ Project Finance user can edit and save in Partner's calculate overheads option
     Then the user should see the element        jQuery = section:nth-of-type(2) button span:contains("0%")
     And the user should see the element         jQuery = section:nth-of-type(2) button span:contains("£0")
     When the user clicks the button/link        jQuery = section:nth-of-type(2) a:contains("Edit")
-    And the user enters text to a text field    css = section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
+    And the user enters text to a text field    id = overhead.totalSpreadsheet  ${empty}
     And the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
 
 Project Finance user can enter overhead values for partner manually
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link        jQuery = section:nth-of-type(2) a:contains("Edit")
-    And the user enters text to a text field    css = section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
+    And the user enters text to a text field    id = overhead.totalSpreadsheet  1954
     Then the user clicks the button/link        css = .govuk-button[name = "save-eligibility"]
     Then verify percentage and total            2    1%   £1,954
     When the user clicks the button/link        jQuery = section:nth-of-type(2) button:contains("Overhead costs")
@@ -1113,20 +1111,19 @@ Project finance user adds, modifies and removes labour rows
     [Setup]  Log in as a different user            &{internal_finance_credentials}
     Given the user navigates to the page           ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/finance-check/organisation/${PS_GOL_APPLICATION_LEAD_ORGANISATION_ID}/eligibility
     When the user expands the section              Labour
-    And the user clicks the button/link            jQuery = h3:contains("Labour") + #collapsible-0 a:contains("Edit")
-    And the user clicks the button/link            jQuery = h3:contains("Labour") + #collapsible-0 button:contains("Add another role")
+    When the user clicks the button/link           jQuery = section:nth-of-type(1) a:contains("Edit")
+    And the user clicks the button/link            jQuery = section:nth-of-type(1) button:contains("Add another role")
     And the user adds data into labour row         4  test  2000  100
-    And the user clicks the button/link            jQuery = h3:contains("Labour") + #collapsible-0 button:contains("Add another role")
+    And the user clicks the button/link            jQuery = section:nth-of-type(1) button:contains("Add another role")
     And the user adds data into labour row         5  test 1  1450  100
     Then verify percentage and total               1    3%    £5,886
-    When the user clicks the button/link           jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(2) button:contains('Remove')
-    And the user clears the text from the element  jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossEmployeeCost"]
-    And the user enters text to a text field       jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossEmployeeCost"]    100
+    When the user clicks the button/link           jQuery = section:nth-of-type(1) tr:nth-of-type(2) button:contains('Remove')
+    And the user enters text to a text field       css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    100
     And the user clicks the button/link            css = section:nth-of-type(1) .govuk-button[name = save-eligibility]
     Then verify percentage and total               1    2%    £4,748
-    And the user should see the element            jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(3) td:contains("£1,626")
-    And the user should see the element            jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(4) td:contains("£1,179")
-    And the user should not see the element        jQuery = h3:contains("Labour") + #collapsible-0 tr:nth-of-type(5) td:contains("£976")  # This is the row which was removed
+    And the user should see the element            jQuery = section:nth-of-type(1) tr:nth-of-type(3) td:contains("£1,626")
+    And the user should see the element            jQuery = section:nth-of-type(1) tr:nth-of-type(4) td:contains("£1,179")
+    And the user should not see the element        jQuery = section:nth-of-type(1) tr:nth-of-type(5) td:contains("£976")  # This is the row which was removed
 
 *** Keywords ***
 Custom suite setup

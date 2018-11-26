@@ -22,10 +22,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_ID;
 import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
 @Component
@@ -61,19 +63,9 @@ public class YourFundingFormPopulator {
 
         Map<String, OtherFundingRowForm> rows = otherFundingCategory.getCosts().stream().map(cost -> {
             OtherFunding otherFunding = (OtherFunding) cost;
-            OtherFundingRowForm row = new OtherFundingRowForm();
-
-            row.setCostId(cost.getId());
-            row.setDate(otherFunding.getSecuredDate());
-            row.setFundingAmount(otherFunding.getFundingAmount());
-            row.setSource(otherFunding.getFundingSource());
-
-            return row;
+            return new OtherFundingRowForm(otherFunding);
         }).collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-
-        if (!rows.containsKey(YourFundingForm.EMPTY_ROW_ID)) {
-            rows.put(YourFundingForm.EMPTY_ROW_ID, new OtherFundingRowForm());
-        }
+        rows.put(UNSAVED_ROW_ID + UUID.randomUUID().toString(), new OtherFundingRowForm());
 
         form.setRequestingFunding(requestingFunding);
         form.setGrantClaimPercentage(fundingLevel);

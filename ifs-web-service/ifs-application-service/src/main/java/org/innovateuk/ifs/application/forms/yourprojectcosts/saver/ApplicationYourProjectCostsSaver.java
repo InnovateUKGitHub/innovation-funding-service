@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.saver;
 
-import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
@@ -28,11 +26,6 @@ public class ApplicationYourProjectCostsSaver extends AbstractYourProjectCostsSa
     public ServiceResult<Void> save(YourProjectCostsForm form, long applicationId, UserResource user) {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
         return save(form, applicationId, organisation.getId());
-    }
-
-    public <R extends AbstractCostRowForm> R addRowForm(YourProjectCostsForm form, FinanceRowType rowType, long applicationId, UserResource user) throws IllegalAccessException, InstantiationException {
-        OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
-        return addRowForm(form, rowType, applicationId, organisation.getId());
     }
 
     @Override

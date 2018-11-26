@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.EMPTY_ROW_ID;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_ID;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.newFieldError;
@@ -108,7 +108,7 @@ public class YourProjectCostsFormValidator {
 
     private <R extends AbstractCostRowForm> void validateRows(Map<String, R> rows, String path, ValidationHandler validationHandler) {
         rows.forEach((id, row) -> {
-            if (!(EMPTY_ROW_ID.equals(id) && row.isBlank())) {
+            if (!(id.startsWith(UNSAVED_ROW_ID) && row.isBlank())) {
                 validateForm(row, validationHandler,  path, id);
             }
         });

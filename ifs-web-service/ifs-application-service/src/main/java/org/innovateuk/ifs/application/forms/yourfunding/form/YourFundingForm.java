@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class YourFundingForm {
-    public static final String EMPTY_ROW_ID = "empty";
-
     private Boolean requestingFunding;
 
     private Integer grantClaimPercentage;

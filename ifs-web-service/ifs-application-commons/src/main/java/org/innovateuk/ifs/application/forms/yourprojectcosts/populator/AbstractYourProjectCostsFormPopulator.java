@@ -10,9 +10,10 @@ import org.innovateuk.ifs.finance.resource.cost.*;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.EMPTY_ROW_ID;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_ID;
 import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
 public abstract class AbstractYourProjectCostsFormPopulator {
@@ -54,7 +55,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
 
         if (shouldAddEmptyRow()) {
-            rows.put(EMPTY_ROW_ID, new LabourRowForm());
+            rows.put(emptyRowId(), new LabourRowForm());
         }
         return rows;
     }
@@ -66,7 +67,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
                 .map(MaterialRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
         if (shouldAddEmptyRow()) {
-            rows.put(EMPTY_ROW_ID, new MaterialRowForm());
+            rows.put(emptyRowId(), new MaterialRowForm());
         }
         return rows;
     }
@@ -78,7 +79,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
                 .map(CapitalUsageRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
         if (shouldAddEmptyRow()) {
-            rows.put(EMPTY_ROW_ID, new CapitalUsageRowForm());
+            rows.put(emptyRowId(), new CapitalUsageRowForm());
         }
         return rows;
     }
@@ -90,7 +91,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
                 .map(OtherCostRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
         if (shouldAddEmptyRow()) {
-            rows.put(EMPTY_ROW_ID, new OtherCostRowForm());
+            rows.put(emptyRowId(), new OtherCostRowForm());
         }
         return rows;
     }
@@ -102,7 +103,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
                 .map(SubcontractingRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
         if (shouldAddEmptyRow()) {
-            rows.put(EMPTY_ROW_ID, new SubcontractingRowForm());
+            rows.put(emptyRowId(), new SubcontractingRowForm());
         }
         return rows;
     }
@@ -114,9 +115,13 @@ public abstract class AbstractYourProjectCostsFormPopulator {
                 .map(TravelRowForm::new)
                 .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
         if (shouldAddEmptyRow()) {
-            rows.put(EMPTY_ROW_ID, new TravelRowForm());
+            rows.put(emptyRowId(), new TravelRowForm());
         }
         return rows;
+    }
+
+    private String emptyRowId() {
+        return UNSAVED_ROW_ID + UUID.randomUUID().toString();
     }
 
     protected abstract BaseFinanceResource getFinanceResource(long targetId, long organisationId);

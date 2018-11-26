@@ -47,6 +47,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
@@ -200,10 +201,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                              @PathVariable long organisationId,
                              @PathVariable FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
         YourProjectCostsForm form = new YourProjectCostsForm();
-        AbstractCostRowForm row = yourProjectCostsSaver.addRowForm(form, rowType, projectId, organisationId);
+        Map.Entry<String, AbstractCostRowForm> entry = yourProjectCostsSaver.addRowForm(form, rowType);
         model.addAttribute("form", form);
-        model.addAttribute("id", row.getCostId());
-        model.addAttribute("row", row);
+        model.addAttribute("id", entry.getKey());
+        model.addAttribute("row", entry.getValue());
         return String.format("application/your-project-costs-fragments :: ajax_%s_row", rowType.name().toLowerCase());
     }
 
