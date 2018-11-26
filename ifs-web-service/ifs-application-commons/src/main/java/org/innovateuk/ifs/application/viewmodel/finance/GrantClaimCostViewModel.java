@@ -9,7 +9,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 public class GrantClaimCostViewModel extends AbstractCostViewModel {
     private long organisationGrantClaimPercentageId;
     private int maximumGrantClaimPercentage;
-    private int organisationGrantClaimPercentage;
+    private Integer organisationGrantClaimPercentage;
 
 
     @Override
@@ -38,15 +38,15 @@ public class GrantClaimCostViewModel extends AbstractCostViewModel {
         this.maximumGrantClaimPercentage = maximumGrantClaimPercentage;
     }
 
-    public int getOrganisationGrantClaimPercentage() {
+    public Integer getOrganisationGrantClaimPercentage() {
         return organisationGrantClaimPercentage;
     }
 
-    public void setOrganisationGrantClaimPercentage(int organisationGrantClaimPercentage) {
+    public void setOrganisationGrantClaimPercentage(Integer organisationGrantClaimPercentage) {
         this.organisationGrantClaimPercentage = organisationGrantClaimPercentage;
     }
 
     public boolean maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage() {
-        return maximumGrantClaimPercentage < organisationGrantClaimPercentage;
+        return maximumGrantClaimPercentage < (organisationGrantClaimPercentage == null ? 0 : organisationGrantClaimPercentage);
     }
 }

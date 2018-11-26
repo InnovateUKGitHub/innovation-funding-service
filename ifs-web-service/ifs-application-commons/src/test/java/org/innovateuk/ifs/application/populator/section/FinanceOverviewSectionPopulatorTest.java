@@ -22,17 +22,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
-import static org.innovateuk.ifs.form.resource.SectionType.FUNDING_FINANCES;
-import static org.innovateuk.ifs.form.resource.SectionType.ORGANISATION_FINANCES;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -138,17 +134,13 @@ public class FinanceOverviewSectionPopulatorTest {
         FinanceOverviewSectionViewModel result = financeOverviewSectionPopulator.createNew(applicantSection, form,
                 readOnly, Optional.of(applicantOrganisationId), readOnlyAllApplicantApplicationFinances);
 
-        List<SectionType> expectedSectionTypesToSkipForOrganisationType = asList(ORGANISATION_FINANCES,
-                FUNDING_FINANCES);
-
         assertEquals(applicantSection, result.getApplicantResource());
         assertEquals(readOnly, result.isAllReadOnly());
         assertEquals(applicantOrganisationId, result.getApplicantOrganisationId().longValue());
         assertEquals(readOnlyAllApplicantApplicationFinances, result.isReadOnlyAllApplicantApplicationFinances());
 
         verify(formInputViewModelGenerator, only()).fromSection(applicantSection, applicantSection, form, readOnly);
-        verify(applicationNavigationPopulator, only()).addNavigation(section, application.getId(),
-                expectedSectionTypesToSkipForOrganisationType);
+        verify(applicationNavigationPopulator, only()).addNavigation(section, application.getId());
     }
 
     @Test

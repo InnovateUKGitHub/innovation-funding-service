@@ -195,6 +195,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("applicationFinanceType", applicationFinanceType);
     }
 
+    public CompetitionResourceBuilder withProjectDocument(List<ProjectDocumentResource> projectDocumentResourcesList) {
+        return withList(projectDocumentResourcesList, (projectDocumentResource, section) -> section.setProjectDocuments(projectDocumentResourcesList));
+    }
+
     public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {
         return withArraySetFieldByReflection("assessorCount", assessorCount);
     }
@@ -231,12 +235,20 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("stateAid", stateAid);
     }
 
+    public CompetitionResourceBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSection) {
+        return withArraySetFieldByReflection("includeYourOrganisationSection", includeYourOrganisationSection);
+    }
+
     public CompetitionResourceBuilder withGrantClaimMaximums(Set<Long>... grantClaimMaximums) {
         return withArraySetFieldByReflection("grantClaimMaximums", grantClaimMaximums);
     }
 
     public CompetitionResourceBuilder withNonFinanceType(boolean... nonFinanceTypes) {
         return withArraySetFieldByReflection("nonFinanceType", nonFinanceTypes);
+    }
+
+    public CompetitionResourceBuilder withIncludeJesForm(Boolean... includeJesForms) {
+        return withArray((includeJesForm, competitionSetupFinance) -> setField("includeJesForm", includeJesForm, competitionSetupFinance), includeJesForms);
     }
 
     public CompetitionResourceBuilder withIncludeProjectGrowthTable(Boolean... includeProjectGrowthTable) {

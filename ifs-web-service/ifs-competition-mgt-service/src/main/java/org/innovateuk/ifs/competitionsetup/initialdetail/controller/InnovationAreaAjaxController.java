@@ -22,16 +22,17 @@ import java.util.List;
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = InnovationAreaAjaxController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class InnovationAreaAjaxController {
+
     @Autowired
     private CategoryRestService categoryRestService;
 
     /* AJAX Function */
-    @GetMapping("/getInnovationArea/{innovationSectorId}")
+    @GetMapping("/get-innovation-areas/{innovationSectorId}")
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
 
         if (CompetitionSpecialSectors.isOpenSector().test(innovationSectorId)) {
-            List<InnovationAreaResource> returningList = categoryRestService.getInnovationAreas().getSuccess();
+            List<InnovationAreaResource> returningList = categoryRestService.getInnovationAreasExcludingNone().getSuccess();
             returningList.add(0, createAllInnovationArea());
 
             return returningList;

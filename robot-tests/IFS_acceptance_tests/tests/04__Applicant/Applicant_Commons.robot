@@ -227,7 +227,7 @@ the user fills the organisation details with Project growth table
     the user navigates to Your-finances page                ${Application}
     the user clicks the button/link                         link = Your organisation
     the user enters text to a text field                    css = input[name$="month"]    12
-    and the user enters text to a text field                css = input[name$="year"]    2016
+    the user enters text to a text field                    css = input[name$="year"]    2016
     the user selects the radio button                       financePosition-organisationSize  ${org_size}
     the user enters text to a text field                    jQuery = td:contains("Annual turnover") + td input   5600
     the user enters text to a text field                    jQuery = td:contains("Annual profit") + td input    3000
@@ -268,8 +268,9 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
     the user clicks the button/link       link = Your funding
-    the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  45
-    click element                         jQuery = label:contains("No")
+    the user selects the radio button     requestingFunding   true
+    the user enters text to a text field  css = [name^="grantClaimPercentage"]  45
+    the user selects the radio button     otherFunding   false
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
     the user clicks the button/link       link = Your funding
@@ -337,16 +338,9 @@ the applicant edits the "economic benefit" question
 
 logged in user applies to competition
     [Arguments]  ${competition}  ${applicationType}
-    the user navigates to the page      ${frontDoor}
-    navigate to next page if not found  ${competition}
-    the user clicks the button/link     link = ${competition}
-    the user clicks the button/link     jQuery = a:contains("Start new application")
-    the user clicks the button/link     link = Apply with a different organisation.
-    the user selects the radio button   organisationTypeId  ${applicationType}
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user clicks the Not on companies house link
-    the user clicks the button/link            jQuery = button:contains("Save and continue")
-    the user clicks the button/link            id = application-question-save
+    the user select the competition and starts application    ${competition}
+    the user clicks the button/link                           jQuery = button:contains("Save and continue")
+    the user clicks the button/link                           id = application-question-save
 
 navigate to next page if not found
     [Arguments]  ${competition}
@@ -436,3 +430,14 @@ the user fills in the address info
    the user clicks the button/link        jQuery = a:contains("Continue and create an account")
    the user selects the radio button      organisationTypeId  ${organisationType}
    the user clicks the button/link        jQuery = button:contains("Save and continue")
+
+the user marks your funding section as complete
+    the user selects the radio button     requestingFunding   true
+    the user enters text to a text field  css = [name^="grantClaimPercentage"]  30
+    the user selects the radio button     otherFunding  false
+    the user selects the checkbox         agree-terms-page
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+
+the user selects medium organisation size
+    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}

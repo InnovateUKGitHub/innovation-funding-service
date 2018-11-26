@@ -33,8 +33,7 @@ Comp Admin creates an ATI competition
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user marks the application as done     yes  ${compType_Programme}
     And the user fills in the CS Assessors
-    # TODO IFS-4609 Uncomment when this functionality is enabled.
-    #And the user fills in the CS Documents in other projects
+    And the user fills in the CS Documents in other projects
     When the user clicks the button/link           link = Public content
     Then the user fills in the Public content and publishes  ATI
     When the user clicks the button/link           link = Return to setup overview
@@ -49,7 +48,7 @@ Applicant applies to newly created ATI competition
     And Log in as a different user            &{lead_applicant_credentials}
     Then logged in user applies to competition                  ${ATIcompetitionTitle}  1
 
-Single applicant cannot submits his application to a collaborative comp
+Single applicant cannot submit his application to a collaborative comp
     [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421
     [Tags]
     Given the user clicks the button/link               link=Application details
@@ -91,7 +90,7 @@ Project Finance is able to see the Overheads costs file
     [Tags]
     Given Log in as a different user       &{internal_finance_credentials}
     When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
-    And the user clicks the button/link    jQuery = tr:contains("org2") td:nth-child(4) a:contains("Review")
+    And the user clicks the button/link    jQuery = tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
     And the user clicks the button/link    jQuery = button:contains("Overhead costs")
     Then the user should see the element   jQuery = a:contains("${excel_file}")
     And the project finance user is able to download the Overheads file    ${ProjectID}  22
@@ -122,10 +121,10 @@ User fills in funding overide
 the user checks the override value is applied
     the user clicks the button/link     link = Your finances
     the user clicks the button/link     link = Your funding
-    the user clicks the button/link     css = button[type=submit]
-    the user should see the element     jQuery = .govuk-label:contains("maximum 100%")
+    the user clicks the button/link     jQuery = button:contains("Edit your funding")
+    the user should see the element     jQuery = span:contains("The maximum you can enter is 100%")
     the user selects the checkbox       agree-terms-page
-    the user clicks the button/link     css = button[name=mark_section_as_complete]
+    the user clicks the button/link     jQuery = button:contains("Mark as complete")
     the user clicks the button/link     link = Application overview
 
 the finance overview is marked as incomplete

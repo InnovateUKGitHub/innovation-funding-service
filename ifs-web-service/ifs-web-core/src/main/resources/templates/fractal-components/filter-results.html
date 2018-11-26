@@ -1,27 +1,176 @@
-<h1 class="govuk-heading-xl">Filter results</h1>
+<div class="wide-page">
+    <div class="govuk-width-container">
 
-<form method="GET">
-  <div class="search-filters govuk-!-margin-top-6">
-
-    <fieldset class="govuk-fieldset">
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-        <h2 class="govuk-fieldset__heading">Filter applications</h2>
-      </legend>
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          <label class="govuk-label" for="filterSearch">Search by application number.</label>
-          <input class="govuk-input govuk-!-margin-bottom-6"
-                 id="filterSearch"
-                 name="filterSearch"
-                 value=""
-                 type="text">
-          <a href="?sort=">Clear all filters</a>
+        <div class="govuk-inset-text">
+            <p class="govuk-body">
+                This is an IFS component.
+            </p>
         </div>
-        <div class="govuk-grid-column-one-third">
-          <button class="govuk-button">Filter</button>
-        </div>
-      </div>
-    </fieldset>
 
-  </div>
-</form>
+        <h2 class="govuk-heading-s">Example 1</h2>
+
+        <div class="search-filters govuk-!-margin-top-6">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                    <h2 class="govuk-fieldset__heading">Filter applications</h2>
+                </legend>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds">
+                        <label class="govuk-label" for="filterSearch">Search by application number.</label>
+                        <input type="text" class="govuk-input" id="filterSearch" name="filterSearch" value="">
+                    </div>
+
+                    <div class="govuk-grid-column-one-third">
+                        <button class="govuk-button">Filter</button>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="govuk-!-margin-top-6">
+                <a href="?sort=" class="govuk-body govuk-link">Clear all filters</a>
+            </div>
+        </div>
+
+        <h2 class="govuk-heading-s">Example, allocate assessors</h2>
+
+        <div class="search-filters">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                    <h2 class="govuk-fieldset__heading">Filter assessors</h2>
+                </legend>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-form-group">
+                            <label for="innovationSector" class="govuk-label">Innovation sector</label>
+                            <select class="govuk-select" name="innovationSector" id="innovationSector">
+                                <option value="" selected="selected">---</option>
+                                <option value="0">Open</option>
+                                <option value="1">Health and life sciences</option>
+                                <option value="2">Materials and manufacturing</option>
+                                <option value="3">Emerging and enabling</option>
+                                <option value="4">Infrastructure systems</option>
+                                <option value="50">Transport</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-form-group">
+                            <label for="businessType" class="govuk-label">Type</label>
+                            <select class="govuk-select" name="businessType" id="businessType">
+                                <option value="" selected="selected">---</option>
+                                <option value="BUSINESS">Business</option>
+                                <option value="ACADEMIC">Academic</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <div class="column-one alignright">
+                            <button class="govuk-button govuk-!-margin-0">Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="clear-search-filters">
+                <a href="?sort" class="govuk-body govuk-link">Clear all filters</a>
+            </div>
+        </div>
+
+        <h2 class="govuk-heading-s">Example, invite assessors</h2>
+
+        <div class="search-filters govuk-!-margin-top-6">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                    <h2 class="govuk-fieldset__heading">Filter assessors</h2>
+                </legend>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-third">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="filterInnovationArea">Innovation area</label>
+                            <select name="innovationArea" id="filterInnovationArea" class="govuk-select">
+                                <option value="" selected="selected">Any</option>
+                                <option value="39">Additive layer manufacturing (ALM)</option>
+                                <option value="16">Advanced therapies</option>
+                                <option value="59">Aerospace</option>
+                                <option value="57">Agricultural productivity</option>
+                                <option value="24">Assembly / disassembly / joining</option>
+                                <option value="19">Biosciences</option>
+                                <option value="38">Ceramic / electronic / functional materials</option>
+                                <option value="40">Chemical / bio processes</option>
+                                <option value="44">Composite materials</option>
+                                <option value="56">Connected and autonomous vehicles</option>
+                                <option value="27">Connected transport</option>
+                                <option value="12">Creative industries</option>
+                                <option value="18">Diagnostics, medical technology and devices</option>
+                                <option value="20">Digital health</option>
+                                <option value="5">Digital industries</option>
+                                <option value="22">Digital manufacturing</option>
+                                <option value="14">Digital technology</option>
+                                <option value="42">Electronic materials and manufacturing</option>
+                                <option value="10">Electronics, sensors and photonics</option>
+                                <option value="7">Emerging technology</option>
+                                <option value="37">Energy - other</option>
+                                <option value="51">Energy and automotive</option>
+                                <option value="36">Energy efficiency</option>
+                                <option value="30">Energy systems</option>
+                                <option value="58">Enhancing food quality</option>
+                                <option value="23">Forming technologies</option>
+                                <option value="21">Independent living and wellbeing</option>
+                                <option value="52">Low carbon vehicles</option>
+                                <option value="53">Marine transport</option>
+                                <option value="25">Materials, process and manufacturing design technologies</option>
+                                <option value="45">Metals / metallurgy</option>
+                                <option value="26">Nanotechnology / nanomaterials</option>
+                                <option value="31">Nuclear fission</option>
+                                <option value="32">Offshore wind</option>
+                                <option value="54">Other transport</option>
+                                <option value="46">Polymers and plastics</option>
+                                <option value="17">Precision medicine</option>
+                                <option value="47">Preclinical technologies and drug target discovery</option>
+                                <option value="55">Rail transport</option>
+                                <option value="8">Robotics and autonomous systems</option>
+                                <option value="6">Satellite applications</option>
+                                <option value="29">Smart infrastructure</option>
+                                <option value="15">Space technology</option>
+                                <option value="41">Surface engineering, coatings and thin films</option>
+                                <option value="43">Sustainable materials</option>
+                                <option value="48">Therapeutic and medicine development</option>
+                                <option value="28">Urban living</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="govuk-grid-column-one-third">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="filterStatus">Status</label>
+                            <select name="status" id="filterStatus" class="govuk-select">
+                                <option value="" selected="selected">All</option>
+                                <option value="PENDING">Invite sent</option>
+                                <option value="REJECTED">Invite declined</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="govuk-grid-column-one-third">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="filterContract">Contract and DOI</label>
+                            <select name="compliant" id="filterContract" class="govuk-select">
+                                <option value="" selected="selected">Show all</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="govuk-grid-row">
+                    <input type="hidden" name="filterChanged" value="1">
+                    <div class="govuk-grid-column-full alignright">
+                        <button class="govuk-button govuk-!-margin-0" type="submit">Filter</button>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="clear-search-filter">
+                <a href="?page=0&amp;filterChanged=1" class="govuk-link">Clear filters</a>
+            </div>
+        </div>
+
+    </div>
+</div>

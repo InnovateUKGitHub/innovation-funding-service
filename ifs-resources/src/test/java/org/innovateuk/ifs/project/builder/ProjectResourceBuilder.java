@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -53,6 +54,10 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return withArray((applicationId, project) -> project.setApplication(applicationId), application);
     }
 
+    public ProjectResourceBuilder withCompetition(Long... competitions) {
+        return withArray((competition, project) -> project.setCompetition(competition), competitions);
+    }
+
     public ProjectResourceBuilder withTargetStartDate(LocalDate... dates) {
         return withArray((date, project) -> project.setTargetStartDate(date), dates);
     }
@@ -61,13 +66,7 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with(project -> project.setAddress(address));
     }
 
-    public ProjectResourceBuilder withCollaborationAgreement(Long collaborationAgreement) {
-        return with (project -> project.setCollaborationAgreement(collaborationAgreement));
-    }
 
-    public ProjectResourceBuilder withExploitationPlan(Long exploitationPlan) {
-        return with (project -> project.setExploitationPlan(exploitationPlan));
-    }
 
     public ProjectResourceBuilder withSignedGrantOfferLetter(Long grantOfferLetter) {
         return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
@@ -85,12 +84,16 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with(project -> project.setOtherDocumentsApproved(otherDocumentsApproved));
     }
 
+    public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
+        return withArray((userList, project) -> project.setProjectUsers(userList), projectUsers);
+    }
+
     public ProjectResourceBuilder withDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
         return with(project -> project.setDocumentsSubmittedDate(documentsSubmittedDate));
     }
 
-    public ProjectResourceBuilder withProjectUsers(List<Long>... projectUsers) {
-        return withArray((userList, project) -> project.setProjectUsers(userList), projectUsers);
+    public ProjectResourceBuilder withProjectDocuments(List<ProjectDocumentResource>... projectDocuments) {
+        return withArray((projectDocumentList, project) -> project.setProjectDocuments(projectDocumentList), projectDocuments);
     }
 
     public ProjectResourceBuilder withDuration(Long... durations) {

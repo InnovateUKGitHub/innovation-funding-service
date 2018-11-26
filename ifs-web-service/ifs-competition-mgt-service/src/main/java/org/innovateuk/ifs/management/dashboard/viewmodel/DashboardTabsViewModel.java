@@ -23,15 +23,19 @@ public class DashboardTabsViewModel {
         return isInternalAdmin(userResource);
     }
 
-    public boolean projectSetup(){
+    public boolean projectSetup() {
         return isInternal(userResource);
     }
 
-    public boolean previous(){
+    public boolean previous() {
         return isInternal(userResource);
     }
 
-    public boolean support(){
+    public boolean support() {
         return isSupport(userResource);
+    }
+
+    public boolean isInternalUser() {
+        return isInternal(userResource);
     }
 }

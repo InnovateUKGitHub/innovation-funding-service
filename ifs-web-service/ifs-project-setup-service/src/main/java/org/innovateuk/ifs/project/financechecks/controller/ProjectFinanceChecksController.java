@@ -381,6 +381,7 @@ public class ProjectFinanceChecksController {
         Long projectId = compositeId.getProjectId();
         Long organisationId = compositeId.getOrganisationId();
         ProjectResource projectResource = projectService.getById(projectId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
         OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         Map<Long, String> attachmentLinks =
@@ -404,7 +405,7 @@ public class ProjectFinanceChecksController {
                 FinanceChecksQueryConstraints.MAX_QUERY_WORDS,
                 FinanceChecksQueryConstraints.MAX_QUERY_CHARACTERS,
                 queryId,
-                PROJECT_FINANCE_CHECKS_BASE_URL, financeUtil.isUsingJesFinances(organisationResource.getOrganisationType()));
+                PROJECT_FINANCE_CHECKS_BASE_URL, financeUtil.isUsingJesFinances(competition, organisationResource.getOrganisationType()));
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {
@@ -516,7 +517,8 @@ public class ProjectFinanceChecksController {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager) financeViewHandlerProvider.getProjectFinanceModelManager(organisation.getOrganisationType())).getProjectFinanceChangesViewModel(false, project, organisation, userId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager) financeViewHandlerProvider.getProjectFinanceModelManager(competition, organisation.getOrganisationType())).getProjectFinanceChangesViewModel(false, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";
     }

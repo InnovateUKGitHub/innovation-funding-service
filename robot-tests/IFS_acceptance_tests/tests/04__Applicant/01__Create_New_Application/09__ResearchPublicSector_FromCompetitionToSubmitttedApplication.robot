@@ -54,18 +54,17 @@ The Applicant is able to apply to the competition once is Open and see the corre
 Applicant Applies to Research leading Competition
     [Documentation]  IFS-1012  IFS-2879  IFS-4046
     [Tags]  Applicant
-    [Setup]  Log in as a different user                   antonio.jenkins@jabbertype.example.com  ${short_password}
-    # This application is for competition Photonics for Research, which is Web test data.
-    # That is why we have 2 diferent test cases, where Research users apply to a Research leading competition.
-    Given logged in user applies to competition research  ${openCompetitionResearch_name}  2
     When the user clicks the button/link                  link = Application details
     Then the user fills in the Application details        ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
-    And the user marks every section but one as complete  ${researchLeadApp}  Experimental development
-    When the academic user fills in his finances          ${researchLeadApp}
-    And the user enters the project location
+    the applicant completes Application Team
+    the user selects Research category                    Feasibility studies
+    the lead applicant marks every question as complete   Scope
+    the lead applicant marks every question as complete   1. How innovative is your project?
+    And The user clicks the button/link                   link = Your finances
+    When the user marks the finances as complete          ${researchLeadApp}   Calculate  52,214  yes
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                   link = Application overview
-    And collaborating is required to submit the application if Research participation is not 100pc   ${openCompetitionResearch_name}  ${researchLeadApp}  antonio.jenkins@jabbertype.example.com
+    And collaborating is required to submit the application if Research participation is not 100pc   ${compResearch}  ${researchLeadApp}  ${collaborator2_credentials["email"]}  yes
 
 Applicant Applies to Public content leading Competition
     [Documentation]  IFS-1012  IFS-4046
@@ -78,7 +77,7 @@ Applicant Applies to Public content leading Competition
     And the user marks every section but one as complete  ${publicLeadApp}  Experimental development
     When the user navigates to Your-finances page         ${publicLeadApp}
     Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214  no
-    And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com
+    And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com  no
 
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-1724
@@ -104,8 +103,7 @@ The competition admin creates a competition for
     the internal user can see that the Generic competition has only one Application Question
     The user removes the Project details questions and marks the Application section as done  yes  Generic
     the user fills in the CS Assessors
-    # TODO IFS-4609 Uncomment when this functionality is enabled.
-    #the user fills in the CS Documents in other projects
+    the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
     the user fills in the Public content and publishes      ${extraKeyword}
     the user clicks the button/link                         link = Return to setup overview
@@ -131,18 +129,18 @@ user is not able to submit his application as he exceeds research participation
     the user should see the element  jQuery = button:disabled:contains("Submit application")
 
 Collaborating is required to submit the application if Research participation is not 100pc
-    [Arguments]  ${competition}  ${application}  ${lead}
+    [Arguments]  ${competition}  ${application}  ${lead}  ${projectGrowth}
     the user fills in the inviting steps  ${collaborator}
     the user logs out if they are logged in
-    the collaborator accepts and fills in his part in the application  ${competition}  ${application}
+    the collaborator accepts and fills in his part in the application  ${competition}  ${application}  ${projectGrowth}
     the lead is able to submit the application  ${lead}  ${application}
 
 the collaborator accepts and fills in his part in the application
-    [Arguments]  ${competition}  ${application}
+    [Arguments]  ${competition}  ${application}  ${projectGrowth}
     the user reads his email and clicks the link  ${collaborator}  Invitation to collaborate in ${competition}  You are invited by  2
     the user is able to confirm the invite        ${collaborator}  ${short_password}
     the user navigates to Your-finances page      ${application}
-    the user marks the finances as complete       ${application}  Calculate  52,214  no
+    the user marks the finances as complete       ${application}  Calculate  52,214  ${projectGrowth}
 
 the lead is able to submit the application
     [Arguments]  ${user}  ${application}

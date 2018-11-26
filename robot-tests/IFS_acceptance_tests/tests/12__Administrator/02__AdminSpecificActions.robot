@@ -2,7 +2,7 @@
 Documentation  IFS-50 Change an existing unsuccessful application into a successful project in setup
 Suite Setup    The user logs-in in new browser  &{ifs_admin_user_credentials}
 Suite Teardown  the user closes the browser
-Force Tags      Administrator
+Force Tags      Administrator  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
 

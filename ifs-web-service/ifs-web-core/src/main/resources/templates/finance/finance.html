@@ -4,29 +4,38 @@
     <!-- ===========================Form: Your funding =========================== -->
     <th:block th:fragment="finance(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
         <th:block th:unless="${model.readonly}">
-            <div th:class="govuk-form-group" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'govuk-form-group--error'">
-                <label class="govuk-label"
-                       th:for="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|"
-                       th:text="'Enter your funding level (maximum ' + ${model.maximumGrantClaimPercentage} + '%).'">
-                </label>
-                <span class="govuk-hint" th:text="'The maximum funding level is ' + ${model.maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
-                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId + '-grantClaimPercentage'})" />
-                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId})" />
-                <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-                <input type="number"
-                       min="0"
-                       required="required"
-                       class="govuk-input govuk-input--width-4"
-                       th:max="${model.maximumGrantClaimPercentage}"
-                       th:readonly="${model.readonly}"
-                       th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'govuk-input--error'"
-                       th:id="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|"
-                       th:name="${'finance-grantclaimpercentage-' + question.id + '-' + model.organisationGrantClaimPercentageId}"
-                       th:value="${model.organisationGrantClaimPercentage}"
-                       placeholder="0"
-                       th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
-                                data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
-                /><span class="govuk-body">&percnt;</span>
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        Are you requesting funding?
+                    </legend>
+
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id='request-funding')" />
+
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" data-target="request-funding">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="request-funding-yes"
+                                   name="request-funding"
+                                   value="yes"
+                                   th:checked="${model.organisationGrantClaimPercentage > 0}"
+                                   required="required" />
+                            <label for="request-funding-yes" class="govuk-label govuk-radios__label">Yes</label>
+                        </div>
+                        <th:block th:insert="finance/finance :: requesting_funding" />
+                        <div class="govuk-radios__item">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="request-funding-no"
+                                   name="request-funding"
+                                   value="no"
+                                   th:checked="${model.organisationGrantClaimPercentage == 0}"
+                                   required="required" />
+                            <label for="request-funding-no" class="govuk-label govuk-radios__label">No</label>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
         </th:block>
         <th:block th:if="${model.readonly}">
@@ -35,6 +44,38 @@
                 <dd th:text="${model.organisationGrantClaimPercentage+'%'}">50%</dd>
             </dl>
         </th:block>
+    </th:block>
+
+    <th:block th:fragment="requesting_funding">
+        <div class="govuk-radios__conditional" id="request-funding">
+            <div th:class="govuk-form-group" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|">
+                    <th:block th:text="${'Select a funding level'}" />
+                    <span class="govuk-hint" th:with="isBusiness=${model.currentApplicant.organisation.organisationTypeName=='Business'}">
+                        <th:block th:if="${isBusiness}">
+                            <th:block th:text="'The maximum you can enter is ' + ${model.maximumGrantClaimPercentage} + '%, based on your organisation size and project research category. The amount you apply for must reflect other funding received and be within the participation levels listed on the' " />
+                            <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}"
+                                th:text="${'finances overview'}" />.
+                        </th:block>
+                        <th:block th:unless="${isBusiness}">
+                            The amount you apply for must reflect other funding received and be within the participation
+                            levels listed on the
+                            <a class="govuk-link" th:href="@{/application/{applicationId}/form/OVERVIEW_FINANCES(applicationId=${model.applicantSection.application.id})}"
+                                th:text="${'finances overview'}" />.
+                        </th:block>
+                    </span>
+                </label>
+
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId + '-grantClaimPercentage'})" />
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId})" />
+                <input type="number" min="0" required="required" class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
+                    th:max="${model.maximumGrantClaimPercentage}" th:readonly="${model.readonly}" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'govuk-input--error'"
+                    th:id="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|" th:name="${'finance-grantclaimpercentage-' + question.id + '-' + model.organisationGrantClaimPercentageId}"
+                    th:value="${model.organisationGrantClaimPercentage}" placeholder="0" th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
+                                    data-max-errormessage=#{validation.finance.grant.claim.percentage.max('%max%')}" /><span
+                    class="govuk-body govuk-!-padding-left-1">&percnt;</span>
+            </div>
+        </div>
     </th:block>
 
     <!-- ===========================Form: organisation_size =========================== -->
@@ -315,39 +356,7 @@
 
     <!-- ===========================Form: labour =========================== -->
     <th:block th:fragment="labour (costViewModel, internalView)">
-        <p class="govuk-body">
-            Be specific and add each role separately.
-        </p>
-        <details class="govuk-details" role="group" th:unless="${costViewModel.viewmode == 'readonly'}">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">Labour costs guidance</span>
-            </summary>
-            <div class="govuk-details__text">
-                <p class="govuk-body">If your application is awarded funding, you will need to account for all your labour costs as they occur. For example, you must keep timesheets and payroll records. These must show the actual hours worked by individuals and paid by the organisation.</p>
-                <p class="govuk-body">You can include the following labour costs, based on your PAYE records:</p>
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>gross salary</li>
-                    <li>National Insurance</li>
-                    <li>company pension contribution</li>
-                    <li>life insurance</li>
-                    <li>other non-discretionary package costs</li>
-                </ul>
-                <p class="govuk-body">You cannot include:</p>
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>discretionary bonuses</li>
-                    <li>performance related payments of any kind</li>
-                </ul>
-                <p class="govuk-body">You may include the total number of working days for staff but do not include:</p>
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>sick days</li>
-                    <li>waiting time</li>
-                    <li>training days</li>
-                    <li>non-productive time</li>
-                </ul>
-                <p class="govuk-body">Enter the total number of working days in the year. List the total days worked by all categories of staff on your project. Describe their roles.</p>
-                <p class="govuk-body">We will review the total amount of time and cost of labour before we approve your application. The terms and conditions of the grant include compliance with these points.</p>
-            </div>
-        </details>
+        <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: labour_finances" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -539,21 +548,7 @@
     </th:block>
     <!-- ===========================Form: overheads =========================== -->
     <th:block th:fragment="overheads (costViewModel, internalView)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
-        <p class="govuk-body">
-            You can incur overhead costs associated with those directly working on the project as well as indirect (administration) overheads. To be eligible both overhead categories need to be directly attributable to the project. The indirect overheads need to be additional as well as directly attributable. Note that there are certain cost categories/activities which are not eligible. To find out which costs are ineligible/eligible refer to our <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">project costs guidance</a>
-        </p>
-        <details class="govuk-details" th:if="${viewmode == 'edit'}">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                  Overheads costs guidance
-                </span>
-            </summary>
-            <div class="govuk-details__text wysiwyg-styles">
-                <p>If you wish to claim overheads, there are 2 options available to you:</p>
-                <p>Option 1: 20% overhead option. This allows you to claim 20% of your labour costs as overhead. No further documentation is needed.</p>
-                <p>Option2: Calculate overheads. This allows you to calculate direct and indirect overheads using our overhead spreadsheet. The overhead value claimed under this method will be subject to review if your application is successful. This is in order to assess the appropriateness of the overhead value you are claiming.</p>
-            </div>
-        </details>
+        <p class="govuk-body" th:if="${viewmode == 'edit'}" ifs:utext="${question.description}" />
         <th:block th:insert="finance/finance :: overheads_finances (internalView=${internalView})" th:with="overheadCosts=${costCategory == null || costCategory.costs == null || costCategory.costs.isEmpty()} ? null : ${costCategory.costs[0]}, overheadRate=${overheadCosts?.rateType == null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" />
     </th:block>
 
@@ -874,25 +869,6 @@
     <th:block th:fragment="materials (costViewModel, internalView)" th:with="question=${costViewModel.question}">
         <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${question.description}">description</p>
         <th:block th:insert="finance/finance :: materials_finances" th:with="costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
-        <div class="govuk-body"><p>You can claim the costs of materials used on your project providing:</p>
-        <ul class="list-bullet">
-         <li>they are not already purchased or included in the overheads</li>
-         <li>they are purchased from third parties</li>
-         <li>they won’t have a residual/resale value at the end of your project. If they do you can claim the costs minus this value</li>
-        </ul>
-        <p><a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Please refer to our guide to project costs for further information.</a></p></div>
-        <details class="govuk-details" th:if="${costViewModel.viewmode == 'edit'}">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                  Materials costs guidance
-                </span>
-            </summary>
-            <div class="govuk-details__text wysiwyg-styles">
-                <p>Materials supplied by associated companies or project partners should be charged at cost.</p>
-                <p>Software that you have purchased specifically for use during your project may be included. If you already own the software then only additional costs which are incurred and paid during your project, will be eligible. For example, installation, training or customisation.</p>
-                <p>Material costs must be itemised to justify that they are eligible.</p>
-            </div>
-        </details>
     </th:block>
 
     <th:block th:fragment="materials_finances">
@@ -1056,20 +1032,6 @@
     <th:block th:fragment="capital_usage (costViewModel, internalView)" >
         <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: capital_usage_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
-        <div class="govuk-body">
-          <p>You can claim the usage costs of capital assets you will buy for, or use on, your project.</p>
-        </div>
-        <details class="govuk-details" th:if="${costViewModel.viewmode == 'edit'}">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                  Capital usage guidance
-                </span>
-            </summary>
-            <div class="govuk-details__text wysiwyg-styles">
-                <p>You will need to calculate a ‘usage’ value for each item. You can do this by deducting its expected value from its original price at the end of your project. If you owned the equipment before the project started then you should use its net present value.</p>
-                <p>This value is then multiplied by the amount, in percentages, that is used during the project. This final value represents the eligible cost to your project.</p>
-            </div>
-        </details>
     </th:block>
 
     <th:block th:fragment="capital_usage_finances">
@@ -1141,7 +1103,7 @@
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <div th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}" class="form-row">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label--s" th:for="|formInput[cost-${costIdentifier}-description]|">
+                    <label class="govuk-label govuk-label--s" th:for="|formInput[cost-${costIdentifier}-description]|">
                         <span>Item description</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
                     </label>
@@ -1149,8 +1111,8 @@
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-existing]}')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" th:id="|formInput[cost-${costIdentifier}-existing]|">
-                            New or existing item
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" th:id="|formInput[cost-${costIdentifier}-existing]|">
+                            <h2 class="govuk-fieldset__heading">New or existing item</h2>
                         </legend>
 
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-existing'})" />
@@ -1186,7 +1148,7 @@
 
                     </fieldset>
                 </div>
-                <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-deprecation]|" class="govuk-label govuk-label--s">
                         Depreciation period (months)
                     </label>
@@ -1205,7 +1167,7 @@
                             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'govuk-input--error'"
                              />
                 </div>
-                <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-npv]|" class="govuk-label govuk-label--s">
                         Net present value at the start of your project or the price you bought it for (&pound;)
                     </label>
@@ -1225,7 +1187,7 @@
                         th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'govuk-input--error'" />
 
                 </div>
-                <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-residualValue]|" class="govuk-label govuk-label--s">
                         Residual value at end of project (&pound;)
                     </label>
@@ -1246,8 +1208,7 @@
                 </div>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-utilisation]}')} ? 'govuk-form-group--error'">
-                    <label th:for="|formInput[cost-${costIdentifier}-utilisation]|"
-                           class="govuk-label govuk-label--s">
+                    <label th:for="|formInput[cost-${costIdentifier}-utilisation]|" class="govuk-label govuk-label--s">
                         Utilisation (&percnt;)
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-utilisation'})" />
@@ -1298,22 +1259,6 @@
     <th:block th:fragment="subcontracting (costViewModel, internalView)">
         <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: subcontracting_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
-        <div class="govuk-body">
-          <p>You can subcontract work if you don’t have the expertise in your project team. You can also subcontract if it is cheaper than developing your skills in-house.</p>
-        </div>
-        <details class="govuk-details" th:if="${costViewModel.viewmode == 'edit'}">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                  Subcontracting costs guidance
-                </span>
-            </summary>
-            <div class="govuk-details__text wysiwyg-styles">
-                <p>Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project.</p>
-                <p>Subcontracting is eligible providing it’s justified as to why the work cannot be performed by a project partner.</p>
-                <p>Subcontracting associate companies should be charged at cost.</p>
-                <p>Where possible you should select a UK based contractor. You should name the subcontractor (where known) and describe what they will be doing. You should also state where the work will be undertaken. We will look at the size of this contribution when assessing your eligibility and level of support.</p>
-            </div>
-        </details>
     </th:block>
 
     <th:block th:fragment="subcontracting_finances">
@@ -1377,8 +1322,7 @@
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <div class="form-row" th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label--s"
-                           th:for="|formInput[cost-${costIdentifier}-name]|">
+                    <label class="govuk-label govuk-label--s" th:for="|formInput[cost-${costIdentifier}-name]|">
                         Subcontractor name
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-name'})" />
@@ -1391,8 +1335,8 @@
                            required="required"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'govuk-input--error'"  />
                 </div>
-                <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label--s" th:for="|formInput[cost-${costIdentifier}-country]|">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" th:for="|formInput[cost-${costIdentifier}-country]|">
                         Country where the subcontractor will work
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-country'})" />
@@ -1407,15 +1351,14 @@
                 </div>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label--s"
-                           th:for="|formInput[cost-${costIdentifier}-role]|">
+                    <label class="govuk-label govuk-label--s" th:for="|formInput[cost-${costIdentifier}-role]|">
                         Role of the subcontractor in the project and description of the work they’ll do
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" />
                     <th:block th:insert="question-type/form-elements :: form-finance-textarea (type='subcontracting', id=${costIdentifier}, name='role', value=${cost.role},readonly=false,required=true)" />
                 </div>
 
-                <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-label--s" th:for="|formInput[cost-${costIdentifier}-cost]|">
                         Cost
                     </label>
@@ -1448,23 +1391,8 @@
     <!-- ===========================Form: travel cost =========================== -->
 
     <th:block th:fragment="travel (costViewModel, internalView)">
-        <p class="govuk-body">
-            Include all travel and subsistence costs that relate to this project. Be specific and add each item separately.
-        </p>
-        <details class="govuk-details" role="group" th:unless="${costViewModel.viewmode == 'readonly'}">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">Travel and subsistence costs guidance</span>
-            </summary>
-            <div class="govuk-details__text">
-                <p class="govuk-body">You can claim reasonable travel and subsistence costs for those individuals identified in the labour table. Costs must be necessary and be solely for the progression of your project.</p>
-                <p class="govuk-body">Travel costs must be at economy travel only. State the reason for travel, number of people travelling, mode of transport, cost per trip and number of trips.</p>
-                <p class="govuk-body">Provide full details and the purpose for any subsistence expenditure, including the number of staff involved.</p>
-            </div>
-        </details>
+        <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: travel_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
-        <div class="govuk-body">
-          <p>You should include travel and subsistence costs that relate to this project. </p>
-        </div>
     </th:block>
 
     <th:block th:fragment="travel_finances">
@@ -1630,26 +1558,6 @@
     <th:block th:fragment="other_costs (costViewModel, internalView)">
         <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}" />
         <th:block th:insert="finance/finance :: other_costs_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
-        <div class="govuk-body">
-          <p>Please provide details of any project costs which cannot be covered by the other cost categories.</p>
-        </div>
-        <details class="govuk-details" th:if="${costViewModel.viewmode == 'edit'}">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                  Other costs guidance
-                </span>
-            </summary>
-            <div class="govuk-details__text wysiwyg-styles">
-                <p>Examples of other costs include:</p>
-                <p><strong>Training costs:</strong> these costs are eligible for support if they relate to your project. We may support management training for your project but will not support ongoing training.</p>
-                <p><strong>Workshop/laboratory usage charges:</strong> direct costs which relate to workshops or laboratories and which can be supported with actual usage data can be claimed. You should provide details of how the workshop/laboratory charge out rates per hour or day are calculated. This can include specific labour, rent, rates, maintenance, equipment, calibration costs, etc. These should form the overall costs together with the available operational hours to form the hourly or daily charge out rates.</p>
-                <p><strong>Preparation of technical reports:</strong> if, for example, the main aim of your project is standard support or technology transfer. You should show how this is more than you would produce through good project management.</p>
-                <p><strong>Market assessment:</strong> we may support market assessments studies. The study will need to help us understand how your project is a good match for your target market. It could also be eligible if it helps commercialise your product.</p>
-                <p><strong>Licensing in new technologies:</strong> if new technology makes up a large part of your project, we will expect you to develop that technology. For instance, if the value of the technology is more than £100,000.</p>
-                <p><strong>Patent filing costs for new IP generated by your project:</strong> these are eligible for SMEs up to a limit of £7,500 per partner. You should not include legal costs relating to the filing or trademark related expenditure.</p>
-                <p>Regulatory compliance costs are eligible if necessary to carry out your project.</p>
-            </div>
-        </details>
     </th:block>
 
     <th:block th:fragment="other_costs_finances">
@@ -1796,7 +1704,7 @@
             </th:block>
         </th:block>
         <th:block th:unless="${readonly}">
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')} ? 'govuk-form-group--error'">
+            <div class="govuk-form-group govuk-!-margin-bottom-9" th:classappend="${#fields.hasErrors('${form.formInput[cost-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')} ? 'govuk-form-group--error'">
                 <h2 th:text="${question.name}" class="govuk-heading-m"></h2>
                 <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" th:id="|formInput[cost-otherPublicFunding]|">
@@ -1804,9 +1712,9 @@
                     </legend>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
-                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-otherPublicFunding'})" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=cost-otherPublicFunding)" />
                     <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-                    <div class="govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios">
                         <div class="govuk-radios__item"  data-target="other-funding-table">
                             <input type="radio"
                                    class="govuk-radios__input"
@@ -1821,6 +1729,7 @@
                                 Yes
                             </label>
                         </div>
+                        <th:block th:insert="finance/finance :: other_funding_table" />
                         <div class="govuk-radios__item">
                             <input type="radio"
                                    class="govuk-radios__input"
@@ -1836,58 +1745,57 @@
                             </label>
                         </div>
                     </div>
-
-                    <div id="other-funding-table">
-                        <div class="govuk-form-group" th:attr="data-repeatable-container=${question.id}">
-                            <div class="table-overflow">
-                                <table class="govuk-table">
-                                    <thead class="govuk-table__head">
-                                    <tr class="govuk-table__row">
-                                        <th class="govuk-table__header"scope="col" id="other-funding-source">Source of funding</th>
-                                        <th scope="col" id="other-funding-date" class="govuk-table__header width-150">Date secured</th>
-                                        <th scope="col" id="other-funding-amount" class="govuk-table__header width-150">Funding amount (&pound;)</th>
-                                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="govuk-table__body">
-                                    <th:block th:each="cost : ${costCategory.costs}">
-                                        <th:block th:insert="finance/finance :: other_funding_row" />
-                                    </th:block>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <p class="alignright">
-                                <th:block th:insert="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" />
-                            </p>
-                        </div>
-                        <div class="govuk-form-group alignright inline">
-                            <label class="govuk-label"
-                                   for="other-funding-total">Total other funding</label>
-                            <input class="govuk-input govuk-input--width-10 alignright"
-                                   data-calculation-fields="[id*=fundingAmount]"
-                                   data-calculation-operations="+"
-                                   id="other-funding-total"
-                                   th:attr="data-calculation-rawvalue=${costCategory.total}"
-                                   readonly="readonly"
-                                   type="text"
-                                   th:value="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}" />
-                        </div>
-                    </div>
                 </fieldset>
             </div>
         </th:block>
     </th:block>
 
+    <th:block th:fragment="other_funding_table">
+        <div class="govuk-checkboxes__conditional" id="other-funding-table">
+            <div class="govuk-form-group form-in-table" th:attr="data-repeatable-container=${question.id}">
+                <div class="table-overflow">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col" id="other-funding-source">Source of funding</th>
+                                <th scope="col" id="other-funding-date" class="govuk-table__header width-150">Date secured</th>
+                                <th scope="col" id="other-funding-amount" class="govuk-table__header govuk-table__header--numeric width-200">Funding amount (&pound;)</th>
+                                <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            <th:block th:each="cost : ${costCategory.costs}">
+                                <th:block th:insert="finance/finance :: other_funding_row" />
+                            </th:block>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="alignright">
+                    <th:block th:insert="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" />
+                </p>
+            </div>
+            <div class="govuk-form-group alignright inline">
+                <label class="govuk-label"
+                       for="other-funding-total">Total other funding</label>
+                <input class="govuk-input govuk-input--width-10 alignright"
+                       data-calculation-fields="[id*=fundingAmount]"
+                       data-calculation-operations="+"
+                       id="other-funding-total"
+                       th:attr="data-calculation-rawvalue=${costCategory.total}"
+                       readonly="readonly"
+                       type="text" th:value="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}" />
+            </div>
+        </div>
+    </th:block>
+
     <th:block th:fragment="other_funding_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
-            <tr th:id="${'cost-'+costIdentifier}"
-                th:attr="data-repeatable-row=${costIdentifier}"
-                class="govuk-table__row">
+            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}" class="govuk-table__row">
                 <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-fundingSource]|" class="govuk-visually-hidden">
                         Source of funding
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
                     </label>
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
                     <input type="text"
                            th:name="${'other_funding-fundingSource-' + question.id + '-' + costIdentifier}"
                            class="govuk-input"
@@ -1901,26 +1809,26 @@
                 <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-securedDate]|" class="govuk-visually-hidden">
                         Date secured
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
                     </label>
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
                     <input type="text"
                            th:name="${'other_funding-securedDate-' + question.id + '-' + costIdentifier}"
-                           class="govuk-input govuk-input--width-10"
+                           class="govuk-input"
                            th:id="|formInput[cost-${costIdentifier}-securedDate]|"
                            placeholder="MM-YYYY"
                            pattern="(0[1-9]|1[012])-[0-9]{4}"
-                           th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid}"
+                           th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
                            maxlength="7"
                            th:value="${cost.securedDate}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-input--error'"
                            required="required" />
                 </td>
 
-                <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-form-group--error' : ''">
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-form-group--error' : ''">
                     <label th:for="|formInput[cost-${costIdentifier}-fundingAmount]|" class="govuk-visually-hidden">
                         Funding amount (&pound;)
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                     </label>
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                     <input class="govuk-input govuk-input--width-10"
                            type="number"
                            th:name="${'other_funding-fundingAmount-' + question.id + '-' + costIdentifier}"

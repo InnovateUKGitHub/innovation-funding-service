@@ -700,6 +700,21 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around a 1-stage filter function to find any matching element.
+     *
+     * @param list
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> Optional<T> simpleFindAny(Collection<T> list, Predicate<T> filterFn) {
+        if (list == null || list.isEmpty()) {
+            return empty();
+        }
+        return list.stream().filter(filterFn).findAny();
+    }
+
+    /**
      * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
      *
      * @param list

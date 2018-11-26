@@ -30,34 +30,6 @@ Finance sub-sections
     [Tags]  HappyPath
     Then the user should see all the Your-Finances Sections
 
-Not requesting funding guidance
-    [Documentation]    INFUND-7093
-    [Tags]
-    Given the user should not see the funding guidance
-    When the user clicks the button/link                jQuery = summary span:contains("Not requesting funding")
-    Then the user should see the funding guidance
-    When the user clicks the button/link                jQuery = summary span:contains("Not requesting funding")
-    Then the user should not see the funding guidance
-
-Not requesting funding button
-    [Documentation]    INFUND-7093
-    [Tags]  HappyPath
-    When the user clicks the button/link                jQuery = summary span:contains("Not requesting funding")
-    And the user clicks the button/link                 jQuery = button:contains("Not requesting funding")
-    Then the user should see the funding guidance
-    And the user should see the element                 jQuery = button:contains("Requesting funding")
-    And the user should see the element                 jQuery = li:nth-of-type(3) span:contains("No action required")
-    And the user should see the element                 jQuery = li:nth-of-type(4) span:contains("No action required")
-
-Requesting funding button
-    [Documentation]    INFUND-7093
-    [Tags]  HappyPath
-    When the user clicks the button/link                jQuery = button:contains("Requesting funding")
-    Then the user should see the element                jQuery = li:nth-of-type(2) > .task-status-incomplete
-    And the user should not see the element             jQuery = li:nth-of-type(3) span:contains("No action required")
-    And the user should not see the element             jQuery = li:nth-of-type(3) > .task-status-complete
-    And the user should not see the funding guidance
-
 Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
@@ -95,7 +67,6 @@ Non-academic partner finance section
     [Tags]  HappyPath
     [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
-    And The user should see the element     jQuery = .govuk-details__summary:contains("Not requesting funding")
     And the user should see the element     link = Your project costs
     And the user should see the element     link = Your organisation
     When the user clicks the button/link    link = Your funding
@@ -109,7 +80,7 @@ Academic partner finance section
     Then The user should not see the element        link = Not requesting funding
     And the user should see the element             link = Your project costs
     And the user should not see the element         link = Your organisation
-    And the user should not see the element         link = Your funding
+    And the user should see the element             link = Your funding
     And the user should not see the element         link = application details
 
 Academic partner can upload file for field J-es PDF
@@ -143,9 +114,7 @@ File upload mandatory for Academic partner to mark section as complete
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page    ${applicationName}
     And the user clicks the button/link               link = Your project costs
-    And the element should be disabled                id = mark-all-as-complete
     And the user clicks the button/link               jQuery = button:contains("Remove")
-    When the user selects the checkbox                termsAgreed
     And the user clicks the button/link               jQuery = button:contains("Mark as complete")
     Then the user should see a field error            You must upload a Je-S file
 
@@ -179,14 +148,14 @@ the user adds three material rows
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(2) td:nth-of-type(2) input  01
     the user clicks the button/link       jQuery = button:contains("Add another materials cost")
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
-    the user moves focus to the element   link = Please refer to our guide to project costs for further information.
+    Set Focus To Element                  link = Please refer to our guide to project costs for further information.
     Wait for autosave
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
     the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
-    the user moves focus to the element                      jQuery = table[id=material-costs-table] button:contains("Remove")
+    Set Focus To Element                                     jQuery = table[id=material-costs-table] button:contains("Remove")
     the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
     the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")

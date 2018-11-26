@@ -118,7 +118,7 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page                ${DASHBOARD_URL}
     And the user clicks the button/link                 link=Academic robot test application
-    the user fills in the inviting steps no edit                ${test_mailbox_one}+academictest@gmail.com
+    the user fills in the inviting steps no edit        ${test_mailbox_one}+academictest@gmail.com
     logout as user
     When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")

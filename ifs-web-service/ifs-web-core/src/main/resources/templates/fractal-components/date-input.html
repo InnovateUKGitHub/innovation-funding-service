@@ -1,0 +1,157 @@
+<div class="govuk-width-container">
+    <div class="govuk-inset-text">
+        <p class="govuk-body">This is a GDS pattern. Example and code can be found at:<br />
+            <a class="govuk-link" href="https://design-system.service.gov.uk/components/date-input/">https://design-system.service.gov.uk/components/date-input/</a>
+        </p>
+    </div>
+
+    <h2 class="govuk-heading-m">Example 1 - Application</h2>
+
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0" id="application.startDate">
+                <span>Estimated timescales</span>
+            </legend>
+            <span class="govuk-hint">When do you wish to start your project? For example: 31 12 2015</span>
+            <div class="date-group" data-future-date="">
+                <div class="day">
+                    <label class="govuk-label" for="application_details-startdate_day">
+                        <span>Day</span>
+                    </label>
+                    <input class="govuk-input govuk-input--width-3"
+                           type="number"
+                           id="application_details-startdate_day"
+                           min="1"
+                           max="31"
+                           placeholder="DD"
+                           required="required"
+                           name="application.startDate.dayOfMonth"
+                           value="1"
+                           data-date=""
+                           data-autosave-disabled="">
+                </div>
+                <div class="month">
+                    <label class="govuk-label" for="application_details-startdate_month">
+                        <span>Month</span>
+                    </label>
+                    <input class="govuk-input govuk-input--width-3"
+                           type="number"
+                           id="application_details-startdate_month"
+                           min="1"
+                           max="12"
+                           placeholder="MM"
+                           required="required"
+                           name="application.startDate.monthValue"
+                           value="11"
+                           data-date=""
+                           data-autosave-disabled="">
+                </div>
+                <div class="year">
+                    <label class="govuk-label" for="application_details-startdate_year">
+                        <span>Year</span>
+                    </label>
+                    <input class="govuk-input govuk-input--width-3"
+                           type="number"
+                           id="application_details-startdate_year"
+                           placeholder="YYYY"
+                           required="required"
+                           name="application.startDate.year"
+                           value="2015"
+                           data-date=""
+                           data-autosave-disabled="">
+                </div>
+                <input type="hidden" name="application.startDate" id="application_details-startdate" value="application.startDate" data-date="" data-autosave-disabled="">
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="govuk-form-group govuk-!-margin-top-9">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="projectStartDate">
+                <h2 class="govuk-fieldset__heading">Example 2, project setup -  Target start date</h2>
+            </legend>
+            <span class="govuk-hint">Projects must start on the first day of a month so please choose the month and year of your project start.</span>
+            <div class="date-group" data-future-date="">
+                <div class="day">
+                    <label class="govuk-label" for="projectStartDate_day">
+                        <span>Day</span>
+                    </label>
+                    <input class="govuk-input govuk-input--width-3 null js-visited" type="number" id="projectStartDate_day" min="1" max="31" placeholder="DD" required="required" readonly="readonly" name="projectStartDate.dayOfMonth" value="1" data-date="" data-autosave-disabled="">
+                </div>
+                <div class="month">
+                    <label class="govuk-label" for="projectStartDate_month">
+                        <span>Month</span>
+                    </label>
+                    <input class="govuk-input govuk-input--width-3 null " type="number" id="projectStartDate_month" min="1" max="12" placeholder="MM" required="required" name="projectStartDate.monthValue" value="11" data-date="" data-autosave-disabled="">
+                </div>
+                <div class="year">
+                    <label class="govuk-label" for="projectStartDate_year">
+                        <span>Year</span>
+                    </label>
+                    <input class="govuk-input govuk-input--width-3 null " type="number" id="projectStartDate_year" placeholder="YYYY" required="required" name="projectStartDate.year" value="2015" data-date="" data-autosave-disabled="">
+                </div>
+
+                <input type="hidden" name="projectStartDate" id="projectStartDate" value="projectStartDate" data-date="" data-autosave-disabled="">
+            </div>
+
+        </fieldset>
+    </div>
+
+
+
+    <h2 class="govuk-heading-m govuk-!-margin-top-9">Example 3 - EU grant form</h2>
+
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+            <legend id="startDate" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                Project start date
+            </legend>
+
+            <div class="date-group">
+                <div class="day govuk-visually-hidden">
+                    <label class="govuk-label" for="startDateDay">
+                        <span>Day</span>
+                    </label>
+                    <input class="govuk-input govuk-input--width-3"
+                           type="hidden"
+                           required="required"
+                           value="1"
+                           data-date=""
+                           data-autosave-disabled=""
+                           name="startDateDay"
+                           id="startDateDay">
+                </div>
+                <div class="month">
+                    <label class="govuk-label" for="startDateMonth">
+                        <span>Month</span>
+                    </label>
+                    <input class="govuk-input govuk-input--width-3"
+                           type="number"
+                           id="startDateMonth"
+                           min="1"
+                           max="12"
+                           placeholder="MM"
+                           required="required"
+                           data-date=""
+                           data-autosave-disabled=""
+                           data-required-errormessage="Enter a valid month."
+                           name="startDateMonth"
+                           value="">
+                </div>
+                <div class="year">
+                    <label class="govuk-label" for="startDateYear">
+                        <span>Year</span>
+                    </label>
+                    <input class="govuk-input govuk-input--width-3"
+                           type="number"
+                           id="startDateYear"
+                           placeholder="YYYY"
+                           required="required"
+                           data-date=""
+                           data-autosave-disabled="" data-required-errormessage="Enter a valid year." name="startDateYear" value="">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+</div>
