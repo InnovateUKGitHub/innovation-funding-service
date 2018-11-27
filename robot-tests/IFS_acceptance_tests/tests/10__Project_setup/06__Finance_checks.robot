@@ -1297,6 +1297,7 @@ Project finance user amends subcontracting usage details in eligibility for lead
     And the user adds subcontracting data into row  2    test    9400
     Then verify percentage and total                5    12%   £20,000
     When the user clicks the button/link            css = section:nth-of-type(5) #subcontracting div:nth-child(2) button
+    capture page screenshot
     When the user clicks the button/link            css = .govuk-button[name = save-eligibility]
     Then verify total costs of project              £162,150
     And the user should see the element             jQuery = section:nth-of-type(5) a:contains("Edit")
