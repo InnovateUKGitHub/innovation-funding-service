@@ -24,7 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,7 +84,7 @@ class GrantMapper {
         grant.setParticipants(
                 project.getPartnerOrganisations().stream()
                         .map(o -> toParticipant(context, o))
-                        .collect(Collectors.toSet())
+                        .collect(Collectors.toList())
         );
         return grant;
     }
@@ -142,11 +144,12 @@ class GrantMapper {
         participant.setForecasts(spendProfile.get()
                 .getSpendProfileFigures()
                 .getCosts().stream()
+                .sorted(Comparator.comparing(cost -> cost.getCostCategory().getName()))
                 .collect(
                         groupingBy(cost -> cost.getCostCategory().getName())
                 ).values().stream()
                 .map(this::toForecast)
-                .collect(Collectors.toSet())
+                .collect(Collectors.toList())
         );
         return participant;
     }
@@ -157,17 +160,24 @@ class GrantMapper {
                 .findFirst()
                 .orElseThrow(IllegalStateException::new)
                 .getCostCategory().getName());
+        forecast.setCost(costs.stream()
+                .map(Cost::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(0, RoundingMode.HALF_UP).longValue()
+        );
         forecast.setPeriods(costs
                 .stream()
+                .sorted(Comparator.comparing(cost -> cost.getCostTimePeriod().getOffsetAmount()))
                 .map(this::toPeriod)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toList()));
         return forecast;
     }
 
     private Period toPeriod(Cost cost) {
         Period period = new Period();
         period.setMonth(cost.getCostTimePeriod().getOffsetAmount());
-        period.setValue(cost.getValue().longValue());
+        period.setValue(cost.getValue()
+                .setScale(0, RoundingMode.HALF_UP).longValue());
         return period;
     }
 

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeSerializer;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Set;
 
 public class Grant {
@@ -33,7 +34,7 @@ public class Grant {
     private LocalDate startDate;
     private long duration;
     @JsonProperty("participant")
-    private Set<Participant> participants;
+    private List<Participant> participants;
 
     public long getId() {
         return id;
@@ -109,11 +110,11 @@ public class Grant {
         this.duration = duration;
     }
 
-    public Set<Participant> getParticipants() {
+    public List<Participant> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(Set<Participant> participants) {
+    public void setParticipants(List<Participant> participants) {
         this.participants = participants;
     }
 

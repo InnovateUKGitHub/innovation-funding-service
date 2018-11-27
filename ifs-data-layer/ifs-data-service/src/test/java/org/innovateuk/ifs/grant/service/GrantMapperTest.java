@@ -24,6 +24,7 @@ import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
+import org.innovateuk.ifs.sil.grant.resource.Forecast;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.resource.Participant;
 import org.innovateuk.ifs.user.domain.User;
@@ -62,6 +63,7 @@ public class GrantMapperTest {
     private static final LocalDate DEFAULT_START_DATE = LocalDate.of(2018, 1,2);
     private static final ZonedDateTime DEFAULT_GOL_DATE = ZonedDateTime
             .of(LocalDate.of(2018, 3,4), LocalTime.MIDNIGHT, ZoneId.of("GMT"));
+    private static final String OVERHEADS = "Overheads";
     private static final boolean OUTPUT_TEST_JSON = true;
     private static final String OUTPUT_DIRECTORY = "./build/tmp/grant-mapper-json";
 
@@ -91,11 +93,11 @@ public class GrantMapperTest {
     @Test
     public void testMap() throws IOException {
         Parameter parameter = parameters().iterator().next();
-        Project project = parameter.project();
+        Project project = parameter.createProject();
         when(formInputResponseRepository.findByApplicationId(project.getApplication().getId()))
                 .thenReturn(parameter.formInputResponses());
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(any(), any()))
-                .thenReturn(Optional.of(parameter.spendProfile()));
+                .thenAnswer(i -> Optional.of(parameter.createSpendProfile((long) i.getArguments()[1])));
         ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
         when(applicationFinance.getMaximumFundingLevel()).thenReturn(50);
         when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(any(), any()))
@@ -130,51 +132,28 @@ public class GrantMapperTest {
         Optional<Participant> participant = grant.getParticipants().stream()
                 .filter(it -> it.getId() == 1).findFirst();
         assertThat(participant.isPresent(), Is.is(true));
-        participant.ifPresent(it ->
-                assertThat(it.getContactEmail(), equalTo("user@test.com"))
-                        );
+        participant.ifPresent(it -> {
+            assertThat(it.getContactEmail(), equalTo("user@test.com"));
+            assertThat(it.getForecasts().size(), equalTo(parameter.costCategoryCount()));
+            Forecast overheads = it.getForecasts().stream()
+                    .filter(forecast -> OVERHEADS.equals(forecast.getCostCategory()))
+                    .findFirst()
+                    .orElseThrow(IllegalStateException::new);
+            assertThat(overheads.getPeriods().size(), equalTo(parameter.duration()));
+            assertThat(overheads.getCost(), equalTo(parameter.expectFirstOverheads()));
+        });
     }
 
     @Parameterized.Parameters
     public static Collection<Parameter> parameters() {
         return Arrays.asList(
-                newParameter("basic", newProject())
+                newParameter("basic", newProject()),
+                newParameter("single", newProject()).duration(1).expectFirstOverheads(10L)
         );
     }
 
     private static Parameter newParameter(String name, ProjectBuilder projectBuilder) {
-        long applicationId = 1L;
-        long competitionId = 2L;
-        long projectId = 1L;
-        long duration = 12;
-        int costCategoryCount = 2;
-        int organisationCount = 3;
-        int userCount = 3;
-        return new Parameter().project(projectBuilder
-                .withDuration(duration)
-                .withId(projectId)
-                .withTargetStartDate(DEFAULT_START_DATE)
-                .withOfferSubmittedDate(DEFAULT_GOL_DATE)
-                .withPartnerOrganisations(
-                        Stream.iterate(0, i -> i + 1).limit(organisationCount)
-                                .map(i -> new PartnerOrganisation(null, createOrganisation(i), i == 0))
-                                .collect(Collectors.toList())
-                ).withApplication(
-                        newApplication()
-                                .withId(applicationId)
-                                .withCompetition(
-                                        newCompetition().withId(competitionId).build())
-                                .build())
-                .withProjectUsers(
-                        Stream.iterate(0, i -> i + 1).limit(organisationCount * userCount)
-                            .map(i -> createProjectUser(i, organisationCount))
-                            .collect(Collectors.toList())
-                ).build())
-                .participantCount(organisationCount)
-                .costCategoryCount(costCategoryCount)
-                .name(name)
-                .applicationId(applicationId)
-                .competitionId(competitionId);
+        return new Parameter().name(name).projectBuilder(projectBuilder);
     }
 
     private static Organisation createOrganisation(long id) {
@@ -200,24 +179,28 @@ public class GrantMapperTest {
     }
 
     private static class Parameter {
-        private Project project;
+        private ProjectBuilder projectBuilder;
         private String name;
         private List<FormInputResponse> formInputResponses = new ArrayList<>();
-        private long competitionId;
-        private long applicationId;
+        private long competitionId = 2L;
+        private long applicationId = 1L;
+        private long projectId = 1L;
         private String projectSummary;
         private String publicDescription;
-        private int participantCount;
-        private int costCategoryCount;
-        private int count;
+        private int duration = 12;
+        private int participantCount = 3;
+        private int costCategoryCount = 2;
+        private int userCount = 3;
+        private int value = 10;
+        private long expectFirstOverheads = 120;
 
-        private Parameter project(Project project) {
-            this.project = project;
+        private Parameter projectBuilder(ProjectBuilder projectBuilder) {
+            this.projectBuilder = projectBuilder;
             return this;
         }
 
-        private Project project() {
-            return project;
+        private ProjectBuilder projectBuilder() {
+            return projectBuilder;
         }
 
         private Parameter applicationId(long applicationId) {
@@ -265,16 +248,23 @@ public class GrantMapperTest {
             return costCategoryCount;
         }
 
-        private Parameter count(int count) {
-            this.count = count;
-            participantCount(count);
+        private Parameter duration(int duration) {
+            this.duration = duration;
             return this;
         }
 
-        private int count() {
-            return count;
+        private int duration() {
+            return duration;
         }
 
+        private Parameter expectFirstOverheads(long expectFirstOverheads) {
+            this.expectFirstOverheads = expectFirstOverheads;
+            return this;
+        }
+
+        private long expectFirstOverheads() {
+            return expectFirstOverheads;
+        }
 
         private String publicDescription() {
             return publicDescription == null ? name + " public description" : publicDescription;
@@ -304,15 +294,41 @@ public class GrantMapperTest {
             return formInputResponse;
         }
 
-        private SpendProfile spendProfile() {
+        private SpendProfile createSpendProfile(long organisationId) {
             List<Cost> eligibleCosts = new ArrayList<>();
-            List<Cost> spendProfileFigures =
-                    Stream.iterate(0, i -> i + 1).limit(participantCount * costCategoryCount)
-                            .map(i -> new Cost(BigDecimal.valueOf(10))
-                                    .withTimePeriod(i, null, null, null)
-                                    .withCategory(new CostCategory("Overheads")))
-                            .collect(Collectors.toList());
+            List<Cost> spendProfileFigures = new ArrayList<>();
+            for (int costCategoryIndex = 0 ; costCategoryIndex < costCategoryCount ; costCategoryIndex++ ) {
+                for (int durationIndex = 0 ; durationIndex < duration ; durationIndex++ ) {
+                    spendProfileFigures.add(new Cost(BigDecimal.valueOf(value))
+                            .withTimePeriod(durationIndex, null, null, null)
+                            .withCategory(new CostCategory(costCategoryIndex == 0
+                                    ? OVERHEADS : "cost-" + costCategoryIndex)));
+                }
+            }
             return new SpendProfile(null, null, null, eligibleCosts, spendProfileFigures, null, null, true);
+        }
+
+        private Project createProject() {
+            return projectBuilder
+                    .withDuration((long) duration)
+                    .withId(projectId)
+                    .withTargetStartDate(DEFAULT_START_DATE)
+                    .withOfferSubmittedDate(DEFAULT_GOL_DATE)
+                    .withPartnerOrganisations(
+                            Stream.iterate(0, i -> i + 1).limit(participantCount)
+                                    .map(i -> new PartnerOrganisation(null, createOrganisation(i), i == 0))
+                                    .collect(Collectors.toList())
+                    ).withApplication(
+                    newApplication()
+                            .withId(applicationId)
+                            .withCompetition(
+                                    newCompetition().withId(competitionId).build())
+                            .build())
+                    .withProjectUsers(
+                            Stream.iterate(0, i -> i + 1).limit(participantCount * userCount)
+                                    .map(i -> createProjectUser(i, participantCount))
+                                    .collect(Collectors.toList())
+                    ).build();
         }
     }
 }
