@@ -99,7 +99,7 @@ public class AssessmentDetailedFinancesModelPopulator {
             model.addAttribute("readonly", true);
             model.addAttribute("financeView", "academic-finance");
         } else {
-            YourProjectCostsViewModel viewModel = yourProjectCostsViewModelPopulator.populateManagement(applicationId, costSection.getId(), organisationId, "");
+            YourProjectCostsViewModel viewModel = yourProjectCostsViewModelPopulator.populate(applicationId, costSection.getId(), organisationId, true,"");
             YourProjectCostsForm form = new YourProjectCostsForm();
             yourProjectCostsFormPopulator.populateForm(form, applicationId, organisationId);
             model.addAttribute("costsViewModel", viewModel);
