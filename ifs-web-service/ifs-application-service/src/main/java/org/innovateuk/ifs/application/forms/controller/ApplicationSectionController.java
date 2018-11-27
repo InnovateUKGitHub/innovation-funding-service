@@ -6,7 +6,6 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.saver.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
-import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -70,9 +69,6 @@ public class ApplicationSectionController {
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Autowired
-    private OverheadFileSaver overheadFileSaver;
 
     @Autowired
     private QuestionService questionService;
@@ -224,7 +220,7 @@ public class ApplicationSectionController {
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        if (!isSaveAndReturnRequest(params) && (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request))) {
+        if (!isSaveAndReturnRequest(params) && (saveApplicationErrors.hasErrors() || !validFinanceTerms)) {
             validationHandler.addAnyErrors(saveApplicationErrors);
             populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), isSupport);
             return APPLICATION_FORM;
@@ -266,10 +262,6 @@ public class ApplicationSectionController {
         }
 
         switch (section.getSection().getType()) {
-            case PROJECT_COST_FINANCES:
-                return section.getCompetition().showJesFinances(section.getCurrentApplicant().getOrganisation().getOrganisationType()) ||
-                        validateStateAidAgreement(form, bindingResult);
-
             case ORGANISATION_FINANCES:
                 return validateOrganisationSizeSelected(section, params, bindingResult);
 
@@ -279,14 +271,6 @@ public class ApplicationSectionController {
             default:
                 return true;
         }
-    }
-
-    private boolean validateStateAidAgreement(ApplicationForm form, BindingResult bindingResult) {
-        if (form.isStateAidAgreed()) {
-            return true;
-        }
-        bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
-        return false;
     }
 
     private boolean validateOrganisationSizeSelected(
