@@ -76,7 +76,7 @@ public class ProjectDetailsAddressControllerTest extends BaseControllerMockMVCTe
         ProjectDetailsAddressViewModel viewModel = (ProjectDetailsAddressViewModel) model.get("model");
         assertEquals(project.getId(), viewModel.getProjectId());
         assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(project.getApplication(), viewModel.getApplicationId());
+        assertEquals(project.getApplication(), (long) viewModel.getApplicationId());
 
         ProjectDetailsAddressForm form = (ProjectDetailsAddressForm) model.get(FORM_ATTR_NAME);
         assertTrue(form.getAddressForm().isManualAddressEntry());
