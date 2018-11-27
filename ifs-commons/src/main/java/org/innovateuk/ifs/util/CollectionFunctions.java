@@ -84,8 +84,8 @@ public final class CollectionFunctions {
         };
     }
 
-    private static <T> List<T> doCombineLists(Collection<T>... lists) {
-        return flattenLists(Arrays.asList(lists));
+    private static <T> List<T> doCombineLists(Collection<T>... collections) {
+        return flattenLists(asList(collections));
     }
 
     /**
