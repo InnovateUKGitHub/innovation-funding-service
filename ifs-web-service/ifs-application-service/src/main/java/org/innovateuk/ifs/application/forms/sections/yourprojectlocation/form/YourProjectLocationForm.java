@@ -14,7 +14,6 @@ public class YourProjectLocationForm {
         this.postcode = postcode;
     }
 
-    // for Spring instantiation
     YourProjectLocationForm() {
     }
 
