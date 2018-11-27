@@ -3,7 +3,11 @@ package org.innovateuk.ifs.competitionsetup.core.viewmodel;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleAllMatch;
 
 public class MenuViewModel extends CompetitionSetupViewModel {
 
@@ -41,6 +45,7 @@ public class MenuViewModel extends CompetitionSetupViewModel {
     }
 
     private boolean sectionIsComplete(CompetitionSetupSection setupSection) {
-        return statuses.getOrDefault(setupSection, false);
+        List<CompetitionSetupSection> relatedSections = combineLists(setupSection, setupSection.getAllNextSections());
+        return simpleAllMatch(relatedSections, section -> statuses.getOrDefault(section, false));
     }
 }

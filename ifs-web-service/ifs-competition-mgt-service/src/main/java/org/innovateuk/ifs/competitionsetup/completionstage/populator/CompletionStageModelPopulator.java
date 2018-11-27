@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.springframework.stereotype.Service;
 
 /**
- * TODO DW - comment
+ * Service to populate the Completion Stage page in Competition Setup.
  */
 @Service
 public class CompletionStageModelPopulator implements CompetitionSetupSectionModelPopulator {
