@@ -54,7 +54,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "Stakeholders can see the participation percentage for applications they are assigned to")
-    public boolean StakeholdersCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
+    public boolean stakeholdersCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
         return userIsStakeholderInCompetition(applicationResource.getCompetition(), user.getId());
     }
 
@@ -109,7 +109,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
-    public boolean innovationLeadAssginedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
+    public boolean innovationLeadAssignedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
         return application != null && application.getCompetition() != null && userIsInnovationLeadOnCompetition(application.getCompetition(), user.getId());
     }
 

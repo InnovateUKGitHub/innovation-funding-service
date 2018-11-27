@@ -172,8 +172,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void onlyInnovationLeadAssignedCompetitionForApplicationCanAccessApplication() {
-        assertTrue(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadOnApplication1));
-        assertFalse(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadUser()));
+        assertTrue(rules.innovationLeadAssignedToCompetitionCanViewApplications(applicationResource1, innovationLeadOnApplication1));
+        assertFalse(rules.innovationLeadAssignedToCompetitionCanViewApplications(applicationResource1, innovationLeadUser()));
     }
 
     @Test
@@ -198,11 +198,34 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     user.hasRole(PROJECT_FINANCE) ||
                     user.hasRole(SUPPORT) ||
                     user.hasRole(INNOVATION_LEAD) ||
-                    user.hasRole(STAKEHOLDER) ||
                     user.hasRole(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
             } else {
                 assertFalse(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
+            }
+        });
+    }
+
+    @Test
+    public void stakeholdersCanSeeTheResearchParticipantPercentageInApplications() {
+        ApplicationResource applicationResource = newApplicationResource().build();
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(STAKEHOLDER)) {
+                assertTrue(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user));
+            } else {
+                assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user));
+            }
+        });
+    }
+
+    @Test
+    public void stakeholdersCanSeeApplicationFinancesTotals() {
+        ApplicationResource applicationResource = newApplicationResource().build();
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(STAKEHOLDER)) {
+                assertTrue(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user));
+            } else {
+                assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user));
             }
         });
     }
@@ -255,9 +278,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void internalUsersCanSeeTheResearchParticipantPercentageInApplications() {
-        assertTrue(rules.internalUsersAndStakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, compAdmin));
-        assertTrue(rules.internalUsersAndStakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, projectFinanceUser()));
-        assertFalse(rules.internalUsersAndStakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, leadOnApplication1));
+        assertTrue(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, compAdmin));
+        assertTrue(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, projectFinanceUser()));
+        assertFalse(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, leadOnApplication1));
     }
 
     @Test

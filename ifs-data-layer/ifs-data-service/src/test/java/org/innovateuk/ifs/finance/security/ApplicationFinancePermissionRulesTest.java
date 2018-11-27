@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
@@ -16,12 +17,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -130,6 +133,24 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
+    public void stakeholdersCanSeeApplicationFinancesForOrganisations() {
+
+        Application application = newApplication().build();
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withApplication(application.getId())
+                .build();
+        when(applicationRepositoryMock.findOne(applicationFinanceResource.getApplication())).thenReturn(application);
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(STAKEHOLDER)) {
+                assertTrue(rules.stakeholdersCanSeeApplicationFinancesForOrganisations(applicationFinanceResource, user));
+            } else {
+                assertFalse(rules.stakeholdersCanSeeApplicationFinancesForOrganisations(applicationFinanceResource, user));
+            }
+        });
+    }
+
+    @Test
     public void updateCosts() {
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
@@ -155,6 +176,24 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
 
         assertFalse(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, systemRegistrationUser()));
+    }
+
+    @Test
+    public void stakeholdersCanSeeTheResearchParticipantPercentageInApplications() {
+
+        Application application = newApplication().build();
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withApplication(application.getId())
+                .build();
+        when(applicationRepositoryMock.findOne(applicationFinanceResource.getApplication())).thenReturn(application);
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(STAKEHOLDER)) {
+                assertTrue(rules.stakeholdersCanViewCostsToApplicationFinance(applicationFinanceResource, user));
+            } else {
+                assertFalse(rules.stakeholdersCanViewCostsToApplicationFinance(applicationFinanceResource, user));
+            }
+        });
     }
 
     @Test

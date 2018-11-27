@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PA
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -45,6 +47,20 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
                 assertTrue(rules.internalUsersCanViewMonitoringOfficersForAnyProject(project, user));
             } else {
                 assertFalse(rules.internalUsersCanViewMonitoringOfficersForAnyProject(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(STAKEHOLDER)) {
+                assertTrue(rules.stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, user));
+            } else {
+                assertFalse(rules.stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, user));
             }
         });
     }

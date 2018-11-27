@@ -34,9 +34,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
@@ -73,6 +71,19 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                     assertTrue(rules.internalUsersCanViewEveryone(otherUser, user));
                 } else {
                     assertFalse(rules.internalUsersCanViewEveryone(otherUser, user));
+                }
+            });
+        });
+    }
+
+    @Test
+    public void stakeholdersCanViewEveryone() {
+        allGlobalRoleUsers.forEach(user -> {
+            allGlobalRoleUsers.forEach(otherUser -> {
+                if (user.hasRole(STAKEHOLDER)) {
+                    assertTrue(rules.stakeholdersCanViewEveryone(otherUser, user));
+                } else {
+                    assertFalse(rules.stakeholdersCanViewEveryone(otherUser, user));
                 }
             });
         });

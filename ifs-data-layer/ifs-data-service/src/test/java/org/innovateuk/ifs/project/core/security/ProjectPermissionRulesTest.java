@@ -14,6 +14,7 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PA
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -61,6 +62,20 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
                 assertTrue(rules.internalUsersCanViewProjects(project, user));
             } else {
                 assertFalse(rules.internalUsersCanViewProjects(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void stakeholdersCanViewProjects() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(STAKEHOLDER)) {
+                assertTrue(rules.stakeholdersCanViewProjects(project, user));
+            } else {
+                assertFalse(rules.stakeholdersCanViewProjects(project, user));
             }
         });
     }

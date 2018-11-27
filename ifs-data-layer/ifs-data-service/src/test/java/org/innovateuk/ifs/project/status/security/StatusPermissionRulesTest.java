@@ -123,6 +123,17 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     }
 
     @Test
+    public void stakeholdersCanViewTeamStatus(){
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(STAKEHOLDER)) {
+                assertTrue(rules.stakeholdersCanViewTeamStatus(newProjectResource().build(), user));
+            } else {
+                assertFalse(rules.stakeholdersCanViewTeamStatus(newProjectResource().build(), user));
+            }
+        });
+    }
+
+    @Test
     public void testInternalAdminTeamCanViewCompetitionStatus(){
         allGlobalRoleUsers.forEach(user -> {
             if (isInternalAdmin(user)) {
