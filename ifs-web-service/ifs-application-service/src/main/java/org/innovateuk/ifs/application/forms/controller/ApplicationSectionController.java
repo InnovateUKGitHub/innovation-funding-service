@@ -136,9 +136,12 @@ public class ApplicationSectionController {
         if (applicantSection.getSection().getType() == SectionType.FUNDING_FINANCES) {
             return String.format("redirect:/application/%d/form/your-funding/%d", applicationId, sectionId);
         }
-        if (applicantSection.getSection().getType() == SectionType.PROJECT_COST_FINANCES
-                && !financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
-            return String.format("redirect:/application/%d/form/your-project-costs/%d", applicationId, sectionId);
+        if (applicantSection.getSection().getType() == SectionType.PROJECT_COST_FINANCES) {
+            if (financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
+                return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
+            } else {
+                return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
+            }
         }
         boolean isSupport = user.hasRole(SUPPORT);
         populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), isSupport);
@@ -174,9 +177,13 @@ public class ApplicationSectionController {
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
         if (applicantSection.getSection().getType() == SectionType.FUNDING_FINANCES) {
             return String.format("redirect:/application/%d/form/your-funding/%d/%d%s", applicationId, sectionId, applicantOrganisationId, originQuery);
-        } else if (applicantSection.getSection().getType() == SectionType.PROJECT_COST_FINANCES
-                && !financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
-            return String.format("redirect:/application/%d/form/your-project-costs/%d/%d%s", applicationId, sectionId, applicantOrganisationId, originQuery);
+        } else if (applicantSection.getSection().getType() == SectionType.PROJECT_COST_FINANCES) {
+
+            if (financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
+                return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d%s", applicationId, applicantOrganisationId, sectionId, originQuery);
+            } else {
+                return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d%s", applicationId, applicantOrganisationId, sectionId, originQuery);
+            }
         }
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true, Optional.of(originQuery), isSupport);
         return APPLICATION_FORM;

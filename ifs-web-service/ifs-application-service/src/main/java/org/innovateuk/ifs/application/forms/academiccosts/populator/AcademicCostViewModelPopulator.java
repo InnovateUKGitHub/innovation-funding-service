@@ -60,6 +60,7 @@ public class AcademicCostViewModelPopulator {
                 organisation.getName(),
                 applicationId,
                 sectionId,
+                organisationId,
                 finance.getId(),
                 includeVat,
                 open,

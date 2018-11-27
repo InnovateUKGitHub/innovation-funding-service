@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.util.NumberUtils;
 
 import java.math.BigDecimal;
@@ -33,6 +34,6 @@ public class AcademicFinanceHandler extends FinanceRowHandler {
                 value = NumberUtils.getBigDecimalValue(academicFormField.getValue(), 0.0);
         }
 
-        return new AcademicCost(id, key, value, item);
+        return new AcademicCost(id, key, value, item, FinanceRowType.LABOUR);
     }
 }

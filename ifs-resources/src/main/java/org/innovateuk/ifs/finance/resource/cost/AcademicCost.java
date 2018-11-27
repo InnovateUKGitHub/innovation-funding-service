@@ -1,29 +1,31 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.groups.Default;
 import java.math.BigDecimal;
 
 public class AcademicCost extends AbstractFinanceRowItem {
     private Long id;
     private String name;
 
-    @DecimalMin(value = "0", message = NO_DECIMAL_VALUES)
+    @Digits(integer = MAX_DIGITS, fraction = 0, groups = Default.class, message = NO_DECIMAL_VALUES)
     private BigDecimal cost;
 
     private String item;
+
+    private FinanceRowType costType;
 
     public AcademicCost() {
     	// no-arg constructor
     }
 
-    public AcademicCost(Long id, String name, BigDecimal cost, String item) {
+    public AcademicCost(Long id, String name, BigDecimal cost, String item, FinanceRowType costType) {
         this();
         this.id = id;
         this.name = name;
-        if(cost != null){
-            this.cost = cost.setScale(2, BigDecimal.ROUND_HALF_UP);
-        }
+        this.cost = cost;
         this.item = item;
+        this.costType = costType;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class AcademicCost extends AbstractFinanceRowItem {
 
     @Override
     public FinanceRowType getCostType() {
-        return FinanceRowType.ACADEMIC;
+        return costType;
     }
 
     public String getItem() {
@@ -62,5 +64,13 @@ public class AcademicCost extends AbstractFinanceRowItem {
 
     public BigDecimal getCost() {
         return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public void setItem(String item) {
+        this.item = item;
     }
 }

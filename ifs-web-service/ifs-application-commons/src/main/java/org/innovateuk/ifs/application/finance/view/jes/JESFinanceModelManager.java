@@ -136,7 +136,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
                 List<String> costNames = TYPE_TO_COSTS.get(financeRowType.getFormInputType());
                 if (costNames != null) {
                     costNames.forEach(costName -> {
-                        FinanceRowItem financeRowItem = new AcademicCost(null, costName, BigDecimal.ZERO, null);
+                        FinanceRowItem financeRowItem = new AcademicCost(null, costName, BigDecimal.ZERO, null, financeRowType);
                         financeRowRestService.add(applicationFinanceResource.getId(), questionResource.getId(), financeRowItem)
                                 .getSuccess();
                     });

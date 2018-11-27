@@ -46,8 +46,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -55,7 +53,7 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "YOUR_PROJECT_COSTS_APPLICANT", description = "Applicants can all fill out the Your project costs section of the application.")
 public class YourProjectCostsController extends AsyncAdaptor {
@@ -90,35 +88,18 @@ public class YourProjectCostsController extends AsyncAdaptor {
     @Autowired
     private ApplicationSectionFinanceSaver completeSectionAction;
 
-    @GetMapping("/{applicantOrganisationId}")
-    @SecuredBySpring(value = "MANAGEMENT_VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your Finances'")
-    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
-    public String managementViewYourProjectCosts(Model model,
-                                            UserResource user,
-                                            @PathVariable long applicationId,
-                                            @PathVariable long sectionId,
-                                            @PathVariable long applicantOrganisationId,
-                                            @ModelAttribute("form") YourProjectCostsForm form,
-                                            @RequestParam(value = "origin", defaultValue = "MANAGEMENT_DASHBOARD") String origin,
-                                            @RequestParam MultiValueMap<String, String> queryParams) throws ExecutionException, InterruptedException {
-
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
-        Future<YourProjectCostsViewModel> viewModel = async(() -> viewModelPopulator.populateManagement(applicationId, sectionId, applicantOrganisationId, originQuery));
-        Future<Void> populate = async(() -> formPopulator.populateForm(form, applicationId, applicantOrganisationId));
-
-        model.addAttribute("model", viewModel.get());
-        populate.get();
-        return VIEW;
-    }
-
     @GetMapping
     public String viewYourProjectCosts(Model model,
                                        UserResource user,
                                        @PathVariable long applicationId,
+                                       @PathVariable long organisationId,
                                        @PathVariable long sectionId,
-                                       @ModelAttribute("form") YourProjectCostsForm form) {
+                                       @ModelAttribute("form") YourProjectCostsForm form,
+                                       @RequestParam(value = "origin", defaultValue = "MANAGEMENT_DASHBOARD") String origin,
+                                       @RequestParam MultiValueMap<String, String> queryParams) {
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
         formPopulator.populateForm(form, applicationId, user);
-        return viewYourProjectCosts(form, model, applicationId, sectionId, user);
+        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, originQuery);
     }
 
     @PostMapping
@@ -135,12 +116,13 @@ public class YourProjectCostsController extends AsyncAdaptor {
     public String complete(Model model,
                            UserResource user,
                            @PathVariable long applicationId,
+                           @PathVariable long organisationId,
                            @PathVariable long sectionId,
                            @Valid @ModelAttribute("form") YourProjectCostsForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
-        Supplier<String> failureView = () -> viewYourProjectCosts(form, model, applicationId, sectionId, user);
+        Supplier<String> failureView = () -> viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, "");
         validator.validate(form, validationHandler);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, user));
@@ -165,42 +147,45 @@ public class YourProjectCostsController extends AsyncAdaptor {
     public String removeRowPost(Model model,
                                 UserResource user,
                                 @PathVariable long applicationId,
+                                @PathVariable long organisationId,
                                 @PathVariable long sectionId,
                                 @ModelAttribute("form") YourProjectCostsForm form,
                                 @RequestParam("remove_cost") List<String> removeRequest) {
         String id = removeRequest.get(0);
         FinanceRowType type = FinanceRowType.valueOf(removeRequest.get(1));
         saver.removeRowFromForm(form, type, id);
-        return viewYourProjectCosts(form, model, applicationId, sectionId, user);
+        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, "");
 
     }
 
     @PostMapping(params = "add_cost")
     public String addRowPost(Model model,
-                                UserResource user,
-                                @PathVariable long applicationId,
-                                @PathVariable long sectionId,
-                                @ModelAttribute("form") YourProjectCostsForm form,
-                                @RequestParam("add_cost") FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
+                             UserResource user,
+                             @PathVariable long applicationId,
+                             @PathVariable long organisationId,
+                             @PathVariable long sectionId,
+                             @ModelAttribute("form") YourProjectCostsForm form,
+                             @RequestParam("add_cost") FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
 
         saver.addRowForm(form, rowType, applicationId, user);
-        return viewYourProjectCosts(form, model, applicationId, sectionId, user);
+        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, "");
     }
 
     @PostMapping(params = "uploadOverheadFile")
     public String uploadOverheadSpreadsheet(Model model,
-                             UserResource user,
-                             @PathVariable long applicationId,
-                             @PathVariable long sectionId,
-                             @ModelAttribute("form") YourProjectCostsForm form,
+                                            UserResource user,
+                                            @PathVariable long applicationId,
+                                            @PathVariable long organisationId,
+                                            @PathVariable long sectionId,
+                                            @ModelAttribute("form") YourProjectCostsForm form,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler) throws IOException {
 
         MultipartFile file = form.getOverhead().getFile();
         RestResult<FileEntryResource> fileEntryResult = overheadFileRestService.updateOverheadCalculationFile(form.getOverhead().getCostId(), file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
-        if(fileEntryResult.isFailure()) {
+        if (fileEntryResult.isFailure()) {
             fileEntryResult.getErrors().forEach(error -> {
-                if(UNSUPPORTED_MEDIA_TYPE.name().equals(error.getErrorKey())) {
+                if (UNSUPPORTED_MEDIA_TYPE.name().equals(error.getErrorKey())) {
                     bindingResult.rejectValue("overhead.file", "validation.finance.overhead.file.type");
                 } else {
                     bindingResult.rejectValue("overhead.file", error.getErrorKey(), error.getArguments().toArray(), "");
@@ -209,17 +194,18 @@ public class YourProjectCostsController extends AsyncAdaptor {
         } else {
             form.getOverhead().setFilename(fileEntryResult.getSuccess().getName());
         }
-        return viewYourProjectCosts(form, model, applicationId, sectionId, user);
+        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, "");
     }
 
     @PostMapping(params = "removeOverheadFile")
     public String removeOverheadSpreadsheet(Model model,
-                             UserResource user,
-                             @PathVariable long applicationId,
-                             @PathVariable long sectionId,
-                             @ModelAttribute("form") YourProjectCostsForm form) {
+                                            UserResource user,
+                                            @PathVariable long applicationId,
+                                            @PathVariable long organisationId,
+                                            @PathVariable long sectionId,
+                                            @ModelAttribute("form") YourProjectCostsForm form) {
         overheadFileRestService.removeOverheadCalculationFile(form.getOverhead().getCostId()).getSuccess();
-        return viewYourProjectCosts(form, model, applicationId, sectionId, user);
+        return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, "");
     }
 
     @PostMapping("remove-row/{rowId}")
@@ -282,9 +268,9 @@ public class YourProjectCostsController extends AsyncAdaptor {
         return String.format("redirect:/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
     }
 
-    private String viewYourProjectCosts(YourProjectCostsForm form, Model model, long applicationId, long sectionId, UserResource user) {
+    private String viewYourProjectCosts(YourProjectCostsForm form, UserResource user, Model model, long applicationId, long sectionId, long organisationId, String originQuery) {
         recalculateTotals(form);
-        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, user);
+        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser(), originQuery);
         model.addAttribute("model", viewModel);
         return VIEW;
     }

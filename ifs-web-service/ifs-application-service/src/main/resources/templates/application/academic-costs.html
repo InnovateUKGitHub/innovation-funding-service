@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your project costs'"/>
 </head>
-<body class="govuk-template__body finance-row-form overheads">
+<body class="govuk-template__body app-form finance-row-form overheads">
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
 
-    <main class="govuk-main-wrapper" id="main-content" role="main" style="background-color:pink;">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
              aria-labelledby="error-summary-title"
@@ -28,6 +28,7 @@
                   th:with="pageTitle='Your project costs',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
 
         <form th:object="${form}"
+              th:attr="data-autosave=@{/application/{applicationId}/form/academic-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               enctype="multipart/form-data"
               novalidate="novalidate"
@@ -68,6 +69,7 @@
                            class="govuk-input"
                            th:field="*{tsbReference}"
                            required="required"
+                           th:readonly="${model.readOnly}"
                            th:errorclass="govuk-input--error" />
                 </div>
             </fieldset>
@@ -98,6 +100,7 @@
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
                                step="1"
+                               th:readonly="${model.readOnly}"
                                th:errorclass="govuk-input--error" />
                     </div>
                 </div>
@@ -117,6 +120,7 @@
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
                                step="1"
+                               th:readonly="${model.readOnly}"
                                th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
@@ -135,6 +139,7 @@
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
                                step="1"
+                               th:readonly="${model.readOnly}"
                                th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
@@ -175,6 +180,7 @@
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
                                step="1"
+                               th:readonly="${model.readOnly}"
                                th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
@@ -193,6 +199,7 @@
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
                                step="1"
+                               th:readonly="${model.readOnly}"
                                th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
@@ -211,6 +218,7 @@
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
                                step="1"
+                               th:readonly="${model.readOnly}"
                                th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
@@ -246,6 +254,7 @@
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
                                step="1"
+                               th:readonly="${model.readOnly}"
                                th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
@@ -271,6 +280,7 @@
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
                                step="1"
+                               th:readonly="${model.readOnly}"
                                th:errorclass="govuk-input--error"/>
                     </div>
                 </div>
@@ -289,6 +299,7 @@
                                th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
                                placeholder="0"
                                step="1"
+                               th:readonly="${model.readOnly}"
                                th:errorclass="govuk-input--error"/>
                     </div>
                 </div>

@@ -17,6 +17,11 @@ public class IFSRuntimeException extends RuntimeException {
         this.arguments = arguments;
     }
 
+    public IFSRuntimeException(String message) {
+        super(message);
+        this.arguments = new ArrayList<>();
+    }
+
     public IFSRuntimeException(String message, List<Object> arguments) {
         super(message);
         this.arguments = arguments;
