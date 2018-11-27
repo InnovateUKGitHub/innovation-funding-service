@@ -58,7 +58,7 @@ public class YourProjectLocationViewModelPopulator {
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {
-        // TODO DW - we're constructing this URL in a few places - maybe a NavigationUtil?
+        // IFS-4848 - we're constructing this URL in a few places - maybe a NavigationUtil?
         return internalUser ?
                 String.format("%s%d/form/FINANCE/%d", APPLICATION_BASE_URL, applicationId, organisationId) :
                 String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);

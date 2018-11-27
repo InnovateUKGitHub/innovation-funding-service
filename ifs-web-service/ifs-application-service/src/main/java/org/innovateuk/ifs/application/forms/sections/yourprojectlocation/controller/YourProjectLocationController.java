@@ -216,7 +216,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     }
 
     private String redirectToYourFinances(long applicationId) {
-        // TODO DW - we're constructing this URL in a few places - maybe a NavigationUtil?
+        // IFS-4848 - we're constructing this URL in a few places - maybe a NavigationUtil?
         return "redirect:" + String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
     }
 }
