@@ -105,14 +105,17 @@ public enum CompetitionSetupSection {
         return id;
     }
 
+    /**
+     * After marking this section as complete, visit the next section if one exists, or otherwise re-view this
+     * section
+     */
     public String getPostMarkCompletePath() {
-
-        Optional<CompetitionSetupSection> nextSection = simpleFindFirst(CompetitionSetupSection.values(),
-                section -> section.getPreviousSection().equals(Optional.of(this)));
-
-        return nextSection.map(CompetitionSetupSection::getPath).orElse(path);
+        return getNextSection().map(CompetitionSetupSection::getPath).orElse(path);
     }
 
+    /**
+     * After marking this section as incomplete, revisit this section to edit it
+     */
     public String getPostMarkIncompletePath() {
         return getPath();
     }

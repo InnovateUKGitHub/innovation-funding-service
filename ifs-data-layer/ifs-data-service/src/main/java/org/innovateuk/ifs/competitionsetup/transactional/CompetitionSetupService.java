@@ -9,6 +9,7 @@ import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public interface CompetitionSetupService {
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can mark sections incomplete")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    ServiceResult<SetupStatusResource> markSectionIncomplete(Long competitionId, CompetitionSetupSection section);
+    ServiceResult<List<SetupStatusResource>> markSectionIncomplete(Long competitionId, CompetitionSetupSection section);
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can mark subsections complete")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")

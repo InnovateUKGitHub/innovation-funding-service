@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.resource;
 
 /**
- * TODO DW - document this class
+ * An enum representing the stage at which a Competition is deemed complete.
  */
 public enum CompetitionCompletionStage {
 
