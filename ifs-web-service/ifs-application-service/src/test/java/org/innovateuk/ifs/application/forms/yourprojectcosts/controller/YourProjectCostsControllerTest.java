@@ -191,16 +191,15 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     public void removeFundingRowFormPost() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
         String rowToRemove = "5";
-        FinanceRowType type = FinanceRowType.LABOUR;
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}",
                 APPLICATION_ID, SECTION_ID)
-                .param("remove_cost", String.format("%s,%s", rowToRemove, type)))
+                .param("remove_cost", rowToRemove))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
-        verify(saver).removeRowFromForm(any(YourProjectCostsForm.class), eq(type), eq(rowToRemove));
+        verify(saver).removeRowFromForm(any(YourProjectCostsForm.class), eq(rowToRemove));
     }
 
     @Test

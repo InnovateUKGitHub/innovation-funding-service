@@ -43,6 +43,8 @@ IFS.core.financeRowForm = (function () {
     removeRow: function (el, event) {
       var removeButton = jQuery(el)
       var id = removeButton.val()
+      var form = removeButton.closest('form')
+      form.attr('data-save-status', 'progress')
       event.preventDefault()
       jQuery.ajaxProtected({
         url: IFS.core.financeRowForm.getUrl(el) + '/remove-row/' + id,
@@ -50,6 +52,7 @@ IFS.core.financeRowForm = (function () {
       }).done(function (data) {
         removeButton.closest('[data-repeatable-row]').remove()
         jQuery('body').trigger('recalculateAllFinances').trigger('updateSerializedFormState')
+        form.attr('data-save-status', 'done')
       })
     },
     backForwardCacheReload: function () {
