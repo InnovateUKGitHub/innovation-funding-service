@@ -55,7 +55,7 @@ public class MilestoneController {
     }
 
     @PutMapping("/competition/{competitionId}/completion-stage")
-    public RestResult<Void> saveMilestone(@PathVariable("competitionId") long competitionId,
+    public RestResult<Void> updateCompletionStage(@PathVariable("competitionId") long competitionId,
                                           @RequestParam("completionStage") final CompetitionCompletionStage completionStage) {
 
         return milestoneService.updateCompletionStage(competitionId, completionStage).toPutResponse();

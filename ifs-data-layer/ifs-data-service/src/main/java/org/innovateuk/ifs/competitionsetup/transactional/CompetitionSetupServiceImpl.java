@@ -236,7 +236,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
-    public ServiceResult<List<SetupStatusResource>> markSectionIncomplete(Long competitionId, CompetitionSetupSection section) {
+    public ServiceResult<List<SetupStatusResource>> markSectionIncomplete(long competitionId, CompetitionSetupSection section) {
 
         List<CompetitionSetupSection> allSectionsToMarkIncomplete = getAllSectionsToMarkIncomplete(section);
 

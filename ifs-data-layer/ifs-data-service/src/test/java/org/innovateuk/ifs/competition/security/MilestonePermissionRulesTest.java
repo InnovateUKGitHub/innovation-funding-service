@@ -45,7 +45,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
 	}
 
 	private long competitionId = 123L;
-	private CompetitionCompositeId compositeId = CompetitionCompositeId.id(123L);
+	private CompetitionCompositeId compositeId = CompetitionCompositeId.id(competitionId);
 
     @Test
     public void internalUsersOtherThanInnovationLeadsCanViewAllMilestones() {

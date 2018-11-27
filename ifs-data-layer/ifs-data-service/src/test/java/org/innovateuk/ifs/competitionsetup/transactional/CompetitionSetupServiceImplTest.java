@@ -339,6 +339,11 @@ public class CompetitionSetupServiceImplTest {
         verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
     }
 
+    /**
+     * This test asserts that when marking a section as incomplete when it is in a chain of related sections (in
+     * this case, COMPLETION_STAGE then MILESTONES), it marks future sections as incomplete as they are
+     * potentially affected by this one being edited.
+     */
     @Test
     public void testMarkSectionIncompleteWithNextSections() {
 
@@ -393,6 +398,47 @@ public class CompetitionSetupServiceImplTest {
 
             verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
         });
+    }
+
+    /**
+     * This test asserts that when marking a section as incomplete when it is in a chain of related sections (in
+     * this case, COMPLETION_STAGE then MILESTONES), it does not mark previous sections as incomplete as they are
+     * not affected by this one being edited.
+     */
+    @Test
+    public void testMarkSectionIncompleteWithPreviousSections() {
+
+        final Long competitionId = 32L;
+
+        final CompetitionSetupSection section = CompetitionSetupSection.MILESTONES;
+
+        final SetupStatusResource savingStatus = newSetupStatusResource()
+                .withId()
+                .withClassName(CompetitionSetupSection.class.getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE)
+                .build();
+
+        final SetupStatusResource savedStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE)
+                .build();
+
+        when(setupStatusService.findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+
+        when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
+
+        service.markSectionIncomplete(competitionId, section);
+
+        verify(setupStatusService, times(1)).findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId);
+        verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
     }
 
     @Test
