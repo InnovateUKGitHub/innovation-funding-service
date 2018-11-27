@@ -224,7 +224,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, stakeholderUserResourceOnCompetition));
         assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user2));
         assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user3));
-
     }
 
     @Test

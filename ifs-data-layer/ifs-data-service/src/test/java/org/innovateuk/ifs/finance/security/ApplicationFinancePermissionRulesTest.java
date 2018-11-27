@@ -203,9 +203,9 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         when(applicationRepositoryMock.findById(applicationFinanceResource.getApplication())).thenReturn(application);
         when(stakeholderRepositoryMock.findStakeholders(application.getCompetition().getId())).thenReturn(asList(stakeholder));
 
-        assertTrue(rules.stakeholdersCanViewCostsToApplicationFinance(applicationFinanceResource, stakeholderResource));
+        assertTrue(rules.stakeholdersCanAddACostToApplicationFinance(applicationFinanceResource, stakeholderResource));
         allInternalUsers.forEach(user -> {
-            assertFalse(rules.stakeholdersCanViewCostsToApplicationFinance(applicationFinanceResource, user));
+            assertFalse(rules.stakeholdersCanAddACostToApplicationFinance(applicationFinanceResource, user));
         });
     }
 

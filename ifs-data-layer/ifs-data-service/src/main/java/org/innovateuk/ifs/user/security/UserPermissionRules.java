@@ -4,7 +4,12 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -16,8 +21,11 @@ import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -39,6 +47,9 @@ public class UserPermissionRules {
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
+
+    @Autowired
+    private StakeholderRepository stakeholderRepository;
 
     private static List<Role> CONSORTIUM_ROLES = asList(LEADAPPLICANT, COLLABORATOR);
 
@@ -78,9 +89,9 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "Stakeholders can view everyone")
-    public boolean stakeholdersCanViewEveryone(UserResource userToView, UserResource user) {
-        return isStakeholder(user);
+    @PermissionRule(value = "READ", description = "Stakeholders can view users in competitions they are assigned to")
+    public boolean stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
+        return userIsInCompetitionAssignedToStakeholder(userToView, user);
     }
 
     @PermissionRule(value = "READ_USER_ORGANISATION", description = "Internal support users can view all users and associated organisations")
@@ -224,6 +235,30 @@ public class UserPermissionRules {
         return roleCommand.getTargetRole().equals(APPLICANT) &&
                 user.getId().equals(roleCommand.getUserId()) &&
                 user.hasRole(ASSESSOR);
+    }
+
+    private boolean userIsInCompetitionAssignedToStakeholder(UserResource userToView, UserResource stakeholder) {
+        List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(userToView, consortiumProcessRoleFilter);
+        List<Project> projectsThisUserIsAMemberOf =
+                simpleMap(getFilteredProjectUsers(userToView, projectUserFilter), ProjectUser::getProject);
+
+        List<Competition> stakeholderCompetitions =
+                simpleMap(stakeholderRepository.findByStakeholderId(stakeholder.getId()), Stakeholder::getProcess);
+
+        List<Competition> userCompetitions = getUserCompetitions(applicationsWhereThisUserIsInConsortium, projectsThisUserIsAMemberOf);
+
+        return !Collections.disjoint(stakeholderCompetitions, userCompetitions);
+    }
+
+    private List<Competition> getUserCompetitions(List<Application> userApplications, List<Project> userProjects) {
+        List<Competition> competitions = new ArrayList<>();
+        competitions.addAll(simpleMap(userApplications, Application::getCompetition));
+        competitions.addAll(
+                userProjects.stream()
+                    .map(project -> project.getApplication().getCompetition())
+                    .collect(Collectors.toList())
+        );
+        return competitions;
     }
 
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {

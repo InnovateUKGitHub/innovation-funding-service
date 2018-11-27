@@ -62,8 +62,8 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "ADD_COST", description = "Stakeholders can view project costs for applications they are assigned")
-    public boolean stakeholdersCanViewCostsToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+    @PermissionRule(value = "ADD_COST", description = "Stakeholders can add a cost to the application finances they are assigned to")
+    public boolean stakeholdersCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         Application application = applicationRepository.findById(applicationFinanceResource.getApplication());
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
