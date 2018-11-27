@@ -93,12 +93,15 @@ The user enters bank details, wants to manually enter their address, leaves the 
     Given the user enters text to a text field    name = accountNumber    24681012
     And the user enters text to a text field      name = sortCode         36912
     #When the user selects the radio button        addressType             ADD_NEW
-    And the user clicks the button/link           css = button[name = "addressForm.action"]        #Enter address manually
+    #And the user clicks the button/link           css = button[name = "addressForm.action"]        #Enter address manually
+    Then the user clicks the button/link          jQuery = button:contains("Enter address manually")
     Then the user clicks the button/link          jQuery = button:contains("Submit bank account details")
     And the user clicks the button/link           id = submit-bank-details
     And the user should see a summary error       The first line of the address cannot be blank.
     And the user should see a summary error       The postcode cannot be blank.
     And the user should see a summary error       The town cannot be blank.
+
+#Errors could be due to the submit pop up staying in focus!!!
 
 Bank details client side validations
     [Documentation]    INFUND-3010, INFUND-6887, INFUND-6482
@@ -127,7 +130,7 @@ Bank details client side validations
     Then the user should not see the text in the page    Please enter a sort code.
     And the user should not see the text in the page     Please enter a valid sort code.
     #When the user selects the radio button               addressType    REGISTERED
-    Then the user should not see the text in the page    Search using a valid postcode or enter the address manually.
+    Then the user should see the text in the page    Search using a valid postcode or enter the address manually.
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282
@@ -137,13 +140,15 @@ Bank account postcode lookup
     And the user clicks the button/link          jQuery = .govuk-button:contains("Find UK address")
     Then the user should see the element         css = .govuk-form-group--error
     When the user enters text to a text field    name = addressForm.postcodeInput    BS14NT/
-    And the user clicks the button/link          jQuery = .govuk-button:contains("Find UK address")
-    Then the user should see the element         name = addressForm.selectedPostcodeIndex
+    And the user clicks the button/link               id = postcode-lookup
+    And the user selects the index from the drop-down menu  0  id=addressForm.selectedPostcodeIndex
+    And the user clicks the button/link               jQuery = button:contains("Submit bank account details")
+    #Then the user should see the element         name = addressForm.selectedPostcodeIndex
     #When the user selects the radio button       addressType    ADD_NEW
-    And the user enters text to a text field     id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link          id = postcode-lookup
-    Then the user should see the element         css = #select-address-block
-    And the user clicks the button/link          css = #select-address-block > button
+    #And the user enters text to a text field     id = addressForm.postcodeInput    BS14NT
+    #And the user clicks the button/link          id = postcode-lookup
+    #Then the user should see the element         css = #select-address-block
+    #And the user clicks the button/link          css = #select-address-block > button
     And the address fields should be filled
 
 Bank details experian validations
