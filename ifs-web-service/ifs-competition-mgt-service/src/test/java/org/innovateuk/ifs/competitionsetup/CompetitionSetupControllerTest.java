@@ -885,6 +885,25 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
+    public void submitCompletionStageSectionDetailsWithValidationErrors() throws Exception {
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/completion-stage"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm",
+                        "selectedCompletionStage", "NotNull"))
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionSetupService, never()).saveCompetitionSetupSection(any(), any(), any());
+    }
+
+    @Test
     public void markCompletionStageSectionIncomplete() throws Exception {
 
         CompetitionResource competition = newCompetitionResource()
@@ -902,25 +921,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/completion-stage"));
 
         verify(competitionSetupRestService).markSectionIncomplete(competition.getId(), CompetitionSetupSection.COMPLETION_STAGE);
-    }
-
-    @Test
-    public void submitCompletionStageSectionDetailsWithValidationErrors() throws Exception {
-
-        CompetitionResource competition = newCompetitionResource()
-                .withId(COMPETITION_ID)
-                .build();
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/completion-stage"))
-                .andExpect(model().hasErrors())
-                .andExpect(model().errorCount(1))
-                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm",
-                        "selectedCompletionStage", "NotNull"))
-                .andExpect(view().name("competition/setup"));
-
-        verify(competitionSetupService, never()).saveCompetitionSetupSection(any(), any(), any());
     }
 
     @Test
