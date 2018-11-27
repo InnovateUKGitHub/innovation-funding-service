@@ -27,6 +27,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -159,7 +160,9 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         when(stakeholderRepositoryMock.findStakeholders(application.getCompetition().getId())).thenReturn(asList(stakeholder));
 
         assertTrue(rules.stakeholdersCanSeeApplicationFinancesForOrganisations(applicationFinanceResource, stakeholderResource));
-        assertFalse(rules.stakeholdersCanSeeApplicationFinancesForOrganisations(applicationFinanceResource, collaborator));
+        allInternalUsers.forEach(user -> {
+            assertFalse(rules.stakeholdersCanSeeApplicationFinancesForOrganisations(applicationFinanceResource, user));
+        });
     }
 
     @Test
@@ -201,7 +204,9 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         when(stakeholderRepositoryMock.findStakeholders(application.getCompetition().getId())).thenReturn(asList(stakeholder));
 
         assertTrue(rules.stakeholdersCanViewCostsToApplicationFinance(applicationFinanceResource, stakeholderResource));
-        assertFalse(rules.stakeholdersCanViewCostsToApplicationFinance(applicationFinanceResource, collaborator));
+        allInternalUsers.forEach(user -> {
+            assertFalse(rules.stakeholdersCanViewCostsToApplicationFinance(applicationFinanceResource, user));
+        });
     }
 
     @Test

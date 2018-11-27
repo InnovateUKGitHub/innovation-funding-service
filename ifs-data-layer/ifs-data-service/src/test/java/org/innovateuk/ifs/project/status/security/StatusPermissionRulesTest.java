@@ -134,7 +134,9 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
 
         assertTrue(rules.stakeholdersCanViewTeamStatus(project, stakeholderUserResourceOnCompetition));
-        assertFalse(rules.stakeholdersCanViewTeamStatus(project, user));
+        allInternalUsers.forEach(user -> {
+            assertFalse(rules.stakeholdersCanViewTeamStatus(project, user));
+        });
     }
 
     @Test
