@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.competitionsetup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupSummaryForm;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
@@ -212,18 +213,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 eq(competition),
                 eq(CompetitionSetupSection.INITIAL_DETAILS)
         );
-    }
-
-    @Test
-    public void editCompetitionSetupSection_redirectsIfInitialDetailsNotCompleted() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(Boolean.FALSE);
-
-        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/application"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/competition/setup/" + COMPETITION_ID));
     }
 
     @Test
@@ -670,6 +659,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         List<CompetitionSetupSection> sections = asList(
                 CompetitionSetupSection.ADDITIONAL_INFO,
                 CompetitionSetupSection.ELIGIBILITY,
+                CompetitionSetupSection.COMPLETION_STAGE,
                 CompetitionSetupSection.MILESTONES,
                 CompetitionSetupSection.APPLICATION_FORM,
                 CompetitionSetupSection.ASSESSORS
@@ -861,6 +851,50 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         );
 
         verify(validator).validate(any(AdditionalInfoForm.class), any(BindingResult.class));
+    }
+
+    @Test
+    public void submitCompletionStageSectionDetails() throws Exception {
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        when(competitionSetupService.saveCompetitionSetupSection(
+                any(CompletionStageForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.COMPLETION_STAGE))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/completion-stage")
+                .param("selectedCompletionStage", CompetitionCompletionStage.PROJECT_SETUP.name()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/milestones"));
+
+        verify(competitionSetupService, atLeastOnce()).saveCompetitionSetupSection(
+                any(CompletionStageForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.COMPLETION_STAGE));
+    }
+
+    @Test
+    public void submitCompletionStageSectionDetailsWithValidationErrors() throws Exception {
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/completion-stage"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm",
+                        "selectedCompletionStage", "NotNull"))
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionSetupService, never()).saveCompetitionSetupSection(any(), any(), any());
     }
 
     @Test
