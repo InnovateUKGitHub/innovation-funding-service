@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competitionsetup.completionstage.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.completionstage.form.CompletionStageForm;
-import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupFormPopulator;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ public class CompletionStageFormPopulator implements CompetitionSetupFormPopulat
     }
 
     @Override
-    public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
+    public CompletionStageForm populateForm(CompetitionResource competitionResource) {
         return new CompletionStageForm(competitionResource.getCompletionStage());
     }
 }

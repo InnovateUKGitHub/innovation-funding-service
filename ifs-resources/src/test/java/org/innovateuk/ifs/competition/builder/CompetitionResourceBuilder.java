@@ -271,6 +271,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("modifiedOn", modifiedOns);
     }
 
+    public CompetitionResourceBuilder withCompletionStage(CompetitionCompletionStage... completionStage) {
+        return withArraySetFieldByReflection("completionStage", completionStage);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);

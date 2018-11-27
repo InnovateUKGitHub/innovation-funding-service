@@ -4,7 +4,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.completionstage.viewmodel.CompletionStageViewModel;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSectionModelPopulator;
-import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Service;
  * Service to populate the Completion Stage page in Competition Setup.
  */
 @Service
-public class CompletionStageModelPopulator implements CompetitionSetupSectionModelPopulator {
+public class CompletionStageViewModelPopulator implements CompetitionSetupSectionModelPopulator {
 
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
@@ -20,7 +19,7 @@ public class CompletionStageModelPopulator implements CompetitionSetupSectionMod
     }
 
     @Override
-    public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
+    public CompletionStageViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
         return new CompletionStageViewModel(generalViewModel);
     }
 }
