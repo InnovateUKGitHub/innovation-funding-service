@@ -114,8 +114,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     @PostMapping("/auto-save")
     @PreAuthorize("hasAuthority('applicant')")
     @SecuredBySpring(value = "UPDATE_PROJECT_LOCATION", description = "Applicants can update their project location")
-    public @ResponseBody
-    JsonNode autosave(
+    public @ResponseBody JsonNode autosave(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
             @ModelAttribute YourProjectLocationForm form) {
