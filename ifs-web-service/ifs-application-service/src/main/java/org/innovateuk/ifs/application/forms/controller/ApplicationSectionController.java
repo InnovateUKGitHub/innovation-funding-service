@@ -130,20 +130,17 @@ public class ApplicationSectionController {
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
 
         switch (applicantSection.getSection().getType()) {
-            case FUNDING_FINANCES: {
+            case FUNDING_FINANCES:
                 return String.format("redirect:/application/%d/form/your-funding/%d", applicationId, sectionId);
-            }
-            case PROJECT_LOCATION: {
+            case PROJECT_LOCATION:
 
                 long organisationId = applicantSection.getCurrentApplicant().getOrganisation().getId();
 
                 return String.format("redirect:/application/%d/form/your-project-location/organisation/%d/section/%d",
                         applicationId, organisationId, sectionId);
-            }
-            default: {
+            default:
                 populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), false);
                 return APPLICATION_FORM;
-            }
         }
     }
 
