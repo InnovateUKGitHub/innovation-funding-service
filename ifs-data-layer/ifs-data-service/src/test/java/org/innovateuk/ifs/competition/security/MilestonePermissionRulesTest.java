@@ -16,6 +16,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
@@ -25,9 +26,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class MilestonePermissionRulesTest extends BasePermissionRulesTest<MilestonePermissionRules> {
 
@@ -108,7 +107,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
         when(competitionRepository.findById(competitionId)).thenReturn(competitionInSetup);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (compAdminsAndProjectFinance.contains(user)) {
+            if (compAdminAndProjectFinance.contains(user)) {
                 assertTrue(rules.compAdminsAndProjectFinanceUserCanUpdateCompletionStageDuringCompetitionSetup(compositeId, user));
             } else {
                 assertFalse(rules.compAdminsAndProjectFinanceUserCanUpdateCompletionStageDuringCompetitionSetup(compositeId, user));
@@ -121,15 +120,24 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
     @Test
     public void compAdminsAndProjectFinanceUserCanUpdateCompletionStageDuringCompetitionSetup_ButNotWhenCompetitionPastSetup() {
 
-        Competition competitionInSetup = newCompetition().
-                withCompetitionStatus(CompetitionStatus.OPEN).
-                build();
+        stream(CompetitionStatus.values()).forEach(status -> {
 
-        when(competitionRepository.findById(competitionId)).thenReturn(competitionInSetup);
+            Competition competitionInSetup = newCompetition().
+                    withCompetitionStatus(status).
+                    build();
 
-        allGlobalRoleUsers.forEach(user ->
-                assertFalse(rules.compAdminsAndProjectFinanceUserCanUpdateCompletionStageDuringCompetitionSetup(compositeId, user)));
+            when(competitionRepository.findById(competitionId)).thenReturn(competitionInSetup);
 
-        verify(competitionRepository, times(2)).findById(competitionId);
+            compAdminAndProjectFinance.forEach(user -> {
+                if (CompetitionStatus.COMPETITION_SETUP.equals(status)) {
+                    assertTrue(rules.compAdminsAndProjectFinanceUserCanUpdateCompletionStageDuringCompetitionSetup(compositeId, user));
+                } else {
+                    assertFalse(rules.compAdminsAndProjectFinanceUserCanUpdateCompletionStageDuringCompetitionSetup(compositeId, user));
+                }
+            });
+
+            verify(competitionRepository, times(2)).findById(competitionId);
+            reset(competitionRepository);
+        });
     }
 }
