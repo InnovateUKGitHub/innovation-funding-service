@@ -70,6 +70,10 @@ IFS.core.formValidation = (function () {
         fields: '[data-maxwordslength]',
         messageInvalid: 'This field has a maximum number of words.'
       },
+      postcode: {
+        fields: '[data-postcode-errormessage]:not([readonly])',
+        messageInvalid: 'Enter a valid postcode.'
+      },
       date: {
         fields: '.date-group input',
         messageInvalid: {
@@ -134,6 +138,7 @@ IFS.core.formValidation = (function () {
       jQuery('body').on('change ifsValidate', s.maxlength.fields, function () { IFS.core.formValidation.checkMaxLength(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.minwordslength.fields, function () { IFS.core.formValidation.checkMinWordsLength(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.maxwordslength.fields, function () { IFS.core.formValidation.checkMaxWordsLength(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.postcode.fields, function () { IFS.core.formValidation.checkPostcode(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.tel.fields, function () { IFS.core.formValidation.checkTel(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.date.fields, function () { IFS.core.formValidation.checkDate(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.pattern.fields, function () { IFS.core.formValidation.checkPattern(jQuery(this)) })
@@ -525,6 +530,24 @@ IFS.core.formValidation = (function () {
       var words = IFS.core.formValidation.countWords(value)
 
       if (words.length > maxWordsLength) {
+        IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
+        return false
+      } else {
+        IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+        return true
+      }
+    },
+    checkPostcode: function (field) {
+      // matches postcode validation in ApplicationSectionController.java
+      var postcodeAttribute = 'postcode'
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, postcodeAttribute)
+      var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, postcodeAttribute)
+      var re = /^$|^.{3,10}$/
+
+      var postcode = field.val()
+      var validPostcode = re.test(postcode)
+
+      if (!validPostcode) {
         IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
         return false
       } else {

@@ -267,7 +267,8 @@
                 <th:block th:if="${#fields.hasErrors('projectLocation')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input govuk-input--width-10" id="projectLocation" th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
+                <input class="govuk-input govuk-input--width-10" id="projectLocation" th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED},
+                data-postcode-errormessage=#{validation.standard.postcodesearch.required}"
                     type="text" name="financePosition-projectLocation" th:value="${model.projectLocationValue}" />
             </div>
         </th:block>
