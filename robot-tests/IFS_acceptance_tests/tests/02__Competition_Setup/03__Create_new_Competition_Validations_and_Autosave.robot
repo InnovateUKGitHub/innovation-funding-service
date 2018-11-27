@@ -254,27 +254,26 @@ Assessor: Client-side validation
     Then The user should not see the text in the page  This field can only accept whole numbers
     And the user clicks the button/link          link = Competition setup
 
-# TODO IFS-4609 Uncomment when this functionality is enabled.
-#Documents in project setup: The competition admin is required to enter a title and guidance message
-#    [Documentation]
-#    [Tags]
-#    Given the user clicks the button/link       link = Documents in project setup
-#    And the user clicks the button/link         link = Add document type
-#    When the user clicks the button/link        css = button[type = "submit"]
-#    Then the user should see the group of errors
-#
-#Documents in project setup: The competition admin addresses the errors
-#    [Documentation]
-#    [Tags]
-#    Given the user enters text to a text field    id = title    Test document type
-#    And the user moves focus and waits for autosave
-#    Then the user should not see the element      jQuery = a:contains("Please enter a title.")
-#    When the user clicks the button/link          jQuery = span:contains("PDF")
-#    #And the user moves focus and waits for autosave
-#    Then the user should not see the element      jQuery = a:contains("You need to select at least one file type.")
-#    When the user enters text to a text field     css = .editor    Guidance test.
-#    And the user moves focus and waits for autosave
-#    Then the user should not see the element      jQuery = a:contains("Please enter guidance for the applicant.")
+Documents in project setup: The competition admin is required to enter a title and guidance message
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link       link = Documents
+    And the user clicks the button/link         link = Add document type
+    When the user clicks the button/link        css = button[type = "submit"]
+    Then the user should see the group of errors
+
+Documents in project setup: The competition admin addresses the errors
+    [Documentation]
+    [Tags]
+    Given the user enters text to a text field    id = title    Test document type
+    And the user moves focus and waits for autosave
+    Then the user should not see the element      jQuery = a:contains("Please enter a title.")
+    When the user clicks the button/link          jQuery = span:contains("PDF")
+    And the user moves focus and waits for autosave
+    Then the user should not see the element      jQuery = a:contains("You need to select at least one file type.")
+    When the user enters text to a text field     css = .editor    Guidance test.
+    And the user moves focus and waits for autosave
+    Then the user should not see the element      jQuery = a:contains("Please enter guidance for the applicant.")
 
 *** Keywords ***
 Custom suite setup
@@ -285,10 +284,6 @@ Custom suite setup
     Set suite variable  ${nextYear}
     ${tomorrowMonthWord} =  get tomorrow month as word
     set suite variable  ${tomorrowMonthWord}
-
-the user moves focus and waits for autosave
-    Set Focus To Element    link=Sign out
-    Wait For Autosave
 
 the validation error above the question should be visible
     [Arguments]    ${QUESTION}    ${ERROR}
@@ -431,10 +426,10 @@ the user should see the correct details in the funding information form
 
 the user should see the correct details in the eligibility form
     the user sees that the radio button is selected     singleOrCollaborative    single
-    the user should see that the checkbox is selected   research-categories-33
-    the user should see that the checkbox is selected   research-categories-34
-    the user should see that the checkbox is selected   research-categories-35
-    the user should see that the checkbox is selected   lead-applicant-type-1  # business
+    Checkbox Should Be Selected   research-categories-33
+    Checkbox Should Be Selected   research-categories-34
+    Checkbox Should Be Selected   research-categories-35
+    Checkbox Should Be Selected   lead-applicant-type-1  # business
     Page Should Contain    50%
     the user sees that the radio button is selected    resubmission    no
 

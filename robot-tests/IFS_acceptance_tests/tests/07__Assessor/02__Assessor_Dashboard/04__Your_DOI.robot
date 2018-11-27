@@ -119,9 +119,9 @@ the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id = familyAffiliations[0].organisation    Innovate
     the user enters text to a text field    id = familyAffiliations[0].position    Director
     the user enters text to a text field    id = familyFinancialInterests    My interests
-    the user moves focus to the element     css = [for^="accurateAccount"]
-    the user selects the checkbox    accurateAccount1
-    Set Focus To Element      jQuery = button:contains("Save and return to your declaration of interest")
+    Set Focus To Element                    css = [for^="accurateAccount"]
+    the user selects the checkbox           accurateAccount1
+    Set Focus To Element                    jQuery = button:contains("Save and return to your declaration of interest")
     Wait For Autosave
 
 the user should see the correct inputs in the declaration form
