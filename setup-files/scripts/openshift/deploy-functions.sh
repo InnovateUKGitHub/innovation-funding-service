@@ -306,7 +306,9 @@ function blockUntilServiceIsUp() {
             if [ ${ERRORRED_PODS} -ne "0" ]; then
                 echo "$ERRORRED_PODS pods stuck in error state.."
                 POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep Error | awk '{ print $1 }')
-                oc logs ${SVC_ACCOUNT_CLAUSE} $POD
+                if ! (( $(isNamedEnvironment ${TARGET}) )); then
+                    oc logs ${SVC_ACCOUNT_CLAUSE} $POD
+                fi
                 exit 1
             fi
         else
@@ -327,7 +329,9 @@ function blockUntilServiceIsUp() {
                 SINCE=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep -E "CrashLoopBackOff|Error" | awk '{ print $5 }')
                 echo "$POD is crashlooping for ${SINCE%m} minutes. Pod logs are:"
                 if [ ${SINCE%m} -gt "5" ]; then
-                    oc ${SVC_ACCOUNT_CLAUSE} logs $POD
+                    if ! (( $(isNamedEnvironment ${TARGET}) )); then
+                        oc logs ${SVC_ACCOUNT_CLAUSE} $POD
+                    fi
                 fi
             fi
         fi
