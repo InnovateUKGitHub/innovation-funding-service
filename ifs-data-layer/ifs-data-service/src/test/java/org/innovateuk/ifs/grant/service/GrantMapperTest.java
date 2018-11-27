@@ -30,6 +30,7 @@ import org.innovateuk.ifs.sil.grant.resource.Participant;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -59,6 +60,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(Parameterized.class)
 public class GrantMapperTest {
     private static final LocalDate DEFAULT_START_DATE = LocalDate.of(2018, 1,2);
     private static final ZonedDateTime DEFAULT_GOL_DATE = ZonedDateTime
@@ -66,6 +68,7 @@ public class GrantMapperTest {
     private static final String OVERHEADS = "Overheads";
     private static final boolean OUTPUT_TEST_JSON = true;
     private static final String OUTPUT_DIRECTORY = "./build/tmp/grant-mapper-json";
+    private final Parameter parameter;
 
     @Mock
     private ApplicationFinanceRepository applicationFinanceRepository;
@@ -90,9 +93,12 @@ public class GrantMapperTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    public GrantMapperTest(Parameter parameter) {
+        this.parameter = parameter;
+    }
+
     @Test
     public void testMap() throws IOException {
-        Parameter parameter = parameters().iterator().next();
         Project project = parameter.createProject();
         when(formInputResponseRepository.findByApplicationId(project.getApplication().getId()))
                 .thenReturn(parameter.formInputResponses());
