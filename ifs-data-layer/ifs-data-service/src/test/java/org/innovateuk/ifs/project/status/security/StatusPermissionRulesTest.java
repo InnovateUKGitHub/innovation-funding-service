@@ -45,6 +45,8 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     private ProjectResource projectResource1;
     private UserResource innovationLeadUserResourceOnProject1;
     private UserResource stakeholderUserResourceOnCompetition;
+    private Competition competition;
+    private Stakeholder stakeholder;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -63,9 +65,9 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
-        Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
+        stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
 
-        Competition competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
+        competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         competitionResource = newCompetitionResource().withId(competition.getId()).build();
         Application application1 = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();
@@ -124,13 +126,15 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
 
     @Test
     public void stakeholdersCanViewTeamStatus(){
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(STAKEHOLDER)) {
-                assertTrue(rules.stakeholdersCanViewTeamStatus(newProjectResource().build(), user));
-            } else {
-                assertFalse(rules.stakeholdersCanViewTeamStatus(newProjectResource().build(), user));
-            }
-        });
+
+        ProjectResource project = newProjectResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
+
+        assertTrue(rules.stakeholdersCanViewTeamStatus(project, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholdersCanViewTeamStatus(project, user));
     }
 
     @Test

@@ -208,26 +208,23 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void stakeholdersCanSeeTheResearchParticipantPercentageInApplications() {
-        ApplicationResource applicationResource = newApplicationResource().build();
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(STAKEHOLDER)) {
-                assertTrue(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user));
-            } else {
-                assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user));
-            }
-        });
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+        assertTrue(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user2));
+        assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user3));
     }
 
     @Test
     public void stakeholdersCanSeeApplicationFinancesTotals() {
-        ApplicationResource applicationResource = newApplicationResource().build();
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(STAKEHOLDER)) {
-                assertTrue(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user));
-            } else {
-                assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user));
-            }
-        });
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+        assertTrue(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user2));
+        assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user3));
+
     }
 
     @Test
