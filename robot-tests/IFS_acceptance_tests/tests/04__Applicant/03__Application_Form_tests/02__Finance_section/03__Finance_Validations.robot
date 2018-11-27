@@ -17,7 +17,7 @@ Mark as complete Your funding with only one input should not be possible
     When the user clicks the button/link      link = Your funding
     And the user selects the radio button     requestingFunding   true
     And the user enters text to a text field  css = [name^="grantClaimPercentage"]  70
-    And the user moves focus to the element   css = [data-target="other-funding-table"] label
+    And Set Focus To Element                  css = [data-target="other-funding-table"] label
     Then the user should see the element      jQuery = #mark-all-as-complete.disabled:contains("Mark as complete")
 
 Other funding client side
@@ -55,43 +55,43 @@ Labour client side
     [Tags]
     Given the user clicks the button/link       link = Your project costs
     And the user clicks the button/link         jQuery = button:contains("Labour")
-    When the user enters text to a text field   css = [name^="labour-labourDaysYearly"]    -1
-    And the user enters text to a text field    css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
+    When the user enters text to a text field   id = working-days-per-year    -1
+    And the user enters text to a text field    css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     Then the user should see a field error      ${field_should_be_1_or_higher}
-    When the user enters text to a text field   css = [name^="labour-labourDaysYearly"]    366
-    And the user enters text to a text field    css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    12121212121212121212121212
-    And the user enters text to a text field    css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    123456789101112
-    And the user enters text to a text field    css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
+    When the user enters text to a text field   id = working-days-per-year    366
+    And the user enters text to a text field    css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    12121212121212121212121212
+    And the user enters text to a text field    css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    123456789101112
+    And the user enters text to a text field    css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     Then the user should see a field error      This field should be 9999999999999999999 or lower.
     And the user should see a field error       You must enter a value less than 10 digits.
     And the user should see a field error       This field should be 365 or lower.
     And the user should see a field error       ${empty_field_warning_message}
-    When the user enters text to a text field   css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    123456789101112131415161718192021
-    When the user enters text to a text field   css = [name^="labour-labourDaysYearly"]    120
-    And the user enters text to a text field    css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    -1
+    When the user enters text to a text field   css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    123456789101112131415161718192021
+    When the user enters text to a text field   id = working-days-per-year    120
+    And the user enters text to a text field    css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    -1
     Then the user should see a field error      This field should be 9999999999999999999 or lower.
     And the user should see a field error       ${field_should_be_1_or_higher}
 
 Labour server side
     [Documentation]    INFUND-844
     [Tags]
-    When the user enters text to a text field   css = [name^="labour-labourDaysYearly"]    366
-    And the user enters text to a text field    css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
-    And the user enters text to a text field    css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
-    And the user enters text to a text field    css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    -1
+    When the user enters text to a text field   id = working-days-per-year    366
+    And the user enters text to a text field    css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
+    And the user enters text to a text field    css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
+    And the user enters text to a text field    css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    -1
     And the user selects the checkbox           stateAidAgreed
     And the user clicks the button/link         jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   ${field_should_be_1_or_higher}
     And the user should see a field and summary error    ${empty_field_warning_message}
     And the user should see a field and summary error    This field should be 365 or lower
-    [Teardown]    Run keywords    the user enters text to a text field    css = [name^="labour-labourDaysYearly"]    21
-    ...    AND    Remove row    jQuery = button:contains("Labour")    jQuery = .labour-costs-table button:contains("Remove")
+    [Teardown]    Run keywords    the user enters text to a text field    id = working-days-per-year    21
+    ...    AND    Remove row    jQuery = button:contains("Labour")    jQuery = #labour-costs-table button:contains("Remove")
 
 Overhead cost client side
     [Documentation]    INFUND-844
     Given the user clicks the button/link    jQuery = button:contains("Overhead costs")
-    When the user selects the radio button   overheads-type-649-1839  cost-overheads-1839-rateType_3
-    And the user uploads the file            id = overheadfile  ${text_file}
+    When the user selects the radio button   overhead.rateType  overhead-rate-type-total
+    And the user uploads the file            id = overhead.file  ${text_file}
     Then the user should see a field and summary error    Please upload a file in .xls, .xlsx or .ods format only.
     #TODO Add validaions for text feild once IFS-2555 done
 
@@ -99,7 +99,7 @@ Overhead cost server side
     [Documentation]    INFUND-844
     Given the user selects the checkbox        agree-terms-page
     When the user clicks the button/link       jQuery = button:contains("Mark as complete")
-    Then The user should see a field and summary error   You should upload a completed overheads spreadsheet.
+    Then The user should see a summary error   You should upload a completed overheads spreadsheet.
 
 Materials client side
     [Documentation]    INFUND-844
@@ -107,7 +107,7 @@ Materials client side
     Given the user clicks the button/link       jQuery = button:contains("Materials")
     When the user enters text to a text field   css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1234567810111213141516171819202122
     And the user enters text to a text field    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
-    And the user moves focus to the element     css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input
+    And Set Focus To Element                    css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input
     Then the user should see a field error      You must enter a value less than 10 digits.
     And the user should see a field error       ${field_should_be_1_or_higher}
 
@@ -157,27 +157,22 @@ Capital usage server side
     And the user enters text to a text field   css = .form-finances-capital-usage-utilisation    50.58
     And the user enters text to a text field   css = .form-finances-capital-usage-depreciation    ${EMPTY}
     And the user clicks the button/link        jQuery = button:contains("Mark as complete")
-    Then the user should see a summary error   ${field_should_be_1_or_higher}
-    And the user should see a summary error    ${field_should_be_1_or_higher}
-    And the user should see a summary error    ${field_should_be_1_or_higher}
-    [Teardown]    Remove row    jQuery = button:contains("Capital usage")    jQuery = #capital_usage button:contains("Remove")
+    Then the user should see a summary error   ${empty_field_warning_message}
+    [Teardown]    Remove row    jQuery = button:contains("Capital usage")    jQuery = #capital-usage button:contains("Remove")
 
 Subcontracting costs client side
     [Documentation]    INFUND-844
     Given the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
-    When the user enters text to a text field   css = #collapsible-4 .form-row:nth-child(1) input[id="formInput[cost-1847-cost]"]    ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id="formInput[cost-1847-name]"]   ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id="formInput[cost-1847-country]"]   ${EMPTY}
-    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) textarea[id="formInput[cost-1847-role]"]   ${EMPTY}
+    When the user enters text to a text field   css = #collapsible-4 .form-row:nth-child(1) input[id$="cost"]    ${EMPTY}
+    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id$="name"]   ${EMPTY}
+    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) input[id$="country"]   ${EMPTY}
+    And the user enters text to a text field    css = #collapsible-4 .form-row:nth-child(1) textarea[id$="role"]   ${EMPTY}
     Then the user should see a field error      ${empty_field_warning_message}
-    And the user should see a field error       ${empty_field_warning_message}
-    And the user should see a field error       ${empty_field_warning_message}
-    And the user should see a field error       ${empty_field_warning_message}
 
 Subcontracting costs server side
     [Documentation]    INFUND-844
-    When the user enters text to a text field            css = #collapsible-4 .form-row:nth-child(1) input[id="formInput[cost-1847-cost]"]    -100
-    And the user enters text to a text field             css = #collapsible-4 .form-row:nth-child(1) input[id="formInput[cost-1847-name]"]     ${EMPTY}
+    When the user enters text to a text field            css = #collapsible-4 .form-row:nth-child(1) input[id$="cost"]    -100
+    And the user enters text to a text field             css = #collapsible-4 .form-row:nth-child(1) input[id$="name"]     ${EMPTY}
     And the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error   ${field_should_be_1_or_higher}
     And the user should see a field and summary error    ${empty_field_warning_message}
@@ -252,7 +247,7 @@ Funding level server side
     Then the user should see a field and summary error   Funding level must be 70% or lower.
     And the user selects the radio button        requestingFunding   true
     Then the user enters text to a text field    css = [name^="grantClaimPercentage"]  69
-    And the user moves focus to the element      css = [data-target="other-funding-table"] label
+    And Set Focus To Element                     css = [data-target="other-funding-table"] label
 
 *** Keywords ***
 Custom Suite Setup
@@ -267,11 +262,11 @@ the user enters invalid inputs in the other funding fields
     the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${SOURCE}
     the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${DATE}
     the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${FUNDING}
-    the user moves focus to the element     css = button.govuk-button[type="submit"]
+    Set Focus To Element                    css = button.govuk-button[type="submit"]
 
 Remove row
     [Arguments]    ${section}    ${close button}
-    the user moves focus to the element    ${close button}
+    Set Focus To Element               ${close button}
     wait for autosave
     the user clicks the button/link    ${close button}
     the user clicks the button/link    ${section}

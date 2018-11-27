@@ -146,10 +146,9 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     @Transactional
     public ServiceResult<Void> deleteCost(Long costId) {
         return find(projectFinanceRowRepository.findOne(costId), notFoundError(ProjectFinanceRow.class)).
-                andOnSuccess(projectFinanceRow -> {
+                andOnSuccessReturnVoid(projectFinanceRow -> {
                     financeRowMetaValueRepository.deleteByFinanceRowId(costId);
                     projectFinanceRowRepository.delete(costId);
-                    return serviceSuccess();
                 });
     }
 

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.saver;
 
-import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
@@ -19,6 +18,8 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
+
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 
 @Component
 public class YourProjectCostsAutosaver {
@@ -45,7 +46,7 @@ public class YourProjectCostsAutosaver {
                 LabourCost workingDaysCost = category.getWorkingDaysPerYearCostItem();
                 workingDaysCost.setLabourDays(Integer.parseInt(value));
                 financeRowRestService.update(workingDaysCost).getSuccess();
-            } else if (field.startsWith("labour.costs")) {
+            } else if (field.startsWith("labour.rows")) {
                 return autosaveLabourCost(field, value, finance);
             } else if (field.startsWith("overhead")) {
                 return autosaveOverheadCost(field, value, finance, applicationId, organisation.getId());
@@ -81,7 +82,7 @@ public class YourProjectCostsAutosaver {
             case "gross":
                 cost.setGrossEmployeeCost(new BigDecimal(value));
                 break;
-            case "fundingAmount":
+            case "days":
                 cost.setLabourDays(Integer.parseInt(value));
                 break;
             default:
@@ -217,7 +218,7 @@ public class YourProjectCostsAutosaver {
     }
 
     private <R extends FinanceRowItem> R getCost(String id, ApplicationFinanceResource finance, Class<R> clazz) throws IllegalAccessException, InstantiationException {
-        if (id.equals(YourFundingForm.EMPTY_ROW_ID)) {
+        if (id.startsWith(UNSAVED_ROW_PREFIX)) {
             return (R) financeRowRestService.addWithResponse(finance.getId(), clazz.newInstance()).getSuccess();
         } else {
             return (R) financeRowRestService.getCost(Long.valueOf(id)).getSuccess();

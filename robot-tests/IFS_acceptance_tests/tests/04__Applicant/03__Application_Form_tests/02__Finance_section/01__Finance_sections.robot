@@ -129,10 +129,9 @@ Applicant chooses Calculate overheads option
     When the user clicks the button/link                    link = Your project costs
     Then the user should see the text in the page           ${excel_file}
     And the user clicks the button/link                     jQuery = button:contains("Edit your project costs")
-    And the user clicks the button/link                     css = button[name="overheadfiledelete"]
+    And the user clicks the button/link                     css = button[name="removeOverheadFile"]
     When the user selects the checkbox                      stateAidAgreed
     And the user clicks the button/link                     jQuery = button:contains("Mark as complete")
-    Then the user should see a summary error                You cannot mark as complete.
 
 *** Keywords ***
 Custom Suite Setup
@@ -148,14 +147,14 @@ the user adds three material rows
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(2) td:nth-of-type(2) input  01
     the user clicks the button/link       jQuery = button:contains("Add another materials cost")
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
-    the user moves focus to the element   link = Please refer to our guide to project costs for further information.
+    Set Focus To Element                  link = Please refer to our guide to project costs for further information.
     Wait for autosave
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
     the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
-    the user moves focus to the element                      jQuery = table[id=material-costs-table] button:contains("Remove")
+    Set Focus To Element                                     jQuery = table[id=material-costs-table] button:contains("Remove")
     the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
     the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")

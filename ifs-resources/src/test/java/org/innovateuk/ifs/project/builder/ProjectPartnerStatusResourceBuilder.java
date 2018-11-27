@@ -46,8 +46,8 @@ public class ProjectPartnerStatusResourceBuilder extends BaseBuilder<ProjectPart
         return withArray((monitoringOfficerStatus, partnerStatus) -> partnerStatus.setMonitoringOfficerStatus(monitoringOfficerStatus), monitoringOfficerStatuses);
     }
 
-    public ProjectPartnerStatusResourceBuilder withOtherDocumentsStatus(ProjectActivityStates... otherDocumentsStatuses){
-        return withArray((otherDocumentsStatus, partnerStatus) -> partnerStatus.setOtherDocumentsStatus(otherDocumentsStatus), otherDocumentsStatuses);
+    public ProjectPartnerStatusResourceBuilder withDocumentsStatus(ProjectActivityStates... documentsStatuses){
+        return withArray((documentsStatus,  partnerStatus) -> partnerStatus.setDocumentsStatus(documentsStatus), documentsStatuses);
     }
 
     public ProjectPartnerStatusResourceBuilder withProjectDetailsStatus(ProjectActivityStates... projectDetailsStatuses){

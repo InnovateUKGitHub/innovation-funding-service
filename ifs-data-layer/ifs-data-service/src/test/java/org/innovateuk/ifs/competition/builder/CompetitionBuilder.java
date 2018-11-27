@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.user.domain.User;
@@ -184,6 +185,14 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withStateAid(Boolean... stateAid) {
         return withArraySetFieldByReflection("stateAid", stateAid);
+    }
+
+    public CompetitionBuilder withProjectDocuments(List<ProjectDocument>... projectDocuments) {
+        return withArraySetFieldByReflection("projectDocuments", projectDocuments);
+    }
+
+    public CompetitionBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSection) {
+        return withArraySetFieldByReflection("includeYourOrganisationSection", includeYourOrganisationSection);
     }
 
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {

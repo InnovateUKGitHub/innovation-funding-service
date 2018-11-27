@@ -184,23 +184,22 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
-        verify(saver).addRowForm(any(YourProjectCostsForm.class), eq(type), eq(APPLICATION_ID), eq(getLoggedInUser()));
+        verify(saver).addRowForm(any(YourProjectCostsForm.class), eq(type));
     }
 
     @Test
     public void removeFundingRowFormPost() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
         String rowToRemove = "5";
-        FinanceRowType type = FinanceRowType.LABOUR;
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}",
                 APPLICATION_ID, SECTION_ID)
-                .param("remove_cost", String.format("%s,%s", rowToRemove, type)))
+                .param("remove_cost", rowToRemove))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
-        verify(saver).removeRowFromForm(any(YourProjectCostsForm.class), eq(type), eq(rowToRemove));
+        verify(saver).removeRowFromForm(any(YourProjectCostsForm.class), eq(rowToRemove));
     }
 
     @Test
@@ -240,17 +239,17 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
         doAnswer((invocation) -> {
             YourProjectCostsForm form = (YourProjectCostsForm) invocation.getArguments()[0];
             form.getLabour().getRows().put(rowId, row);
-            return row;
-        }).when(saver).addRowForm(any(YourProjectCostsForm.class), eq(type), eq(APPLICATION_ID), eq(loggedInUser));
+            return form.getLabour().getRows().entrySet().iterator().next();
+        }).when(saver).addRowForm(any(YourProjectCostsForm.class), eq(type));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}/add-row/{type}",
                 APPLICATION_ID, SECTION_ID, type))
                 .andExpect(view().name("application/your-project-costs-fragments :: ajax_labour_row"))
                 .andExpect(model().attribute("row", row))
-                .andExpect(model().attribute("id", Long.valueOf(rowId)))
+                .andExpect(model().attribute("id", rowId))
                 .andExpect(status().isOk());
 
-        verify(saver).addRowForm(any(YourProjectCostsForm.class), eq(type), eq(APPLICATION_ID), eq(loggedInUser));
+        verify(saver).addRowForm(any(YourProjectCostsForm.class), eq(type));
     }
 
 

@@ -43,7 +43,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -89,6 +88,8 @@ public class YourProjectCostsController extends AsyncAdaptor {
     private ApplicationSectionFinanceSaver completeSectionAction;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @SecuredBySpring(value = "VIEW_PROJECT_COSTS", description = "Applicants and internal users can view the Your project costs page")
     public String viewYourProjectCosts(Model model,
                                        UserResource user,
                                        @PathVariable long applicationId,
@@ -150,12 +151,9 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                 @PathVariable long organisationId,
                                 @PathVariable long sectionId,
                                 @ModelAttribute("form") YourProjectCostsForm form,
-                                @RequestParam("remove_cost") List<String> removeRequest) {
-        String id = removeRequest.get(0);
-        FinanceRowType type = FinanceRowType.valueOf(removeRequest.get(1));
-        saver.removeRowFromForm(form, type, id);
+                                @RequestParam("remove_cost") String removeId) {
+        saver.removeRowFromForm(form, removeId);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, "");
-
     }
 
     @PostMapping(params = "add_cost")
@@ -167,7 +165,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
                              @ModelAttribute("form") YourProjectCostsForm form,
                              @RequestParam("add_cost") FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
 
-        saver.addRowForm(form, rowType, applicationId, user);
+        saver.addRowForm(form, rowType);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, "");
     }
 
@@ -219,15 +217,14 @@ public class YourProjectCostsController extends AsyncAdaptor {
 
     @PostMapping("add-row/{rowType}")
     public String ajaxAddRow(Model model,
-                             UserResource user,
-                             @PathVariable long applicationId,
                              @PathVariable FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
         YourProjectCostsForm form = new YourProjectCostsForm();
         form.setLabour(new LabourForm());
-        AbstractCostRowForm row = saver.addRowForm(form, rowType, applicationId, user);
+        Map.Entry<String, AbstractCostRowForm> map = saver.addRowForm(form, rowType);
+
         model.addAttribute("form", form);
-        model.addAttribute("id", row.getCostId());
-        model.addAttribute("row", row);
+        model.addAttribute("id", map.getKey());
+        model.addAttribute("row", map.getValue());
         return String.format("application/your-project-costs-fragments :: ajax_%s_row", rowType.name().toLowerCase());
     }
 

@@ -151,7 +151,7 @@
 </th:block>
 
 <th:block th:fragment="labour_row (id, row)">
-    <tr th:with="path=${'labour.rows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+    <tr th:with="path=${'labour.rows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.role">
@@ -219,7 +219,7 @@
         <td class="govuk-table__cell buttoncolumn alignright">
             <button type="submit"
                     th:name="remove_cost"
-                    th:value="|${id},${row.rowType}|"
+                    th:value="${id}"
                     class="button-clear js-remove-row">Remove
             </button>
         </td>
@@ -385,51 +385,51 @@
                         <div class="govuk-form-group download">
                             <h3 class="govuk-heading-s">Download the overhead calculation spreadsheet</h3>
                             <ul class="govuk-list govuk-list--bullet">
-                                <li>Download as an Excel document <a href="/files/overheads.xlsx" class="govuk-link">overhead
-                                    calculation spreadsheet.xlsx (16KB)</a></li>
-                                <li>Download as an Open Office document <a href="/files/overheads.ods"
-                                                                           class="govuk-link">overhead
-                                    calculation spreadsheet.ods (10KB)</a></li>
+                                <li>Download as an Excel document <a href="/files/overheads.xlsx" class="govuk-link">overhead calculation spreadsheet.xlsx (16KB)</a></li>
+                                <li>Download as an Open Office document <a href="/files/overheads.ods" class="govuk-link">overhead calculation spreadsheet.ods (10KB)</a></li>
                             </ul>
                         </div>
-                        <div class="upload-section govuk-!-margin-top-6">
-                            <h3 class="govuk-heading-s govuk-!-margin-0">Upload your completed spreadsheet</h3>
-                            <div class="govuk-form-group">
-
-                                <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
-                                    @{${'/application/download/overheadfile/'+form.overhead.costId}},
-                                    ${form.overhead.filename},
-                                    overhead.file,
-                                    overhead.file,
-                                    true,
-                                    removeOverheadFile,
-                                    uploadOverheadFile)"/>
-                            </div>
-                        </div>
-                        <div class="govuk-form-group alignright inline">
-                            <label for="overhead.totalSpreadsheet"
-                                   class="govuk-label">
-                                Enter the total cost of overheads as calculated in the spreadsheet &pound;
-                            </label>
-                            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead.totalSpreadsheet)"/>
-                            <input id="overhead.totalSpreadsheet"
-                                   th:field="*{overhead.totalSpreadsheet}"
-                                   th:errorclass="govuk-input--error"
-                                   type="number"
-                                   class="govuk-input govuk-input--width-10 alignright"
-                                   min="0"
-                                   max="999999999"
-                                   step="1"
-                                   required="required"/>
-                            <input type="hidden"
-                                   readonly="readonly"
-                                   id="total-overhead-calculated"
-                                   data-calculation-fields="[id='overhead.totalSpreadsheet'],1"
-                                   data-calculation-operations="*"
-                                   th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
-                                   th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
-                        </div>
                     </th:block>
+                    <div class="upload-section govuk-!-margin-top-6">
+                        <h3 th:unless="${model.internal}" class="govuk-heading-s govuk-!-margin-0">Upload your completed spreadsheet</h3>
+
+                        <div class="govuk-form-group">
+                            <th:block th:if="${model.internal}">
+                                <p th:if="${form.overhead.filename == null}" class="govuk-body">The applicant has not uploaded a file.</p>
+                                <p th:if="${form.overhead.filename != null}" class="govuk-body">The applicant has uploaded a completed overhead costs spreadsheet.</p>
+                            </th:block>
+                            <th:block th:unless="${model.internal and form.overhead.filename == null}" th:insert="question-type/types :: fileupload-fragment(${model.internal ? 'readonly' : 'edit'},
+                                @{'/application/download/overheadfile/{overheadId}(overheadId=${form.overhead.costId})},
+                                ${form.overhead.filename},
+                                overhead.file,
+                                overhead.file,
+                                true,
+                                removeOverheadFile,
+                                uploadOverheadFile)"/>
+                        </div>
+                    </div>
+                    <div class="govuk-form-group alignright inline">
+                        <label for="overhead.totalSpreadsheet"
+                               class="govuk-label" th:text="${model.internal ? 'Total cost of overheads &pound;' : 'Enter the total cost of overheads as calculated in the spreadsheet &pound;' }">
+                            Enter the total cost of overheads as calculated in the spreadsheet &pound;
+                        </label>
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead.totalSpreadsheet)"/>
+                        <input id="overhead.totalSpreadsheet"
+                               th:field="*{overhead.totalSpreadsheet}"
+                               th:errorclass="govuk-input--error"
+                               type="number"
+                               class="govuk-input govuk-input--width-10 alignright"
+                               min="0"
+                               max="999999999"
+                               step="1"/>
+                        <input type="hidden"
+                               readonly="readonly"
+                               id="total-overhead-calculated"
+                               data-calculation-fields="[id='overhead.totalSpreadsheet'],1"
+                               data-calculation-operations="*"
+                               th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
+                               th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
+                    </div>
                 </div>
             </th:block>
             <th:block th:if="${model.internal}" th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})" />
@@ -626,7 +626,7 @@
 
 <th:block th:fragment="materials_row (id, row)">
     <tr th:with="path=${'materialRows[__${id}__]'}" class="govuk-table__row form-group-row-validated"
-        th:attr="data-repeatable-row=${path}">
+        th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.item">
@@ -693,7 +693,7 @@
         <td class="govuk-table__cell alignright buttoncolumn remove">
             <button type="submit"
                     th:name="remove_cost"
-                    th:value="|${id},${row.rowType}|"
+                    th:value="${id}"
                     class="button-clear js-remove-row">Remove
             </button>
         </td>
@@ -827,7 +827,7 @@
 </th:block>
 
 <th:block th:fragment="capital_usage_row (id, row)">
-    <div class="form-row" th:with="path=${'capitalUsageRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+    <div class="form-row" th:with="path=${'capitalUsageRows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <div class="govuk-form-group">
             <label class="govuk-label govuk-label--s"
@@ -972,7 +972,7 @@
         </div>
         <button type="submit"
                 th:name="remove_cost"
-                th:value="|${id},${row.rowType}|"
+                th:value="${id}"
                 class="button-clear js-remove-row">Remove
         </button>
     </div>
@@ -1005,7 +1005,7 @@
             <th:block th:each="entry : *{capitalUsageRows}" th:with="cost=${entry.value}">
                 <tr class="govuk-table__row" th:unless="${cost.blank}">
                     <td class="govuk-table__cell" th:text="${cost.item}"></td>
-                    <td class="govuk-table__cell" th:text="${cost.newItem ? 'Existing' : 'New'}"></td>
+                    <td class="govuk-table__cell" th:text="${cost.newItem ? 'New' : 'Existing'}"></td>
                     <td class="govuk-table__cell" th:text="${cost.deprecation}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric"
                         th:text="${#numbers.formatInteger(cost.netValue, 0, 'DEFAULT')}"></td>
@@ -1122,7 +1122,7 @@
 </th:block>
 
 <th:block th:fragment="subcontracting_costs_row (id, row)">
-    <div class="form-row" th:with="path=${'subcontractingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+    <div class="form-row" th:with="path=${'subcontractingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <div class="govuk-form-group">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.name">
@@ -1190,7 +1190,7 @@
         </div>
         <button type="submit"
                 th:name="remove_cost"
-                th:value="|${id},${row.rowType}|"
+                th:value="${id}"
                 class="button-clear js-remove-row">Remove
         </button>
     </div>
@@ -1322,7 +1322,7 @@
 
 <th:block th:fragment="travel_row (id, row)">
     <tr class="govuk-table__row form-group-row-validated" th:with="path=${'travelRows[__${id}__]'}"
-        th:attr="data-repeatable-row=${path}">
+        th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.item">
@@ -1389,7 +1389,7 @@
         <td class="govuk-table__cell">
             <button type="submit"
                     th:name="remove_cost"
-                    th:value="|${id},${row.rowType}|"
+                    th:value="${id}"
                     class="button-clear js-remove-row">Remove
             </button>
         </td>
@@ -1518,7 +1518,7 @@
 </th:block>
 
 <th:block th:fragment="other_costs_row (id, row)">
-    <tr class="form-group-row-validated" th:with="path=${'otherRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+    <tr class="form-group-row-validated" th:with="path=${'otherRows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.description">
@@ -1557,7 +1557,7 @@
         <td class="govuk-table__cell">
             <button type="submit"
                     th:name="remove_cost"
-                    th:value="|${id},${row.rowType}|"
+                    th:value="${id}"
                     class="button-clear js-remove-row">Remove
             </button>
         </td>

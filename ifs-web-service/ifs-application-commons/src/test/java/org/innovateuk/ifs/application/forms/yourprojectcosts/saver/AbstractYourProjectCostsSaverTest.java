@@ -17,7 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
-import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.EMPTY_ROW_ID;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -54,7 +54,7 @@ public class AbstractYourProjectCostsSaverTest {
         labourForm.setWorkingDaysPerYear(365);
         LabourRowForm labourRow =  new LabourRowForm();
         labourRow.setGross(new BigDecimal(123));
-        labourForm.setRows(asMap(EMPTY_ROW_ID, labourRow));
+        labourForm.setRows(asMap(UNSAVED_ROW_PREFIX, labourRow));
         form.setLabour(labourForm);
 
         OverheadForm overheadForm = new OverheadForm();
@@ -64,23 +64,23 @@ public class AbstractYourProjectCostsSaverTest {
 
         MaterialRowForm materialRow = new MaterialRowForm();
         materialRow.setCost(new BigDecimal(123));
-        form.setMaterialRows(asMap(EMPTY_ROW_ID, materialRow));
+        form.setMaterialRows(asMap(UNSAVED_ROW_PREFIX, materialRow));
 
         CapitalUsageRowForm capitalUsageRow = new CapitalUsageRowForm();
         capitalUsageRow.setNetValue(new BigDecimal(123));
-        form.setCapitalUsageRows(asMap(EMPTY_ROW_ID, capitalUsageRow));
+        form.setCapitalUsageRows(asMap(UNSAVED_ROW_PREFIX, capitalUsageRow));
 
         SubcontractingRowForm subcontractingRow = new SubcontractingRowForm();
         subcontractingRow.setCost(new BigDecimal(123));
-        form.setSubcontractingRows(asMap(EMPTY_ROW_ID, subcontractingRow));
+        form.setSubcontractingRows(asMap(UNSAVED_ROW_PREFIX, subcontractingRow));
 
         TravelRowForm travelRow = new TravelRowForm();
         travelRow.setEachCost(new BigDecimal(123));
-        form.setTravelRows(asMap(EMPTY_ROW_ID, travelRow));
+        form.setTravelRows(asMap(UNSAVED_ROW_PREFIX, travelRow));
 
         OtherCostRowForm otherRow = new OtherCostRowForm();
         otherRow.setEstimate(new BigDecimal(123));
-        form.setOtherRows(asMap(EMPTY_ROW_ID, otherRow));
+        form.setOtherRows(asMap(UNSAVED_ROW_PREFIX, otherRow));
 
         FinanceRowItem mockResponse = mock(FinanceRowItem.class);
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));

@@ -52,8 +52,6 @@ public class FinanceFormPopulatorTest {
 
     @Test
     public void populateForm() {
-        final boolean isIncludeGrowthTable = true;
-        Boolean includeJesForm = false;
         final String fundingRules = "Funding rules for competition are fun, right?";
 
         SectionResource overviewFinanceSection = newSectionResource()
@@ -61,9 +59,10 @@ public class FinanceFormPopulatorTest {
                 .build();
 
         CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()
-                .withIncludeGrowthTable(isIncludeGrowthTable)
+                .withIncludeGrowthTable(true)
+                .withIncludeYourOrganisationSection(true)
                 .withApplicationFinanceType(STANDARD)
-                .withIncludeJesForm(includeJesForm)
+                .withIncludeJesForm(true)
                 .build();
 
         CompetitionResource competition = newCompetitionResource()
@@ -86,24 +85,23 @@ public class FinanceFormPopulatorTest {
         assertTrue(result instanceof FinanceForm);
         FinanceForm form = (FinanceForm) result;
         assertEquals(STANDARD, form.getApplicationFinanceType());
-        assertEquals(isIncludeGrowthTable, form.getIncludeGrowthTable());
+        assertTrue(form.getIncludeGrowthTable());
+        assertTrue(form.getIncludeYourOrganisationSection());
+        assertTrue(form.getIncludeJesForm());
         assertEquals(fundingRules, form.getFundingRules());
-        assertEquals(includeJesForm, form.getIncludeJesForm());
     }
 
     @Test
     public void populateForm_noFinances() {
-        final boolean isIncludeGrowthTable = true;
-        Boolean includeJesForm = false;
-
         CompetitionResource competition = newCompetitionResource()
                 .withNonFinanceType(true)
                 .build();
 
         CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()
-                .withIncludeGrowthTable(isIncludeGrowthTable)
+                .withIncludeGrowthTable(false)
+                .withIncludeYourOrganisationSection(false)
+                .withIncludeJesForm(false)
                 .withApplicationFinanceType(NO_FINANCES)
-                .withIncludeJesForm(includeJesForm)
                 .build();
 
         assertTrue(competition.isNonFinanceType());
@@ -116,8 +114,10 @@ public class FinanceFormPopulatorTest {
         assertTrue(result instanceof FinanceForm);
         FinanceForm form = (FinanceForm) result;
         assertEquals(NO_FINANCES, form.getApplicationFinanceType());
-        assertEquals(isIncludeGrowthTable, form.getIncludeGrowthTable());
+        assertFalse(form.getIncludeGrowthTable());
+        assertFalse(form.getIncludeYourOrganisationSection());
+        assertFalse(form.getIncludeJesForm());
+
         assertNull(form.getFundingRules());
-        assertEquals(includeJesForm, form.getIncludeJesForm());
     }
 }

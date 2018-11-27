@@ -61,7 +61,7 @@ Applicant Applies to Research leading Competition
     the lead applicant marks every question as complete   Scope
     the lead applicant marks every question as complete   1. How innovative is your project?
     And The user clicks the button/link                   link = Your finances
-    When the user marks finances complete (no Your org)    ${researchLeadApp}   Calculate  52,214  yes
+    When the user marks the finances as complete          ${researchLeadApp}   Calculate  52,214  yes
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                   link = Application overview
     And collaborating is required to submit the application if Research participation is not 100pc   ${compResearch}  ${researchLeadApp}  ${collaborator2_credentials["email"]}  yes
@@ -103,8 +103,7 @@ The competition admin creates a competition for
     the internal user can see that the Generic competition has only one Application Question
     The user removes the Project details questions and marks the Application section as done  yes  Generic
     the user fills in the CS Assessors
-    # TODO IFS-4609 Uncomment when this functionality is enabled.
-    #the user fills in the CS Documents in other projects
+    the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
     the user fills in the Public content and publishes      ${extraKeyword}
     the user clicks the button/link                         link = Return to setup overview

@@ -262,24 +262,6 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void applicationFormSubmit_applicationFinanceMarkAsCompleteFailWithoutStateAid() throws Exception {
-        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build()).build());
-
-        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
-
-        when(organisationRestService.getByUserAndApplicationId(anyLong(), anyLong())).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()));
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-        ).andExpect(status().isOk())
-                .andExpect(view().name("application-form"))
-                .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrors("form", STATE_AID_AGREED_KEY));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
-    }
-
-    @Test
     public void applicationFormSubmit_yourOrganisationMarkAsCompleteFailsWithoutOrganisationSize() throws Exception {
         when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build()).build());
         when(organisationRestService.getByUserAndApplicationId(anyLong(), anyLong())).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()));
@@ -472,23 +454,6 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void applicationFormSubmit_errorsAreNotShownOnOverheadFileRequest() throws Exception {
-        mockMvc.perform(
-                fileUpload("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
-        ).andExpect(status().is2xxSuccessful())
-                .andExpect(model().hasNoErrors());
-    }
-
-    @Test
-    public void applicationFormSubmit_pageIsNotRedirectedOnOverheadFileUploadRequest() throws Exception {
-        mockMvc.perform(
-                fileUpload("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
-        ).andExpect(status().is2xxSuccessful());
     }
 
     @Test

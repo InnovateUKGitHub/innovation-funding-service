@@ -5,20 +5,27 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.form.LabourForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.OverheadForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
+import org.innovateuk.ifs.finance.service.OverheadFileRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.EMPTY_ROW_ID;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.newFieldError;
 
@@ -27,6 +34,12 @@ public class YourProjectCostsFormValidator {
 
     @Autowired
     private Validator validator;
+
+    @Autowired
+    private OverheadFileRestService overheadFileRestService;
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
 
     public void validateType(YourProjectCostsForm form, FinanceRowType type, ValidationHandler validationHandler) {
         switch (type) {
@@ -67,6 +80,15 @@ public class YourProjectCostsFormValidator {
     private void validateOverhead(OverheadForm overhead, ValidationHandler validationHandler) {
         if (OverheadRateType.TOTAL.equals(overhead.getRateType())) {
             validateForm(overhead, validationHandler, "overhead.");
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+                    .getRequestAttributes()).getRequest();
+            UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+            if (!user.isInternalUser()) {
+                boolean hasOverheadFile = overheadFileRestService.getOverheadFileDetails(overhead.getCostId()).isSuccess();
+                if (!hasOverheadFile) {
+                    validationHandler.addAnyErrors(new ValidationMessages(fieldError("overhead.file", null, "validation.finance.overhead.file.required")));
+                }
+            }
         }
     }
 
@@ -86,7 +108,7 @@ public class YourProjectCostsFormValidator {
 
     private <R extends AbstractCostRowForm> void validateRows(Map<String, R> rows, String path, ValidationHandler validationHandler) {
         rows.forEach((id, row) -> {
-            if (!(EMPTY_ROW_ID.equals(id) && row.isBlank())) {
+            if (!(id.startsWith(UNSAVED_ROW_PREFIX) && row.isBlank())) {
                 validateForm(row, validationHandler,  path, id);
             }
         });

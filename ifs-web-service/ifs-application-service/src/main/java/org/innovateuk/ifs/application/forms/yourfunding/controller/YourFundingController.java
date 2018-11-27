@@ -26,6 +26,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -140,7 +141,7 @@ public class YourFundingController {
                                         @PathVariable long sectionId,
                                         @ModelAttribute("form") YourFundingForm form) {
 
-        saver.addOtherFundingRow(form, applicationId, user);
+        saver.addOtherFundingRow(form);
         return viewYourFunding(model, applicationId, sectionId, user);
     }
 
@@ -179,16 +180,14 @@ public class YourFundingController {
     }
 
     @PostMapping("add-row")
-    public String ajaxAddRow(Model model,
-                             UserResource user,
-                             @PathVariable long applicationId) {
+    public String ajaxAddRow(Model model) {
         YourFundingForm form = new YourFundingForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
-        saver.addOtherFundingRow(form, applicationId, user);
-        OtherFundingRowForm row = form.getOtherFundingRows().entrySet().iterator().next().getValue();
+        saver.addOtherFundingRow(form);
+        Map.Entry<String, OtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();
         model.addAttribute("form", form);
-        model.addAttribute("id", row.getCostId());
-        model.addAttribute("row", row);
+        model.addAttribute("id", row.getKey());
+        model.addAttribute("row", row.getValue());
         return "application/your-funding-fragments :: ajax_other_funding_row";
     }
 

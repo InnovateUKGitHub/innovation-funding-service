@@ -56,14 +56,14 @@ Valid Profile Update
 Custom Suite Setup
    the assessor logs-in
    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Sign in successful")
-   Run Keyword If   '${status}' == 'PASS'  Run keywords    the user selects the checkbox   selectedRole1
+   Run Keyword If   '${status}' == 'PASS'  Run keywords    the user selects the radio button    selectedRole   ASSESSOR
    ...                              AND    the user clicks the button/link   css = .govuk-button[type="submit"]   #Continue
    User opens the edit details form
 
 the assessor updates profile details
     The user enters text to a text field  id = firstName    Joy
     The user enters text to a text field  id = lastName    Archer
-    the user moves focus to the element   id = firstName
+    Set Focus To Element                  id = firstName
     the user enters text to a text field  id = addressForm.addressLine1    7, Phoenix house
     the user enters text to a text field  id = addressForm.town    Reading
     the user enters text to a text field  id = addressForm.postcode    RG1 7UH

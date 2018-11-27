@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRo
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -47,6 +48,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
@@ -102,6 +104,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
+    @AsyncMethod
     public String viewEligibility(@PathVariable long projectId,
                                   @PathVariable Long organisationId,
                                   @ModelAttribute(name = FORM_ATTR_NAME, binding = false) YourProjectCostsForm form,
@@ -200,10 +203,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                              @PathVariable long organisationId,
                              @PathVariable FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
         YourProjectCostsForm form = new YourProjectCostsForm();
-        AbstractCostRowForm row = yourProjectCostsSaver.addRowForm(form, rowType, projectId, organisationId);
+        Map.Entry<String, AbstractCostRowForm> entry = yourProjectCostsSaver.addRowForm(form, rowType);
         model.addAttribute("form", form);
-        model.addAttribute("id", row.getCostId());
-        model.addAttribute("row", row);
+        model.addAttribute("id", entry.getKey());
+        model.addAttribute("row", entry.getValue());
         return String.format("application/your-project-costs-fragments :: ajax_%s_row", rowType.name().toLowerCase());
     }
 
@@ -213,6 +216,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "confirm-eligibility")
+    @AsyncMethod
     public String confirmEligibility(@PathVariable long projectId,
                                      @PathVariable long organisationId,
                                      @ModelAttribute(FORM_ATTR_NAME) YourProjectCostsForm form,
@@ -230,6 +234,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save-and-continue")
+    @AsyncMethod
     public String saveAndContinue(@PathVariable long projectId,
                                   @PathVariable Long organisationId,
                                   @ModelAttribute(FORM_ATTR_NAME) YourProjectCostsForm form,

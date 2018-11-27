@@ -44,8 +44,7 @@ Comp Admin starts a new Competition
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
-    # TODO IFS-4609 Uncomment when this functionality is enabled.
-    #And the user fills in the CS Documents in other projects
+    And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -122,8 +121,7 @@ Once the project growth table is selected
     And the user fills in the CS Milestones              ${month}  ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
-    # TODO IFS-4609 Uncomment when this functionality is enabled.
-    #And the user fills in the CS Documents in other projects
+    And the user fills in the CS Documents in other projects
     When the user clicks the button/link                 link = Public content
     Then the user fills in the Public content and publishes  GrowthTable
     And the user clicks the button/link                  link = Return to setup overview
@@ -164,14 +162,14 @@ Organisation client side validation when no
     [Tags]
     Given the user selects medium organisation size
     When the user enters text to a text field           jQuery = .govuk-hint:contains("Your turnover from the last financial year") + + input  ${empty}
-    And the user moves focus to the element             jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input
+    And Set Focus To Element                            jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input
     Then the user should see a field and summary error  ${empty_field_warning_message}
     And the user enters text to a text field            jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input  ${empty}
-    When the user moves focus to the element            jQuery = button:contains("Mark as complete")
+    When Set Focus To Element                           jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error  ${empty_field_warning_message}
     When the user enters text to a text field           jQuery = .govuk-hint:contains("Your turnover from the last financial year") + + input  150
     And the user enters text to a text field            jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input  0
-    And the user moves focus to the element             jQuery = button:contains("Mark as complete")
+    And Set Focus To Element                            jQuery = button:contains("Mark as complete")
     Then the user should not see the element            css = .govuk-error-message
 
 Mark Organisation as complete when no
@@ -233,7 +231,7 @@ Organisation client side validation when yes
     And the user enters value to field                        Annual turnover    ${EMPTY}
     Then the user should see a field and summary error        ${empty_field_warning_message}
     When the user enters value to field                       Annual turnover    8.5
-    And the user moves focus to the element                   jQuery = td:contains("Annual profit") + td input
+    And Set Focus To Element                                  jQuery = td:contains("Annual profit") + td input
     Then the user should see a field and summary error        ${only_accept_whole_numbers_message}
     And the user enters value to field                        Annual profit    -5
     When the user enters value to field                       Annual export    ${empty}
@@ -373,16 +371,6 @@ the user should see that the funding depends on the research area
 
 the user should see his finances empty
     the user should see the element  jQuery = thead:contains("Total project costs") ~ *:contains("£0")
-
-the user decides about the growth table
-    [Arguments]  ${edit}  ${read}
-    the user should see the element   jQuery = h1:contains("Competition setup")
-    the user clicks the button/link   link = Application
-    the user fills in the Finances questions  ${edit}
-    the user clicks the button/link   link = Finances
-    the user should see the element   jQuery = dt:contains("Include project growth table") + dd:contains("${read}")
-    the user clicks the button/link   link = Application
-    the user clicks the button/link   link = Competition setup
 
 the user enters value to field
     [Arguments]  ${field}  ${value}
