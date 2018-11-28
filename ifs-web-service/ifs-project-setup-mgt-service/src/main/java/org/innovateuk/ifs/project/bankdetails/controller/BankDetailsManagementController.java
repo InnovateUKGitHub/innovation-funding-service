@@ -30,7 +30,6 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
@@ -110,10 +109,7 @@ public class BankDetailsManagementController {
         return validationHandler.performActionOrBindErrorsToField("",
                 failureView,
                 () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
-                () -> {
-                    Void result = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).getSuccess();
-                    return serviceSuccess(result);
-                }
+                () -> bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource)
         );
     }
 
