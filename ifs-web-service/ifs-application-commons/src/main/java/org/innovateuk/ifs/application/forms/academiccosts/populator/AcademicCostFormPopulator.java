@@ -14,6 +14,7 @@ import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -69,7 +70,7 @@ public class AcademicCostFormPopulator {
     private AcademicCost getCostByName(Map<String, AcademicCost> costMap, String name, ApplicationFinanceResource finance) {
         AcademicCost cost = costMap.get(name);
         if (cost == null) {
-            cost = new AcademicCost(null, name, null, null, costTypeFromName(name));
+            cost = new AcademicCost(null, name, BigDecimal.ZERO, null, costTypeFromName(name));
             defaultFinanceRowRestService.addWithResponse(finance. getId(), cost);
         }
         return cost;
