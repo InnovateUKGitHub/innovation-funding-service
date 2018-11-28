@@ -47,7 +47,8 @@
                         th:field="${form.title}"
                         th:disabled="${form.editable ? 'false' : 'true'}"
                         required="required"
-                        th:attr="data-required-errormessage=#{validation.standard.title.required}" />
+                        th:attr="data-required-errormessage=#{validation.standard.title.required},
+                           data-anychange-errormessage=#{DOCUMENT_TITLE_HAS_BEEN_USED}" />
                       <input th:if="${!form.editable}" type="hidden" th:field="${form.title}"/>
                   </div>
 

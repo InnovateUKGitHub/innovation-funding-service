@@ -11,9 +11,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.dao.DataIntegrityViolationException;
+
+
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.DOCUMENT_TITLE_HAS_BEEN_USED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
@@ -39,8 +43,20 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
 
             ProjectDocument projectDocument = projectDocumentMapper.mapToDomain(projectDocumentResource);
 
-            ProjectDocument savedProjectDocument = projectDocumentConfigRepository.save(projectDocument);
-            return serviceSuccess(projectDocumentMapper.mapToResource(savedProjectDocument));
+            try {
+                ProjectDocument savedProjectDocument = projectDocumentConfigRepository.save(projectDocument);
+                return serviceSuccess(projectDocumentMapper.mapToResource(savedProjectDocument));
+
+            } catch (DataIntegrityViolationException e) {
+                String message = e.getCause().getCause().getMessage();
+                if(message.matches("Duplicate entry '(.*)' for key 'UC_competition_title'")) {
+                    return serviceFailure(DOCUMENT_TITLE_HAS_BEEN_USED);
+                }
+                else
+                {
+                    throw e;
+                }
+            }
         });
     }
 

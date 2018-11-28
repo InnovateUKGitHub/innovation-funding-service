@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.DOCUMENT_TITLE_HAS_BEEN_USED;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
@@ -197,6 +198,7 @@ public class CompetitionSetupProjectDocumentController {
 
             return validationHandler.addAnyErrors(updateResult,
                                                     mappingErrorKeyToField(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE, "acceptedFileTypesId"),
+                                                    mappingErrorKeyToField(DOCUMENT_TITLE_HAS_BEEN_USED, "title"),
                                                     fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> format(PROJECT_DOCUMENT_LANDING_REDIRECT, competitionId));
         });
