@@ -269,16 +269,16 @@ Custom suite setup
     The user logs-in in new browser  &{lead_applicant_credentials}
 
 the finance summary calculations should be correct
-    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("£349,046")
+    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("£328,571")
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("58,793")
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("502,468")
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("140,632")
 
 the finance Funding breakdown calculations should be correct
-    the user should see the element  jQuery = .project-cost-breakdown th:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") + td:contains("£147,153")
+    the user should see the element  jQuery = .project-cost-breakdown th:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") + td:contains("£126,678")
     the user should see the element  jQuery = .project-cost-breakdown th:contains("${organisationLudlowName}") + td:contains("£200,903")
     the user should see the element  jQuery = .project-cost-breakdown th:contains("${organisationEggsName}") + td:contains("£990")
-    the user should see the element  jQuery = .project-cost-breakdown th:contains("Total") + td:contains("£349,046")
+    the user should see the element  jQuery = .project-cost-breakdown th:contains("Total") + td:contains("£328,571")
 
 the finance summary table in Your Finances has correct values for lead
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
@@ -324,12 +324,12 @@ Lead enters a valid research participation value
     the user clicks the button/link                   jQuery = button:contains("Labour")
     the user should see the element                   name = add_cost
     the user clicks the button/link                   jQuery = button:contains('Add another role')
-    the user should see the element                   css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    the user enters text to a text field              css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input  Test
+    the user should see the element                   css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
+    the user enters text to a text field              css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input  Test
     wait for autosave
-    The user enters text to a text field              css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input  1200000000
+    The user enters text to a text field              css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input  1200000000
     wait for autosave
-    the user enters text to a text field              css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input  1000
+    the user enters text to a text field              css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input  1000
     wait for autosave
     the user selects the checkbox                     stateAidAgreed
     the user clicks the button/link                   jQuery = button:contains('Mark as complete')

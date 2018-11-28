@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 /**
  * Determines if a registering user has to become part of an already existing organisation
  * Companies House or Je-s organisations on the basis of specific organisation details.
@@ -25,13 +27,16 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
 
     public Optional<Organisation> findOrganisationMatch(OrganisationResource submittedOrganisationResource) {
         if (OrganisationTypeEnum.isResearch(submittedOrganisationResource.getOrganisationType())) {
-            return findFirstCompaniesHouseMatch(submittedOrganisationResource);
-        } else {
             return findFirstResearchMatch(submittedOrganisationResource);
+        } else {
+            return findFirstCompaniesHouseMatch(submittedOrganisationResource);
         }
     }
 
-    private Optional<Organisation> findFirstResearchMatch(OrganisationResource submittedOrganisationResource) {
+    private Optional<Organisation> findFirstCompaniesHouseMatch(OrganisationResource submittedOrganisationResource) {
+        if (isNullOrEmpty(submittedOrganisationResource.getCompaniesHouseNumber())) {
+            return Optional.empty();
+        }
         return findOrganisationByCompaniesHouseId(submittedOrganisationResource).stream()
                 .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeMatches(
                         foundOrganisation,
@@ -40,7 +45,7 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
                 .findFirst();
     }
 
-    private Optional<Organisation> findFirstCompaniesHouseMatch(OrganisationResource submittedOrganisationResource) {
+    private Optional<Organisation> findFirstResearchMatch(OrganisationResource submittedOrganisationResource) {
         return findOrganisationByName(submittedOrganisationResource).stream()
                 .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeIsResearch(foundOrganisation))
                 .findFirst();

@@ -8,7 +8,9 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
-import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.ManagementYourProjectCostsViewModel;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.populator.section.YourProjectCostsSectionPopulator;
@@ -16,12 +18,10 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
-import org.innovateuk.ifs.application.viewmodel.section.DefaultProjectCostSection;
-import org.innovateuk.ifs.application.viewmodel.section.StandardYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.JesYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
+import org.innovateuk.ifs.assessment.overview.populator.ApplicationYourProjectCostsFormPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentDetailedFinancesModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
@@ -35,6 +35,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -60,6 +61,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
@@ -75,8 +77,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -140,6 +142,15 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
     @Spy
     @InjectMocks
     private YourProjectCostsSectionPopulator yourProjectCostsSectionPopulator;
+
+    @Spy
+    private FinanceUtil financeUtil;
+
+    @Mock
+    private YourProjectCostsViewModelPopulator yourProjectCostsViewModelPopulator;
+
+    @Mock
+    private ApplicationYourProjectCostsFormPopulator yourProjectCostsFormPopulator;
 
     @Override
     protected AssessmentOverviewController supplyControllerUnderTest() {
@@ -451,34 +462,23 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         AssessmentDetailedFinancesViewModel expectedViewModel = new AssessmentDetailedFinancesViewModel(
                 assessmentResource.getId(), applicationResource.getId(), "Application name", "finance");
 
-        ApplicationForm form = new ApplicationForm();
-        AbstractFormInputViewModel formInputViewModel = mock(AbstractFormInputViewModel.class);
-        FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
         when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
-        when(formInputViewModelGenerator.fromSection(section, costSection, form, true)).thenReturn(asList(formInputViewModel));
-        when(financeViewHandlerProvider.getFinanceModelManager(section.getCompetition(), section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
+        ManagementYourProjectCostsViewModel viewModel = mock(ManagementYourProjectCostsViewModel.class);
+        when(yourProjectCostsViewModelPopulator.populateManagement(applicationResource.getId(), sectionResources.get(7).getId(), organisations.get(0).getId(), "")).thenReturn(viewModel);
 
         MvcResult result = mockMvc.perform(get("/{assessmentId}/detailed-finances/organisation/{organisationId}", assessmentResource.getId(), organisation.getId()))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(model().attribute("applicationOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("organisationFinances", organisationFinanceOverview.getFinancesByOrganisation()))
+                .andExpect(model().attribute("costsViewModel", viewModel))
+                .andExpect(model().attribute("form", instanceOf(YourProjectCostsForm.class)))
+                .andExpect(model().attribute("financeView", "finance"))
                 .andExpect(view().name("assessment/application-detailed-finances"))
                 .andReturn();
 
-        StandardYourProjectCostsSectionViewModel resultCostsViewModel = (StandardYourProjectCostsSectionViewModel) result.getModelAndView().getModel().get("detailedCostings");
-        assertThat(resultCostsViewModel.isSection(), equalTo(true));
-        assertThat(resultCostsViewModel.isComplete(), equalTo(false));
-        assertThat(resultCostsViewModel.getDefaultProjectCostSections().size(), equalTo(1));
-        DefaultProjectCostSection costSectionViewModel = resultCostsViewModel.getDefaultProjectCostSections().get(0);
-        assertThat(costSectionViewModel.getApplicantResource(), equalTo(section));
-        assertThat(costSectionViewModel.getApplicantSection(), equalTo(costSection));
-        assertThat(costSectionViewModel.getCostViews(), equalTo(asList(formInputViewModel)));
     }
 
     @Test
