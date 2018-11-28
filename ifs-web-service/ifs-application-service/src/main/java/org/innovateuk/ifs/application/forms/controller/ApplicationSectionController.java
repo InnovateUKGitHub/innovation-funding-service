@@ -6,7 +6,6 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.saver.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
-import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -168,6 +167,8 @@ public class ApplicationSectionController {
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
 
         SectionResource section = sectionService.getById(sectionId);
+
+        ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
 
         switch (section.getType()) {
             case FUNDING_FINANCES:
