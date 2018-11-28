@@ -33,6 +33,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/academic-costs/organisation/{organisationId}/section/{sectionId}")
@@ -102,7 +104,7 @@ public class AcademicCostsController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                validationHandler.addAnyErrors(markAsComplete(sectionId, applicationId, user));
+                validationHandler.addAnyErrors(markAsComplete(sectionId, applicationId, user), mappingErrorKeyToField("validation.application.jes.upload.required", "jesFile"), defaultConverters());
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });
