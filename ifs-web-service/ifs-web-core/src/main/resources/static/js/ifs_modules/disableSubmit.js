@@ -5,7 +5,7 @@ IFS.core.disableSubmitUntilChecked = (function () {
     settings: {
       checkBoxesAttribute: 'data-switches-button-status',
       checkBoxRevealPanel: 'data-target',
-      checkRequiredInputs: '[aria-hidden="false"] input[type="text"][required][data-switches-button-status]'
+      checkRequiredInputs: '[aria-hidden="false"] [required][data-switches-button-status]'
     },
     init: function () {
       s = this.settings
@@ -70,7 +70,7 @@ IFS.core.disableSubmitUntilChecked = (function () {
           state = inst.prop('checked')
         } else if (inst.is('select')) {
           state = inst.val() !== 'UNSET'
-        } else if (inst.is('input[type="text"][required]')) {
+        } else if (inst.is('input[type="text"][required]') || inst.is('textarea[required]')) {
           state = inst.val().trim().length > 0
         }
         if (typeof (state) !== 'undefined') {

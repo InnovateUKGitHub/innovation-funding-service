@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Documents'" />
+</head>
+<body class="govuk-template__body competition-management project-management">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}" />
+
+	<main class="govuk-main-wrapper" id="main-content" role="main">
+         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
+
+	    <p class="govuk-body govuk-!-margin-top-6">Please review the documents uploaded by the Project Manager.</p>
+	    <p class="govuk-body govuk-!-margin-top-6">You must accept or reject these based on Innovate UK's requirements.</p>
+
+		<ul class="task-list">
+            <li th:each="document : ${model.documents}">
+                <div class="task">
+                    <h3 class="govuk-heading-s">
+                        <a th:unless="${document.notSubmitted}" th:href="@{/project/{id}/document/config/{documentConfigId}(id=${model.projectId}, documentConfigId=${document.documentConfigId})}"
+                           th:text=${document.title}
+                           class="govuk-link" />
+                        <th:block th:if="${document.notSubmitted}" th:text=${document.title}></th:block>
+                    </h3>
+                </div>
+               <div th:if="${document.notSubmitted}"
+                     class="task-status-info">
+                    <span>No file uploaded</span>
+                </div>
+                <div th:if="${document.awaitingReview}"
+                    class="task-status-incomplete">
+                    <span>To be reviewed</span>
+                </div>
+                <div th:if="${document.approved}"
+                     class="task-status-complete">
+                    <span>Approved</span>
+                </div>
+                <div th:if="${document.rejected}"
+                     class="task-status-rejected">
+                    <span>Rejected</span>
+                </div>
+            </li>
+        </ul>
+
+	    <th:block th:insert="fragments/layout :: main-content-end" />
+	</main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

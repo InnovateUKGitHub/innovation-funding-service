@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.projectdocument.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupProjectDocumentRestService;
@@ -18,16 +17,21 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.ui.ModelMap;
+
+import java.util.Arrays;
+import java.util.List;
+
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -78,7 +82,6 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
                 .andReturn().getModelAndView().getModelMap();
 
         verify(competitionSetupService, never()).populateCompetitionSectionModelAttributes(any(), any());
-        assertNull(model.get("landingPageForm"));
     }
 
     @Test
@@ -97,7 +100,6 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
                 .andReturn().getModelAndView().getModelMap();
 
         verify(competitionSetupService, never()).populateCompetitionSectionModelAttributes(any(), any());
-        assertNull(model.get("landingPageForm"));
     }
 
     @Test
@@ -117,15 +119,48 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
                 .andReturn().getModelAndView().getModelMap();
 
         verify(competitionSetupService).populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT);
-        assertEquals(new LandingPageForm(), model.get("landingPageForm"));
         assertEquals(viewModel, model.get("model"));
     }
 
     @Test
-    public void viewAddProjectDocument() throws Exception {
+    public void saveProjectDocumentLandingPageFailsWhenNoDocumentsSelected() throws Exception {
+
+        List<ProjectDocumentResource> projectDocuments = newProjectDocumentResource()
+                .withTitle("Title")
+                .withEditable(true)
+                .withEnabled(true)
+                .build(2);
+
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withProjectDocument(projectDocuments)
+                .build();
+
+        ProjectDocumentViewModel viewModel = new ProjectDocumentViewModel(null);
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT)).thenReturn(viewModel);
+
+        mockMvc.perform(post(URL_PREFIX + "/landing-page"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionSetupProjectDocumentRestService, never()).save(anyList());
+    }
+
+    @Test
+    public void viewAddProjectDocument() throws Exception {
+        List<ProjectDocumentResource> projectDocuments = newProjectDocumentResource()
+                .withTitle("Title")
+                .withEditable(true)
+                .withEnabled(true)
+                .build(2);
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withProjectDocument(projectDocuments)
                 .build();
 
         ProjectDocumentViewModel viewModel = new ProjectDocumentViewModel(null);
@@ -138,7 +173,6 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
                 .andReturn().getModelAndView().getModelMap();
 
         verify(competitionSetupService).populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT);
-        assertEquals(new LandingPageForm(), model.get("landingPageForm"));
         assertEquals(new ProjectDocumentForm(true, true), model.get("form"));
         assertEquals(viewModel, model.get("model"));
     }
@@ -247,7 +281,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
                 .build();
         long fileTypeId = 1L;
 
-        ProjectDocumentResource projectDocumentResource = ProjectDocumentResourceBuilder.newProjectDocumentResource()
+        ProjectDocumentResource projectDocumentResource = newProjectDocumentResource()
                 .withId(projectDocumentId)
                 .withTitle("Title")
                 .withGuidance("Guidance")
@@ -276,7 +310,6 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
                 .andReturn().getModelAndView().getModelMap();
 
         verify(competitionSetupService).populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT);
-        assertEquals(new LandingPageForm(), model.get("landingPageForm"));
         assertEquals(expectedProjectDocumentForm, model.get("form"));
         assertEquals(viewModel, model.get("model"));
     }
