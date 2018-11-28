@@ -46,4 +46,9 @@ public class Forecast {
     public void setCost(long cost) {
         this.cost = cost;
     }
+
+    public Forecast cost(long cost) {
+        setCost(cost);
+        return this;
+    }
 }

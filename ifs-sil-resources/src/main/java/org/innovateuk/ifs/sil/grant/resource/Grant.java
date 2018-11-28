@@ -12,7 +12,6 @@ import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeSerializer;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.List;
 
 public class Grant {
     @JsonProperty("ifsAppNumber")

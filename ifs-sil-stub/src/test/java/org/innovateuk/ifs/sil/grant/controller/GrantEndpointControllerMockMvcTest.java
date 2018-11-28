@@ -1,25 +1,15 @@
 package org.innovateuk.ifs.sil.grant.controller;
 
 import org.innovateuk.ifs.sil.AbstractEndpointControllerMockMvcTest;
-import org.innovateuk.ifs.sil.grant.resource.Forecast;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
-import org.innovateuk.ifs.sil.grant.resource.Participant;
-import org.innovateuk.ifs.sil.grant.resource.Period;
+import org.innovateuk.ifs.sil.grant.resource.GrantBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Arrays;
+import java.util.Collection;
 
-import static java.time.temporal.ChronoUnit.MONTHS;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -31,9 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(Parameterized.class)
 public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControllerMockMvcTest<GrantEndpointController> {
-    private static final boolean OUTPUT_TEST_JSON = false;
-    private static final String OUTPUT_DIRECTORY = "./build/tmp/grant-json";
-
     protected GrantEndpointController supplyControllerUnderTest() {
         return new GrantEndpointController();
     }
@@ -47,15 +34,6 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
     @Test
     public void testSendProject() throws Exception {
         String requestBody = objectMapper.writeValueAsString(parameter.grant());
-
-        if (OUTPUT_TEST_JSON) {
-            File outDirectory = new File(OUTPUT_DIRECTORY);
-            if (!outDirectory.exists()) {
-                assertTrue(outDirectory.mkdir());
-            }
-            Files.write(Paths.get(OUTPUT_DIRECTORY + "/grant-" + parameter.name() + ".json"), requestBody.getBytes());
-        }
-
         mockMvc.
                 perform(
                         post("/silstub/sendproject").
@@ -112,7 +90,6 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
         private String name() {
             return name;
         }
-
     }
 
 }
