@@ -336,7 +336,7 @@ function blockUntilServiceIsUp() {
             fi
         fi
 
-        oc get pods ${SVC_ACCOUNT_CLAUSE}
+        oc get pods ${SVC_ACCOUNT_CLAUSE} -o wide
         echo "$UNREADY_PODS pods still not ready.."
         
         sleep 10s
