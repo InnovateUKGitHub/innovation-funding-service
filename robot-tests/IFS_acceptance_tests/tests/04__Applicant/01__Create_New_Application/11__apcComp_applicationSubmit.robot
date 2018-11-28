@@ -31,8 +31,7 @@ Comp Admin creates an APC competition
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
     And the user fills in the CS Assessors
-    # TODO IFS-4609 Uncomment when this functionality is enabled.
-    #And #the user fills in the CS Documents in other projects
+    And the user fills in the CS Documents in other projects
     When the user clicks the button/link           link = Public content
     Then the user fills in the Public content and publishes  APC
     When the user clicks the button/link           link = Return to setup overview

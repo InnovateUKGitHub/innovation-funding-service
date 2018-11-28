@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Documents',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+</head>
+<body class="govuk-template__body project-other-documents">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/modals :: modal-configured-partner-document" />
+<th:block th:insert="fragments/modals :: modal-overlay" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to document overview',linkUrl=@{/project/{projectId}/document/all/(projectId=${model.projectId})}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${model.projectName},size='govuk-heading-xl'" />
+
+        <div th:if="${model.status.name() == 'APPROVED'}" class="success-alert">
+            <h2 class="govuk-heading-s govuk-!-margin-0">This document has been approved by us.</h2>
+        </div>
+
+        <div th:if="${model.status.name() == 'REJECTED'}" class="warning-alert">
+            <h2 class="govuk-heading-s govuk-!-margin-0">We will contact you to discuss this document.</h2>
+        </div>
+
+        <div th:if="${model.status.name() == 'SUBMITTED'}" class="message-alert">
+            <h2 class="govuk-heading-s">This document has been submitted and is being reviewed by us.</h2>
+        </div>
+
+        <th:block th:if="${model.status.name() == 'UNSET'}">
+            <th:block th:if="${model.projectManager}">
+                <p class="govuk-body">You must upload and submit the document to be reviewed by us.</p>
+            </th:block>
+            <th:block th:unless="${model.projectManager}">
+                <p class="govuk-body">The Project Manager must upload and submit the document to be reviewed by us.</p>
+            </th:block>
+        </th:block>
+
+        <div class="upload-section">
+            <h2 class="govuk-heading-m govuk-!-margin-0">
+                <th:block th:text=${model.title}>
+                        TITLE OF DOCUMENT
+                </th:block>
+            </h2>
+            <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">What should I include?</span>
+                </summary>
+                <div class="govuk-details__text wysiwyg-styles">
+                    <p class="govuk-body" ifs:utext=${model.guidance}>
+                        GUIDANCE FOR DOCUMENT
+                    </p>
+                </div>
+            </details>
+
+            <!--/* allowed to edit */-->
+            <form th:action="@{/project/{id}/document/config/{documentConfigId}(documentConfigId=${model.documentConfigId},id=${model.projectId})}"
+                  th:if="${model.isEditable()}"
+                  th:object="${form}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  th:with="viewmode='edit',
+                           downloadUrl=@{/project/{id}/document/config/{documentConfigId}/download(documentConfigId=${model.documentConfigId},id=${model.projectId})},
+                           filename=${model.fileDetails?.filename},
+                           inputField='document',
+                           validationField=${inputField},
+                           mayRemove=true,
+                           removeName='deleteDocument',
+                           saveName='uploadDocument'">
+
+                <!--/* file is not uploaded */-->
+                <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+            </form>
+            <!--/* not allowed to edit */-->
+            <th:block th:unless="${model.isEditable()}"
+                      th:with="viewmode='readonly',
+                               downloadUrl=@{/project/{id}/document/config/{documentConfigId}/download(documentConfigId=${model.documentConfigId}, id=${model.projectId})},
+                               filename=${model.fileDetails?.filename},
+                               inputField='',
+                               validationField='',
+                               mayRemove=false,
+                               removeName='',
+                               saveName=''">
+                 <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                <p th:unless="${model.fileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager</p>
+            </th:block>
+        </div>
+
+        <th:block th:if="${model.isShowSubmitDocumentsButton()}">
+            <form th:action="@{/project/{id}/document/config/{documentConfigId}(documentConfigId=${model.documentConfigId}, id=${model.projectId})}" method="post">
+              <div>
+                <button data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit" id="submitDocumentButton">Submit</button>
+              </div>
+            </form>
+        </th:block>
+
+         <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
+             <button disabled="disabled" class="govuk-button govuk-!-margin-top-6">Submit</button>
+         </th:block>
+
+         <th:block th:if="${!model.isShowSubmitDocumentsButton() && !model.isShowDisabledSubmitDocumentsButton()}">
+            <div class="govuk-!-margin-top-6">
+                <a th:href="@{/project/{projectId}/document/all/(projectId=${model.projectId})}" class="button-secondary">Return to documents</a>
+            </div>
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+
+</body>
+</html>
