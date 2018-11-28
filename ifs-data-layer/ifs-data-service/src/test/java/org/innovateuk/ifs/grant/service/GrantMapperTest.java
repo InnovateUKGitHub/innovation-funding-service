@@ -19,7 +19,6 @@ import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -135,26 +134,34 @@ public class GrantMapperTest {
         assertThat(grant.getSummary(), equalTo(parameter.projectSummary()));
         assertThat(grant.getStartDate(), equalTo(DEFAULT_START_DATE));
         assertThat(grant.getGrantOfferLetterDate(), equalTo(DEFAULT_GOL_DATE));
-        Optional<Participant> participant = grant.getParticipants().stream()
-                .filter(it -> it.getId() == 1).findFirst();
-        assertThat(participant.isPresent(), Is.is(true));
-        participant.ifPresent(it -> {
-            assertThat(it.getContactEmail(), equalTo("user@test.com"));
-            assertThat(it.getForecasts().size(), equalTo(parameter.costCategoryCount()));
-            Forecast overheads = it.getForecasts().stream()
+        for (int id = 0; id < parameter.participantCount() ; id ++) {
+            int finalId = id;
+            Optional<Participant> participantOptional = grant.getParticipants().stream()
+                    .filter(it -> it.getId() == finalId).findFirst();
+            assertThat(participantOptional.isPresent(), Is.is(true));
+            Participant participant = participantOptional.get();
+            assertThat(participant.getContactEmail(), equalTo("user@test.com"));
+            assertThat(participant.getForecasts().size(), equalTo(parameter.costCategoryCount()));
+            Forecast overheads = participant.getForecasts().stream()
                     .filter(forecast -> OVERHEADS.equals(forecast.getCostCategory()))
                     .findFirst()
                     .orElseThrow(IllegalStateException::new);
             assertThat(overheads.getPeriods().size(), equalTo(parameter.duration()));
-            assertThat(overheads.getCost(), equalTo(parameter.expectFirstOverheads()));
-        });
+            if (parameter.expectedOverheads().size() > id) {
+                assertThat(overheads.getCost(), equalTo(parameter.expectedOverheads().get(id)));
+            }
+            if (parameter.expectedOverheadRates().size() > id) {
+                assertThat(participant.getOverheadRate().longValue(), equalTo(parameter.expectedOverheadRates().get(id)));
+            }
+        }
     }
 
     @Parameterized.Parameters
     public static Collection<Parameter> parameters() {
         return Arrays.asList(
                 newParameter("basic", newProject()),
-                newParameter("single", newProject()).duration(1).expectFirstOverheads(10L)
+                newParameter("single", newProject()).duration(1).expectedOverheads(10L)
+
         );
     }
 
@@ -198,7 +205,8 @@ public class GrantMapperTest {
         private int costCategoryCount = 2;
         private int userCount = 3;
         private int value = 10;
-        private long expectFirstOverheads = 120;
+        private List<Long> expectedOverheads = Collections.singletonList(120L);
+        private List<Long> expectedOverheadRates = Collections.singletonList(50L);
 
         private Parameter projectBuilder(ProjectBuilder projectBuilder) {
             this.projectBuilder = projectBuilder;
@@ -263,14 +271,24 @@ public class GrantMapperTest {
             return duration;
         }
 
-        private Parameter expectFirstOverheads(long expectFirstOverheads) {
-            this.expectFirstOverheads = expectFirstOverheads;
+        private Parameter expectedOverheads(Long... expectedOverheads) {
+            this.expectedOverheads = Arrays.asList(expectedOverheads);
             return this;
         }
 
-        private long expectFirstOverheads() {
-            return expectFirstOverheads;
+        private List<Long> expectedOverheads() {
+            return expectedOverheads;
         }
+
+        private List<Long> expectedOverheadRates() {
+            return expectedOverheadRates;
+        }
+
+        private Parameter expectedOverheadRates(Long... expectedOverheadRates) {
+            this.expectedOverheadRates = Arrays.asList(expectedOverheadRates);
+            return this;
+        }
+
 
         private String publicDescription() {
             return publicDescription == null ? name + " public description" : publicDescription;
