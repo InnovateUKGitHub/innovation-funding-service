@@ -17,6 +17,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @Rollback
 public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<StakeholderRepository> {
@@ -58,6 +59,7 @@ public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Stakeholder> retrievedStakeholders = repository.findByStakeholderId(expectedUser.getId());
 
         assertFalse(retrievedStakeholders.isEmpty());
+        assertTrue(retrievedStakeholders.size() == 1);
         assertEquals(retrievedStakeholders.get(0).getUser().getId(), expectedUser.getId());
     }
 }
