@@ -138,10 +138,11 @@ public class YourProjectCostsController extends AsyncAdaptor {
     public String edit(Model model,
                        UserResource user,
                        @PathVariable long applicationId,
+                       @PathVariable long organisationId,
                        @PathVariable long sectionId,
                        @ModelAttribute("form") YourProjectCostsForm form) {
         sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
-        return String.format("redirect:/application/%s/form/your-project-costs/%s", applicationId, sectionId);
+        return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId);
     }
 
     @PostMapping(params = "remove_cost")
