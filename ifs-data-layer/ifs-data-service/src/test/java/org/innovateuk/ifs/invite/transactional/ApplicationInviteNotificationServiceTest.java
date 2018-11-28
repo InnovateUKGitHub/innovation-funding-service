@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
-import static org.innovateuk.ifs.commons.service.ServiceFailureTestHelper.assertThatServiceFailureIs;
+import static org.innovateuk.ifs.service.ServiceFailureTestHelper.assertThatServiceFailureIs;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;

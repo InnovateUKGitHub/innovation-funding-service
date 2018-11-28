@@ -106,6 +106,7 @@ public class EuGrantResource {
                 .append(organisation, that.organisation)
                 .append(contact, that.contact)
                 .append(funding, that.funding)
+                .append(shortCode, that.shortCode)
                 .isEquals();
     }
 
@@ -119,6 +120,7 @@ public class EuGrantResource {
                 .append(organisationComplete)
                 .append(contactComplete)
                 .append(fundingComplete)
+                .append(shortCode)
                 .toHashCode();
     }
 }

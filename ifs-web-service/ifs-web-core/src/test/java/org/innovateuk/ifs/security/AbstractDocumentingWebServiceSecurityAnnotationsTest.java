@@ -9,9 +9,8 @@ import org.springframework.stereotype.Controller;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.util.CollectionFunctions.union;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * Base class to document security permissions and rules in the web layer
@@ -31,7 +30,7 @@ public abstract class AbstractDocumentingWebServiceSecurityAnnotationsTest exten
 
     @Override
     protected final List<Class<?>> excludedClasses() {
-        return union(asList(IfsErrorController.class), additionalExcludedClasses());
+        return combineLists(IfsErrorController.class, additionalExcludedClasses());
     }
 
     /**
