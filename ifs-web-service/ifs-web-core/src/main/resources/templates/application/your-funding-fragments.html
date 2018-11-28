@@ -68,7 +68,7 @@
 
     <th:block th:fragment="other_funding_table">
         <div class="govuk-checkboxes__conditional" id="other-funding-table">
-            <div class="govuk-form-group form-in-table" th:attr="data-repeatable-container=other-funding-table">
+            <div class="govuk-form-group form-in-table">
                 <div class="table-overflow">
                     <table class="govuk-table">
                         <thead class="govuk-table__head">
@@ -88,10 +88,9 @@
                 </div>
                 <p class="alignright">
                     <button type="submit"
-                            name="add_other_funding"
-                            th:class="'button-clear'"
-                            class="add-another-row button-clear"
-                            th:attrappend="data-repeatable-rowcontainer='#other-funding-table tbody'"
+                            name="add_cost"
+                            class="button-clear"
+                            data-repeatable-rowcontainer="#other-funding-table tbody"
                     >Add another source of funding
                     </button>
                 </p>
@@ -117,7 +116,7 @@
     </th:block>
 
     <th:block th:fragment="other_funding_row (id, row)">
-        <tr class="govuk-table__row" th:with="path=${'otherFundingRows[__${id}__]'}">
+        <tr class="govuk-table__row" th:with="path=${'otherFundingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
             <input type="hidden"
                    th:field="*{__${path}__.costId}" />
             <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('__${path}__.source')} ? 'govuk-form-group--error'">
@@ -170,7 +169,7 @@
             </td>
             <td class="govuk-table__cell">
                 <button type="submit"
-                        name="remove_other_funding"
+                        name="remove_cost"
                         class="button-clear js-remove-row"
                         th:value="${id}">Remove
                 </button>

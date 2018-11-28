@@ -397,8 +397,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         Integer.valueOf(financeRow.metadata.get(2)));
             case "Overheads":
                 switch (financeRow.metadata.get(0).toLowerCase()) {
-                    case "custom":
-                        return builder.withAdministrationSupportCostsCustomRate(
+                    case "total":
+                        return builder.withAdministrationSupportCostsTotalRate(
                                 Integer.valueOf(financeRow.metadata.get(1)));
                     case "default":
                         return builder.withAdministrationSupportCostsDefaultRate();

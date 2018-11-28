@@ -20,6 +20,7 @@ import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
+import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -69,9 +70,6 @@ public class ApplicationSectionController {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
-    private OverheadFileSaver overheadFileSaver;
-
-    @Autowired
     private QuestionService questionService;
 
     @Autowired
@@ -88,6 +86,9 @@ public class ApplicationSectionController {
 
     @Autowired
     private SectionService sectionService;
+
+    @Autowired
+    private FinanceUtil financeUtil;
 
     private Map<SectionType, AbstractSectionPopulator> sectionPopulators;
 
@@ -110,7 +111,7 @@ public class ApplicationSectionController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('applicant')")
+    @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{sectionType}")
     public String redirectToSection(@PathVariable("sectionType") SectionType type,
                                     @PathVariable(APPLICATION_ID) Long applicationId) {
@@ -132,6 +133,13 @@ public class ApplicationSectionController {
         switch (applicantSection.getSection().getType()) {
             case FUNDING_FINANCES:
                 return String.format("redirect:/application/%d/form/your-funding/%d", applicationId, sectionId);
+            case PROJECT_COST_FINANCES:
+                if (!financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {		
+                    return String.format("redirect:/application/%d/form/your-project-costs/%d", applicationId, sectionId);
+                } else {
+                    populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), false);
+                    return APPLICATION_FORM;
+                }
             case PROJECT_LOCATION:
 
                 long organisationId = applicantSection.getCurrentApplicant().getOrganisation().getId();
@@ -165,14 +173,20 @@ public class ApplicationSectionController {
             case FUNDING_FINANCES:
                 return String.format("redirect:/application/%d/form/your-funding/%d/%d%s", applicationId, sectionId,
                         applicantOrganisationId, originQuery);
+            case PROJECT_COST_FINANCES:
+                if (!financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
+                    return String.format("redirect:/application/%d/form/your-project-costs/%d/%d%s", applicationId, sectionId, applicantOrganisationId, originQuery);
+                } else {
+                    return populateGenericApplicationFormSectionForInternalUser(
+                        form, bindingResult, model, applicationId, sectionId, applicantOrganisationId, user, originQuery);
+                }
             case PROJECT_LOCATION: {
                 return String.format("redirect:/application/%d/form/your-project-location/organisation/%d/section/%d",
                         applicationId, applicantOrganisationId, sectionId);
             }
-            default: {
+            default: 
                 return populateGenericApplicationFormSectionForInternalUser(
                         form, bindingResult, model, applicationId, sectionId, applicantOrganisationId, user, originQuery);
-            }
         }
     }
 
@@ -216,7 +230,7 @@ public class ApplicationSectionController {
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        if (!isSaveAndReturnRequest(params) && (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request))) {
+        if (!isSaveAndReturnRequest(params) && (saveApplicationErrors.hasErrors() || !validFinanceTerms)) {
             validationHandler.addAnyErrors(saveApplicationErrors);
             populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), false);
             return APPLICATION_FORM;
@@ -257,24 +271,12 @@ public class ApplicationSectionController {
         }
 
         switch (section.getSection().getType()) {
-            case PROJECT_COST_FINANCES:
-                return section.getCompetition().showJesFinances(section.getCurrentApplicant().getOrganisation().getOrganisationType()) ||
-                        validateStateAidAgreement(form, bindingResult);
-
             case ORGANISATION_FINANCES:
                 return validateOrganisationSizeSelected(section, params, bindingResult);
 
             default:
                 return true;
         }
-    }
-
-    private boolean validateStateAidAgreement(ApplicationForm form, BindingResult bindingResult) {
-        if (form.isStateAidAgreed()) {
-            return true;
-        }
-        bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
-        return false;
     }
 
     private boolean validateOrganisationSizeSelected(
