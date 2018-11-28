@@ -171,7 +171,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     private ServiceResult<Void> validateProjectInviteResource(ProjectInviteResource projectInviteResource) {
 
         if (StringUtils.isEmpty(projectInviteResource.getEmail()) || StringUtils.isEmpty(projectInviteResource.getName())
-                || projectInviteResource.getProject() == null ||projectInviteResource.getOrganisation() == null ){
+                || projectInviteResource.getProject() == null || projectInviteResource.getOrganisation() == null ){
             return serviceFailure(PROJECT_INVITE_INVALID);
         }
         return serviceSuccess();
@@ -193,17 +193,17 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
                 .map(organisations -> simpleMap(organisations, Organisation::getId))
                 .orElse(emptyList());
 
+        if (usersOrganisations.isEmpty()) {
+            serviceSuccess();
+        }
+
         return existingUser.map(user ->
                validateUserIsInSameOrganisation(invite, usersOrganisations).andOnSuccess(() ->
                validateUserIsNotAlreadyPartnerInOrganisation(invite, user))).
                orElse(serviceSuccess());
     }
 
-    private ServiceResult<Void> validateUserIsInSameOrganisation(ProjectInviteResource invite, List usersOrganisations) {
-
-        if (usersOrganisations.isEmpty()) {
-            serviceSuccess();
-        }
+    private ServiceResult<Void> validateUserIsInSameOrganisation(ProjectInviteResource invite, List<Long> usersOrganisations) {
 
         if (!usersOrganisations.contains(invite.getOrganisation())) {
             return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION);
