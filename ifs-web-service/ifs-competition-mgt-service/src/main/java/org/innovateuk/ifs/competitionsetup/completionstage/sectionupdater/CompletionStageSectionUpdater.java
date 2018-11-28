@@ -3,11 +3,11 @@ package org.innovateuk.ifs.competitionsetup.completionstage.sectionupdater;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.sectionupdater.CompetitionSetupSectionUpdater;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupMilestoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompletionStageSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
-    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+    private MilestoneRestService milestoneRestService;
 
     @Override
     public CompetitionSetupSection sectionToSave() {
@@ -25,14 +25,14 @@ public class CompletionStageSectionUpdater extends AbstractSectionUpdater implem
     }
 
     @Autowired
-    public CompletionStageSectionUpdater(CompetitionSetupMilestoneService competitionSetupMilestoneService) {
-        this.competitionSetupMilestoneService = competitionSetupMilestoneService;
+    public CompletionStageSectionUpdater(MilestoneRestService milestoneRestService) {
+        this.milestoneRestService = milestoneRestService;
     }
 
     @Override
     protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-        return competitionSetupMilestoneService.updateCompletionStage(competition.getId(),
-                ((CompletionStageForm)competitionSetupForm).getSelectedCompletionStage());
+        return milestoneRestService.updateCompletionStage(competition.getId(),
+                ((CompletionStageForm)competitionSetupForm).getSelectedCompletionStage()).toServiceResult();
     }
 
     @Override

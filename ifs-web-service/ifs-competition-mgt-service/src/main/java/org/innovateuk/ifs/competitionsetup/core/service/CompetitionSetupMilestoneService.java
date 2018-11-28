@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competitionsetup.core.service;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competitionsetup.core.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestonesForm;
@@ -18,8 +17,6 @@ public interface CompetitionSetupMilestoneService {
 	ServiceResult<List<MilestoneResource>> createMilestonesForIFSCompetition(Long competitionId);
 
     ServiceResult<Void> updateMilestonesForCompetition(List<MilestoneResource> milestones, Map<String, GenericMilestoneRowForm> milestoneEntries, Long competitionId);
-
-	ServiceResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage);
 
 	List<Error> validateMilestoneDates(Map<String, GenericMilestoneRowForm> milestonesFormEntries);
 

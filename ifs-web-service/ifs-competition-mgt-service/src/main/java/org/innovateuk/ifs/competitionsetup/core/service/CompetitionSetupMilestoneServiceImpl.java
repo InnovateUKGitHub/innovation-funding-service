@@ -65,11 +65,6 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     }
 
     @Override
-    public ServiceResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage) {
-        return milestoneRestService.updateCompletionStage(competitionId, completionStage).toServiceResult();
-    }
-
-    @Override
     public List<Error> validateMilestoneDates(Map<String, GenericMilestoneRowForm> milestonesFormEntries) {
         List<Error> errors =  new ArrayList<>();
         milestonesFormEntries.values().forEach(milestone -> {
