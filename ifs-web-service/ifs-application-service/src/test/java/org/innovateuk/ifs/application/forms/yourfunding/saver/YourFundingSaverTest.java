@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
@@ -83,12 +85,12 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
         form.setOtherFundingQuestionId(otherFundingQuestionId);
         form.setOtherFunding(true);
 
-        OtherFundingRowForm emptyRow = new OtherFundingRowForm(null, "emptySource", "emptyDate", new BigDecimal(123));
+        OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "emptySource", "emptyDate", new BigDecimal(123)));
 
-        OtherFundingRowForm existingRow = new OtherFundingRowForm(20L, "existingSource", "existingDate", new BigDecimal(321));
+        OtherFundingRowForm existingRow = new OtherFundingRowForm(new OtherFunding(20L, null, "existingSource", "existingDate", new BigDecimal(321)));
 
         form.setOtherFundingRows(asMap(
-                YourFundingForm.EMPTY_ROW_ID, emptyRow,
+                generateUnsavedRowId(), emptyRow,
                 "20", existingRow
                 ));
 
@@ -125,22 +127,11 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
     @Test
     public void addOtherFundingRow() {
-        OrganisationResource organisation = newOrganisationResource().build();
-        UserResource user = newUserResource().build();
-        ApplicationFinanceResource finance = newApplicationFinanceResource().build();
-        Long savedId = 132L;
-        OtherFunding otherFunding = new OtherFunding(savedId, null, null, null, null);
-
-        when(organisationRestService.getByUserAndApplicationId(user.getId(), APPLICATION_ID)).thenReturn(restSuccess(organisation));
-        when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
-        when(financeRowRestService.addWithResponse(finance.getId(), new OtherFunding())).thenReturn(restSuccess(otherFunding));
         YourFundingForm form = new YourFundingForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
 
-        service.addOtherFundingRow(form, APPLICATION_ID, user);
+        service.addOtherFundingRow(form);
 
-        assertTrue(form.getOtherFundingRows().containsKey(String.valueOf(savedId)));
-
-        verify(financeRowRestService).addWithResponse(finance.getId(), new OtherFunding());
+        assertTrue(form.getOtherFundingRows().keySet().stream().anyMatch(key -> key.startsWith(UNSAVED_ROW_PREFIX)));
     }
 }

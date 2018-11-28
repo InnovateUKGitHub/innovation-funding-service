@@ -1,19 +1,18 @@
 package org.innovateuk.ifs.application.forms.yourfunding.form;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class YourFundingForm {
-    public static final String EMPTY_ROW_ID = "empty";
-
     private Boolean requestingFunding;
 
     private Integer grantClaimPercentage;
 
     private Boolean otherFunding;
 
-    private Map<String, OtherFundingRowForm> otherFundingRows;
+    private Map<String, OtherFundingRowForm> otherFundingRows = new LinkedHashMap<>();
 
     private Boolean termsAgreed;
 

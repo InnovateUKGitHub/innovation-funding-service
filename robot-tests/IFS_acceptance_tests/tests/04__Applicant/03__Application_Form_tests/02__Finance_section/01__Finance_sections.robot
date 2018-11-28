@@ -45,7 +45,7 @@ Guidance in the your project costs
     When the user clicks the button/link    jQuery = button:contains("Labour")
     And the user clicks the button/link     css = .govuk-details summary
     Then the user should see the element    css = .govuk-details__text p
-    And the user should see the element     css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
+    And the user should see the element     css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 Working days per year should be 232
     [Documentation]    INFUND-2961
@@ -129,10 +129,9 @@ Applicant chooses Calculate overheads option
     When the user clicks the button/link                    link = Your project costs
     Then the user should see the text in the page           ${excel_file}
     And the user clicks the button/link                     jQuery = button:contains("Edit your project costs")
-    And the user clicks the button/link                     css = button[name="overheadfiledelete"]
+    And the user clicks the button/link                     css = button[name="removeOverheadFile"]
     When the user selects the checkbox                      stateAidAgreed
     And the user clicks the button/link                     jQuery = button:contains("Mark as complete")
-    Then the user should see a summary error                You cannot mark as complete.
 
 *** Keywords ***
 Custom Suite Setup
@@ -164,8 +163,8 @@ the user removes the materials rows
     the user clicks the button/link                          jQuery = button:contains("Materials")
 
 the working days per year should be 232 by default
-    the user should see the element    css = [name^="labour-labourDaysYearly"]
-    ${Days_value} =   Get Value        css = [name^="labour-labourDaysYearly"]
+    the user should see the element    id = working-days-per-year
+    ${Days_value} =   Get Value        id = working-days-per-year
     Should Be Equal As Strings         ${Days_value}    232
 
 the user navigates to another page
