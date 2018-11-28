@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
-import au.com.bytecode.opencsv.CSVWriter;
 import com.google.common.collect.Lists;
+import com.opencsv.CSVWriter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.commons.service;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
@@ -222,6 +224,26 @@ public class ServiceResult<T> extends BaseFailingOrSucceedingResult<T, ServiceFa
 
     private <T> RestResult<T> toRestFailure() {
         return restFailure(getFailure().getErrors());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ServiceResult<?> that = (ServiceResult<?>) o;
+
+        return new EqualsBuilder()
+                .append(result, that.result)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(result)
+                .toHashCode();
     }
 
     /**
