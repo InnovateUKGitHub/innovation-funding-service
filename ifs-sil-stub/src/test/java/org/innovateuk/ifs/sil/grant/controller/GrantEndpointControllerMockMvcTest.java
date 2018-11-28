@@ -10,6 +10,7 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.innovateuk.ifs.sil.grant.resource.GrantBuilder.newGrant;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -56,11 +57,11 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
          * SIL end point is available we could fire these tests onto the SIL stub if it proves beneficial.
          */
         return Arrays.asList(
-                newParameter(new GrantBuilder().name("basic")),
-                newParameter(new GrantBuilder().name("several").withCount(2)),
-                newParameter(new GrantBuilder().name("many").withCount(5)),
-                newParameter(new GrantBuilder().withSpecialCharacters(true).name("special")),
-                newParameter(new GrantBuilder().withLongStrings(true).name("long"))
+                newParameter(newGrant().name("basic")),
+                newParameter(newGrant().name("several").withCount(2)),
+                newParameter(newGrant().name("many").withCount(5)),
+                newParameter(newGrant().withSpecialCharacters(true).name("special")),
+                newParameter(newGrant().withLongStrings(true).name("long"))
         );
     }
 

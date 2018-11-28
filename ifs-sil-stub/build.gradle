@@ -24,6 +24,7 @@ dependencies {
 
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-sil-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
 }
 
 test {

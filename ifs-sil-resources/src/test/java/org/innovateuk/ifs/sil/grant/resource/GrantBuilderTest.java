@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.innovateuk.ifs.sil.grant.resource.GrantBuilder.newGrant;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -51,12 +52,12 @@ public class GrantBuilderTest {
          * SIL end point is available we could fire these tests onto the SIL stub if it proves beneficial.
          */
         return Arrays.asList(
-                newParameter(new GrantBuilder().name("basic")),
-                newParameter(new GrantBuilder().name("several").withCount(2)),
-                newParameter(new GrantBuilder().name("many").withCount(5)),
-                newParameter(new GrantBuilder().withSpecialCharacters(true).name("special")),
-                newParameter(new GrantBuilder().withLongStrings(true).name("long")),
-                newParameter(new GrantBuilder().withSpecialCharacters(true).withLongStrings(true).name("long-special"))
+                newParameter(newGrant().name("basic")),
+                newParameter(newGrant().name("several").withCount(2)),
+                newParameter(newGrant().name("many").withCount(5)),
+                newParameter(newGrant().withSpecialCharacters(true).name("special")),
+                newParameter(newGrant().withLongStrings(true).name("long")),
+                newParameter(newGrant().withSpecialCharacters(true).withLongStrings(true).name("long-special"))
         );
     }
 

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.sil.grant.resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.BaseBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -8,11 +9,13 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class GrantBuilder {
+public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
     private static final LocalDate DEFAULT_START_DATE = LocalDate.of(2018, 1,2);
     private static final ZonedDateTime DEFAULT_GOL_DATE = ZonedDateTime
             .of(LocalDate.of(2018, 3,4), LocalTime.MIDNIGHT, ZoneId.of("GMT"));
@@ -40,6 +43,14 @@ public class GrantBuilder {
     private boolean specialCharacters;
     private boolean longStrings;
 
+    private GrantBuilder(List<BiConsumer<Integer, Grant>> multiActions) {
+        super(multiActions);
+    }
+
+    public static GrantBuilder newGrant() {
+        return new GrantBuilder(Collections.emptyList());
+    }
+
     public Grant build() {
         costCategories = Stream.iterate(0, i -> i + 1).limit(costCategoryCount)
             .map(i -> i == 0 ? "Overheads" : "Other " + i)
@@ -60,6 +71,16 @@ public class GrantBuilder {
         grant.setId(applicationId);
         grant.setCompetitionCode(competitionCode);
         return grant;
+    }
+
+    @Override
+    protected GrantBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Grant>> actions) {
+        return new GrantBuilder(actions);
+    }
+
+    @Override
+    protected Grant createInitial() {
+        return new Grant();
     }
 
     private String createString(String body) {
