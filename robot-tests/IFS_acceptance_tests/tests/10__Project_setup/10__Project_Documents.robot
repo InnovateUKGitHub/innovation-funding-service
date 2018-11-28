@@ -49,10 +49,10 @@ Non-lead partner cannot upload either document
     Given Log in as a different user           &{collaborator1_credentials}
     When the user navigates to the page        ${project_in_setup_page}
     And The user should see the element        jQuery = p:contains("The Project Manager must upload supporting documents to be reviewed.")
-    When the user go to Collaboration agreement/Exploitation plan page    Documents  Collaboration agreement
+    When the user goes to documents page       Documents  Collaboration agreement
     Then the user should see the element       jQuery = p:contains("Awaiting upload by the Project Manager")
     And the user should not see the element    jQuery = label:contains("Upload")
-    When the user go to Collaboration agreement/Exploitation plan page    Return to documents  Exploitation plan
+    When the user goes to documents page       Return to documents  Exploitation plan
     Then the user should see the element       jQuery = p:contains("Awaiting upload by the Project Manager")
     And the user should not see the element    jQuery = label:contains("Upload")
 
@@ -62,9 +62,9 @@ Lead partner cannot upload either document
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     When The user should see the element    jQuery = p:contains("The Project Manager must upload supporting documents to be reviewed.")
-    When the user go to Collaboration agreement/Exploitation plan page    Documents  Collaboration agreement
+    When the user goes to documents page    Documents  Collaboration agreement
     Then the user should see the element    jQuery = p:contains("Awaiting upload by the Project Manager")
-    And the user go to Collaboration agreement/Exploitation plan page    Return to documents  Exploitation plan
+    And the user goes to documents page     Return to documents  Exploitation plan
     Then the user should see the element    jQuery = p:contains("Awaiting upload by the Project Manager")
 
 PM cannot submit when both documents are not uploaded
@@ -74,7 +74,7 @@ PM cannot submit when both documents are not uploaded
     And the user navigates to the page         ${project_in_setup_page}/document/all
     When the user clicks the button/link       link = Collaboration agreement
     Then the user should see the element       jQuery = label:contains("Upload")
-    When the user go to Collaboration agreement/Exploitation plan page    Back to document overview  Exploitation plan
+    When the user goes to documents page       Back to document overview  Exploitation plan
     Then the user should see the element       jQuery = label:contains("Upload")
 
 Large pdfs not allowed for either document
@@ -85,7 +85,7 @@ Large pdfs not allowed for either document
     When the user uploads to the collaboration agreement/exploitation plan    ${too_large_pdf}
     Then the user should see the text in the page       ${too_large_pdf_validation_error}
     And the user goes back to the previous page
-    And the user go to Collaboration agreement/Exploitation plan page         Back to document overview  Exploitation plan
+    And the user goes to documents page                 Back to document overview  Exploitation plan
     When the user uploads to the collaboration agreement/exploitation plan    ${too_large_pdf}
     Then the user should see the text in the page        ${too_large_pdf_validation_error}
     And the user should not see the text in the page     ${too_large_pdf}
@@ -95,19 +95,19 @@ Large pdfs not allowed for either document
 Non pdf files not allowed for either document
     [Documentation]  INFUND-3011
     [Tags]
-    Given the user clicks the button/link                                       link = Collaboration agreement
+    Given the user clicks the button/link                link = Collaboration agreement
     When the user uploads to the collaboration agreement/exploitation plan      ${text_file}
-    Then the user should see a field error                                      ${wrong_filetype_validation_error}
-    And the user go to Collaboration agreement/Exploitation plan page           Back to document overview  Exploitation plan
+    Then the user should see a field error               ${wrong_filetype_validation_error}
+    And the user goes to documents page                  Back to document overview  Exploitation plan
     When the user uploads to the collaboration agreement/exploitation plan      ${text_file}
-    Then the user should see a field error                                      ${wrong_filetype_validation_error}
-    And the user should not see the text in the page                            ${text_file}
+    Then the user should see a field error               ${wrong_filetype_validation_error}
+    And the user should not see the text in the page     ${text_file}
 
 PM can upload both documents
     [Documentation]  INFUND-3011  IFS-2371-2258
     [Tags]  HappyPath
     [Setup]    log in as a different user                 ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given PM upload Collaboration agreement and Exploitation plan documents
+    Given PM uploads the project documents
 
 Lead partner can view both documents
     [Documentation]  INFUND-3011  INFUND-2621
@@ -118,7 +118,7 @@ Lead partner can view both documents
     Then the user opens the link in new window      ${valid_pdf}
     And the user should not see an error in the page
     And the user closes the last opened tab
-    When the user go to Collaboration agreement/Exploitation plan page    Back to document overview  Exploitation plan
+    When the user goes to documents page            Back to document overview  Exploitation plan
     And the user opens the link in new window       ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
@@ -131,14 +131,14 @@ Lead partner does not have the option to submit the documents
     When the user should not see an error in the page
     And the user clicks the button/link          link = Collaboration agreement
     Then the user should not see the element     id = submitDocumentButton
-    When the user go to Collaboration agreement/Exploitation plan page    Back to document overview  Exploitation plan
+    When the user goes to documents page         Back to document overview  Exploitation plan
     Then the user should not see the element     id = submitDocumentButton
 
 Lead partner cannot remove either document
     [Documentation]  INFUND-3011
     [Tags]  HappyPath
     Given the user should not see the element     name = deleteDocument      #Exploitation plan remove CTA
-    When the user go to Collaboration agreement/Exploitation plan page    Return to documents  Collaboration agreement
+    When the user goes to documents page          Return to documents  Collaboration agreement
     And the user should not see the element       name = deleteDocument     #Collaboration agreement remove CTA
 
 Non-lead partner can view both documents
@@ -146,11 +146,11 @@ Non-lead partner can view both documents
     [Tags]
     Given log in as a different user        &{collaborator1_credentials}
     When the user navigates to the page     ${project_in_setup_page}
-    And the user go to Collaboration agreement/Exploitation plan page    Documents  Collaboration agreement
+    And the user goes to documents page     Documents  Collaboration agreement
     And the user clicks the button/link     link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user go to Collaboration agreement/Exploitation plan page    Return to documents  Exploitation plan
+    When the user goes to documents page    Return to documents  Exploitation plan
     And the user clicks the button/link     link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
@@ -170,7 +170,7 @@ PM can view both documents
     And the user navigates to the page       ${project_in_setup_page}/document/all
     When the user clicks the button/link     link = Collaboration agreement
     Then the user should see the element     link = ${valid_pdf}
-    When the user go to Collaboration agreement/Exploitation plan page    Back to document overview  Exploitation plan
+    When the user goes to documents page     Back to document overview  Exploitation plan
     Then the user should see the element     link = ${valid_pdf}
 
 PM can remove the Exploitation plan
@@ -184,7 +184,7 @@ Non-lead partner can still view the Collaboration agreement
     [Tags]
     [Setup]    log in as a different user            &{collaborator1_credentials}
     When the user navigates to the page              ${project_in_setup_page}
-    And the user go to Collaboration agreement/Exploitation plan page    Documents  Collaboration agreement
+    And the user goes to documents page              Documents  Collaboration agreement
     Then the user should see the text in the page    ${valid_pdf}
 
 PM can remove the first document
@@ -192,7 +192,7 @@ PM can remove the first document
     [Tags]  HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     Given the user navigates to the page     ${project_in_setup_page}
-    And the user go to Collaboration agreement/Exploitation plan page    Documents  Collaboration agreement
+    And the user goes to documents page      Documents  Collaboration agreement
     When the user clicks the button/link     name = deleteDocument
     Then the user should not see the text in the page    ${valid_pdf}
 
@@ -203,14 +203,14 @@ Non-lead partner cannot view either document once removed
     When the user navigates to the page      ${project_in_setup_page}/document/all
     And the user clicks the button/link      link = Collaboration agreement
     Then the user should not see the text in the page    ${valid_pdf}
-    When the user go to Collaboration agreement/Exploitation plan page    Back to document overview  Exploitation plan
+    When the user goes to documents page     Back to document overview  Exploitation plan
     Then the user should not see the text in the page    ${valid_pdf}
 
 PM can upload both documents after they have been removed
     [Documentation]    INFUND-3011
     [Tags]  HappyPath
     [Setup]    log in as a different user                    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given PM upload Collaboration agreement and Exploitation plan documents
+    Given PM uploads the project documents
 
 Status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011
@@ -236,7 +236,7 @@ PM can still view both documents after submitting
     And the user clicks the button/link     link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user go to Collaboration agreement/Exploitation plan page    Return to documents  Exploitation plan
+    When the user goes to documents page    Return to documents  Exploitation plan
     Then the user clicks the button/link    link = ${valid_pdf}
     And the user should not see an error in the page
     And the user closes the last opened tab
@@ -254,7 +254,7 @@ Lead partner cannot remove the documents after submission by PM
     Given the user navigates to the page           ${project_in_setup_page}/document/all
     When the user clicks the button/link           link = Collaboration agreement
     Then the user should not see the element       name = deleteDocument
-    When the user go to Collaboration agreement/Exploitation plan page    Return to documents  Exploitation plan
+    When the user goes to documents page           Return to documents  Exploitation plan
     Then the user should not see the element       name = deleteDocument
 
 Lead partner can still view both documents after submitting
@@ -263,7 +263,7 @@ Lead partner can still view both documents after submitting
     When the user clicks the button/link    link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user go to Collaboration agreement/Exploitation plan page    Return to documents  Collaboration agreement
+    When the user goes to documents page    Return to documents  Collaboration agreement
     Then the user clicks the button/link    link = ${valid_pdf}
     And the user should not see an error in the page
     And the user closes the last opened tab
@@ -275,7 +275,7 @@ Non-lead partner cannot remove the documents after submission by PM
     Given the user navigates to the page        ${project_in_setup_page}/document/all
     When the user clicks the button/link        link = Collaboration agreement
     Then the user should not see the element    name = deleteDocument
-    When the user go to Collaboration agreement/Exploitation plan page    Return to documents  Exploitation plan
+    When the user goes to documents page        Return to documents  Exploitation plan
     Then the user should not see the element    name = deleteDocument
 
 Non-lead partner can still view both documents after submitting
@@ -284,7 +284,7 @@ Non-lead partner can still view both documents after submitting
     When the user clicks the button/link        link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user go to Collaboration agreement/Exploitation plan page    Return to documents  Collaboration agreement
+    When the user goes to documents page        Return to documents  Collaboration agreement
     Then the user clicks the button/link        link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
@@ -302,7 +302,7 @@ CompAdmin can see uploaded files
     And the user clicks the button/link     link = Collaboration agreement
     And the user clicks the button/link     link = ${valid_pdf}
     Then the user should see the file without error
-    When the user go to Collaboration agreement/Exploitation plan page    Documents  Exploitation plan
+    When the user goes to documents page    Documents  Exploitation plan
     And the user clicks the button/link     link = ${valid_pdf}
     Then the user should see the file without error
 
@@ -312,7 +312,7 @@ CompAdmin rejects both documents
     Given the user navigates to the page        ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/document/all
     When the user clicks the button/link        link = Collaboration agreement
     Then compAdmin reject uploaded documents
-    When the user go to Collaboration agreement/Exploitation plan page    Return to documents  Exploitation plan
+    When the user goes to documents page        Return to documents  Exploitation plan
     Then compAdmin reject uploaded documents
 
 Partners can see the documents rejected
@@ -342,7 +342,7 @@ Project Manager can remove the offending documents
     When the user clicks the button/link      link = Collaboration agreement
     And the user clicks the button/link       name = deleteDocument
     Then the user should not see the element  link = ${valid_pdf}
-    When the user go to Collaboration agreement/Exploitation plan page    Back to document overview  Exploitation plan
+    When the user goes to documents page      Back to document overview  Exploitation plan
     And the user clicks the button/link       name = deleteDocument
     Then the user should not see the element  link = ${valid_pdf}
 
@@ -352,7 +352,7 @@ After rejection, non-lead partner cannot upload either document
     [Setup]    log in as a different user       &{collaborator1_credentials}
     Given the user navigates to the page        ${project_in_setup_page}
     And The user should see the element         jQuery = p:contains("The Project Manager must upload supporting documents to be reviewed.")
-    When the user go to Collaboration agreement/Exploitation plan page    Documents  Collaboration agreement
+    When the user goes to documents page        Documents  Collaboration agreement
     Then the user should not see the element    jQuery = label:contains("Upload")
     And the user clicks the button/link         link = Return to documents
     When the user clicks the button/link        link = Exploitation plan
@@ -362,7 +362,7 @@ After rejection PM can upload both documents when both documents are removed
     [Documentation]    INFUND-3011
     [Tags]  HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
-    Given PM upload Collaboration agreement and Exploitation plan documents
+    Given PM uploads the project documents
 
 After rejection, mandatory document submission
     [Documentation]    INFUND-3011, INFUND-6152, INFUND-7342
@@ -395,7 +395,7 @@ CompAdmin approves both documents
     Given the user navigates to the page        ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/document/all
     When the user clicks the button/link        link = Collaboration agreement
     Then internal user approve uploaded documents
-    When the user go to Collaboration agreement/Exploitation plan page    Return to documents  Exploitation plan
+    When the user goes to documents page        Return to documents  Exploitation plan
     Then internal user approve uploaded documents
 
 Partners can see the documents approved
@@ -443,7 +443,7 @@ Sole applicant uploads only exploitation plan and submits
     Then the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
     And the user clicks the button/link         id = submitDocumentButton
     And the user clicks the button/link         id = submitDocumentButtonConfirm
-    When the user go to Collaboration agreement/Exploitation plan page    Return to documents  Set up your project
+    When the user goes to documents page        Return to documents  Set up your project
     Then the user should see the element        jQuery = li:contains("Documents") span:contains("Awaiting review")
 
 CompAdmin sees uploaded file and approves it
@@ -463,7 +463,7 @@ Sole applicant can see documents approval
     [Setup]  log in as a different user    ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
     When the user navigates to the page    ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
     Then the user should see the element   jQuery = li:contains("Documents") span:contains("Completed")
-    When the user go to Collaboration agreement/Exploitation plan page    Documents  Exploitation plan
+    When the user goes to documents page   Documents  Exploitation plan
     Then the user should see the element   jQuery = .success-alert h2:contains("This document has been approved by us.")
 
 *** Keywords ***
@@ -523,7 +523,7 @@ Partners can see both documents approved
     the user clicks the button/link     link = Exploitation plan
     the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
 
-the user go to Collaboration agreement/Exploitation plan page
+the user goes to documents page
     [Arguments]  ${link1}  ${link2}
     the user clicks the button/link    link = ${link1}
     the user clicks the button/link    link = ${link2}
@@ -535,22 +535,22 @@ PM submits both documents
     the user should see the element     name = deleteDocument
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm
-    the user go to Collaboration agreement/Exploitation plan page    Return to documents  Exploitation plan
+    the user goes to documents page     Return to documents  Exploitation plan
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user should be redirected to the correct page    ${project_in_setup_page}
 
-PM upload Collaboration agreement and Exploitation plan documents
+PM uploads the project documents
     the user navigates to the page         ${project_in_setup_page}/document/all
     the user clicks the button/link        link = Exploitation plan
     the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
     the user should see the element        jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
-    the user go to Collaboration agreement/Exploitation plan page        Back to document overview  Collaboration agreement
+    the user goes to documents page        Back to document overview  Collaboration agreement
     the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
     the user should see the element        jQuery = .upload-section:contains("Collaboration agreement") a:contains("${valid_pdf}")
     the user should not see an error in the page
 
 partners can not remove the documents
     the user should not see the element       name = deleteDocument      #Exploitation plan remove CTA
-    the user go to Collaboration agreement/Exploitation plan page    Return to documents  Collaboration agreement
+    the user goes to documents page           Return to documents  Collaboration agreement
     the user should not see the element       name = deleteDocument     #Collaboration agreement remove CTA
