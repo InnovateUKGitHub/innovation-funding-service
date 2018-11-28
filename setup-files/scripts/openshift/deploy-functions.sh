@@ -294,9 +294,11 @@ function blockUntilServiceIsUp() {
 
     RETRIES=0
     UNREADY_PODS=1
-    while [ ${UNREADY_PODS} -ne "0" ]
+    UNSATISFIED_DEPLOYMENTS=1
+    while [ ${UNREADY_PODS} -ne "0" ] || [ ${UNSATISFIED_DEPLOYMENTS} -ne "0" ];
     do
-        UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
+        UNREADY_PODS=$(oc get pods ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
+        UNSATISFIED_DEPLOYMENTS=$(oc get dc ${SVC_ACCOUNT_CLAUSE} | sed 1d | awk '{ print $4 }' | grep -v 1 | wc -l)
         ERRORRED_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep Error | wc -l)
         DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | wc -l)
         ERRORRED_DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | grep Error | wc -l)
@@ -338,6 +340,7 @@ function blockUntilServiceIsUp() {
 
         oc get pods ${SVC_ACCOUNT_CLAUSE} -o wide
         echo "$UNREADY_PODS pods still not ready.."
+        echo "$UNSATISFIED_DEPLOYMENTS deployments still not ready.."
         
         sleep 10s
     done
