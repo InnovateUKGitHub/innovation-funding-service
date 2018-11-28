@@ -16,6 +16,9 @@ public class GrantProcess {
 
     private ZonedDateTime sentRequested;
     private ZonedDateTime sentSucceeded;
+    private ZonedDateTime lastProcessed;
+    private boolean pending;
+    private String message;
 
     public long getApplicationId() {
         return applicationId;
@@ -39,5 +42,29 @@ public class GrantProcess {
 
     public void setSentSucceeded(ZonedDateTime sentSucceeded) {
         this.sentSucceeded = sentSucceeded;
+    }
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
+    }
+
+    public boolean isPending() {
+        return pending;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public ZonedDateTime getLastProcessed() {
+        return lastProcessed;
+    }
+
+    public void setLastProcessed(ZonedDateTime lastProcessed) {
+        this.lastProcessed = lastProcessed;
     }
 }

@@ -2,10 +2,12 @@ package org.innovateuk.ifs.grant.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.innovateuk.ifs.grant.repository.GrantProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.service.GrantEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,16 +34,25 @@ public class GrantServiceImpl implements GrantService {
     @Autowired
     private GrantMapper grantMapper;
 
+    @Autowired
+    private GrantProcessApplicationFilter grantProcessApplicationFilter;
+
     @Override
     @Transactional
     public ServiceResult<Void> sendProject(Long applicationId) {
         LOG.info("Sending project : " + applicationId);
-        grantEndpoint.send(
-                grantMapper.mapToGrant(
-                        projectRepository.findOneByApplicationId(applicationId)
-                )
+
+        Grant grant = grantMapper.mapToGrant(
+                projectRepository.findOneByApplicationId(applicationId)
         );
-        grantProcessService.sendSucceeded(applicationId);
+        if (grantProcessApplicationFilter.shouldSend(grant)) {
+            grantEndpoint.send(grant)
+                    .andOnSuccess(() -> grantProcessService.sendSucceeded(applicationId))
+                    .andOnFailure((ServiceFailure serviceFailure) ->
+                            grantProcessService.sendFailed(applicationId, serviceFailure.getCause().getMessage()));
+        } else {
+            grantProcessService.sendIgnored(applicationId, grantProcessApplicationFilter.generateFilterReason(grant));
+        }
         return serviceSuccess();
     }
 

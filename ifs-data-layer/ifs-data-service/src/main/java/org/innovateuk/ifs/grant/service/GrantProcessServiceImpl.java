@@ -30,6 +30,25 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     public void sendSucceeded(long applicationId) {
         GrantProcess process = grantProcessRepository.findOneByApplicationId(applicationId);
         process.setSentSucceeded(ZonedDateTime.now());
+        process.setPending(false);
+        process.setMessage(null);
+        grantProcessRepository.save(process);
+    }
+
+    @Override
+    public void sendFailed(long applicationId, String message) {
+        GrantProcess process = grantProcessRepository.findOneByApplicationId(applicationId);
+        process.setLastProcessed(ZonedDateTime.now());
+        process.setMessage(message);
+        grantProcessRepository.save(process);
+    }
+
+    @Override
+    public void sendIgnored(long applicationId, String message) {
+        GrantProcess process = grantProcessRepository.findOneByApplicationId(applicationId);
+        process.setLastProcessed(ZonedDateTime.now());
+        process.setPending(false);
+        process.setMessage(message);
         grantProcessRepository.save(process);
     }
 }

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.sil.grant.resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,7 +24,6 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
     private static final int LONG_STRING_REPEAT = 5;
     private static final int CONTACT_ID_START = 1_000;
 
-    private Grant grant = new Grant();
     private String name;
     private String orgType = "Business";
     private String orgProjectRole = "lead";
@@ -52,25 +52,27 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
     }
 
     public Grant build() {
-        costCategories = Stream.iterate(0, i -> i + 1).limit(costCategoryCount)
-            .map(i -> i == 0 ? "Overheads" : "Other " + i)
-            .collect(Collectors.toList());
+        with(grant -> {
+            costCategories = Stream.iterate(0, i -> i + 1).limit(costCategoryCount)
+                    .map(i -> i == 0 ? "Overheads" : "Other " + i)
+                    .collect(Collectors.toList());
 
-        grant.setParticipants(
-                Stream.iterate(0, i -> i + 1)
-                        .limit(participantCount)
-                        .map(this::createParticipant)
-                        .collect(Collectors.toSet()));
+            grant.setParticipants(
+                    Stream.iterate(0, i -> i + 1)
+                            .limit(participantCount)
+                            .map(this::createParticipant)
+                            .collect(Collectors.toSet()));
 
-        grant.setGrantOfferLetterDate(grantOfferLetterDate != null ? grantOfferLetterDate : DEFAULT_GOL_DATE);
-        grant.setStartDate(startDate != null ? startDate : DEFAULT_START_DATE);
-        grant.setTitle(createString("title"));
-        grant.setSummary(createString("summary"));
-        grant.setPublicDescription(createString("public description"));
-        grant.setDuration(durationInMonths);
-        grant.setId(applicationId);
-        grant.setCompetitionCode(competitionCode);
-        return grant;
+            grant.setGrantOfferLetterDate(grantOfferLetterDate != null ? grantOfferLetterDate : DEFAULT_GOL_DATE);
+            grant.setStartDate(startDate != null ? startDate : DEFAULT_START_DATE);
+            grant.setTitle(createString("title"));
+            grant.setSummary(createString("summary"));
+            grant.setPublicDescription(createString("public description"));
+            grant.setDuration(durationInMonths);
+            grant.setId(applicationId);
+            grant.setCompetitionCode(competitionCode);
+        });
+        return super.build();
     }
 
     @Override
@@ -96,6 +98,10 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
 
     public String name() {
         return name;
+    }
+
+    public GrantBuilder withCompetitionId(Long... competitionIds) {
+        return withArray((id, grant) -> grant.setCompetitionCode(id), competitionIds);
     }
 
     public GrantBuilder withParticipantCount(int participantCount) {

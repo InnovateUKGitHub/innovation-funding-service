@@ -7,7 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 
 public interface GrantProcessRepository extends PagingAndSortingRepository<GrantProcess, Long> {
-    String READY_TO_SEND = "SELECT g FROM GrantProcess g WHERE g.sentSucceeded is NULL";
+    String READY_TO_SEND = "SELECT g FROM GrantProcess g WHERE g.pending IS TRUE";
 
     @Query(READY_TO_SEND)
     List<GrantProcess> findReadyToSend();

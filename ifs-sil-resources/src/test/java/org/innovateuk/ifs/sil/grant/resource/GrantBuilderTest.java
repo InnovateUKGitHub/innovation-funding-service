@@ -53,6 +53,7 @@ public class GrantBuilderTest {
          */
         return Arrays.asList(
                 newParameter(newGrant().name("basic")),
+                newParameter(newGrant().withCompetitionId(123L).name("competitionid")),
                 newParameter(newGrant().name("several").withCount(2)),
                 newParameter(newGrant().name("many").withCount(5)),
                 newParameter(newGrant().withSpecialCharacters(true).name("special")),
