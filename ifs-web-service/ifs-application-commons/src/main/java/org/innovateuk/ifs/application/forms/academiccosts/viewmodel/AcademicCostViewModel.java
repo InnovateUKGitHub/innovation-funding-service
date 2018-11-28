@@ -9,11 +9,12 @@ public class AcademicCostViewModel {
     private final long sectionId;
     private final long organisationId;
     private final long applicationFinanceId;
+    private final boolean applicant;
     private final boolean includeVat;
     private final boolean open;
     private final boolean complete;
 
-    public AcademicCostViewModel(String financesUrl, String applicationName, String organisationName, long applicationId, long sectionId, long organisationId, long applicationFinanceId, boolean includeVat, boolean open, boolean complete) {
+    public AcademicCostViewModel(String financesUrl, String applicationName, String organisationName, long applicationId, long sectionId, long organisationId, long applicationFinanceId, boolean applicant, boolean includeVat, boolean open, boolean complete) {
         this.financesUrl = financesUrl;
         this.applicationName = applicationName;
         this.organisationName = organisationName;
@@ -21,6 +22,7 @@ public class AcademicCostViewModel {
         this.sectionId = sectionId;
         this.organisationId = organisationId;
         this.applicationFinanceId = applicationFinanceId;
+        this.applicant = applicant;
         this.includeVat = includeVat;
         this.open = open;
         this.complete = complete;
@@ -64,6 +66,10 @@ public class AcademicCostViewModel {
 
     public long getApplicationFinanceId() {
         return applicationFinanceId;
+    }
+
+    public boolean isApplicant() {
+        return applicant;
     }
 
     /* View logic. */

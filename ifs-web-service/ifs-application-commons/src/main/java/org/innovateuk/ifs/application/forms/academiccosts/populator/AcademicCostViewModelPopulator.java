@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
 
 @Component
@@ -36,7 +35,7 @@ public class AcademicCostViewModelPopulator {
         this.applicationFinanceRestService = applicationFinanceRestService;
     }
 
-    public AcademicCostViewModel populate(long organisationId, long applicationId, long sectionId, boolean internalUser) {
+    public AcademicCostViewModel populate(long organisationId, long applicationId, long sectionId, boolean applicant) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
@@ -52,25 +51,26 @@ public class AcademicCostViewModelPopulator {
 
         boolean complete = completedSectionIds.contains(sectionId);
 
-        boolean open = !internalUser && competition.isOpen() && application.isOpen();
+        boolean open = applicant && competition.isOpen() && application.isOpen();
 
         return new AcademicCostViewModel(
-                getYourFinancesUrl(applicationId, organisationId, internalUser),
+                getYourFinancesUrl(applicationId, organisationId, applicant),
                 application.getName(),
                 organisation.getName(),
                 applicationId,
                 sectionId,
                 organisationId,
                 finance.getId(),
+                applicant,
                 includeVat,
                 open,
                 complete);
     }
 
 
-    private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {
-        return internalUser ?
-                String.format("%s%d/form/FINANCE/%d", APPLICATION_BASE_URL, applicationId, organisationId) :
-                String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
+    private String getYourFinancesUrl(long applicationId, long organisationId, boolean applicant) {
+        return applicant ?
+                String.format("/application/%d/form/FINANCE", applicationId) :
+                String.format("/application/%d/form/FINANCE/%d", applicationId, organisationId);
     }
 }
