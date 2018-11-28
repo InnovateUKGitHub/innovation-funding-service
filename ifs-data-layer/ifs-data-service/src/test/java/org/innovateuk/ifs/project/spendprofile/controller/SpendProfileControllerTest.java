@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVWriter;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;

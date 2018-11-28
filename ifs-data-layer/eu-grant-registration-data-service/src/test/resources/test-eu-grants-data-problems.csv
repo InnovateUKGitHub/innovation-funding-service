@@ -1,0 +1,5 @@
+Organisation type,Organisation name,Registration number (Companies House),Full name,Job title,Email,Telephone,Grant agreement number,Participant identification code (PIC),Type of action,Project name,Project start date,Project end date,EU funding contribution for above project (EUR),Is your organisation the project co-ordinator on this project?
+Research,The University of Sheffield,,Bob Bobbins,Project manager,bob.bobbins@example.com,01234 567890,111222,998592400,UNK,An interesting project 1,01/12/2018,28/02/2021,132470.07,BENEFICIARY
+Research,The University of Sheffield,,Bob Bobbins,Project manager,bob.bobbins@example.com,01234 567890,111222,998592400,CSA,An interesting project 2,Invalid start date,28/02/2021,132470.07,BENEFICIARY
+Research,The University of Sheffield,,Bob Bobbins,Project manager,bob.bobbins@example.com,01234 567890,111222,998592400,CSA,An interesting project 3,01/12/2018,Invalid end date,132470.07,BENEFICIARY
+Research,The University of Sheffield,,Bob Bobbins,Project manager,bob.bobbins@example.com,01234 567890,111222,998592400,CSA,An interesting project 4,01/12/2018,28/02/2021,Invalid number,BENEFICIARY
