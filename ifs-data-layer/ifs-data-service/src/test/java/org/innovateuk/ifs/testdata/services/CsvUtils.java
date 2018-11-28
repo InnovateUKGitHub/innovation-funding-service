@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.testdata.services;
 
-import au.com.bytecode.opencsv.CSVReader;
 import com.google.common.base.Splitter;
+import com.opencsv.CSVReader;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;

@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.commons.service;
+package org.innovateuk.ifs.service;
 
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 
 import java.util.List;
 
