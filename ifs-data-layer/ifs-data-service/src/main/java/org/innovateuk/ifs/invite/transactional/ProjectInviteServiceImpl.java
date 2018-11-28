@@ -36,13 +36,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_EXISTS_ON_PROJECT;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
@@ -78,7 +75,6 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     private OrganisationRepository organisationRepository;
 
     private LocalValidatorFactoryBean validator;
-    private List<Long> usersOrganisations;
 
     public ProjectInviteServiceImpl() {
         validator = new LocalValidatorFactoryBean();
@@ -193,19 +189,21 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
 
         Optional<User> existingUser = userRepository.findByEmail(targetEmail);
 
-        usersOrganisations = simpleMap(organisationRepository.findDistinctByUsers(existingUser), Organisation::getId);
-
-        if (usersOrganisations.size() > 0) {
-            validateUserIsInSameOrganisation(invite);
-        }
+        List<Long> usersOrganisations = existingUser.map(organisationRepository::findDistinctByUsers)
+                .map(organisations -> simpleMap(organisations, Organisation::getId))
+                .orElse(emptyList());
 
         return existingUser.map(user ->
-               validateUserIsInSameOrganisation(invite).andOnSuccess(() ->
+               validateUserIsInSameOrganisation(invite, usersOrganisations).andOnSuccess(() ->
                validateUserIsNotAlreadyPartnerInOrganisation(invite, user))).
                orElse(serviceSuccess());
     }
 
-    private ServiceResult<Void> validateUserIsInSameOrganisation(ProjectInviteResource invite) {
+    private ServiceResult<Void> validateUserIsInSameOrganisation(ProjectInviteResource invite, List usersOrganisations) {
+
+        if (usersOrganisations.isEmpty()) {
+            serviceSuccess();
+        }
 
         if (!usersOrganisations.contains(invite.getOrganisation())) {
             return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION);
