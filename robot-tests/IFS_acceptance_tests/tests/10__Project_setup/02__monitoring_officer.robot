@@ -289,9 +289,8 @@ the lead partner fills in project details
     the user enters text to a text field      id = projectStartDate_year    ${nextyear}
     the user clicks the button/link           css = button[type = "submit"]
     the user clicks the button/link           link = Correspondence address
-    #the user selects the radio button         addressType    REGISTERED
-    the user enters text to a text field          id = addressForm.postcodeInput  BS1 4NT
-    the user clicks the button/link               id = postcode-lookup
+    the user enters text to a text field      id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link           id = postcode-lookup
     the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
     the user clicks the button/link           jQuery = .govuk-button:contains("Save address")
     the user clicks the button/link           link = Project Manager

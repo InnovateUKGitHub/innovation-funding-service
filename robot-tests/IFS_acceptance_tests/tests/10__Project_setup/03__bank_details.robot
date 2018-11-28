@@ -92,16 +92,12 @@ The user enters bank details, wants to manually enter their address, leaves the 
     [Tags]
     Given the user enters text to a text field    name = accountNumber    24681012
     And the user enters text to a text field      name = sortCode         36912
-    #When the user selects the radio button        addressType             ADD_NEW
-    #And the user clicks the button/link           css = button[name = "addressForm.action"]        #Enter address manually
     Then the user clicks the button/link          jQuery = button:contains("Enter address manually")
-    Then the user clicks the button/link          jQuery = button:contains("Submit bank account details")
+    And the user clicks the button/link           jQuery = button:contains("Submit bank account details")
     And the user clicks the button/link           id = submit-bank-details
     And the user should see a summary error       The first line of the address cannot be blank.
     And the user should see a summary error       The postcode cannot be blank.
     And the user should see a summary error       The town cannot be blank.
-
-#Errors could be due to the submit pop up staying in focus!!!
 
 Bank details client side validations
     [Documentation]    INFUND-3010, INFUND-6887, INFUND-6482
@@ -129,26 +125,18 @@ Bank details client side validations
     And the user moves focus away from the element       name = sortCode
     Then the user should not see the text in the page    Please enter a sort code.
     And the user should not see the text in the page     Please enter a valid sort code.
-    #When the user selects the radio button               addressType    REGISTERED
-    Then the user should see the text in the page    Search using a valid postcode or enter the address manually.
+    Then the user should see the text in the page        Search using a valid postcode or enter the address manually.
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282
     [Tags]  HappyPath
-    #When the user selects the radio button       addressType    ADD_NEW
-    And the user enters text to a text field     name = addressForm.postcodeInput    ${EMPTY}
+    When the user enters text to a text field    name = addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link          jQuery = .govuk-button:contains("Find UK address")
     Then the user should see the element         css = .govuk-form-group--error
     When the user enters text to a text field    name = addressForm.postcodeInput    BS14NT/
-    And the user clicks the button/link               id = postcode-lookup
+    And the user clicks the button/link          id = postcode-lookup
     And the user selects the index from the drop-down menu  0  id=addressForm.selectedPostcodeIndex
-    And the user clicks the button/link               jQuery = button:contains("Submit bank account details")
-    #Then the user should see the element         name = addressForm.selectedPostcodeIndex
-    #When the user selects the radio button       addressType    ADD_NEW
-    #And the user enters text to a text field     id = addressForm.postcodeInput    BS14NT
-    #And the user clicks the button/link          id = postcode-lookup
-    #Then the user should see the element         css = #select-address-block
-    #And the user clicks the button/link          css = #select-address-block > button
+    And the user clicks the button/link          jQuery = button:contains("Submit bank account details")
     And the address fields should be filled
 
 Bank details experian validations
@@ -197,7 +185,6 @@ Submission of bank details for academic user
     And the user clicks the button/link            link = Bank details
     When partner fills in his bank details         ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
     Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery = .govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
-    # Added this wait so to give extra execution time
     When the user enters text to a text field      name = accountNumber   ${account_one}
     And the user enters text to a text field       name = sortCode  ${sortCode_one}
     When the user selects the radio button         addressType  ADD_NEW
@@ -270,12 +257,12 @@ Non lead partner submits bank details
 Bank details verified by Experian require no action by the Project Finance
     [Documentation]  IFS-2495
     [Tags]  MySQL  HappyPath
-    [Setup]  log in as a different user      &{internal_finance_credentials}
+    [Setup]  log in as a different user       &{internal_finance_credentials}
     Given the bank details have been verified by the Experian  ${Vitruvius_Id}
-    When the user navigates to the page      ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/organisation/${Vitruvius_Id}/review-bank-details
-    Then the user should see the element     jQuery = .success-alert:contains("The bank details provided have been approved.")
-    And the user should not see the element  css = button[data-js-modal = "modal-partner-approve-bank-details"]
-    When the user navigates to the page      ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
+    When the user navigates to the page       ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/organisation/${Vitruvius_Id}/review-bank-details
+    Then the user should see the element      jQuery = .success-alert:contains("The bank details provided have been approved.")
+    And the user should not see the element   css = button[data-js-modal = "modal-partner-approve-bank-details"]
+    When the user navigates to the page       ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
     Then the user should not see the element  jQuery = td:contains("${PS_BD_APPLICATION_NUMBER}") ~ td:contains("${Vitruvius_Name}")
 
 Project Finance can see the progress of partners bank details

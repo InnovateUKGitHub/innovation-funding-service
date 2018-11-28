@@ -167,9 +167,7 @@ The user fills and submits the registration form
     And the user enters text to a text field   id = phoneNumber    1234567891011
     And The user enters text to a text field   id = addressForm.postcodeInput    BS14NT
     the user clicks the button/link            id = postcode-lookup
-    #the user clicks the button/link               jQuery = button:contains("Find UK address")
     the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
-    #And the user clicks the button/link        id = postcode-lookup
     And the user should see the element        id = addressForm.selectedPostcodeIndex
     And The user enters text to a text field   id = password    ${correct_password}
     And the user clicks the button/link        jQuery = button:contains("Continue")

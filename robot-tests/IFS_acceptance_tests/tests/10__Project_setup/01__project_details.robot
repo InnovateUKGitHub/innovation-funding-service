@@ -302,12 +302,9 @@ Lead partner can change the project address
     And the user enters text to a text field         id = addressForm.postcodeInput  BS1 4NT
     And the user clicks the button/link              id = postcode-lookup
     And the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
-    #And the user clicks the button/link              jQuery = .govuk-button:contains("Find UK address")
-    #Then the user should see the element             css = #select-address-block
     And the user clicks the button/link              jQuery = .govuk-button:contains("Save address")
     And the user should see the address data
     When the user clicks the button/link             link = Correspondence address
-    #And the user selects the radio button            addressType    REGISTERED
     And the user clicks the button/link              jQuery = .govuk-button:contains("Save address")
     Then the user should see the text in the page    Montrose House 1, Neston, CH64 3RU
 
