@@ -202,6 +202,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
             newOrganisationAddress = bankOrganisationAddresses.get(0);
             newOrganisationAddress.getAddress().updateFrom(addressResource);
         } else {
+            addressResource.setId(null);
             OrganisationAddressResource organisationAddressResource = new OrganisationAddressResource();
             organisationAddressResource.setAddress(addressResource);
             organisationAddressResource.setOrganisation(bankDetailsResource.getOrganisation());
