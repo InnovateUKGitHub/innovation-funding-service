@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -99,7 +100,7 @@ class GrantBuilder {
         return participant;
     }
 
-    private Set<Forecast> createForecasts(BigDecimal participantTotal) {
+    private Collection<Forecast> createForecasts(BigDecimal participantTotal) {
         BigDecimal value = participantTotal.divide(BigDecimal.valueOf(durationInMonths * costCategories.size()),
                 6, BigDecimal.ROUND_UP);
         return costCategories.stream().map(category ->
@@ -107,7 +108,7 @@ class GrantBuilder {
                 .collect(Collectors.toSet());
     }
 
-    private static Set<Period> createPeriods(int durationInMonths, BigDecimal value) {
+    private static Collection<Period> createPeriods(int durationInMonths, BigDecimal value) {
         return Stream.iterate(0, i -> i + 1).limit(durationInMonths)
                 .map(i -> new Period().month(i + 1).value(value.longValue()))
                 .collect(Collectors.toSet());

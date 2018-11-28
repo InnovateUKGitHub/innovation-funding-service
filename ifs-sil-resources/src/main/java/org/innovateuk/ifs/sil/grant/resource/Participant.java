@@ -7,7 +7,7 @@ import org.innovateuk.ifs.sil.grant.resource.json.PercentageDeserializer;
 import org.innovateuk.ifs.sil.grant.resource.json.PercentageSerializer;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Collection;
 
 public class Participant {
     @JsonProperty("orgId")
@@ -30,7 +30,7 @@ public class Participant {
     @JsonDeserialize(using = PercentageDeserializer.class)
     private BigDecimal overheadRate;
     @JsonProperty("forecast")
-    private List<Forecast> forecasts;
+    private Collection<Forecast> forecasts;
 
     public long getId() {
         return id;
@@ -112,11 +112,11 @@ public class Participant {
         this.overheadRate = overheadRate;
     }
 
-    public List<Forecast> getForecasts() {
+    public Collection<Forecast> getForecasts() {
         return forecasts;
     }
 
-    public void setForecasts(List<Forecast> forecasts) {
+    public void setForecasts(Collection<Forecast> forecasts) {
         this.forecasts = forecasts;
     }
 }
