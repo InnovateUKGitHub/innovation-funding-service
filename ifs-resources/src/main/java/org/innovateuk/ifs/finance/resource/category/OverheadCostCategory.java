@@ -14,9 +14,6 @@ import java.util.List;
  */
 public class OverheadCostCategory implements FinanceRowCostCategory {
     public static final String ACCEPT_RATE = "Accept Rate";
-    public static final Boolean USE_TOTAL_BY_DEFAULT = true;
-    public static final String USE_TOTAL_META_FIELD = "use_total";
-    public static final String CALCULATION_FILE_FIELD = "file_entry";
     private List<FinanceRowItem> costs = new ArrayList<>();
     private BigDecimal total = BigDecimal.ZERO;
     private BigDecimal labourCostTotal = BigDecimal.ZERO;

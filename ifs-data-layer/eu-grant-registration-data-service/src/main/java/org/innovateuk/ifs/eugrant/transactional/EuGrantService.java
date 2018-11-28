@@ -13,18 +13,18 @@ import java.util.UUID;
 public interface EuGrantService {
 
     @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "Anonymous users can submit grant registration")
+    @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "The system registrar can update grant registration")
     ServiceResult<Void> update(UUID id, EuGrantResource externalFundingResource);
 
     @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "Anonymous users can submit grant registration")
+    @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "The system registrar can find grant registration")
     ServiceResult<EuGrantResource> findById(UUID id);
 
     @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "Anonymous users can submit grant registration")
+    @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "The system registrar can create grant registration")
     ServiceResult<EuGrantResource> create();
 
     @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "Anonymous users can submit grant registration")
-    ServiceResult<EuGrantResource> submit(UUID uuid);
+    @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "The system registrar can submit grant registration")
+    ServiceResult<EuGrantResource> submit(UUID uuid, boolean sendEmail);
 }

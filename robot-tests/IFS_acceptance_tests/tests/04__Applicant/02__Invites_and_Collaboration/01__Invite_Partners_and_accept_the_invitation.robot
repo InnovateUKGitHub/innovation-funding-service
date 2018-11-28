@@ -130,9 +130,8 @@ Partner organisation Server-side validations
     And browser validations have been disabled
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Add organisation and invite applicants")
     Then the user should see a field and summary error    An organisation name is required.
-    #TODO remove below uncommented once IFS-4760 is done.
-    #And the user should see a field and summary error     Please enter a name.
-    #And the user should see a field and summary error     Please enter an email address.
+    And the user should see a field and summary error     Please enter a name.
+    And the user should see a field and summary error     Please enter an email address.
     [Teardown]  the user goes back to the previous page
 
 Partner organisation Client-side validations
