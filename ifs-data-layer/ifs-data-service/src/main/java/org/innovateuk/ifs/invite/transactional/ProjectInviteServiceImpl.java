@@ -78,6 +78,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     private OrganisationRepository organisationRepository;
 
     private LocalValidatorFactoryBean validator;
+    private List<Long> usersOrganisations;
 
     public ProjectInviteServiceImpl() {
         validator = new LocalValidatorFactoryBean();
@@ -192,17 +193,21 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
 
         Optional<User> existingUser = userRepository.findByEmail(targetEmail);
 
+        usersOrganisations = simpleMap(organisationRepository.findDistinctByUsers(existingUser), Organisation::getId);
+
+        if (usersOrganisations.size() > 0) {
+            validateUserIsInSameOrganisation(invite);
+        }
+
         return existingUser.map(user ->
-               validateUserIsInSameOrganisation(invite, user).andOnSuccess(() ->
+               validateUserIsInSameOrganisation(invite).andOnSuccess(() ->
                validateUserIsNotAlreadyPartnerInOrganisation(invite, user))).
                orElse(serviceSuccess());
     }
 
-    private ServiceResult<Void> validateUserIsInSameOrganisation(ProjectInviteResource invite, User user) {
+    private ServiceResult<Void> validateUserIsInSameOrganisation(ProjectInviteResource invite) {
 
-        List<Long> usersOrganisations = simpleMap(organisationRepository.findDistinctByUsers(user), Organisation::getId);
-
-        if (usersOrganisations.size() > 0 && !usersOrganisations.contains(invite.getOrganisation())) {
+        if (!usersOrganisations.contains(invite.getOrganisation())) {
             return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION);
         }
 

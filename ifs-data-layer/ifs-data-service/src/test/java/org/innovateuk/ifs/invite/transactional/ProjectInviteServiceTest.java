@@ -39,7 +39,6 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mapstruct.factory.Mappers.getMapper;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
@@ -138,7 +137,6 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void saveProjectInvite_success() throws Exception {
         Organisation organisation = newOrganisation().build();
-        when(organisationRepositoryMock.findDistinctByUsers(any(User.class))).thenReturn(singletonList(organisation));
 
         Project project = newProject().withName("project name").build();
         User user = newUser().
@@ -150,6 +148,8 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
                 withName("project name").
                 withEmail(user.getEmail()).
                 build();
+
+        when(organisationRepositoryMock.findDistinctByUsers(Optional.ofNullable(user))).thenReturn(singletonList(organisation));
         ProjectInviteResource projectInviteResource = getMapper(ProjectInviteMapper.class).mapToResource(projectInvite);
         when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(projectInviteMapperMock.mapToDomain(projectInviteResource)).thenReturn(projectInvite);
