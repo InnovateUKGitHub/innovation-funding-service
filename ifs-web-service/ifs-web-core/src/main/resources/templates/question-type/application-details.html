@@ -11,14 +11,10 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <dl class="govuk-list govuk-!-font-size-16">
-                <th:block th:if="${model.applicationIsClosed}">
-                    <dt>Competition name</dt>
-                    <dd th:text="${competition.name}"></dd>
-                </th:block>
-                <th:block th:unless="${model.applicationIsClosed}">
-                    <dt>Application title</dt>
-                    <dd th:text="${model.application.name}"></dd>
-                </th:block>
+                <dt>Competition name</dt>
+                <dd th:text="${competition.name}"></dd>
+                <dt>Application name</dt>
+                <dd th:text="${model.application.name}"></dd>
                 <dt>When do you wish to start your project?</dt>
                 <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
                 <dd th:unless="${model.application.startDate}"><span class="invisible">Not specified</span></dd>
