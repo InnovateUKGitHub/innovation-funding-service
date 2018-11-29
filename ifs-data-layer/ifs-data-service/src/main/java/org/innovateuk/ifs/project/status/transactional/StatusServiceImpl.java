@@ -310,12 +310,12 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments
-                && matchAll(projectDocuments, projectDocument -> DocumentStatus.REJECTED.equals(projectDocument.getStatus()))) {
+                && simpleAllMatch(projectDocuments, projectDocument -> DocumentStatus.REJECTED.equals(projectDocument.getStatus()))) {
             return REJECTED;
         }
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments
-                && matchAll(projectDocuments, projectDocument -> APPROVED.equals(projectDocument.getStatus()))) {
+                && simpleAllMatch(projectDocuments, projectDocument -> APPROVED.equals(projectDocument.getStatus()))) {
             return COMPLETE;
         }
 

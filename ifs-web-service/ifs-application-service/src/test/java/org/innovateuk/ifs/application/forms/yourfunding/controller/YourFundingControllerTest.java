@@ -132,9 +132,8 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}",
                 APPLICATION_ID, SECTION_ID)
                 .param("edit", "true"))
-                .andExpect(model().attribute("model", viewModel))
-                .andExpect(view().name(VIEW))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("%s%s/form/your-funding/%s", APPLICATION_BASE_URL, APPLICATION_ID, SECTION_ID)));
 
         verifyZeroInteractions(saver);
         verify(sectionStatusRestService).markAsInComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID);
@@ -183,12 +182,12 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}",
                 APPLICATION_ID, SECTION_ID)
-                .param("add_other_funding", "true"))
+                .param("add_cost", "true"))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
-        verify(saver).addOtherFundingRow(any(), eq(APPLICATION_ID), eq(getLoggedInUser()));
+        verify(saver).addOtherFundingRow(any());
     }
 
     @Test
@@ -198,7 +197,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}",
                 APPLICATION_ID, SECTION_ID)
-                .param("remove_other_funding", rowToRemove))
+                .param("remove_cost", rowToRemove))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
@@ -243,16 +242,16 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
             YourFundingForm form = (YourFundingForm) invocation.getArguments()[0];
             form.getOtherFundingRows().put(rowId, row);
             return null;
-        }).when(saver).addOtherFundingRow(any(), eq(APPLICATION_ID), eq(loggedInUser));
+        }).when(saver).addOtherFundingRow(any());
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/{sectionId}/add-row",
                 APPLICATION_ID, SECTION_ID))
                 .andExpect(view().name("application/your-funding-fragments :: ajax_other_funding_row"))
                 .andExpect(model().attribute("row", row))
-                .andExpect(model().attribute("id", Long.valueOf(rowId)))
+                .andExpect(model().attribute("id", rowId))
                 .andExpect(status().isOk());
 
-        verify(saver).addOtherFundingRow(any(), eq(APPLICATION_ID), eq(loggedInUser));
+        verify(saver).addOtherFundingRow(any());
     }
 
 
