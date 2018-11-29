@@ -230,8 +230,8 @@ Project location server-side validations
     [Documentation]  IFS-4569
     [Setup]  the user clicks the button/link  link = Your finances
     Given the user clicks the button/link     link = Your project location
-    And The user enters text to a text field  id = projectLocation  ${EMPTY}
-    When the user clicks the button/link      id = mark-all-as-complete
+    And The user enters text to a text field  id = postcode  ${EMPTY}
+    When the user clicks the button/link      id = mark_as_complete
     Then The user should see a field and summary error  Enter a valid postcode.
 #Funding level client side is covered in 02__Org_size_validation.robot
 

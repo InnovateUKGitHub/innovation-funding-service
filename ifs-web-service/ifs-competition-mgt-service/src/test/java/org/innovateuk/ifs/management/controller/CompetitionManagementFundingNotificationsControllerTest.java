@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
-import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -62,7 +61,6 @@ import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyApplicationStatisticsResourceBuilder.newCompetitionFundedKeyApplicationStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
@@ -120,10 +118,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     private CompetitionResource competitionResource;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         setupCookieUtil(cookieUtil);
         competitionResource = newCompetitionResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).withName("A competition").build();
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.survey;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.survey.controller.SurveyController;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -10,7 +9,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyController> {
 
@@ -20,11 +20,6 @@ public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyContro
     @Override
     protected SurveyController supplyControllerUnderTest() {
         return new SurveyController();
-    }
-
-    @Before
-    public void setUp() {
-        super.setUp();
     }
 
     @Test
