@@ -118,7 +118,7 @@ public class AcademicCostsController {
                        @PathVariable long sectionId,
                        @ModelAttribute("form") AcademicCostForm form) {
         sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
-        return String.format("redirect:/application/%s/form/academic-costs/organisation/%S/section/%s", applicationId, organisationId, sectionId);
+        return redirectToYourFinances(applicationId);
     }
 
     @PostMapping(params = "remove_jes")
@@ -130,8 +130,8 @@ public class AcademicCostsController {
                                 @ModelAttribute("form") AcademicCostForm form) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
         applicationFinanceRestService.removeFinanceDocument(finance.getId());
-        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, true));
-        return VIEW;
+        saver.save(form, applicationId, organisationId);
+        return redirectToAcademicCosts(applicationId, organisationId, sectionId);
     }
 
     @PostMapping(params = "upload_jes")
@@ -171,6 +171,10 @@ public class AcademicCostsController {
 
     private String redirectToYourFinances(long applicationId) {
         return String.format("redirect:/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
+    }
+
+    private String redirectToAcademicCosts(long applicationId, long organisationId, long sectionId) {
+        return String.format("redirect:/application/%s/form/academic-costs/organisation/%S/section/%s", applicationId, organisationId, sectionId);
     }
 
     private long getProcessRoleId(long applicationId, long userId) {
