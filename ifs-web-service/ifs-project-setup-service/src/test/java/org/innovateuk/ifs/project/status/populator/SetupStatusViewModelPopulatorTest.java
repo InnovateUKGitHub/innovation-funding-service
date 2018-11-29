@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
@@ -91,7 +92,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     private static final boolean monitoringOfficerExpected = true;
 
-    List<org.innovateuk.ifs.competition.resource.ProjectDocumentResource> projectDocumentConfig =
+    List<CompetitionDocumentResource> projectDocumentConfig =
             org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource()
             .withTitle("Risk Register", "Plan Document")
             .build(2);
@@ -1429,12 +1430,12 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        List<org.innovateuk.ifs.competition.resource.ProjectDocumentResource> competitionDocuments = org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource()
+        List<CompetitionDocumentResource> competitionDocuments = org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource()
                 .withTitle("Collaboration agreement", "Other Document")
                 .withCompetition(competition.getId())
                 .build(2);
 
-        competition.setProjectDocuments(competitionDocuments);
+        competition.setCompetitionDocuments(competitionDocuments);
 
         List<ProjectDocumentResource> projectDocuments = ProjectDocumentResourceBuilder.newProjectResource()
                 .withProjectDocument(competitionDocuments.get(1))

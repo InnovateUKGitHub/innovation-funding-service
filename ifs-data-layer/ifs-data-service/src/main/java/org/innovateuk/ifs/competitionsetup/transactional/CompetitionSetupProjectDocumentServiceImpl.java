@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
-import org.innovateuk.ifs.competitionsetup.mapper.ProjectDocumentMapper;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.competitionsetup.mapper.CompetitionDocumentMapper;
 import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,62 +25,62 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactionalService implements CompetitionSetupProjectDocumentService {
 
     @Autowired
-    private ProjectDocumentMapper projectDocumentMapper;
+    private CompetitionDocumentMapper competitionDocumentMapper;
 
     @Autowired
     private ProjectDocumentConfigRepository projectDocumentConfigRepository;
 
     @Override
     @Transactional
-    public ServiceResult<ProjectDocumentResource> save(ProjectDocumentResource projectDocumentResource) {
+    public ServiceResult<CompetitionDocumentResource> save(CompetitionDocumentResource competitionDocumentResource) {
 
-        return validateProjectDocument(projectDocumentResource).andOnSuccess(() -> {
+        return validateProjectDocument(competitionDocumentResource).andOnSuccess(() -> {
 
-            ProjectDocument projectDocument = projectDocumentMapper.mapToDomain(projectDocumentResource);
+            CompetitionDocument competitionDocument = competitionDocumentMapper.mapToDomain(competitionDocumentResource);
 
-            ProjectDocument savedProjectDocument = projectDocumentConfigRepository.save(projectDocument);
-            return serviceSuccess(projectDocumentMapper.mapToResource(savedProjectDocument));
+            CompetitionDocument savedCompetitionDocument = projectDocumentConfigRepository.save(competitionDocument);
+            return serviceSuccess(competitionDocumentMapper.mapToResource(savedCompetitionDocument));
         });
     }
 
-    private ServiceResult<Void> validateProjectDocument(ProjectDocumentResource projectDocumentResource) {
-        return projectDocumentResource.getFileTypes() != null && projectDocumentResource.getFileTypes().size() > 0 ?
+    private ServiceResult<Void> validateProjectDocument(CompetitionDocumentResource competitionDocumentResource) {
+        return competitionDocumentResource.getFileTypes() != null && competitionDocumentResource.getFileTypes().size() > 0 ?
                 serviceSuccess() : serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
     }
 
     @Override
     @Transactional
-    public ServiceResult<List<ProjectDocumentResource>> saveAll(List<ProjectDocumentResource> projectDocumentResources) {
+    public ServiceResult<List<CompetitionDocumentResource>> saveAll(List<CompetitionDocumentResource> competitionDocumentResources) {
 
-        return validateProjectDocument(projectDocumentResources).andOnSuccess(() -> {
+        return validateProjectDocument(competitionDocumentResources).andOnSuccess(() -> {
 
-            List<ProjectDocument> projectDocuments = simpleMap(projectDocumentResources,
-                    projectDocumentResource -> projectDocumentMapper.mapToDomain(projectDocumentResource));
+            List<CompetitionDocument> competitionDocuments = simpleMap(competitionDocumentResources,
+                    projectDocumentResource -> competitionDocumentMapper.mapToDomain(projectDocumentResource));
 
-            List<ProjectDocument> savedProjectDocuments = (List<ProjectDocument>) projectDocumentConfigRepository.save(projectDocuments);
-            return serviceSuccess(simpleMap(savedProjectDocuments, savedProjectDocument -> projectDocumentMapper.mapToResource(savedProjectDocument)));
+            List<CompetitionDocument> savedCompetitionDocuments = (List<CompetitionDocument>) projectDocumentConfigRepository.save(competitionDocuments);
+            return serviceSuccess(simpleMap(savedCompetitionDocuments, savedProjectDocument -> competitionDocumentMapper.mapToResource(savedProjectDocument)));
         });
     }
 
-    private ServiceResult<Void> validateProjectDocument(List<ProjectDocumentResource> projectDocumentResources) {
+    private ServiceResult<Void> validateProjectDocument(List<CompetitionDocumentResource> competitionDocumentResources) {
 
-        return simpleAnyMatch(projectDocumentResources,
+        return simpleAnyMatch(competitionDocumentResources,
                 projectDocumentResource -> projectDocumentResource.getFileTypes() == null || projectDocumentResource.getFileTypes().size() <= 0) ?
                 serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE) : serviceSuccess();
     }
 
     @Override
     @Transactional
-    public ServiceResult<ProjectDocumentResource> findOne(long id) {
-        ProjectDocument projectDocument = projectDocumentConfigRepository.findOne(id);
-        return serviceSuccess(projectDocumentMapper.mapToResource(projectDocument));
+    public ServiceResult<CompetitionDocumentResource> findOne(long id) {
+        CompetitionDocument competitionDocument = projectDocumentConfigRepository.findOne(id);
+        return serviceSuccess(competitionDocumentMapper.mapToResource(competitionDocument));
     }
 
     @Override
     @Transactional
-    public ServiceResult<List<ProjectDocumentResource>> findByCompetitionId(long competitionId) {
-        List<ProjectDocument> projectDocuments = projectDocumentConfigRepository.findByCompetitionId(competitionId);
-        return serviceSuccess(simpleMap(projectDocuments, projectDocument -> projectDocumentMapper.mapToResource(projectDocument)));
+    public ServiceResult<List<CompetitionDocumentResource>> findByCompetitionId(long competitionId) {
+        List<CompetitionDocument> competitionDocuments = projectDocumentConfigRepository.findByCompetitionId(competitionId);
+        return serviceSuccess(simpleMap(competitionDocuments, projectDocument -> competitionDocumentMapper.mapToResource(projectDocument)));
     }
 
     @Override

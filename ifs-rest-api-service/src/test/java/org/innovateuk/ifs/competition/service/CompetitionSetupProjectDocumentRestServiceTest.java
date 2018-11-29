@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder;
-import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -25,26 +25,26 @@ public class CompetitionSetupProjectDocumentRestServiceTest extends BaseRestServ
 
     @Test
     public void save() {
-        ProjectDocumentResource requestBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build();
-        ProjectDocumentResource responseBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build();
+        CompetitionDocumentResource requestBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build();
+        CompetitionDocumentResource responseBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build();
 
-        setupPostWithRestResultExpectations(String.format("%s/save", competitionSetupProjectDocumentRestURL), ProjectDocumentResource.class, requestBody, responseBody, HttpStatus.OK);
+        setupPostWithRestResultExpectations(String.format("%s/save", competitionSetupProjectDocumentRestURL), CompetitionDocumentResource.class, requestBody, responseBody, HttpStatus.OK);
 
-        ProjectDocumentResource response = service.save(requestBody).getSuccess();
+        CompetitionDocumentResource response = service.save(requestBody).getSuccess();
         assertNotNull(response);
         assertEquals(responseBody, response);
 
-        setupPostWithRestResultVerifications(String.format("%s/save", competitionSetupProjectDocumentRestURL), ProjectDocumentResource.class, requestBody);
+        setupPostWithRestResultVerifications(String.format("%s/save", competitionSetupProjectDocumentRestURL), CompetitionDocumentResource.class, requestBody);
     }
 
     @Test
     public void saveAll() {
-        List<ProjectDocumentResource> requestBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build(2);
-        List<ProjectDocumentResource> responseBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build(2);
+        List<CompetitionDocumentResource> requestBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build(2);
+        List<CompetitionDocumentResource> responseBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build(2);
 
         setupPostWithRestResultExpectations(String.format("%s/save-all", competitionSetupProjectDocumentRestURL), projectDocumentResourceListType(), requestBody, responseBody, HttpStatus.OK);
 
-        List<ProjectDocumentResource> response = service.save(requestBody).getSuccess();
+        List<CompetitionDocumentResource> response = service.save(requestBody).getSuccess();
         assertNotNull(response);
         assertEquals(responseBody, response);
 
@@ -56,15 +56,15 @@ public class CompetitionSetupProjectDocumentRestServiceTest extends BaseRestServ
 
         long projectDocumentId = 1L;
 
-        ProjectDocumentResource responseBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build();
+        CompetitionDocumentResource responseBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build();
 
-        setupGetWithRestResultExpectations(String.format("%s/%s", competitionSetupProjectDocumentRestURL, projectDocumentId), ProjectDocumentResource.class, responseBody);
+        setupGetWithRestResultExpectations(String.format("%s/%s", competitionSetupProjectDocumentRestURL, projectDocumentId), CompetitionDocumentResource.class, responseBody);
 
-        ProjectDocumentResource response = service.findOne(projectDocumentId).getSuccess();
+        CompetitionDocumentResource response = service.findOne(projectDocumentId).getSuccess();
         assertNotNull(response);
         assertEquals(responseBody, response);
 
-        setupGetWithRestResultVerifications(String.format("%s/%s", competitionSetupProjectDocumentRestURL, projectDocumentId), null, ProjectDocumentResource.class);
+        setupGetWithRestResultVerifications(String.format("%s/%s", competitionSetupProjectDocumentRestURL, projectDocumentId), null, CompetitionDocumentResource.class);
     }
 
     @Test
@@ -72,11 +72,11 @@ public class CompetitionSetupProjectDocumentRestServiceTest extends BaseRestServ
 
         long competitionId = 1L;
 
-        List<ProjectDocumentResource> responseBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build(2);
+        List<CompetitionDocumentResource> responseBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build(2);
 
         setupGetWithRestResultExpectations(String.format("%s/find-by-competition-id/%s", competitionSetupProjectDocumentRestURL, competitionId), projectDocumentResourceListType(), responseBody);
 
-        List<ProjectDocumentResource> response = service.findByCompetitionId(competitionId).getSuccess();
+        List<CompetitionDocumentResource> response = service.findByCompetitionId(competitionId).getSuccess();
         assertNotNull(response);
         assertEquals(responseBody, response);
     }

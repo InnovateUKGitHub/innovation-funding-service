@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,22 +18,22 @@ public class CompetitionSetupProjectDocumentRestServiceImpl extends BaseRestServ
     private String competitionSetupProjectDocumentRestURL = "/competition/setup/project-document";
 
     @Override
-    public RestResult<ProjectDocumentResource> save(ProjectDocumentResource projectDocumentResource) {
-        return postWithRestResult(competitionSetupProjectDocumentRestURL + "/save", projectDocumentResource, ProjectDocumentResource.class);
+    public RestResult<CompetitionDocumentResource> save(CompetitionDocumentResource competitionDocumentResource) {
+        return postWithRestResult(competitionSetupProjectDocumentRestURL + "/save", competitionDocumentResource, CompetitionDocumentResource.class);
     }
 
     @Override
-    public RestResult<List<ProjectDocumentResource>> save(List<ProjectDocumentResource> projectDocumentResources) {
-        return postWithRestResult(competitionSetupProjectDocumentRestURL + "/save-all", projectDocumentResources, projectDocumentResourceListType());
+    public RestResult<List<CompetitionDocumentResource>> save(List<CompetitionDocumentResource> competitionDocumentResources) {
+        return postWithRestResult(competitionSetupProjectDocumentRestURL + "/save-all", competitionDocumentResources, projectDocumentResourceListType());
     }
 
     @Override
-    public RestResult<ProjectDocumentResource> findOne(long id) {
-        return getWithRestResult(competitionSetupProjectDocumentRestURL + "/" + id, ProjectDocumentResource.class);
+    public RestResult<CompetitionDocumentResource> findOne(long id) {
+        return getWithRestResult(competitionSetupProjectDocumentRestURL + "/" + id, CompetitionDocumentResource.class);
     }
 
     @Override
-    public RestResult<List<ProjectDocumentResource>> findByCompetitionId(long competitionId) {
+    public RestResult<List<CompetitionDocumentResource>> findByCompetitionId(long competitionId) {
         return getWithRestResult(competitionSetupProjectDocumentRestURL + "/find-by-competition-id/" + competitionId, projectDocumentResourceListType());
     }
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupProjectDocumentController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupProjectDocumentService;
 import org.junit.Test;
@@ -30,7 +30,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CompetitionSetupProjectDocumentControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSetupProjectDocumentController> {
+public class CompetitionSetupCompetitionDocumentControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSetupProjectDocumentController> {
 
     @Mock
     private CompetitionSetupProjectDocumentService competitionSetupProjectDocumentServiceMock;
@@ -43,7 +43,7 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
     @Test
     public void save() throws Exception {
 
-        ProjectDocumentResource projectDocumentResource = newProjectDocumentResource()
+        CompetitionDocumentResource competitionDocumentResource = newProjectDocumentResource()
                 .withId(1L)
                 .withCompetition(2L)
                 .withTitle("Title")
@@ -53,26 +53,26 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
                 .withFileType(singletonList(3L))
                 .build();
 
-        when(competitionSetupProjectDocumentServiceMock.save(projectDocumentResource)).thenReturn(serviceSuccess(projectDocumentResource));
+        when(competitionSetupProjectDocumentServiceMock.save(competitionDocumentResource)).thenReturn(serviceSuccess(competitionDocumentResource));
 
         mockMvc.perform(post("/competition/setup/project-document/save")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
-                .content(toJson(projectDocumentResource)))
+                .content(toJson(competitionDocumentResource)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(projectDocumentResource)))
+                .andExpect(content().json(toJson(competitionDocumentResource)))
                 .andDo(document("competition/setup/project-document/{method-name}",
                         requestFields(projectDocumentResourceFields),
                         responseFields(projectDocumentResourceFields)
                 ));
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).save(projectDocumentResource);
+        verify(competitionSetupProjectDocumentServiceMock, only()).save(competitionDocumentResource);
     }
 
     @Test
     public void saveAll() throws Exception {
 
-        List<ProjectDocumentResource> projectDocumentResources = newProjectDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = newProjectDocumentResource()
                 .withId(1L)
                 .withCompetition(12L)
                 .withTitle("Title")
@@ -82,14 +82,14 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
                 .withFileType(singletonList(3L))
                 .build(2);
 
-        when(competitionSetupProjectDocumentServiceMock.saveAll(projectDocumentResources)).thenReturn(serviceSuccess(projectDocumentResources));
+        when(competitionSetupProjectDocumentServiceMock.saveAll(competitionDocumentResources)).thenReturn(serviceSuccess(competitionDocumentResources));
 
         mockMvc.perform(post("/competition/setup/project-document/save-all")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
-                .content(toJson(projectDocumentResources)))
+                .content(toJson(competitionDocumentResources)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(projectDocumentResources)))
+                .andExpect(content().json(toJson(competitionDocumentResources)))
                 .andDo(document("competition/setup/project-document/{method-name}",
                         requestFields(
                                 fieldWithPath("[]").description("List of Project Documents to save")
@@ -99,7 +99,7 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
                         )
                 ));
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).saveAll(projectDocumentResources);
+        verify(competitionSetupProjectDocumentServiceMock, only()).saveAll(competitionDocumentResources);
     }
 
     @Test
@@ -107,14 +107,14 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
 
         long projectDocumentId = 1L;
 
-        ProjectDocumentResource projectDocumentResource = newProjectDocumentResource().build();
+        CompetitionDocumentResource competitionDocumentResource = newProjectDocumentResource().build();
 
-        when(competitionSetupProjectDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(projectDocumentResource));
+        when(competitionSetupProjectDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(competitionDocumentResource));
 
         mockMvc.perform(get("/competition/setup/project-document/{projectDocumentId}", projectDocumentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(projectDocumentResource)))
+                .andExpect(content().json(toJson(competitionDocumentResource)))
                 .andDo(document("competition/setup/project-document/{method-name}",
                         pathParameters(
                                 parameterWithName("projectDocumentId").description("Id of the Project Document to be retrieved")
@@ -130,14 +130,14 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
 
         long competitionId = 1L;
 
-        List<ProjectDocumentResource> projectDocumentResources = newProjectDocumentResource().build(2);
+        List<CompetitionDocumentResource> competitionDocumentResources = newProjectDocumentResource().build(2);
 
-        when(competitionSetupProjectDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(projectDocumentResources));
+        when(competitionSetupProjectDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionDocumentResources));
 
         mockMvc.perform(get("/competition/setup/project-document/find-by-competition-id/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(projectDocumentResources)))
+                .andExpect(content().json(toJson(competitionDocumentResources)))
                 .andDo(document("competition/setup/project-document/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("The competition id for which Project Documents need to be retrieved")

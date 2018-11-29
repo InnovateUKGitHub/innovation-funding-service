@@ -278,8 +278,8 @@ public final class ParameterizedTypeReferences {
     }
 
 
-    public static ParameterizedTypeReference<List<ProjectDocumentResource>> projectDocumentResourceListType() {
-        return new ParameterizedTypeReference<List<ProjectDocumentResource>>() {};
+    public static ParameterizedTypeReference<List<CompetitionDocumentResource>> projectDocumentResourceListType() {
+        return new ParameterizedTypeReference<List<CompetitionDocumentResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<SpendProfileStatusResource>> spendProfileStatusResourceListType() {

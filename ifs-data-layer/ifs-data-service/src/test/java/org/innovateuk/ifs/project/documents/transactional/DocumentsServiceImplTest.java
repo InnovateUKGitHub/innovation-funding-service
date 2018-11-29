@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.builder.FileTypeBuilder;
@@ -19,7 +20,6 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
-import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
@@ -74,8 +74,8 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     private Application application;
     private Competition competition;
     private ProjectDocument projectDocument;
-    private List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> competitionDocuments;
-    private org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument;
+    private List<CompetitionDocument> competitionDocuments;
+    private CompetitionDocument configuredCompetitionDocument;
     private FileEntry fileEntry;
     private List<PartnerOrganisation> partnerOrganisations;
 
@@ -107,7 +107,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
                 .withExtension(".pdf")
                 .build();
 
-        configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
+        configuredCompetitionDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
                 .newCompetitionProjectDocument()
                 .withId(documentConfigId)
                 .withTitle("Risk Register")
@@ -119,7 +119,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         projectDocument = newProjectDocument()
                 .withId(projectDocumentId)
-                .withProjectDocument(configuredProjectDocument)
+                .withProjectDocument(configuredCompetitionDocument)
                 .withFileEntry(fileEntry)
                 .build();
 
@@ -140,7 +140,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
-        when(projectDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(configuredProjectDocument);
+        when(projectDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(configuredCompetitionDocument);
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
         when(projectDocumentConfigRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(competitionDocuments);
     }
@@ -152,7 +152,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         ServiceResult<List<String>> result = service.getValidMediaTypesForDocument(documentConfigId);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonErrors.notFoundError(org.innovateuk.ifs.competitionsetup.domain.ProjectDocument.class, documentConfigId)));
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(CompetitionDocument.class, documentConfigId)));
     }
 
     @Test
@@ -201,7 +201,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         ProjectDocument savedProjectDocument = captor.getValue();
 
         assertEquals(project, savedProjectDocument.getProject());
-        assertEquals(configuredProjectDocument, savedProjectDocument.getProjectDocument());
+        assertEquals(configuredCompetitionDocument, savedProjectDocument.getCompetitionDocument());
         assertEquals(fileEntry, savedProjectDocument.getFileEntry());
         assertEquals(UPLOADED, savedProjectDocument.getStatus());
 

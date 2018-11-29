@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.documents.populator;
 
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -42,7 +43,7 @@ public class DocumentsPopulator {
 
         List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
 
-        List<org.innovateuk.ifs.competition.resource.ProjectDocumentResource> configuredProjectDocuments = competition.getProjectDocuments();
+        List<CompetitionDocumentResource> configuredProjectDocuments = competition.getCompetitionDocuments();
 
         if (partnerOrganisations.size() == 1) {
             configuredProjectDocuments.removeIf(
@@ -55,7 +56,7 @@ public class DocumentsPopulator {
 
         boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
 
-        for (org.innovateuk.ifs.competition.resource.ProjectDocumentResource configuredDocument : configuredProjectDocuments) {
+        for (CompetitionDocumentResource configuredDocument : configuredProjectDocuments) {
             documents.add(new ProjectDocumentStatus(configuredDocument.getId(),
                     configuredDocument.getTitle(),
                     getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
@@ -66,7 +67,7 @@ public class DocumentsPopulator {
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
 
-        return simpleFindAny(projectDocuments, projectDocumentResource -> projectDocumentResource.getProjectDocument().getId().equals(documentConfigId))
+        return simpleFindAny(projectDocuments, projectDocumentResource -> projectDocumentResource.getCompetitionDocument().getId().equals(documentConfigId))
                 .map(projectDocumentResource -> projectDocumentResource.getStatus())
                 .orElse(DocumentStatus.UNSET);
     }
@@ -79,13 +80,13 @@ public class DocumentsPopulator {
 
         boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
 
-        org.innovateuk.ifs.competition.resource.ProjectDocumentResource configuredProjectDocument =
-                simpleFindAny(competition.getProjectDocuments(),
+        CompetitionDocumentResource configuredProjectDocument =
+                simpleFindAny(competition.getCompetitionDocuments(),
                              projectDocumentResource -> projectDocumentResource.getId().equals(documentConfigId))
                 .get();
 
         Optional<ProjectDocumentResource> projectDocument = simpleFindAny(project.getProjectDocuments(),
-                    projectDocumentResource -> projectDocumentResource.getProjectDocument().getId().equals(documentConfigId));
+                    projectDocumentResource -> projectDocumentResource.getCompetitionDocument().getId().equals(documentConfigId));
 
         FileDetailsViewModel fileDetails = projectDocument.map(projectDocumentResource -> projectDocumentResource.getFileEntry())
                 .map(FileDetailsViewModel::new)

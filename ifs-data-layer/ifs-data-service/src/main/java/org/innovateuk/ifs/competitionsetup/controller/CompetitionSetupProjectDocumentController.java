@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupProjectDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,22 +20,22 @@ public class CompetitionSetupProjectDocumentController {
     private CompetitionSetupProjectDocumentService competitionSetupProjectDocumentService;
 
     @PostMapping("/save")
-    public RestResult<ProjectDocumentResource> save(@Valid @RequestBody ProjectDocumentResource projectDocumentResource) {
-        return competitionSetupProjectDocumentService.save(projectDocumentResource).toGetResponse();
+    public RestResult<CompetitionDocumentResource> save(@Valid @RequestBody CompetitionDocumentResource competitionDocumentResource) {
+        return competitionSetupProjectDocumentService.save(competitionDocumentResource).toGetResponse();
     }
 
     @PostMapping("/save-all")
-    public RestResult<List<ProjectDocumentResource>> save(@Valid @RequestBody List<ProjectDocumentResource> projectDocumentResources) {
-        return competitionSetupProjectDocumentService.saveAll(projectDocumentResources).toGetResponse();
+    public RestResult<List<CompetitionDocumentResource>> save(@Valid @RequestBody List<CompetitionDocumentResource> competitionDocumentResources) {
+        return competitionSetupProjectDocumentService.saveAll(competitionDocumentResources).toGetResponse();
     }
 
     @GetMapping("/{id}")
-    public RestResult<ProjectDocumentResource> findOne(@PathVariable("id") final long id) {
+    public RestResult<CompetitionDocumentResource> findOne(@PathVariable("id") final long id) {
         return competitionSetupProjectDocumentService.findOne(id).toGetResponse();
     }
 
     @GetMapping("/find-by-competition-id/{competitionId}")
-    public RestResult<List<ProjectDocumentResource>> findByCompetitionId(@PathVariable("competitionId") final long competitionId) {
+    public RestResult<List<CompetitionDocumentResource>> findByCompetitionId(@PathVariable("competitionId") final long competitionId) {
         return competitionSetupProjectDocumentService.findByCompetitionId(competitionId).toGetResponse();
     }
 

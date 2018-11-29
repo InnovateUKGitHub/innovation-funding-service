@@ -1,22 +1,22 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link ProjectDocumentResource} related data when in setup.
+ * Interface for CRUD operations on {@link CompetitionDocumentResource} related data when in setup.
  */
 public interface CompetitionSetupProjectDocumentRestService {
 
-    RestResult<ProjectDocumentResource> save(ProjectDocumentResource projectDocumentResource);
+    RestResult<CompetitionDocumentResource> save(CompetitionDocumentResource competitionDocumentResource);
 
-    RestResult<List<ProjectDocumentResource>> save(List<ProjectDocumentResource> projectDocumentResources);
+    RestResult<List<CompetitionDocumentResource>> save(List<CompetitionDocumentResource> competitionDocumentResources);
 
-    RestResult<ProjectDocumentResource> findOne(long id);
+    RestResult<CompetitionDocumentResource> findOne(long id);
 
-    RestResult<List<ProjectDocumentResource>> findByCompetitionId(long competitionId);
+    RestResult<List<CompetitionDocumentResource>> findByCompetitionId(long competitionId);
 
     RestResult<Void> delete(long id);
 }

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -28,7 +29,6 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
-import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
@@ -601,13 +601,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         setupOrganisationsForGrantOfferLetter(o1, o2, o3, applicationFinanceResource, applicationFinanceResource, applicationFinanceResource);
 
         Competition comp = newCompetition().withName("Test Comp<").build();
-        org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
+        CompetitionDocument configuredCompetitionDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
                 .newCompetitionProjectDocument()
                 .withCompetition(comp)
                 .withTitle("Risk Register")
                 .withGuidance("Guidance for Risk Register")
                 .build();
-        comp.setProjectDocuments(singletonList(configuredProjectDocument));
+        comp.setCompetitionDocuments(singletonList(configuredCompetitionDocument));
         project.getApplication().setCompetition(comp);
 
         ProjectDocument projectDocument =
@@ -650,13 +650,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     public void generateGrantOfferLetterProjectDocumentsAndDocsNotApproved() {
 
         Competition comp = newCompetition().withName("Test Comp").build();
-        org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
+        CompetitionDocument configuredCompetitionDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
                 .newCompetitionProjectDocument()
                 .withCompetition(comp)
                 .withTitle("Risk Register")
                 .withGuidance("Guidance for Risk Register")
                 .build();
-        comp.setProjectDocuments(singletonList(configuredProjectDocument));
+        comp.setCompetitionDocuments(singletonList(configuredCompetitionDocument));
 
         Organisation o1 = newOrganisation().withName("OrgLeader").build();
         User u = newUser().withFirstName("ab").withLastName("cd").build();
@@ -774,12 +774,12 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
     private void setupOrganisationsForGrantOfferLetter(Organisation o1, Organisation o2, Organisation o3, ApplicationFinanceResource af1, ApplicationFinanceResource af2, ApplicationFinanceResource af3) {
 
-        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> projectDocuments
+        List<CompetitionDocument> competitionDocuments
                 = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder.newCompetitionProjectDocument().build(1);
 
         Competition comp = newCompetition()
                 .withName("Test Comp<")
-                .withProjectDocuments(projectDocuments)
+                .withCompetitionDocuments(competitionDocuments)
                 .build();
 
         User u = newUser()

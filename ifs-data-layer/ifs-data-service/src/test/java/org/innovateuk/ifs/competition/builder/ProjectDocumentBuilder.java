@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileType;
 
 import java.util.List;
@@ -14,26 +14,26 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
- * Builder for {@link ProjectDocument}s.
+ * Builder for {@link CompetitionDocument}s.
  */
-public class ProjectDocumentBuilder extends BaseBuilder<ProjectDocument, ProjectDocumentBuilder> {
+public class ProjectDocumentBuilder extends BaseBuilder<CompetitionDocument, ProjectDocumentBuilder> {
 
     public static ProjectDocumentBuilder newCompetitionProjectDocument() {
         return new ProjectDocumentBuilder(emptyList()).with(uniqueIds());
     }
 
-    private ProjectDocumentBuilder(List<BiConsumer<Integer, ProjectDocument>> multiActions) {
+    private ProjectDocumentBuilder(List<BiConsumer<Integer, CompetitionDocument>> multiActions) {
         super(multiActions);
     }
 
     @Override
-    protected ProjectDocumentBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ProjectDocument>> actions) {
+    protected ProjectDocumentBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionDocument>> actions) {
         return new ProjectDocumentBuilder(actions);
     }
 
     @Override
-    protected ProjectDocument createInitial() {
-        return createDefault(ProjectDocument.class);
+    protected CompetitionDocument createInitial() {
+        return createDefault(CompetitionDocument.class);
     }
 
     public ProjectDocumentBuilder withId(Long... ids) {

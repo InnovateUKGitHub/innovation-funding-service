@@ -97,7 +97,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     protected ProjectActivityStates createDocumentStatus(Project project) {
 
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
-        int expectedNumberOfDocuments = project.getApplication().getCompetition().getProjectDocuments().size();
+        int expectedNumberOfDocuments = project.getApplication().getCompetition().getCompetitionDocuments().size();
         int actualNumberOfDocuments = projectDocuments.size();
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()

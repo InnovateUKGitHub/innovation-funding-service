@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -10,9 +10,9 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class ProjectDocumentResourceBuilder extends BaseBuilder<ProjectDocumentResource, ProjectDocumentResourceBuilder> {
+public class ProjectDocumentResourceBuilder extends BaseBuilder<CompetitionDocumentResource, ProjectDocumentResourceBuilder> {
 
-    private ProjectDocumentResourceBuilder(List<BiConsumer<Integer, ProjectDocumentResource>> multiActions) {
+    private ProjectDocumentResourceBuilder(List<BiConsumer<Integer, CompetitionDocumentResource>> multiActions) {
         super(multiActions);
     }
 
@@ -21,13 +21,13 @@ public class ProjectDocumentResourceBuilder extends BaseBuilder<ProjectDocumentR
     }
 
     @Override
-    protected ProjectDocumentResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ProjectDocumentResource>> actions) {
+    protected ProjectDocumentResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionDocumentResource>> actions) {
         return new ProjectDocumentResourceBuilder(actions);
     }
 
     @Override
-    protected ProjectDocumentResource createInitial() {
-        return new ProjectDocumentResource();
+    protected CompetitionDocumentResource createInitial() {
+        return new CompetitionDocumentResource();
     }
 
     public ProjectDocumentResourceBuilder withId(Long... ids) {

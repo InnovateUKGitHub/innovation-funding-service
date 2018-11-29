@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -31,7 +32,6 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
-import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
@@ -223,7 +223,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 build();
 
         competition = newCompetition()
-                .withProjectDocuments(singletonList(newCompetitionProjectDocument().build()))
+                .withCompetitionDocuments(singletonList(newCompetitionProjectDocument().build()))
                 .build();
 
         long applicationId = 456L;
@@ -874,7 +874,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .withStatus(DocumentStatus.APPROVED)
                 .build(1);
 
-        competition.setProjectDocuments(newCompetitionProjectDocument().withTitle("Exploitation plan").build(1));
+        competition.setCompetitionDocuments(newCompetitionProjectDocument().withTitle("Exploitation plan").build(1));
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
                 Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
         project.setProjectDocuments(docs);
@@ -896,7 +896,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .withStatus(DocumentStatus.REJECTED)
                 .build(1);
 
-        competition.setProjectDocuments(newCompetitionProjectDocument().withTitle("Exploitation plan").build(1));
+        competition.setCompetitionDocuments(newCompetitionProjectDocument().withTitle("Exploitation plan").build(1));
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
                 Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
         project.setProjectDocuments(docs);
@@ -918,7 +918,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .withStatus(DocumentStatus.APPROVED)
                 .build(1);
 
-        competition.setProjectDocuments(newCompetitionProjectDocument().withTitle("Exploitation plan").build(2));
+        competition.setCompetitionDocuments(newCompetitionProjectDocument().withTitle("Exploitation plan").build(2));
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
                 Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
         project.setProjectDocuments(docs);
@@ -940,7 +940,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .withStatus(DocumentStatus.APPROVED, DocumentStatus.APPROVED)
                 .build(2);
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().build(2);
-        competition.setProjectDocuments(newCompetitionProjectDocument().withTitle("Collaboration agreement", "Exploitation plan").build(2));
+        competition.setCompetitionDocuments(newCompetitionProjectDocument().withTitle("Collaboration agreement", "Exploitation plan").build(2));
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
         project.setProjectDocuments(docs);
         project.setApplication(application);
@@ -964,7 +964,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .build(1);
         PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
 
-        competition.setProjectDocuments(newCompetitionProjectDocument().withTitle("Collaboration agreement", "Exploitation plan").build(2));
+        competition.setCompetitionDocuments(newCompetitionProjectDocument().withTitle("Collaboration agreement", "Exploitation plan").build(2));
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
         project.setProjectDocuments(docs);
         project.setApplication(application);
@@ -1097,12 +1097,12 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         long competitionId = 112L;
 
-        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> competitionDocuments
+        List<CompetitionDocument> competitionDocuments
                 = newCompetitionProjectDocument().withTitle("document").build(1);
 
         Competition competition = CompetitionBuilder.newCompetition()
                 .withId(competitionId)
-                .withProjectDocuments(competitionDocuments)
+                .withCompetitionDocuments(competitionDocuments)
                 .withLocationPerPartner(locationPerPartnerRequired)
                 .build();
 
