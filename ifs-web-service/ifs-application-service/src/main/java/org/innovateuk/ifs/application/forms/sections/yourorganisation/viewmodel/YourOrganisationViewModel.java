@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel;
+package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel;
 
 /**
  * View model to support project location page
  */
-public class YourProjectLocationViewModel {
+public class YourOrganisationViewModel {
 
     private final String financesUrl;
     private final String applicationName;
@@ -12,7 +12,7 @@ public class YourProjectLocationViewModel {
     private final boolean open;
     private final boolean complete;
 
-    public YourProjectLocationViewModel(
+    public YourOrganisationViewModel(
             boolean complete,
             String financesUrl,
             String applicationName,

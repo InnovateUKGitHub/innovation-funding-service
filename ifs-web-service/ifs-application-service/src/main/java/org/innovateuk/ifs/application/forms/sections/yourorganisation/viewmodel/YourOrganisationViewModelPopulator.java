@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel;
+package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -16,14 +16,14 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
  * A populator to build a YourProjectLocationViewModel
  */
 @Component
-public class YourProjectLocationViewModelPopulator {
+public class YourOrganisationViewModelPopulator {
 
     private ApplicationRestService applicationRestService;
     private CompetitionRestService competitionRestService;
     private SectionService sectionService;
 
     @Autowired
-    public YourProjectLocationViewModelPopulator(
+    public YourOrganisationViewModelPopulator(
             ApplicationRestService applicationRestService,
             CompetitionRestService competitionRestService,
             SectionService sectionService) {
@@ -33,7 +33,7 @@ public class YourProjectLocationViewModelPopulator {
         this.sectionService = sectionService;
     }
 
-    public YourProjectLocationViewModel populate(long organisationId, long applicationId, long sectionId, boolean internalUser) {
+    public YourOrganisationViewModel populate(long organisationId, long applicationId, long sectionId, boolean internalUser) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
@@ -43,7 +43,7 @@ public class YourProjectLocationViewModelPopulator {
 
         boolean open = !internalUser && isOpen(application);
 
-        return new YourProjectLocationViewModel(
+        return new YourOrganisationViewModel(
                 sectionMarkedAsComplete,
                 getYourFinancesUrl(applicationId, organisationId, internalUser),
                 application.getName(),

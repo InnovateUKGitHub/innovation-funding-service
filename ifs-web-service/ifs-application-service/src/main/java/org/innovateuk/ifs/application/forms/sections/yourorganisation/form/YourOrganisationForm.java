@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form;
+package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -6,15 +6,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Form used to capture project location information
  */
-public class YourProjectLocationForm {
+public class YourOrganisationForm {
 
     private String postcode;
 
-    public YourProjectLocationForm(String postcode) {
+    public YourOrganisationForm(String postcode) {
         this.postcode = postcode;
     }
 
-    YourProjectLocationForm() {
+    YourOrganisationForm() {
     }
 
     public String getPostcode() {
@@ -31,7 +31,7 @@ public class YourProjectLocationForm {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        YourProjectLocationForm that = (YourProjectLocationForm) o;
+        YourOrganisationForm that = (YourOrganisationForm) o;
 
         return new EqualsBuilder()
                 .append(postcode, that.postcode)

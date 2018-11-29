@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form;
+package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -9,21 +9,21 @@ import org.springframework.stereotype.Component;
  * A populator to build a YourProjectLocationForm
  */
 @Component
-public class YourProjectLocationFormPopulator {
+public class YourOrganisationFormPopulator {
 
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
-    YourProjectLocationFormPopulator(ApplicationFinanceRestService applicationFinanceRestService) {
+    YourOrganisationFormPopulator(ApplicationFinanceRestService applicationFinanceRestService) {
         this.applicationFinanceRestService = applicationFinanceRestService;
     }
 
-    public YourProjectLocationForm populate(long applicationId, long organisationId) {
+    public YourOrganisationForm populate(long applicationId, long organisationId) {
 
         ApplicationFinanceResource applicationFinance =
                 applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
         String postcode = applicationFinance.getWorkPostcode();
-        return new YourProjectLocationForm(postcode);
+        return new YourOrganisationForm(postcode);
     }
 }
