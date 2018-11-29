@@ -11,9 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.dao.DataIntegrityViolationException;
-
-
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
@@ -43,26 +40,44 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
 
             ProjectDocument projectDocument = projectDocumentMapper.mapToDomain(projectDocumentResource);
 
-            try {
-                ProjectDocument savedProjectDocument = projectDocumentConfigRepository.save(projectDocument);
-                return serviceSuccess(projectDocumentMapper.mapToResource(savedProjectDocument));
+            ProjectDocument savedProjectDocument = projectDocumentConfigRepository.save(projectDocument);
+            return serviceSuccess(projectDocumentMapper.mapToResource(savedProjectDocument));
 
-            } catch (DataIntegrityViolationException e) {
-                String message = e.getCause().getCause().getMessage();
-                if(message.matches("Duplicate entry '(.*)' for key 'UC_competition_title'")) {
-                    return serviceFailure(DOCUMENT_TITLE_HAS_BEEN_USED);
-                }
-                else
-                {
-                    throw e;
-                }
-            }
         });
     }
 
+    private boolean validateAtLeastOneFileType(ProjectDocumentResource projectDocumentResource) {
+        return projectDocumentResource.getFileTypes() != null && projectDocumentResource.getFileTypes().size() > 0 ;
+    }
+
+    private boolean validateNoOverlappingTitles(ProjectDocumentResource projectDocumentResource)
+    {
+        Long competitionId = projectDocumentResource.getCompetition();
+        if(competitionId != null) {
+            ServiceResult<List<ProjectDocumentResource>> result = findByCompetitionId(competitionId);
+            List<ProjectDocumentResource> currentDocuments = result.getSuccess();
+
+            for (ProjectDocumentResource currentDocument : currentDocuments) {
+                if (currentDocument.getTitle().equals(projectDocumentResource.getTitle()) &&
+                        !currentDocument.getId().equals(projectDocumentResource.getId())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private ServiceResult<Void> validateProjectDocument(ProjectDocumentResource projectDocumentResource) {
-        return projectDocumentResource.getFileTypes() != null && projectDocumentResource.getFileTypes().size() > 0 ?
-                serviceSuccess() : serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
+        if(!validateNoOverlappingTitles(projectDocumentResource))
+        {
+            return serviceFailure(DOCUMENT_TITLE_HAS_BEEN_USED);
+        }
+        if(!validateAtLeastOneFileType(projectDocumentResource))
+        {
+            return serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
+        }
+
+        return serviceSuccess();
     }
 
     @Override
@@ -81,9 +96,19 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
 
     private ServiceResult<Void> validateProjectDocument(List<ProjectDocumentResource> projectDocumentResources) {
 
-        return simpleAnyMatch(projectDocumentResources,
-                projectDocumentResource -> projectDocumentResource.getFileTypes() == null || projectDocumentResource.getFileTypes().size() <= 0) ?
-                serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE) : serviceSuccess();
+        if(simpleAnyMatch(projectDocumentResources,
+                projectDocumentResource -> !validateNoOverlappingTitles(projectDocumentResource)))
+        {
+            return serviceFailure(DOCUMENT_TITLE_HAS_BEEN_USED);
+        }
+
+        if(simpleAnyMatch(projectDocumentResources,
+                projectDocumentResource -> !validateAtLeastOneFileType(projectDocumentResource)))
+        {
+            return serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
+        }
+
+        return serviceSuccess();
     }
 
     @Override
