@@ -202,7 +202,7 @@ the user edits the organisation size
     [Arguments]  ${org_size}
     the user clicks the button/link     link = Your organisation
     the user clicks the button/link     jQuery = button:contains("Edit")
-    the user selects the radio button   financePosition-organisationSize  ${org_size}
+    the user selects the radio button   organisationSize  ${org_size}
     the user selects the checkbox       agree-state-aid
     the user clicks the button/link     jQuery = button:contains("Mark as complete")
     the user clicks the button/link     link = Your funding

@@ -48,35 +48,16 @@
                             EU definition (opens in a new window)</a> for guidance.</span>
 
                         <div class="govuk-radios">
-                            <div class="govuk-radios__item">
+                            <div class="govuk-radios__item" th:each="organisationSizeOption : ${model.organisationSizeOptions}">
                                 <input type="radio"
                                        class="govuk-radios__input"
-                                       id="financePosition-organisationSize-1"
-                                       name="financePosition-organisationSize"
-                                       value="1"
-                                       required="required" data-required-errormessage="Enter your organisation size."/>
-                                <label for="financePosition-organisationSize-1"
+                                       th:id="${'organisationSize-' + organisationSizeOption.name()}"
+                                       name="organisationSize"
+                                       th:value="${organisationSizeOption.name()}"
+                                       required="required" data-required-errormessage="Please enter your organisation size."/>
+                                <label th:for="${'organisationSize-' + organisationSizeOption.name()}"
+                                       th:text="${organisationSizeOption.description}"
                                        class="govuk-label govuk-radios__label">Micro or small</label>
-                            </div>
-                            <div class="govuk-radios__item">
-                                <input type="radio"
-                                       class="govuk-radios__input"
-                                       id="financePosition-organisationSize-2"
-                                       name="financePosition-organisationSize"
-                                       value="2"
-                                       required="required" data-required-errormessage="Enter your organisation size." checked="checked"/>
-                                <label for="financePosition-organisationSize-2"
-                                       class="govuk-label govuk-radios__label">Medium</label>
-                            </div>
-                            <div class="govuk-radios__item">
-                                <input type="radio"
-                                       class="govuk-radios__input"
-                                       id="financePosition-organisationSize-3"
-                                       name="financePosition-organisationSize"
-                                       value="3"
-                                       required="required" data-required-errormessage="Enter your organisation size."/>
-                                <label for="financePosition-organisationSize-3"
-                                       class="govuk-label govuk-radios__label">Large</label>
                             </div>
                         </div>
 

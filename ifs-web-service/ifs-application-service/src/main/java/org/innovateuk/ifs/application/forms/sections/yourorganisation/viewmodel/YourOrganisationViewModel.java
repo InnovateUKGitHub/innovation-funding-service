@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel;
 
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
+
 /**
  * View model to support project location page
  */
@@ -54,5 +56,9 @@ public class YourOrganisationViewModel {
 
     public boolean isOpen() {
         return open;
+    }
+
+    public OrganisationSize[] getOrganisationSizeOptions() {
+        return OrganisationSize.values();
     }
 }
