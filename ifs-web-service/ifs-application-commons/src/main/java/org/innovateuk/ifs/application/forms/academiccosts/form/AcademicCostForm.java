@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.application.forms.academiccosts.form;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.NOT_BLANK_MESSAGE;
+
 public class AcademicCostForm {
 
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     private String tsbReference;
 
     private BigDecimal incurredStaff;
