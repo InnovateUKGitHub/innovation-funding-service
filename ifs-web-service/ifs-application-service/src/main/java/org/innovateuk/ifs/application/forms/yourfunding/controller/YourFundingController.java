@@ -26,6 +26,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -58,7 +59,7 @@ public class YourFundingController {
     private YourFundingFormValidator yourFundingFormValidator;
 
     @GetMapping("/{applicantOrganisationId}")
-    @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
+    @SecuredBySpring(value = "MANAGEMENT_VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your Finances'")
     @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
     public String managementViewYourFunding(Model model,
                                             UserResource user,
@@ -109,7 +110,7 @@ public class YourFundingController {
                        @PathVariable long sectionId,
                        @ModelAttribute("form") YourFundingForm form) {
         sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
-        return viewYourFunding(model, user, applicationId, sectionId, form);
+        return String.format("redirect:/application/%s/form/your-funding/%s", applicationId, sectionId);
     }
 
     @PostMapping(params = "complete")
@@ -133,24 +134,24 @@ public class YourFundingController {
         });
     }
 
-    @PostMapping(params = "add_other_funding")
+    @PostMapping(params = "add_cost")
     public String addFundingRowFormPost(Model model,
                                         UserResource user,
                                         @PathVariable long applicationId,
                                         @PathVariable long sectionId,
                                         @ModelAttribute("form") YourFundingForm form) {
 
-        saver.addOtherFundingRow(form, applicationId, user);
+        saver.addOtherFundingRow(form);
         return viewYourFunding(model, applicationId, sectionId, user);
     }
 
-    @PostMapping(params = "remove_other_funding")
+    @PostMapping(params = "remove_cost")
     public String removeFundingRowFormPost(Model model,
                                            UserResource user,
                                            @PathVariable long applicationId,
                                            @PathVariable long sectionId,
                                            @ModelAttribute("form") YourFundingForm form,
-                                           @RequestParam("remove_other_funding") String costId) {
+                                           @RequestParam("remove_cost") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
         return viewYourFunding(model, applicationId, sectionId, user);
@@ -179,16 +180,14 @@ public class YourFundingController {
     }
 
     @PostMapping("add-row")
-    public String ajaxAddRow(Model model,
-                             UserResource user,
-                             @PathVariable long applicationId) {
+    public String ajaxAddRow(Model model) {
         YourFundingForm form = new YourFundingForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
-        saver.addOtherFundingRow(form, applicationId, user);
-        OtherFundingRowForm row = form.getOtherFundingRows().entrySet().iterator().next().getValue();
+        saver.addOtherFundingRow(form);
+        Map.Entry<String, OtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();
         model.addAttribute("form", form);
-        model.addAttribute("id", row.getCostId());
-        model.addAttribute("row", row);
+        model.addAttribute("id", row.getKey());
+        model.addAttribute("row", row.getValue());
         return "application/your-funding-fragments :: ajax_other_funding_row";
     }
 
