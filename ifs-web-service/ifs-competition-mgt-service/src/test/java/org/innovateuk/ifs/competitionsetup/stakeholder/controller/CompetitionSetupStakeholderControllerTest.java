@@ -183,7 +183,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void inviteInternalUserAsStakeholder() throws Exception {
+    public void inviteFailsInternalUserAsStakeholder() throws Exception {
         String tab = "add";
         UserResource user = newUserResource()
                 .withId(1l)
@@ -224,7 +224,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void inviteStakeholderAlreadyOnTheCompetition() throws Exception {
+    public void inviteFailsStakeholderAlreadyOnTheCompetition() throws Exception {
         String tab = "add";
         UserResource user = newUserResource()
                 .withId(1l)

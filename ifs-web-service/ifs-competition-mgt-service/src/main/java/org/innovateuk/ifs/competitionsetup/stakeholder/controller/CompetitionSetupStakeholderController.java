@@ -91,7 +91,7 @@ public class CompetitionSetupStakeholderController {
         Optional<UserResource> userResource = userRestService.findUserByEmail(form.getEmailAddress()).getOptionalSuccessObject();
         String userEmail = form.getEmailAddress().toLowerCase();
 
-        if (userResource.isPresent() && !isInternal(userEmail) && !isUserAlreadyStakeholder(competitionId, userResource.get())) {
+        if (userResource.isPresent() && !hasInternalEmailAddess(userEmail) && !isUserAlreadyStakeholderOnCompetition(competitionId, userResource.get())) {
             return addStakeholder(competitionId, userResource.get().getId(), model);
         }
 
@@ -124,13 +124,13 @@ public class CompetitionSetupStakeholderController {
         return "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + ADDED_TAB;
     }
 
-    private boolean isUserAlreadyStakeholder(long competitionId, UserResource userResource) {
-        Optional<List<UserResource>> optionalSuccessObject = competitionSetupStakeholderRestService.findStakeholders(competitionId).getOptionalSuccessObject();
-        return optionalSuccessObject.get().contains(userResource);
+    private boolean isUserAlreadyStakeholderOnCompetition(long competitionId, UserResource userResource) {
+        List<UserResource> competitionStakeholders = competitionSetupStakeholderRestService.findStakeholders(competitionId).getSuccess();
+        return competitionStakeholders.contains(userResource);
     }
 
-    private boolean isInternal(String emailAddress) {
-        return (emailAddress.contains("@innovate.ukri.org") || emailAddress.contains("@innovateuk.gov.uk") || /*for testing only*/ emailAddress.contains("@innovateuk.test"));
+    private boolean hasInternalEmailAddess(String emailAddress) {
+        return (emailAddress.contains("@innovateuk.ukri.org") || emailAddress.contains("@innovateuk.gov.uk") || /*for testing only*/ emailAddress.contains("@innovateuk.test"));
     }
 
     private ValidationHandler handleInviteStakeholderErrors(RestResult<Void> saveResult, ValidationHandler validationHandler) {
