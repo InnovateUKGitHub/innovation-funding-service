@@ -154,41 +154,55 @@ public class ApplicationSectionController {
     @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
     @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
     @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
-    public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
-                                                             BindingResult bindingResult,
-                                                             Model model,
-                                                             @PathVariable(APPLICATION_ID) final Long applicationId,
-                                                             @PathVariable("sectionId") final Long sectionId,
-                                                             @PathVariable("applicantOrganisationId") final Long applicantOrganisationId,
-                                                             UserResource user,
-                                                             @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
-                                                             @RequestParam MultiValueMap<String, String> queryParams) {
+    public String applicationFormWithOpenSectionForInternalUser(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
+                                                                BindingResult bindingResult,
+                                                                Model model,
+                                                                @PathVariable(APPLICATION_ID) final Long applicationId,
+                                                                @PathVariable("sectionId") final Long sectionId,
+                                                                @PathVariable("applicantOrganisationId") final Long applicantOrganisationId,
+                                                                UserResource user,
+                                                                @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                                                @RequestParam MultiValueMap<String, String> queryParams) {
 
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
 
         SectionResource section = sectionService.getById(sectionId);
 
-        ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-
         switch (section.getType()) {
             case FUNDING_FINANCES:
                 return String.format("redirect:/application/%d/form/your-funding/%d/%d%s", applicationId, sectionId,
                         applicantOrganisationId, originQuery);
-            case PROJECT_COST_FINANCES:
+            case PROJECT_COST_FINANCES: {
+
+                ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
+
                 if (!financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
                     return String.format("redirect:/application/%d/form/your-project-costs/%d/%d%s", applicationId, sectionId, applicantOrganisationId, originQuery);
                 } else {
                     return populateGenericApplicationFormSectionForInternalUser(
-                        form, bindingResult, model, applicationId, sectionId, applicantOrganisationId, user, originQuery);
+                            form, bindingResult, model, applicantOrganisationId, user, originQuery, applicantSection);
                 }
+            }
             case PROJECT_LOCATION: {
                 return String.format("redirect:/application/%d/form/your-project-location/organisation/%d/section/%d",
                         applicationId, applicantOrganisationId, sectionId);
             }
-            default: 
+            default:
+
+                ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
+
                 return populateGenericApplicationFormSectionForInternalUser(
-                        form, bindingResult, model, applicationId, sectionId, applicantOrganisationId, user, originQuery);
+                        form, bindingResult, model, applicantOrganisationId, user, originQuery, applicantSection);
         }
+    }
+
+    private ApplicantSectionResource getApplicantSectionForInternalUser(@PathVariable(APPLICATION_ID) Long applicationId, @PathVariable("sectionId") Long sectionId, @PathVariable("applicantOrganisationId") Long applicantOrganisationId) {
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
+
+        ProcessRoleResource arbitraryProcessRole = simpleFindFirstMandatory(processRoles, pr ->
+                pr.getOrganisationId().equals(applicantOrganisationId) && APPLICANT_AND_COLLABORATOR_ROLES.contains(pr.getRole()));
+
+        return applicantRestService.getSection(arbitraryProcessRole.getUser(), applicationId, sectionId);
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
@@ -293,15 +307,16 @@ public class ApplicationSectionController {
         return false;
     }
 
-    private String populateGenericApplicationFormSectionForInternalUser(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) @Valid ApplicationForm form, BindingResult bindingResult, Model model, @PathVariable(APPLICATION_ID) Long applicationId, @PathVariable("sectionId") Long sectionId, @PathVariable("applicantOrganisationId") Long applicantOrganisationId, UserResource user, String originQuery) {
+    private String populateGenericApplicationFormSectionForInternalUser(
+            ApplicationForm form,
+            BindingResult bindingResult,
+            Model model,
+            Long applicantOrganisationId,
+            UserResource user,
+            String originQuery,
+            ApplicantSectionResource applicantSection) {
+
         model.addAttribute("originQuery", originQuery);
-
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
-
-        ProcessRoleResource arbitraryProcessRole = simpleFindFirstMandatory(processRoles, pr ->
-                pr.getOrganisationId().equals(applicantOrganisationId) && APPLICANT_AND_COLLABORATOR_ROLES.contains(pr.getRole()));
-
-        ApplicantSectionResource applicantSection = applicantRestService.getSection(arbitraryProcessRole.getUser(), applicationId, sectionId);
 
         boolean isSupport = user.hasRole(SUPPORT);
 
