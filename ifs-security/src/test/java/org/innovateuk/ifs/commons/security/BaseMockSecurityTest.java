@@ -14,7 +14,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -248,18 +247,27 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
      * the action will raise an error and vice versa any not specified who can will also raise an error
      */
     protected void assertRolesCanPerform(Runnable actionFn, Role... supportedRoles) {
+        assertRolesCanPerform(actionFn, asList(supportedRoles));
+    }
+
+    /**
+     * Asserts that only the given Global Role(s) can perform the given action.  Any specified roles who cannot perform
+     * the action will raise an error and vice versa any not specified who can will also raise an error
+     */
+    protected void assertRolesCanPerform(Runnable actionFn, List<Role> supportedRoles) {
 
         asList(Role.values()).forEach(role -> {
 
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(role)).build();
             setLoggedInUser(userWithRole);
 
-            if (asList(supportedRoles).contains(role)) {
+            if (supportedRoles.contains(role)) {
                 actionFn.run();
             } else {
                 try {
                     actionFn.run();
-                    fail("Should have thrown an AccessDeniedException for any non " + Arrays.toString(supportedRoles) + " users");
+                    fail("Should have thrown an AccessDeniedException for any non " + supportedRoles + " users, " +
+                            "but succeeded with " + role);
                 } catch (AccessDeniedException e) {
                     // expected behaviour
                 }

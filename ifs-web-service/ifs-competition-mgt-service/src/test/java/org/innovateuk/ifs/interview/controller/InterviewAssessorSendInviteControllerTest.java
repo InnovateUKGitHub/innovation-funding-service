@@ -51,10 +51,8 @@ public class InterviewAssessorSendInviteControllerTest extends BaseControllerMoc
         return new InterviewAssessorSendInviteController();
     }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()

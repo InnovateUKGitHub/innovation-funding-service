@@ -81,7 +81,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Before
     public void setUp() {
-        super.setUp();
         UserResource user = newUserResource().withId(3L).withFirstName("test").withLastName("name").build();
         setLoggedInUser(user);
     }

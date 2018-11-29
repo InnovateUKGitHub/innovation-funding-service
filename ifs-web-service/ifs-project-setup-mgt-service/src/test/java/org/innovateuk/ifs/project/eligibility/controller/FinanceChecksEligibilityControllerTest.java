@@ -117,9 +117,8 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
     private FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
 
     @Before
-    public void setUp() {
-        super.setUp();
-
+    public void setupData() {
+        
         industrialOrganisation = newOrganisationResource()
                     .withId(2L)
                     .withName("Industrial Org")

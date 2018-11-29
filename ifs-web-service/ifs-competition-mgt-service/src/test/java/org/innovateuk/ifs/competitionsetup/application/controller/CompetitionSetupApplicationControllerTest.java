@@ -93,10 +93,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Override
     protected CompetitionSetupApplicationController supplyControllerUnderTest() { return new CompetitionSetupApplicationController(); }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
