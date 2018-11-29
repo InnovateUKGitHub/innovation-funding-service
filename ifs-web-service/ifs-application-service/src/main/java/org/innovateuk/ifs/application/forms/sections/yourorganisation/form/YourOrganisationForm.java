@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Form used to capture project location information
+ * Form used to capture "Your organisation" information
  */
 public class YourOrganisationForm {
 

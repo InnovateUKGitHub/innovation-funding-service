@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * A populator to build a YourProjectLocationForm
+ * A populator to build a YourOrganisationForm
  */
 @Component
 public class YourOrganisationFormPopulator {

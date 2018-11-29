@@ -11,7 +11,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${model.financesUrl}" />
+              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${commonFinancesModel.financesUrl}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -25,7 +25,7 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Your organisation',subTitle=${model.applicationName},size='govuk-heading-xl'" />
+                  th:with="pageTitle='Your organisation',subTitle=${commonFinancesModel.applicationName},size='govuk-heading-xl'" />
 
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
@@ -37,7 +37,7 @@
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
 
-            <th:block th:if="${!model.readOnly}" >
+            <th:block th:if="${!commonFinancesModel.readOnly}" >
 
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
@@ -128,7 +128,7 @@
 
             </th:block>
 
-            <th:block th:if="${model.complete}">
+            <th:block th:if="${commonFinancesModel.complete}">
 
                 <dl class="govuk-list readonly-data">
                     <dt>Size</dt>
@@ -151,23 +151,23 @@
                 <p class="govuk-body">If you are found to be ineligible for state aid, we have the right to withdraw any offer.</p>
             </div>
 
-            <div class="form-footer" th:if="${model.open}">
+            <div class="form-footer" th:if="${commonFinancesModel.open}">
                 <div class="form-footer__actions">
-                    <button id="mark_as_complete" th:unless="${model.readOnly}" type="submit" name="mark-as-complete"
+                    <button id="mark_as_complete" th:unless="${commonFinancesModel.readOnly}" type="submit" name="mark-as-complete"
                             class="button-clear" value="true">Mark as complete
                     </button>
-                    <button id="mark_as_incomplete" th:if="${model.complete}" type="submit" name="mark-as-incomplete" class="button-clear" value="true"
+                    <button id="mark_as_incomplete" th:if="${commonFinancesModel.complete}" type="submit" name="mark-as-incomplete" class="button-clear" value="true"
                             th:text="${'Edit your organisation'}">Edit
                     </button>
                 </div>
             </div>
 
             <div>
-                <a th:href="${model.financesUrl}"
-                   th:if="${model.readOnly}"
+                <a th:href="${commonFinancesModel.financesUrl}"
+                   th:if="${commonFinancesModel.readOnly}"
                    class="govuk-!-margin-top-6 button-secondary">Return to finances
                 </a>
-                <button type="submit" th:unless="${model.readOnly}"
+                <button type="submit" th:unless="${commonFinancesModel.readOnly}"
                         class="govuk-!-margin-top-6 govuk-button">
                     Save and return to finances
                 </button>

@@ -2,10 +2,10 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.contro
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModel;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationFormPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel.YourProjectLocationViewModel;
-import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel.YourProjectLocationViewModelPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -46,7 +46,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     private static final int MINIMUM_POSTCODE_LENGTH = 3;
     private static final int MAXIMUM_POSTCODE_LENGTH = 10;
 
-    private YourProjectLocationViewModelPopulator viewModelPopulator;
+    private CommonYourFinancesViewModelPopulator commonViewModelPopulator;
     private YourProjectLocationFormPopulator formPopulator;
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
@@ -54,13 +54,13 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     @Autowired
     YourProjectLocationController(
-            YourProjectLocationViewModelPopulator viewModelPopulator,
+            CommonYourFinancesViewModelPopulator commonViewModelPopulator,
             YourProjectLocationFormPopulator formPopulator,
             ApplicationFinanceRestService applicationFinanceRestService,
             SectionService sectionService,
             UserRestService userRestService) {
 
-        this.viewModelPopulator = viewModelPopulator;
+        this.commonViewModelPopulator = commonViewModelPopulator;
         this.formPopulator = formPopulator;
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
@@ -69,7 +69,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     // for ByteBuddy
     YourProjectLocationController() {
-        this.viewModelPopulator = null;
+        this.commonViewModelPopulator = null;
         this.formPopulator = null;
         this.applicationFinanceRestService = null;
         this.sectionService = null;
@@ -87,13 +87,13 @@ public class YourProjectLocationController extends AsyncAdaptor {
             UserResource loggedInUser,
             Model model) {
 
-        Future<YourProjectLocationViewModel> viewModelRequest = async(() ->
+        Future<CommonYourFinancesViewModel> commonViewModelRequest = async(() ->
                 getViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
 
         Future<YourProjectLocationForm> formRequest = async(() ->
                 formPopulator.populate(applicationId, organisationId));
 
-        model.addAttribute("model", viewModelRequest);
+        model.addAttribute("commonFinancesModel", commonViewModelRequest);
         model.addAttribute("form", formRequest);
 
         return VIEW_PAGE;
@@ -139,7 +139,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
         trimPostcodeInForm(form);
 
         Supplier<String> failureHandler = () -> {
-            YourProjectLocationViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
+            CommonYourFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
             return VIEW_PAGE;
@@ -202,8 +202,8 @@ public class YourProjectLocationController extends AsyncAdaptor {
         return singletonList(fieldError("postcode", postcode, "APPLICATION_PROJECT_LOCATION_REQUIRED"));
     }
 
-    private YourProjectLocationViewModel getViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
-        return viewModelPopulator.populate(organisationId, applicationId, sectionId, internalUser);
+    private CommonYourFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
+        return commonViewModelPopulator.populate(organisationId, applicationId, sectionId, internalUser);
     }
 
     private String redirectToViewPage(long applicationId, long organisationId, long sectionId) {

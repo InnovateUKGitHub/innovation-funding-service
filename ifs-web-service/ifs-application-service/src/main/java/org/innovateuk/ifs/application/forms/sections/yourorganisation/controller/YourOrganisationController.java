@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.controlle
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModel;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
@@ -34,16 +36,15 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 /**
- * The Controller for the "Your project location" page in the Application Form process.
+ * The Controller for the "Your organisation" page in the Application Form process.
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-organisation/organisation/{organisationId}/section/{sectionId}")
 public class YourOrganisationController extends AsyncAdaptor {
 
     private static final String VIEW_PAGE = "application/sections/your-organisation/your-organisation";
-    private static final int MINIMUM_POSTCODE_LENGTH = 3;
-    private static final int MAXIMUM_POSTCODE_LENGTH = 10;
 
+    private CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator;
     private YourOrganisationViewModelPopulator viewModelPopulator;
     private YourOrganisationFormPopulator formPopulator;
     private ApplicationFinanceRestService applicationFinanceRestService;
@@ -52,12 +53,14 @@ public class YourOrganisationController extends AsyncAdaptor {
 
     @Autowired
     YourOrganisationController(
+            CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator,
             YourOrganisationViewModelPopulator viewModelPopulator,
             YourOrganisationFormPopulator formPopulator,
             ApplicationFinanceRestService applicationFinanceRestService,
             SectionService sectionService,
             UserRestService userRestService) {
 
+        this.commonFinancesViewModelPopulator = commonFinancesViewModelPopulator;
         this.viewModelPopulator = viewModelPopulator;
         this.formPopulator = formPopulator;
         this.applicationFinanceRestService = applicationFinanceRestService;
@@ -85,12 +88,16 @@ public class YourOrganisationController extends AsyncAdaptor {
             UserResource loggedInUser,
             Model model) {
 
+        Future<CommonYourFinancesViewModel> commonViewModelRequest = async(() ->
+                getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
+
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
-                getViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
+                getViewModel());
 
         Future<YourOrganisationForm> formRequest = async(() ->
                 formPopulator.populate(applicationId, organisationId));
 
+        model.addAttribute("commonFinancesModel", commonViewModelRequest);
         model.addAttribute("model", viewModelRequest);
         model.addAttribute("form", formRequest);
 
@@ -135,7 +142,9 @@ public class YourOrganisationController extends AsyncAdaptor {
             Model model) {
 
         Supplier<String> failureHandler = () -> {
-            YourOrganisationViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
+            CommonYourFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, false);
+            YourOrganisationViewModel viewModel = getViewModel();
+            model.addAttribute("commonFinancesModel", commonViewModel);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
             return VIEW_PAGE;
@@ -187,8 +196,12 @@ public class YourOrganisationController extends AsyncAdaptor {
         return emptyList();
     }
 
-    private YourOrganisationViewModel getViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
-        return viewModelPopulator.populate(organisationId, applicationId, sectionId, internalUser);
+    private YourOrganisationViewModel getViewModel() {
+        return viewModelPopulator.populate();
+    }
+
+    private CommonYourFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
+        return commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, internalUser);
     }
 
     private String redirectToViewPage(long applicationId, long organisationId, long sectionId) {
