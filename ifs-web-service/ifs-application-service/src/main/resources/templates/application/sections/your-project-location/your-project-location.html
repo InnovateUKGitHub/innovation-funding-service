@@ -36,7 +36,7 @@
 
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
-            <th:block th:unless="${model.complete}" >
+            <th:block th:if="${!model.readOnly}" >
                 <div class="govuk-!-margin-top-6">
                     <th:block th:unless="${model.readOnly}">
                         <p class="govuk-body">Where will most of the project work take place?</p>
@@ -51,13 +51,6 @@
                                    th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
                                    type="text" name="postcode" th:value="${form.postcode}" />
                         </div>
-                    </th:block>
-                    <th:block th:if="${model.readOnly}">
-                        <!--/* view  */-->
-                        <dl class="govuk-list readonly-data">
-                            <dt>Postcode</dt>
-                            <dd th:if="${form.postcode != null}" th:text="${form.postcode}">Postcode</dd>
-                        </dl>
                     </th:block>
                 </div>
             </th:block>

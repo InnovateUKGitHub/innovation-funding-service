@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your project location'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your organisation'" />
 </head>
 <body class="govuk-template__body your-organisation">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -36,10 +36,140 @@
 
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
-            <th:block th:unless="${model.complete}" >
+
+            <th:block th:if="${!model.readOnly}" >
+
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="organisationSize">Size</legend>
+
+                        <span class="govuk-hint">To determine the level of funding you are eligible to receive please provide your business size using the
+                        <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank">
+                            EU definition (opens in a new window)</a> for guidance.</span>
+
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input type="radio"
+                                       class="govuk-radios__input"
+                                       id="financePosition-organisationSize-1"
+                                       name="financePosition-organisationSize"
+                                       value="1"
+                                       required="required" data-required-errormessage="Enter your organisation size."/>
+                                <label for="financePosition-organisationSize-1"
+                                       class="govuk-label govuk-radios__label">Micro or small</label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input type="radio"
+                                       class="govuk-radios__input"
+                                       id="financePosition-organisationSize-2"
+                                       name="financePosition-organisationSize"
+                                       value="2"
+                                       required="required" data-required-errormessage="Enter your organisation size." checked="checked"/>
+                                <label for="financePosition-organisationSize-2"
+                                       class="govuk-label govuk-radios__label">Medium</label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input type="radio"
+                                       class="govuk-radios__input"
+                                       id="financePosition-organisationSize-3"
+                                       name="financePosition-organisationSize"
+                                       value="3"
+                                       required="required" data-required-errormessage="Enter your organisation size."/>
+                                <label for="financePosition-organisationSize-3"
+                                       class="govuk-label govuk-radios__label">Large</label>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+
+                <div class="govuk-form-group">
+                    <label class="govuk-label--s"
+                           for="formInput[1443]"
+                           id="form-label-1443">Turnover (£)</label>
+
+                    <span class="govuk-hint">Your turnover from the last financial year.</span>
+
+                    <input class="govuk-input govuk-input--width-10"
+                           id="formInput[1443]"
+                           name="formInput[1443]"
+                           value=""
+                           pattern="[0-9]"
+                           data-prevent-input-regex="[^0-9]"
+                           required="required"
+                           min="0"
+                           type="number" />
+                </div>
+
+                <div class="govuk-form-group">
+                    <label class="govuk-label--s"
+                           for="formInput[1444]"
+                           id="form-label-1444">Full time employees</label>
+
+                    <span class="govuk-hint">Number of full time employees at your organisation.</span>
+
+                    <input class="govuk-input govuk-input--width-10"
+                           type="number"
+                           id="formInput[1444]"
+                           name="formInput[1444]"
+                           pattern="[0-9]"
+                           data-prevent-input-regex="[^0-9]"
+                           min="0"
+                           max="2147483647"
+                           value=""
+                           required="required" />
+                </div>
+
+                <div class="agree-to-terms-container">
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                                <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
+                            </legend>
+
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input id="agree-state-aid"
+                                           class="govuk-checkboxes__input"
+                                           type="checkbox"
+                                           value="true"
+                                           data-switches-button-status="#mark-all-as-complete"
+                                           data-autosave-disabled name="stateAidAgreed" /><input type="hidden" name="_stateAidAgreed" value="on"/>
+                                    <label for="agree-state-aid"
+                                           class="govuk-label govuk-checkboxes__label">
+                                        I confirm that by submitting my application my organisation will be <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid" target="_blank" class="govuk-link">eligible for state aid</a> (opens in a new window) within 90 days of any offer being made.
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
             </th:block>
+
             <th:block th:if="${model.complete}">
+
+                <dl class="govuk-list readonly-data">
+                    <dt>Size</dt>
+                    <dd>Medium</dd>
+                </dl>
+
+                <dl class="govuk-list readonly-data">
+                    <dt>Turnover (£)</dt>
+                    <dd>&pound;1</dd>
+                </dl>
+
+                <dl class="govuk-list readonly-data">
+                    <dt>Full time employees</dt>
+                    <dd>1</dd>
+                </dl>
+
             </th:block>
+
+            <div class="message-alert">
+                <p class="govuk-body">If you are found to be ineligible for state aid, we have the right to withdraw any offer.</p>
+            </div>
+
             <div class="form-footer" th:if="${model.open}">
                 <div class="form-footer__actions">
                     <button id="mark_as_complete" th:unless="${model.readOnly}" type="submit" name="mark-as-complete"
@@ -50,6 +180,7 @@
                     </button>
                 </div>
             </div>
+
             <div>
                 <a th:href="${model.financesUrl}"
                    th:if="${model.readOnly}"
