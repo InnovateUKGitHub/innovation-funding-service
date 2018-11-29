@@ -32,7 +32,7 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
     private int costCategoryCount = 2;
     private int durationInMonths = 12;
     private int applicationId = 1;
-    private int competitionCode = 9;
+    private Integer defaultCompetitionCode = 9;
     private long total = 50_000;
     private BigDecimal overheadRate = BigDecimal.valueOf(50);
     private BigDecimal awardRate =  BigDecimal.valueOf(30);
@@ -70,7 +70,9 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
             grant.setPublicDescription(createString("public description"));
             grant.setDuration(durationInMonths);
             grant.setId(applicationId);
-            grant.setCompetitionCode(competitionCode);
+            if (defaultCompetitionCode != null) {
+                grant.setCompetitionCode(defaultCompetitionCode);
+            }
         }).superBuild();
     }
 
@@ -80,7 +82,9 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
 
     @Override
     protected GrantBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Grant>> actions) {
-        return new GrantBuilder(actions);
+        GrantBuilder builder = new GrantBuilder(actions);
+        builder.defaultCompetitionCode = defaultCompetitionCode;
+        return builder;
     }
 
     @Override
@@ -104,6 +108,7 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
     }
 
     public GrantBuilder withCompetitionId(Long... competitionIds) {
+        defaultCompetitionCode = null;
         return withArray((id, grant) -> grant.setCompetitionCode(id), competitionIds);
     }
 

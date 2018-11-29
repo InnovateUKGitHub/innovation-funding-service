@@ -22,7 +22,7 @@ public class GrantProcessApplicationFilterImplTest {
     public void shouldConditionallySend() {
         GrantProcessApplicationFilter filter = new GrantProcessApplicationFilterImpl("123,456");
         Grant grant = newGrant().withCompetitionId(123L).build();
-        assertThat(filter.shouldSend(grant), is(true));
+        assertThat(filter.generateFilterReason(grant), filter.shouldSend(grant), is(true));
         assertThat(filter.generateFilterReason(grant), is(nullValue()));
 
         grant = newGrant().withCompetitionId(124L).build();

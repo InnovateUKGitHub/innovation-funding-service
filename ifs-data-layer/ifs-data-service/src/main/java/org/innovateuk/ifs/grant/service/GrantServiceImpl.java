@@ -49,7 +49,7 @@ public class GrantServiceImpl implements GrantService {
             grantEndpoint.send(grant)
                     .andOnSuccess(() -> grantProcessService.sendSucceeded(applicationId))
                     .andOnFailure((ServiceFailure serviceFailure) ->
-                            grantProcessService.sendFailed(applicationId, serviceFailure.getCause().getMessage()));
+                            grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString()));
         } else {
             grantProcessService.sendIgnored(applicationId, grantProcessApplicationFilter.generateFilterReason(grant));
         }
