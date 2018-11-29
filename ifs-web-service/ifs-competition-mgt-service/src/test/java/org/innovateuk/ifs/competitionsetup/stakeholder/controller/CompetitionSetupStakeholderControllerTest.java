@@ -68,7 +68,6 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
 
     @Test
     public void manageStakeholders() throws Exception {
-
         String competitionName = "competitionName";
         String tab = "add";
 
@@ -77,13 +76,10 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
                 .withName(competitionName)
                 .build();
 
-        when(competitionRestService.getCompetitionById(COMPETITION_ID))
-                .thenReturn(restSuccess(competitionResource));
+        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName, emptyList(), emptyList(), emptyList(), tab);
 
-        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName,
-                emptyList(), emptyList(), emptyList(), tab);
-        when(manageStakeholderModelPopulator.populateModel(competitionResource, tab))
-                .thenReturn(viewModel);
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(manageStakeholderModelPopulator.populateModel(competitionResource, tab)).thenReturn(viewModel);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/competition/setup/{competitionId}/manage-stakeholders", COMPETITION_ID))
                 .andExpect(status().isOk())
@@ -94,9 +90,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
 
     @Test
     public void inviteStakeholderWhenInviteFails() throws Exception {
-
         String tab = "add";
-
         String competitionName = "competitionName";
 
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
@@ -104,19 +98,12 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
                 .withName(competitionName)
                 .build();
 
-        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName,
-                emptyList(), emptyList(), emptyList(), tab);
+        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName, emptyList(), emptyList(), emptyList(), tab);
 
         when(userRestService.findUserByEmail(any())).thenReturn(restFailure(GENERAL_UNEXPECTED_ERROR));
-
-        when(competitionSetupStakeholderRestService.inviteStakeholder(any(), eq(COMPETITION_ID)))
-                .thenReturn(restFailure(STAKEHOLDER_INVITE_INVALID_EMAIL));
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID))
-                .thenReturn(restSuccess(competitionResource));
-
-        when(manageStakeholderModelPopulator.populateModel(competitionResource, tab))
-                .thenReturn(viewModel);
+        when(competitionSetupStakeholderRestService.inviteStakeholder(any(), eq(COMPETITION_ID))).thenReturn(restFailure(STAKEHOLDER_INVITE_INVALID_EMAIL));
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(manageStakeholderModelPopulator.populateModel(competitionResource, tab)).thenReturn(viewModel);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/competition/setup/{competitionId}/manage-stakeholders?inviteStakeholder=inviteStakeholder", COMPETITION_ID).
                 param("firstName", "First").
@@ -130,7 +117,6 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
     public void inviteStakeholderSuccess() throws Exception {
 
         when(competitionSetupStakeholderRestService.inviteStakeholder(any(), eq(COMPETITION_ID))).thenReturn(restSuccess());
-
         when(userRestService.findUserByEmail(any())).thenReturn(restFailure(GENERAL_UNEXPECTED_ERROR));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/competition/setup/{competitionId}/manage-stakeholders?inviteStakeholder=inviteStakeholder", COMPETITION_ID).
@@ -181,6 +167,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
                 .withLastName("Last")
                 .withEmail("user@test.com")
                 .build();
+
         when(competitionSetupStakeholderRestService.findStakeholders(COMPETITION_ID)).thenReturn(restSuccess(emptyList()));
         when(userRestService.findUserByEmail(any())).thenReturn(restSuccess(user));
 
@@ -197,9 +184,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
 
     @Test
     public void inviteInternalUserAsStakeholder() throws Exception {
-
         String tab = "add";
-
         UserResource user = newUserResource()
                 .withId(1l)
                 .withFirstName("First")
@@ -213,19 +198,12 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
                 .withName(competitionName)
                 .build();
 
-        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName,
-                emptyList(), emptyList(), emptyList(), tab);
+        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName, emptyList(), emptyList(), emptyList(), tab);
 
         when(userRestService.findUserByEmail(user.getEmail())).thenReturn(restSuccess(user));
-
-        when(competitionSetupStakeholderRestService.inviteStakeholder(any(), eq(COMPETITION_ID)))
-                .thenReturn(restFailure(STAKEHOLDER_INVITE_INVALID_EMAIL));
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID))
-                .thenReturn(restSuccess(competitionResource));
-
-        when(manageStakeholderModelPopulator.populateModel(competitionResource, tab))
-                .thenReturn(viewModel);
+        when(competitionSetupStakeholderRestService.inviteStakeholder(any(), eq(COMPETITION_ID))).thenReturn(restFailure(STAKEHOLDER_INVITE_INVALID_EMAIL));
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(manageStakeholderModelPopulator.populateModel(competitionResource, tab)).thenReturn(viewModel);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/competition/setup/{competitionId}/manage-stakeholders?inviteStakeholder=inviteStakeholder", COMPETITION_ID).
                 param("firstName", user.getFirstName()).
@@ -248,7 +226,6 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
     @Test
     public void inviteStakeholderAlreadyOnTheCompetition() throws Exception {
         String tab = "add";
-
         UserResource user = newUserResource()
                 .withId(1l)
                 .withFirstName("First")
@@ -262,21 +239,13 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
                 .withName(competitionName)
                 .build();
 
-        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName,
-                emptyList(), emptyList(), emptyList(), tab);
+        ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName, emptyList(), emptyList(), emptyList(), tab);
 
         when(userRestService.findUserByEmail(user.getEmail())).thenReturn(restSuccess(user));
-
         when(competitionSetupStakeholderRestService.findStakeholders(COMPETITION_ID)).thenReturn(restSuccess(singletonList(user)));
-
-        when(competitionSetupStakeholderRestService.inviteStakeholder(any(), eq(COMPETITION_ID)))
-                .thenReturn(restFailure(STAKEHOLDER_INVITE_INVALID_EMAIL));
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID))
-                .thenReturn(restSuccess(competitionResource));
-
-        when(manageStakeholderModelPopulator.populateModel(competitionResource, tab))
-                .thenReturn(viewModel);
+        when(competitionSetupStakeholderRestService.inviteStakeholder(any(), eq(COMPETITION_ID))).thenReturn(restFailure(STAKEHOLDER_INVITE_INVALID_EMAIL));
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(manageStakeholderModelPopulator.populateModel(competitionResource, tab)).thenReturn(viewModel);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/competition/setup/{competitionId}/manage-stakeholders?inviteStakeholder=inviteStakeholder", COMPETITION_ID).
                 param("firstName", user.getFirstName()).

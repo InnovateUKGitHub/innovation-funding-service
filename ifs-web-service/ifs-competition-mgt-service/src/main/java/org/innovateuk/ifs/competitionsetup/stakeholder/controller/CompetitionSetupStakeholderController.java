@@ -17,12 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -30,9 +25,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID_EMAIL;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
 /**
  * Controller for managing stakeholders
@@ -78,7 +71,7 @@ public class CompetitionSetupStakeholderController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -96,26 +89,20 @@ public class CompetitionSetupStakeholderController {
                                     @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
         Optional<UserResource> userResource = userRestService.findUserByEmail(form.getEmailAddress()).getOptionalSuccessObject();
-
         String userEmail = form.getEmailAddress().toLowerCase();
 
-        if(userResource.isPresent() && !isInternal(userEmail) && !isUserAlreadyStakeholder(competitionId, userResource.get())){
+        if (userResource.isPresent() && !isInternal(userEmail) && !isUserAlreadyStakeholder(competitionId, userResource.get())) {
             return addStakeholder(competitionId, userResource.get().getId(), model);
         }
 
         Supplier<String> failureView = () -> doViewManageStakeholders(competitionId, model, form, tab);
-
         form.setVisible(true);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
             InviteUserResource inviteUserResource = constructInviteUserResource(form);
-
             RestResult<Void> saveResult = competitionSetupStakeholderRestService.inviteStakeholder(inviteUserResource, competitionId);
-
             return handleInviteStakeholderErrors(saveResult, validationHandler).
                     failNowOrSucceedWith(failureView, () -> "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + tab);
-
         });
     }
 
@@ -151,12 +138,10 @@ public class CompetitionSetupStakeholderController {
     }
 
     private InviteUserResource constructInviteUserResource(InviteStakeholderForm form) {
-
         UserResource invitedUser = new UserResource();
         invitedUser.setFirstName(form.getFirstName());
         invitedUser.setLastName(form.getLastName());
         invitedUser.setEmail(form.getEmailAddress());
-
         return new InviteUserResource(invitedUser);
     }
 }
