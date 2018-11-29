@@ -21,7 +21,7 @@ public class GrantProcessApplicationFilterImpl implements GrantProcessApplicatio
     public GrantProcessApplicationFilterImpl(
             @Value("${ifs.grant.process.filterBy.competitionIds}") final String filterByCompetitionIdsAsString
     ) {
-        if (filterByCompetitionIdsAsString != null) {
+        if (filterByCompetitionIdsAsString != null && !filterByCompetitionIdsAsString.trim().isEmpty()) {
             filterEnabled = true;
             filterByCompetitionIds = Arrays
                     .stream(filterByCompetitionIdsAsString.split(","))

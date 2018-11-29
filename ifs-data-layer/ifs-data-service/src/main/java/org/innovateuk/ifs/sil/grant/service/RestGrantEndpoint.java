@@ -37,12 +37,15 @@ public class RestGrantEndpoint implements GrantEndpoint {
         final Either<ResponseEntity<Void>, ResponseEntity<Void>> response =
                 adaptor.restPostWithEntity(silRestServiceUrl + path, grant,
                         Void.class, Void.class, HttpStatus.OK, HttpStatus.ACCEPTED);
-        if (response.isLeft()){
-            LOG.debug("Sent grant NOK : " + grant);
-            return serviceFailure(new Error(GRANT_PROCESS_SEND_FAILED));
-        } else {
-            LOG.debug("Sent grant OK : " + grant);
-            return serviceSuccess();
-        }
+        return response.mapLeftOrRight(
+                failure -> {
+                    LOG.debug("Sent grant NOK : " + grant);
+                    return serviceFailure(new Error(GRANT_PROCESS_SEND_FAILED, failure.getStatusCode()));
+                },
+                success -> {
+                    LOG.debug("Sent grant OK : " + grant);
+                    return serviceSuccess();
+                }
+        );
     }
 }
