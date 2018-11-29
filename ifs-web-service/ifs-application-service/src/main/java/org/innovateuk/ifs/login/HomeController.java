@@ -95,7 +95,19 @@ public class HomeController {
     }
 
     private String doViewRoleSelection(Model model, UserResource user) {
-        model.addAttribute("model", new RoleSelectionViewModel(user));
+        RoleSelectionViewModel roleSelectionViewModel = new RoleSelectionViewModel(user);
+
+        if (roleSelectionViewModel.getAcceptedRoles().contains(Role.APPLICANT)) {
+            roleSelectionViewModel.setRoleDescription("Manage your applications and projects.");
+        }
+        if (roleSelectionViewModel.getAcceptedRoles().contains(Role.ASSESSOR)) {
+            roleSelectionViewModel.setRoleDescription("Review the applications you have been invited to assess.");
+        }
+        if (roleSelectionViewModel.getAcceptedRoles().contains(Role.STAKEHOLDER)) {
+            roleSelectionViewModel.setRoleDescription("View the competitions you have been invited to oversee.");
+        }
+
+        model.addAttribute("model", roleSelectionViewModel);
         return "login/multiple-user-choice";
     }
 

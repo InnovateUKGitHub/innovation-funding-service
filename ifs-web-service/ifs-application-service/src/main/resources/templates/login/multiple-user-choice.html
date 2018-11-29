@@ -22,15 +22,13 @@
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Sign in successful',size='govuk-heading-xl'" />
-                <p class="govuk-body">Thank you for signing into the Innovation Funding Service.</p>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Select a dashboard',size='govuk-heading-xl'" />
 
                 <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="govuk-!-margin-top-6" novalidate="novalidate">
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectedRole')} ? govuk-form-group--error">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="selectedRole">
-                                <h2 class="govuk-fieldset__heading">Please choose the role you are signing in as today</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('selectedRole')}">
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
@@ -44,8 +42,12 @@
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.standard.role.required}" />
                                     <label th:for="${#ids.prev('selectedRole')}"
-                                           th:text="${role.displayName}"
-                                           class="govuk-label govuk-radios__label"></label>
+                                           class="govuk-label govuk-radios__label">
+                                            <span class="govuk-fieldset__legend--s"
+                                                  th:text="${role.displayName}"></span>
+                                            <p class="govuk-hint"
+                                               th:text="${model.getRoleDescription()}">Description</p>
+                                    </label>
                                 </div>
                             </div>
                         </fieldset>
