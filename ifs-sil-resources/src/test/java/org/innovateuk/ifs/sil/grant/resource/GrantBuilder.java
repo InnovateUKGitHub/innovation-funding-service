@@ -52,7 +52,7 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
     }
 
     public Grant build() {
-        with(grant -> {
+        return with(grant -> {
             costCategories = Stream.iterate(0, i -> i + 1).limit(costCategoryCount)
                     .map(i -> i == 0 ? "Overheads" : "Other " + i)
                     .collect(Collectors.toList());
@@ -71,7 +71,10 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
             grant.setDuration(durationInMonths);
             grant.setId(applicationId);
             grant.setCompetitionCode(competitionCode);
-        });
+        }).superBuild();
+    }
+
+    private Grant superBuild() {
         return super.build();
     }
 
