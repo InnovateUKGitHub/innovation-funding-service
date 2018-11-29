@@ -198,16 +198,16 @@ the academic user fills in his finances
     the academic fills in the project costs
 
 the academic fills in the project costs
-    The user enters text to a text field  css = [name$="incurred_staff"]  4242
-    The user enters text to a text field  css = [name$="incurred_travel_subsistence"]  4243
-    The user enters text to a text field  css = [name$="incurred_other_costs"]  4244
-    The user enters text to a text field  css = [name$="allocated_investigators"]  42
-    The user enters text to a text field  css = [name$="allocated_estates_costs"]  3000
-    The user enters text to a text field  css = [name$="allocated_other_costs"]  5
-    The user enters text to a text field  css = [name$="indirect_costs"]  8909
-    The user enters text to a text field  css = [name$="exceptions_staff"]  123
-    The user enters text to a text field  css = [name$="exceptions_other_costs"]  7890
-    The user enters text to a text field  css = input[name$="tsb_reference"]  L33t
+    The user enters text to a text field  css = [name$="incurredStaff"]  4242
+    The user enters text to a text field  css = [name$="incurredTravel"]  4243
+    The user enters text to a text field  css = [name$="incurredOtherCosts"]  4244
+    The user enters text to a text field  css = [name$="allocatedInvestigators"]  42
+    The user enters text to a text field  css = [name$="allocatedEstateCosts"]  3000
+    The user enters text to a text field  css = [name$="allocatedOtherCosts"]  5
+    The user enters text to a text field  css = [name$="indirectCosts"]  8909
+    The user enters text to a text field  css = [name$="exceptionsStaff"]  123
+    The user enters text to a text field  css = [name$="exceptionsOtherCosts"]  7890
+    The user enters text to a text field  css = input[name$="tsbReference"]  L33t
     Textfield Value Should Be             id = total  £23,789
     the user uploads the file             css = .inputfile  ${5mb_pdf}
     the user should see the element       link = ${5mb_pdf}

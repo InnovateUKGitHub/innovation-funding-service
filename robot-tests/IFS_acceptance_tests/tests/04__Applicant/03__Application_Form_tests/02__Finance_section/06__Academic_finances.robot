@@ -132,7 +132,7 @@ User should not be able to edit or upload the form
     And the user should see correct grant percentage
     And the user clicks the button/link               link = Your project costs
     Then the user should not see the element          jQuery = button:contains("Remove")
-    And the user should see the element               css = [name$="incurred_staff"][readonly]
+    And the user should see the element               css = [name$="incurredStaff"][readonly]
 
 File delete should not be allowed when marked as complete
     [Documentation]    INFUND-2437

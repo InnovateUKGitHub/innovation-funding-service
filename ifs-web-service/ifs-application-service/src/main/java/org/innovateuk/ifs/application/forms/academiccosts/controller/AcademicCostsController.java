@@ -118,7 +118,7 @@ public class AcademicCostsController {
                        @PathVariable long sectionId,
                        @ModelAttribute("form") AcademicCostForm form) {
         sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
-        return redirectToYourFinances(applicationId);
+        return redirectToAcademicCosts(applicationId, organisationId, sectionId);
     }
 
     @PostMapping(params = "remove_jes")
@@ -146,7 +146,7 @@ public class AcademicCostsController {
         RestResult<FileEntryResource> result = applicationFinanceRestService.addFinanceDocument(finance.getId(), form.getJesFile().getContentType(), form.getJesFile().getSize(), form.getJesFile().getOriginalFilename(), form.getJesFile().getBytes());
         if(result.isFailure()) {
             result.getErrors().forEach(error ->
-                    bindingResult.rejectValue("overhead.file", error.getErrorKey(), error.getArguments().toArray(), "")
+                    bindingResult.rejectValue("jesFile", error.getErrorKey(), error.getArguments().toArray(), "")
             );
         } else {
             form.setFilename(result.getSuccess().getName());
