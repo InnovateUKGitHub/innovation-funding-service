@@ -26,6 +26,14 @@ gulp_default.dependsOn 'installGulp'
 
 processResources.dependsOn gulp_default
 
+// javascript unit testing
+task testUnit(type: NpmTask) {
+    args = ['run', 'test']
+}
+//include js unit tests into project build lifecycle
+test.dependsOn testUnit
+
+
 node {
     // Version of node to use.
     version = '8.11.1'
