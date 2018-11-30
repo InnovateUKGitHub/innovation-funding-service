@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProje
 import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.ApplicationYourProjectCostsSaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsAutosaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
-import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.ManagementYourProjectCostsViewModel;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -48,6 +47,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     private static final long APPLICATION_ID = 1L;
     private static final long SECTION_ID = 2L;
     private static final long PROCESS_ROLE_ID = 3L;
+    private static final long ORGANISATION_ID = 4L;
     private static final String VIEW = "application/your-project-costs";
 
     @Mock
@@ -78,8 +78,8 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     public void viewYourProjectCosts() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
 
-        mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}",
-                APPLICATION_ID, SECTION_ID))
+        mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
@@ -88,28 +88,11 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     }
 
     @Test
-    public void managementViewYourProjectCosts() throws Exception {
-        long organisationId = 5L;
-        ManagementYourProjectCostsViewModel viewModel = mock(ManagementYourProjectCostsViewModel.class);
-
-        when(viewModelPopulator.populateManagement(APPLICATION_ID, SECTION_ID, organisationId, "?origin=PROJECT_SETUP_MANAGEMENT_STATUS"))
-                .thenReturn(viewModel);
-
-        mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}/{organisationId}?origin=PROJECT_SETUP_MANAGEMENT_STATUS",
-                APPLICATION_ID, SECTION_ID, organisationId))
-                .andExpect(model().attribute("model", viewModel))
-                .andExpect(view().name(VIEW))
-                .andExpect(status().isOk());
-
-        verify(formPopulator).populateForm(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(organisationId));
-    }
-
-    @Test
     public void saveYourProjectCosts() throws Exception {
         when(saver.save(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}",
-                APPLICATION_ID, SECTION_ID)
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
                 .param("eligibleAgreement", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/application/%s/form/%s", APPLICATION_ID, SectionType.FINANCE)));
@@ -117,16 +100,15 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
     @Test
     public void edit() throws Exception {
-        YourProjectCostsViewModel viewModel = mockViewModel();
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
         when(sectionStatusRestService.markAsInComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess());
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}",
-                APPLICATION_ID, SECTION_ID)
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
                 .param("edit", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("%s%s/form/your-project-costs/%s", APPLICATION_BASE_URL, APPLICATION_ID, SECTION_ID)));
+                .andExpect(redirectedUrl(String.format("%s%s/form/your-project-costs/organisation/%s/section/%s", APPLICATION_BASE_URL, APPLICATION_ID, ORGANISATION_ID, SECTION_ID)));
 
 
         verifyZeroInteractions(saver);
@@ -141,8 +123,8 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
                 .thenReturn(restSuccess(processRole));
         when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess(emptyList()));
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}",
-                APPLICATION_ID, SECTION_ID)
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
                 .param("complete", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/application/%s/form/%s", APPLICATION_ID, SectionType.FINANCE)));
@@ -161,8 +143,8 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
             return Void.class;
         }).when(yourFundingFormValidator).validate(any(), any());
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}",
-                APPLICATION_ID, SECTION_ID)
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
                 .param("complete", "true"))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
@@ -173,12 +155,12 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
 
     @Test
-    public void addFundingRowFormPost() throws Exception {
+    public void addRowFormPost() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
         FinanceRowType type = FinanceRowType.LABOUR;
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}",
-                APPLICATION_ID, SECTION_ID)
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
                 .param("add_cost", type.name()))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
@@ -188,12 +170,12 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     }
 
     @Test
-    public void removeFundingRowFormPost() throws Exception {
+    public void removeRowFormPost() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
         String rowToRemove = "5";
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}",
-                APPLICATION_ID, SECTION_ID)
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
                 .param("remove_cost", rowToRemove))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
@@ -209,8 +191,8 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
         String fieldId = "123";
 
         when(autosaver.autoSave(field, value, APPLICATION_ID, getLoggedInUser())).thenReturn(Optional.of(Long.valueOf(fieldId)));
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}/auto-save",
-                APPLICATION_ID, SECTION_ID)
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
                 .param("field", field)
                 .param("value", value))
                 .andExpect(jsonPath("$.fieldId", equalTo(Integer.valueOf(fieldId))))
@@ -222,8 +204,8 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     public void ajaxRemoveRow() throws Exception {
         String costId = "123";
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}/remove-row/{rowId}",
-                APPLICATION_ID, SECTION_ID, costId))
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/remove-row/{rowId}",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID, costId))
                 .andExpect(status().isOk());
 
         verify(saver).removeFinanceRow(costId);
@@ -242,8 +224,8 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
             return form.getLabour().getRows().entrySet().iterator().next();
         }).when(saver).addRowForm(any(YourProjectCostsForm.class), eq(type));
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/{sectionId}/add-row/{type}",
-                APPLICATION_ID, SECTION_ID, type))
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/add-row/{type}",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID, type))
                 .andExpect(view().name("application/your-project-costs-fragments :: ajax_labour_row"))
                 .andExpect(model().attribute("row", row))
                 .andExpect(model().attribute("id", rowId))
@@ -255,7 +237,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
     private YourProjectCostsViewModel mockViewModel() {
         YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
-        when(viewModelPopulator.populate(APPLICATION_ID, SECTION_ID, getLoggedInUser())).thenReturn(viewModel);
+        when(viewModelPopulator.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, getLoggedInUser().isInternalUser(), "")).thenReturn(viewModel);
         return viewModel;
     }
 }

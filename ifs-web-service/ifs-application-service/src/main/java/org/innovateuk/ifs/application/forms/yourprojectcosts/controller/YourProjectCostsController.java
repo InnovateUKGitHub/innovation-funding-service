@@ -96,9 +96,12 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                        @PathVariable long organisationId,
                                        @PathVariable long sectionId,
                                        @ModelAttribute("form") YourProjectCostsForm form,
-                                       @RequestParam(value = "origin", defaultValue = "MANAGEMENT_DASHBOARD") String origin,
+                                       @RequestParam(value = "origin", required = false) String origin,
                                        @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
+        String originQuery = "";
+        if (origin != null) {
+            originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
+        }
         formPopulator.populateForm(form, applicationId, user);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, originQuery);
     }

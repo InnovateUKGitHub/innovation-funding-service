@@ -214,15 +214,6 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void  applicationFormWithOpenSection_addCost() throws Exception {
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param("add_cost", String.valueOf(questionId)))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));
-    }
-
-    @Test
     public void applicationFormSubmit() throws Exception {
 
         LocalDate futureDate = LocalDate.now().plusDays(1);
@@ -369,18 +360,6 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
-    }
-
-    @Test
-    public void applicationFormSubmit_deleteCost() throws Exception {
-        String sectionId = "1";
-        Long costId = 1L;
-
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param("remove_cost", String.valueOf(costId)))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));
     }
 
     @Test

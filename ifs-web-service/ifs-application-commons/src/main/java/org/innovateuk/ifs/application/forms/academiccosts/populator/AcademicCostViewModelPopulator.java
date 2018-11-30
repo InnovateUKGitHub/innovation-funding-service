@@ -26,6 +26,8 @@ public class AcademicCostViewModelPopulator {
     private OrganisationRestService organisationRestService;
     private ApplicationFinanceRestService applicationFinanceRestService;
 
+    AcademicCostViewModelPopulator() {}
+
     @Autowired
     public AcademicCostViewModelPopulator(ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, SectionService sectionService, OrganisationRestService organisationRestService, ApplicationFinanceRestService applicationFinanceRestService) {
         this.applicationRestService = applicationRestService;

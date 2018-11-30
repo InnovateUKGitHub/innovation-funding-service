@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static org.innovateuk.ifs.finance.builder.AcademicCostBuilder.newAcademicCost;
 import static org.innovateuk.ifs.finance.builder.CapitalUsageBuilder.newCapitalUsage;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
@@ -122,5 +123,50 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                             withCost(new BigDecimal("100"), new BigDecimal("300")).
                             build(2))
                     .build());
+
+
+    public static Map<FinanceRowType, FinanceRowCostCategory> ACADEMIC_FINANCES = asMap(
+            FinanceRowType.YOUR_FINANCE, newDefaultCostCategory().withCosts(
+                    newAcademicCost().
+                            withName("tsb_reference").
+                            withItem("TSBReference").
+                            withCostType(FinanceRowType.YOUR_FINANCE).
+                            build(1)).
+                    build(),
+            FinanceRowType.LABOUR, newDefaultCostCategory().withCosts(
+                    newAcademicCost().
+                            withName("incurred_staff", "allocated_investigators", "exceptions_staff").
+                            withCost(new BigDecimal("100"), new BigDecimal("200"), new BigDecimal("300")).
+                            withCostType(FinanceRowType.LABOUR, FinanceRowType.LABOUR, FinanceRowType.LABOUR).
+                            build(3)).
+                    build(),
+            FinanceRowType.OVERHEADS, newDefaultCostCategory().withCosts(
+                    newAcademicCost().
+                            withName("indirect_costs").
+                            withCost(new BigDecimal("100")).
+                            withCostType(FinanceRowType.OVERHEADS).
+                            build(1)).
+                    build(),
+            FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                    newAcademicCost().
+                            withName("incurred_other_costs").
+                            withCost(new BigDecimal("100")).
+                            withCostType(FinanceRowType.MATERIALS).
+                            build(1)).
+                    build(),
+            FinanceRowType.TRAVEL, newDefaultCostCategory().withCosts(
+                    newAcademicCost().
+                            withName("incurred_travel_subsistence").
+                            withCost(new BigDecimal("100")).
+                            withCostType(FinanceRowType.MATERIALS).
+                            build(1)).
+                    build(),
+            FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
+                    newAcademicCost().
+                            withName("allocated_estates_costs", "allocated_other_costs", "exceptions_other_costs").
+                            withCost(new BigDecimal("100"), new BigDecimal("200"), new BigDecimal("300")).
+                            withCostType(FinanceRowType.OTHER_COSTS, FinanceRowType.OTHER_COSTS, FinanceRowType.OTHER_COSTS).
+                            build(3))
+            .build());
 
 }
