@@ -44,6 +44,7 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     private String companiesHouseNumber;
     private Organisation matchingBusinessOrganisation;
     private OrganisationResource submittedBusinessOrganisation;
+    private OrganisationResource submittedBusinessNullCompaniesHouseNumber;
 
     @Before
     public void setUp() {
@@ -53,6 +54,10 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
         submittedBusinessOrganisation = newOrganisationResource()
                 .withCompaniesHouseNumber(companiesHouseNumber)
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
+
+        submittedBusinessNullCompaniesHouseNumber = newOrganisationResource()
+                .withCompaniesHouseNumber(null)
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
 
         academicName = "academic";
@@ -108,6 +113,15 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
 
         verify(organisationPatternMatcher, times(1)).organisationTypeMatches(any(), any());
         verify(organisationPatternMatcher, times(0)).organisationTypeIsResearch(any());
+    }
+
+    @Test
+    public void findOrganisationMatch_companiesHouseOrganisationShouldIgnoreNullCompaniesHouseNumber() throws Exception {
+        Optional<Organisation> result = service.findOrganisationMatch(submittedBusinessNullCompaniesHouseNumber);
+
+        assertFalse(result.isPresent());
+
+        verifyZeroInteractions(organisationPatternMatcher);
     }
 
     @Test
