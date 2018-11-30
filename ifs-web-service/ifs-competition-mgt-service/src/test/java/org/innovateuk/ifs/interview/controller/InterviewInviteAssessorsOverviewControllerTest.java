@@ -76,10 +76,8 @@ public class InterviewInviteAssessorsOverviewControllerTest extends BaseControll
 
     private CompetitionResource competition;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()

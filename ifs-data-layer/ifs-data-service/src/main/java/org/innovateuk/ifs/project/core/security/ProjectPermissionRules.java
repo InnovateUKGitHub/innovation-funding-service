@@ -8,6 +8,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isStakeholder;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
 
 @PermissionRules
@@ -22,6 +23,11 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Internal users can see project resources")
     public boolean internalUsersCanViewProjects(final ProjectResource project, final UserResource user) {
         return isInternal(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Stakeholders can see project resources")
+    public boolean stakeholdersCanViewProjects(final ProjectResource project, final UserResource user) {
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "A monitoring officer can see projects that they are assigned to")

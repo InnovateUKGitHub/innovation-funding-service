@@ -51,8 +51,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     private UserResource user;
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void loginUserForTest() {
 
         user = newUserResource()
                 .withTitle(Ms)

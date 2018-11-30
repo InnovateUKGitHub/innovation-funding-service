@@ -8,7 +8,6 @@ import org.innovateuk.ifs.eugrant.contact.form.EuContactForm;
 import org.innovateuk.ifs.eugrant.contact.populator.EuContactFormPopulator;
 import org.innovateuk.ifs.eugrant.contact.saver.EuContactSaver;
 import org.innovateuk.ifs.eugrant.overview.service.EuGrantCookieService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,9 +16,7 @@ import org.mockito.Spy;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class EuContactControllerTest extends BaseControllerMockMVCTest<EuContactController> {
 
@@ -36,11 +33,6 @@ public class EuContactControllerTest extends BaseControllerMockMVCTest<EuContact
     @Override
     protected EuContactController supplyControllerUnderTest() {
         return new EuContactController();
-    }
-
-    @Before
-    public void setUp() {
-        super.setUp();
     }
 
     @Test

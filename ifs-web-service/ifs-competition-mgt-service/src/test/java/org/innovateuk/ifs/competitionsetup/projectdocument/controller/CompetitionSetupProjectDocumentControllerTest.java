@@ -61,10 +61,8 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
     @Override
     protected CompetitionSetupProjectDocumentController supplyControllerUnderTest() { return new CompetitionSetupProjectDocumentController(); }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(true);
     }
 
