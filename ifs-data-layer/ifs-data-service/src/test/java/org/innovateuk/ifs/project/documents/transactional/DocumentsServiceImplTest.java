@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
-import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
+import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.builder.FileTypeBuilder;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -83,7 +83,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     private ProjectRepository projectRepositoryMock;
 
     @Mock
-    private ProjectDocumentConfigRepository projectDocumentConfigRepositoryMock;
+    private CompetitionDocumentConfigRepository competitionDocumentConfigRepositoryMock;
 
     @Mock
     private ProjectWorkflowHandler projectWorkflowHandlerMock;
@@ -140,15 +140,15 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
-        when(projectDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(configuredCompetitionDocument);
+        when(competitionDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(configuredCompetitionDocument);
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
-        when(projectDocumentConfigRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(competitionDocuments);
+        when(competitionDocumentConfigRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(competitionDocuments);
     }
 
     @Test
     public void getValidMediaTypesForDocumentWhenConfiguredProjectDocumentNotPresent() {
 
-        when(projectDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(null);
+        when(competitionDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(null);
         ServiceResult<List<String>> result = service.getValidMediaTypesForDocument(documentConfigId);
 
         assertTrue(result.isFailure());

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.mapper.CompetitionDocumentMapper;
-import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
+import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -24,19 +24,19 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests the CompetitionSetupProjectDocumentServiceImpl with mocked repository.
+ * Tests the CompetitionSetupDocumentServiceImpl with mocked repository.
  */
-public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServiceUnitTest<CompetitionSetupProjectDocumentServiceImpl> {
+public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServiceUnitTest<CompetitionSetupDocumentServiceImpl> {
 
     @Mock
     private CompetitionDocumentMapper competitionDocumentMapperMock;
 
     @Mock
-    private ProjectDocumentConfigRepository projectDocumentConfigRepositoryMock;
+    private CompetitionDocumentConfigRepository competitionDocumentConfigRepositoryMock;
 
     @Override
-    protected CompetitionSetupProjectDocumentServiceImpl supplyServiceUnderTest() {
-        return new CompetitionSetupProjectDocumentServiceImpl();
+    protected CompetitionSetupDocumentServiceImpl supplyServiceUnderTest() {
+        return new CompetitionSetupDocumentServiceImpl();
     }
 
     @Test
@@ -48,7 +48,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE));
 
-        verify(projectDocumentConfigRepositoryMock, never()).save(any(CompetitionDocument.class));
+        verify(competitionDocumentConfigRepositoryMock, never()).save(any(CompetitionDocument.class));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         CompetitionDocument competitionDocument = new CompetitionDocument();
 
         when(competitionDocumentMapperMock.mapToDomain(competitionDocumentResource)).thenReturn(competitionDocument);
-        when(projectDocumentConfigRepositoryMock.save(competitionDocument)).thenReturn(competitionDocument);
+        when(competitionDocumentConfigRepositoryMock.save(competitionDocument)).thenReturn(competitionDocument);
         when(competitionDocumentMapperMock.mapToResource(competitionDocument)).thenReturn(competitionDocumentResource);
 
         ServiceResult<CompetitionDocumentResource> result = service.save(competitionDocumentResource);
@@ -68,7 +68,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         assertTrue(result.isSuccess());
         assertEquals(competitionDocumentResource, result.getSuccess());
 
-        verify(projectDocumentConfigRepositoryMock).save(competitionDocument);
+        verify(competitionDocumentConfigRepositoryMock).save(competitionDocument);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE));
 
-        verify(projectDocumentConfigRepositoryMock, never()).save(any(List.class));
+        verify(competitionDocumentConfigRepositoryMock, never()).save(any(List.class));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
 
         when(competitionDocumentMapperMock.mapToDomain(competitionDocumentResources.get(0))).thenReturn(competitionDocument1);
         when(competitionDocumentMapperMock.mapToDomain(competitionDocumentResources.get(1))).thenReturn(competitionDocument2);
-        when(projectDocumentConfigRepositoryMock.save(competitionDocuments)).thenReturn(competitionDocuments);
+        when(competitionDocumentConfigRepositoryMock.save(competitionDocuments)).thenReturn(competitionDocuments);
         when(competitionDocumentMapperMock.mapToResource(competitionDocument1)).thenReturn(competitionDocumentResources.get(0));
         when(competitionDocumentMapperMock.mapToResource(competitionDocument2)).thenReturn(competitionDocumentResources.get(1));
 
@@ -112,7 +112,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         assertEquals(competitionDocumentResources.get(0), result.getSuccess().get(0));
         assertEquals(competitionDocumentResources.get(1), result.getSuccess().get(1));
 
-        verify(projectDocumentConfigRepositoryMock).save(competitionDocuments);
+        verify(competitionDocumentConfigRepositoryMock).save(competitionDocuments);
     }
 
     @Test
@@ -123,7 +123,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         CompetitionDocument competitionDocument = new CompetitionDocument();
         CompetitionDocumentResource competitionDocumentResource = new CompetitionDocumentResource();
 
-        when(projectDocumentConfigRepositoryMock.findOne(projectDocumentId)).thenReturn(competitionDocument);
+        when(competitionDocumentConfigRepositoryMock.findOne(projectDocumentId)).thenReturn(competitionDocument);
         when(competitionDocumentMapperMock.mapToResource(competitionDocument)).thenReturn(competitionDocumentResource);
 
         ServiceResult<CompetitionDocumentResource> result = service.findOne(projectDocumentId);
@@ -131,7 +131,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         assertTrue(result.isSuccess());
         assertEquals(competitionDocumentResource, result.getSuccess());
 
-        verify(projectDocumentConfigRepositoryMock).findOne(projectDocumentId);
+        verify(competitionDocumentConfigRepositoryMock).findOne(projectDocumentId);
     }
 
     @Test
@@ -147,7 +147,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         CompetitionDocumentResource competitionDocumentResource1 = new CompetitionDocumentResource();
         CompetitionDocumentResource competitionDocumentResource2 = new CompetitionDocumentResource();
 
-        when(projectDocumentConfigRepositoryMock.findByCompetitionId(competitionId)).thenReturn(competitionDocuments);
+        when(competitionDocumentConfigRepositoryMock.findByCompetitionId(competitionId)).thenReturn(competitionDocuments);
         when(competitionDocumentMapperMock.mapToResource(competitionDocument1)).thenReturn(competitionDocumentResource1);
         when(competitionDocumentMapperMock.mapToResource(competitionDocument2)).thenReturn(competitionDocumentResource2);
 
@@ -157,7 +157,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         assertEquals(competitionDocumentResource1, result.getSuccess().get(0));
         assertEquals(competitionDocumentResource2, result.getSuccess().get(1));
 
-        verify(projectDocumentConfigRepositoryMock).findByCompetitionId(competitionId);
+        verify(competitionDocumentConfigRepositoryMock).findByCompetitionId(competitionId);
     }
 
     @Test
@@ -168,6 +168,6 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         ServiceResult<Void> result = service.delete(projectDocumentId);
 
         assertTrue(result.isSuccess());
-        verify(projectDocumentConfigRepositoryMock).delete(projectDocumentId);
+        verify(competitionDocumentConfigRepositoryMock).delete(projectDocumentId);
     }
 }

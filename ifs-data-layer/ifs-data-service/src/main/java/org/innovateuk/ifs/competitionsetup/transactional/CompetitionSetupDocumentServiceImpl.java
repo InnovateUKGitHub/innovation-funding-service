@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.mapper.CompetitionDocumentMapper;
-import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
+import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +22,13 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Service for operations around the usage and processing of Project Documents
  */
 @Service
-public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactionalService implements CompetitionSetupProjectDocumentService {
+public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalService implements CompetitionSetupDocumentService {
 
     @Autowired
     private CompetitionDocumentMapper competitionDocumentMapper;
 
     @Autowired
-    private ProjectDocumentConfigRepository projectDocumentConfigRepository;
+    private CompetitionDocumentConfigRepository competitionDocumentConfigRepository;
 
     @Override
     @Transactional
@@ -38,7 +38,7 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
 
             CompetitionDocument competitionDocument = competitionDocumentMapper.mapToDomain(competitionDocumentResource);
 
-            CompetitionDocument savedCompetitionDocument = projectDocumentConfigRepository.save(competitionDocument);
+            CompetitionDocument savedCompetitionDocument = competitionDocumentConfigRepository.save(competitionDocument);
             return serviceSuccess(competitionDocumentMapper.mapToResource(savedCompetitionDocument));
         });
     }
@@ -57,7 +57,7 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
             List<CompetitionDocument> competitionDocuments = simpleMap(competitionDocumentResources,
                     projectDocumentResource -> competitionDocumentMapper.mapToDomain(projectDocumentResource));
 
-            List<CompetitionDocument> savedCompetitionDocuments = (List<CompetitionDocument>) projectDocumentConfigRepository.save(competitionDocuments);
+            List<CompetitionDocument> savedCompetitionDocuments = (List<CompetitionDocument>) competitionDocumentConfigRepository.save(competitionDocuments);
             return serviceSuccess(simpleMap(savedCompetitionDocuments, savedProjectDocument -> competitionDocumentMapper.mapToResource(savedProjectDocument)));
         });
     }
@@ -72,21 +72,21 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     @Override
     @Transactional
     public ServiceResult<CompetitionDocumentResource> findOne(long id) {
-        CompetitionDocument competitionDocument = projectDocumentConfigRepository.findOne(id);
+        CompetitionDocument competitionDocument = competitionDocumentConfigRepository.findOne(id);
         return serviceSuccess(competitionDocumentMapper.mapToResource(competitionDocument));
     }
 
     @Override
     @Transactional
     public ServiceResult<List<CompetitionDocumentResource>> findByCompetitionId(long competitionId) {
-        List<CompetitionDocument> competitionDocuments = projectDocumentConfigRepository.findByCompetitionId(competitionId);
+        List<CompetitionDocument> competitionDocuments = competitionDocumentConfigRepository.findByCompetitionId(competitionId);
         return serviceSuccess(simpleMap(competitionDocuments, projectDocument -> competitionDocumentMapper.mapToResource(projectDocument)));
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> delete(long id) {
-        projectDocumentConfigRepository.delete(id);
+        competitionDocumentConfigRepository.delete(id);
         return serviceSuccess();
     }
 }

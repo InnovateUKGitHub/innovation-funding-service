@@ -7,17 +7,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-public interface CompetitionSetupProjectDocumentService {
+public interface CompetitionSetupDocumentService {
 
-    @SecuredBySpring(value = "UPDATE", description = "Only comp admin, project finance or IFS admin can update a project document")
+    @SecuredBySpring(value = "UPDATE", description = "Only comp admin, project finance or IFS admin can update a competition project document")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<CompetitionDocumentResource> save(CompetitionDocumentResource competitionDocumentResource);
 
-    @SecuredBySpring(value = "UPDATE_ALL", description = "Only comp admin, project finance or IFS admin can update a list of project documents")
+    @SecuredBySpring(value = "UPDATE_ALL", description = "Only comp admin, project finance or IFS admin can update a list of project documents required in project setup")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<List<CompetitionDocumentResource>> saveAll(List<CompetitionDocumentResource> competitionDocumentResources);
 
-    @SecuredBySpring(value = "READ", description = "Only comp admin, project finance or IFS admin can retrieve a project document")
+    @SecuredBySpring(value = "READ", description = "Only comp admin, project finance or IFS admin can retrieve a competition project document")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<CompetitionDocumentResource> findOne(long id);
 
@@ -25,7 +25,7 @@ public interface CompetitionSetupProjectDocumentService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<List<CompetitionDocumentResource>> findByCompetitionId(long competitionId);
 
-    @SecuredBySpring(value = "DELETE", description = "Only comp admin, project finance or IFS admin can delete a project document")
+    @SecuredBySpring(value = "DELETE", description = "Only comp admin, project finance or IFS admin can delete a competition project document")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<Void> delete(long id);
 }

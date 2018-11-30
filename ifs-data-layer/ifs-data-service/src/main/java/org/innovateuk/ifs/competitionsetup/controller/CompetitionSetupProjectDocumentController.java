@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
-import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupProjectDocumentService;
+import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,30 +17,30 @@ import java.util.List;
 public class CompetitionSetupProjectDocumentController {
 
     @Autowired
-    private CompetitionSetupProjectDocumentService competitionSetupProjectDocumentService;
+    private CompetitionSetupDocumentService competitionSetupDocumentService;
 
     @PostMapping("/save")
     public RestResult<CompetitionDocumentResource> save(@Valid @RequestBody CompetitionDocumentResource competitionDocumentResource) {
-        return competitionSetupProjectDocumentService.save(competitionDocumentResource).toGetResponse();
+        return competitionSetupDocumentService.save(competitionDocumentResource).toGetResponse();
     }
 
     @PostMapping("/save-all")
     public RestResult<List<CompetitionDocumentResource>> save(@Valid @RequestBody List<CompetitionDocumentResource> competitionDocumentResources) {
-        return competitionSetupProjectDocumentService.saveAll(competitionDocumentResources).toGetResponse();
+        return competitionSetupDocumentService.saveAll(competitionDocumentResources).toGetResponse();
     }
 
     @GetMapping("/{id}")
     public RestResult<CompetitionDocumentResource> findOne(@PathVariable("id") final long id) {
-        return competitionSetupProjectDocumentService.findOne(id).toGetResponse();
+        return competitionSetupDocumentService.findOne(id).toGetResponse();
     }
 
     @GetMapping("/find-by-competition-id/{competitionId}")
     public RestResult<List<CompetitionDocumentResource>> findByCompetitionId(@PathVariable("competitionId") final long competitionId) {
-        return competitionSetupProjectDocumentService.findByCompetitionId(competitionId).toGetResponse();
+        return competitionSetupDocumentService.findByCompetitionId(competitionId).toGetResponse();
     }
 
     @DeleteMapping("/{id}")
     public RestResult<Void> delete(@PathVariable("id") final long id) {
-        return competitionSetupProjectDocumentService.delete(id).toGetResponse();
+        return competitionSetupDocumentService.delete(id).toGetResponse();
     }
 }

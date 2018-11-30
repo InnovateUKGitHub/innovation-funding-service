@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
-import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupProjectDocumentService;
+import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupDocumentService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionSetupCompetitionDocumentControllerTest extends BaseControllerMockMVCTest<CompetitionSetupProjectDocumentController> {
 
     @Mock
-    private CompetitionSetupProjectDocumentService competitionSetupProjectDocumentServiceMock;
+    private CompetitionSetupDocumentService competitionSetupDocumentServiceMock;
 
     @Override
     protected CompetitionSetupProjectDocumentController supplyControllerUnderTest() {
@@ -39,7 +39,7 @@ public class CompetitionSetupCompetitionDocumentControllerTest extends BaseContr
                 .withGuidance("Guidance")
                 .build();
 
-        when(competitionSetupProjectDocumentServiceMock.save(competitionDocumentResource)).thenReturn(serviceSuccess(competitionDocumentResource));
+        when(competitionSetupDocumentServiceMock.save(competitionDocumentResource)).thenReturn(serviceSuccess(competitionDocumentResource));
 
         mockMvc.perform(post("/competition/setup/project-document/save")
                 .contentType(APPLICATION_JSON)
@@ -47,7 +47,7 @@ public class CompetitionSetupCompetitionDocumentControllerTest extends BaseContr
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(competitionDocumentResource)));
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).save(competitionDocumentResource);
+        verify(competitionSetupDocumentServiceMock, only()).save(competitionDocumentResource);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class CompetitionSetupCompetitionDocumentControllerTest extends BaseContr
                 .withGuidance("Guidance")
                 .build(2);
 
-        when(competitionSetupProjectDocumentServiceMock.saveAll(competitionDocumentResources)).thenReturn(serviceSuccess(competitionDocumentResources));
+        when(competitionSetupDocumentServiceMock.saveAll(competitionDocumentResources)).thenReturn(serviceSuccess(competitionDocumentResources));
 
         mockMvc.perform(post("/competition/setup/project-document/save-all")
                 .contentType(APPLICATION_JSON)
@@ -66,7 +66,7 @@ public class CompetitionSetupCompetitionDocumentControllerTest extends BaseContr
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(competitionDocumentResources)));
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).saveAll(competitionDocumentResources);
+        verify(competitionSetupDocumentServiceMock, only()).saveAll(competitionDocumentResources);
     }
 
     @Test
@@ -76,14 +76,14 @@ public class CompetitionSetupCompetitionDocumentControllerTest extends BaseContr
 
         CompetitionDocumentResource competitionDocumentResource = newProjectDocumentResource().build();
 
-        when(competitionSetupProjectDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(competitionDocumentResource));
+        when(competitionSetupDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(competitionDocumentResource));
 
         mockMvc.perform(get("/competition/setup/project-document/{projectDocumentId}", projectDocumentId)
                        )
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(competitionDocumentResource)));
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).findOne(projectDocumentId);
+        verify(competitionSetupDocumentServiceMock, only()).findOne(projectDocumentId);
     }
 
     @Test
@@ -93,25 +93,25 @@ public class CompetitionSetupCompetitionDocumentControllerTest extends BaseContr
 
         List<CompetitionDocumentResource> competitionDocumentResources = newProjectDocumentResource().build(2);
 
-        when(competitionSetupProjectDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionDocumentResources));
+        when(competitionSetupDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionDocumentResources));
 
         mockMvc.perform(get("/competition/setup/project-document/find-by-competition-id/{competitionId}", competitionId)
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(competitionDocumentResources)));
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).findByCompetitionId(competitionId);
+        verify(competitionSetupDocumentServiceMock, only()).findByCompetitionId(competitionId);
     }
 
     @Test
     public void delete() throws Exception {
 
         long projectDocumentId = 1L;
-        when(competitionSetupProjectDocumentServiceMock.delete(projectDocumentId)).thenReturn(serviceSuccess());
+        when(competitionSetupDocumentServiceMock.delete(projectDocumentId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/competition/setup/project-document/{projectDocumentId}", projectDocumentId))
                 .andExpect(status().isOk());
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).delete(projectDocumentId);
+        verify(competitionSetupDocumentServiceMock, only()).delete(projectDocumentId);
     }
 }

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competitionsetup.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupProjectDocumentController;
-import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupProjectDocumentService;
+import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupDocumentService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionSetupCompetitionDocumentControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSetupProjectDocumentController> {
 
     @Mock
-    private CompetitionSetupProjectDocumentService competitionSetupProjectDocumentServiceMock;
+    private CompetitionSetupDocumentService competitionSetupDocumentServiceMock;
 
     @Override
     protected CompetitionSetupProjectDocumentController supplyControllerUnderTest() {
@@ -53,7 +53,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                 .withFileType(singletonList(3L))
                 .build();
 
-        when(competitionSetupProjectDocumentServiceMock.save(competitionDocumentResource)).thenReturn(serviceSuccess(competitionDocumentResource));
+        when(competitionSetupDocumentServiceMock.save(competitionDocumentResource)).thenReturn(serviceSuccess(competitionDocumentResource));
 
         mockMvc.perform(post("/competition/setup/project-document/save")
                 .header("IFS_AUTH_TOKEN", "123abc")
@@ -66,7 +66,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                         responseFields(projectDocumentResourceFields)
                 ));
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).save(competitionDocumentResource);
+        verify(competitionSetupDocumentServiceMock, only()).save(competitionDocumentResource);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                 .withFileType(singletonList(3L))
                 .build(2);
 
-        when(competitionSetupProjectDocumentServiceMock.saveAll(competitionDocumentResources)).thenReturn(serviceSuccess(competitionDocumentResources));
+        when(competitionSetupDocumentServiceMock.saveAll(competitionDocumentResources)).thenReturn(serviceSuccess(competitionDocumentResources));
 
         mockMvc.perform(post("/competition/setup/project-document/save-all")
                 .header("IFS_AUTH_TOKEN", "123abc")
@@ -99,7 +99,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                         )
                 ));
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).saveAll(competitionDocumentResources);
+        verify(competitionSetupDocumentServiceMock, only()).saveAll(competitionDocumentResources);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
 
         CompetitionDocumentResource competitionDocumentResource = newProjectDocumentResource().build();
 
-        when(competitionSetupProjectDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(competitionDocumentResource));
+        when(competitionSetupDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(competitionDocumentResource));
 
         mockMvc.perform(get("/competition/setup/project-document/{projectDocumentId}", projectDocumentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -122,7 +122,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                         responseFields(projectDocumentResourceFields)
                 ));
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).findOne(projectDocumentId);
+        verify(competitionSetupDocumentServiceMock, only()).findOne(projectDocumentId);
     }
 
     @Test
@@ -132,7 +132,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
 
         List<CompetitionDocumentResource> competitionDocumentResources = newProjectDocumentResource().build(2);
 
-        when(competitionSetupProjectDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionDocumentResources));
+        when(competitionSetupDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionDocumentResources));
 
         mockMvc.perform(get("/competition/setup/project-document/find-by-competition-id/{competitionId}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -147,14 +147,14 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                         )
                 ));
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).findByCompetitionId(competitionId);
+        verify(competitionSetupDocumentServiceMock, only()).findByCompetitionId(competitionId);
     }
 
     @Test
     public void delete() throws Exception {
 
         long projectDocumentId = 1L;
-        when(competitionSetupProjectDocumentServiceMock.delete(projectDocumentId)).thenReturn(serviceSuccess());
+        when(competitionSetupDocumentServiceMock.delete(projectDocumentId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/competition/setup/project-document/{projectDocumentId}", projectDocumentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -165,7 +165,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                         )
                 ));
 
-        verify(competitionSetupProjectDocumentServiceMock, only()).delete(projectDocumentId);
+        verify(competitionSetupDocumentServiceMock, only()).delete(projectDocumentId);
     }
 }
 

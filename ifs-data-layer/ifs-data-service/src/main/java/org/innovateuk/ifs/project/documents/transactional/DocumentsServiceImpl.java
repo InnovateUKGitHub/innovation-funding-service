@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
-import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
+import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -50,7 +50,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements DocumentsService {
 
     @Autowired
-    private ProjectDocumentConfigRepository projectDocumentConfigRepository;
+    private CompetitionDocumentConfigRepository competitionDocumentConfigRepository;
 
     @Autowired
     private ProjectDocumentRepository projectDocumentRepository;
@@ -80,7 +80,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     }
 
     private ServiceResult<CompetitionDocument> getProjectDocumentConfig(final long documentConfigId) {
-        return find(projectDocumentConfigRepository.findOne(documentConfigId), notFoundError(CompetitionDocument.class, documentConfigId));
+        return find(competitionDocumentConfigRepository.findOne(documentConfigId), notFoundError(CompetitionDocument.class, documentConfigId));
     }
 
     private List<String> getMediaTypes(List<FileType> fileTypes) {
@@ -203,7 +203,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     private boolean allDocumentsSubmitted(Project project) {
         List<PartnerOrganisation> projectOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
-        List<CompetitionDocument> expectedDocuments = projectDocumentConfigRepository.findByCompetitionId(project.getApplication().getCompetition().getId());
+        List<CompetitionDocument> expectedDocuments = competitionDocumentConfigRepository.findByCompetitionId(project.getApplication().getCompetition().getId());
 
         if (projectOrganisations.size() == 1) {
             expectedDocuments.removeIf(

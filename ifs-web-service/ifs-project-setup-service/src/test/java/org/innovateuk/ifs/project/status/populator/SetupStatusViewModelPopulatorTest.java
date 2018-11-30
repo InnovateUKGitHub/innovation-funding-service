@@ -165,7 +165,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
         assertFalse(viewModel.isProjectComplete());
-        assertTrue(viewModel.isProjectDocuments());
+        assertTrue(viewModel.isCompetitionDocuments());
 
     }
 

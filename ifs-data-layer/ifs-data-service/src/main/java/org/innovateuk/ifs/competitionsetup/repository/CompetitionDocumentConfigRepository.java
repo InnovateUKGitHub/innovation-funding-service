@@ -10,7 +10,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface ProjectDocumentConfigRepository extends PagingAndSortingRepository<CompetitionDocument, Long> {
+public interface CompetitionDocumentConfigRepository extends PagingAndSortingRepository<CompetitionDocument, Long> {
 
     List<CompetitionDocument> findByCompetitionId(Long competitionId);
 }
