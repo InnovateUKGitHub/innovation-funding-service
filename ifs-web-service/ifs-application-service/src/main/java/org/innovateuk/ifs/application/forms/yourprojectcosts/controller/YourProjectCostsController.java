@@ -102,7 +102,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
         if (origin != null) {
             originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
         }
-        formPopulator.populateForm(form, applicationId, user);
+        formPopulator.populateForm(form, applicationId, organisationId);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, originQuery);
     }
 

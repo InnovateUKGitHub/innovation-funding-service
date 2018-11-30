@@ -84,7 +84,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
 
-        verify(formPopulator).populateForm(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()));
+        verify(formPopulator).populateForm(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID));
     }
 
     @Test
