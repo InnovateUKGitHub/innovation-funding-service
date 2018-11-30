@@ -29,7 +29,11 @@ public class ValidationHandler {
     }
 
     public ValidationHandler addAnyErrors(ErrorHolder errors) {
-        return addAnyErrors(errors.getErrors(), fieldErrorsToFieldErrors(), asGlobalErrors());
+        return addAnyErrors(errors.getErrors());
+    }
+
+    public ValidationHandler addAnyErrors(List<Error> errors) {
+        return addAnyErrors(errors, fieldErrorsToFieldErrors(), asGlobalErrors());
     }
 
     public ValidationHandler addAnyErrors(ErrorHolder errors, ErrorToObjectErrorConverter converter, ErrorToObjectErrorConverter... otherConverters) {

@@ -71,10 +71,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     private Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
 
         competitions = new HashMap<>();
         addInnovationAreaNamesToCompetitions(competitions);

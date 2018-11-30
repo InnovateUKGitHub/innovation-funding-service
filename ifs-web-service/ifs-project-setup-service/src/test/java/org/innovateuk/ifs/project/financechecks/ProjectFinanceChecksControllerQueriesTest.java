@@ -162,9 +162,10 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
 
     @Before
-    public void setup() {
-        super.setUp();
+    public void setupCommonExpectations() {
+
         setupCookieUtil(cookieUtil);
+
         when(userRestService.retrieveUserById(financeTeamUser.getId())).thenReturn(restSuccess(financeTeamUser));
         when(organisationRestService.getByUserAndProjectId(financeTeamUser.getId(), projectId)).thenReturn(restSuccess(innovateOrganisationResource));
         when(userRestService.retrieveUserById(financeContactUser.getId())).thenReturn(restSuccess(financeContactUser));
