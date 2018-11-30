@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDERS_CANNOT_BE_INTERNAL_USERS;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
@@ -143,5 +144,10 @@ public class CompetitionSetupStakeholderController {
         invitedUser.setLastName(form.getLastName());
         invitedUser.setEmail(form.getEmailAddress());
         return new InviteUserResource(invitedUser);
+    }
+
+    private boolean stakeholderPendingInvite(long competitionId, long userId){
+        List<UserResource> pendingUsers = competitionSetupStakeholderRestService.findPendingStakeholderInvites(competitionId).getSuccess();
+        return pendingUsers.stream().anyMatch(user -> user.getId() == userId);
     }
 }

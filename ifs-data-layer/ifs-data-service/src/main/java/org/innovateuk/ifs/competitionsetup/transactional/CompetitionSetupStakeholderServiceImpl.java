@@ -96,6 +96,8 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
+                .andOnSuccess(() -> validateUserIsNotInvitePending(competitionId, invitedUser.getEmail()))
+                .andOnSuccess(() -> validateUserEmailNotInternal(invitedUser.getEmail()))
                 .andOnSuccess(() -> getCompetition(competitionId))
                 .andOnSuccess(competition -> saveInvite(invitedUser, competition)
                         .andOnSuccess(stakeholderInvite -> sendStakeholderInviteNotification(stakeholderInvite, competition))
@@ -111,14 +113,33 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateEmail(String email) {
+    private ServiceResult<Void> validateEmail(String emailAddress) {
 
+        emailAddress = emailAddress.toLowerCase();
+
+        if (emailAddress.contains("@innovateuk.ukri.org") || emailAddress.contains("@innovateuk.gov.uk") || /*for testing only*/ emailAddress.contains("@innovateuk.test")) {
+            return serviceFailure(STAKEHOLDERS_CANNOT_BE_INTERNAL_USERS);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateUserEmailNotInternal(String email) {
         internalUserEmailDomain = StringUtils.defaultIfBlank(internalUserEmailDomain, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
 
         String domain = StringUtils.substringAfter(email, "@");
 
         if (internalUserEmailDomain.equalsIgnoreCase(domain)) {
             return serviceFailure(STAKEHOLDER_INVITE_INVALID_EMAIL);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateUserIsNotInvitePending(long competitionId, String email) {
+        ServiceResult<List<UserResource>> pendingStakeholderInvites = findPendingStakeholderInvites(competitionId);
+        if(pendingStakeholderInvites.getSuccess().stream().anyMatch(user -> user.getEmail().equals(email))){
+            return serviceFailure(STAKEHOLDER_PENDING_INVITE);
         }
 
         return serviceSuccess();

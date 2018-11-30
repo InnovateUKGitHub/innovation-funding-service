@@ -189,7 +189,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
                 .withId(1l)
                 .withFirstName("First")
                 .withLastName("Last")
-                .withEmail("user@innovate.ukri.org")
+                .withEmail("user@innovateuk.ukri.org")
                 .build();
 
         String competitionName = "competitionName";
@@ -201,6 +201,7 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
         ManageStakeholderViewModel viewModel = new ManageStakeholderViewModel(COMPETITION_ID, competitionName, emptyList(), emptyList(), emptyList(), tab);
 
         when(userRestService.findUserByEmail(user.getEmail())).thenReturn(restSuccess(user));
+        when(competitionSetupStakeholderRestService.findStakeholders(COMPETITION_ID)).thenReturn(restSuccess(emptyList()));
         when(competitionSetupStakeholderRestService.inviteStakeholder(any(), eq(COMPETITION_ID))).thenReturn(restFailure(STAKEHOLDER_INVITE_INVALID_EMAIL));
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
         when(manageStakeholderModelPopulator.populateModel(competitionResource, tab)).thenReturn(viewModel);
