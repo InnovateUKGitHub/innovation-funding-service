@@ -7,14 +7,14 @@ import org.innovateuk.ifs.competitionsetup.mapper.ProjectDocumentMapper;
 import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.DOCUMENT_TITLE_HAS_BEEN_USED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
@@ -50,13 +50,11 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
         return projectDocumentResource.getFileTypes() != null && projectDocumentResource.getFileTypes().size() > 0 ;
     }
 
-    private boolean validateNoOverlappingTitles(ProjectDocumentResource projectDocumentResource)
+    private boolean validateUniqueDocumentTitle(ProjectDocumentResource projectDocumentResource)
     {
         Long competitionId = projectDocumentResource.getCompetition();
-        if(competitionId != null) {
-            ServiceResult<List<ProjectDocumentResource>> result = findByCompetitionId(competitionId);
-            List<ProjectDocumentResource> currentDocuments = result.getSuccess();
-
+        if (competitionId != null) {
+            List<ProjectDocumentResource> currentDocuments = findByCompetitionId(competitionId).getSuccess();
             for (ProjectDocumentResource currentDocument : currentDocuments) {
                 if (currentDocument.getTitle().equals(projectDocumentResource.getTitle()) &&
                         !currentDocument.getId().equals(projectDocumentResource.getId())) {
@@ -68,16 +66,8 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     }
 
     private ServiceResult<Void> validateProjectDocument(ProjectDocumentResource projectDocumentResource) {
-        if(!validateNoOverlappingTitles(projectDocumentResource))
-        {
-            return serviceFailure(DOCUMENT_TITLE_HAS_BEEN_USED);
-        }
-        if(!validateAtLeastOneFileType(projectDocumentResource))
-        {
-            return serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
-        }
-
-        return serviceSuccess();
+        List<ProjectDocumentResource> projectDocumentResources = Collections.singletonList(projectDocumentResource);
+        return validateProjectDocument(projectDocumentResources);
     }
 
     @Override
@@ -96,13 +86,13 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
 
     private ServiceResult<Void> validateProjectDocument(List<ProjectDocumentResource> projectDocumentResources) {
 
-        if(simpleAnyMatch(projectDocumentResources,
-                projectDocumentResource -> !validateNoOverlappingTitles(projectDocumentResource)))
+        if (simpleAnyMatch(projectDocumentResources,
+                projectDocumentResource -> !validateUniqueDocumentTitle(projectDocumentResource)))
         {
-            return serviceFailure(DOCUMENT_TITLE_HAS_BEEN_USED);
+            return serviceFailure(PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED);
         }
 
-        if(simpleAnyMatch(projectDocumentResources,
+        if (simpleAnyMatch(projectDocumentResources,
                 projectDocumentResource -> !validateAtLeastOneFileType(projectDocumentResource)))
         {
             return serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);

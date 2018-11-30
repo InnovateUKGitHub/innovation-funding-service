@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competitionsetup.mapper.ProjectDocumentMapper;
 import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +17,7 @@ import java.util.List;
 
 import static java.util.Collections.*;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.DOCUMENT_TITLE_HAS_BEEN_USED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -80,14 +79,6 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
 
         Competition competition = newCompetition().build();
 
-        // create 2 document resources with same title & competition but different Id
-        List<ProjectDocumentResource> projectDocumentResources = ProjectDocumentResourceBuilder.newProjectDocumentResource()
-                .withCompetition(competition.getId())
-                .withTitle("Test1")
-                .withId(1L, 2L)
-                .withFileType(singletonList(1L))
-                .build(2);
-
         ProjectDocument projectDocument1 = new ProjectDocument();
         projectDocument1.setId(1L);
         projectDocument1.setCompetition(competition);
@@ -96,17 +87,21 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
         projectDocument2.setId(2L);
         projectDocument2.setCompetition(competition);
 
-        List<ProjectDocument> projectDocuments = new ArrayList<>();
-        projectDocuments.add(projectDocument1);
-        projectDocuments.add(projectDocument2);
+        // create 2 document resources with same title & competition but different Id
+        List<ProjectDocumentResource> projectDocumentResources = ProjectDocumentResourceBuilder.newProjectDocumentResource()
+                .withCompetition(competition.getId())
+                .withTitle("Test1")
+                .withId(projectDocument1.getId(), projectDocument2.getId())
+                .withFileType(singletonList(1L))
+                .build(2);
 
-        when(projectDocumentConfigRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(projectDocuments);
+        when(projectDocumentConfigRepositoryMock.findByCompetitionId(competition.getId())).thenReturn( Arrays.asList(projectDocument1, projectDocument2) );
         when(projectDocumentMapperMock.mapToResource(projectDocument1)).thenReturn(projectDocumentResources.get(0));
         when(projectDocumentMapperMock.mapToResource(projectDocument2)).thenReturn(projectDocumentResources.get(1));
 
         ServiceResult<ProjectDocumentResource> result = service.save(projectDocumentResources.get(0));
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(DOCUMENT_TITLE_HAS_BEEN_USED));
+        assertTrue(result.getFailure().is(PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED));
     }
 
     @Test
