@@ -55,9 +55,6 @@ public class CompetitionSetupStakeholderController {
     @Autowired
     private ManageStakeholderModelPopulator manageStakeholderModelPopulator;
 
-    @Autowired
-    private UserRestService userRestService;
-
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_STAKEHOLDERS')")
     @GetMapping("/{competitionId}/manage-stakeholders")
     public String manageStakeholders(@PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -88,13 +85,6 @@ public class CompetitionSetupStakeholderController {
                                     Model model,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) InviteStakeholderForm form,
                                     @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
-
-        Optional<UserResource> userResource = userRestService.findUserByEmail(form.getEmailAddress()).getOptionalSuccessObject();
-        String userEmail = form.getEmailAddress().toLowerCase();
-
-        if (userResource.isPresent() && !hasInternalEmailAddess(userEmail) && !isUserAlreadyStakeholderOnCompetition(competitionId, userResource.get())) {
-            return addStakeholder(competitionId, userResource.get().getId(), model);
-        }
 
         Supplier<String> failureView = () -> doViewManageStakeholders(competitionId, model, form, tab);
         form.setVisible(true);
@@ -130,10 +120,6 @@ public class CompetitionSetupStakeholderController {
         return competitionStakeholders.contains(userResource);
     }
 
-    private boolean hasInternalEmailAddess(String emailAddress) {
-        return (emailAddress.contains("@innovateuk.ukri.org") || emailAddress.contains("@innovateuk.gov.uk") || /*for testing only*/ emailAddress.contains("@innovateuk.test"));
-    }
-
     private ValidationHandler handleInviteStakeholderErrors(RestResult<Void> saveResult, ValidationHandler validationHandler) {
         return validationHandler.addAnyErrors(saveResult, mappingErrorKeyToField(STAKEHOLDER_INVITE_INVALID_EMAIL, "emailAddress"), fieldErrorsToFieldErrors(), asGlobalErrors());
     }
@@ -144,10 +130,5 @@ public class CompetitionSetupStakeholderController {
         invitedUser.setLastName(form.getLastName());
         invitedUser.setEmail(form.getEmailAddress());
         return new InviteUserResource(invitedUser);
-    }
-
-    private boolean stakeholderPendingInvite(long competitionId, long userId){
-        List<UserResource> pendingUsers = competitionSetupStakeholderRestService.findPendingStakeholderInvites(competitionId).getSuccess();
-        return pendingUsers.stream().anyMatch(user -> user.getId() == userId);
     }
 }
