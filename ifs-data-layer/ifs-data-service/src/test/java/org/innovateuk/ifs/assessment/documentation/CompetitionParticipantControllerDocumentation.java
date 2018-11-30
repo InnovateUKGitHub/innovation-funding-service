@@ -40,15 +40,14 @@ public class CompetitionParticipantControllerDocumentation extends BaseControlle
 
         List<CompetitionParticipantResource> competitionParticipants = competitionParticipantResourceBuilder.build(2);
 
-        when(competitionParticipantServiceMock.getCompetitionParticipants(userId, role)).thenReturn(serviceSuccess(competitionParticipants));
+        when(competitionParticipantServiceMock.getCompetitionAssessors(userId)).thenReturn(serviceSuccess(competitionParticipants));
 
-        mockMvc.perform(get("/competitionparticipant/user/{userId}/role/{role}", userId, role, status)
+        mockMvc.perform(get("/competitionparticipant/user/{userId}", userId, status)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("competitionparticipant/{method-name}",
                         pathParameters(
-                                parameterWithName("userId").description("User id of the competition participant"),
-                                parameterWithName("role").description("Role of the user")
+                                parameterWithName("userId").description("User id of the competition participant")
                         ),
                         responseFields(fieldWithPath("[]").description("List of competition participants the user is allowed to see"))
                 ));

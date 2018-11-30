@@ -7,10 +7,7 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.competition.mapper.CompetitionParticipantRoleMapper;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,18 +34,12 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     private AssessmentParticipantMapper compParticipantMapper;
 
     @Autowired
-    private CompetitionParticipantRoleMapper competitionParticipantRoleMapper;
-
-    @Autowired
     private AssessmentRepository assessmentRepository;
 
     @Override
-    public ServiceResult<List<CompetitionParticipantResource>> getCompetitionParticipants(Long userId,
-                                                                                          CompetitionParticipantRoleResource roleResource) {
+    public ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessors(long userId) {
 
-        CompetitionParticipantRole role = competitionParticipantRoleMapper.mapToDomain(roleResource);
-
-        List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getByUserIdAndRole(userId, role).stream()
+        List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getByAssessorId(userId).stream()
                 .map(compParticipantMapper::mapToResource)
                 .filter(participant -> !participant.isRejected() && participant.isUpcomingOrInAssessment())
                 .collect(toList());
