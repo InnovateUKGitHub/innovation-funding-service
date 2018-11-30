@@ -68,7 +68,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
     @Test
     public void viewPageInternalUser() throws Exception {
-        setLoggedInUser(stakeholder);
+        setLoggedInUser(admin);
         assertViewPageSuccessful(true);
     }
 
