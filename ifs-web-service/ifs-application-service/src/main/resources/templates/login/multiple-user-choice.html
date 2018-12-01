@@ -22,9 +22,9 @@
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Select a dashboard',size='govuk-heading-xl'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Select a dashboard',size='govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-6'"/>
 
-                <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="govuk-!-margin-top-6" novalidate="novalidate">
+                <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="govuk-!-margin-top-0" novalidate="novalidate">
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectedRole')} ? govuk-form-group--error">
                         <fieldset class="govuk-fieldset">
@@ -45,8 +45,8 @@
                                            class="govuk-label govuk-radios__label">
                                             <span class="govuk-fieldset__legend--s"
                                                   th:text="${role.displayName}"></span>
-                                            <p class="govuk-hint"
-                                               th:text="${model.getRoleDescription()}">Description</p>
+                                            <p class="govuk-hint govuk-!-margin-top-1"
+                                               th:text="${model.roleDescription(role.displayName)}">Description</p>
                                     </label>
                                 </div>
                             </div>

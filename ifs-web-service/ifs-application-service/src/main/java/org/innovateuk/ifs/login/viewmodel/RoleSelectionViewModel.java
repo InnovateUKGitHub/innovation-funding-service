@@ -3,7 +3,9 @@ package org.innovateuk.ifs.login.viewmodel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Holder of model attributes for the selection of role by a user
@@ -11,22 +13,34 @@ import java.util.List;
 public final class RoleSelectionViewModel {
 
     private final List<Role> acceptedRoles;
-    private String roleDescription;
 
     public RoleSelectionViewModel(UserResource user) {
         acceptedRoles = user.getRoles();
-        getRoleDescription();
+        roleDescription(user.getRolesString());
     }
 
     public List<Role> getAcceptedRoles() {
         return acceptedRoles;
     }
 
-    public String getRoleDescription() {
-        return roleDescription;
-    }
+    public String roleDescription(String role) {
 
-    public void setRoleDescription(String roleDescription) {
-        this.roleDescription = roleDescription;
+        String description ="";
+
+        Map<String, String> roleDescription = new HashMap<>();
+
+        roleDescription.put("Applicant", "Manage your applications and projects.");
+        roleDescription.put("Assessor", "Review the applications you have been invited to assess.");
+        roleDescription.put("Stakeholder", "View the competitions you have been invited to oversee.");
+
+        if (role.equals("Applicant")) {
+            description = roleDescription.get("Applicant");
+        } else if (role.equals("Assessor")) {
+            description = roleDescription.get("Assessor");
+        } else if (role.equals("Stakeholder")) {
+            description = roleDescription.get("Stakeholder");
+        }
+
+        return description;
     }
 }
