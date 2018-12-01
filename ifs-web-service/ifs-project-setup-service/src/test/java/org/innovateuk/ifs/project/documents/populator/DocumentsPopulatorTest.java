@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.documents.populator;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -68,8 +69,8 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
         user = UserResourceBuilder.newUserResource().build();
 
-        List<CompetitionDocumentResource> configuredProjectDocuments = org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder
-                .newProjectDocumentResource()
+        List<CompetitionDocumentResource> configuredProjectDocuments = CompetitionDocumentResourceBuilder
+                .neCompetitionDocumentResource()
                 .withId(documentConfigId1, documentConfigId2, collaborationAgreementId)
                 .withTitle(documentConfigTitle1, documentConfigTitle2, collaborationAgreement)
                 .withGuidance(documentConfigGuidance1, documentConfigGuidance2)
@@ -87,7 +88,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
         ProjectDocumentResource projectDocumentResource = ProjectDocumentResourceBuilder
                 .newProjectResource()
-                .withProjectDocument(configuredProjectDocuments.get(0))
+                .withCompetitionDocument(configuredProjectDocuments.get(0))
                 .withStatus(UPLOADED)
                 .build();
 

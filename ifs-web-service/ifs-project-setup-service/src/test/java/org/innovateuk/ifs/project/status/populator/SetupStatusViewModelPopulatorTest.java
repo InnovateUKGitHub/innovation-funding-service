@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -93,7 +94,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private static final boolean monitoringOfficerExpected = true;
 
     List<CompetitionDocumentResource> projectDocumentConfig =
-            org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource()
+            CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
             .withTitle("Risk Register", "Plan Document")
             .build(2);
 
@@ -1430,7 +1431,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        List<CompetitionDocumentResource> competitionDocuments = org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource()
+        List<CompetitionDocumentResource> competitionDocuments = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
                 .withTitle("Collaboration agreement", "Other Document")
                 .withCompetition(competition.getId())
                 .build(2);
@@ -1438,7 +1439,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         competition.setCompetitionDocuments(competitionDocuments);
 
         List<ProjectDocumentResource> projectDocuments = ProjectDocumentResourceBuilder.newProjectResource()
-                .withProjectDocument(competitionDocuments.get(1))
+                .withCompetitionDocument(competitionDocuments.get(1))
                 .withStatus(DocumentStatus.APPROVED)
                 .build(1);
 

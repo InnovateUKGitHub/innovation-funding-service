@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder;
+import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.mapper.CompetitionDocumentMapper;
@@ -54,7 +54,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
     @Test
     public void save() {
 
-        CompetitionDocumentResource competitionDocumentResource = ProjectDocumentResourceBuilder.newProjectDocumentResource()
+        CompetitionDocumentResource competitionDocumentResource = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
                 .withFileType(singletonList(1L))
                 .build();
         CompetitionDocument competitionDocument = new CompetitionDocument();
@@ -73,7 +73,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
 
     @Test
     public void saveAllWhenNoFileTypeSelected() {
-        List<CompetitionDocumentResource> competitionDocumentResources = ProjectDocumentResourceBuilder.newProjectDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
                 .withFileType(singletonList(1L), emptyList())
                 .build(2);
 
@@ -88,7 +88,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
     @Test
     public void saveAll() {
 
-        List<CompetitionDocumentResource> competitionDocumentResources = ProjectDocumentResourceBuilder.newProjectDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
                 .withId(1L, 2L)
                 .withFileType(singletonList(1L))
                 .build(2);

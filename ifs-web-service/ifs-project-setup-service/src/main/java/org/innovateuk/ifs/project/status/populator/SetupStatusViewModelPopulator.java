@@ -6,6 +6,7 @@ import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupProjectDocumentRestService;
 import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -54,7 +55,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private CompetitionRestService competitionRestService;
-
+    
     public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId,
                                                                      UserResource loggedInUser,
                                                                      String originQuery) {
@@ -75,6 +76,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         return awaitAll(basicDetailsRequest, teamStatusRequest, monitoringOfficerRequest, isProjectManagerRequest, partnerOrganisationsRequest).thenApply(futureResults -> {
 
             BasicDetails basicDetails = basicDetailsRequest.get();
+
             ProjectTeamStatusResource teamStatus = teamStatusRequest.get();
             Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerRequest.get();
             boolean isProjectManager = isProjectManagerRequest.get();

@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.neCompetitionDocumentResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -123,7 +123,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
     @Test
     public void saveProjectDocumentLandingPageFailsWhenNoDocumentsSelected() throws Exception {
 
-        List<CompetitionDocumentResource> projectDocuments = newProjectDocumentResource()
+        List<CompetitionDocumentResource> projectDocuments = neCompetitionDocumentResource()
                 .withTitle("Title")
                 .withEditable(true)
                 .withEnabled(true)
@@ -149,7 +149,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
 
     @Test
     public void viewAddProjectDocument() throws Exception {
-        List<CompetitionDocumentResource> projectDocuments = newProjectDocumentResource()
+        List<CompetitionDocumentResource> projectDocuments = neCompetitionDocumentResource()
                 .withTitle("Title")
                 .withEditable(true)
                 .withEnabled(true)
@@ -279,7 +279,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
                 .build();
         long fileTypeId = 1L;
 
-        CompetitionDocumentResource competitionDocumentResource = newProjectDocumentResource()
+        CompetitionDocumentResource competitionDocumentResource = neCompetitionDocumentResource()
                 .withId(projectDocumentId)
                 .withTitle("Title")
                 .withGuidance("Guidance")

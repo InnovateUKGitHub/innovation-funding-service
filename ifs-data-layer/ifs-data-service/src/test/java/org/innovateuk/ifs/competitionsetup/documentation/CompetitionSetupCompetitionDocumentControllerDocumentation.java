@@ -12,7 +12,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.*;
+import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.*;
 import static org.innovateuk.ifs.documentation.ProjectDocumentResourceDocs.projectDocumentResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.only;
@@ -43,7 +43,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
     @Test
     public void save() throws Exception {
 
-        CompetitionDocumentResource competitionDocumentResource = newProjectDocumentResource()
+        CompetitionDocumentResource competitionDocumentResource = neCompetitionDocumentResource()
                 .withId(1L)
                 .withCompetition(2L)
                 .withTitle("Title")
@@ -72,7 +72,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
     @Test
     public void saveAll() throws Exception {
 
-        List<CompetitionDocumentResource> competitionDocumentResources = newProjectDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = neCompetitionDocumentResource()
                 .withId(1L)
                 .withCompetition(12L)
                 .withTitle("Title")
@@ -107,7 +107,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
 
         long projectDocumentId = 1L;
 
-        CompetitionDocumentResource competitionDocumentResource = newProjectDocumentResource().build();
+        CompetitionDocumentResource competitionDocumentResource = neCompetitionDocumentResource().build();
 
         when(competitionSetupDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(competitionDocumentResource));
 
@@ -130,7 +130,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
 
         long competitionId = 1L;
 
-        List<CompetitionDocumentResource> competitionDocumentResources = newProjectDocumentResource().build(2);
+        List<CompetitionDocumentResource> competitionDocumentResources = neCompetitionDocumentResource().build(2);
 
         when(competitionSetupDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionDocumentResources));
 

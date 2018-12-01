@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectDocumentResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionDocumentResourceListType;
 
 /**
  * Implements {@link CompetitionSetupProjectDocumentRestService}
@@ -24,7 +24,7 @@ public class CompetitionSetupProjectDocumentRestServiceImpl extends BaseRestServ
 
     @Override
     public RestResult<List<CompetitionDocumentResource>> save(List<CompetitionDocumentResource> competitionDocumentResources) {
-        return postWithRestResult(competitionSetupProjectDocumentRestURL + "/save-all", competitionDocumentResources, projectDocumentResourceListType());
+        return postWithRestResult(competitionSetupProjectDocumentRestURL + "/save-all", competitionDocumentResources, competitionDocumentResourceListType());
     }
 
     @Override
@@ -34,7 +34,7 @@ public class CompetitionSetupProjectDocumentRestServiceImpl extends BaseRestServ
 
     @Override
     public RestResult<List<CompetitionDocumentResource>> findByCompetitionId(long competitionId) {
-        return getWithRestResult(competitionSetupProjectDocumentRestURL + "/find-by-competition-id/" + competitionId, projectDocumentResourceListType());
+        return getWithRestResult(competitionSetupProjectDocumentRestURL + "/find-by-competition-id/" + competitionId, competitionDocumentResourceListType());
     }
 
     @Override

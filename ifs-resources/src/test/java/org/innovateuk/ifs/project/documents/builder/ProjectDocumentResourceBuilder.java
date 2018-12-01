@@ -37,7 +37,7 @@ public class ProjectDocumentResourceBuilder extends BaseBuilder<ProjectDocumentR
         return withArray((id, project) -> setField("id", id, project), ids);
     }
 
-    public ProjectDocumentResourceBuilder withProjectDocument(CompetitionDocumentResource... competitionDocumentResources){
+    public ProjectDocumentResourceBuilder withCompetitionDocument(CompetitionDocumentResource... competitionDocumentResources){
         return withArray((projectConfigDocumentResource, projectDocumentResource) -> projectDocumentResource.setCompetitionDocument(projectConfigDocumentResource), competitionDocumentResources);
     }
 
