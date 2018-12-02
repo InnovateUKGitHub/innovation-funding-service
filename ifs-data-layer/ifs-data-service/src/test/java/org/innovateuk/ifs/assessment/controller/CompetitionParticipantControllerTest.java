@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.transactional.CompetitionParticipantService;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -33,12 +32,12 @@ public class CompetitionParticipantControllerTest extends BaseControllerMockMVCT
         List<CompetitionParticipantResource> competitionParticipants = newCompetitionParticipantResource()
                 .build(2);
 
-        when(competitionParticipantService.getCompetitionParticipants(1L, CompetitionParticipantRoleResource.ASSESSOR)).thenReturn(serviceSuccess(competitionParticipants));
+        when(competitionParticipantService.getCompetitionAssessors(1L)).thenReturn(serviceSuccess(competitionParticipants));
 
-        mockMvc.perform(get("/competitionparticipant/user/{userId}/role/{role}", 1L, CompetitionParticipantRoleResource.ASSESSOR).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/competitionparticipant/user/{userId}", 1L).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(toJson(competitionParticipants)))
                 .andExpect(status().isOk());
 
-        verify(competitionParticipantService, times(1)).getCompetitionParticipants(1L, CompetitionParticipantRoleResource.ASSESSOR);
+        verify(competitionParticipantService, times(1)).getCompetitionAssessors(1L);
     }
 }

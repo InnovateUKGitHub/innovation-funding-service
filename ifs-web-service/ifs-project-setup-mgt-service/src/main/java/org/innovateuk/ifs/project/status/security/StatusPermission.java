@@ -12,23 +12,23 @@ public class StatusPermission {
     private Boolean canAccessBankDetails;
     private Boolean canAccessFinanceChecks;
     private Boolean canAccessSpendProfile;
-    private Boolean canAccessOtherDocuments;
+    private Boolean canAccessDocuments;
     private Boolean canAccessGrantOfferLetter;
     private Boolean canAccessGrantOfferLetterSend;
     private ProjectActivityStates grantOfferLetterActivityState;
 
     public StatusPermission(Boolean canAccessCompaniesHouse, Boolean canAccessProjectDetails,
-                                   Boolean canAccessMonitoringOfficer, Boolean canAccessBankDetails,
-                                   Boolean canAccessFinanceChecks, Boolean canAccessSpendProfile,
-                                   Boolean canAccessOtherDocuments, Boolean canAccessGrantOfferLetter,
-                                   Boolean canAccessGrantOfferLetterSend, ProjectActivityStates grantOfferLetterActivityState) {
+                                    Boolean canAccessMonitoringOfficer, Boolean canAccessBankDetails,
+                                    Boolean canAccessFinanceChecks, Boolean canAccessSpendProfile, Boolean canAccessDocuments,
+                                    Boolean canAccessGrantOfferLetter, Boolean canAccessGrantOfferLetterSend,
+                                    ProjectActivityStates grantOfferLetterActivityState) {
         this.canAccessCompaniesHouse = canAccessCompaniesHouse;
         this.canAccessProjectDetails = canAccessProjectDetails;
         this.canAccessMonitoringOfficer = canAccessMonitoringOfficer;
         this.canAccessBankDetails = canAccessBankDetails;
         this.canAccessFinanceChecks = canAccessFinanceChecks;
         this.canAccessSpendProfile = canAccessSpendProfile;
-        this.canAccessOtherDocuments = canAccessOtherDocuments;
+        this.canAccessDocuments = canAccessDocuments;
         this.canAccessGrantOfferLetter = canAccessGrantOfferLetter;
         this.canAccessGrantOfferLetterSend = canAccessGrantOfferLetterSend;
         this.grantOfferLetterActivityState = grantOfferLetterActivityState;
@@ -58,8 +58,8 @@ public class StatusPermission {
         return canAccessSpendProfile;
     }
 
-    public Boolean getCanAccessOtherDocuments() {
-        return canAccessOtherDocuments;
+    public Boolean getCanAccessDocuments() {
+        return canAccessDocuments;
     }
 
     public Boolean getCanAccessGrantOfferLetter() { return canAccessGrantOfferLetter; }

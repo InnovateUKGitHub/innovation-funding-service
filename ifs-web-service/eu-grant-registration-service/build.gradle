@@ -64,7 +64,7 @@ dependencies {
     testCompile 'org.powermock:powermock-api-mockito:1.6.5'
     testCompile 'org.powermock:powermock-module-junit4:1.6.5'
 
-    testCompile "net.sf.opencsv:opencsv:2.3"
+    testCompile "com.opencsv:opencsv:4.3.2"
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"

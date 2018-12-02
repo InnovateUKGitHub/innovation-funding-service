@@ -7,13 +7,27 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static org.innovateuk.ifs.finance.builder.CapitalUsageBuilder.newCapitalUsage;
+import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
+import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
+import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
+import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static org.innovateuk.ifs.finance.builder.OtherCostBuilder.newOtherCost;
+import static org.innovateuk.ifs.finance.builder.OverheadBuilder.newOverhead;
+import static org.innovateuk.ifs.finance.builder.OverheadCostCategoryBuilder.newOverheadCostCategory;
+import static org.innovateuk.ifs.finance.builder.SubcontractingCostBuilder.newSubContractingCost;
+import static org.innovateuk.ifs.finance.builder.TravelCostBuilder.newTravelCost;
+import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * Base class Builder for building BaseFinanceResource entities.  This class holds build steps that are common to all
@@ -50,4 +64,63 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
     protected BaseFinanceResourceBuilder(List<BiConsumer<Integer, FinanceResourceType>> newActions) {
         super(newActions);
     }
+
+    public static Map<FinanceRowType, FinanceRowCostCategory> INDUSTRIAL_FINANCES = asMap(
+            FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                    newLabourCost().
+                            withId(1L, 2L).
+                            withGrossEmployeeCost(new BigDecimal("10000.23"), new BigDecimal("5100.11"), BigDecimal.ZERO).
+                            withDescription("Developers", "Testers", WORKING_DAYS_PER_YEAR).
+                            withLabourDays(100, 120, 250).
+                            build(3)).
+                    build(),
+            FinanceRowType.OVERHEADS, newOverheadCostCategory().withCosts(
+                    newOverhead().
+                            withId(1L).
+                            withRateType(OverheadRateType.TOTAL).
+                            withRate(1000).
+                            build(1)).
+                    build(),
+            FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                    newMaterials().
+                            withId(1L, 2L).
+                            withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
+                            withQuantity(1, 2).
+                            build(2)).
+                    build(),
+            FinanceRowType.CAPITAL_USAGE, newDefaultCostCategory().withCosts(
+                    newCapitalUsage().
+                            withId(1L, 2L).
+                            withNpv(new BigDecimal("30"), new BigDecimal("70")).
+                            withResidualValue(new BigDecimal("10"), new BigDecimal("35")).
+                            withDeprecation(12, 20).
+                            withUtilisation(80, 70).
+                            withExisting("New", "Existing").
+                            build(2)).
+                    build(),
+            FinanceRowType.SUBCONTRACTING_COSTS, newDefaultCostCategory().withCosts(
+                    newSubContractingCost().
+                            withId(1L, 2L).
+                            withName("Bob", "Jim").
+                            withCountry("UK", "Sweden").
+                            withRole("Developer", "BA").
+                            withCost(new BigDecimal("5000"), new BigDecimal("3000")).
+                            build(2)).
+                    build(),
+            FinanceRowType.TRAVEL, newDefaultCostCategory().withCosts(
+                    newTravelCost().
+                            withId(1L, 2L).
+                            withCost(new BigDecimal("30"), new BigDecimal("50")).
+                            withItem("Train", "Bus").
+                            withQuantity(20, 30).
+                            build(2))
+                    .build(),
+            FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
+                    newOtherCost().
+                            withId(1L, 2L).
+                            withDescription("Something", "Else").
+                            withCost(new BigDecimal("100"), new BigDecimal("300")).
+                            build(2))
+                    .build());
+
 }

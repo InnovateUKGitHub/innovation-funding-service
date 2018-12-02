@@ -33,20 +33,20 @@ Before Monitoring Officer is assigned
     Then the user should see the text in the page       Your project has not yet been assigned a Monitoring Officer.
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
     When the user navigates to the page                 ${project_in_setup_team_status_page}
-    And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
+    And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
     [Tags]
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_competition_status}
-    Then the user should see the element   css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok       # Project details
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.action   # MO
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(3).status          # Bank details are not yet provided by any partner yet
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action   # Finance checks-always action flag for private beta
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(5).status          # Spend Profile
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.waiting  # Other Docs
-    And the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(7).status          # GOL
+    Then the user should see the element   css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok                     # Project details
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)                       # Documents
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4)                       # Monitoring Officer
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)                       # Bank details
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action    # Finance checks
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)                       # Spend Profile
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(8)                       # GOL
 
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-2630
@@ -131,7 +131,7 @@ MO details can be added
     And the user should see the element                  css = ul li.complete:nth-child(3)
     And the user should see the text in the element      css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
     And the user clicks the button/link                  link = View the status of partners
-    And the user should see the element                  css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+    And the user should see the element                  css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 MO details(email step)
     [Documentation]    INFUND-2630, INFUND-2632, INFUND-2633, IFS-3553
@@ -158,7 +158,7 @@ MO details can be edited and viewed in the Set up your project page
     And the user should see the text in the page       ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page       08549731414
     When the user navigates to the page                ${project_in_setup_team_status_page}
-    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 MO details edit(email step)
     [Documentation]    INFUND-2630, INFUND-2634, IFS-3553
@@ -180,7 +180,7 @@ MO details accessible/seen by all partners
     And the user should see the text in the page       ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page       08549731414
     When the user navigates to the page                ${project_in_setup_team_status_page}
-    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
     When Log in as a different user                    &{lead_applicant_credentials}
     And the user navigates to the page                 ${project_in_setup_page}
     Then the user should see the element               css = ul li.complete:nth-child(3)
@@ -191,7 +191,7 @@ MO details accessible/seen by all partners
     And the user should see the text in the page       ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page       08549731414
     When the user navigates to the page                ${project_in_setup_team_status_page}
-    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428

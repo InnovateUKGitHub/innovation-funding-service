@@ -86,10 +86,8 @@ public class InviteAssessorsOverviewControllerTest extends BaseControllerMockMVC
 
     private CompetitionInviteStatisticsResource inviteStatistics;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()

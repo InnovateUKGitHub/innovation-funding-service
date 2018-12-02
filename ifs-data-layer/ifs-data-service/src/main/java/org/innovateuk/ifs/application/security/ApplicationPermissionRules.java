@@ -53,6 +53,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "Stakeholders can see the participation percentage for applications they are assigned to")
+    public boolean stakeholdersCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
+        return userIsStakeholderInCompetition(applicationResource.getCompetition(), user.getId());
+    }
+
     @PermissionRule(value = "READ_FINANCE_DETAILS",
             description = "The consortium can see the application finance details",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
@@ -81,6 +86,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ_FINANCE_TOTALS",
+            description = "Stakeholders can view the finance totals.",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean stakeholdersCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
+        return userIsStakeholderInCompetition(applicationResource.getCompetition(), user.getId());
+    }
+
     @PermissionRule(value = "APPLICATION_SUBMITTED_NOTIFICATION", description = "A lead applicant can send the notification of a submitted application")
     public boolean aLeadApplicantCanSendApplicationSubmittedNotification(final ApplicationResource applicationResource, final UserResource user) {
         return isLeadApplicant(applicationResource.getId(), user);
@@ -91,13 +103,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return userIsConnectedToApplicationResource(application, user);
     }
 
-    @PermissionRule(value = "READ", description = "Internal users (other than innovation lead or stakeholder) can see all application resources")
+    @PermissionRule(value = "READ", description = "Internal users (other than innovation lead) can see all application resources")
     public boolean internalUsersCanViewApplications(final ApplicationResource application, final UserResource user) {
-        return !isInnovationLead(user) && !isStakeholder(user) && isInternal(user);
+        return !isInnovationLead(user) && isInternal(user);
     }
 
     @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
-    public boolean innovationLeadAssginedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
+    public boolean innovationLeadAssignedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
         return application != null && application.getCompetition() != null && userIsInnovationLeadOnCompetition(application.getCompetition(), user.getId());
     }
 

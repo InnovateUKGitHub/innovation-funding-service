@@ -578,6 +578,17 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
+    public void showApplicationTeamWhenStakeholder() {
+        User user = newUser().withRoles(singleton(Role.STAKEHOLDER)).build();
+        when(userRepositoryMock.findOne(234L)).thenReturn(user);
+
+        ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
+
+        assertTrue(serviceResult.isSuccess());
+        assertTrue(serviceResult.getSuccess());
+    }
+
+    @Test
     public void showApplicationTeamNoUser() {
 
         when(userRepositoryMock.findOne(234L)).thenReturn(null);

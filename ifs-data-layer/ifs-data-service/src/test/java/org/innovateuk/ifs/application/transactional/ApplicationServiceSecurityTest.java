@@ -64,7 +64,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
                             isA(UserResource.class));
                     verify(applicationRules).internalUsersCanViewApplications(isA(ApplicationResource.class), isA
                             (UserResource.class));
-                    verify(applicationRules).innovationLeadAssginedToCompetitionCanViewApplications(isA
+                    verify(applicationRules).innovationLeadAssignedToCompetitionCanViewApplications(isA
                             (ApplicationResource.class), isA(UserResource.class));
                 }
         );
