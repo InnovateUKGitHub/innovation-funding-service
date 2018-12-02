@@ -2,8 +2,6 @@ package org.innovateuk.ifs;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.handler.CompletableFutureTuple1Handler;
 import org.innovateuk.ifs.async.generation.handler.CompletableFutureTuple2Handler;
@@ -34,23 +32,16 @@ import static org.mockito.Mockito.when;
  * allows Controllers to be tested via their routes and their responses' HTTP responses tested also.
  */
 public abstract class AbstractAsyncWaitMockMVCTest<ControllerType> extends BaseControllerMockMVCTest<ControllerType> {
-    public static final Log LOG = LogFactory.getLog(AbstractAsyncWaitMockMVCTest.class);
 
     @Mock
     private AsyncFuturesGenerator futuresGeneratorMock;
-
-    @Before
-    public void setUp() {
-        super.setUp();
-        setFutureExpectations();
-    }
-
 
     /**
      * Setup expectations around the various {@link AsyncFuturesGenerator} methods that generate CompletableFutures
      * and helper classes
      */
-    private void setFutureExpectations() {
+    @Before
+    public void setUpFutureExpectations() {
         setAsyncMethodExpectations();
         setupAwaitAllMethodExpectations();
     }

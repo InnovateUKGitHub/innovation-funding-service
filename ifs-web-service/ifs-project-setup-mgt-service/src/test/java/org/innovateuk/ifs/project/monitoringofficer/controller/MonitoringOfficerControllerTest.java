@@ -122,10 +122,8 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
     @Mock
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    @Override
     @Before
-    public void setUp() {
-        super.setUp();
+    public void logInCompAdminUser() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
     }
 

@@ -105,10 +105,12 @@ public enum Role implements Identifiable {
         return this == PROJECT_MANAGER;
     }
 
+    public boolean isStakeHolder() {return this == STAKEHOLDER; }
+
     public static List<Role> applicantProcessRoles() { return Arrays.asList(LEADAPPLICANT, COLLABORATOR); }
 
     public static Set<Role> internalRoles(){
-        return new HashSet<>(asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, STAKEHOLDER));
+        return new HashSet<>(asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
     }
 
     public static Set<Role> externalApplicantRoles(){

@@ -69,8 +69,8 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     private ProjectService projectService;
 
     @Before
-    public void setUp(){
-        super.setUp();
+    public void setupCommonExpectations() {
+
         organisationResource = newOrganisationResource().withName("Vitruvius Stonework Limited").withCompaniesHouseNumber("60674010").build();
         updatedOrganisationResource = newOrganisationResource().withId(organisationResource.getId()).withName("Vitruvius Stonework").withCompaniesHouseNumber("60674010").build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withOrganisation(organisationResource.getId()).withAddress(newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build()).build();

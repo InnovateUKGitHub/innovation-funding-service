@@ -36,9 +36,6 @@ public class YourFundingViewModelPopulator {
     private QuestionRestService questionRestService;
 
     @Autowired
-    private SectionRestService sectionRestService;
-
-    @Autowired
     private SectionService sectionService;
 
     @Autowired
