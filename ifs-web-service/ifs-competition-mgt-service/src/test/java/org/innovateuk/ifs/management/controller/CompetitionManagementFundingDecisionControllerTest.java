@@ -96,7 +96,6 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
     @Before
     public void setupMockMvc() {
-        super.setUp();
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();

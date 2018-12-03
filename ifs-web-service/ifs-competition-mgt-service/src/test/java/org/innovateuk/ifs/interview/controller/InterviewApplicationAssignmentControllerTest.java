@@ -108,10 +108,8 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         return new InterviewApplicationAssignmentController();
     }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()

@@ -70,10 +70,8 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         return new CompetitionInviteController();
     }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         when(rejectionReasonRestService.findAllActive()).thenReturn(restSuccess(rejectionReasons));
     }
 

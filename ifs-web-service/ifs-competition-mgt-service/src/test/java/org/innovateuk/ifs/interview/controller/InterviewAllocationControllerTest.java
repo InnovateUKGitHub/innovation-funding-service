@@ -105,8 +105,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     private CookieUtil cookieUtil;
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpCookies() {
         setupCookieUtil(cookieUtil);
     }
 

@@ -41,6 +41,7 @@ public class StatusServiceSecurityTest extends BaseServiceSecurityTest<StatusSer
         assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L, Optional.empty()), () -> {
             verify(statusPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
             verify(statusPermissionRules).internalUsersCanViewTeamStatus(project, getLoggedInUser());
+            verify(statusPermissionRules).stakeholdersCanViewTeamStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(statusPermissionRules);
         });
     }

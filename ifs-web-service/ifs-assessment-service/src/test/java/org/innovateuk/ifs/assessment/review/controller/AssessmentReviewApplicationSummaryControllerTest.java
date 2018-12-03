@@ -138,7 +138,6 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
 
     @Before
     public void setUp() {
-        super.setUp();
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
