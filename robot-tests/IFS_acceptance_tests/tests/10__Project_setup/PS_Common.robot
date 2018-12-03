@@ -248,7 +248,7 @@ project lead submits project address
     the user navigates to the page                ${server}/project-setup/project/${project_id}/details/project-address
     the user enters text to a text field          id = addressForm.postcodeInput  BS1 4NT
     the user clicks the button/link               id = postcode-lookup
-    the user selects the index from the drop-down menu  0  id=addressForm.selectedPostcodeIndex
+    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
     the user clicks the button/link               jQuery = button:contains("Save address")
 
 project lead submits project details

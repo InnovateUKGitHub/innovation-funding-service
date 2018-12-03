@@ -1023,6 +1023,7 @@ Status updates correctly for internal user's table
      [Tags]
      [Setup]    log in as a different user   &{Comp_admin1_credentials}
      When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
+     #Here
      Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok                        # Project details
      And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.waiting > a  # Documents
      And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4) > a                      # Monitoring officer
