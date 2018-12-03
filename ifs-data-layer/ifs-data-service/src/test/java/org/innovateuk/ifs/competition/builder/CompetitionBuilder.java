@@ -24,6 +24,7 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
 public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuilder> {
@@ -242,6 +243,19 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
                     .withAssessorFeedbackDate(now.minusDays(2L))
                     .withReleaseFeedbackDate(now.minusDays(10L))
                     .withFeedbackReleased(now.minusDays(1L));
+        } else if(PREVIOUS.equals(status)) {
+            return withSetupComplete(true)
+                    .withStartDate(now.minusDays(9L))
+                    .withEndDate(now.minusDays(8L))
+                    .withAssessorAcceptsDate(now.minusDays(7L))
+                    .withAssessorsNotifiedDate(now.minusDays(6L))
+                    .withFundersPanelDate(now.minusDays(5L))
+                    .withFundersPanelEndDate(now.minusDays(4L))
+                    .withAssessmentClosedDate(now.minusDays(3L))
+                    .withAssessorFeedbackDate(now.minusDays(2L))
+                    .withReleaseFeedbackDate(now.minusDays(10L))
+                    .withFeedbackReleased(now.minusDays(1L))
+                    .withCompetitionType(newCompetitionType().withName("Expression of interest").build());
         } else if(COMPETITION_SETUP.equals(status)) {
             return withSetupComplete(false);
         } else {
