@@ -137,13 +137,11 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         Optional<User> user = userRepository.findByEmail(invitedUser.getEmail());
 
         if (user.isPresent()) {
-            addStakeholder(competition.getId(), user.get().getId());
+            return addStakeholder(competition.getId(), user.get().getId());
         } else {
-            saveInvite(invitedUser, competition)
+            return saveInvite(invitedUser, competition)
                     .andOnSuccess(stakeholderInvite -> sendStakeholderInviteNotification(stakeholderInvite, competition));
         }
-
-        return serviceSuccess();
     }
 
     private ServiceResult<StakeholderInvite> saveInvite(UserResource invitedUser, Competition competition) {
