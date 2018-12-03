@@ -45,8 +45,8 @@ public class ProjectDocumentBuilder extends BaseBuilder<ProjectDocument, Project
         return withArray((project, p) -> setField("project", project, p), projects);
     }
 
-    public ProjectDocumentBuilder withProjectDocument(CompetitionDocument... competitionDocuments) {
-        return withArray((projectDocument, p) -> setField("competitionDocument", projectDocument, p), competitionDocuments);
+    public ProjectDocumentBuilder withCompetitionDocument(CompetitionDocument... competitionDocuments) {
+        return withArray((competitionDocument, p) -> setField("competitionDocument", competitionDocument, p), competitionDocuments);
     }
 
     public ProjectDocumentBuilder withFileEntry(FileEntry... fileEntries) {

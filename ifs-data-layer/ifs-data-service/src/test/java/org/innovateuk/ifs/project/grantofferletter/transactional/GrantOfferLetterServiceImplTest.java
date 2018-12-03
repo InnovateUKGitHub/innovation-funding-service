@@ -6,6 +6,7 @@ import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.builder.CompetitionDocumentBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -601,8 +602,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         setupOrganisationsForGrantOfferLetter(o1, o2, o3, applicationFinanceResource, applicationFinanceResource, applicationFinanceResource);
 
         Competition comp = newCompetition().withName("Test Comp<").build();
-        CompetitionDocument configuredCompetitionDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
-                .newCompetitionProjectDocument()
+        CompetitionDocument configuredCompetitionDocument = CompetitionDocumentBuilder
+                .newCompetitionDocument()
                 .withCompetition(comp)
                 .withTitle("Risk Register")
                 .withGuidance("Guidance for Risk Register")
@@ -647,11 +648,11 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
-    public void generateGrantOfferLetterProjectDocumentsAndDocsNotApproved() {
+    public void generateGrantOfferLetterProjectDocuments() {
 
         Competition comp = newCompetition().withName("Test Comp").build();
-        CompetitionDocument configuredCompetitionDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
-                .newCompetitionProjectDocument()
+        CompetitionDocument configuredCompetitionDocument = CompetitionDocumentBuilder
+                .newCompetitionDocument()
                 .withCompetition(comp)
                 .withTitle("Risk Register")
                 .withGuidance("Guidance for Risk Register")
@@ -775,7 +776,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private void setupOrganisationsForGrantOfferLetter(Organisation o1, Organisation o2, Organisation o3, ApplicationFinanceResource af1, ApplicationFinanceResource af2, ApplicationFinanceResource af3) {
 
         List<CompetitionDocument> competitionDocuments
-                = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder.newCompetitionProjectDocument().build(1);
+                = CompetitionDocumentBuilder.newCompetitionDocument().build(1);
 
         Competition comp = newCompetition()
                 .withName("Test Comp<")

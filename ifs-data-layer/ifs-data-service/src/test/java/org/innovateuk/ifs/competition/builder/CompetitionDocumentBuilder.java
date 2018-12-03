@@ -16,19 +16,19 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 /**
  * Builder for {@link CompetitionDocument}s.
  */
-public class ProjectDocumentBuilder extends BaseBuilder<CompetitionDocument, ProjectDocumentBuilder> {
+public class CompetitionDocumentBuilder extends BaseBuilder<CompetitionDocument, CompetitionDocumentBuilder> {
 
-    public static ProjectDocumentBuilder newCompetitionProjectDocument() {
-        return new ProjectDocumentBuilder(emptyList()).with(uniqueIds());
+    public static CompetitionDocumentBuilder newCompetitionDocument() {
+        return new CompetitionDocumentBuilder(emptyList()).with(uniqueIds());
     }
 
-    private ProjectDocumentBuilder(List<BiConsumer<Integer, CompetitionDocument>> multiActions) {
+    private CompetitionDocumentBuilder(List<BiConsumer<Integer, CompetitionDocument>> multiActions) {
         super(multiActions);
     }
 
     @Override
-    protected ProjectDocumentBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionDocument>> actions) {
-        return new ProjectDocumentBuilder(actions);
+    protected CompetitionDocumentBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionDocument>> actions) {
+        return new CompetitionDocumentBuilder(actions);
     }
 
     @Override
@@ -36,23 +36,23 @@ public class ProjectDocumentBuilder extends BaseBuilder<CompetitionDocument, Pro
         return createDefault(CompetitionDocument.class);
     }
 
-    public ProjectDocumentBuilder withId(Long... ids) {
+    public CompetitionDocumentBuilder withId(Long... ids) {
         return withArray((id, i) -> setField("id", id, i), ids);
     }
 
-    public ProjectDocumentBuilder withCompetition(Competition... competitions) {
+    public CompetitionDocumentBuilder withCompetition(Competition... competitions) {
         return withArray((competition, p) -> setField("competition", competition, p), competitions);
     }
 
-    public ProjectDocumentBuilder withFileTypes(List<FileType>... fileTypesList) {
+    public CompetitionDocumentBuilder withFileTypes(List<FileType>... fileTypesList) {
         return withArray((fileTypes, p) -> setField("fileTypes", fileTypes, p), fileTypesList);
     }
 
-    public ProjectDocumentBuilder withTitle(String... titles) {
+    public CompetitionDocumentBuilder withTitle(String... titles) {
         return withArray((title, p) -> setField("title", title, p), titles);
     }
 
-    public ProjectDocumentBuilder withGuidance(String... guidanceList) {
+    public CompetitionDocumentBuilder withGuidance(String... guidanceList) {
         return withArray((guidance, p) -> setField("guidance", guidance, p), guidanceList);
     }
 }

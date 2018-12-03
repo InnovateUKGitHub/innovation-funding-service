@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Interface for CRUD operations on {@link CompetitionDocumentResource} related data when in setup.
  */
-public interface CompetitionSetupProjectDocumentRestService {
+public interface CompetitionSetupDocumentRestService {
 
     RestResult<CompetitionDocumentResource> save(CompetitionDocumentResource competitionDocumentResource);
 

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.builder.CompetitionDocumentBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
@@ -107,8 +108,8 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
                 .withExtension(".pdf")
                 .build();
 
-        configuredCompetitionDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
-                .newCompetitionProjectDocument()
+        configuredCompetitionDocument = CompetitionDocumentBuilder
+                .newCompetitionDocument()
                 .withId(documentConfigId)
                 .withTitle("Risk Register")
                 .withGuidance("Guidance for Risk Register")
@@ -119,7 +120,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         projectDocument = newProjectDocument()
                 .withId(projectDocumentId)
-                .withProjectDocument(configuredCompetitionDocument)
+                .withCompetitionDocument(configuredCompetitionDocument)
                 .withFileEntry(fileEntry)
                 .build();
 
@@ -132,7 +133,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
                 .withCompetition(competition)
                 .build();
 
-        competitionDocuments = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder.newCompetitionProjectDocument()
+        competitionDocuments = CompetitionDocumentBuilder.newCompetitionDocument()
                 .build(1);
 
         project.setProjectDocuments(singletonList(projectDocument));

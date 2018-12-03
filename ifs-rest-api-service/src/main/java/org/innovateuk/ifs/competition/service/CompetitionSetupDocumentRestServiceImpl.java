@@ -10,10 +10,10 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionDocumentResourceListType;
 
 /**
- * Implements {@link CompetitionSetupProjectDocumentRestService}
+ * Implements {@link CompetitionSetupDocumentRestService}
  */
 @Service
-public class CompetitionSetupProjectDocumentRestServiceImpl extends BaseRestService implements CompetitionSetupProjectDocumentRestService {
+public class CompetitionSetupDocumentRestServiceImpl extends BaseRestService implements CompetitionSetupDocumentRestService {
 
     private String competitionSetupProjectDocumentRestURL = "/competition/setup/project-document";
 

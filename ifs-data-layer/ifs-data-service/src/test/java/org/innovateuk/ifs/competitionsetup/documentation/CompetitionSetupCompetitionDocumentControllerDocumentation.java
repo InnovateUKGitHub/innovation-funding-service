@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
-import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupProjectDocumentController;
+import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupDocumentController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupDocumentService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -30,14 +30,14 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CompetitionSetupCompetitionDocumentControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSetupProjectDocumentController> {
+public class CompetitionSetupCompetitionDocumentControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSetupDocumentController> {
 
     @Mock
     private CompetitionSetupDocumentService competitionSetupDocumentServiceMock;
 
     @Override
-    protected CompetitionSetupProjectDocumentController supplyControllerUnderTest() {
-        return new CompetitionSetupProjectDocumentController();
+    protected CompetitionSetupDocumentController supplyControllerUnderTest() {
+        return new CompetitionSetupDocumentController();
     }
 
     @Test

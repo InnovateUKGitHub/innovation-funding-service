@@ -75,11 +75,11 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     @Override
     public ServiceResult<List<String>> getValidMediaTypesForDocument(long documentConfigId) {
-        return getProjectDocumentConfig(documentConfigId)
+        return getCompetitionDocumentConfig(documentConfigId)
                 .andOnSuccessReturn(projectDocumentConfig -> getMediaTypes(projectDocumentConfig.getFileTypes()));
     }
 
-    private ServiceResult<CompetitionDocument> getProjectDocumentConfig(final long documentConfigId) {
+    private ServiceResult<CompetitionDocument> getCompetitionDocumentConfig(final long documentConfigId) {
         return find(competitionDocumentConfigRepository.findOne(documentConfigId), notFoundError(CompetitionDocument.class, documentConfigId));
     }
 
@@ -102,7 +102,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Override
     @Transactional
     public ServiceResult<FileEntryResource> createDocumentFileEntry(long projectId, long documentConfigId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
+        return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
                         .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier))
                         .andOnSuccessReturn(fileDetails -> createProjectDocument(project, projectDocumentConfig, fileDetails)));
@@ -154,7 +154,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Override
     @Transactional
     public ServiceResult<Void> deleteDocument(long projectId, long documentConfigId) {
-        return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
+        return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
                         .andOnSuccess(() -> deleteProjectDocument(project, documentConfigId))
                         .andOnSuccess(() -> deleteFile(project, documentConfigId))
@@ -179,7 +179,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Override
     @Transactional
     public ServiceResult<Void> submitDocument(long projectId, long documentConfigId) {
-        return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
+        return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
                         .andOnSuccess(() -> submitDocument(project, documentConfigId))
                 );
@@ -218,7 +218,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     public ServiceResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision) {
 
         return validateProjectDocumentDecision(decision)
-                .andOnSuccess(() -> find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
+                .andOnSuccess(() -> find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                         andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
                                 .andOnSuccess(() -> applyDocumentDecision(project, documentConfigId, decision))
                                 .andOnSuccess(() -> generateGrantOfferLetterIfReady(projectId))

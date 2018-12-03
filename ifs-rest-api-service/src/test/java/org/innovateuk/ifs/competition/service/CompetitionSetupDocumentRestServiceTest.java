@@ -14,13 +14,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionDocumentResourceListType;
 import static org.junit.Assert.assertTrue;
 
-public class CompetitionSetupProjectDocumentRestServiceTest extends BaseRestServiceUnitTest<CompetitionSetupProjectDocumentRestServiceImpl> {
+public class CompetitionSetupDocumentRestServiceTest extends BaseRestServiceUnitTest<CompetitionSetupDocumentRestServiceImpl> {
 
     private static final String competitionSetupProjectDocumentRestURL = "/competition/setup/project-document";
 
     @Override
-    protected CompetitionSetupProjectDocumentRestServiceImpl registerRestServiceUnderTest() {
-        return new CompetitionSetupProjectDocumentRestServiceImpl();
+    protected CompetitionSetupDocumentRestServiceImpl registerRestServiceUnderTest() {
+        return new CompetitionSetupDocumentRestServiceImpl();
     }
 
     @Test

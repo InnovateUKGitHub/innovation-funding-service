@@ -21,14 +21,14 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CompetitionSetupCompetitionDocumentControllerTest extends BaseControllerMockMVCTest<CompetitionSetupProjectDocumentController> {
+public class CompetitionSetupCompetitionDocumentControllerTest extends BaseControllerMockMVCTest<CompetitionSetupDocumentController> {
 
     @Mock
     private CompetitionSetupDocumentService competitionSetupDocumentServiceMock;
 
     @Override
-    protected CompetitionSetupProjectDocumentController supplyControllerUnderTest() {
-        return new CompetitionSetupProjectDocumentController();
+    protected CompetitionSetupDocumentController supplyControllerUnderTest() {
+        return new CompetitionSetupDocumentController();
     }
 
     @Test

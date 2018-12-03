@@ -14,7 +14,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/competition/setup/project-document")
-public class CompetitionSetupProjectDocumentController {
+public class CompetitionSetupDocumentController {
 
     @Autowired
     private CompetitionSetupDocumentService competitionSetupDocumentService;
