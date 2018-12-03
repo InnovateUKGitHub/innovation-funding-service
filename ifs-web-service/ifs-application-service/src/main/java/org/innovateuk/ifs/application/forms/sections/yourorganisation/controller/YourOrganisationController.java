@@ -162,7 +162,7 @@ public class YourOrganisationController extends AsyncAdaptor {
         };
 
         return validationHandler.
-                addAnyErrors(validateYourOrganisation(form.getPostcode())).
+                addAnyErrors(validateYourOrganisation(form)).
                 failNowOrSucceedWith(failureHandler, successHandler);
     }
 
@@ -187,12 +187,10 @@ public class YourOrganisationController extends AsyncAdaptor {
         ApplicationFinanceResource finance =
                 applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
-        finance.setWorkPostcode(form.getPostcode());
-
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
     }
 
-    private List<Error> validateYourOrganisation(String postcode) {
+    private List<Error> validateYourOrganisation(YourOrganisationForm form) {
         return emptyList();
     }
 

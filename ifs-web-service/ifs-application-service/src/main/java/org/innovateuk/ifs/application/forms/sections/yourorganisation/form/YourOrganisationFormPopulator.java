@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationService;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,19 +10,32 @@ import org.springframework.stereotype.Component;
 @Component
 public class YourOrganisationFormPopulator {
 
-    private ApplicationFinanceRestService applicationFinanceRestService;
+    private YourOrganisationService yourOrganisationService;
 
-    @Autowired
-    YourOrganisationFormPopulator(ApplicationFinanceRestService applicationFinanceRestService) {
-        this.applicationFinanceRestService = applicationFinanceRestService;
+    public YourOrganisationFormPopulator(YourOrganisationService yourOrganisationService) {
+        this.yourOrganisationService = yourOrganisationService;
     }
 
     public YourOrganisationForm populate(long applicationId, long organisationId) {
 
-        ApplicationFinanceResource applicationFinance =
-                applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
+        OrganisationSize organisationSize = yourOrganisationService.getOrganisationSize(applicationId, organisationId).getSuccess();
 
-        String postcode = applicationFinance.getWorkPostcode();
-        return new YourOrganisationForm(postcode);
+        Long turnover = yourOrganisationService.getTurnover(applicationId, organisationId).getSuccess();
+
+        Long headcount = yourOrganisationService.getHeadCount(applicationId, organisationId).getSuccess();
+
+        boolean stateAidEligibility = yourOrganisationService.getStateAidEligibility(applicationId).getSuccess();
+
+        // TODO DW - readOnlyAllApplicantApplicationFinances
+
+        // TODO DW - isBusinessOrganisation
+
+        // TODO DW - formInputViewModelGenerator.fromSection
+
+        return new YourOrganisationForm(
+                organisationSize,
+                turnover,
+                headcount,
+                stateAidEligibility);
     }
 }

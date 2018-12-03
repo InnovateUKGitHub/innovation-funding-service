@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -134,5 +135,10 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
         String uriWithParams = buildPaginationUri(applicationRestURL +  "/" + competitionId + "/previous-applications", pageNumber, pageSize, sortField, params);
         return getWithRestResult(uriWithParams, PreviousApplicationPageResource.class);
+    }
+
+    @Override
+    public RestResult<CompetitionResource> getCompetitionByApplicationId(long applicationId) {
+        return getWithRestResult(applicationRestURL + "/" + applicationId + "/competition", CompetitionResource.class);
     }
 }

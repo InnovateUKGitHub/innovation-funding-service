@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -179,5 +180,10 @@ public class ApplicationController {
     @GetMapping("/getLatestEmailFundingDate/{competitionId}")
     public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
         return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/{applicationId}/competition")
+    public RestResult<CompetitionResource> getCompetitionByApplicationId(@PathVariable("applicationId") long applicationId) {
+        return applicationService.getCompetitionByApplicationId(applicationId).toGetResponse();
     }
 }

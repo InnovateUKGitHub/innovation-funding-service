@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.Role;
 
 import java.time.ZonedDateTime;
@@ -29,4 +30,5 @@ public interface ApplicationRestService {
     RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId);
     RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId);
     RestResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter);
+    RestResult<CompetitionResource> getCompetitionByApplicationId(long applicationId);
 }

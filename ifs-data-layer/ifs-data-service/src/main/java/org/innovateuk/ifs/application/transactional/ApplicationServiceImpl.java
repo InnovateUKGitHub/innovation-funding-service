@@ -8,6 +8,8 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -43,6 +45,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private ApplicationMapper applicationMapper;
+
+    @Autowired
+    private CompetitionMapper competitionMapper;
 
     @Autowired
     private ApplicationWorkflowHandler applicationWorkflowHandler;
@@ -298,6 +303,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<PreviousApplicationResource> previousApplications = simpleMap(pagedResult.getContent(), this::convertToPreviousApplicationResource);
 
         return serviceSuccess(new PreviousApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), previousApplications, pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    @Override
+    public ServiceResult<CompetitionResource> getCompetitionByApplicationId(long applicationId) {
+        return find(application(applicationId)).andOnSuccessReturn(application ->
+                competitionMapper.mapToResource(application.getCompetition()));
     }
 
     private ServiceResult<ApplicationPageResource> handleApplicationSearchResultPage(Page<Application> pagedResult) {

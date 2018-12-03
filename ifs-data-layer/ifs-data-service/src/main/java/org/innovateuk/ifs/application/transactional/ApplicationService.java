@@ -3,8 +3,10 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
@@ -80,4 +82,7 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_PREVIOUS_APPLICATIONS')")
     ServiceResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageIndex, int pageSize, String sortField, String filter);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
+    ServiceResult<CompetitionResource> getCompetitionByApplicationId(long applicationId);
 }

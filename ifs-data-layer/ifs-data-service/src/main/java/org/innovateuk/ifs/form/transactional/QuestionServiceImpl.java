@@ -3,17 +3,18 @@ package org.innovateuk.ifs.form.transactional;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
+import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,13 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -52,6 +54,9 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private FormInputRepository formInputRepository;
 
     @Override
     public ServiceResult<QuestionResource> getQuestionById(final Long id) {
@@ -149,13 +154,11 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
-        List<Question> questions = questionRepository.findByCompetitionId(competitionId);
-        Optional<Question> question = simpleFindFirst(questions, q -> {
-            List<FormInput> activeFormInputs = simpleFilter(q.getFormInputs(), FormInput::getActive);
-            return !activeFormInputs.isEmpty() && formInputType == activeFormInputs.get(0).getType();
-        });
-        if (question.isPresent()) {
-            return serviceSuccess(question.get());
+
+        List<FormInput> formInputs = formInputRepository.findByCompetitionIdAndTypeIn(competitionId, singletonList(formInputType));
+
+        if (!formInputs.isEmpty()) {
+            return serviceSuccess(formInputs.get(0).getQuestion());
         } else {
             return serviceFailure(notFoundError(Question.class, competitionId, formInputType));
         }

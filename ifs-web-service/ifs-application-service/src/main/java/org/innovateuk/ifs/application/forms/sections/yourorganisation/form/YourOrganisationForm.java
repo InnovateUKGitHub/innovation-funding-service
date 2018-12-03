@@ -1,47 +1,53 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 /**
  * Form used to capture "Your organisation" information
  */
 public class YourOrganisationForm {
 
-    private String postcode;
+    private OrganisationSize organisationSize;
+    private Long turnover;
+    private Long headcount;
+    private boolean stateAidEligibility;
 
-    public YourOrganisationForm(String postcode) {
-        this.postcode = postcode;
+    public YourOrganisationForm(OrganisationSize organisationSize, Long turnover, Long headcount, boolean stateAidEligibility) {
+        this.organisationSize = organisationSize;
+        this.turnover = turnover;
+        this.headcount = headcount;
+        this.stateAidEligibility = stateAidEligibility;
     }
 
-    YourOrganisationForm() {
+    public OrganisationSize getOrganisationSize() {
+        return organisationSize;
     }
 
-    public String getPostcode() {
-        return postcode;
+    public void setOrganisationSize(OrganisationSize organisationSize) {
+        this.organisationSize = organisationSize;
     }
 
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
+    public Long getTurnover() {
+        return turnover;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        YourOrganisationForm that = (YourOrganisationForm) o;
-
-        return new EqualsBuilder()
-                .append(postcode, that.postcode)
-                .isEquals();
+    public void setTurnover(Long turnover) {
+        this.turnover = turnover;
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(postcode)
-                .toHashCode();
+    public Long getHeadcount() {
+        return headcount;
+    }
+
+    public void setHeadcount(Long headcount) {
+        this.headcount = headcount;
+    }
+
+    public boolean isStateAidEligibility() {
+        return stateAidEligibility;
+    }
+
+    public void setStateAidEligibility(boolean stateAidEligibility) {
+        this.stateAidEligibility = stateAidEligibility;
     }
 }

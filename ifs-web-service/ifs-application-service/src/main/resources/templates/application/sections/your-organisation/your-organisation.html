@@ -52,7 +52,7 @@
                                 <input type="radio"
                                        class="govuk-radios__input"
                                        th:id="${'organisationSize-' + organisationSizeOption.name()}"
-                                       name="organisationSize"
+                                       th:field="organisationSize"
                                        th:value="${organisationSizeOption.name()}"
                                        required="required" data-required-errormessage="Please enter your organisation size."/>
                                 <label th:for="${'organisationSize-' + organisationSizeOption.name()}"
@@ -66,15 +66,12 @@
 
                 <div class="govuk-form-group">
                     <label class="govuk-label--s"
-                           for="formInput[1443]"
-                           id="form-label-1443">Turnover (£)</label>
+                           th:for="turnover">Turnover (£)</label>
 
                     <span class="govuk-hint">Your turnover from the last financial year.</span>
 
                     <input class="govuk-input govuk-input--width-10"
-                           id="formInput[1443]"
-                           name="formInput[1443]"
-                           value=""
+                           th:field="turnover"
                            pattern="[0-9]"
                            data-prevent-input-regex="[^0-9]"
                            required="required"
