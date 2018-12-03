@@ -159,7 +159,7 @@ Bank details submission
     And the user should not see the text in the page  The bank account details below are being reviewed
     When the user clicks the button/link              jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link               id = submit-bank-details
-    And the user should see the text in the page      The bank account details below are being reviewed
+    Then the user should see the element              jQuery = p:contains("The bank account details below are being")
     Then the user navigates to the page               ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element               jQuery = ul li.waiting:nth-child(4)
     When the user clicks the button/link              link = View the status of partners
@@ -187,18 +187,18 @@ Submission of bank details for academic user
     Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery = .govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
     When the user enters text to a text field      name = accountNumber   ${account_one}
     And the user enters text to a text field       name = sortCode  ${sortCode_one}
-    When the user selects the radio button         addressType  ADD_NEW
-    And the user enters text to a text field       id = addressForm.postcodeInput  BS14NT
-    And the user clicks the button/link            id = postcode-lookup
-    Then the user should see the element           css = #select-address-block
-    And the user clicks the button/link            css = #select-address-block > button
-    And the address fields should be filled
+    #When the user selects the radio button         addressType  ADD_NEW
+    #And the user enters text to a text field       id = addressForm.postcodeInput  BS14NT
+    #And the user clicks the button/link            id = postcode-lookup
+    #Then the user should see the element           css = #select-address-block
+    #And the user clicks the button/link            css = #select-address-block > button
+    #And the address fields should be filled
     When the user clicks the button/link           jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link            jquery = button:contains("Cancel")
     And the user should not see the text in the page  The bank account details below are being reviewed
     When the user clicks the button/link           jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link            id = submit-bank-details
-    And the user should see the text in the page   The bank account details below are being reviewed
+    And the user should see the element            jQuery = p:contains("The bank account details below are being")
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element            jQuery = ul li.complete:nth-child(1)
     When the user clicks the button/link           link = View the status of partners
@@ -235,18 +235,19 @@ Non lead partner submits bank details
     [Tags]  HappyPath
     When the user enters text to a text field      name = accountNumber  ${account_one}
     Then the user enters text to a text field      name = sortCode  ${sortCode_one}
-    When the user selects the radio button         addressType  ADD_NEW
-    Then the user enters text to a text field      id = addressForm.postcodeInput  BS14NT
-    And the user clicks the button/link            id = postcode-lookup
-    And the user clicks the button/link            jQuery = .govuk-button:contains("Use selected address")
-    And the address fields should be filled
+    #When the user selects the radio button         addressType  ADD_NEW
+    #Then the user enters text to a text field      id = addressForm.postcodeInput  BS14NT
+    #And the user clicks the button/link            id = postcode-lookup
+    #And the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    #And the user clicks the button/link            jQuery = .govuk-button:contains("Use selected address")
+    #And the address fields should be filled
     When the user clicks the button/link           jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link            jquery = button:contains("Cancel")
     Then the user should not see an error in the page
-    And the user should not see the text in the page  The bank account details below are being reviewed
+    And the user should not see the element        jQuery = p:contains("The bank account details below are being")
     When the user clicks the button/link           jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link            id = submit-bank-details
-    And the user should see the element            jQuery = p:contains("The bank account details below are being reviewed")
+    And the user should see the element            jQuery = p:contains("The bank account details below are being")
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element            css = ul li.complete:nth-child(1)
     When the user clicks the button/link           link = View the status of partners
