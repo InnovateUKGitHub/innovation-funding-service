@@ -36,7 +36,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -44,7 +43,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -189,39 +187,16 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
 
         Optional<User> existingUser = userRepository.findByEmail(targetEmail);
 
-        if (existingUser.isPresent()) {
-
-            List<Long> usersOrganisations = existingUser.map(organisationRepository::findDistinctByUsers)
-                    .map(organisations -> simpleMap(organisations, Organisation::getId))
-                    .orElse(emptyList());
-
-            if (usersOrganisations.isEmpty()) {
-                return serviceSuccess();
-            }
-
-            return existingUser.map(user ->
-                    validateUserIsInSameOrganisation(invite, usersOrganisations).andOnSuccess(() ->
-                            validateUserIsNotAlreadyPartnerInOrganisation(invite, user))).
-                    orElse(serviceSuccess());
-        } else {
-            return serviceSuccess();
-        }
-    }
-
-    private ServiceResult<Void> validateUserIsInSameOrganisation(ProjectInviteResource invite, List<Long> usersOrganisations) {
-
-        if (!usersOrganisations.contains(invite.getOrganisation())) {
-            return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION);
-        }
-
-        return serviceSuccess();
+        return existingUser.map(user ->
+                validateUserIsNotAlreadyPartnerInOrganisation(invite, user)).
+                orElse(serviceSuccess());
     }
 
     private ServiceResult<Void> validateUserIsNotAlreadyPartnerInOrganisation(ProjectInviteResource invite, User user) {
 
-        ProjectUser existingUserEntryForOrganisation = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(invite.getProject(), invite.getOrganisation(), user.getId(), PROJECT_PARTNER);
+        List<ProjectUser> existingUserEntryForOrganisation = projectUserRepository.findByProjectIdAndUserIdAndRole(invite.getProject(), user.getId(), PROJECT_PARTNER);
 
-        return existingUserEntryForOrganisation == null ? serviceSuccess() :
+        return existingUserEntryForOrganisation.isEmpty() ? serviceSuccess() :
                 serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_EXISTS_ON_PROJECT);
     }
 }
