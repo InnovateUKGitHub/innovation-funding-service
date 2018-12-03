@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+import static java.util.Arrays.asList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
@@ -36,7 +36,7 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     @Transactional
     public ServiceResult<ProjectDocumentResource> save(ProjectDocumentResource projectDocumentResource) {
 
-        return validateProjectDocument(projectDocumentResource).andOnSuccess(() -> {
+        return validateProjectDocument(asList(projectDocumentResource)).andOnSuccess(() -> {
 
             ProjectDocument projectDocument = projectDocumentMapper.mapToDomain(projectDocumentResource);
 
@@ -63,11 +63,6 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
             }
         }
         return true;
-    }
-
-    private ServiceResult<Void> validateProjectDocument(ProjectDocumentResource projectDocumentResource) {
-        List<ProjectDocumentResource> projectDocumentResources = Collections.singletonList(projectDocumentResource);
-        return validateProjectDocument(projectDocumentResources);
     }
 
     @Override
