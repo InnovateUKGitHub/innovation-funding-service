@@ -125,7 +125,7 @@ Bank details client side validations
     And the user moves focus away from the element       name = sortCode
     Then the user should not see the text in the page    Please enter a sort code.
     And the user should not see the text in the page     Please enter a valid sort code.
-    Then the user should see the text in the page        Search using a valid postcode or enter the address manually.
+    Then the user should see the text in the page        The first line of the address cannot be blank.
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282
@@ -133,11 +133,11 @@ Bank account postcode lookup
     When the user enters text to a text field    name = addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link          jQuery = .govuk-button:contains("Find UK address")
     Then the user should see the element         css = .govuk-form-group--error
-    When the user enters text to a text field    name = addressForm.postcodeInput    BS14NT/
+    When the user enters text to a text field    name = addressForm.postcodeInput    BS14NT
     And the user clicks the button/link          id = postcode-lookup
-    And the user selects the index from the drop-down menu  0  id=addressForm.selectedPostcodeIndex
-    And the user clicks the button/link          jQuery = button:contains("Submit bank account details")
-    And the address fields should be filled
+    And the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    #And the user clicks the button/link          jQuery = button:contains("Submit bank account details")
+    #And the address fields should be filled
 
 Bank details experian validations
     [Documentation]    INFUND-3010, INFUND-8688
