@@ -96,7 +96,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return validateInvite(invitedUser)
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(() -> validateStakeholderAlreadyPartOfCompetition(competitionId, invitedUser.getEmail()))
+                .andOnSuccess(() -> validateUserNotAlreadyStakeholderOnCompetition(competitionId, invitedUser.getEmail()))
                 .andOnSuccess(() -> getCompetition(competitionId))
                 .andOnSuccess(competition -> addOrInviteUser(competition, invitedUser)
                 );
@@ -115,7 +115,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         internalUserEmailDomain = StringUtils.defaultIfBlank(internalUserEmailDomain, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
         String domain = StringUtils.substringAfter(emailAddress, "@");
         emailAddress = emailAddress.toLowerCase();
-
+        // update this after IFS-4879 has been done
         if (emailAddress.contains("@innovateuk.ukri.org") || emailAddress.contains("@innovateuk.gov.uk") || /*for testing only*/ emailAddress.contains("@innovateuk.test") || internalUserEmailDomain.equalsIgnoreCase(domain)) {
             return serviceFailure(STAKEHOLDERS_CANNOT_BE_INTERNAL_USERS);
         }
@@ -129,7 +129,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 
-    private ServiceResult<Void> validateStakeholderAlreadyPartOfCompetition(long competitionId, String email) {
+    private ServiceResult<Void> validateUserNotAlreadyStakeholderOnCompetition(long competitionId, String email) {
         return stakeholderRepository.findStakeholders(competitionId).stream().anyMatch(s -> s.getUser().getEmail().equals(email)) ? serviceFailure(STAKEHOLDER_HAS_ACCEPTED_INVITE) : serviceSuccess();
     }
 
@@ -137,13 +137,11 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         Optional<User> user = userRepository.findByEmail(invitedUser.getEmail());
 
         if (user.isPresent()) {
-            addStakeholder(competition.getId(), user.get().getId());
+            return addStakeholder(competition.getId(), user.get().getId());
         } else {
-            saveInvite(invitedUser, competition)
+            return saveInvite(invitedUser, competition)
                     .andOnSuccess(stakeholderInvite -> sendStakeholderInviteNotification(stakeholderInvite, competition));
         }
-
-        return serviceSuccess();
     }
 
     private ServiceResult<StakeholderInvite> saveInvite(UserResource invitedUser, Competition competition) {
