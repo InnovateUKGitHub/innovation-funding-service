@@ -128,9 +128,9 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
 
         ServiceResult<List<UserResource>> pendingStakeholderInvites = findPendingStakeholderInvites(competitionId);
 
-        boolean s = pendingStakeholderInvites.getSuccess().stream().anyMatch(o -> o.getEmail() == invitedUser.getEmail());
+        boolean foundPendingInvite = pendingStakeholderInvites.getSuccess().stream().anyMatch(o -> o.getEmail() == invitedUser.getEmail());
 
-        return s ? serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess();
+        return foundPendingInvite ? serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess();
     }
 
     private ServiceResult<Void> validateUserNotAlreadyStakeholderOnCompetition(long competitionId, String email) {
@@ -141,17 +141,11 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         Optional<User> user = userRepository.findByEmail(invitedUser.getEmail());
 
         if (user.isPresent()) {
-            return addStakeholderRole(user.get()).andOnSuccess(u -> addStakeholder(competition.getId(), user.get().getId()));
+            return addStakeholder(competition.getId(), user.get().getId());
         } else {
             return saveInvite(invitedUser, competition)
                     .andOnSuccess(stakeholderInvite -> sendStakeholderInviteNotification(stakeholderInvite, competition));
         }
-    }
-
-    private ServiceResult<User> addStakeholderRole(User user){
-        user.addRole(Role.STAKEHOLDER);
-        User user1 = userRepository.save(user);
-        return serviceSuccess(user1);
     }
 
 
@@ -236,6 +230,8 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
                                 notFoundError(User.class, stakeholderUserId))
                                 .andOnSuccess(stakeholder -> {
                                     Stakeholder savedStakeholder = stakeholderRepository.save(new Stakeholder(competition, stakeholder));
+                                    stakeholder.addRole(Role.STAKEHOLDER);
+                                    userRepository.save(stakeholder);
                                     return sendAddStakeholderNotification(savedStakeholder, competition);
                                 })
                 );
