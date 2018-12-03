@@ -14,7 +14,7 @@ Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
 ${openProgrammeCompetitionName}  Photonics for All
 ${openProgrammeCompetitionId}    ${competition_ids['${openProgrammeCompetitionName}']}
 ${stakeholderEmail}              stakeHolder@test.com
-${applicantEmail}                steve.smith@empire.com
+${applicantEmail}                louis.morgan@example.com
 ${previousStakeholderEmail}      blake.wood@gmail.com
 
 *** Test Cases ***
@@ -44,7 +44,7 @@ The internal user can invite an applicant who already has an account
     [Tags]
     Given the user enters the correct details of applicant
     When the user clicks the button/link    jQuery = a:contains("Added to competition")
-    Then the user should see the element    jQuery = td:contains("Steve Smith") ~ td:contains("steve.smith@empire.com") ~ td:contains("Added")
+    Then the user should see the element    jQuery = td:contains("Louis Morgan") ~ td:contains("${applicantEmail}") ~ td:contains("Added")
 
 
 The internal user can invite an assessor who is already a stakeholder
@@ -56,7 +56,7 @@ The internal user can invite an assessor who is already a stakeholder
     And the user enters the correct details of a current stakeholder
     Then the user should not see the element    jQuery = td:contains("Blake Wood")
     When the user clicks the button/link    jQuery = a:contains("Added to competition")
-    Then the user should see the element    jQuery = td:contains("Blake Wood") ~ td:contains("blake.wood@gmail.com") ~ td:contains("Added")
+    Then the user should see the element    jQuery = td:contains("Blake Wood") ~ td:contains("${previousStakeholderEmail}") ~ td:contains("Added")
 
 The internal user invites a new Stakeholder
     [Documentation]  IFS-4190
@@ -64,7 +64,7 @@ The internal user invites a new Stakeholder
     Given the user opens the new invite tab
     And the user enters the correct details of a Stakeholder
     When the user clicks the button/link    jQuery = a:contains("Added to competition")
-    Then the user should see the element    jQuery = td:contains("Stake Holder") ~ td:contains("stakeHolder@test.com") ~ td:contains("Invite pending")
+    Then the user should see the element    jQuery = td:contains("Stake Holder") ~ td:contains("${stakeholderEmail}") ~ td:contains("Invite pending")
     [Teardown]  logout as user
 
 Check existing applicant is emailed and directed to sign in
@@ -199,8 +199,8 @@ the user enters the correct details of a Stakeholder
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
 
 the user enters the correct details of applicant
-    the user enters text to a text field    id = firstName     Steve
-    the user enters text to a text field    id = lastName      Smith
+    the user enters text to a text field    id = firstName     Louis
+    the user enters text to a text field    id = lastName      Morgan
     the user enters text to a text field    id = emailAddress  ${applicantEmail}
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
 
