@@ -25,7 +25,7 @@ public final class RoleSelectionViewModel {
 
     public String roleDescription(String role) {
 
-        String description ="";
+        String description= "";
 
         Map<String, String> roleDescription = new HashMap<>();
 
@@ -33,14 +33,9 @@ public final class RoleSelectionViewModel {
         roleDescription.put("Assessor", "Review the applications you have been invited to assess.");
         roleDescription.put("Stakeholder", "View the competitions you have been invited to oversee.");
 
-        if (role.equals("Applicant")) {
-            description = roleDescription.get("Applicant");
-        } else if (role.equals("Assessor")) {
-            description = roleDescription.get("Assessor");
-        } else if (role.equals("Stakeholder")) {
-            description = roleDescription.get("Stakeholder");
+        if (roleDescription.containsKey(role)) {
+            description = roleDescription.get(role);
         }
-
         return description;
     }
 }
