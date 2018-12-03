@@ -50,10 +50,17 @@ public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTe
     }
 
     @Test
+    public void addWithResponse() {
+        LabourCost costToUpdate = new LabourCost();
+        String expectedUrl = costRestURL + "/add-with-response/123";
+        setupPostWithRestResultExpectations(expectedUrl, FinanceRowItem.class, costToUpdate, new LabourCost(), HttpStatus.OK);
+        service.addWithResponse(123L, costToUpdate).getSuccess();
+    }
+
+    @Test
     public void test_delete_byCostId() {
-        setupDeleteWithRestResultExpectations(costRestURL + "/456/organisation/789/delete/123");
-        service.delete(456L, 789L, 123L);
-        setupDeleteWithRestResultVerifications(costRestURL + "/456/organisation/789/delete/123");
+        setupDeleteWithRestResultExpectations(costRestURL + "/delete/456");
+        service.delete(456L);
     }
 
     @Test

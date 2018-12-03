@@ -6,14 +6,11 @@ import org.innovateuk.ifs.assessment.profile.form.AssessorProfileAppointmentForm
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileFamilyAffiliationForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDeclarationFormPopulator;
-import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.populator.AssessorProfileDeclarationModelPopulator;
 import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
-import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +32,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
@@ -68,11 +64,8 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
     @Mock
     private UserService userService;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
-
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
         ReflectionTestUtils.setField(controller, "validator", validator);

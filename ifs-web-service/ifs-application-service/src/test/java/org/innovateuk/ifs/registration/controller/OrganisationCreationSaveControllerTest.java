@@ -62,8 +62,8 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     private OrganisationCreationForm organisationForm;
 
     @Before
-    public void setup(){
-        super.setUp();
+    public void setupForms() {
+
         setLoggedInUser(null);
 
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);

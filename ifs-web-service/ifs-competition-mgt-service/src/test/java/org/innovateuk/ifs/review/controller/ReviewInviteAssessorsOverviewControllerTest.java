@@ -79,10 +79,8 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
 
     private ReviewInviteStatisticsResource inviteStatistics;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()

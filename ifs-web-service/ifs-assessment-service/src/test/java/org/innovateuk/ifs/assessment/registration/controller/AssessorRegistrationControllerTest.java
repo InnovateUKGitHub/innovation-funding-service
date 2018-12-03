@@ -71,11 +71,8 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     @Mock
     private CompetitionInviteRestService competitionInviteRestService;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
-
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
         ReflectionTestUtils.setField(controller, "validator", validator);
