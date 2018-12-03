@@ -39,18 +39,16 @@
             <th:block th:if="${!commonFinancesModel.readOnly}" >
                 <div class="govuk-!-margin-top-6">
                     <th:block th:unless="${commonFinancesModel.readOnly}">
+
                         <p class="govuk-body">Where will most of the project work take place?</p>
-                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'govuk-form-group--error'">
-                            <label class="govuk-label govuk-label--s" for="postcode">
-                                Postcode
-                            </label>
-                            <th:block th:if="${#fields.hasErrors('postcode')}">
-                                <span class="govuk-error-message" th:each="err : ${#fields.errors('postcode')}" th:text="${err}"></span>
-                            </th:block>
-                            <input class="govuk-input govuk-input--width-10" id="postcode"
-                                   th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
-                                   type="text" name="postcode" th:value="${form.postcode}" />
-                        </div>
+
+                        <th:block th:insert="fragments/textfields ::
+                            textfield(
+                                label='Postcode',
+                                id='postcode',
+                                value=${form.postcode}
+                                )" />
+
                     </th:block>
                 </div>
             </th:block>

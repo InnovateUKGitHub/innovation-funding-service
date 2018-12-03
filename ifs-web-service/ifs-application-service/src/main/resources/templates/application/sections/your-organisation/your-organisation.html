@@ -47,12 +47,16 @@
                         <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank">
                             EU definition (opens in a new window)</a> for guidance.</span>
 
+                        <th:block th:if="${#fields.hasErrors('organisationSize')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>
+                        </th:block>
+
                         <div class="govuk-radios">
                             <div class="govuk-radios__item" th:each="organisationSizeOption : ${model.organisationSizeOptions}">
                                 <input type="radio"
                                        class="govuk-radios__input"
                                        th:id="${'organisationSize-' + organisationSizeOption.name()}"
-                                       th:field="organisationSize"
+                                       th:field="${form.organisationSize}"
                                        th:value="${organisationSizeOption.name()}"
                                        required="required" data-required-errormessage="Please enter your organisation size."/>
                                 <label th:for="${'organisationSize-' + organisationSizeOption.name()}"
@@ -64,39 +68,21 @@
                     </fieldset>
                 </div>
 
-                <div class="govuk-form-group">
-                    <label class="govuk-label--s"
-                           th:for="turnover">Turnover (£)</label>
+                <th:block th:insert="fragments/textfields ::
+                    textfield-integer(
+                        label='Turnover (£)',
+                        hint='Your turnover from the last financial year.',
+                        id='turnover',
+                        value=${form.turnover}
+                        )" />
 
-                    <span class="govuk-hint">Your turnover from the last financial year.</span>
-
-                    <input class="govuk-input govuk-input--width-10"
-                           th:field="turnover"
-                           pattern="[0-9]"
-                           data-prevent-input-regex="[^0-9]"
-                           required="required"
-                           min="0"
-                           type="number" />
-                </div>
-
-                <div class="govuk-form-group">
-                    <label class="govuk-label--s"
-                           for="formInput[1444]"
-                           id="form-label-1444">Full time employees</label>
-
-                    <span class="govuk-hint">Number of full time employees at your organisation.</span>
-
-                    <input class="govuk-input govuk-input--width-10"
-                           type="number"
-                           id="formInput[1444]"
-                           name="formInput[1444]"
-                           pattern="[0-9]"
-                           data-prevent-input-regex="[^0-9]"
-                           min="0"
-                           max="2147483647"
-                           value=""
-                           required="required" />
-                </div>
+                <th:block th:insert="fragments/textfields ::
+                    textfield-integer(
+                        label='Full time employees',
+                        hint='Number of full time employees at your organisation.',
+                        id='headCount',
+                        value=${form.headCount}
+                        )" />
 
                 <div class="agree-to-terms-container">
                     <div class="govuk-form-group">

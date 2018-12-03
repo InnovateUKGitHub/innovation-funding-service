@@ -9,13 +9,13 @@ public class YourOrganisationForm {
 
     private OrganisationSize organisationSize;
     private Long turnover;
-    private Long headcount;
+    private Long headCount;
     private boolean stateAidEligibility;
 
-    public YourOrganisationForm(OrganisationSize organisationSize, Long turnover, Long headcount, boolean stateAidEligibility) {
+    public YourOrganisationForm(OrganisationSize organisationSize, Long turnover, Long headCount, boolean stateAidEligibility) {
         this.organisationSize = organisationSize;
         this.turnover = turnover;
-        this.headcount = headcount;
+        this.headCount = headCount;
         this.stateAidEligibility = stateAidEligibility;
     }
 
@@ -35,12 +35,12 @@ public class YourOrganisationForm {
         this.turnover = turnover;
     }
 
-    public Long getHeadcount() {
-        return headcount;
+    public Long getHeadCount() {
+        return headCount;
     }
 
-    public void setHeadcount(Long headcount) {
-        this.headcount = headcount;
+    public void setHeadCount(Long headCount) {
+        this.headCount = headCount;
     }
 
     public boolean isStateAidEligibility() {
