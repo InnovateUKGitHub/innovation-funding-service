@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competitionsetup.stakeholder.populator.ManageStakehold
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,11 +19,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDERS_CANNOT_BE_INTERNAL_USERS;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
@@ -113,11 +109,6 @@ public class CompetitionSetupStakeholderController {
 
         competitionSetupStakeholderRestService.removeStakeholder(competitionId, stakeholderUserId);
         return "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + ADDED_TAB;
-    }
-
-    private boolean isUserAlreadyStakeholderOnCompetition(long competitionId, UserResource userResource) {
-        List<UserResource> competitionStakeholders = competitionSetupStakeholderRestService.findStakeholders(competitionId).getSuccess();
-        return competitionStakeholders.contains(userResource);
     }
 
     private ValidationHandler handleInviteStakeholderErrors(RestResult<Void> saveResult, ValidationHandler validationHandler) {

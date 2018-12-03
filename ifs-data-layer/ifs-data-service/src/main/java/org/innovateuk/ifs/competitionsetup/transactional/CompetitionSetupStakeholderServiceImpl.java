@@ -129,14 +129,14 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 
-    private ServiceResult<Void> validateStakeholderAlreadyPartOfCompetition (long competitionId, String email){
-        return stakeholderRepository.findStakeholders(competitionId).stream().anyMatch(s -> s.getUser().getEmail().equals(email)) ? serviceFailure(STAKEHOLDER_HAS_ACCEPTED_INVITE) : serviceSuccess() ;
+    private ServiceResult<Void> validateStakeholderAlreadyPartOfCompetition(long competitionId, String email) {
+        return stakeholderRepository.findStakeholders(competitionId).stream().anyMatch(s -> s.getUser().getEmail().equals(email)) ? serviceFailure(STAKEHOLDER_HAS_ACCEPTED_INVITE) : serviceSuccess();
     }
 
-    private ServiceResult<Void> addOrInviteUser(Competition competition, UserResource invitedUser){
+    private ServiceResult<Void> addOrInviteUser(Competition competition, UserResource invitedUser) {
         Optional<User> user = userRepository.findByEmail(invitedUser.getEmail());
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             addStakeholder(competition.getId(), user.get().getId());
         } else {
             saveInvite(invitedUser, competition)
