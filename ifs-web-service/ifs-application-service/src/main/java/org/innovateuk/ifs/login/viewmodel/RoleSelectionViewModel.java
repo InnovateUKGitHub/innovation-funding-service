@@ -12,9 +12,9 @@ public final class RoleSelectionViewModel {
 
     private final List<Role> acceptedRoles;
 
-    private static final String APPLICANT_ROLE_DESCRIPTION = "Manage your applications and projects.";
-    private static final String ASSESSOR_ROLE_DESCRIPTION = "Review the applications you have been invited to assess.";
-    private static final String STAKEHOLDER_ROLE_DESCRIPTION = "View the competitions you have been invited to oversee.";
+    public static final String APPLICANT_ROLE_DESCRIPTION = "Manage your applications and projects.";
+    public static final String ASSESSOR_ROLE_DESCRIPTION = "Review the applications you have been invited to assess.";
+    public static final String STAKEHOLDER_ROLE_DESCRIPTION = "View the competitions you have been invited to oversee.";
 
     public RoleSelectionViewModel(UserResource user) {
         acceptedRoles = user.getRoles();

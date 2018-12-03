@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.login.controller.viewModel;
+package org.innovateuk.ifs.login.viewModel;
 
 import org.innovateuk.ifs.login.viewmodel.RoleSelectionViewModel;
 import org.innovateuk.ifs.user.resource.Role;
@@ -13,9 +13,11 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class RoleSelectionViewModelTest {
@@ -35,6 +37,13 @@ public class RoleSelectionViewModelTest {
         assertTrue(viewModel.getAcceptedRoles().contains(STAKEHOLDER));
         assertTrue(viewModel.getAcceptedRoles().contains(APPLICANT));
         assertTrue(viewModel.getAcceptedRoles().contains(ASSESSOR));
+    }
+
+    @Test
+    public void getRoleDescription(){
+        assertThat(viewModel.getRoleDescription(APPLICANT.getDisplayName()), is(equalTo(RoleSelectionViewModel.APPLICANT_ROLE_DESCRIPTION)));
+        assertThat(viewModel.getRoleDescription(ASSESSOR.getDisplayName()), is(equalTo(RoleSelectionViewModel.ASSESSOR_ROLE_DESCRIPTION)));
+        assertThat(viewModel.getRoleDescription(STAKEHOLDER.getDisplayName()), is(equalTo(RoleSelectionViewModel.STAKEHOLDER_ROLE_DESCRIPTION)));
     }
 
 }
