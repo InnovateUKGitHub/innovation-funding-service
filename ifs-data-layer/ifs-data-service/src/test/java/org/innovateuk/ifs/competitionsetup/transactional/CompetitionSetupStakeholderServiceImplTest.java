@@ -114,21 +114,31 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void inviteStakeholderWhenUserAlreadyInvited() throws Exception {
+    public void inviteAlreadyInvitedStakeholderFailure() throws Exception {
 
-        StakeholderInvite stakeholderInvite = new StakeholderInvite();
+        long competitionId = 1L;
 
-        when(stakeholderInviteRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(stakeholderInvite));
+        String user1Name = "Rayon Kevin";
+        String user2Name = "Sonal Dsilva";
+        String user1Email = "Rayon.Kevin@gmail.com";
+        String user2Email = "Sonal.Dsilva@gmail.com";
+        List<StakeholderInvite> pendingStakeholderInvites = StakeholderInviteBuilder.newStakeholderInvite()
+                .withName(user1Name, user2Name)
+                .withEmail(user1Email, user2Email)
+                .build(2);
+
+        when(stakeholderInviteRepositoryMock.findByCompetitionIdAndStatus(competitionId, SENT)).thenReturn(pendingStakeholderInvites);
 
         ServiceResult<Void> result = service.inviteStakeholder(invitedUser, 1L);
+
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED));
         verify(stakeholderInviteRepositoryMock, never()).save(any(StakeholderInvite.class));
-
+        verify(stakeholderInviteRepositoryMock).findByCompetitionIdAndStatus(competitionId, SENT);
     }
 
     @Test
-    public void inviteStakeholderAlreadyPartOfCompetitionFailure() {
+    public void inviteUserNotAlreadyStakeholderOnCompetitionFailure() {
 
         long competitionId = 1L;
         long stakeholderUser1 = 12L;

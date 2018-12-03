@@ -22,6 +22,7 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -95,7 +96,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
 
         return validateInvite(invitedUser)
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
-                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
+                .andOnSuccess(() -> validateUserNotPendingInvite(competitionId, invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyStakeholderOnCompetition(competitionId, invitedUser.getEmail()))
                 .andOnSuccess(() -> getCompetition(competitionId))
                 .andOnSuccess(competition -> addOrInviteUser(competition, invitedUser)
@@ -123,10 +124,13 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource invitedUser) {
+    private ServiceResult<Void> validateUserNotPendingInvite(long competitionId, UserResource invitedUser) {
 
-        List<StakeholderInvite> existingInvites = stakeholderInviteRepository.findByEmail(invitedUser.getEmail());
-        return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED);
+        ServiceResult<List<UserResource>> pendingStakeholderInvites = findPendingStakeholderInvites(competitionId);
+
+        boolean s = pendingStakeholderInvites.getSuccess().stream().anyMatch(o -> o.getEmail() == invitedUser.getEmail());
+
+        return s ? serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess();
     }
 
     private ServiceResult<Void> validateUserNotAlreadyStakeholderOnCompetition(long competitionId, String email) {
@@ -137,12 +141,19 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         Optional<User> user = userRepository.findByEmail(invitedUser.getEmail());
 
         if (user.isPresent()) {
-            return addStakeholder(competition.getId(), user.get().getId());
+            return addStakeholderRole(user.get()).andOnSuccess(u -> addStakeholder(competition.getId(), user.get().getId()));
         } else {
             return saveInvite(invitedUser, competition)
                     .andOnSuccess(stakeholderInvite -> sendStakeholderInviteNotification(stakeholderInvite, competition));
         }
     }
+
+    private ServiceResult<User> addStakeholderRole(User user){
+        user.addRole(Role.STAKEHOLDER);
+        User user1 = userRepository.save(user);
+        return serviceSuccess(user1);
+    }
+
 
     private ServiceResult<StakeholderInvite> saveInvite(UserResource invitedUser, Competition competition) {
 
