@@ -862,13 +862,13 @@ check if project manager, project address and finance contact fields are editabl
     check if finance contact can be changed
 
 check if project address can be changed
-    the user clicks the button/link                    jQuery = a:contains("Project address")
-    the user selects the radio button                  addressType  address-use-operating
-    the user clicks the button/link                    jQuery = button:contains("Save")
-    the user clicks the button/link                    jQuery = a:contains("Project address")
-    the user sees that the radio button is selected    addressType  address-use-operating
-    the user selects the radio button                  addressType  address-use-org
-    the user clicks the button/link                    jQuery = button:contains("Save")
+    the user clicks the button/link                    jQuery = a:contains("Correspondence address")
+    #the user selects the radio button                  addressType  address-use-operating
+    the user clicks the button/link                    jQuery = button:contains("Save address")
+    #the user clicks the button/link                    jQuery = a:contains("Correspondence address")
+    #the user sees that the radio button is selected    addressType  address-use-operating
+    #the user selects the radio button                  addressType  address-use-org
+    #the user clicks the button/link                    jQuery = button:contains("Save")
 
 check if project manager can be changed
     the user clicks the button/link                    jQuery = a:contains("Project Manager")
