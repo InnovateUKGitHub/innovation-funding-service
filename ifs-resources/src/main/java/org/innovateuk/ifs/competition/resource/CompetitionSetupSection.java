@@ -17,6 +17,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  * It is used when recording which sections are marked as complete during the competition setup process.
  */
 public enum CompetitionSetupSection {
+
     HOME(1L, "home", "Home Page", emptyList(), false),
     INITIAL_DETAILS(2L, "initial", "Initial details", emptyList(), true),
     TERMS_AND_CONDITIONS(9L, "terms-and-conditions", "Terms and conditions", emptyList(), false),

@@ -12,8 +12,8 @@ public class GeneralSetupViewModel {
 
     private static final List<CompetitionSetupSection> PUBLISH_SECTIONS = asList(
             CompetitionSetupSection.INITIAL_DETAILS,
-            CompetitionSetupSection.CONTENT,
-            CompetitionSetupSection.COMPLETION_STAGE);
+            CompetitionSetupSection.COMPLETION_STAGE,
+            CompetitionSetupSection.CONTENT);
 
     private static final List<CompetitionSetupSection> COMPETITION_SETUP_SECTIONS = asList(
             CompetitionSetupSection.TERMS_AND_CONDITIONS,
