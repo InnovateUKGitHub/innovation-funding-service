@@ -12,26 +12,25 @@ public final class RoleSelectionViewModel {
 
     private final List<Role> acceptedRoles;
 
-    public static final String APPLICANT_ROLE_DESCRIPTION = "Manage your applications and projects.";
-    public static final String ASSESSOR_ROLE_DESCRIPTION = "Review the applications you have been invited to assess.";
-    public static final String STAKEHOLDER_ROLE_DESCRIPTION = "View the competitions you have been invited to oversee.";
+    static final String APPLICANT_ROLE_DESCRIPTION = "Manage your applications and projects.";
+    static final String ASSESSOR_ROLE_DESCRIPTION = "Review the applications you have been invited to assess.";
+    static final String STAKEHOLDER_ROLE_DESCRIPTION = "View the competitions you have been invited to oversee.";
 
     public RoleSelectionViewModel(UserResource user) {
         acceptedRoles = user.getRoles();
-        getRoleDescription(user.getRolesString());
     }
 
     public List<Role> getAcceptedRoles() {
         return acceptedRoles;
     }
 
-    public String getRoleDescription(String role){
+    public String getRoleDescription(Role role){
 
-        if (role.equals("Applicant")){
+        if (role.equals(Role.APPLICANT)){
             return APPLICANT_ROLE_DESCRIPTION;
-        } else if(role.equals("Assessor")){
+        } else if(role.equals(Role.ASSESSOR)){
             return ASSESSOR_ROLE_DESCRIPTION;
-        } else if(role.equals("Stakeholder")){
+        } else if(role.equals(Role.STAKEHOLDER)){
             return STAKEHOLDER_ROLE_DESCRIPTION;
         } else return "";
     }

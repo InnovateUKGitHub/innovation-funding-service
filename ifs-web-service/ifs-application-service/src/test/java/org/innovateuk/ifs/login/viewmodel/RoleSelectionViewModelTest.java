@@ -1,6 +1,5 @@
-package org.innovateuk.ifs.login.viewModel;
+package org.innovateuk.ifs.login.viewmodel;
 
-import org.innovateuk.ifs.login.viewmodel.RoleSelectionViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -38,12 +37,11 @@ public class RoleSelectionViewModelTest {
         assertTrue(viewModel.getAcceptedRoles().contains(APPLICANT));
         assertTrue(viewModel.getAcceptedRoles().contains(ASSESSOR));
     }
-
     @Test
     public void getRoleDescription(){
-        assertThat(viewModel.getRoleDescription(APPLICANT.getDisplayName()), is(equalTo(RoleSelectionViewModel.APPLICANT_ROLE_DESCRIPTION)));
-        assertThat(viewModel.getRoleDescription(ASSESSOR.getDisplayName()), is(equalTo(RoleSelectionViewModel.ASSESSOR_ROLE_DESCRIPTION)));
-        assertThat(viewModel.getRoleDescription(STAKEHOLDER.getDisplayName()), is(equalTo(RoleSelectionViewModel.STAKEHOLDER_ROLE_DESCRIPTION)));
+        assertThat(viewModel.getRoleDescription(Role.APPLICANT), is(equalTo(RoleSelectionViewModel.APPLICANT_ROLE_DESCRIPTION)));
+        assertThat(viewModel.getRoleDescription(Role.ASSESSOR), is(equalTo(RoleSelectionViewModel.ASSESSOR_ROLE_DESCRIPTION)));
+        assertThat(viewModel.getRoleDescription(Role.STAKEHOLDER), is(equalTo(RoleSelectionViewModel.STAKEHOLDER_ROLE_DESCRIPTION)));
     }
 
 }
