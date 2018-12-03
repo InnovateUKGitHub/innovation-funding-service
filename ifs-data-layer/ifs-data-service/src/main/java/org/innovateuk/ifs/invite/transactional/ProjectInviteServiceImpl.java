@@ -196,7 +196,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
                     .orElse(emptyList());
 
             if (usersOrganisations.isEmpty()) {
-                serviceSuccess();
+                return serviceSuccess();
             }
 
             return existingUser.map(user ->
