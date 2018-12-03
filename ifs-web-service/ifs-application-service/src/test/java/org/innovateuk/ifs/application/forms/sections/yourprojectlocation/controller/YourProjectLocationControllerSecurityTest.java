@@ -4,8 +4,12 @@ import org.innovateuk.ifs.security.BaseControllerSecurityTest;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 
 public class YourProjectLocationControllerSecurityTest extends BaseControllerSecurityTest<YourProjectLocationController> {
 
@@ -16,8 +20,11 @@ public class YourProjectLocationControllerSecurityTest extends BaseControllerSec
 
     @Test
     public void testViewPage() {
-        assertRolesCanPerform(() -> classUnderTest.viewPage(0L, 0L, 0L, null, null),
-                combineLists(APPLICANT, Role.internalRoles()));
+        List<Role> roles = new ArrayList<>(internalRoles());
+        roles.add(APPLICANT);
+        roles.add(STAKEHOLDER);
+
+        assertRolesCanPerform(() -> classUnderTest.viewPage(0L, 0L, 0L, null, null), roles);
     }
 
     @Test

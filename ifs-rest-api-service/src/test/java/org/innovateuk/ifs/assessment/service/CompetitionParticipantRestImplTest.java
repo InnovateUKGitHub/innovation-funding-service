@@ -33,8 +33,8 @@ public class CompetitionParticipantRestImplTest extends BaseRestServiceUnitTest<
             return cpr;
         }).collect(Collectors.toList());
 
-        setupGetWithRestResultExpectations(String.format("%s/user/%s/role/%s", restUrl, 1L, ASSESSOR), competitionParticipantResourceListType(), expected, OK);
-        List<CompetitionParticipantResource> actual = service.getParticipants(1L, ASSESSOR).getSuccess();
+        setupGetWithRestResultExpectations(String.format("%s/user/%s", restUrl, 1L), competitionParticipantResourceListType(), expected, OK);
+        List<CompetitionParticipantResource> actual = service.getAssessorParticipants(1L).getSuccess();
         assertEquals(expected, actual);
     }
 }
