@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +14,9 @@ public class CompetitionParticipantRestServiceImpl extends BaseRestService imple
     private static final String COMPETITION_PARTICIPANT_REST_URL = "/competitionparticipant";
 
     @Override
-    public RestResult<List<CompetitionParticipantResource>> getParticipants(Long userId, CompetitionParticipantRoleResource role) {
+    public RestResult<List<CompetitionParticipantResource>> getAssessorParticipants(long userId) {
         return getWithRestResult(
-                String.format("%s/user/%s/role/%s", COMPETITION_PARTICIPANT_REST_URL, userId, role),
+                String.format("%s/user/%s", COMPETITION_PARTICIPANT_REST_URL, userId),
                 ParameterizedTypeReferences.competitionParticipantResourceListType()
         );
     }

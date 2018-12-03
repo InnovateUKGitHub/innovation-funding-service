@@ -172,8 +172,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void onlyInnovationLeadAssignedCompetitionForApplicationCanAccessApplication() {
-        assertTrue(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadOnApplication1));
-        assertFalse(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadUser()));
+        assertTrue(rules.innovationLeadAssignedToCompetitionCanViewApplications(applicationResource1, innovationLeadOnApplication1));
+        assertFalse(rules.innovationLeadAssignedToCompetitionCanViewApplications(applicationResource1, innovationLeadUser()));
     }
 
     @Test
@@ -198,13 +198,32 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     user.hasRole(PROJECT_FINANCE) ||
                     user.hasRole(SUPPORT) ||
                     user.hasRole(INNOVATION_LEAD) ||
-                    user.hasRole(STAKEHOLDER) ||
                     user.hasRole(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
             } else {
                 assertFalse(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
             }
         });
+    }
+
+    @Test
+    public void stakeholdersCanSeeTheResearchParticipantPercentageInApplications() {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+        assertTrue(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user2));
+        assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user3));
+    }
+
+    @Test
+    public void stakeholdersCanSeeApplicationFinancesTotals() {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+        assertTrue(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user2));
+        assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user3));
     }
 
     @Test

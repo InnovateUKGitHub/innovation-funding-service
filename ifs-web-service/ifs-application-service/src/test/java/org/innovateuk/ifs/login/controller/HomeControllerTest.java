@@ -32,8 +32,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpCookies() {
         setupCookieUtil(cookieUtil);
     }
 

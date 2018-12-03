@@ -124,6 +124,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
             verify(projectPermissionRules).internalUsersCanViewProjects(project, getLoggedInUser());
             verify(projectPermissionRules).monitoringOfficerOnProjectCanView(project, getLoggedInUser());
+            verify(projectPermissionRules).stakeholdersCanViewProjects(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }

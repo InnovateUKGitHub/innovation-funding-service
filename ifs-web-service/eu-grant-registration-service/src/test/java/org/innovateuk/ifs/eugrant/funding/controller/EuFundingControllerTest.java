@@ -11,7 +11,6 @@ import org.innovateuk.ifs.eugrant.funding.form.EuFundingForm;
 import org.innovateuk.ifs.eugrant.funding.populator.EuFundingFormPopulator;
 import org.innovateuk.ifs.eugrant.funding.saver.EuFundingSaver;
 import org.innovateuk.ifs.eugrant.overview.service.EuGrantCookieService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,7 +30,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class EuFundingControllerTest extends BaseControllerMockMVCTest<EuFundingController> {
-
 
     @Mock
     private EuGrantCookieService euGrantCookieService;
@@ -55,11 +53,6 @@ public class EuFundingControllerTest extends BaseControllerMockMVCTest<EuFunding
     @Override
     protected EuFundingController supplyControllerUnderTest() {
         return new EuFundingController();
-    }
-
-    @Before
-    public void setUp() {
-        super.setUp();
     }
 
     @Test

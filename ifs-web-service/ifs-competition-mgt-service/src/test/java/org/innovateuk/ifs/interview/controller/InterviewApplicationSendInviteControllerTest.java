@@ -98,10 +98,8 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
     @Mock
     private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()
