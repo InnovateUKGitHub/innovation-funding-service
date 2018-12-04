@@ -61,7 +61,7 @@ Project Finance can see the address with score
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Address
-    And the user should see the text in the page     Montrose House 1, Neston, CH64 3RU  #In order to update this the 'Partner fills in his bank details' will need to be formularised.
+    And the user should see the element              jQuery = td:contains("Address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
     And the user should see the element              jQuery = tr:nth-child(4) td:nth-child(3):contains("7 / 9")
 
 Project Finance has the options to edit the details and to approve the bank details

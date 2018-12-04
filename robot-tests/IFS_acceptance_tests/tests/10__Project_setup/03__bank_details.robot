@@ -125,7 +125,7 @@ Bank details client side validations
     And the user moves focus away from the element       name = sortCode
     Then the user should not see the text in the page    Please enter a sort code.
     And the user should not see the text in the page     Please enter a valid sort code.
-    Then the user should see the text in the page        The first line of the address cannot be blank.
+    Then The user should see the element                 jQuery = span:contains("The first line of the address cannot be blank.")
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282
