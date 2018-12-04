@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestSer
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.stakeholder.form.InviteStakeholderForm;
 import org.innovateuk.ifs.competitionsetup.stakeholder.populator.ManageStakeholderModelPopulator;
+import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -88,7 +89,7 @@ public class CompetitionSetupStakeholderController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             InviteUserResource inviteUserResource = constructInviteUserResource(form);
             RestResult<Void> saveResult = competitionSetupStakeholderRestService.inviteStakeholder(inviteUserResource, competitionId);
-            return handleInviteStakeholderErrors(saveResult, validationHandler).
+            return handleInviteStakeholderErrors(saveResult, validationHandler, form).
                     failNowOrSucceedWith(failureView, () -> "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + tab);
         });
     }
@@ -111,8 +112,13 @@ public class CompetitionSetupStakeholderController {
         return "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + ADDED_TAB;
     }
 
-    private ValidationHandler handleInviteStakeholderErrors(RestResult<Void> saveResult, ValidationHandler validationHandler) {
-        return validationHandler.addAnyErrors(saveResult, mappingErrorKeyToField(STAKEHOLDER_INVITE_INVALID_EMAIL, "emailAddress"), fieldErrorsToFieldErrors(), asGlobalErrors());
+    private ValidationHandler handleInviteStakeholderErrors(RestResult<Void> saveResult, ValidationHandler validationHandler, InviteStakeholderForm form) {
+        if (saveResult.getErrors().size() > 0) {
+            ErrorToObjectErrorConverter error = mappingErrorKeyToField(saveResult.getErrors().get(0).getErrorKey(), "emailAddress");
+            return validationHandler.addAnyErrors(saveResult, error, fieldErrorsToFieldErrors(), asGlobalErrors());
+        } else {
+            return validationHandler;
+        }
     }
 
     private InviteUserResource constructInviteUserResource(InviteStakeholderForm form) {

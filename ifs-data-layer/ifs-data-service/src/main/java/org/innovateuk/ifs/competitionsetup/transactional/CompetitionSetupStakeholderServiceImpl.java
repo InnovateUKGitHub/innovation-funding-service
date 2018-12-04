@@ -116,7 +116,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         internalUserEmailDomain = StringUtils.defaultIfBlank(internalUserEmailDomain, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
         String domain = StringUtils.substringAfter(emailAddress, "@");
         emailAddress = emailAddress.toLowerCase();
-        // update this after IFS-4879 has been done
+        // TODO: update this once IFS-4879 has been done
         if (emailAddress.contains("@innovateuk.ukri.org") || emailAddress.contains("@innovateuk.gov.uk") || /*for testing only*/ emailAddress.contains("@innovateuk.test") || internalUserEmailDomain.equalsIgnoreCase(domain)) {
             return serviceFailure(STAKEHOLDERS_CANNOT_BE_INTERNAL_USERS);
         }
@@ -126,9 +126,9 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
 
     private ServiceResult<Void> validateUserNotPendingInvite(long competitionId, UserResource invitedUser) {
 
-        ServiceResult<List<UserResource>> pendingStakeholderInvites = findPendingStakeholderInvites(competitionId);
+        List<UserResource> pendingStakeholderInvites = findPendingStakeholderInvites(competitionId).getSuccess();
 
-        boolean foundPendingInvite = pendingStakeholderInvites.getSuccess().stream().anyMatch(o -> o.getEmail() == invitedUser.getEmail());
+        boolean foundPendingInvite = pendingStakeholderInvites.stream().anyMatch(o -> o.getEmail().equals(invitedUser.getEmail()));
 
         return foundPendingInvite ? serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess();
     }
