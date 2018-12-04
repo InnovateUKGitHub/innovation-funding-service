@@ -19,6 +19,7 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -362,9 +363,8 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                                         Address newAddress = addressMapper.mapToDomain(address);
                                         project.setAddress(newAddress);
                                     }
-
                                     if (oldAddress != null) {
-                                        addressRepository.delete(oldAddress);
+                                        deleteAddressIfNotLinkedToOrganisation(oldAddress, organisationId);
                                     }
 
                                     return getCurrentlyLoggedInPartner(project).andOnSuccess(user -> {
@@ -373,6 +373,13 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                                     });
                                 })
                 );
+    }
+
+    private void deleteAddressIfNotLinkedToOrganisation(Address oldAddress, Long organisationId) {
+        OrganisationAddress maybeAddress = organisationAddressRepository.findByOrganisationIdAndAddressId(organisationId, oldAddress.getId());
+        if (maybeAddress == null) {
+            addressRepository.delete(oldAddress);
+        }
     }
 
     @Override
