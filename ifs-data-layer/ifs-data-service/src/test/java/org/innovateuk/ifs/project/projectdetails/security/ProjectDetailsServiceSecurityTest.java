@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.core.security.ProjectPermissionRules;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
@@ -56,7 +55,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
 
         when(projectLookupStrategy.getProjectResource(456L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.updateProjectAddress(123L, 456L, OrganisationAddressType.ADD_NEW, newAddressResource().build()), () -> {
+        assertAccessDenied(() -> classUnderTest.updateProjectAddress(123L, 456L, newAddressResource().build()), () -> {
             verify(projectDetailsPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectDetailsPermissionRules);
         });

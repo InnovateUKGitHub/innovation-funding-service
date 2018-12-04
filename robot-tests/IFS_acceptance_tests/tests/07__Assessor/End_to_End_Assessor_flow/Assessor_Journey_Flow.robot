@@ -162,12 +162,12 @@ click the link assessor
 
 
 The user fills and submits the registration form
-    When The user enters text to a text field  id = firstName    Tom
-    And The user enters text to a text field   id = lastName    Fister
-    And the user enters text to a text field   id = phoneNumber    1234567891011
-    And The user enters text to a text field   id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link        id = postcode-lookup
-    And the user should see the element        id = addressForm.selectedPostcodeIndex
-    And the user clicks the button/link        css =#select-address-block button
-    And The user enters text to a text field   id = password    ${correct_password}
-    And the user clicks the button/link        jQuery = button:contains("Continue")
+    the user enters text to a text field   id = firstName    Tom
+    the user enters text to a text field   id = lastName    Fister
+    the user enters text to a text field   id = phoneNumber    1234567891011
+    the user enters text to a text field   id = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link        id = postcode-lookup
+    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    the user should see the element        id = addressForm.selectedPostcodeIndex
+    the user enters text to a text field   id = password    ${correct_password}
+    the user clicks the button/link        jQuery = button:contains("Continue")

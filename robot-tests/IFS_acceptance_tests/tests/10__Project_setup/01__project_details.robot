@@ -161,7 +161,7 @@ Lead partner can see the overview of the project details
     When the user clicks the button/link   link = Project details
     Then the user should see the element   jQuery = p:contains("Please supply the following details for your project and the team")
     And the user should see the element    link = Target start date
-    And the user should see the element    link = Project address
+    And the user should see the element    link = Correspondence address
     And the user should see the element    link = Project Manager
     And the user should see the element    jQuery = h2:contains("Partner details")
 
@@ -277,9 +277,9 @@ Lead partner selects a project manager
     [Documentation]    INFUND-2616 INFUND-2996 INFUND-5610
     [Tags]  HappyPath
     Given the user navigates to the page             ${project_in_setup_details_page}
-    And the user clicks the button/link              link = Project Manager
-    When the user clicks the button/link             jQuery = .govuk-button:contains("Save")
-    Then the user should see a validation error      You need to select a Project Manager before you can continue.
+    When the user clicks the button/link             link = Project Manager
+    Then the user clicks the button/link             jQuery = .govuk-button:contains("Save")
+    And the user should see a validation error       You need to select a Project Manager before you can continue.
     When the user selects the radio button           projectManager    projectManager1
     And the user should not see the text in the page    You need to select a Project Manager before you can continue.
     And the user clicks the button/link              jQuery = .govuk-button:contains("Save")
@@ -296,22 +296,17 @@ Lead partner can change the project address
     [Documentation]    INFUND-3157 INFUND-2165
     [Tags]  HappyPath
     Given the user navigates to the page             ${project_in_setup_details_page}
-    And the user clicks the button/link              link = Project address
+    And the user clicks the button/link              link = Correspondence address
     When the user clicks the button/link             jQuery = .govuk-button:contains("Save")
-    Then the user should see the text in the page    You need to select an address before you can continue.
-    When the user selects the radio button           addressType    ADD_NEW
-    And the user enters text to a text field         id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link              jQuery = .govuk-button:contains("Find UK address")
-    And the user clicks the button/link              jQuery = .govuk-button:contains("Find UK address")
-    Then the user should see the element             css = #select-address-block
-    And the user clicks the button/link              css = #select-address-block > button
-    And the address fields should be filled
-    And the user clicks the button/link              jQuery = .govuk-button:contains("Save project address")
+    And the user should see a field and summary error   Search using a valid postcode or enter the address manually.
+    And the user enters text to a text field         id = addressForm.postcodeInput  BS1 4NT
+    And the user clicks the button/link              id = postcode-lookup
+    And the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    And the user clicks the button/link              jQuery = .govuk-button:contains("Save address")
     And the user should see the address data
-    When the user clicks the button/link             link = Project address
-    And the user selects the radio button            addressType    REGISTERED
-    And the user clicks the button/link              jQuery = .govuk-button:contains("Save project address")
-    Then the user should see the text in the page    1, Sheffield, S1 2ED
+    When the user clicks the button/link             link = Correspondence address
+    And the user clicks the button/link              jQuery = .govuk-button:contains("Save address")
+    Then the user should see the text in the page    Montrose House 1, Neston, CH64 3RU
 
 Project details can be submitted with PM, project address and start date
     [Documentation]    INFUND-4583
@@ -460,7 +455,7 @@ Non-lead partner cannot change start date, project manager or project address
     When the user navigates to the page         ${project_in_setup_page}
     Then the user should not see the element    link = Target start date
     And the user should not see the element     link = Project Manager
-    And the user should not see the element     link = Project address
+    And the user should not see the element     link = Correspondence address
 
 Internal user should see project details are incomplete
     [Documentation]    INFUND-6781
@@ -530,7 +525,7 @@ Project details links are still enabled after submission
     Given the user navigates to the page    ${project_in_setup_details_page}
     When all the fields are completed
     Then The user should see the element    link = Target start date
-    And the user should see the element     link = Project address
+    And the user should see the element     link = Correspondence address
     And the user should see the element     link = Project Manager
 
 All partners can view submitted project details
@@ -563,9 +558,9 @@ Non-lead partner cannot change any project details
     And the user should see the text in the page    Project Manager
     And the user should see the text in the page    Elmo Chenault
     And the user should not see the element         link = Project Manager
-    And the user should see the text in the page    Project address
-    And the user should see the text in the page    1, Sheffield, S1 2ED
-    And the user should not see the element         link = Project address
+    And the user should see the text in the page    Correspondence address
+    And the user should see the text in the page    Montrose House 1, Neston, CH64 3RU
+    And the user should not see the element         link = Correspondence address
     When the user navigates to the page and gets a custom error message    ${project_start_date_page}    ${403_error_message}
     When the user navigates to the page and gets a custom error message    ${project_address_page}    ${403_error_message}
 
@@ -641,7 +636,7 @@ the user should not see duplicated select options
 
 the user can see all project details completed
     the user should see the element  jQuery = #start-date:contains("1 Jan ${nextyear}")
-    the user should see the element  jQuery = #project-address:contains("1, Sheffield, S1 2ED")
+    the user should see the element  jQuery = #project-address:contains("Montrose House 1, Neston, CH64 3RU")
     the user should see the element  jQuery = #project-manager:contains("Elmo Chenault")
 
 the user can see all finance contacts completed
