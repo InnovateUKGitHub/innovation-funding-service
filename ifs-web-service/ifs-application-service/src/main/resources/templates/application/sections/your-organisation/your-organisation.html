@@ -39,36 +39,43 @@
 
             <th:block th:if="${!commonFinancesModel.readOnly}" >
 
-                <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="organisationSize">Size</legend>
+                <th:block th:insert="fragments/form-elements/radiofield ::
+                    radiofield(
+                        label='Size',
+                        id='organisationSize',
+                        value=${form.organisationSize},
+                        optionDescriptionsAndValues=${model.organisationSizeOptions},
+                        hint='To determine the level of funding you are eligible to receive please provide your
+                              business size using the &lt;a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
+                              target=&quot;_blank&quot;> EU definition (opens in a new window)&lt;/a&gt; for guidance.',
+                        )" />
 
-                        <span class="govuk-hint">To determine the level of funding you are eligible to receive please provide your business size using the
-                        <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank">
-                            EU definition (opens in a new window)</a> for guidance.</span>
+                <!--<div class="govuk-form-group">-->
+                    <!--<fieldset class="govuk-fieldset">-->
+                        <!--<legend class="govuk-fieldset__legend govuk-fieldset__legend&#45;&#45;s" id="organisationSize">Size</legend>-->
 
-                        <th:block th:if="${#fields.hasErrors('organisationSize')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>
-                        </th:block>
+                        <!--<th:block th:if="${#fields.hasErrors('organisationSize')}">-->
+                            <!--<span class="govuk-error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>-->
+                        <!--</th:block>-->
 
-                        <div class="govuk-radios">
-                            <div class="govuk-radios__item" th:each="organisationSizeOption : ${model.organisationSizeOptions}">
-                                <input type="radio"
-                                       class="govuk-radios__input"
-                                       th:id="${'organisationSize-' + organisationSizeOption.name()}"
-                                       th:field="${form.organisationSize}"
-                                       th:value="${organisationSizeOption.name()}"
-                                       required="required" data-required-errormessage="Please enter your organisation size."/>
-                                <label th:for="${'organisationSize-' + organisationSizeOption.name()}"
-                                       th:text="${organisationSizeOption.description}"
-                                       class="govuk-label govuk-radios__label">Micro or small</label>
-                            </div>
-                        </div>
+                        <!--<div class="govuk-radios">-->
+                            <!--<div class="govuk-radios__item" th:each="organisationSizeOption : ${model.organisationSizeOptions}">-->
+                                <!--<input type="radio"-->
+                                       <!--class="govuk-radios__input"-->
+                                       <!--th:id="${'organisationSize-' + organisationSizeOption.name()}"-->
+                                       <!--th:field="${form.organisationSize}"-->
+                                       <!--th:value="${organisationSizeOption.name()}"-->
+                                       <!--required="required" data-required-errormessage="Please enter your organisation size."/>-->
+                                <!--<label th:for="${'organisationSize-' + organisationSizeOption.name()}"-->
+                                       <!--th:text="${organisationSizeOption.description}"-->
+                                       <!--class="govuk-label govuk-radios__label">Micro or small</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
 
-                    </fieldset>
-                </div>
+                    <!--</fieldset>-->
+                <!--</div>-->
 
-                <th:block th:insert="fragments/textfields ::
+                <th:block th:insert="fragments/form-elements/textfield ::
                     textfield-integer(
                         label='Turnover (£)',
                         hint='Your turnover from the last financial year.',
@@ -76,7 +83,7 @@
                         value=${form.turnover}
                         )" />
 
-                <th:block th:insert="fragments/textfields ::
+                <th:block th:insert="fragments/form-elements/textfield ::
                     textfield-integer(
                         label='Full time employees',
                         hint='Number of full time employees at your organisation.',

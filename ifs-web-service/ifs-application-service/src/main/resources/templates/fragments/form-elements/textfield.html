@@ -29,7 +29,7 @@ Available parameters:
 
         <label class="govuk-label--s" th:for="headCount" th:text="${label}">Label text</label>
 
-        <span th:if="${hint != null}" class="govuk-hint" th:text="${hint}">Hint text.</span>
+        <span th:if="${hint != null}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
 
         <th:block th:if="${#fields.hasErrors(id)}">
             <span class="govuk-error-message" th:each="err : ${#fields.errors(id)}" th:text="${err}"></span>
@@ -80,3 +80,5 @@ Other mandatory and optional values can be seen on the "textfield" fragment.
             preventInputRegex='[^0-9]',
             min='0',
             max='2147483647')" />
+
+</html>

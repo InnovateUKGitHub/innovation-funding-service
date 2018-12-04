@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+
+<!--/*
+
+A fragment to render a standard textfield within a form.
+
+Available parameters:
+
+  Mandatory
+
+    * label
+    * id
+    * optionDescriptionsAndValues
+    * value
+
+  Optional
+
+    * hint - additional guidance text to explain the textfield - defaults to not showing a hint
+    * required
+    * requiredErrorMessage
+
+*/-->
+<th:block th:fragment="radiofield(label, id, value, optionDescriptionsAndValues)">
+
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="${id}">Legend text</legend>
+
+            <span th:if="${hint != null}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
+
+            <th:block th:if="${#fields.hasErrors(id)}">
+                <span class="govuk-error-message" th:each="err : ${#fields.errors(id)}" th:text="${err}"></span>
+            </th:block>
+
+            <div class="govuk-radios">
+
+                <div class="govuk-radios__item" th:each="option : ${optionDescriptionsAndValues}">
+
+                    <input type="radio"
+                           class="govuk-radios__input"
+                           th:id="${id + '-' + option.value}"
+                           th:name="${id}"
+                           th:value="${option.value}"
+                           th:checked="${value == option.value}"
+                           th:attrappend="
+                                required=${required ?: null},
+                                data-required-errormessage=${requiredErrorMessage ?: null}
+                                "/>
+
+                    <label th:for="${id + '-' + option.value}"
+                           th:text="${option.description}"
+                           class="govuk-label govuk-radios__label">Option description</label>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+
+</th:block>
+
+</html>
