@@ -100,7 +100,6 @@ the user directed to correct dashboard
     [Arguments]    ${Application_name}
     the user should see the text in the page  Dashboard
     the user clicks the button/link           link = ${Application_name}
-    the user clicks the button/link           link = Application overview
     the user is redirected to overview page if he has been there already
 
 the user is redirected to overview page if he has been there already

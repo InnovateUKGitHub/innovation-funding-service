@@ -372,7 +372,6 @@ logged in user applies to competition public
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    Innovate  INNOVATE LTD
-    the user clicks the button/link     id = application-question-save
 
 the user navigates to the eligibility of the competition
     [Arguments]  ${competition}
