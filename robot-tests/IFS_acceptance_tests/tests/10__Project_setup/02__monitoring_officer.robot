@@ -57,12 +57,7 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page       Supporting information
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page       Digital manufacturing
-    And the user should see the text in the page       Montrose House 1
-    And the user should see the text in the page       Clayhill Park
-    And the user should see the text in the page       Cheshire West and Chester
-    And the user should see the text in the page       Neston
-    And the user should see the text in the page       Cheshire
-    And the user should see the text in the page       CH64 3RU
+    And the user should see the correct address
     And the user should see the text in the element    jQuery = p:nth-child(11)    1 Jan ${nextyear}
     And the user should see the text in the page       Elmo Chenault
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
@@ -78,12 +73,7 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the page       Supporting information
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page       Digital manufacturing
-    And the user should see the text in the page       Montrose House 1
-    And the user should see the text in the page       Clayhill Park
-    And the user should see the text in the page       Cheshire West and Chester
-    And the user should see the text in the page       Neston
-    And the user should see the text in the page       Cheshire
-    And the user should see the text in the page       CH64 3RU
+    And the user should see the correct address
     And the user should see the text in the element    jQuery = p:nth-child(11)    1 Jan ${nextyear}
     And the user should see the text in the page       Elmo Chenault
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
@@ -329,3 +319,11 @@ the industrial partner fills in their finance contact
     the user clicks the button/link       jQuery = #project-details-finance td:contains("Ludlow") ~ td a:contains("Select project location")
     the user enters text to a text field  css = #postcode  ${postcode}
     the user clicks the button/link       css = button[type = "submit"]  #Save project location button
+
+the user should see the correct address
+    the user should see the text in the page       Montrose House 1
+    the user should see the text in the page       Clayhill Park
+    the user should see the text in the page       Cheshire West and Chester
+    the user should see the text in the page       Neston
+    the user should see the text in the page       Cheshire
+    the user should see the text in the page       CH64 3RU

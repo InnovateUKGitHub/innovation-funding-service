@@ -77,7 +77,6 @@ Project Finance can change address and companies house details
     Then the user clicks the button/link                     link = Change bank account details
     And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details/change
     And the text box should be editable                      id = organisationName
-    #When the user enters text to a text field                css = [id = "addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
     And the user enters text to a text field                 id = organisationName  ${Ntag_Name}
     And the user enters text to a text field                 id = registrationNumber  ${Ntag_No}
 
@@ -179,13 +178,13 @@ Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
+    Given the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 Project partners cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
+    Given the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 
 *** Keywords ***

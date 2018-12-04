@@ -277,9 +277,9 @@ Lead partner selects a project manager
     [Documentation]    INFUND-2616 INFUND-2996 INFUND-5610
     [Tags]  HappyPath
     Given the user navigates to the page             ${project_in_setup_details_page}
-    And the user clicks the button/link              link = Project Manager
-    When the user clicks the button/link             jQuery = .govuk-button:contains("Save")
-    Then the user should see a validation error      You need to select a Project Manager before you can continue.
+    When the user clicks the button/link             link = Project Manager
+    Then the user clicks the button/link             jQuery = .govuk-button:contains("Save")
+    And the user should see a validation error       You need to select a Project Manager before you can continue.
     When the user selects the radio button           projectManager    projectManager1
     And the user should not see the text in the page    You need to select a Project Manager before you can continue.
     And the user clicks the button/link              jQuery = .govuk-button:contains("Save")
