@@ -42,7 +42,7 @@ Available parameters:
                            th:id="${id + '-' + option.value}"
                            th:name="${id}"
                            th:value="${option.value}"
-                           th:checked="${value == option.value}"
+                           th:checked="${value.toString() == option.value.toString()}"
                            th:attrappend="
                                 required=${required ?: null},
                                 data-required-errormessage=${requiredErrorMessage ?: null}
