@@ -321,7 +321,6 @@ the industrial partner fills in their finance contact
     the user clicks the button/link       css = button[type = "submit"]  #Save project location button
 
 the user should see the correct address
-    #the user should see the element       jQuery = td:contains("Montrose House 1, Neston, CH64 3RU")
     the user should see the element       jQuery = p:contains("Montrose House 1")
     the user should see the element       jQuery = p:contains("Clayhill Park")
     the user should see the element       jQuery = p:contains("Cheshire West and Chester")
