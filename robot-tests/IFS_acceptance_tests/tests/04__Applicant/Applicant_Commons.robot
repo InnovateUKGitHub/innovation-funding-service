@@ -337,7 +337,6 @@ logged in user applies to competition
     [Arguments]  ${competition}  ${applicationType}
     the user select the competition and starts application    ${competition}
     the user clicks the button/link                           jQuery = button:contains("Save and continue")
-    the user clicks the button/link                           id = application-question-save
 
 navigate to next page if not found
     [Arguments]  ${competition}
@@ -365,7 +364,6 @@ logged in user applies to competition research
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    Bath  Bath Spa University
-    the user clicks the button/link     id = application-question-save
 
 logged in user applies to competition public
     [Arguments]  ${competition}  ${applicationType}
