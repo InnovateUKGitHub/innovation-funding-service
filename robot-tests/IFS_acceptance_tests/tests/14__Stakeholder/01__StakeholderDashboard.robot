@@ -21,9 +21,9 @@ ${previousStakeholderEmail}      blake.wood@gmail.com
 The internal user cannot invite a Stakeholder when they have triggered the name validation
     [Documentation]  IFS-4190
     [Tags]
-    Given the user logs-in in new browser                &{Comp_admin1_credentials}
-    And the user navigates to the page                   ${SERVER}/management/competition/setup/${competition_ids['${openProgrammeCompetitionName}']}/manage-stakeholders
-    When the user opens the new invite tab
+    Given the user logs-in in new browser            &{Comp_admin1_credentials}
+    And the user navigates to the page               ${SERVER}/management/competition/setup/${competition_ids['${openProgrammeCompetitionName}']}/manage-stakeholders
+    When the user clicks the button/link             jQuery = span:contains("Invite a new stakeholder")
     And the user triggers the name validation
     Then the user should see the name validation messages
 
@@ -46,13 +46,12 @@ The internal user can invite an applicant who already has an account
     When the user clicks the button/link    jQuery = a:contains("Added to competition")
     Then the user should see the element    jQuery = td:contains("Louis Morgan") ~ td:contains("${applicantEmail}") ~ td:contains("Added")
 
-
 The internal user can invite an assessor who is already a stakeholder
     [Documentation]  IFS-4288
     [Tags]
     Given the user clicks the button/link   jQuery = a[href='?tab=add']
     Then the user should see the element    jQuery = td:contains("Blake Wood")
-    And the user opens the new invite tab
+    And the user clicks the button/link     jQuery = span:contains("Invite a new stakeholder")
     And the user enters the correct details of a current stakeholder
     Then the user should not see the element    jQuery = td:contains("Blake Wood")
     When the user clicks the button/link    jQuery = a:contains("Added to competition")
@@ -61,7 +60,7 @@ The internal user can invite an assessor who is already a stakeholder
 The internal user invites a new Stakeholder
     [Documentation]  IFS-4190
     [Tags]
-    Given the user opens the new invite tab
+    Given the user clicks the button/link   jQuery = span:contains("Invite a new stakeholder")
     And the user enters the correct details of a Stakeholder
     When the user clicks the button/link    jQuery = a:contains("Added to competition")
     Then the user should see the element    jQuery = td:contains("Stake Holder") ~ td:contains("${stakeholderEmail}") ~ td:contains("Invite pending")
@@ -166,10 +165,6 @@ The Stakeholder can no longer see the competition
     Then the user should not see the element    jQuery = h3:contains("${openProgrammeCompetitionName}")
 
 *** Keywords ***
-
-the user opens the new invite tab
-    the user clicks the button/link         jQuery = span:contains("Invite a new stakeholder")
-
 the user triggers the name validation
     the user enters text to a text field    id = emailAddress  stakeHolder@test.com
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
