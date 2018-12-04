@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.bankdetails.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.bankdetails.controller.ProjectBankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsStatusResource;
@@ -15,11 +15,11 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.BankDetailsDocs.bankDetailsResourceFields;
 import static org.innovateuk.ifs.documentation.BankDetailsDocs.projectBankDetailsStatusSummaryFields;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
@@ -51,12 +51,12 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
     public void submitBankDetails() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
+        AddressResource addressResource = newAddressResource().build();
         BankDetailsResource bankDetailsResource = newBankDetailsResource()
                 .withProject(projectId).withSortCode("123456")
                 .withAccountNumber("12345678")
                 .withOrganisation(organisationId)
-                .withOrganiationAddress(organisationAddressResource)
+                .withAddress(addressResource)
                 .withCompanyName("Company name")
                 .build();
 
@@ -82,12 +82,12 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
         Long projectId = 1L;
         Long organisationId = 1L;
 
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
+        AddressResource addressResource = newAddressResource().build();
         BankDetailsResource bankDetailsResource = newBankDetailsResource()
                 .withProject(projectId).withSortCode("123")
                 .withAccountNumber("1234567")
                 .withOrganisation(organisationId)
-                .withOrganiationAddress(organisationAddressResource)
+                .withAddress(addressResource)
                 .withCompanyName("Company name")
                 .build();
 

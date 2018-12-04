@@ -50,12 +50,12 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
-                        <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}" class="govuk-link">Project address</a>
-                        <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Project address</th:block>
+                        <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}" class="govuk-link">Correspondence address</a>
+                        <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Correspondence address</th:block>
                     </td>
                     <td class="govuk-table__cell" id="project-address">
                         <th:block th:if="${model.project.address.id == null}">-</th:block>
-                        <th:block th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}">Project address</th:block>
+                        <th:block th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}">Correspondence address</th:block>
                     </td>
                     <td class="govuk-table__cell">
                         <span th:if="${model.project.address.id == null}" id="project-address-status" class="no">No</span>

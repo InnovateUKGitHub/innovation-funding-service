@@ -7,19 +7,19 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class ProjectDocument extends DocumentConfig {
+public class CompetitionDocument extends DocumentConfig {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competitionId", referencedColumnName = "id")
     public Competition competition;
 
-    public ProjectDocument(Competition competition, String title, String guidance,
-                           boolean editable, boolean enabled, List<FileType> fileTypes) {
+    public CompetitionDocument(Competition competition, String title, String guidance,
+                               boolean editable, boolean enabled, List<FileType> fileTypes) {
         super(title, guidance, editable, enabled, fileTypes);
         this.competition = competition;
     }
 
-    public ProjectDocument() {
+    public CompetitionDocument() {
     }
 
     public Competition getCompetition() {

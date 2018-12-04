@@ -68,7 +68,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last"),
             fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility"),
             fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition"),
-            fieldWithPath("projectDocuments").description("List of documents required during the project setup phase"),
+            fieldWithPath("competitionDocuments").description("List of documents required during the project setup phase"),
             fieldWithPath("nonFinanceType").description("Does the competition have finance questions"),
             fieldWithPath("includeJesForm").description("Does the competition include the Je-S form for academics"),
             fieldWithPath("includeProjectGrowthTable").description("Indicate if the competition has a project growth table"),
