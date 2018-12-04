@@ -15,6 +15,7 @@ public final class RoleSelectionViewModel {
     static final String APPLICANT_ROLE_DESCRIPTION = "Manage your applications and projects.";
     static final String ASSESSOR_ROLE_DESCRIPTION = "Review the applications you have been invited to assess.";
     static final String STAKEHOLDER_ROLE_DESCRIPTION = "View the competitions you have been invited to oversee.";
+    static final String EMPTY_DESCRIPTION = "";
 
     public RoleSelectionViewModel(UserResource user) {
         acceptedRoles = user.getRoles();
@@ -32,7 +33,7 @@ public final class RoleSelectionViewModel {
             return ASSESSOR_ROLE_DESCRIPTION;
         } else if(role.equals(Role.STAKEHOLDER)){
             return STAKEHOLDER_ROLE_DESCRIPTION;
-        } else return "";
+        } else return EMPTY_DESCRIPTION;
     }
 
 }

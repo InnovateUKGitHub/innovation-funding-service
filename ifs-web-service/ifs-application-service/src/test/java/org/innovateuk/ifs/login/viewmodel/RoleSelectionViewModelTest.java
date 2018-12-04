@@ -15,6 +15,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 
@@ -36,12 +37,27 @@ public class RoleSelectionViewModelTest {
         assertTrue(viewModel.getAcceptedRoles().contains(STAKEHOLDER));
         assertTrue(viewModel.getAcceptedRoles().contains(APPLICANT));
         assertTrue(viewModel.getAcceptedRoles().contains(ASSESSOR));
+        assertFalse(viewModel.getAcceptedRoles().contains(COMP_ADMIN));
     }
+
     @Test
-    public void getRoleDescription(){
+    public void getApplicantRoleDescription() {
         assertThat(viewModel.getRoleDescription(Role.APPLICANT), is(equalTo(RoleSelectionViewModel.APPLICANT_ROLE_DESCRIPTION)));
+    }
+
+    @Test
+    public void getAssessorRoleDescription() {
         assertThat(viewModel.getRoleDescription(Role.ASSESSOR), is(equalTo(RoleSelectionViewModel.ASSESSOR_ROLE_DESCRIPTION)));
+    }
+
+    @Test
+    public void getStakeholderRoleDescription() {
         assertThat(viewModel.getRoleDescription(Role.STAKEHOLDER), is(equalTo(RoleSelectionViewModel.STAKEHOLDER_ROLE_DESCRIPTION)));
+    }
+
+    @Test
+    public void getRoleDescriptionForRoleNotInAcceptedRoles() {
+        assertThat(viewModel.getRoleDescription(Role.COMP_ADMIN), is(equalTo(RoleSelectionViewModel.EMPTY_DESCRIPTION)));
     }
 
 }
