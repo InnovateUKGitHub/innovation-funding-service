@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.registration.service;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -18,13 +19,13 @@ public class AssessorServiceImpl implements AssessorService {
     private AssessorRestService assessorRestService;
 
     @Override
-    public ServiceResult<Void> createAssessorByInviteHash(String inviteHash, AssessorRegistrationForm registrationForm) {
+    public ServiceResult<Void> createAssessorByInviteHash(String inviteHash, AssessorRegistrationForm registrationForm, AddressResource address) {
         UserRegistrationResource userRegistrationResource = new UserRegistrationResource();
         userRegistrationResource.setFirstName(registrationForm.getFirstName());
         userRegistrationResource.setLastName(registrationForm.getLastName());
         userRegistrationResource.setPhoneNumber(registrationForm.getPhoneNumber());
         userRegistrationResource.setPassword(registrationForm.getPassword());
-        userRegistrationResource.setAddress(registrationForm.getAddressForm().getSelectedPostcode());
+        userRegistrationResource.setAddress(address);
 
         return assessorRestService.createAssessorByInviteHash(inviteHash, userRegistrationResource).toServiceResult();
     }

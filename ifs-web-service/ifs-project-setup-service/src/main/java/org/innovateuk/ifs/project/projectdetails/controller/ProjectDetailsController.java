@@ -1,26 +1,21 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.projectdetails.form.*;
+import org.innovateuk.ifs.project.projectdetails.form.FinanceContactForm;
+import org.innovateuk.ifs.project.projectdetails.form.PartnerProjectLocationForm;
+import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
+import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -39,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,9 +48,6 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY;
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
@@ -99,9 +90,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationService;
-
-    @Autowired
-    private OrganisationAddressRestService organisationAddressRestService;
 
     @Autowired
     private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
@@ -412,118 +400,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @GetMapping("/{projectId}/details/project-address")
-    public String viewAddress(@PathVariable("projectId") final Long projectId,
-                              Model model,
-                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsAddressForm form) {
-
-        ProjectResource project = projectService.getById(projectId);
-        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
-
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
-        if (project.getAddress() != null && project.getAddress().getId() != null) {
-            RestResult<OrganisationAddressResource> result = organisationAddressRestService.findByOrganisationIdAndAddressId(leadOrganisation.getId(), project.getAddress().getId());
-            if (result.isSuccess()) {
-                form.setAddressType(OrganisationAddressType.valueOf(result.getSuccess().getAddressType().getName()));
-            }
-        }
-
-        model.addAttribute("model", projectDetailsAddressViewModel);
-        return "project/details-address";
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @PostMapping("/{projectId}/details/project-address")
-    public String updateAddress(@PathVariable("projectId") final Long projectId,
-                                Model model,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
-                                @SuppressWarnings("unused") BindingResult bindingResult,
-                                ValidationHandler validationHandler) {
-
-        ProjectResource projectResource = projectService.getById(projectId);
-
-        if (validationHandler.hasErrors() && form.getAddressType() == null) {
-            return viewCurrentAddressForm(model, form, projectResource);
-        }
-
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getId());
-
-        AddressResource newAddressResource = null;
-        OrganisationAddressType addressType = null;
-        switch (form.getAddressType()) {
-            case REGISTERED:
-            case OPERATING:
-            case PROJECT:
-                Optional<OrganisationAddressResource> organisationAddressResource = getAddress(leadOrganisation, form.getAddressType());
-                if (organisationAddressResource.isPresent()) {
-                    newAddressResource = organisationAddressResource.get().getAddress();
-                }
-                addressType = form.getAddressType();
-                break;
-            case ADD_NEW:
-                form.getAddressForm().setTriedToSave(true);
-                newAddressResource = form.getAddressForm().getSelectedPostcode();
-                if (newAddressResource == null) {
-                    addAddressNotProvidedValidationError(bindingResult, validationHandler);
-                }
-
-                if (validationHandler.hasErrors()) {
-                    return viewCurrentAddressForm(model, form, projectResource);
-                }
-                addressType = PROJECT;
-                break;
-            default:
-                newAddressResource = null;
-                break;
-        }
-
-        projectResource.setAddress(newAddressResource);
-        ServiceResult<Void> updateResult = projectDetailsService.updateAddress(leadOrganisation.getId(), projectId, addressType, newAddressResource);
-
-        return updateResult.handleSuccessOrFailure(
-                failure -> {
-                    validationHandler.addAnyErrors(failure, asGlobalErrors());
-                    return viewAddress(projectId, model, form);
-                },
-                success -> redirectToProjectDetails(projectId));
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @PostMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS)
-    public String searchAddress(@PathVariable("projectId") Long projectId,
-                                Model model,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
-                                BindingResult bindingResult) {
-        if (StringUtils.isEmpty(form.getAddressForm().getPostcodeInput())) {
-            bindingResult.addError(createPostcodeSearchFieldError());
-        }
-        form.getAddressForm().setSelectedPostcodeIndex(null);
-        form.getAddressForm().setTriedToSearch(true);
-        ProjectResource project = projectService.getById(projectId);
-        return viewCurrentAddressForm(model, form, project);
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @PostMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS)
-    public String selectAddress(@PathVariable("projectId") Long projectId,
-                                Model model,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
-        form.getAddressForm().setSelectedPostcode(null);
-        ProjectResource project = projectService.getById(projectId);
-        return viewCurrentAddressForm(model, form, project);
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @PostMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS)
-    public String manualAddress(@PathVariable("projectId") Long projectId, Model model,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
-        AddressForm addressForm = form.getAddressForm();
-        addressForm.setManualAddress(true);
-        ProjectResource project = projectService.getById(projectId);
-        return viewCurrentAddressForm(model, form, project);
-    }
-
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
     @GetMapping(value = "/{projectId}/details/finance-contact/confirm", params = RESEND_FC_INVITE)
@@ -672,30 +548,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/project-manager";
     }
 
-    private String viewCurrentAddressForm(Model model, ProjectDetailsAddressForm form,
-                                          ProjectResource project) {
-        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
-        processAddressLookupFields(form);
-        model.addAttribute("model", projectDetailsAddressViewModel);
-        return "project/details-address";
-    }
-
-    private ProjectDetailsAddressViewModel loadDataIntoModel(final ProjectResource project) {
-        ProjectDetailsAddressViewModel projectDetailsAddressViewModel = new ProjectDetailsAddressViewModel(project);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
-
-        Optional<OrganisationAddressResource> registeredAddress = getAddress(leadOrganisation, REGISTERED);
-        registeredAddress.ifPresent(organisationAddressResource -> projectDetailsAddressViewModel.setRegisteredAddress(organisationAddressResource.getAddress()));
-
-        Optional<OrganisationAddressResource> operatingAddress = getAddress(leadOrganisation, OPERATING);
-        operatingAddress.ifPresent(organisationAddressResource -> projectDetailsAddressViewModel.setOperatingAddress(organisationAddressResource.getAddress()));
-
-        Optional<OrganisationAddressResource> projectAddress = getAddress(leadOrganisation, PROJECT);
-        projectAddress.ifPresent(organisationAddressResource -> projectDetailsAddressViewModel.setProjectAddress(organisationAddressResource.getAddress()));
-
-        return projectDetailsAddressViewModel;
-    }
-
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
 
         final Comparator<OrganisationResource> compareById =
@@ -746,11 +598,5 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     private String redirectToProjectManager(long projectId) {
         return "redirect:/project/" + projectId + "/details/project-manager";
-    }
-
-    private void addAddressNotProvidedValidationError(BindingResult bindingResult, ValidationHandler validationHandler) {
-        ValidationMessages validationMessages = new ValidationMessages(bindingResult);
-        validationMessages.addError(fieldError("addressType", new Error(PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY)));
-        validationHandler.addAnyErrors(validationMessages);
     }
 }

@@ -46,22 +46,11 @@ public class BankDetailsControllerSecurityTest extends BaseProjectSetupControlle
     }
 
     @Test
-    public void testManualAddress() {
-        assertSecured(() -> classUnderTest.manualAddress(null, null, projectCompositeId.id(), null),
+    public void testAddressFormAction() {
+        assertSecured(() -> classUnderTest.addressFormAction(null, projectCompositeId.id(), null, null, null, null),
                 permissionRules -> permissionRules.partnerCanAccessBankDetailsSection(eq(projectCompositeId), isA(UserResource.class)));
     }
 
-    @Test
-    public void testSearchAddress() {
-        assertSecured(() -> classUnderTest.searchAddress(null, projectCompositeId.id(), null, null, null),
-                permissionRules -> permissionRules.partnerCanAccessBankDetailsSection(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testSelectAddress() {
-        assertSecured(() -> classUnderTest.selectAddress(null, projectCompositeId.id(), null, null),
-                permissionRules -> permissionRules.partnerCanAccessBankDetailsSection(eq(projectCompositeId), isA(UserResource.class)));
-    }
 
     @Test
     public void testSubmitBankDetails() {
