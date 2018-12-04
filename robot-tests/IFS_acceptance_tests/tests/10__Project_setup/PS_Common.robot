@@ -190,12 +190,9 @@ partner fills in his bank details
     the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
     the user enters text to a text field             id = accountNumber  ${account_number}
     the user enters text to a text field             id = sortCode  ${sort_code}
-    #the user clicks the button twice                 css = label[for = "address-use-org"]
-    #the user sees that the radio button is selected  addressType  REGISTERED  # Added this check to give extra execution time
     the user enters text to a text field             name = addressForm.postcodeInput    BS14NT
     the user clicks the button/link                  id = postcode-lookup
     the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
-    #the user should see the element                  css = #registeredAddress
     wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery = .govuk-button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  id = submit-bank-details
 
