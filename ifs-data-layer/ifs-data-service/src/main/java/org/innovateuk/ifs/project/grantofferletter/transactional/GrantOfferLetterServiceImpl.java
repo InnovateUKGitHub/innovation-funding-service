@@ -14,7 +14,7 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -374,7 +374,7 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
 
     private boolean allProjectDocumentsApproved(Project project) {
         Competition competition = project.getApplication().getCompetition();
-        List<ProjectDocument> expectedDocuments = competition.getProjectDocuments();
+        List<CompetitionDocument> expectedDocuments = competition.getCompetitionDocuments();
         int actualNumberOfDocuments = project.getProjectDocuments().size();
 
         List<PartnerOrganisationResource> partnerOrganisations = partnerOrganisationService.getProjectPartnerOrganisations(project.getId()).getSuccess();

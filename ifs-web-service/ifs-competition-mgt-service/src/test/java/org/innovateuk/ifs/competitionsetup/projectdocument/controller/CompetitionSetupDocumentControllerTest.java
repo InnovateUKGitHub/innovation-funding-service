@@ -3,9 +3,8 @@ package org.innovateuk.ifs.competitionsetup.projectdocument.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competition.service.CompetitionSetupProjectDocumentRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupDocumentRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.projectdocument.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.projectdocument.form.ProjectDocumentForm;
 import org.innovateuk.ifs.competitionsetup.projectdocument.viewmodel.ProjectDocumentViewModel;
 import org.innovateuk.ifs.file.resource.FileTypeResource;
@@ -18,7 +17,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.ui.ModelMap;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -27,7 +25,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.neCompetitionDocumentResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -41,10 +39,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
- * Class for testing public functions of {@link CompetitionSetupProjectDocumentController}
+ * Class for testing public functions of {@link CompetitionSetupDocumentController}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CompetitionSetupProjectDocumentControllerTest extends BaseControllerMockMVCTest<CompetitionSetupProjectDocumentController> {
+public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMVCTest<CompetitionSetupDocumentController> {
     private static final Long COMPETITION_ID = 12L;
     private static final String URL_PREFIX = format("/competition/setup/%d/section/project-document", COMPETITION_ID);
 
@@ -52,7 +50,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
     private CompetitionSetupService competitionSetupService;
 
     @Mock
-    private CompetitionSetupProjectDocumentRestService competitionSetupProjectDocumentRestService;
+    private CompetitionSetupDocumentRestService competitionSetupDocumentRestService;
 
     @Mock
     private FileTypeRestService fileTypeRestService;
@@ -61,7 +59,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
     private CompetitionRestService competitionRestService;
 
     @Override
-    protected CompetitionSetupProjectDocumentController supplyControllerUnderTest() { return new CompetitionSetupProjectDocumentController(); }
+    protected CompetitionSetupDocumentController supplyControllerUnderTest() { return new CompetitionSetupDocumentController(); }
 
     @Before
     public void setUp() {
@@ -125,7 +123,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
     @Test
     public void saveProjectDocumentLandingPageFailsWhenNoDocumentsSelected() throws Exception {
 
-        List<ProjectDocumentResource> projectDocuments = newProjectDocumentResource()
+        List<CompetitionDocumentResource> projectDocuments = neCompetitionDocumentResource()
                 .withTitle("Title")
                 .withEditable(true)
                 .withEnabled(true)
@@ -146,12 +144,12 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("competition/setup"));
 
-        verify(competitionSetupProjectDocumentRestService, never()).save(anyList());
+        verify(competitionSetupDocumentRestService, never()).save(anyList());
     }
 
     @Test
     public void viewAddProjectDocument() throws Exception {
-        List<ProjectDocumentResource> projectDocuments = newProjectDocumentResource()
+        List<CompetitionDocumentResource> projectDocuments = neCompetitionDocumentResource()
                 .withTitle("Title")
                 .withEditable(true)
                 .withEnabled(true)
@@ -203,7 +201,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
 
         ProjectDocumentForm expectedForm = new ProjectDocumentForm(null, title, null, true, true);
         verify(competitionSetupService).populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT);
-        verify(competitionSetupProjectDocumentRestService, never()).save(any(ProjectDocumentResource.class));
+        verify(competitionSetupDocumentRestService, never()).save(any(CompetitionDocumentResource.class));
         assertEquals(expectedForm, model.get("form"));
 
     }
@@ -222,7 +220,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
         ProjectDocumentViewModel viewModel = new ProjectDocumentViewModel(null);
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
         when(competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT)).thenReturn(viewModel);
-        when(competitionSetupProjectDocumentRestService.save(any(ProjectDocumentResource.class))).thenReturn(restFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE));
+        when(competitionSetupDocumentRestService.save(any(CompetitionDocumentResource.class))).thenReturn(restFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE));
 
         ModelMap model = mockMvc.perform(post(URL_PREFIX + "/save")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -237,7 +235,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
 
         ProjectDocumentForm expectedForm = new ProjectDocumentForm(null, title, guidance, true, true);
         verify(competitionSetupService).populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT);
-        verify(competitionSetupProjectDocumentRestService).save(any(ProjectDocumentResource.class));
+        verify(competitionSetupDocumentRestService).save(any(CompetitionDocumentResource.class));
         assertEquals(expectedForm, model.get("form"));
     }
 
@@ -249,11 +247,11 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
 
         FileTypeResource fileTypeResource = new FileTypeResource();
 
-        ProjectDocumentResource expectedProjectDocumentResource = new ProjectDocumentResource(COMPETITION_ID, title, guidance,
+        CompetitionDocumentResource expectedCompetitionDocumentResource = new CompetitionDocumentResource(COMPETITION_ID, title, guidance,
                 true, true, singletonList(fileTypeResource.getId()));
 
         when(fileTypeRestService.findByName("PDF")).thenReturn(restSuccess(fileTypeResource));
-        when(competitionSetupProjectDocumentRestService.save(expectedProjectDocumentResource)).thenReturn(restSuccess(expectedProjectDocumentResource));
+        when(competitionSetupDocumentRestService.save(expectedCompetitionDocumentResource)).thenReturn(restSuccess(expectedCompetitionDocumentResource));
 
 
         mockMvc.perform(post(URL_PREFIX + "/save")
@@ -267,7 +265,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(format("redirect:/competition/setup/%d/section/project-document/landing-page", COMPETITION_ID)));
 
-        verify(competitionSetupProjectDocumentRestService).save(expectedProjectDocumentResource);
+        verify(competitionSetupDocumentRestService).save(expectedCompetitionDocumentResource);
     }
 
     @Test
@@ -281,7 +279,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
                 .build();
         long fileTypeId = 1L;
 
-        ProjectDocumentResource projectDocumentResource = newProjectDocumentResource()
+        CompetitionDocumentResource competitionDocumentResource = neCompetitionDocumentResource()
                 .withId(projectDocumentId)
                 .withTitle("Title")
                 .withGuidance("Guidance")
@@ -297,7 +295,7 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
         ProjectDocumentViewModel viewModel = new ProjectDocumentViewModel(null);
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
         when(competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT)).thenReturn(viewModel);
-        when(competitionSetupProjectDocumentRestService.findOne(projectDocumentId)).thenReturn(restSuccess(projectDocumentResource));
+        when(competitionSetupDocumentRestService.findOne(projectDocumentId)).thenReturn(restSuccess(competitionDocumentResource));
         when(fileTypeRestService.findOne(fileTypeId)).thenReturn(restSuccess(fileTypeResource));
 
         ProjectDocumentForm expectedProjectDocumentForm = new ProjectDocumentForm(projectDocumentId, "Title", "Guidance", true, true);
@@ -319,14 +317,14 @@ public class CompetitionSetupProjectDocumentControllerTest extends BaseControlle
 
         long projectDocumentId = 2L;
 
-        when(competitionSetupProjectDocumentRestService.delete(projectDocumentId)).thenReturn(restSuccess());
+        when(competitionSetupDocumentRestService.delete(projectDocumentId)).thenReturn(restSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/{projectDocumentId}/delete", projectDocumentId)
                         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(format("redirect:/competition/setup/%d/section/project-document/landing-page", COMPETITION_ID)));
 
-        verify(competitionSetupProjectDocumentRestService).delete(projectDocumentId);
+        verify(competitionSetupDocumentRestService).delete(projectDocumentId);
     }
 }
 

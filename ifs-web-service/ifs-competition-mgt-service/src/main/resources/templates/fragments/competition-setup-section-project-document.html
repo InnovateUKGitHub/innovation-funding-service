@@ -28,7 +28,7 @@
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('enabledIds')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item" th:each="document : ${model.general.competition.projectDocuments}" >
+                        <div class="govuk-checkboxes__item" th:each="document : ${model.general.competition.competitionDocuments}" >
                             <input th:value="${document.id}"
                                     type="checkbox"
                                     name="enabledIds"

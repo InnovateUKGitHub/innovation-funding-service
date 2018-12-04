@@ -195,8 +195,8 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("applicationFinanceType", applicationFinanceType);
     }
 
-    public CompetitionResourceBuilder withProjectDocument(List<ProjectDocumentResource> projectDocumentResourcesList) {
-        return withList(projectDocumentResourcesList, (projectDocumentResource, section) -> section.setProjectDocuments(projectDocumentResourcesList));
+    public CompetitionResourceBuilder withProjectDocument(List<CompetitionDocumentResource> competitionDocumentResourcesList) {
+        return withList(competitionDocumentResourcesList, (projectDocumentResource, section) -> section.setCompetitionDocuments(competitionDocumentResourcesList));
     }
 
     public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {

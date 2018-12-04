@@ -3,8 +3,8 @@ package org.innovateuk.ifs.competitionsetup.mapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.mapper.FileTypeMapper;
 import org.mapstruct.Mapper;
 
@@ -15,15 +15,15 @@ import org.mapstruct.Mapper;
                 FileTypeMapper.class
         }
 )
-public abstract class ProjectDocumentMapper extends BaseMapper<ProjectDocument, ProjectDocumentResource, Long> {
+public abstract class CompetitionDocumentMapper extends BaseMapper<CompetitionDocument, CompetitionDocumentResource, Long> {
 
     @Override
-    public abstract ProjectDocumentResource mapToResource(ProjectDocument domain);
+    public abstract CompetitionDocumentResource mapToResource(CompetitionDocument domain);
 
     @Override
-    public abstract ProjectDocument mapToDomain(ProjectDocumentResource resource);
+    public abstract CompetitionDocument mapToDomain(CompetitionDocumentResource resource);
 
-    public Long mapProjectDocumentToId(ProjectDocument object) {
+    public Long mapCompetitionDocumentToId(CompetitionDocument object) {
         if (object == null) {
             return null;
         }

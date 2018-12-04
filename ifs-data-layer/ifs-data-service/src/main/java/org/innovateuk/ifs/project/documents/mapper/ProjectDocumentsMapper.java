@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.documents.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
+import org.innovateuk.ifs.competitionsetup.mapper.CompetitionDocumentMapper;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
@@ -12,7 +13,7 @@ import org.mapstruct.Mapper;
         config = GlobalMapperConfig.class,
         uses = {
                 ProjectMapper.class,
-                org.innovateuk.ifs.competitionsetup.mapper.ProjectDocumentMapper.class,
+                CompetitionDocumentMapper.class,
                 FileEntryMapper.class
         }
 )
