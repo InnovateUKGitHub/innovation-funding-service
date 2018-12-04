@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static java.util.Arrays.asList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
@@ -34,39 +36,64 @@ public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalServic
     @Transactional
     public ServiceResult<CompetitionDocumentResource> save(CompetitionDocumentResource competitionDocumentResource) {
 
-        return validateProjectDocument(competitionDocumentResource).andOnSuccess(() -> {
+        return validateCompetitionDocument(asList(competitionDocumentResource)).andOnSuccess(() -> {
 
             CompetitionDocument competitionDocument = competitionDocumentMapper.mapToDomain(competitionDocumentResource);
 
             CompetitionDocument savedCompetitionDocument = competitionDocumentConfigRepository.save(competitionDocument);
             return serviceSuccess(competitionDocumentMapper.mapToResource(savedCompetitionDocument));
+
         });
     }
 
-    private ServiceResult<Void> validateProjectDocument(CompetitionDocumentResource competitionDocumentResource) {
-        return competitionDocumentResource.getFileTypes() != null && competitionDocumentResource.getFileTypes().size() > 0 ?
-                serviceSuccess() : serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
+    private boolean validateAtLeastOneFileType(CompetitionDocumentResource competitionDocumentResource) {
+        return competitionDocumentResource.getFileTypes() != null && competitionDocumentResource.getFileTypes().size() > 0 ;
+    }
+
+    private boolean validateUniqueDocumentTitle(CompetitionDocumentResource competitionDocumentResource)
+    {
+        Long competitionId = competitionDocumentResource.getCompetition();
+        if (competitionId != null) {
+            List<CompetitionDocumentResource> currentDocuments = findByCompetitionId(competitionId).getSuccess();
+            for (CompetitionDocumentResource currentDocument : currentDocuments) {
+                if (currentDocument.getTitle().equals(competitionDocumentResource.getTitle()) &&
+                        !currentDocument.getId().equals(competitionDocumentResource.getId())) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
     @Transactional
     public ServiceResult<List<CompetitionDocumentResource>> saveAll(List<CompetitionDocumentResource> competitionDocumentResources) {
 
-        return validateProjectDocument(competitionDocumentResources).andOnSuccess(() -> {
+        return validateCompetitionDocument(competitionDocumentResources).andOnSuccess(() -> {
 
             List<CompetitionDocument> competitionDocuments = simpleMap(competitionDocumentResources,
-                    projectDocumentResource -> competitionDocumentMapper.mapToDomain(projectDocumentResource));
+                    competitionDocumentResource -> competitionDocumentMapper.mapToDomain(competitionDocumentResource));
 
             List<CompetitionDocument> savedCompetitionDocuments = (List<CompetitionDocument>) competitionDocumentConfigRepository.save(competitionDocuments);
-            return serviceSuccess(simpleMap(savedCompetitionDocuments, savedProjectDocument -> competitionDocumentMapper.mapToResource(savedProjectDocument)));
+            return serviceSuccess(simpleMap(savedCompetitionDocuments, savedCompeitionDocument -> competitionDocumentMapper.mapToResource(savedCompeitionDocument)));
         });
     }
 
-    private ServiceResult<Void> validateProjectDocument(List<CompetitionDocumentResource> competitionDocumentResources) {
+    private ServiceResult<Void> validateCompetitionDocument(List<CompetitionDocumentResource> competitionDocumentResources) {
 
-        return simpleAnyMatch(competitionDocumentResources,
-                projectDocumentResource -> projectDocumentResource.getFileTypes() == null || projectDocumentResource.getFileTypes().size() <= 0) ?
-                serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE) : serviceSuccess();
+        if (simpleAnyMatch(competitionDocumentResources,
+                competitionDocumentResource -> !validateUniqueDocumentTitle(competitionDocumentResource)))
+        {
+            return serviceFailure(PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED);
+        }
+
+        if (simpleAnyMatch(competitionDocumentResources,
+                competitionDocumentResource -> !validateAtLeastOneFileType(competitionDocumentResource)))
+        {
+            return serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
+        }
+
+        return serviceSuccess();
     }
 
     @Override
@@ -80,7 +107,7 @@ public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalServic
     @Transactional
     public ServiceResult<List<CompetitionDocumentResource>> findByCompetitionId(long competitionId) {
         List<CompetitionDocument> competitionDocuments = competitionDocumentConfigRepository.findByCompetitionId(competitionId);
-        return serviceSuccess(simpleMap(competitionDocuments, projectDocument -> competitionDocumentMapper.mapToResource(projectDocument)));
+        return serviceSuccess(simpleMap(competitionDocuments, competitionDocument -> competitionDocumentMapper.mapToResource(competitionDocument)));
     }
 
     @Override
@@ -90,4 +117,3 @@ public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalServic
         return serviceSuccess();
     }
 }
-

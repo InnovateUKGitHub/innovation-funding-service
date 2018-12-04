@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.mapper.CompetitionDocumentMapper;
@@ -16,6 +17,8 @@ import java.util.List;
 
 import static java.util.Collections.*;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -158,6 +161,36 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         assertEquals(competitionDocumentResource2, result.getSuccess().get(1));
 
         verify(competitionDocumentConfigRepositoryMock).findByCompetitionId(competitionId);
+    }
+
+    @Test
+    public void saveDuplicateTitle() {
+
+        Competition competition = newCompetition().build();
+
+        CompetitionDocument competitionDocument1 = new CompetitionDocument();
+        competitionDocument1.setId(1L);
+        competitionDocument1.setCompetition(competition);
+
+        CompetitionDocument competitionDocument2 = new CompetitionDocument();
+        competitionDocument2.setId(2L);
+        competitionDocument2.setCompetition(competition);
+
+        // create 2 document resources with same title & competition but different Id
+        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+                .withCompetition(competition.getId())
+                .withTitle("Test1")
+                .withId(competitionDocument1.getId(), competitionDocument2.getId())
+                .withFileType(singletonList(1L))
+                .build(2);
+
+        when(competitionDocumentConfigRepositoryMock.findByCompetitionId(competition.getId())).thenReturn( Arrays.asList(competitionDocument1, competitionDocument2) );
+        when(competitionDocumentMapperMock.mapToResource(competitionDocument1)).thenReturn(competitionDocumentResources.get(0));
+        when(competitionDocumentMapperMock.mapToResource(competitionDocument2)).thenReturn(competitionDocumentResources.get(1));
+
+        ServiceResult<CompetitionDocumentResource> result = service.save(competitionDocumentResources.get(0));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED));
     }
 
     @Test
