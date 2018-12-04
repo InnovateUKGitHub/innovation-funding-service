@@ -27,7 +27,6 @@ new account complete all but one
 create new account for submitting
     [Arguments]  ${application_name}
     the user clicks the button/link                   link=Untitled application (start here)
-    the user clicks the button/link                   jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link                   link=Application details
     the user enters text to a text field              css=[id="application.name"]    ${application_name}
     the user clicks the button/link                   jQuery=button:contains("Save and return")
@@ -109,7 +108,6 @@ create new submit application
     [Arguments]  ${overview}  ${email}  ${application_name}
     And The guest user inserts user email and password  ${email}   ${correct_password}
     And the guest user clicks the log-in button
-    And the user clicks the button/link                 jQuery=button:contains("Save and return to application overview")
     And the user clicks the button/link                 link=Application details
     And the user enters text to a text field            css=[id="application.name"]    ${application_name}
     And the user clicks the button/link                 jQuery=button:contains("Save and return")
