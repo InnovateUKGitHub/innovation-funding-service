@@ -57,9 +57,7 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page       Supporting information
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page       Digital manufacturing
-    And the user should see the text in the page       Empire Road
-    And the user should see the text in the page       Sheffield
-    And the user should see the text in the page       S1 2ED
+    And the user should see the correct address
     And the user should see the text in the element    jQuery = p:nth-child(11)    1 Jan ${nextyear}
     And the user should see the text in the page       Elmo Chenault
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
@@ -75,9 +73,7 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the page       Supporting information
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page       Digital manufacturing
-    And the user should see the text in the page       Empire Road
-    And the user should see the text in the page       Sheffield
-    And the user should see the text in the page       S1 2ED
+    And the user should see the correct address
     And the user should see the text in the element    jQuery = p:nth-child(11)    1 Jan ${nextyear}
     And the user should see the text in the page       Elmo Chenault
     And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
@@ -282,9 +278,11 @@ the lead partner fills in project details
     the user enters text to a text field      id = projectStartDate_month    1
     the user enters text to a text field      id = projectStartDate_year    ${nextyear}
     the user clicks the button/link           css = button[type = "submit"]
-    the user clicks the button/link           link = Project address
-    the user selects the radio button         addressType    REGISTERED
-    the user clicks the button/link           jQuery = .govuk-button:contains("Save project address")
+    the user clicks the button/link           link = Correspondence address
+    the user enters text to a text field      id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link           id = postcode-lookup
+    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link           jQuery = .govuk-button:contains("Save address")
     the user clicks the button/link           link = Project Manager
     the user selects the radio button         projectManager  projectManager2
     the user clicks the button/link           id = save
@@ -321,3 +319,11 @@ the industrial partner fills in their finance contact
     the user clicks the button/link       jQuery = #project-details-finance td:contains("Ludlow") ~ td a:contains("Select project location")
     the user enters text to a text field  css = #postcode  ${postcode}
     the user clicks the button/link       css = button[type = "submit"]  #Save project location button
+
+the user should see the correct address
+    the user should see the element       jQuery = p:contains("Montrose House 1")
+    the user should see the element       jQuery = p:contains("Clayhill Park")
+    the user should see the element       jQuery = p:contains("Cheshire West and Chester")
+    the user should see the element       jQuery = p:contains("Neston")
+    the user should see the element       jQuery = p:contains("Cheshire")
+    the user should see the element       jQuery = p:contains("CH64 3RU")

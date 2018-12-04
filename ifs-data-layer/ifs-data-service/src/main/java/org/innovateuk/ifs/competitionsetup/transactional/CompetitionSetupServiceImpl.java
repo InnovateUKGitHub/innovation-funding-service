@@ -14,7 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
@@ -359,26 +359,26 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 (GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
 
         competition.setTermsAndConditions(defaultTermsAndConditions);
-        competition.setProjectDocuments(createDefaultProjectDocuments(competition));
+        competition.setCompetitionDocuments(createDefaultProjectDocuments(competition));
 
         Competition savedCompetition = competitionRepository.save(competition);
         return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
                 .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
     }
 
-    private List<ProjectDocument> createDefaultProjectDocuments(Competition competition) {
+    private List<CompetitionDocument> createDefaultProjectDocuments(Competition competition) {
 
         FileType pdfFileType = fileTypeRepository.findByName("PDF");
 
-        List<ProjectDocument> defaultProjectDocuments = new ArrayList<>();
-        defaultProjectDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
-        defaultProjectDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
+        List<CompetitionDocument> defaultCompetitionDocuments = new ArrayList<>();
+        defaultCompetitionDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
+        defaultCompetitionDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
 
-        return defaultProjectDocuments;
+        return defaultCompetitionDocuments;
     }
 
-    private ProjectDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
-        return new ProjectDocument(competition, "Collaboration agreement", "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
+    private CompetitionDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
+        return new CompetitionDocument(competition, "Collaboration agreement", "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
                 "\n" +
                 "<p>Please allow enough time to complete this document before your project start date.</p>\n" +
                 "\n" +
@@ -391,8 +391,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 false, true, fileTypes);
     }
 
-    private ProjectDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
-        return new ProjectDocument(competition, "Exploitation plan", "<p>This is a confirmation of your overall plan, setting out the business case for your project. This plan will change during the lifetime of the project.</p>\n" +
+    private CompetitionDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
+        return new CompetitionDocument(competition, "Exploitation plan", "<p>This is a confirmation of your overall plan, setting out the business case for your project. This plan will change during the lifetime of the project.</p>\n" +
                 "\n" +
                 "<p>It should also describe partner activities that will exploit the results of the project so that:</p>\n" +
                 "<ul class=\"list-bullet\"><li>changes in the commercial environment can be monitored and accounted for</li>\n" +

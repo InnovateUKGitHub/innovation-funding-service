@@ -61,7 +61,7 @@ Project Finance can see the address with score
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Address
-    And the user should see the text in the page     ${Ntag_Street}, London, E17 5LR
+    And the user should see the element              jQuery = td:contains("Address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
     And the user should see the element              jQuery = tr:nth-child(4) td:nth-child(3):contains("7 / 9")
 
 Project Finance has the options to edit the details and to approve the bank details
@@ -77,7 +77,6 @@ Project Finance can change address and companies house details
     Then the user clicks the button/link                     link = Change bank account details
     And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details/change
     And the text box should be editable                      id = organisationName
-    When the user enters text to a text field                css = [id = "addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
     And the user enters text to a text field                 id = organisationName  ${Ntag_Name}
     And the user enters text to a text field                 id = registrationNumber  ${Ntag_No}
 
@@ -113,8 +112,8 @@ Project Finance cancels bank details changes
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     When the user clicks the button/link                      link = Change bank account details
     Then the text box should be editable                      id = organisationName
-    And Set Focus To Element                                  css = [id = "addressForm.selectedPostcode.addressLine1"]
-    Then the user sees the text in the text field             css = [id = "addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
+    And Set Focus To Element                                  css = [id = "addressForm.manualAddress.addressLine1"]
+    Then the user sees the text in the text field             css = [id = "addressForm.manualAddress.addressLine1"]  Montrose House 1
     When the user clicks the button/link                      id = modal-change-bank-details
     And the user clicks the button/link                       jQuery = .button-clear:contains("Cancel")
     Then the text box should be editable                      id = organisationName
@@ -125,12 +124,12 @@ Project Finance cancels bank details changes
 Project Finance updates bank account details
     [Documentation]    INFUND-4054
     [Tags]
-    When the user enters text to a text field      css = [id = "addressForm.selectedPostcode.addressLine1"]    Montrose House 2
+    When the user enters text to a text field      css = [id = "addressForm.manualAddress.addressLine1"]    Montrose House 2
     And the user clicks the button/link            id = modal-change-bank-details
     And the user clicks the button/link            id = submit-change-bank-details
     Then the user should see the text in the page  ${Ntag_Name} - Account details
     When the user clicks the button/link           link = Change bank account details
-    Then the user sees the text in the text field  css = [id = "addressForm.selectedPostcode.addressLine1"]    Montrose House 2
+    Then the user sees the text in the text field  css = [id = "addressForm.manualAddress.addressLine1"]    Montrose House 2
     When the user clicks the button/link           id = modal-change-bank-details
     Then the user clicks the button/link           id = submit-change-bank-details
 
@@ -149,7 +148,7 @@ Project Finance approves the bank details
     And the user should not see the text in the page    We are unable to save your bank account details
     When the user goes back to the previous page
     And the user goes back to the previous page
-    When the user enters text to a text field       css = [id = "addressForm.selectedPostcode.addressLine1"]    Montrose House 3
+    When the user enters text to a text field       css = [id = "addressForm.manualAddress.addressLine1"]    Montrose House 3
     And the user clicks the button/link             id = modal-change-bank-details
     And the user clicks the button/link             id = submit-change-bank-details
     Then the user should see the text in the page   Bank details have already been approved and cannot be changed
@@ -179,13 +178,13 @@ Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
+    Given the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 Project partners cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
+    Given the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 
 *** Keywords ***
