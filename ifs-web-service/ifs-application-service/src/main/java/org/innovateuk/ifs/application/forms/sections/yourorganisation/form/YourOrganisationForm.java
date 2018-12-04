@@ -12,6 +12,9 @@ public class YourOrganisationForm {
     private Long headCount;
     private boolean stateAidEligibility;
 
+    YourOrganisationForm() {
+    }
+
     public YourOrganisationForm(OrganisationSize organisationSize, Long turnover, Long headCount, boolean stateAidEligibility) {
         this.organisationSize = organisationSize;
         this.turnover = turnover;

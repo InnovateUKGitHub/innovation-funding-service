@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -31,4 +32,6 @@ public interface FormInputResponseRestService {
     RestResult<FormInputResponseResource> getByApplicationIdAndQuestionSetupType(long applicationId, QuestionSetupType questionSetupType);
 
     RestResult<List<FormInputResponseResource>> getByApplicationIdAndQuestionId(long applicationId, long questionId);
+
+    RestResult<FormInputResponseResource> getByApplicationIdQuestionIdOrganisationIdAndFormInputType(long applicationId, long questionId, long organisationId, FormInputType formInputType);
 }

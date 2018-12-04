@@ -130,6 +130,7 @@ public class ApplicationSectionController {
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
 
         long organisationId = applicantSection.getCurrentApplicant().getOrganisation().getId();
+        long competitionId = applicantSection.getCompetition().getId();
 
         switch (applicantSection.getSection().getType()) {
             case FUNDING_FINANCES:
@@ -145,8 +146,8 @@ public class ApplicationSectionController {
                 return String.format("redirect:/application/%d/form/your-project-location/organisation/%d/section/%d",
                         applicationId, organisationId, sectionId);
             case ORGANISATION_FINANCES:
-                return String.format("redirect:/application/%d/form/your-organisation/organisation/%d/section/%d",
-                        applicationId, organisationId, sectionId);
+                return String.format("redirect:/application/%d/form/your-organisation/competition/%d/organisation/%d/section/%d",
+                        applicationId, competitionId, organisationId, sectionId);
             default:
                 populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), false);
                 return APPLICATION_FORM;

@@ -3,20 +3,24 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.service;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputType.ORGANISATION_TURNOVER;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
 /**
  * TODO DW - document this class
@@ -25,29 +29,32 @@ import static org.innovateuk.ifs.form.resource.FormInputType.ORGANISATION_TURNOV
 public class FormInputBasedYourOrganisationService implements YourOrganisationService {
 
     private QuestionRestService questionRestService;
+    private FormInputRestService formInputRestService;
     private FormInputResponseRestService formInputResponseRestService;
     private ApplicationRestService applicationRestService;
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     public FormInputBasedYourOrganisationService(QuestionRestService questionRestService,
+                                                 FormInputRestService formInputRestService,
                                                  FormInputResponseRestService formInputResponseRestService,
                                                  ApplicationRestService applicationRestService,
                                                  ApplicationFinanceRestService applicationFinanceRestService) {
 
         this.questionRestService = questionRestService;
+        this.formInputRestService = formInputRestService;
         this.formInputResponseRestService = formInputResponseRestService;
         this.applicationRestService = applicationRestService;
         this.applicationFinanceRestService = applicationFinanceRestService;
     }
 
     @Override
-    public ServiceResult<Long> getTurnover(long applicationId, long competitionId) {
-        return getLongValueForFormInputType(applicationId, competitionId, ORGANISATION_TURNOVER);
+    public ServiceResult<Long> getTurnover(long applicationId, long competitionId, long organisationId) {
+        return getLongValueForFormInputType(applicationId, competitionId, organisationId, ORGANISATION_TURNOVER);
     }
 
     @Override
-    public ServiceResult<Long> getHeadCount(long applicationId, long competitionId) {
-        return getLongValueForFormInputType(applicationId, competitionId, FormInputType.STAFF_COUNT);
+    public ServiceResult<Long> getHeadCount(long applicationId, long competitionId, long organisationId) {
+        return getLongValueForFormInputType(applicationId, competitionId, organisationId, FormInputType.STAFF_COUNT);
     }
 
     @Override
@@ -67,34 +74,50 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     }
 
     @Override
-    public ServiceResult<Void> updateTurnover(long applicationId, long competitionId, Long value) {
-        return serviceSuccess();
+    public ServiceResult<Void> updateTurnover(long applicationId, long competitionId, long userId, Long value) {
+        return updateLongValueForFormInput(applicationId, competitionId, userId, value, FormInputType.ORGANISATION_TURNOVER);
     }
 
     @Override
-    public ServiceResult<Void> updateHeadCount(long applicationId, long competitionId, Long value) {
-        return serviceSuccess();
+    public ServiceResult<Void> updateHeadCount(long applicationId, long competitionId, long userId, Long value) {
+        return updateLongValueForFormInput(applicationId, competitionId, userId, value, FormInputType.STAFF_COUNT);
     }
 
-    private ServiceResult<Long> getLongValueForFormInputType(long applicationId, long competitionId, FormInputType formInputType) {
-        return questionRestService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType).
-                andOnSuccess(question -> formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, question.getId())).
+    private ServiceResult<Long> getLongValueForFormInputType(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {
+        return getFormInputResponseForOrganisation(applicationId, competitionId, organisationId, formInputType).
                 andOnSuccessReturn(this::getLongValueFromFormInputResponses).
                 toServiceResult();
     }
 
-    private Long getLongValueFromFormInputResponses(List<FormInputResponseResource> formInputResponses) {
+    private ServiceResult<Void> updateLongValueForFormInput(long applicationId, long competitionId, long userId, Long value, FormInputType formInputType) {
 
-        if (formInputResponses.isEmpty()) {
-            return null;
-        } else {
-            String value = formInputResponses.get(0).getValue();
+        return getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType).
+                andOnSuccess(question -> formInputRestService.getByQuestionId(question.getId())).
+                andOnSuccessReturn(formInputs -> simpleFindFirstMandatory(formInputs, fi -> formInputType.equals(fi.getType()))).
+                andOnSuccessReturn(formInput -> formInputResponseRestService.saveQuestionResponse(
+                        userId,
+                        applicationId,
+                        formInput.getId(),
+                        value != null ? value.toString() : null,
+                        false)).
+                toServiceResult().
+                andOnSuccessReturnVoid();
+    }
 
-            if (value == null) {
-                return null;
-            }
+    private RestResult<Optional<FormInputResponseResource>> getFormInputResponseForOrganisation(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {
+        return getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType).
+                andOnSuccess(question -> formInputResponseRestService.getByApplicationIdQuestionIdOrganisationIdAndFormInputType(applicationId, question.getId(), organisationId, formInputType)).
+                toOptionalIfNotFound();
+    }
 
-            return Long.valueOf(value);
-        }
+    private RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(long competitionId, FormInputType formInputType) {
+        return questionRestService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType);
+    }
+
+    private Long getLongValueFromFormInputResponses(Optional<FormInputResponseResource> formInputResponse) {
+
+        return formInputResponse.
+                map(response -> response.getValue() != null ? Long.valueOf(response.getValue()) : null).
+                orElse(null);
     }
 }

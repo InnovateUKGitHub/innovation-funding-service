@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.core.io.ByteArrayResource;
@@ -110,5 +111,11 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     public RestResult<List<FormInputResponseResource>> getByApplicationIdAndQuestionId(long applicationId, long questionId) {
         return getWithRestResult(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionId",
                 applicationId, questionId), formInputResponseListType());
+    }
+
+    @Override
+    public RestResult<FormInputResponseResource> getByApplicationIdQuestionIdOrganisationIdAndFormInputType(long applicationId, long questionId, long organisationId, FormInputType formInputType) {
+        return getWithRestResult(format("%s/application/%s/question/%s/organisation/%s/form-input-type/%s", formInputResponseRestURL,
+                applicationId, questionId, organisationId, formInputType.name()), FormInputResponseResource.class);
     }
 }

@@ -16,13 +16,13 @@ public class YourOrganisationFormPopulator {
         this.yourOrganisationService = yourOrganisationService;
     }
 
-    public YourOrganisationForm populate(long applicationId, long organisationId) {
+    public YourOrganisationForm populate(long applicationId, long competitionId, long organisationId) {
 
         OrganisationSize organisationSize = yourOrganisationService.getOrganisationSize(applicationId, organisationId).getSuccess();
 
-        Long turnover = yourOrganisationService.getTurnover(applicationId, organisationId).getSuccess();
+        Long turnover = yourOrganisationService.getTurnover(applicationId, competitionId, organisationId).getSuccess();
 
-        Long headcount = yourOrganisationService.getHeadCount(applicationId, organisationId).getSuccess();
+        Long headcount = yourOrganisationService.getHeadCount(applicationId, competitionId, organisationId).getSuccess();
 
         boolean stateAidEligibility = yourOrganisationService.getStateAidEligibility(applicationId).getSuccess();
 

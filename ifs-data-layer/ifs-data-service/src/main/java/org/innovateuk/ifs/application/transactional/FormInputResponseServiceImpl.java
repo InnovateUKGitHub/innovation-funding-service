@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -62,6 +64,17 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<List<FormInputResponseResource>> findResponseByApplicationIdAndQuestionId(long applicationId, long questionId) {
         return serviceSuccess(formInputResponsesToResources(formInputResponseRepository.findByApplicationIdAndFormInputQuestionId(applicationId, questionId)));
+    }
+
+    @Override
+    public ServiceResult<FormInputResponseResource> findResponseByApplicationIdQuestionIdOrganisationIdAndFormInputType(long applicationId, long questionId, long organisationId, FormInputType formInputType) {
+
+        Optional<FormInputResponse> formInputResponse =
+                formInputResponseRepository.findByApplicationIdAndFormInputQuestionIdAndUpdatedByOrganisationIdAndFormInputType(
+                        applicationId, questionId, organisationId, formInputType);
+
+        return formInputResponse.map(response -> serviceSuccess(formInputResponseMapper.mapToResource(response))).
+                        orElseGet(() -> serviceFailure(notFoundError(FormInputResponse.class, applicationId, questionId, organisationId)));
     }
 
     @Override

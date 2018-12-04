@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYour
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationService;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -15,8 +16,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -39,7 +38,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
  * The Controller for the "Your organisation" page in the Application Form process.
  */
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-organisation/organisation/{organisationId}/section/{sectionId}")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-organisation/competition/{competitionId}/organisation/{organisationId}/section/{sectionId}")
 public class YourOrganisationController extends AsyncAdaptor {
 
     private static final String VIEW_PAGE = "application/sections/your-organisation/your-organisation";
@@ -47,34 +46,28 @@ public class YourOrganisationController extends AsyncAdaptor {
     private CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator;
     private YourOrganisationViewModelPopulator viewModelPopulator;
     private YourOrganisationFormPopulator formPopulator;
-    private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
     private UserRestService userRestService;
+    private YourOrganisationService yourOrganisationService;
 
     @Autowired
     YourOrganisationController(
             CommonYourFinancesViewModelPopulator commonFinancesViewModelPopulator,
             YourOrganisationViewModelPopulator viewModelPopulator,
             YourOrganisationFormPopulator formPopulator,
-            ApplicationFinanceRestService applicationFinanceRestService,
             SectionService sectionService,
-            UserRestService userRestService) {
+            UserRestService userRestService, YourOrganisationService yourOrganisationService) {
 
         this.commonFinancesViewModelPopulator = commonFinancesViewModelPopulator;
         this.viewModelPopulator = viewModelPopulator;
         this.formPopulator = formPopulator;
-        this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.userRestService = userRestService;
+        this.yourOrganisationService = yourOrganisationService;
     }
 
     // for ByteBuddy
     YourOrganisationController() {
-        this.viewModelPopulator = null;
-        this.formPopulator = null;
-        this.applicationFinanceRestService = null;
-        this.sectionService = null;
-        this.userRestService = null;
     }
 
     @GetMapping
@@ -83,6 +76,7 @@ public class YourOrganisationController extends AsyncAdaptor {
     @SecuredBySpring(value = "VIEW_YOUR_ORGANISATION", description = "Applicants and internal users can view the Your organisation page")
     public String viewPage(
             @PathVariable("applicationId") long applicationId,
+            @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
@@ -95,7 +89,7 @@ public class YourOrganisationController extends AsyncAdaptor {
                 getViewModel());
 
         Future<YourOrganisationForm> formRequest = async(() ->
-                formPopulator.populate(applicationId, organisationId));
+                formPopulator.populate(applicationId, competitionId, organisationId));
 
         model.addAttribute("commonFinancesModel", commonViewModelRequest);
         model.addAttribute("model", viewModelRequest);
@@ -110,9 +104,10 @@ public class YourOrganisationController extends AsyncAdaptor {
     public String update(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
+            UserResource loggedInUser,
             @ModelAttribute YourOrganisationForm form) {
 
-        updateYourOrganisation(applicationId, organisationId, form);
+        updateYourOrganisation(applicationId, organisationId, loggedInUser.getId(), form);
         return redirectToYourFinances(applicationId);
     }
 
@@ -122,9 +117,10 @@ public class YourOrganisationController extends AsyncAdaptor {
     public @ResponseBody JsonNode autosave(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
+            UserResource loggedInUser,
             @ModelAttribute YourOrganisationForm form) {
 
-        update(applicationId, organisationId, form);
+        update(applicationId, organisationId, loggedInUser, form);
         return new ObjectMapper().createObjectNode();
     }
 
@@ -152,7 +148,7 @@ public class YourOrganisationController extends AsyncAdaptor {
 
         Supplier<String> successHandler = () -> {
 
-            updateYourOrganisation(applicationId, organisationId, form);
+            updateYourOrganisation(applicationId, organisationId, loggedInUser.getId(), form);
 
             ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
             List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
@@ -181,13 +177,12 @@ public class YourOrganisationController extends AsyncAdaptor {
     }
 
     private void updateYourOrganisation(long applicationId,
-                                        long organisationId,
+                                        long competitionId,
+                                        long userId,
                                         YourOrganisationForm form) {
 
-        ApplicationFinanceResource finance =
-                applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
-
-        applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
+        yourOrganisationService.updateHeadCount(applicationId, competitionId, userId, form.getHeadCount()).getSuccess();
+        yourOrganisationService.updateTurnover(applicationId, competitionId, userId, form.getTurnover()).getSuccess();
     }
 
     private List<Error> validateYourOrganisation(YourOrganisationForm form) {

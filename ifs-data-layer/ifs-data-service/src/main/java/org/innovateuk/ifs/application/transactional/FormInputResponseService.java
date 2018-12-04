@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -33,4 +34,6 @@ public interface FormInputResponseService {
     @PreAuthorize("hasPermission(#formInputResponseCommand, 'SAVE')")
     ServiceResult<FormInputResponse> saveQuestionResponse(@P("formInputResponseCommand") FormInputResponseCommand formInputResponseCommand);
 
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<FormInputResponseResource> findResponseByApplicationIdQuestionIdOrganisationIdAndFormInputType(long applicationId, long questionId, long organisationId, FormInputType formInputType);
 }

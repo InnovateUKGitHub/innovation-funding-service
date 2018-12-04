@@ -27,7 +27,7 @@ Available parameters:
 
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors(id)} ? 'govuk-form-group--error'">
 
-        <label class="govuk-label--s" th:for="headCount" th:text="${label}">Label text</label>
+        <label class="govuk-label govuk-label--s" th:for="headCount" th:text="${label}">Label text</label>
 
         <span th:if="${hint != null}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
 

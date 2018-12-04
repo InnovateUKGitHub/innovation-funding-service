@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -55,6 +56,16 @@ public class FormInputResponseController {
     public RestResult<List<FormInputResponseResource>> findByApplicationIdAndQuestionId(@PathVariable long applicationId,
                                                                                         @PathVariable long questionId) {
         return formInputResponseService.findResponseByApplicationIdAndQuestionId(applicationId, questionId).toGetResponse();
+    }
+
+    @GetMapping("/application/{applicationId}/question/{questionId}/organisation/{organisationId}/form-input-type/{formInputType}")
+    public RestResult<FormInputResponseResource> findByApplicationIdQuestionIdAndOrganisationId(@PathVariable long applicationId,
+                                                                                                @PathVariable long questionId,
+                                                                                                @PathVariable long organisationId,
+                                                                                                @PathVariable FormInputType formInputType) {
+
+        return formInputResponseService.findResponseByApplicationIdQuestionIdOrganisationIdAndFormInputType(
+                applicationId, questionId, organisationId, formInputType).toGetResponse();
     }
 
     @PostMapping("/saveQuestionResponse")

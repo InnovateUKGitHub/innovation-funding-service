@@ -69,11 +69,6 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     // for ByteBuddy
     YourProjectLocationController() {
-        this.commonViewModelPopulator = null;
-        this.formPopulator = null;
-        this.applicationFinanceRestService = null;
-        this.sectionService = null;
-        this.userRestService = null;
     }
 
     @GetMapping
