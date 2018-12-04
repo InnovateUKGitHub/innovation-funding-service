@@ -303,6 +303,7 @@ function blockUntilServiceIsUp() {
         DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | wc -l)
         ERRORRED_DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | grep Error | wc -l)
         ERRORRED_CRASHLOOPING_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep -E "CrashLoopBackOff|Error" | wc -l)
+        OUTOFPODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep -E "OutOfpods" | wc -l)
 
         if [ ${DEPLOY_PODS} -eq "0" ]; then
             if [ ${ERRORRED_PODS} -ne "0" ]; then
@@ -342,6 +343,11 @@ function blockUntilServiceIsUp() {
         echo "$UNREADY_PODS pods still not ready.."
         echo "$UNSATISFIED_DEPLOYMENTS deployments still not ready.."
         
+        if [ ${OUTOFPODS} -ne "0" ]; then
+            echo "CLUSTER IS FULL - Delete some projects and retry"
+            exit 1
+        fi
+
         sleep 10s
     done
     oc get routes ${SVC_ACCOUNT_CLAUSE}
