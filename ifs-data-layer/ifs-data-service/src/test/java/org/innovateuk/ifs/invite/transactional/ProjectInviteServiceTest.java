@@ -22,7 +22,6 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -315,38 +314,5 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<List<ProjectInviteResource>> invitesByProject = projectInviteService.getInvitesByProject(projectResource.getId());
         assertTrue(invitesByProject.isSuccess());
         assertEquals(singletonList(projectInviteResource), invitesByProject.getSuccess());
-    }
-
-    @Test
-    public void validateTargetEmailNoUser() {
-
-        String targetEmail = "test@test.com";
-
-        User user = newUser().
-                withEmailAddress(targetEmail)
-                .build();
-
-        Project project = newProject()
-                .build();
-
-        Organisation organisation = newOrganisation()
-                .build();
-
-        ProjectInvite projectInvite = newProjectInvite().
-                withProject(project).
-                withOrganisation(organisation).
-                withName("project name").
-                withEmail(user.getEmail()).
-                build();
-
-        ProjectInviteResource projectInviteResource = getMapper(ProjectInviteMapper.class).mapToResource(projectInvite);
-
-        when(projectInviteRepositoryMock.findByProjectIdAndEmail(projectInviteResource.getProject(), projectInviteResource.getEmail()))
-                .thenReturn(emptyList());
-
-        when(userRepositoryMock.findByEmail(targetEmail)).thenReturn(Optional.empty());
-
-        ServiceResult<Void> result = projectInviteService.saveProjectInvite(projectInviteResource);
-        assertTrue(result.isSuccess());
     }
 }
