@@ -173,6 +173,7 @@ invite a registered user
     the user follows the flow to register their organisation   ${BUSINESS_TYPE_ID}
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                            link = Application team
     the user clicks the button/link                            link=Add a collaborator organisation
     the user enters text to a text field                       css=#organisationName  New Organisation's Name
     the user enters text to a text field                       css=[id="applicants[0].name"]  Partner's name

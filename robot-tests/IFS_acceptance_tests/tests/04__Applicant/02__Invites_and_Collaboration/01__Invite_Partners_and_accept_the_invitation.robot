@@ -351,8 +351,6 @@ the user creates an account and signs in
 the lead applicant invites the collaborator
     Logging in and error checking    ${newLeadApplicant}  ${correct_password}
     The user clicks the button/link  link = Untitled application (start here)
-    The user clicks the button/link  link = Application overview
-    #On purpose here i am not clicking on the Begin Application to see whether we are able to continue without pressing it.
     the user fills in the inviting steps no Edit  ${newCollaborator}
     The user logs out if they are logged in
 

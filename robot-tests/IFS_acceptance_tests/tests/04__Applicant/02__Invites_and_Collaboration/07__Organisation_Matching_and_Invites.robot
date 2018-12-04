@@ -44,6 +44,7 @@ Researcher invites other researcher from same organisation in his application an
 the user invites collaborator by email address
     [Arguments]    ${COLLAB_USER_EMAIL}
     the user clicks the button/link       link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link       link = Application team
     the user clicks the button/link       jQuery=a:contains("Update and add contributors from INNOVATE LTD")
     the user clicks the button/link       jQuery=button:contains("Add another contributor")
     The user enters text to a text field  name=stagedInvite.name  research collab
