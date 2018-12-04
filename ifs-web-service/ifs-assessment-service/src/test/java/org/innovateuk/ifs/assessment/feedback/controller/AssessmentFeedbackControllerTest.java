@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.feedback.controller;
 
 import org.innovateuk.ifs.AbstractInviteMockMVCTest;
-import org.innovateuk.ifs.form.Form;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -23,15 +23,14 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.InviteService;
-import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -151,10 +150,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
     private ZonedDateTime twoHoursAgo;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         twoHoursAgo = ZonedDateTime.now().minusHours(2);
     }
 

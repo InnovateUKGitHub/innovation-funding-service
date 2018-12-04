@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -27,6 +28,9 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     @Autowired
     private CompetitionRepository competitionRepository;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
     @PermissionRule(value = "READ", description = "The consortium can see the application finances of their own organisation")
     public boolean consortiumCanSeeTheApplicationFinancesForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isAConsortiumMemberOnApplication(applicationFinanceResource, user);
@@ -42,6 +46,12 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ", description = "Stakeholders can see application finances for organisations on applications they are assigned to")
+    public boolean stakeholdersCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        Application application = applicationRepository.findById(applicationFinanceResource.getApplication());
+        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
+    }
+
     @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
     public boolean consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isAConsortiumMemberOnApplicationOrIsLeadApplicant(applicationFinanceResource, user);
@@ -50,6 +60,12 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     @PermissionRule(value = "ADD_COST", description = "Internal users can add a cost to the application finances")
     public boolean internalUserCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isInternal(user);
+    }
+
+    @PermissionRule(value = "ADD_COST", description = "Stakeholders can add a cost to the application finances they are assigned to")
+    public boolean stakeholdersCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        Application application = applicationRepository.findById(applicationFinanceResource.getApplication());
+        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(value = "ADD_COST", description = "An assessor can add a cost to the application finances")

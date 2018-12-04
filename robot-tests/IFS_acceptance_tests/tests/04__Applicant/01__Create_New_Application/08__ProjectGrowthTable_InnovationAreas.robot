@@ -98,6 +98,14 @@ Applicant fills in the Application Details
     Then The user fills in the Application details   ${applicationWithoutGrowth}  ${tomorrowday}  ${month}  ${nextyear}
     And the user selects Research category           Feasibility studies
 
+Application details read only view shows correct details without innovation area
+    [Documentation]  IFS-4722
+    [Tags]
+    Given The user clicks the button/link    link = Application details
+    Then the user should see the element     jQuery = dt:contains("Application name") + dd:contains("NewApplFromNewComp without GrowthTable")
+    And The user should not see the element  jQuery = dt:contains("Innovation area")
+    [Teardown]  the user clicks the button/link  link = Application overview
+
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
     [Tags]  HappyPath
@@ -299,6 +307,14 @@ The Lead Applicant fills in the Application Details for App with Growth
     Given the user clicks the button/link           link = Application overview
     When the user clicks the button/link            link = Application details
     Then the user fills in the Application details  ${applicationWithGrowth}  ${tomorrowday}  ${month}  ${nextyear}
+
+Application details read only view shows correct details with innovation area
+    [Documentation]  IFS-4722
+    [Tags]
+    Given The user clicks the button/link    link = Application details
+    Then the user should see the element     jQuery = dt:contains("Application name") + dd:contains("All-Innov-Areas Application With GrowthTable")
+    And The user should see the element  jQuery = dt:contains("Innovation area") + dd:contains("Biosciences")
+    [Teardown]  the user clicks the button/link  link = Application overview
 
 Newly created collaborator can view and edit project Growth table
     [Documentation]    INFUND-8426
