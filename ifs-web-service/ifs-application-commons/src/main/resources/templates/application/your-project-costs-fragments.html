@@ -21,39 +21,41 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body">
-                    Be specific and add each role separately.
-                </p>
-                <details class="govuk-details" role="group">
-                    <summary class="govuk-details__summary">
-                        <span class="govuk-details__summary-text">Labour costs guidance</span>
-                    </summary>
-                    <div class="govuk-details__text">
-                        <p class="govuk-body">If your application is awarded funding, you will need to account for all your labour costs as they occur. For example, you must keep timesheets and payroll records. These must show the actual hours worked by individuals and paid by the organisation.</p>
-                        <p class="govuk-body">You can include the following labour costs, based on your PAYE records:</p>
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>gross salary</li>
-                            <li>National Insurance</li>
-                            <li>company pension contribution</li>
-                            <li>life insurance</li>
-                            <li>other non-discretionary package costs</li>
-                        </ul>
-                        <p class="govuk-body">You cannot include:</p>
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>discretionary bonuses</li>
-                            <li>performance related payments of any kind</li>
-                        </ul>
-                        <p class="govuk-body">You may include the total number of working days for staff but do not include:</p>
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>sick days</li>
-                            <li>waiting time</li>
-                            <li>training days</li>
-                            <li>non-productive time</li>
-                        </ul>
-                        <p class="govuk-body">Enter the total number of working days in the year. List the total days worked by all categories of staff on your project. Describe their roles.</p>
-                        <p class="govuk-body">We will review the total amount of time and cost of labour before we approve your application. The terms and conditions of the grant include compliance with these points.</p>
-                    </div>
-                </details>
+                <th:block th:unless="${model.internal}">
+                    <p class="govuk-body">
+                        Be specific and add each role separately.
+                    </p>
+                    <details class="govuk-details" role="group">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">Labour costs guidance</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body">If your application is awarded funding, you will need to account for all your labour costs as they occur. For example, you must keep timesheets and payroll records. These must show the actual hours worked by individuals and paid by the organisation.</p>
+                            <p class="govuk-body">You can include the following labour costs, based on your PAYE records:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>gross salary</li>
+                                <li>National Insurance</li>
+                                <li>company pension contribution</li>
+                                <li>life insurance</li>
+                                <li>other non-discretionary package costs</li>
+                            </ul>
+                            <p class="govuk-body">You cannot include:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>discretionary bonuses</li>
+                                <li>performance related payments of any kind</li>
+                            </ul>
+                            <p class="govuk-body">You may include the total number of working days for staff but do not include:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>sick days</li>
+                                <li>waiting time</li>
+                                <li>training days</li>
+                                <li>non-productive time</li>
+                            </ul>
+                            <p class="govuk-body">Enter the total number of working days in the year. List the total days worked by all categories of staff on your project. Describe their roles.</p>
+                            <p class="govuk-body">We will review the total amount of time and cost of labour before we approve your application. The terms and conditions of the grant include compliance with these points.</p>
+                        </div>
+                    </details>
+                </th:block>
                 <div class="govuk-form-group inline">
                     <label class="govuk-label" th:for="working-days-per-year">
                         Working days per year
