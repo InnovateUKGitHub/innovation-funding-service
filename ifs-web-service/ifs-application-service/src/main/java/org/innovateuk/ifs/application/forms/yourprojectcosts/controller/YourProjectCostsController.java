@@ -15,6 +15,7 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCo
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -107,6 +108,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
     }
 
     @PostMapping
+    @AsyncMethod
     public String saveYourProjectCosts(Model model,
                                        UserResource user,
                                        @PathVariable long applicationId,
@@ -117,6 +119,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
     }
 
     @PostMapping(params = "complete")
+    @AsyncMethod
     public String complete(Model model,
                            UserResource user,
                            @PathVariable long applicationId,

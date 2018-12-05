@@ -166,6 +166,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save-eligibility")
+    @AsyncMethod
     public String projectFinanceFormSubmit(@PathVariable final Long projectId,
                                            @PathVariable Long organisationId,
                                            @RequestParam("save-eligibility") FinanceRowType type,
