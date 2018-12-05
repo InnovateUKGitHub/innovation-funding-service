@@ -78,13 +78,13 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     public void viewYourProjectCosts() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
 
+        when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID)).thenReturn(new YourProjectCostsForm());
+
         mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
-
-        verify(formPopulator).populateForm(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID));
     }
 
     @Test
