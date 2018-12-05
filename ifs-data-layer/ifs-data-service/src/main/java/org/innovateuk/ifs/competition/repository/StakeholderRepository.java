@@ -21,7 +21,7 @@ public interface StakeholderRepository extends CompetitionParticipantRepository<
         return getByUserIdAndRole(stakeholderUserId, STAKEHOLDER);
     }
 
-    default boolean findStakeholderByCompetitionIdAndEmail(long competitionId, String stakeholderUserEmail) {
+    default boolean findStakeholderByCompetitionIdAndStakeholderEmail(long competitionId, String stakeholderUserEmail) {
         return existsByCompetitionIdAndUserEmailAndRole(competitionId, stakeholderUserEmail, STAKEHOLDER);
     }
 
