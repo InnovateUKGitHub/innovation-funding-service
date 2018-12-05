@@ -22,7 +22,8 @@
     "sshpk": "^1.15.1"
   },
   "devDependencies": {
-    "@frctl/fractal": "^1.1.7"
+    "@frctl/fractal": "^1.1.7",
+    "jest": "^23.6.0"
   },
   "engines": {
     "node": "^8.11.1"
@@ -34,6 +35,14 @@
       "Cookies",
       "showdown",
       "md"
+    ]
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "<rootDir>/build/"
     ]
   },
   "private": true

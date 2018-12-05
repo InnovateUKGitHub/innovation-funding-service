@@ -1,23 +1,25 @@
 package org.innovateuk.ifs.finance.handler.item;
 
-import org.innovateuk.ifs.file.transactional.FileEntryService;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
+import org.innovateuk.ifs.finance.transactional.OverheadFileService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * Handles the overheads, i.e. converts the costs to be stored into the database
@@ -27,17 +29,20 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
     public static final String COST_KEY = "overhead";
 
     @Autowired
-    private FileEntryService fileEntryService;
+    private OverheadFileService overheadFileService;
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
 
     @Override
     public void validate(@NotNull Overhead overhead, @NotNull BindingResult bindingResult) {
 
         switch (overhead.getRateType()) {
             case DEFAULT_PERCENTAGE:
-            case CUSTOM_RATE:
                 super.validate(overhead, bindingResult, Overhead.RateNotZero.class);
                 break;
             case TOTAL:
+                validateFilePresent(overhead, bindingResult);
                 super.validate(overhead, bindingResult, Overhead.TotalCost.class);
                 break;
             case NONE:
@@ -60,40 +65,27 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
 
     @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
-        return buildRowItem(cost, cost.getFinanceRowMetadata());
+        return buildRowItem(cost);
     }
 
     @Override
     public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
-        return buildRowItem(cost, cost.getFinanceRowMetadata());
+        return buildRowItem(cost);
     }
 
-    private FinanceRowItem buildRowItem(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues){
-        OverheadRateType type = OverheadRateType.valueOf(cost.getItem());
-        Overhead overhead = new Overhead(cost.getId(), type, cost.getQuantity());
+    private FinanceRowItem buildRowItem(FinanceRow cost) {
+        return new Overhead(cost.getId(), OverheadRateType.valueOf(cost.getItem()), cost.getQuantity());
+    }
 
-        Optional<FinanceRowMetaValue> useTotalOptionMetaValue = financeRowMetaValues.stream().
-                filter(metaValue -> metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.USE_TOTAL_META_FIELD)).
-                findFirst();
-
-        if (useTotalOptionMetaValue.isPresent() && "false".equals(useTotalOptionMetaValue.get().getValue())) {
-            overhead.setUseTotalOption(false);
-        } else {
-            overhead.setUseTotalOption(true);
-            addOptionalCalculationFile(financeRowMetaValues, overhead);
+    private void validateFilePresent(Overhead overhead, BindingResult bindingResult) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+                .getRequestAttributes()).getRequest();
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        if (!user.isInternalUser()) {
+            if (!overheadFileService.getFileEntryDetails(overhead.getId()).getOptionalSuccessObject().isPresent()) {
+                bindingResult.reject(Overhead.FINANCE_OVERHEAD_FILE_REQUIRED);
+            }
         }
-
-        return overhead;
-    }
-
-    private void addOptionalCalculationFile(List<FinanceRowMetaValue> financeRowMetaValues, Overhead overhead) {
-
-        Optional<FinanceRowMetaValue> overheadFileMetaValue = simpleFindFirst(financeRowMetaValues, metaValue ->
-                metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.CALCULATION_FILE_FIELD));
-
-        overheadFileMetaValue.ifPresent(financeRowMetaValue ->
-                fileEntryService.findOne(Long.valueOf(financeRowMetaValue.getValue())).
-                        andOnSuccessReturnVoid(overhead::setCalculationFile));
     }
 
     @Override

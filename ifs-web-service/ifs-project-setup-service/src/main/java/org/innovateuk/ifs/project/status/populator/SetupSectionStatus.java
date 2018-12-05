@@ -1,13 +1,15 @@
 package org.innovateuk.ifs.project.status.populator;
 
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
-import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
 import static org.innovateuk.ifs.sections.SectionStatus.*;
 
 /**
@@ -75,17 +77,25 @@ public class SetupSectionStatus {
         }
     }
 
-    public SectionStatus otherDocumentsSectionStatus(final ProjectResource project,
-                                                     final boolean isProjectManager) {
-        if (project.isPartnerDocumentsSubmitted() && APPROVED.equals(project.getOtherDocumentsApproved())) {
+    public SectionStatus documentsSectionStatus(final boolean isProjectManager,
+                                                List<CompetitionDocumentResource> expectedDocuments,
+                                                List<ProjectDocumentResource> projectDocuments) {
+
+        int actualNumberOfDocuments = projectDocuments.size();
+        int expectedNumberOfDocuments = expectedDocuments.size();
+
+        if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
+                .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()))) {
             return TICK;
-        } else if (isProjectManager && (!project.isPartnerDocumentsSubmitted() || REJECTED.equals(project.getOtherDocumentsApproved()))) {
-            return FLAG;
-        } else if (!isProjectManager && !project.isPartnerDocumentsSubmitted()) {
-            return EMPTY;
-        } else {
-            return HOURGLASS;
         }
+
+        if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()
+                .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
+                                                    || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
+            return isProjectManager ? FLAG : EMPTY;
+        }
+
+        return HOURGLASS;
     }
 
     public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,

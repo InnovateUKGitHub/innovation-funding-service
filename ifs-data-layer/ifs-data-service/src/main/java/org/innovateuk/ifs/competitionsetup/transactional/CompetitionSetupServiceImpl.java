@@ -14,7 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
@@ -359,31 +359,52 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 (GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
 
         competition.setTermsAndConditions(defaultTermsAndConditions);
-        competition.setProjectDocuments(createDefaultProjectDocuments(competition));
+        competition.setCompetitionDocuments(createDefaultProjectDocuments(competition));
 
         Competition savedCompetition = competitionRepository.save(competition);
         return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
                 .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
     }
 
-    private List<ProjectDocument> createDefaultProjectDocuments(Competition competition) {
+    private List<CompetitionDocument> createDefaultProjectDocuments(Competition competition) {
 
         FileType pdfFileType = fileTypeRepository.findByName("PDF");
 
-        List<ProjectDocument> defaultProjectDocuments = new ArrayList<>();
-        defaultProjectDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
-        defaultProjectDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
+        List<CompetitionDocument> defaultCompetitionDocuments = new ArrayList<>();
+        defaultCompetitionDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
+        defaultCompetitionDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
 
-        return defaultProjectDocuments;
+        return defaultCompetitionDocuments;
     }
 
-    private ProjectDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
-        return new ProjectDocument(competition, "Collaboration agreement", "Enter guidance for Collaboration agreement",
+    private CompetitionDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
+        return new CompetitionDocument(competition, "Collaboration agreement", "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
+                "\n" +
+                "<p>Please allow enough time to complete this document before your project start date.</p>\n" +
+                "\n" +
+                "<p>Guidance on completing a collaboration agreement can be found on the <a target=\"_blank\" href=\"http://www.ipo.gov.uk/lambert\">Lambert Agreement website</a>.</p>\n" +
+                "\n" +
+                "<p>Your collaboration agreement must be:</p>\n" +
+                "<ul class=\"list-bullet\"><li>in portable document format (PDF)</li>\n" +
+                "<li>legible at 100% magnification</li>\n" +
+                "<li>less than 10MB in file size</li></ul>",
                 false, true, fileTypes);
     }
 
-    private ProjectDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
-        return new ProjectDocument(competition, "Exploitation plan", "Enter guidance for Exploitation plan",
+    private CompetitionDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
+        return new CompetitionDocument(competition, "Exploitation plan", "<p>This is a confirmation of your overall plan, setting out the business case for your project. This plan will change during the lifetime of the project.</p>\n" +
+                "\n" +
+                "<p>It should also describe partner activities that will exploit the results of the project so that:</p>\n" +
+                "<ul class=\"list-bullet\"><li>changes in the commercial environment can be monitored and accounted for</li>\n" +
+                "<li>adequate resources are committed to exploitation</li>\n" +
+                "<li>exploitation can be monitored by the stakeholders</li></ul>\n" +
+                "\n" +
+                "<p>You can download an <a href=\"/files/exploitation_plan.doc\" class=\"govuk-link\">exploitation plan template</a>.</p>\n" +
+                "\n" +
+                "<p>The uploaded exploitation plan must be:</p>\n" +
+                "<ul class=\"list-bullet\"><li>in portable document format (PDF)</li>\n" +
+                "<li>legible at 100% magnification</li>\n" +
+                "<li>less than 10MB in file size</li></ul>",
                 false, true, fileTypes);
     }
 

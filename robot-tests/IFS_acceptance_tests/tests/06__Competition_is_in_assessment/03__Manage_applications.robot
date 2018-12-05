@@ -158,7 +158,6 @@ Review the application
     [Tags]
     When the user clicks the button/link  link = Review application
     Then the user should see the element  jQuery = h1:contains("Application overview")
-    And the user should see the element   jQuery = dt:contains("Innovation area") + dd:contains("Digital manufacturing")
     [Teardown]    The user goes back to the previous page
 
 View the available assessors

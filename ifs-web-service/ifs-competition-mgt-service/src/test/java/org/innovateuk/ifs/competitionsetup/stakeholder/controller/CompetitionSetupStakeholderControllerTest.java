@@ -49,10 +49,8 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
     @Override
     protected CompetitionSetupStakeholderController supplyControllerUnderTest() { return new CompetitionSetupStakeholderController(); }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(true);
     }
 

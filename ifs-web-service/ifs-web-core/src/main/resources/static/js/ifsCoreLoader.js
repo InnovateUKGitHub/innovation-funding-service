@@ -52,9 +52,14 @@ IFS.core.loadOrder = {
       IFS.core.financeSpecifics.init()
     }
   },
-  'your-funding': {
+  'finance-row-form': {
     init: function () {
-      IFS.core.yourFunding.init()
+      IFS.core.financeRowForm.init()
+    }
+  },
+  'overheads': {
+    finalize: function () {
+      IFS.core.overheads.init()
     }
   }
 }

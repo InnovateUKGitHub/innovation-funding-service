@@ -44,8 +44,7 @@ Comp Admin starts a new Competition
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
-    # TODO IFS-4609 Uncomment when this functionality is enabled.
-    #And the user fills in the CS Documents in other projects
+    And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -99,6 +98,14 @@ Applicant fills in the Application Details
     Then The user fills in the Application details   ${applicationWithoutGrowth}  ${tomorrowday}  ${month}  ${nextyear}
     And the user selects Research category           Feasibility studies
 
+Application details read only view shows correct details without innovation area
+    [Documentation]  IFS-4722
+    [Tags]
+    Given The user clicks the button/link    link = Application details
+    Then the user should see the element     jQuery = dt:contains("Application name") + dd:contains("NewApplFromNewComp without GrowthTable")
+    And The user should not see the element  jQuery = dt:contains("Innovation area")
+    [Teardown]  the user clicks the button/link  link = Application overview
+
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
     [Tags]  HappyPath
@@ -122,8 +129,7 @@ Once the project growth table is selected
     And the user fills in the CS Milestones              ${month}  ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
-    # TODO IFS-4609 Uncomment when this functionality is enabled.
-    #And the user fills in the CS Documents in other projects
+    And the user fills in the CS Documents in other projects
     When the user clicks the button/link                 link = Public content
     Then the user fills in the Public content and publishes  GrowthTable
     And the user clicks the button/link                  link = Return to setup overview
@@ -301,6 +307,14 @@ The Lead Applicant fills in the Application Details for App with Growth
     Given the user clicks the button/link           link = Application overview
     When the user clicks the button/link            link = Application details
     Then the user fills in the Application details  ${applicationWithGrowth}  ${tomorrowday}  ${month}  ${nextyear}
+
+Application details read only view shows correct details with innovation area
+    [Documentation]  IFS-4722
+    [Tags]
+    Given The user clicks the button/link    link = Application details
+    Then the user should see the element     jQuery = dt:contains("Application name") + dd:contains("All-Innov-Areas Application With GrowthTable")
+    And The user should see the element  jQuery = dt:contains("Innovation area") + dd:contains("Biosciences")
+    [Teardown]  the user clicks the button/link  link = Application overview
 
 Newly created collaborator can view and edit project Growth table
     [Documentation]    INFUND-8426

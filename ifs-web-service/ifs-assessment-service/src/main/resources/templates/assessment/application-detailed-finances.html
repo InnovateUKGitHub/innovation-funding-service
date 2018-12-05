@@ -18,7 +18,6 @@
                 </th:block>
 
                 <h2 class="govuk-heading-m" th:text="${applicationOrganisation.name} + ' (' + (${leadOrganisation} ? 'Lead ' : '') + 'Partner)'">Finances overview</h2>
-
                 <h2 class="govuk-heading-m">Finances overview</h2>
                 <div class="table-overflow">
                     <table class="govuk-table table-overview">
@@ -28,7 +27,7 @@
                             <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total costs</th>
                             <th scope="col" class="govuk-table__header govuk-table__header--numeric">Funding level (%)</th>
                             <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)</th>
-                            <th:block th:unless="${detailedCostings.financeView == 'academic-finance'}">
+                            <th:block th:unless="${financeView == 'academic-finance'}">
                                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
                                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project (&pound;)</th>
                             </th:block>
@@ -37,11 +36,11 @@
                         <th:block th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell" th:text="${detailedCostings.application.durationInMonths+' months'}">15 months</td>
+                            <td class="govuk-table__cell" th:text="${applicationResource.durationInMonths+' months'}">15 months</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.total,1,'DEFAULT')}">200,123</th:block></td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(organisationFinance.grantClaimPercentage,1,'NONE')+'%'}">20%</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(organisationFinance.totalFundingSought,1,'DEFAULT')}">60,271</td>
-                            <th:block th:unless="${detailedCostings.financeView == 'academic-finance'}">
+                            <th:block th:unless="${financeView == 'academic-finance'}">
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(organisationFinance.totalOtherFunding,1,'DEFAULT')}">2,468</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(organisationFinance.totalContribution,1,'DEFAULT')}">138,164</td>
                             </th:block>
@@ -51,7 +50,36 @@
                     </table>
                 </div>
 
-                <th:block th:include="finance/your-finances-sub-sections :: assessment_finances (model=${model}, internalView=${false})" />
+                <th:block th:unless="${financeView == 'academic-finance'}" th:with="model=${costsViewModel}" th:object="${form}">
+                    <h2 class="govuk-heading-m">Detailed finances</h2>
+
+                    <th:block th:insert="application/your-project-costs-fragments :: labour" />
+                    <th:block th:insert="application/your-project-costs-fragments :: overheads" />
+                    <th:block th:insert="application/your-project-costs-fragments :: materials" />
+                    <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
+                    <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
+                    <th:block th:insert="application/your-project-costs-fragments :: travel" />
+                    <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
+
+                    <div class="govuk-grid-row total-cost">
+                        <div class="govuk-grid-column-one-half">
+                            <label for="total-cost" class="govuk-heading-m">Total project costs</label>
+                        </div>
+                        <div class="govuk-grid-column-one-half alignright">
+                            <input type="text"
+                                   id="total-cost"
+                                   readonly="readonly"
+                                   class="govuk-heading-m alignright"
+                                   data-calculation-fields="[id*=section-total]"
+                                   data-calculation-operations="+"
+                                   th:value="'£' + ${#numbers.formatInteger(form.organisationFinanceTotal, 0, 'DEFAULT')}"/>
+                        </div>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${financeView == 'academic-finance'}">
+                    <th:block th:include="finance/your-finances-sub-sections :: assessment_finances (model=${model}, internalView=${false})" />
+                </th:block>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>

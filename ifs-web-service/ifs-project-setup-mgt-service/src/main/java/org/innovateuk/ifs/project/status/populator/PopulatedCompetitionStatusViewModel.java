@@ -50,7 +50,7 @@ public class PopulatedCompetitionStatusViewModel {
                 internalUser.canAccessBankDetailsSection(userResource).isAccessibleOrNotRequired(),
                 internalUser.canAccessFinanceChecksSection(userResource).isAccessibleOrNotRequired(),
                 internalUser.canAccessSpendProfileSection(userResource).isAccessibleOrNotRequired(),
-                internalUser.canAccessOtherDocumentsSection(userResource).isAccessibleOrNotRequired(),
+                internalUser.canAccessDocumentsSection(userResource).isAccessibleOrNotRequired(),
                 internalUser.canAccessGrantOfferLetterSection(userResource).isAccessibleOrNotRequired(),
                 internalUser.canAccessGrantOfferLetterSendSection(userResource).isAccessibleOrNotRequired(),
                 internalUser.grantOfferLetterActivityStatus(userResource));

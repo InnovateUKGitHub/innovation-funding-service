@@ -16,17 +16,6 @@ public class DefaultFinanceRowRestServiceImpl extends BaseFinanceRowRestServiceI
     }
 
     @Override
-    public RestResult<Void> delete(long costId) {
-        return deleteWithRestResult(getCostRestUrl() + "/delete/" + costId);
-    }
-
-    @Override
-    public RestResult<FinanceRowItem> addWithResponse(long applicationFinanceId, FinanceRowItem costItem) {
-        return postWithRestResult(getCostRestUrl() + "/add-with-response/" + applicationFinanceId, costItem,
-                FinanceRowItem.class);
-    }
-
-    @Override
     public RestResult<FinanceRowItem> getCost(long costId) {
         return getWithRestResult(getCostRestUrl() + "/" + costId, FinanceRowItem.class);
     }

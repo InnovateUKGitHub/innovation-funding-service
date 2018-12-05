@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.yourfunding.validator;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.yourfunding.form.OtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -13,6 +14,7 @@ import org.springframework.validation.DataBinder;
 
 import java.math.BigDecimal;
 
+import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertFalse;
@@ -33,16 +35,17 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
 
     @Test
     public void validate() {
+        String unsavedId = generateUnsavedRowId();
         YourFundingForm form =  new YourFundingForm();
         form.setRequestingFunding(true);
         form.setGrantClaimPercentage(0);
 
         form.setOtherFunding(true);
-        OtherFundingRowForm emptyRow = new OtherFundingRowForm(null, "Valid", "01-2019", new BigDecimal(123));
-        OtherFundingRowForm existingRow = new OtherFundingRowForm(20L, null, "InvalidPattern", new BigDecimal("012345678901234567890"));
+        OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "Valid", "01-2019", new BigDecimal(123)));
+        OtherFundingRowForm existingRow = new OtherFundingRowForm(new OtherFunding(20L, null, null, "InvalidPattern", new BigDecimal("012345678901234567890")));
 
         form.setOtherFundingRows(asMap(
-                YourFundingForm.EMPTY_ROW_ID, emptyRow,
+                unsavedId, emptyRow,
                 "20", existingRow
         ));
 
@@ -58,9 +61,9 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
         assertTrue(bindingResult.hasFieldErrors("grantClaimPercentage"));
 
         assertFalse(bindingResult.hasFieldErrors("otherFunding"));
-        assertFalse(bindingResult.hasFieldErrors("otherFundingRows[empty].source"));
-        assertFalse(bindingResult.hasFieldErrors("otherFundingRows[empty].date"));
-        assertFalse(bindingResult.hasFieldErrors("otherFundingRows[empty].fundingAmount"));
+        assertFalse(bindingResult.hasFieldErrors(String.format("otherFundingRows[%s].source", unsavedId)));
+        assertFalse(bindingResult.hasFieldErrors(String.format("otherFundingRows[%s].date", unsavedId)));
+        assertFalse(bindingResult.hasFieldErrors(String.format("otherFundingRows[%s].fundingAmount", unsavedId)));
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].source"));
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].date"));
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].fundingAmount"));
