@@ -2,7 +2,6 @@ package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -20,7 +19,6 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 
 @Component
 public class OrganisationJourneyEnd {
@@ -33,9 +31,6 @@ public class OrganisationJourneyEnd {
 
     @Autowired
     private InviteRestService inviteRestService;
-
-    @Autowired
-    private QuestionRestService questionRestService;
 
     @Autowired
     private UserRestService userRestService;
@@ -73,7 +68,7 @@ public class OrganisationJourneyEnd {
     private String createNewApplication(HttpServletRequest request, UserResource user, long organisationId) {
         ApplicationResource application = applicationService.createApplication(registrationCookieService.getCompetitionIdCookieValue(request).get(),
                 user.getId(), organisationId, "");
-        return redirectToApplicationTeam(application);
+        return redirectToApplicationOverview(application.getId());
     }
 
     private String acceptInvite(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
@@ -82,16 +77,6 @@ public class OrganisationJourneyEnd {
         inviteRestService.acceptInvite(inviteHash, user.getId(), organisationId).getSuccess();
         registrationCookieService.deleteInviteHashCookie(response);
         return redirectToApplicationOverview(invite.getApplication());
-    }
-
-    private String redirectToApplicationTeam(ApplicationResource application) {
-        return questionRestService
-                .getQuestionByCompetitionIdAndQuestionSetupType(application.getCompetition(), APPLICATION_TEAM)
-                .handleSuccessOrFailure(
-                        failure -> format("redirect:/application/%s/team", application.getId()),
-                        question -> format("redirect:/application/%s/form/question/%s", application.getId(),
-                                question.getId())
-                );
     }
 
     private String redirectToApplicationOverview(long applicationId) {
