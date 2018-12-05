@@ -125,16 +125,12 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     }
 
     private ServiceResult<Void> validateUserInviteNotPending(long competitionId, UserResource invitedUser) {
-
-        List<UserResource> pendingStakeholderInvites = findPendingStakeholderInvites(competitionId).getSuccess();
-
-        boolean foundPendingInvite = pendingStakeholderInvites.stream().anyMatch(o -> o.getEmail().equals(invitedUser.getEmail()));
-
+        boolean foundPendingInvite = stakeholderInviteRepository.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, invitedUser.getEmail());
         return foundPendingInvite ? serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess();
     }
 
     private ServiceResult<Void> validateUserNotAlreadyStakeholderOnCompetition(long competitionId, String email) {
-        boolean isUserStakeholderOnCompetition = stakeholderRepository.findStakeholderByCompetitionIdAndEmail(competitionId, email);
+        boolean isUserStakeholderOnCompetition =  stakeholderRepository.findStakeholderByCompetitionIdAndEmail(competitionId, email);
         return isUserStakeholderOnCompetition ? serviceFailure(STAKEHOLDER_HAS_ACCEPTED_INVITE) : serviceSuccess();
     }
 
