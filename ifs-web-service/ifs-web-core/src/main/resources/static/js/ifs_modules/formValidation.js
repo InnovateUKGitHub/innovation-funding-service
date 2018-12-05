@@ -542,7 +542,7 @@ IFS.core.formValidation = (function () {
       var postcodeAttribute = 'postcode'
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, postcodeAttribute)
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, postcodeAttribute)
-      var re = /^$|^.{3,10}$/
+      var re = /^.{3,10}$/
 
       var postcode = field.val()
       var validPostcode = re.test(postcode)
