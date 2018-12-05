@@ -18,7 +18,7 @@ Available parameters:
   Optional
 
     * hint - additional guidance text to explain the textfield - defaults to not showing a hint
-    * required
+    * required - true|false
     * requiredErrorMessage
 
 */-->
@@ -45,7 +45,7 @@ Available parameters:
                            th:value="${option.value}"
                            th:checked="${value.toString() == option.value.toString()}"
                            th:attrappend="
-                                required=${required ?: null},
+                                required=${required ? 'required' : null},
                                 data-required-errormessage=${requiredErrorMessage ?: null}
                                 "/>
 

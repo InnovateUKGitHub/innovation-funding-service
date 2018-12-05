@@ -46,8 +46,9 @@
                         value=${form.organisationSize},
                         optionDescriptionsAndValues=${model.organisationSizeOptions},
                         hint='To determine the level of funding you are eligible to receive please provide your
-                              business size using the &lt;a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
-                              target=&quot;_blank&quot;> EU definition (opens in a new window)&lt;/a&gt; for guidance.',
+                              business size using the <a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
+                              target=&quot;_blank&quot;> EU definition (opens in a new window)</a> for guidance.',
+                        required=true,
                         )" />
 
                 <th:block th:insert="fragments/form-elements/textfield ::
@@ -55,7 +56,8 @@
                         label='Turnover (£)',
                         hint='Your turnover from the last financial year.',
                         id='turnover',
-                        value=${form.turnover}
+                        value=${form.turnover},
+                        required=true,
                         )" />
 
                 <th:block th:insert="fragments/form-elements/textfield ::
@@ -63,7 +65,8 @@
                         label='Full time employees',
                         hint='Number of full time employees at your organisation.',
                         id='headCount',
-                        value=${form.headCount}
+                        value=${form.headCount},
+                        required=true,
                         )" />
 
                 <div class="agree-to-terms-container">
@@ -85,17 +88,17 @@
 
                 <dl class="govuk-list readonly-data">
                     <dt>Size</dt>
-                    <dd>Medium</dd>
+                    <dd th:text="${form.organisationSize.description}">Medium</dd>
                 </dl>
 
                 <dl class="govuk-list readonly-data">
                     <dt>Turnover (£)</dt>
-                    <dd>&pound;1</dd>
+                    <dd th:text="${form.turnover}">&pound;1</dd>
                 </dl>
 
                 <dl class="govuk-list readonly-data">
                     <dt>Full time employees</dt>
-                    <dd>1</dd>
+                    <dd th:text="${form.headCount}">1</dd>
                 </dl>
 
             </th:block>

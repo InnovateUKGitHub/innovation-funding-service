@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.service;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -101,6 +102,17 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
                 toServiceResult();
     }
 
+    @Override
+    public ServiceResult<Void> updateOrganisationSize(long applicationId, long organisationId, OrganisationSize organisationSize) {
+        return applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).
+                andOnSuccess(finance -> {
+                    finance.setOrganisationSize(organisationSize);
+                    return applicationFinanceRestService.update(finance.getId(), finance);
+                }).
+                toServiceResult().
+                andOnSuccessReturnVoid();
+    }
+
     private ServiceResult<Long> getLongValueForFormInputType(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {
         return getFormInputResponseForOrganisation(applicationId, competitionId, organisationId, formInputType).
                 andOnSuccessReturn(this::getLongValueFromFormInputResponses).
@@ -135,7 +147,7 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     private Long getLongValueFromFormInputResponses(Optional<FormInputResponseResource> formInputResponse) {
 
         return formInputResponse.
-                map(response -> response.getValue() != null ? Long.valueOf(response.getValue()) : null).
+                map(response -> NumberUtils.isDigits(response.getValue()) ? Long.valueOf(response.getValue()) : null).
                 orElse(null);
     }
 }

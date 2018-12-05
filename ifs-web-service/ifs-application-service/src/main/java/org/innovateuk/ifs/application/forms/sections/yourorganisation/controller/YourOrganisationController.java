@@ -103,11 +103,12 @@ public class YourOrganisationController extends AsyncAdaptor {
     @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation funding details")
     public String update(
             @PathVariable("applicationId") long applicationId,
+            @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
             UserResource loggedInUser,
             @ModelAttribute YourOrganisationForm form) {
 
-        updateYourOrganisation(applicationId, organisationId, loggedInUser.getId(), form);
+        updateYourOrganisation(applicationId, competitionId, organisationId, loggedInUser.getId(), form);
         return redirectToYourFinances(applicationId);
     }
 
@@ -116,11 +117,12 @@ public class YourOrganisationController extends AsyncAdaptor {
     @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation funding details")
     public @ResponseBody JsonNode autosave(
             @PathVariable("applicationId") long applicationId,
+            @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
             UserResource loggedInUser,
             @ModelAttribute YourOrganisationForm form) {
 
-        update(applicationId, organisationId, loggedInUser, form);
+        update(applicationId, competitionId, organisationId, loggedInUser, form);
         return new ObjectMapper().createObjectNode();
     }
 
@@ -130,6 +132,7 @@ public class YourOrganisationController extends AsyncAdaptor {
     public String markAsComplete(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
+            @PathVariable("competitionId") long competitionId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
             @Valid @ModelAttribute("form") YourOrganisationForm form,
@@ -148,7 +151,7 @@ public class YourOrganisationController extends AsyncAdaptor {
 
         Supplier<String> successHandler = () -> {
 
-            updateYourOrganisation(applicationId, organisationId, loggedInUser.getId(), form);
+            updateYourOrganisation(applicationId, competitionId, organisationId, loggedInUser.getId(), form);
 
             ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
             List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
@@ -179,9 +182,11 @@ public class YourOrganisationController extends AsyncAdaptor {
 
     private void updateYourOrganisation(long applicationId,
                                         long competitionId,
+                                        long organisationId,
                                         long userId,
                                         YourOrganisationForm form) {
 
+        yourOrganisationService.updateOrganisationSize(applicationId, organisationId, form.getOrganisationSize()).getSuccess();
         yourOrganisationService.updateHeadCount(applicationId, competitionId, userId, form.getHeadCount()).getSuccess();
         yourOrganisationService.updateTurnover(applicationId, competitionId, userId, form.getTurnover()).getSuccess();
         yourOrganisationService.updateStateAidAgreed(applicationId, form.getStateAidAgreed()).getSuccess();
