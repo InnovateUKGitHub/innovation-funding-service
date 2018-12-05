@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
+
 /**
  * This interface is used to generate Spring Data Repositories.
  * For more info:
@@ -120,7 +122,9 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
 
     AssessmentParticipant getByInviteHash(String hash);
 
-    List<AssessmentParticipant> getByUserIdAndRole(Long userId, CompetitionParticipantRole role);
+    default List<AssessmentParticipant> getByAssessorId(long assessorId) {
+        return getByUserIdAndRole(assessorId, ASSESSOR);
+    }
 
     List<AssessmentParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 

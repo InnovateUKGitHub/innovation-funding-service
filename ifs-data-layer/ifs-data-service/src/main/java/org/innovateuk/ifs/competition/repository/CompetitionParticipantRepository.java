@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -15,6 +16,8 @@ public interface CompetitionParticipantRepository<ParticipantType extends Compet
 
     ParticipantType getByCompetitionIdAndUserIdAndRole(long competitionId, long userId, CompetitionParticipantRole
             role);
+
+    List<ParticipantType> getByUserIdAndRole(long userId, CompetitionParticipantRole role);
 
     void deleteByCompetitionIdAndUserIdAndRole(long competitionId, long userId, CompetitionParticipantRole role);
 

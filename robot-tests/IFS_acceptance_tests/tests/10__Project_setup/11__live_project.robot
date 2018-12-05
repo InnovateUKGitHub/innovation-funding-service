@@ -28,7 +28,7 @@ Project details section is read-only
     [Tags]  HappyPath
     When the user clicks the button/link        link = Project details
     Then the user should not see the element    link = Target start date
-    And the user should not see the element     link = Project address
+    And the user should not see the element     link = Correspondence address
     And the user should not see the element     link = Project Manager
     And the user should not see the element     link = ${Gabtype_NAME}
     [Teardown]    the user goes back to the previous page
@@ -97,7 +97,7 @@ Project details section is read-only for industrial partner
     [Tags]
     When the user clicks the button/link        link = Project details
     Then the user should not see the element    link = Target start date
-    And the user should not see the element     link = Project address
+    And the user should not see the element     link = Correspondence address
     And the user should not see the element     link = Project Manager
     And the user should not see the element     link = ${Gabtype_NAME}
     [Teardown]    the user goes back to the previous page
@@ -166,7 +166,7 @@ Project details section is read-only for academic partner
     [Tags]
     When the user clicks the button/link        link = Project details
     Then the user should not see the element    link = Target start date
-    And the user should not see the element     link = Project address
+    And the user should not see the element     link = Correspondence address
     And the user should not see the element     link = Project Manager
     And the user should not see the element     link = ${Gabtype_NAME}
     [Teardown]    the user goes back to the previous page
