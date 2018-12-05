@@ -122,36 +122,25 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         String user2Name = "Sonal Dsilva";
         String user1Email = "Rayon.Kevin@gmail.com";
         String user2Email = "Sonal.Dsilva@gmail.com";
-        List<StakeholderInvite> pendingStakeholderInvites = StakeholderInviteBuilder.newStakeholderInvite()
-                .withName(user1Name, user2Name)
-                .withEmail(user1Email, user2Email)
-                .build(2);
 
-        when(stakeholderInviteRepositoryMock.findByCompetitionIdAndStatus(competitionId, SENT)).thenReturn(pendingStakeholderInvites);
+        when(stakeholderInviteRepositoryMock.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, user1Email)).thenReturn(true);
 
         ServiceResult<Void> result = service.inviteStakeholder(invitedUser, 1L);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED));
         verify(stakeholderInviteRepositoryMock, never()).save(any(StakeholderInvite.class));
-        verify(stakeholderInviteRepositoryMock).findByCompetitionIdAndStatus(competitionId, SENT);
+        verify(stakeholderInviteRepositoryMock).existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, user1Email);
     }
 
     @Test
-    public void inviteUserNotAlreadyStakeholderOnCompetitionFailure() {
+    public void inviteUserAlreadyStakeholderOnCompetitionFailure() {
 
         long competitionId = 1L;
         long stakeholderUser1 = 12L;
         long stakeholderUser2 = 14L;
         String email1 = "user1@gmail.com";
         String email2 = "Rayon.Kevin@gmail.com";
-
-
-        String competitionName = "competition1";
-        Competition competition = CompetitionBuilder.newCompetition()
-                .withId(competitionId)
-                .withName(competitionName)
-                .build();
 
         List<User> stakeholderUsers = UserBuilder.newUser()
                 .withId(stakeholderUser1, stakeholderUser2)
@@ -162,9 +151,8 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
                 .withUser(stakeholderUsers.get(0), stakeholderUsers.get(1))
                 .build(2);
 
-        when(stakeholderRepositoryMock.findStakeholders(competitionId)).thenReturn(stakeholders);
-        when(stakeholderInviteRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.emptyList());
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(stakeholderInviteRepositoryMock.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, email1)).thenReturn(false);
+        when(stakeholderRepositoryMock.findStakeholderByCompetitionIdAndStakeholderEmail(competitionId, email2)).thenReturn(true);
 
         ServiceResult<Void> result = service.inviteStakeholder(invitedUser, 1L);
 
@@ -173,7 +161,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void addUserAsStakeholderWhenUserAlreadyExists() {
+    public void addExistingUserAsStakeholder() {
 
         long competitionId = 1L;
         long stakeholderUserId = 2L;
@@ -182,12 +170,6 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
                 .withId(competitionId)
                 .withName(competitionName)
                 .build();
-
-        StakeholderInvite savedStakeholderInvite = new StakeholderInvite(competition,
-                invitedUser.getFirstName() + " " + invitedUser.getLastName(),
-                invitedUser.getEmail(),
-                generateInviteHash(),
-                CREATED);
 
         User stakeholderUser = UserBuilder.newUser()
                 .withId(stakeholderUserId)
@@ -200,14 +182,15 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         User user = newUser().withId(stakeholderUserId).withEmailAddress("Rayon.Kevin@gmail.com").build();
         ArgumentCaptor<Notification> notificationCaptor = ArgumentCaptor.forClass(Notification.class);
 
-        when(stakeholderInviteRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.emptyList());
-        when(stakeholderRepositoryMock.findStakeholders(competitionId)).thenReturn(Collections.emptyList());
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(stakeholderInviteRepositoryMock.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, stakeholderUser.getEmail())).thenReturn(false);
+        when(stakeholderRepositoryMock.findStakeholderByCompetitionIdAndStakeholderEmail(competitionId, stakeholderUser.getEmail())).thenReturn(false);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(user));
+        when(userRepositoryMock.save(any(User.class))).thenReturn(stakeholderUser);
         when(userRepositoryMock.findOne(stakeholderUserId)).thenReturn(stakeholderUser);
         when(stakeholderRepositoryMock.save(any(Stakeholder.class))).thenReturn(savedStakeholderInDB);
         when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), eq(EMAIL))).thenReturn(serviceSuccess());
-
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        
         ServiceResult<Void> result = service.inviteStakeholder(invitedUser, 1L);
 
         assertTrue(result.isSuccess());

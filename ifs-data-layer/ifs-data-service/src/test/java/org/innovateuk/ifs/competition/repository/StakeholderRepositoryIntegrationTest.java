@@ -77,6 +77,9 @@ public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         repository.save(expectedStakeholder);
 
+
+
+
         boolean foundExpectedUser = repository.findStakeholderByCompetitionIdAndStakeholderEmail(competition.getId(), expectedUser.getEmail());
         assertTrue(foundExpectedUser);
     }

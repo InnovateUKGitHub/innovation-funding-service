@@ -114,6 +114,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
 
     private ServiceResult<Void> validateUserIsNotInternal(String emailAddress) {
         String domain = StringUtils.substringAfter(emailAddress, "@");
+        internalUserEmailDomains = StringUtils.defaultIfBlank(internalUserEmailDomains, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
         String[] domains = internalUserEmailDomains.split(",");
         for (String acceptedDomain : domains){
             if (acceptedDomain.equalsIgnoreCase(domain)) {
