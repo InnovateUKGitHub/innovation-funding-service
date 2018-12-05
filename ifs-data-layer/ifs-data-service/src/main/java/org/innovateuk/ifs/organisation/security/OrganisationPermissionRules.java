@@ -42,6 +42,11 @@ public class OrganisationPermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ", description = "Stakeholders can see all Organisations")
+    public boolean stakeholdersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return isStakeholder(user);
+    }
+
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")
     public boolean systemRegistrationUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isSystemRegistrationUser(user);

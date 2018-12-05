@@ -5,8 +5,10 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.builder.CompetitionDocumentBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.builder.FileTypeBuilder;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -19,7 +21,6 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
-import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
@@ -74,8 +75,8 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     private Application application;
     private Competition competition;
     private ProjectDocument projectDocument;
-    private List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> competitionDocuments;
-    private org.innovateuk.ifs.competitionsetup.domain.ProjectDocument configuredProjectDocument;
+    private List<CompetitionDocument> competitionDocuments;
+    private CompetitionDocument configuredCompetitionDocument;
     private FileEntry fileEntry;
     private List<PartnerOrganisation> partnerOrganisations;
 
@@ -83,7 +84,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     private ProjectRepository projectRepositoryMock;
 
     @Mock
-    private ProjectDocumentConfigRepository projectDocumentConfigRepositoryMock;
+    private CompetitionDocumentConfigRepository competitionDocumentConfigRepositoryMock;
 
     @Mock
     private ProjectWorkflowHandler projectWorkflowHandlerMock;
@@ -107,8 +108,8 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
                 .withExtension(".pdf")
                 .build();
 
-        configuredProjectDocument = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder
-                .newCompetitionProjectDocument()
+        configuredCompetitionDocument = CompetitionDocumentBuilder
+                .newCompetitionDocument()
                 .withId(documentConfigId)
                 .withTitle("Risk Register")
                 .withGuidance("Guidance for Risk Register")
@@ -119,7 +120,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         projectDocument = newProjectDocument()
                 .withId(projectDocumentId)
-                .withProjectDocument(configuredProjectDocument)
+                .withCompetitionDocument(configuredCompetitionDocument)
                 .withFileEntry(fileEntry)
                 .build();
 
@@ -132,7 +133,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
                 .withCompetition(competition)
                 .build();
 
-        competitionDocuments = org.innovateuk.ifs.competition.builder.ProjectDocumentBuilder.newCompetitionProjectDocument()
+        competitionDocuments = CompetitionDocumentBuilder.newCompetitionDocument()
                 .build(1);
 
         project.setProjectDocuments(singletonList(projectDocument));
@@ -140,19 +141,19 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
-        when(projectDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(configuredProjectDocument);
+        when(competitionDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(configuredCompetitionDocument);
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
-        when(projectDocumentConfigRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(competitionDocuments);
+        when(competitionDocumentConfigRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(competitionDocuments);
     }
 
     @Test
     public void getValidMediaTypesForDocumentWhenConfiguredProjectDocumentNotPresent() {
 
-        when(projectDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(null);
+        when(competitionDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(null);
         ServiceResult<List<String>> result = service.getValidMediaTypesForDocument(documentConfigId);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonErrors.notFoundError(org.innovateuk.ifs.competitionsetup.domain.ProjectDocument.class, documentConfigId)));
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(CompetitionDocument.class, documentConfigId)));
     }
 
     @Test
@@ -201,7 +202,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         ProjectDocument savedProjectDocument = captor.getValue();
 
         assertEquals(project, savedProjectDocument.getProject());
-        assertEquals(configuredProjectDocument, savedProjectDocument.getProjectDocument());
+        assertEquals(configuredCompetitionDocument, savedProjectDocument.getCompetitionDocument());
         assertEquals(fileEntry, savedProjectDocument.getFileEntry());
         assertEquals(UPLOADED, savedProjectDocument.getStatus());
 

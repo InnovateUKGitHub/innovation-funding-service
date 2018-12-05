@@ -38,9 +38,7 @@ public class ApplicationPrintControllerTest extends AbstractApplicationMockMVCTe
     private CategoryRestService categoryRestServiceMock;
 
     @Before
-    public void setUp() {
-        super.setUp();
-
+    public void setUpData() {
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();

@@ -75,8 +75,8 @@ public final class CollectionFunctions {
     }
 
     @SafeVarargs
-    private static <T> List<T> doCombineLists(List<T>... lists) {
-        return flattenLists(Arrays.asList(lists));
+    private static <T> List<T> doCombineLists(Collection<T>... lists) {
+        return flattenLists(asList(lists));
     }
 
     /**
@@ -110,7 +110,7 @@ public final class CollectionFunctions {
      *
      * @return combined List containing the elements of the given Lists, in the original list order
      */
-    public static <T> List<T> combineLists(T firstElement, List<T> otherElements) {
+    public static <T> List<T> combineLists(T firstElement, Collection<T> otherElements) {
         return doCombineLists(singletonList(firstElement), otherElements);
     }
 

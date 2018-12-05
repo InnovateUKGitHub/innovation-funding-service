@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
@@ -36,7 +35,6 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -75,10 +73,6 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
 
     private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
-    private String POSTCODE_LOOKUP = "CH64 3RU";
-    private String POSTCODE_LOOKUP_URL_ENCODED = "CH64%203RU";
-    private OrganisationResource organisationResource;
-    private Long competitionId;
 
     private OrganisationCreationForm organisationForm;
     private OrganisationTypeForm organisationTypeForm;
@@ -91,14 +85,10 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         return new OrganisationCreationSearchController();
     }
 
-    @Override
     @Before
-    public void setUp() {
-        super.setUp();
-
+    public void setUpForms() {
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
-        organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         when(companiesHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(applicationRestService.createApplication(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(restSuccess(applicationResource));
@@ -124,8 +114,6 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         organisationFormUseSearchResult = new OrganisationCreationForm();
         organisationFormUseSearchResult.setOrganisationSearchName("searchname");
         organisationFormUseSearchResult.setOrganisationName("actualname");
-
-        competitionId = 2L;
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
