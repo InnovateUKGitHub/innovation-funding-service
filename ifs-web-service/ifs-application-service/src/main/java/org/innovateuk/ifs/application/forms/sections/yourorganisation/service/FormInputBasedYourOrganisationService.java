@@ -15,6 +15,8 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,18 +37,21 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     private FormInputResponseRestService formInputResponseRestService;
     private ApplicationRestService applicationRestService;
     private ApplicationFinanceRestService applicationFinanceRestService;
+    private OrganisationRestService organisationRestService;
 
     public FormInputBasedYourOrganisationService(QuestionRestService questionRestService,
                                                  FormInputRestService formInputRestService,
                                                  FormInputResponseRestService formInputResponseRestService,
                                                  ApplicationRestService applicationRestService,
-                                                 ApplicationFinanceRestService applicationFinanceRestService) {
+                                                 ApplicationFinanceRestService applicationFinanceRestService,
+                                                 OrganisationRestService organisationRestService) {
 
         this.questionRestService = questionRestService;
         this.formInputRestService = formInputRestService;
         this.formInputResponseRestService = formInputResponseRestService;
         this.applicationRestService = applicationRestService;
         this.applicationFinanceRestService = applicationFinanceRestService;
+        this.organisationRestService = organisationRestService;
     }
 
     @Override
@@ -67,13 +72,27 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     }
 
     @Override
-    public ServiceResult<Boolean> getStateAidEligibility(long applicationId) {
+    public ServiceResult<Boolean> isShowStateAidAgreement(long applicationId, long organisationId) {
 
+        return getStateAidEligibilityForCompetition(applicationId).andOnSuccess(eligibility -> {
+            if (!eligibility) {
+                return serviceSuccess(false);
+            }
+            return isBusinessOrganisation(organisationId);
+        });
+    }
+
+    private ServiceResult<Boolean> getStateAidEligibilityForCompetition(long applicationId) {
         CompetitionResource competition =
                 applicationRestService.getCompetitionByApplicationId(applicationId).getSuccess();
 
         return serviceSuccess(TRUE.equals(competition.getStateAid()));
+    }
 
+    private ServiceResult<Boolean> isBusinessOrganisation(Long organisationId) {
+        return organisationRestService.getOrganisationById(organisationId).
+                andOnSuccessReturn(organisation -> organisation.getOrganisationType() == OrganisationTypeEnum.BUSINESS.getId()).
+                toServiceResult();
     }
 
     @Override

@@ -24,5 +24,5 @@ public interface YourOrganisationService {
 
     ServiceResult<Void> updateOrganisationSize(long applicationId, long organisationId, OrganisationSize organisationSize);
 
-    ServiceResult<Boolean> getStateAidEligibility(long applicationId);
+    ServiceResult<Boolean> isShowStateAidAgreement(long applicationId, long organisationId);
 }

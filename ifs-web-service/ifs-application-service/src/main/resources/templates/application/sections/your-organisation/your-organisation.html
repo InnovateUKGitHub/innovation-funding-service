@@ -69,7 +69,7 @@
                         required=true,
                         )" />
 
-                <div class="agree-to-terms-container">
+                <div class="agree-to-terms-container" th:if="${model.showStateAidAgreement}">
 
                     <th:block th:insert="fragments/form-elements/checkbox ::
                         checkbox(
@@ -103,7 +103,7 @@
 
             </th:block>
 
-            <div class="message-alert">
+            <div class="message-alert" th:if="${model.showStateAidAgreement}">
                 <p class="govuk-body">If you are found to be ineligible for state aid, we have the right to withdraw any offer.</p>
             </div>
 

@@ -12,17 +12,17 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  */
 public class YourOrganisationViewModel {
 
-    private boolean stateAidEligibility;
+    private boolean showStateAidAgreement;
 
-    public YourOrganisationViewModel(boolean stateAidEligibility) {
-        this.stateAidEligibility = stateAidEligibility;
+    public YourOrganisationViewModel(boolean showStateAidAgreement) {
+        this.showStateAidAgreement = showStateAidAgreement;
     }
 
     public List<FormOption> getOrganisationSizeOptions() {
         return simpleMap(OrganisationSize.values(), size -> new FormOption(size.getDescription(), size.name()));
     }
 
-    public boolean isStateAidEligibility() {
-        return stateAidEligibility;
+    public boolean isShowStateAidAgreement() {
+        return showStateAidAgreement;
     }
 }

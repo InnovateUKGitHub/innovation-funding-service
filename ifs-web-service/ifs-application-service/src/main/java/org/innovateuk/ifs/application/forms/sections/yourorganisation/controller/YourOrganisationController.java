@@ -86,7 +86,7 @@ public class YourOrganisationController extends AsyncAdaptor {
                 getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
-                getViewModel(applicationId));
+                getViewModel(applicationId, organisationId));
 
         Future<YourOrganisationForm> formRequest = async(() ->
                 formPopulator.populate(applicationId, competitionId, organisationId));
@@ -142,7 +142,7 @@ public class YourOrganisationController extends AsyncAdaptor {
 
         Supplier<String> failureHandler = () -> {
             CommonYourFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, false);
-            YourOrganisationViewModel viewModel = getViewModel(applicationId);
+            YourOrganisationViewModel viewModel = getViewModel(applicationId, organisationId);
             model.addAttribute("commonFinancesModel", commonViewModel);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
@@ -196,8 +196,8 @@ public class YourOrganisationController extends AsyncAdaptor {
         return emptyList();
     }
 
-    private YourOrganisationViewModel getViewModel(long applicationId) {
-        return viewModelPopulator.populate(applicationId);
+    private YourOrganisationViewModel getViewModel(long applicationId, long organisationId) {
+        return viewModelPopulator.populate(applicationId, organisationId);
     }
 
     private CommonYourFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {

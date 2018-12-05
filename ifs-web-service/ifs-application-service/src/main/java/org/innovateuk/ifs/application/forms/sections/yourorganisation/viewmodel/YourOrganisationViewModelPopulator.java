@@ -15,8 +15,8 @@ public class YourOrganisationViewModelPopulator {
         this.yourOrganisationService = yourOrganisationService;
     }
 
-    public YourOrganisationViewModel populate(long applicationId) {
-        boolean stateAidEligibility = yourOrganisationService.getStateAidEligibility(applicationId).getSuccess();
-        return new YourOrganisationViewModel(stateAidEligibility);
+    public YourOrganisationViewModel populate(long applicationId, long organisationId) {
+        boolean showStateAidAgreement = yourOrganisationService.isShowStateAidAgreement(applicationId, organisationId).getSuccess();
+        return new YourOrganisationViewModel(showStateAidAgreement);
     }
 }
