@@ -1246,19 +1246,21 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body">
-                    Include all travel and subsistence costs that relate to this project. Be specific and add each item separately.
-                </p>
-                <details class="govuk-details" role="group">
-                    <summary class="govuk-details__summary">
-                        <span class="govuk-details__summary-text">Travel and subsistence costs guidance</span>
-                    </summary>
-                    <div class="govuk-details__text">
-                        <p class="govuk-body">You can claim reasonable travel and subsistence costs for those individuals identified in the labour table. Costs must be necessary and be solely for the progression of your project.</p>
-                        <p class="govuk-body">Travel costs must be at economy travel only. State the reason for travel, number of people travelling, mode of transport, cost per trip and number of trips.</p>
-                        <p class="govuk-body">Provide full details and the purpose for any subsistence expenditure, including the number of staff involved.</p>
-                    </div>
-                </details>
+                <th:block th:unless="${model.internal}">
+                    <p class="govuk-body">
+                        Include all travel and subsistence costs that relate to this project. Be specific and add each item separately.
+                    </p>
+                    <details class="govuk-details" role="group">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">Travel and subsistence costs guidance</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body">You can claim reasonable travel and subsistence costs for those individuals identified in the labour table. Costs must be necessary and be solely for the progression of your project.</p>
+                            <p class="govuk-body">Travel costs must be at economy travel only. State the reason for travel, number of people travelling, mode of transport, cost per trip and number of trips.</p>
+                            <p class="govuk-body">Provide full details and the purpose for any subsistence expenditure, including the number of staff involved.</p>
+                        </div>
+                    </details>
+                </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="travel-costs-table">
                         <thead class="govuk-table__head">
