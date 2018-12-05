@@ -320,7 +320,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void validateUserIsNotAlreadyPartnerInOrganisation_success() throws Exception {
+    public void validateUserIsNotAlreadyPartnerInOrganisationSuccess() throws Exception {
 
         Organisation organisation = newOrganisation().build();
 
@@ -351,7 +351,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void validateUserIsNotAlreadyPartnerInOrganisation_failure() throws Exception {
+    public void validateUserIsNotAlreadyPartnerInOrganisationFailure() throws Exception {
 
         Organisation organisation = newOrganisation().build();
 
@@ -385,7 +385,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void validateUserWhenUserDoesntExist_success() throws Exception {
+    public void validateUserWhenUserDoesntExistSuccess() throws Exception {
 
         Organisation organisation = newOrganisation().build();
 
