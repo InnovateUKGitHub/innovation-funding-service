@@ -10,16 +10,16 @@ public class YourOrganisationForm {
     private OrganisationSize organisationSize;
     private Long turnover;
     private Long headCount;
-    private boolean stateAidEligibility;
+    private Boolean stateAidAgreed;
 
     YourOrganisationForm() {
     }
 
-    public YourOrganisationForm(OrganisationSize organisationSize, Long turnover, Long headCount, boolean stateAidEligibility) {
+    public YourOrganisationForm(OrganisationSize organisationSize, Long turnover, Long headCount, Boolean stateAidAgreed) {
         this.organisationSize = organisationSize;
         this.turnover = turnover;
         this.headCount = headCount;
-        this.stateAidEligibility = stateAidEligibility;
+        this.stateAidAgreed = stateAidAgreed;
     }
 
     public OrganisationSize getOrganisationSize() {
@@ -46,11 +46,11 @@ public class YourOrganisationForm {
         this.headCount = headCount;
     }
 
-    public boolean isStateAidEligibility() {
-        return stateAidEligibility;
+    public Boolean getStateAidAgreed() {
+        return stateAidAgreed;
     }
 
-    public void setStateAidEligibility(boolean stateAidEligibility) {
-        this.stateAidEligibility = stateAidEligibility;
+    public void setStateAidAgreed(Boolean stateAidAgreed) {
+        this.stateAidAgreed = stateAidAgreed;
     }
 }

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
@@ -58,6 +59,13 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     }
 
     @Override
+    public ServiceResult<Boolean> getStateAidAgreed(long applicationId) {
+        return applicationRestService.getApplicationById(applicationId).
+                toServiceResult().
+                andOnSuccessReturn(ApplicationResource::getStateAidAgreed);
+    }
+
+    @Override
     public ServiceResult<Boolean> getStateAidEligibility(long applicationId) {
 
         CompetitionResource competition =
@@ -81,6 +89,16 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     @Override
     public ServiceResult<Void> updateHeadCount(long applicationId, long competitionId, long userId, Long value) {
         return updateLongValueForFormInput(applicationId, competitionId, userId, value, FormInputType.STAFF_COUNT);
+    }
+
+    @Override
+    public ServiceResult<Void> updateStateAidAgreed(long applicationId, boolean stateAidAgreed) {
+        return applicationRestService.getApplicationById(applicationId).
+                andOnSuccess(application -> {
+                    application.setStateAidAgreed(stateAidAgreed);
+                    return applicationRestService.saveApplication(application);
+                }).
+                toServiceResult();
     }
 
     private ServiceResult<Long> getLongValueForFormInputType(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {

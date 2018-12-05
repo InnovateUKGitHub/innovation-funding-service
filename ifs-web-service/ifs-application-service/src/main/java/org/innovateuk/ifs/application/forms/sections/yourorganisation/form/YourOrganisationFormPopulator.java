@@ -24,7 +24,7 @@ public class YourOrganisationFormPopulator {
 
         Long headcount = yourOrganisationService.getHeadCount(applicationId, competitionId, organisationId).getSuccess();
 
-        boolean stateAidEligibility = yourOrganisationService.getStateAidEligibility(applicationId).getSuccess();
+        Boolean stateAidAgreed = yourOrganisationService.getStateAidAgreed(applicationId).getSuccess();
 
         // TODO DW - readOnlyAllApplicantApplicationFinances
 
@@ -36,6 +36,6 @@ public class YourOrganisationFormPopulator {
                 organisationSize,
                 turnover,
                 headcount,
-                stateAidEligibility);
+                stateAidAgreed);
     }
 }

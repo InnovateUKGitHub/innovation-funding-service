@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel;
 
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,7 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class YourOrganisationViewModelPopulator {
 
-    public YourOrganisationViewModel populate() {
-        return new YourOrganisationViewModel();
+    private YourOrganisationService yourOrganisationService;
+
+    public YourOrganisationViewModelPopulator(YourOrganisationService yourOrganisationService) {
+        this.yourOrganisationService = yourOrganisationService;
+    }
+
+    public YourOrganisationViewModel populate(long applicationId) {
+        boolean stateAidEligibility = yourOrganisationService.getStateAidEligibility(applicationId).getSuccess();
+        return new YourOrganisationViewModel(stateAidEligibility);
     }
 }

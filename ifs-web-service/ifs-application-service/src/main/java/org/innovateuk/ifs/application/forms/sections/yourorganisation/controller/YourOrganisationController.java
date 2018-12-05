@@ -86,7 +86,7 @@ public class YourOrganisationController extends AsyncAdaptor {
                 getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
-                getViewModel());
+                getViewModel(applicationId));
 
         Future<YourOrganisationForm> formRequest = async(() ->
                 formPopulator.populate(applicationId, competitionId, organisationId));
@@ -139,7 +139,7 @@ public class YourOrganisationController extends AsyncAdaptor {
 
         Supplier<String> failureHandler = () -> {
             CommonYourFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, false);
-            YourOrganisationViewModel viewModel = getViewModel();
+            YourOrganisationViewModel viewModel = getViewModel(applicationId);
             model.addAttribute("commonFinancesModel", commonViewModel);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
@@ -183,14 +183,15 @@ public class YourOrganisationController extends AsyncAdaptor {
 
         yourOrganisationService.updateHeadCount(applicationId, competitionId, userId, form.getHeadCount()).getSuccess();
         yourOrganisationService.updateTurnover(applicationId, competitionId, userId, form.getTurnover()).getSuccess();
+        yourOrganisationService.updateStateAidAgreed(applicationId, form.getStateAidAgreed()).getSuccess();
     }
 
     private List<Error> validateYourOrganisation(YourOrganisationForm form) {
         return emptyList();
     }
 
-    private YourOrganisationViewModel getViewModel() {
-        return viewModelPopulator.populate();
+    private YourOrganisationViewModel getViewModel(long applicationId) {
+        return viewModelPopulator.populate(applicationId);
     }
 
     private CommonYourFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
