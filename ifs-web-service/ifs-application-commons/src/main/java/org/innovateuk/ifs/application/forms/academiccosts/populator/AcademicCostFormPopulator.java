@@ -38,12 +38,7 @@ public class AcademicCostFormPopulator {
 
     public void populate(AcademicCostForm form, long applicationId, long organisationId) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
-        Map<String, AcademicCost> costMap = finance.getFinanceOrganisationDetails().values().stream()
-                .map(FinanceRowCostCategory::getCosts)
-                .flatMap(List::stream)
-                .filter(AcademicCost.class::isInstance)
-                .map(AcademicCost.class::cast)
-                .collect(toMap(AcademicCost::getName, Function.identity()));
+        Map<String, AcademicCost> costMap = mapCostsByName(finance);
 
         form.setTsbReference(getCostByName(costMap, "tsb_reference", finance).getItem());
 
@@ -65,6 +60,15 @@ public class AcademicCostFormPopulator {
                 .flatMap(RestResult::getOptionalSuccessObject)
                 .map(FileEntryResource::getName)
                 .orElse(null));
+    }
+
+    private Map<String,AcademicCost> mapCostsByName(ApplicationFinanceResource finance) {
+        return finance.getFinanceOrganisationDetails().values().stream()
+                .map(FinanceRowCostCategory::getCosts)
+                .flatMap(List::stream)
+                .filter(AcademicCost.class::isInstance)
+                .map(AcademicCost.class::cast)
+                .collect(toMap(AcademicCost::getName, Function.identity()));
     }
 
     private AcademicCost getCostByName(Map<String, AcademicCost> costMap, String name, ApplicationFinanceResource finance) {

@@ -80,7 +80,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         }
     }
 
-    public ServiceResult<Void> save(YourProjectCostsForm form, long targetId, long organisationId) throws ExecutionException, InterruptedException {
+    public ServiceResult<Void> save(YourProjectCostsForm form, long targetId, long organisationId) {
         BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
 
         List<CompletableFuture<ValidationMessages>> futures = new ArrayList<>();
@@ -95,9 +95,8 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
 
         ValidationMessages messages = new ValidationMessages();
 
-        for (CompletableFuture<ValidationMessages> future : futures) {
-            messages.addAll(future.get());
-        }
+        awaitAll(futures)
+                .thenAccept(messages::addAll);
 
         if (messages.getErrors().isEmpty()) {
             return serviceSuccess();

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.forms.academiccosts.saver;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -17,14 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 @Component
 public class AcademicCostSaver extends AsyncAdaptor {
@@ -36,14 +38,21 @@ public class AcademicCostSaver extends AsyncAdaptor {
     @Autowired
     private DefaultFinanceRowRestService financeRowRestService;
 
+    private static final Map<String, String> formFieldToCostName = asMap(
+            "incurredStaff", "incurred_staff",
+            "incurredTravel", "incurred_travel_subsistence",
+            "incurredOtherCosts", "incurred_other_costs",
+            "allocatedInvestigators", "allocated_investigators",
+            "allocatedEstatesCosts", "allocated_estates_costs",
+            "allocatedOtherCosts", "allocated_other_costs",
+            "indirectCosts", "indirect_costs",
+            "exceptionsStaff", "exceptions_staff",
+            "exceptionsOtherCosts", "exceptions_other_costs"
+    );
+
     public ServiceResult<Void> save(AcademicCostForm form, long applicationId, long organisationId) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
-        Map<String, AcademicCost> costMap = finance.getFinanceOrganisationDetails().values().stream()
-                .map(FinanceRowCostCategory::getCosts)
-                .flatMap(List::stream)
-                .filter(AcademicCost.class::isInstance)
-                .map(AcademicCost.class::cast)
-                .collect(toMap(AcademicCost::getName, Function.identity()));
+        Map<String, AcademicCost> costMap = mapCostsByName(finance);
 
         List<CompletableFuture<ValidationMessages>> futures = new ArrayList<>();
 
@@ -89,13 +98,8 @@ public class AcademicCostSaver extends AsyncAdaptor {
 
         ValidationMessages messages = new ValidationMessages();
 
-        for (CompletableFuture<ValidationMessages> future : futures) {
-            try {
-                messages.addAll(future.get());
-            } catch (InterruptedException | ExecutionException e) {
-                throw new IFSRuntimeException(e, Collections.emptyList());
-            }
-        }
+        awaitAll(futures)
+                .thenAccept(messages::addAll);
 
         if (messages.getErrors().isEmpty()) {
             return serviceSuccess();
@@ -104,16 +108,11 @@ public class AcademicCostSaver extends AsyncAdaptor {
         }
     }
 
+
     public Optional<Long> autoSave(String field, String value, long applicationId, long organisationId) {
         try {
             ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
-            Map<String, AcademicCost> costMap = finance.getFinanceOrganisationDetails().values().stream()
-                    .map(FinanceRowCostCategory::getCosts)
-                    .flatMap(List::stream)
-                    .filter(AcademicCost.class::isInstance)
-                    .map(AcademicCost.class::cast)
-                    .collect(toMap(AcademicCost::getName, Function.identity()));
-
+            Map<String, AcademicCost> costMap = mapCostsByName(finance);
 
             switch (field) {
                 case "tsbReference":
@@ -121,53 +120,11 @@ public class AcademicCostSaver extends AsyncAdaptor {
                     tsbReference.setItem(value);
                     financeRowRestService.update(tsbReference).getSuccess();
                     break;
-                case "incurredStaff":
-                    AcademicCost incurredStaff = costMap.get("incurred_staff");
-                    incurredStaff.setCost(new BigDecimal(value));
-                    financeRowRestService.update(incurredStaff).getSuccess();
-                    break;
-                case "incurredTravel":
-                    AcademicCost incurredTravel = costMap.get("incurred_travel_subsistence");
-                    incurredTravel.setCost(new BigDecimal(value));
-                    financeRowRestService.update(incurredTravel).getSuccess();
-                    break;
-                case "incurredOtherCosts":
-                    AcademicCost incurredOtherCosts = costMap.get("incurred_other_costs");
-                    incurredOtherCosts.setCost(new BigDecimal(value));
-                    financeRowRestService.update(incurredOtherCosts).getSuccess();
-                    break;
-                case "allocatedInvestigators":
-                    AcademicCost allocatedInvestigators = costMap.get("allocated_investigators");
-                    allocatedInvestigators.setCost(new BigDecimal(value));
-                    financeRowRestService.update(allocatedInvestigators).getSuccess();
-                    break;
-                case "allocatedEstatesCosts":
-                    AcademicCost allocatedEstatesCosts = costMap.get("allocated_estates_costs");
-                    allocatedEstatesCosts.setCost(new BigDecimal(value));
-                    financeRowRestService.update(allocatedEstatesCosts).getSuccess();
-                    break;
-                case "allocatedOtherCosts":
-                    AcademicCost allocatedOtherCosts = costMap.get("allocated_other_costs");
-                    allocatedOtherCosts.setCost(new BigDecimal(value));
-                    financeRowRestService.update(allocatedOtherCosts).getSuccess();
-                    break;
-                case "indirectCosts":
-                    AcademicCost indirectCosts = costMap.get("indirect_costs");
-                    indirectCosts.setCost(new BigDecimal(value));
-                    financeRowRestService.update(indirectCosts).getSuccess();
-                    break;
-                case "exceptionsStaff":
-                    AcademicCost exceptionsStaff = costMap.get("exceptions_staff");
-                    exceptionsStaff.setCost(new BigDecimal(value));
-                    financeRowRestService.update(exceptionsStaff).getSuccess();
-                    break;
-                case "exceptionsOtherCosts":
-                    AcademicCost exceptionsOtherCosts = costMap.get("exceptions_other_costs");
-                    exceptionsOtherCosts.setCost(new BigDecimal(value));
-                    financeRowRestService.update(exceptionsOtherCosts).getSuccess();
-                    break;
                 default:
-                    throw new IFSRuntimeException(String.format("Auto save field not handled %s", field), Collections.emptyList());
+                    AcademicCost cost = costMap.get(formFieldToCostName.get(field));
+                    cost.setCost(new BigDecimal(value));
+                    financeRowRestService.update(cost).getSuccess();
+                    break;
             }
         } catch (Exception e) {
             LOG.debug("Error auto saving", e);
@@ -175,6 +132,15 @@ public class AcademicCostSaver extends AsyncAdaptor {
         }
 
         return Optional.empty();
+    }
+
+    private Map<String,AcademicCost> mapCostsByName(ApplicationFinanceResource finance) {
+        return finance.getFinanceOrganisationDetails().values().stream()
+                .map(FinanceRowCostCategory::getCosts)
+                .flatMap(List::stream)
+                .filter(AcademicCost.class::isInstance)
+                .map(AcademicCost.class::cast)
+                .collect(toMap(AcademicCost::getName, Function.identity()));
     }
 
     private CompletableFuture<ValidationMessages> asyncUpdate(FinanceRowItem rowItem) {
