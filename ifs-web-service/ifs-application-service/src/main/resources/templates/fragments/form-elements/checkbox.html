@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--/*
+
+A fragment to render a standard checkbox within a form.
+
+Available parameters:
+
+  Mandatory
+
+    * legend
+    * label - the label text for the checkbox
+    * id
+    * value
+    * checked - is this checkbox currently checked?
+
+  Optional
+
+    * switchesButtonStatus - a css selector for a button that the checking of this checkbox will toggle between
+                             enabled and disabled
+
+*/-->
+<th:block th:fragment="checkbox(legend, label, id, value, checked)">
+
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden"
+                    th:utext="${legend}" />
+
+            <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input"
+                           type="checkbox"
+                           th:id="${id}"
+                           th:name="${id}"
+                           th:value="${value}"
+                           th:checked="${checked}"
+                           th:attrappend="data-switches-button-status=${switchesButtonStatus ?: null}" />
+
+                    <input type="hidden"
+                           th:name="${'_' + id}"
+                           value="on" />
+
+                    <label class="govuk-label govuk-checkboxes__label"
+                           th:for="${id}"
+                           th:utext="${label}">
+                        Checkbox label text.
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+</th:block>
+
+</html>

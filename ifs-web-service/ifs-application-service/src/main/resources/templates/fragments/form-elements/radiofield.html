@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <!--/*
 
@@ -9,7 +9,7 @@ Available parameters:
 
   Mandatory
 
-    * label
+    * legend
     * id
     * value
     * optionDescriptionsAndValues - a list of description / value pairs with getDescription() and getName() methods
@@ -22,11 +22,11 @@ Available parameters:
     * requiredErrorMessage
 
 */-->
-<th:block th:fragment="radiofield(label, id, value, optionDescriptionsAndValues)">
+<th:block th:fragment="radiofield(legend, id, value, optionDescriptionsAndValues)">
 
     <div class="govuk-form-group">
         <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="${id}">Legend text</legend>
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="${id}" th:utext="${legend}">Legend text</legend>
 
             <span th:if="${hint != null}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
 

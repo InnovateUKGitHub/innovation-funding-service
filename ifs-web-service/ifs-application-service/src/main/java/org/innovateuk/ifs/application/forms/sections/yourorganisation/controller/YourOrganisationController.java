@@ -167,13 +167,14 @@ public class YourOrganisationController extends AsyncAdaptor {
     @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_INCOMPLETE", description = "Applicants can mark their organisation funding details as incomplete")
     public String markAsIncomplete(
             @PathVariable("applicationId") long applicationId,
+            @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser) {
 
         ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
-        return redirectToViewPage(applicationId, organisationId, sectionId);
+        return redirectToViewPage(applicationId, competitionId, organisationId, sectionId);
     }
 
     private void updateYourOrganisation(long applicationId,
@@ -198,10 +199,11 @@ public class YourOrganisationController extends AsyncAdaptor {
         return commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, internalUser);
     }
 
-    private String redirectToViewPage(long applicationId, long organisationId, long sectionId) {
+    private String redirectToViewPage(long applicationId, long competitionId, long organisationId, long sectionId) {
         return "redirect:" + APPLICATION_BASE_URL +
-                String.format("%d/form/your-organisation/organisation/%d/section/%d",
+                String.format("%d/form/your-organisation/competition/%d/organisation/%d/section/%d",
                         applicationId,
+                        competitionId,
                         organisationId,
                         sectionId);
     }

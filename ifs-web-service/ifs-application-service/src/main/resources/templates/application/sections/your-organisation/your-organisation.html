@@ -41,7 +41,7 @@
 
                 <th:block th:insert="fragments/form-elements/radiofield ::
                     radiofield(
-                        label='Size',
+                        legend='Size',
                         id='organisationSize',
                         value=${form.organisationSize},
                         optionDescriptionsAndValues=${model.organisationSizeOptions},
@@ -49,31 +49,6 @@
                               business size using the &lt;a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
                               target=&quot;_blank&quot;> EU definition (opens in a new window)&lt;/a&gt; for guidance.',
                         )" />
-
-                <!--<div class="govuk-form-group">-->
-                    <!--<fieldset class="govuk-fieldset">-->
-                        <!--<legend class="govuk-fieldset__legend govuk-fieldset__legend&#45;&#45;s" id="organisationSize">Size</legend>-->
-
-                        <!--<th:block th:if="${#fields.hasErrors('organisationSize')}">-->
-                            <!--<span class="govuk-error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>-->
-                        <!--</th:block>-->
-
-                        <!--<div class="govuk-radios">-->
-                            <!--<div class="govuk-radios__item" th:each="organisationSizeOption : ${model.organisationSizeOptions}">-->
-                                <!--<input type="radio"-->
-                                       <!--class="govuk-radios__input"-->
-                                       <!--th:id="${'organisationSize-' + organisationSizeOption.name()}"-->
-                                       <!--th:field="${form.organisationSize}"-->
-                                       <!--th:value="${organisationSizeOption.name()}"-->
-                                       <!--required="required" data-required-errormessage="Please enter your organisation size."/>-->
-                                <!--<label th:for="${'organisationSize-' + organisationSizeOption.name()}"-->
-                                       <!--th:text="${organisationSizeOption.description}"-->
-                                       <!--class="govuk-label govuk-radios__label">Micro or small</label>-->
-                            <!--</div>-->
-                        <!--</div>-->
-
-                    <!--</fieldset>-->
-                <!--</div>-->
 
                 <th:block th:insert="fragments/form-elements/textfield ::
                     textfield-integer(
@@ -92,28 +67,16 @@
                         )" />
 
                 <div class="agree-to-terms-container">
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
-                                <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
-                            </legend>
 
-                            <div class="govuk-checkboxes">
-                                <div class="govuk-checkboxes__item">
-                                    <input id="agree-state-aid"
-                                           class="govuk-checkboxes__input"
-                                           type="checkbox"
-                                           value="true"
-                                           data-switches-button-status="#mark-all-as-complete"
-                                           data-autosave-disabled name="stateAidAgreed" /><input type="hidden" name="_stateAidAgreed" value="on"/>
-                                    <label for="agree-state-aid"
-                                           class="govuk-label govuk-checkboxes__label">
-                                        I confirm that by submitting my application my organisation will be <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid" target="_blank" class="govuk-link">eligible for state aid</a> (opens in a new window) within 90 days of any offer being made.
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
+                    <th:block th:insert="fragments/form-elements/checkbox ::
+                        checkbox(
+                            legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
+                            label='I confirm that by submitting my application my organisation will be <a href=&quot;https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid&quot; target=&quot;_blank&quot; class=&quot;govuk-link&quot;>eligible for state aid</a> (opens in a new window) within 90 days of any offer being made.',
+                            id='stateAidAgreed',
+                            value='true',
+                            checked=${form.stateAidAgreed},
+                            switchesButtonStatus='#mark_as_complete'
+                            )" />
                 </div>
 
             </th:block>
