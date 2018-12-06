@@ -3,7 +3,6 @@ package org.innovateuk.ifs.dashboard.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -27,7 +26,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -41,20 +39,17 @@ public class ApplicantDashboardPopulator {
     private UserRestService userRestService;
     private ProjectRestService projectRestService;
     private CompetitionRestService competitionRestService;
-    private QuestionRestService questionRestService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     public ApplicantDashboardPopulator(ApplicationRestService applicationRestService,
                                        UserRestService userRestService,
                                        ProjectRestService projectRestService,
                                        CompetitionRestService competitionRestService,
-                                       QuestionRestService questionRestService,
                                        InterviewAssignmentRestService interviewAssignmentRestService) {
         this.applicationRestService = applicationRestService;
         this.userRestService = userRestService;
         this.projectRestService = projectRestService;
         this.competitionRestService = competitionRestService;
-        this.questionRestService = questionRestService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
     }
 
@@ -76,15 +71,13 @@ public class ApplicantDashboardPopulator {
                 .filter(this::applicationInProgress)
                 .map(application -> {
             CompetitionResource competition = competitionsById.get(application.getCompetition());
-            long applicationTeamQuestionId = getApplicationTeamQuestion(competition.getId());
             Optional<ProcessRoleResource> role = usersProcessRoles.stream()
                     .filter(processRoleResource -> processRoleResource.getApplicationId().equals(application.getId()))
                     .findFirst();
             boolean invitedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
             return new InProgressDashboardRowViewModel(application.getName(), application.getId(), competition.getName(),
                     isAssigned(application, role), application.getApplicationState(), isLead(role), competition.getEndDate(),
-                    competition.getDaysLeft(), application.getCompletion().intValue(), invitedToInterview,
-                    applicationTeamQuestionId);
+                    competition.getDaysLeft(), application.getCompletion().intValue(), invitedToInterview);
         }).sorted().collect(toList());
 
         List<PreviousDashboardRowViewModel> previousViews =
@@ -193,10 +186,5 @@ public class ApplicantDashboardPopulator {
 
         List<CompetitionResource> competitions =  simpleMap(competitionIdsForUser, id -> competitionRestService.getCompetitionById(id).getSuccess());
         return simpleToMap(competitions, CompetitionResource::getId, Function.identity());
-    }
-
-    private long getApplicationTeamQuestion(long competitionId) {
-        return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
-                APPLICATION_TEAM).getSuccess().getId();
     }
 }
