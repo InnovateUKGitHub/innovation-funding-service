@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.testdata.builders.data.AcademicCostData;
@@ -36,43 +37,43 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
     }
 
     public AcademicCostDataBuilder withTsbReference(String value) {
-        return addCostItem("Provide the project costs for '{organisationName}'", () -> new AcademicCost(null, "tsb_reference", null, value));
+        return addCostItem("Provide the project costs for '{organisationName}'", () -> new AcademicCost(null, "tsb_reference", null, value, FinanceRowType.YOUR_FINANCE));
     }
 
     public AcademicCostDataBuilder withDirectlyIncurredStaff(BigDecimal value) {
-        return addCostItem("Labour", () -> new AcademicCost(null, "incurred_staff", value, null));
+        return addCostItem("Labour", () -> new AcademicCost(null, "incurred_staff", value, null, FinanceRowType.LABOUR));
     }
 
     public AcademicCostDataBuilder withDirectlyIncurredTravelAndSubsistence(BigDecimal value) {
-        return addCostItem("Travel and subsistence", () -> new AcademicCost(null, "incurred_travel_subsistence", value, null));
+        return addCostItem("Travel and subsistence", () -> new AcademicCost(null, "incurred_travel_subsistence", value, null, FinanceRowType.TRAVEL));
     }
 
     public AcademicCostDataBuilder withDirectlyIncurredOtherCosts(BigDecimal value) {
-        return addCostItem("Materials", () -> new AcademicCost(null, "incurred_other_costs", value, null));
+        return addCostItem("Materials", () -> new AcademicCost(null, "incurred_other_costs", value, null, FinanceRowType.MATERIALS));
     }
 
     public AcademicCostDataBuilder withDirectlyAllocatedInvestigators(BigDecimal value) {
-        return addCostItem("Labour", () -> new AcademicCost(null, "allocated_investigators", value, null));
+        return addCostItem("Labour", () -> new AcademicCost(null, "allocated_investigators", value, null, FinanceRowType.LABOUR));
     }
 
     public AcademicCostDataBuilder withDirectlyAllocatedEstateCosts(BigDecimal value) {
-        return addCostItem("Other costs", () -> new AcademicCost(null, "allocated_estates_costs", value, null));
+        return addCostItem("Other costs", () -> new AcademicCost(null, "allocated_estates_costs", value, null, FinanceRowType.OTHER_COSTS));
     }
 
     public AcademicCostDataBuilder withDirectlyAllocatedOtherCosts(BigDecimal value) {
-        return addCostItem("Other costs", () -> new AcademicCost(null, "allocated_other_costs", value, null));
+        return addCostItem("Other costs", () -> new AcademicCost(null, "allocated_other_costs", value, null, FinanceRowType.OTHER_COSTS));
     }
 
     public AcademicCostDataBuilder withIndirectCosts(BigDecimal value) {
-        return addCostItem("Overheads", () -> new AcademicCost(null, "indirect_costs", value, null));
+        return addCostItem("Overheads", () -> new AcademicCost(null, "indirect_costs", value, null, FinanceRowType.OVERHEADS));
     }
 
     public AcademicCostDataBuilder withExceptionsStaff(BigDecimal value) {
-        return addCostItem("Labour", () -> new AcademicCost(null, "exceptions_staff", value, null));
+        return addCostItem("Labour", () -> new AcademicCost(null, "exceptions_staff", value, null, FinanceRowType.LABOUR));
     }
 
     public AcademicCostDataBuilder withExceptionsOtherCosts(BigDecimal value) {
-        return addCostItem("Other costs", () -> new AcademicCost(null, "exceptions_other_costs", value, null));
+        return addCostItem("Other costs", () -> new AcademicCost(null, "exceptions_other_costs", value, null, FinanceRowType.OTHER_COSTS));
     }
 
     public AcademicCostDataBuilder withUploadedJesForm() {
