@@ -90,7 +90,7 @@ public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         repository.save(expectedStakeholder);
 
-        boolean foundExpectedUser = repository.existsStakeholderByCompetitionIdAndStakeholderEmail(competition.getId(), expectedUser.getEmail());
+        boolean foundExpectedUser = repository.existsByCompetitionIdAndStakeholderEmail(competition.getId(), expectedUser.getEmail());
 
         assertTrue(foundExpectedUser);
     }
