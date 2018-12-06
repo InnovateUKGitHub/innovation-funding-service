@@ -10,8 +10,6 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCos
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
-import org.innovateuk.ifs.async.generation.AsyncAdaptor;
-import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -47,10 +45,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 /**
@@ -59,7 +54,7 @@ import java.util.function.Supplier;
  */
 @Controller
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility")
-public class FinanceChecksEligibilityController extends AsyncAdaptor {
+public class FinanceChecksEligibilityController {
 
     private static final String FORM_ATTR_NAME = "form";
 
@@ -104,7 +99,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
-    @AsyncMethod
     public String viewEligibility(@PathVariable long projectId,
                                   @PathVariable Long organisationId,
                                   @ModelAttribute(name = FORM_ATTR_NAME, binding = false) YourProjectCostsForm form,
@@ -117,44 +111,40 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, FinanceRowType rowType) {
         ProjectResource project = projectService.getById(projectId);
-        Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(project.getCompetition()).getSuccess());
-        Future<OrganisationResource> organisation = async(() -> organisationRestService.getOrganisationById(organisationId).getSuccess());
-        Future<OrganisationResource> leadOrganisation = async(() -> projectService.getLeadOrganisation(projectId));
-        Future<EligibilityResource> eligibility = async(() -> projectFinanceService.getEligibility(projectId, organisationId));
-        Future<FinanceCheckEligibilityResource> eligibilityOverview = async(() -> financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId));
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        EligibilityResource eligibility = projectFinanceService.getEligibility(projectId, organisationId);
+        FinanceCheckEligibilityResource eligibilityOverview = financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId);
 
-        try {
-            if (eligibilityForm == null) {
-                eligibilityForm = getEligibilityForm(eligibility.get());
-            }
-            boolean eligibilityApproved = eligibility.get().getEligibility() == EligibilityState.APPROVED;
-
-            FileDetailsViewModel jesFileDetailsViewModel = null;
-            boolean isUsingJesFinances = financeUtil.isUsingJesFinances(competition.get(), organisation.get().getOrganisationType());
-            if (!isUsingJesFinances) {
-                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType));
-                formPopulator.populateForm(form, projectId, organisationId);
-            } else {
-                ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(project.getApplication(), organisation.get().getId());
-                if (applicationFinanceResource.getFinanceFileEntry() != null) {
-                    FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccess();
-                    jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
-                }
-            }
-
-            boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
-
-            model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview.get(), organisation.get().getName(), project.getName(),
-                    project.getApplication(), isLeadPartnerOrganisation, project.getId(), organisation.get().getId(),
-                    eligibilityApproved, eligibility.get().getEligibilityRagStatus(), eligibility.get().getEligibilityApprovalUserFirstName(),
-                    eligibility.get().getEligibilityApprovalUserLastName(), eligibility.get().getEligibilityApprovalDate(), false, isUsingJesFinances, jesFileDetailsViewModel));
-
-            model.addAttribute("eligibilityForm", eligibilityForm);
-
-            return "project/financecheck/eligibility";
-        } catch (InterruptedException | ExecutionException e) {
-            throw new IFSRuntimeException(e, Collections.emptyList());
+        if (eligibilityForm == null) {
+            eligibilityForm = getEligibilityForm(eligibility);
         }
+        boolean eligibilityApproved = eligibility.getEligibility() == EligibilityState.APPROVED;
+
+        FileDetailsViewModel jesFileDetailsViewModel = null;
+        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(competition, organisation.getOrganisationType());
+        if (!isUsingJesFinances) {
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType));
+            formPopulator.populateForm(form, projectId, organisationId);
+        } else {
+            ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(project.getApplication(), organisation.getId());
+            if (applicationFinanceResource.getFinanceFileEntry() != null) {
+                FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccess();
+                jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
+            }
+        }
+
+        boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationId);
+
+        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
+                project.getApplication(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
+                eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
+                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(), false, isUsingJesFinances, jesFileDetailsViewModel));
+
+        model.addAttribute("eligibilityForm", eligibilityForm);
+
+        return "project/financecheck/eligibility";
     }
 
     private FinanceChecksEligibilityForm getEligibilityForm(EligibilityResource eligibility) {

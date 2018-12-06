@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.eligibility.controller;
 
-import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.LabourRowForm;
@@ -61,7 +61,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMockMVCTest<FinanceChecksEligibilityController> {
+public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMVCTest<FinanceChecksEligibilityController> {
     @Mock
     private Model model;
 
