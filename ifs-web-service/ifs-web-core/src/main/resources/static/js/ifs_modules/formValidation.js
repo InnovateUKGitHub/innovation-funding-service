@@ -138,7 +138,7 @@ IFS.core.formValidation = (function () {
       jQuery('body').on('change ifsValidate', s.maxlength.fields, function () { IFS.core.formValidation.checkMaxLength(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.minwordslength.fields, function () { IFS.core.formValidation.checkMinWordsLength(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.maxwordslength.fields, function () { IFS.core.formValidation.checkMaxWordsLength(jQuery(this)) })
-      jQuery('body').on('change ifsValidate', s.postcode.fields, function () { IFS.core.formValidation.checkPostcode(jQuery(this)) })
+      jQuery('body').on('blur change ifsValidate', s.postcode.fields, function () { IFS.core.formValidation.checkPostcode(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.tel.fields, function () { IFS.core.formValidation.checkTel(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.date.fields, function () { IFS.core.formValidation.checkDate(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.pattern.fields, function () { IFS.core.formValidation.checkPattern(jQuery(this)) })
