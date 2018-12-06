@@ -201,7 +201,6 @@ the applicant enters invalid inputs
     The user enters text to a text field  css = [name="exceptionsStaff"]  ${EMPTY}
     The user enters text to a text field  css = [name="exceptionsOtherCosts"]  ${EMPTY}
     The user enters text to a text field  css = [name="tsbReference"]  ${EMPTY}
-    #the user should see a field error  This field cannot be left blank.
 
 Mark academic finances as complete
     the user selects the checkbox    termsAgreed
