@@ -2,7 +2,7 @@
 <!-- ================= Section: Completion stage (11) =========================== -->
 <th:block th:fragment="section-content">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to save section.</h2>
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
@@ -32,7 +32,7 @@
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectedCompletionStage')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="selectedCompletionStage">
-                        <h2 class="govuk-fieldset__heading">Please select the completion stage.</h2>
+                        <h2 class="govuk-fieldset__heading">Select the completion stage.</h2>
                     </legend>
                     <span th:if="${#fields.hasErrors('selectedCompletionStage')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('selectedCompletionStage')}" th:text="${err}"/>
