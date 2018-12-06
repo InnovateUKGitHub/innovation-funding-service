@@ -33,7 +33,6 @@ import java.util.Optional;
 
 import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
@@ -43,10 +42,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests the CompetitionSetupStakeholderServiceImpl with mocked repository.
@@ -152,7 +148,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
                 .build(2);
 
         when(stakeholderInviteRepositoryMock.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, email1)).thenReturn(false);
-        when(stakeholderRepositoryMock.findStakeholderByCompetitionIdAndStakeholderEmail(competitionId, email2)).thenReturn(true);
+        when(stakeholderRepositoryMock.existsStakeholderByCompetitionIdAndStakeholderEmail(competitionId, email2)).thenReturn(true);
 
         ServiceResult<Void> result = service.inviteStakeholder(invitedUser, 1L);
 
@@ -183,14 +179,14 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         ArgumentCaptor<Notification> notificationCaptor = ArgumentCaptor.forClass(Notification.class);
 
         when(stakeholderInviteRepositoryMock.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, stakeholderUser.getEmail())).thenReturn(false);
-        when(stakeholderRepositoryMock.findStakeholderByCompetitionIdAndStakeholderEmail(competitionId, stakeholderUser.getEmail())).thenReturn(false);
+        when(stakeholderRepositoryMock.existsStakeholderByCompetitionIdAndStakeholderEmail(competitionId, stakeholderUser.getEmail())).thenReturn(false);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(user));
         when(userRepositoryMock.save(any(User.class))).thenReturn(stakeholderUser);
         when(userRepositoryMock.findOne(stakeholderUserId)).thenReturn(stakeholderUser);
         when(stakeholderRepositoryMock.save(any(Stakeholder.class))).thenReturn(savedStakeholderInDB);
         when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), eq(EMAIL))).thenReturn(serviceSuccess());
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
-        
+
         ServiceResult<Void> result = service.inviteStakeholder(invitedUser, 1L);
 
         assertTrue(result.isSuccess());

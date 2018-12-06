@@ -2,34 +2,36 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
-import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.STAKEHOLDER;
+import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @Rollback
 public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<StakeholderRepository> {
 
     @Autowired
     private CompetitionRepository competitionRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     private Competition competition;
 
@@ -44,7 +46,7 @@ public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrat
         loginCompAdmin();
 
         competition = competitionRepository.save(newCompetition()
-                .with(id(null))
+                .withId(100l)
                 .withName("competition")
                 .build());
 
@@ -71,16 +73,25 @@ public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findStakeholderByCompetitionIdAndEmail() {
-        Set<Role> internalRoles = singleton(Role.STAKEHOLDER);
-        User expectedUser = newUser().withFirstName("Rayon").withEmailAddress("Rayon@gmail.com").build();
+
+        loginSteveSmith();
+
+        User expectedUser = userRepository.save(new User("New", "User", "new@example.com", "", "my-uid"));
+        Profile profile = newProfile()
+                .withId((Long) null)
+                .withAddress(newAddress()
+                        .withId((Long) null)
+                        .withAddressLine1("Electric Works")
+                        .build())
+                .build();
+        profileRepository.save(profile);
+
         Stakeholder expectedStakeholder = new Stakeholder(competition, expectedUser);
 
         repository.save(expectedStakeholder);
 
+        boolean foundExpectedUser = repository.existsStakeholderByCompetitionIdAndStakeholderEmail(competition.getId(), expectedUser.getEmail());
 
-
-
-        boolean foundExpectedUser = repository.findStakeholderByCompetitionIdAndStakeholderEmail(competition.getId(), expectedUser.getEmail());
         assertTrue(foundExpectedUser);
     }
 }

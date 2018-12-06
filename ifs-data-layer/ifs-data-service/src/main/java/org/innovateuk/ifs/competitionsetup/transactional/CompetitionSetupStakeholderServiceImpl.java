@@ -116,7 +116,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         String domain = StringUtils.substringAfter(emailAddress, "@");
         internalUserEmailDomains = StringUtils.defaultIfBlank(internalUserEmailDomains, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
         String[] domains = internalUserEmailDomains.split(",");
-        for (String acceptedDomain : domains){
+        for (String acceptedDomain : domains) {
             if (acceptedDomain.equalsIgnoreCase(domain)) {
                 return serviceFailure(STAKEHOLDERS_CANNOT_BE_INTERNAL_USERS);
             }
@@ -131,7 +131,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     }
 
     private ServiceResult<Void> validateUserNotAlreadyStakeholderOnCompetition(long competitionId, String email) {
-        boolean isUserStakeholderOnCompetition =  stakeholderRepository.findStakeholderByCompetitionIdAndStakeholderEmail(competitionId, email);
+        boolean isUserStakeholderOnCompetition = stakeholderRepository.existsStakeholderByCompetitionIdAndStakeholderEmail(competitionId, email);
         return isUserStakeholderOnCompetition ? serviceFailure(STAKEHOLDER_HAS_ACCEPTED_INVITE) : serviceSuccess();
     }
 
@@ -139,7 +139,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         Optional<User> user = userRepository.findByEmail(invitedUser.getEmail());
 
         if (user.isPresent()) {
-            if(!user.get().hasRole(Role.STAKEHOLDER)){
+            if (!user.get().hasRole(Role.STAKEHOLDER)) {
                 addStakeholderRoleToUser(user.get());
             }
             return addStakeholder(competition.getId(), user.get().getId());
@@ -236,7 +236,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
                 );
     }
 
-    private void addStakeholderRoleToUser(User user){
+    private void addStakeholderRoleToUser(User user) {
         user.addRole(Role.STAKEHOLDER);
         userRepository.save(user);
     }
