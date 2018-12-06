@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.service;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.GrowthTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -8,6 +9,7 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -19,9 +21,13 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputType.ORGANISATION_TURNOVER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
@@ -32,6 +38,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandato
 @Service
 public class FormInputBasedYourOrganisationService implements YourOrganisationService {
 
+    private CompetitionRestService competitionRestService;
     private QuestionRestService questionRestService;
     private FormInputRestService formInputRestService;
     private FormInputResponseRestService formInputResponseRestService;
@@ -132,9 +139,37 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
                 andOnSuccessReturnVoid();
     }
 
+    @Override
+    public ServiceResult<Boolean> isIncludingGrowthTable(long competitionId) {
+        return competitionRestService.getCompetitionById(competitionId).
+                andOnSuccessReturn(CompetitionResource::getIncludeProjectGrowthTable).
+                toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<LocalDateTime> getFinancialYearEnd(long applicationId, long competitionId, long organisationId) {
+        return getLocalDateTimeValueForFormInputType(applicationId, competitionId, organisationId, FormInputType.FINANCIAL_YEAR_END);
+    }
+
+    @Override
+    public ServiceResult<List<GrowthTableRow>> getGrowthTableRows(long applicationId, long organisationId) {
+        return serviceSuccess(emptyList());
+    }
+
+    @Override
+    public ServiceResult<Long> getHeadCountAtLastFinancialYear(long applicationId, long organisationId) {
+        return null;
+    }
+
     private ServiceResult<Long> getLongValueForFormInputType(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {
         return getFormInputResponseForOrganisation(applicationId, competitionId, organisationId, formInputType).
                 andOnSuccessReturn(this::getLongValueFromFormInputResponses).
+                toServiceResult();
+    }
+
+    private ServiceResult<LocalDateTime> getLocalDateTimeValueForFormInputType(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {
+        return getFormInputResponseForOrganisation(applicationId, competitionId, organisationId, formInputType).
+                andOnSuccessReturn(this::getLocalDateTimeValueFromFormInputResponses).
                 toServiceResult();
     }
 
@@ -167,6 +202,19 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
 
         return formInputResponse.
                 map(response -> NumberUtils.isDigits(response.getValue()) ? Long.valueOf(response.getValue()) : null).
+                orElse(null);
+    }
+
+    private LocalDateTime getLocalDateTimeValueFromFormInputResponses(Optional<FormInputResponseResource> formInputResponse) {
+
+        return formInputResponse.
+                map(response -> {
+                    try {
+                        return LocalDateTime.parse(response.getValue());
+                    } catch (DateTimeParseException e) {
+                        return null;
+                    }
+                }).
                 orElse(null);
     }
 }

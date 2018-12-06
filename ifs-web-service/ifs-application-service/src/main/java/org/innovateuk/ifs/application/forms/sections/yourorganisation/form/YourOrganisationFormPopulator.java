@@ -4,6 +4,9 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.Yo
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * A populator to build a YourOrganisationForm
  */
@@ -18,24 +21,33 @@ public class YourOrganisationFormPopulator {
 
     public YourOrganisationForm populate(long applicationId, long competitionId, long organisationId) {
 
+        boolean stateAidAgreed = yourOrganisationService.getStateAidAgreed(applicationId).getSuccess();
         OrganisationSize organisationSize = yourOrganisationService.getOrganisationSize(applicationId, organisationId).getSuccess();
 
-        Long turnover = yourOrganisationService.getTurnover(applicationId, competitionId, organisationId).getSuccess();
+        boolean includesGrowthTable = yourOrganisationService.isIncludingGrowthTable(competitionId).getSuccess();
 
-        Long headcount = yourOrganisationService.getHeadCount(applicationId, competitionId, organisationId).getSuccess();
+        if (includesGrowthTable) {
 
-        Boolean stateAidAgreed = yourOrganisationService.getStateAidAgreed(applicationId).getSuccess();
+            LocalDateTime financialYearEnd =
+                    yourOrganisationService.getFinancialYearEnd(applicationId, competitionId, organisationId).getSuccess();
+
+            List<GrowthTableRow> growthTableRows =
+                    yourOrganisationService.getGrowthTableRows(applicationId, organisationId).getSuccess();
+
+            Long headCountAtLastFinancialYear =
+                    yourOrganisationService.getHeadCountAtLastFinancialYear(applicationId, organisationId).getSuccess();
+
+            return YourOrganisationForm.withGrowthTable(organisationSize, null, stateAidAgreed, growthTableRows, financialYearEnd, headCountAtLastFinancialYear);
+
+        } else {
+            Long turnover = yourOrganisationService.getTurnover(applicationId, competitionId, organisationId).getSuccess();
+            Long headCount = yourOrganisationService.getHeadCount(applicationId, competitionId, organisationId).getSuccess();
+            return YourOrganisationForm.noGrowthTable(organisationSize, turnover, headCount, stateAidAgreed);
+        }
+
 
         // TODO DW - readOnlyAllApplicantApplicationFinances
 
-        // TODO DW - isBusinessOrganisation
-
         // TODO DW - formInputViewModelGenerator.fromSection
-
-        return new YourOrganisationForm(
-                organisationSize,
-                turnover,
-                headcount,
-                stateAidAgreed);
     }
 }
