@@ -14,7 +14,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static com.google.common.primitives.Longs.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -65,7 +65,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
-        when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(asList(SECTION_ID));
+        when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, false, "");
 

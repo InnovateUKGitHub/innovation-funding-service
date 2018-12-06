@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCost
 import org.innovateuk.ifs.application.forms.academiccosts.saver.AcademicCostSaver;
 import org.innovateuk.ifs.application.forms.saver.ApplicationSectionFinanceSaver;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -80,6 +81,7 @@ public class AcademicCostsController {
     }
 
     @PostMapping
+    @AsyncMethod
     public String saveAcademicCosts(Model model,
                                     UserResource user,
                                     @PathVariable long applicationId,
@@ -91,6 +93,7 @@ public class AcademicCostsController {
     }
 
     @PostMapping(params = "complete")
+    @AsyncMethod
     public String complete(Model model,
                            UserResource user,
                            @PathVariable long applicationId,
@@ -122,6 +125,7 @@ public class AcademicCostsController {
     }
 
     @PostMapping(params = "remove_jes")
+    @AsyncMethod
     public String removeJesFile(Model model,
                                 UserResource user,
                                 @PathVariable long applicationId,

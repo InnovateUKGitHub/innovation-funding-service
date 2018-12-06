@@ -15,6 +15,7 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCo
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -95,18 +96,19 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                        @PathVariable long applicationId,
                                        @PathVariable long organisationId,
                                        @PathVariable long sectionId,
-                                       @ModelAttribute("form") YourProjectCostsForm form,
                                        @RequestParam(value = "origin", required = false) String origin,
                                        @RequestParam MultiValueMap<String, String> queryParams) {
         String originQuery = "";
         if (origin != null) {
             originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
         }
-        formPopulator.populateForm(form, applicationId, organisationId);
+        YourProjectCostsForm form = formPopulator.populateForm(applicationId, organisationId);
+        model.addAttribute("form", form);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId, originQuery);
     }
 
     @PostMapping
+    @AsyncMethod
     public String saveYourProjectCosts(Model model,
                                        UserResource user,
                                        @PathVariable long applicationId,
@@ -117,6 +119,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
     }
 
     @PostMapping(params = "complete")
+    @AsyncMethod
     public String complete(Model model,
                            UserResource user,
                            @PathVariable long applicationId,

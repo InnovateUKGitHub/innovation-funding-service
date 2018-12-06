@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.academiccosts.saver;
 import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
+import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -11,11 +12,13 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
 
+import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -35,6 +38,14 @@ public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver
 
     @Mock
     private DefaultFinanceRowRestService financeRowRestService;
+
+    @Mock
+    private AsyncFuturesGenerator futuresGeneratorMock;
+
+    @Before
+    public void setupExpectations() {
+        setupAsyncExpectations(futuresGeneratorMock);
+    }
 
     @Override
     protected AcademicCostSaver supplyServiceUnderTest() {

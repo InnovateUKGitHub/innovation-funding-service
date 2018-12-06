@@ -27,7 +27,7 @@ public class AcademicCostBuilder extends BaseBuilder<AcademicCost, AcademicCostB
     }
 
     public AcademicCostBuilder withItem(String... value) {
-        return withArraySetFieldByReflection("item", value);
+        return withArray((v, cost) -> cost.setItem(v), value);
     }
 
     public AcademicCostBuilder withCostType(FinanceRowType... value) {
@@ -35,7 +35,7 @@ public class AcademicCostBuilder extends BaseBuilder<AcademicCost, AcademicCostB
     }
 
     public AcademicCostBuilder withCost(BigDecimal... value) {
-        return withArraySetFieldByReflection("cost", value);
+        return withArray((v, cost) -> cost.setCost(v), value);
     }
 
     private AcademicCostBuilder(List<BiConsumer<Integer, AcademicCost>> multiActions) {

@@ -67,17 +67,17 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
         }
 
         storeFinancePosition(request, applicationFinanceResource.getId(), competitionId, userId);
-        return new ValidationMessages();
+        return ValidationMessages.noErrors();
     }
 
     @Override
     public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
-        return new ValidationMessages();
+        return ValidationMessages.noErrors();
     }
 
     @Override
     public ValidationMessages addCost(Long applicationId, Long userId, Long questionId) {
-        return new ValidationMessages();
+        return ValidationMessages.noErrors();
     }
 
     @Override

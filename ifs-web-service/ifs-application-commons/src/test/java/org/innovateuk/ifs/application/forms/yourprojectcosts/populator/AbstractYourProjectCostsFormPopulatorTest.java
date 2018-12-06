@@ -47,10 +47,9 @@ public class AbstractYourProjectCostsFormPopulatorTest {
 
     @Test
     public void populate() {
-        YourProjectCostsForm form = new YourProjectCostsForm();
         when(overheadFileRestService.getOverheadFileDetails(any())).thenReturn(RestResult.restSuccess(newFileEntryResource().withName("filename").build()));
 
-        target.populateForm(form, 1L, 2L);
+        YourProjectCostsForm form = target.populateForm( 1L, 2L);
 
         Assert.assertEquals((Integer) 250, form.getLabour().getWorkingDaysPerYear());
         Assert.assertEquals(3, form.getLabour().getRows().size());
