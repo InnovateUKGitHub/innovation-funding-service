@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
@@ -288,7 +289,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
 
-        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> expectedDocuments = project.getApplication().getCompetition().getProjectDocuments();
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
 
         List<PartnerOrganisationResource> partnerOrganisations =
                 partnerOrganisationService.getProjectPartnerOrganisations(project.getId()).getSuccess();

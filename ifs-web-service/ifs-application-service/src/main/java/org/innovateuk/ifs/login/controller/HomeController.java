@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.login;
+package org.innovateuk.ifs.login.controller;
 
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;

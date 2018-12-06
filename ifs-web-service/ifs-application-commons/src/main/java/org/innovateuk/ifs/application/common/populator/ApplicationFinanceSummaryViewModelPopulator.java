@@ -181,7 +181,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private OrganisationResource getUserOrganisation(UserResource user, Long applicationId) {
         OrganisationResource userOrganisation = null;
 
-        if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR)) {
+        if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR, Role.STAKEHOLDER)) {
             ProcessRoleResource userProcessRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
             userOrganisation = organisationRestService.getOrganisationById(userProcessRole.getOrganisationId()).getSuccess();
         }

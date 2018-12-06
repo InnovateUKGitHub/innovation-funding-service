@@ -3,9 +3,9 @@ package org.innovateuk.ifs.competitionsetup.projectdocument.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competition.service.CompetitionSetupProjectDocumentRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupDocumentRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.projectdocument.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.projectdocument.form.ProjectDocumentForm;
@@ -30,15 +30,16 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/project-document")
-@SecuredBySpring(value = "Controller", description = "Only comp admin, project finance and IFS Admin can perform the below activities", securedType = CompetitionSetupProjectDocumentController.class)
+@SecuredBySpring(value = "Controller", description = "Only comp admin, project finance and IFS Admin can perform the below activities", securedType = CompetitionSetupDocumentController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
-public class CompetitionSetupProjectDocumentController {
+public class CompetitionSetupDocumentController {
 
     public static final String PROJECT_DOCUMENT_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/project-document/landing-page";
     private static final String FORM_ATTR_NAME = "form";
@@ -60,7 +61,7 @@ public class CompetitionSetupProjectDocumentController {
     private CompetitionSetupService competitionSetupService;
 
     @Autowired
-    private CompetitionSetupProjectDocumentRestService competitionSetupProjectDocumentRestService;
+    private CompetitionSetupDocumentRestService competitionSetupDocumentRestService;
 
     @Autowired
     private FileTypeRestService fileTypeRestService;
@@ -108,18 +109,18 @@ public class CompetitionSetupProjectDocumentController {
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId;
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            List<ProjectDocumentResource> projectDocumentResources =  competitionSetupProjectDocumentRestService.findByCompetitionId(competitionId).getSuccess();
-            projectDocumentResources.forEach(projectDocumentResource -> enableOrDisableProjectDocument(projectDocumentResource, form.getEnabledIds()));
+            List<CompetitionDocumentResource> competitionDocumentResources =  competitionSetupDocumentRestService.findByCompetitionId(competitionId).getSuccess();
+            competitionDocumentResources.forEach(projectDocumentResource -> enableOrDisableProjectDocument(projectDocumentResource, form.getEnabledIds()));
 
-            RestResult<List<ProjectDocumentResource>> updateResult = competitionSetupProjectDocumentRestService.save(projectDocumentResources);
+            RestResult<List<CompetitionDocumentResource>> updateResult = competitionSetupDocumentRestService.save(competitionDocumentResources);
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, successView);
                 });
     }
 
-    private void enableOrDisableProjectDocument(ProjectDocumentResource projectDocumentResource, Set<Long> enabledIds) {
-        projectDocumentResource.setEnabled(enabledIds != null && enabledIds.contains(projectDocumentResource.getId()));
+    private void enableOrDisableProjectDocument(CompetitionDocumentResource competitionDocumentResource, Set<Long> enabledIds) {
+        competitionDocumentResource.setEnabled(enabledIds != null && enabledIds.contains(competitionDocumentResource.getId()));
     }
 
     @GetMapping("/add")
@@ -148,12 +149,12 @@ public class CompetitionSetupProjectDocumentController {
 
     private String doViewEditProjectDocument(Model model, long projectDocumentId) {
 
-        ProjectDocumentForm form = createProjectDocumentForm(competitionSetupProjectDocumentRestService.findOne(projectDocumentId).getSuccess());
+        ProjectDocumentForm form = createProjectDocumentForm(competitionSetupDocumentRestService.findOne(projectDocumentId).getSuccess());
 
         return doViewSaveProjectDocument(model, form);
     }
 
-    private ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
+    private ProjectDocumentForm createProjectDocumentForm(CompetitionDocumentResource resource) {
         ProjectDocumentForm form = new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(),
                 resource.isEditable(), resource.isEnabled());
 
@@ -162,7 +163,7 @@ public class CompetitionSetupProjectDocumentController {
         return form;
     }
 
-    private void populateFileTypes(ProjectDocumentForm form, ProjectDocumentResource resource) {
+    private void populateFileTypes(ProjectDocumentForm form, CompetitionDocumentResource resource) {
 
         resource.getFileTypes().forEach(fileTypeId -> {
             FileTypeResource fileTypeResource = fileTypeRestService.findOne(fileTypeId).getSuccess();
@@ -192,11 +193,12 @@ public class CompetitionSetupProjectDocumentController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ProjectDocumentResource projectDocumentResource = createProjectDocumentResource(form, competitionId);
-            RestResult<ProjectDocumentResource> updateResult = competitionSetupProjectDocumentRestService.save(projectDocumentResource);
+            CompetitionDocumentResource competitionDocumentResource = createProjectDocumentResource(form, competitionId);
+            RestResult<CompetitionDocumentResource> updateResult = competitionSetupDocumentRestService.save(competitionDocumentResource);
 
             return validationHandler.addAnyErrors(updateResult,
                                                     mappingErrorKeyToField(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE, "acceptedFileTypesId"),
+                                                    mappingErrorKeyToField(PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED, "title"),
                                                     fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> format(PROJECT_DOCUMENT_LANDING_REDIRECT, competitionId));
         });
@@ -207,15 +209,15 @@ public class CompetitionSetupProjectDocumentController {
         return redirect.redirect ? redirect.url : doViewSaveProjectDocument(model, form);
     }
 
-    private ProjectDocumentResource createProjectDocumentResource(ProjectDocumentForm form, long competitionId) {
-        ProjectDocumentResource projectDocumentResource = new ProjectDocumentResource(competitionId, form.getTitle(), form.getGuidance(),
+    private CompetitionDocumentResource createProjectDocumentResource(ProjectDocumentForm form, long competitionId) {
+        CompetitionDocumentResource competitionDocumentResource = new CompetitionDocumentResource(competitionId, form.getTitle(), form.getGuidance(),
                 form.isEditable(), form.isEnabled(), populateFileTypes(form));
 
         if (form.getProjectDocumentId() != null) {
-            projectDocumentResource.setId(form.getProjectDocumentId());
+            competitionDocumentResource.setId(form.getProjectDocumentId());
         }
 
-        return projectDocumentResource;
+        return competitionDocumentResource;
     }
 
     private List<Long> populateFileTypes(ProjectDocumentForm form) {
@@ -239,7 +241,7 @@ public class CompetitionSetupProjectDocumentController {
                                           @PathVariable("projectDocumentId") long projectDocumentId,
                                           Model model) {
 
-        competitionSetupProjectDocumentRestService.delete(projectDocumentId);
+        competitionSetupDocumentRestService.delete(projectDocumentId);
         return format(PROJECT_DOCUMENT_LANDING_REDIRECT, competitionId);
     }
 }

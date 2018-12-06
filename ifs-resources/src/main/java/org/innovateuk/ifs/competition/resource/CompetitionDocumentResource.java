@@ -10,7 +10,7 @@ import java.util.List;
  *  Resource for project document.
  */
 
-public class ProjectDocumentResource {
+public class CompetitionDocumentResource {
 
     private Long id;
 
@@ -27,10 +27,10 @@ public class ProjectDocumentResource {
 
     private List<Long> fileTypes;
 
-    public ProjectDocumentResource() {
+    public CompetitionDocumentResource() {
     }
 
-    public ProjectDocumentResource(Long competition, String title, String guidance, boolean editable, boolean enabled, List<Long> fileTypes) {
+    public CompetitionDocumentResource(Long competition, String title, String guidance, boolean editable, boolean enabled, List<Long> fileTypes) {
         this.competition = competition;
         this.title = title;
         this.guidance = guidance;
@@ -101,7 +101,7 @@ public class ProjectDocumentResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectDocumentResource that = (ProjectDocumentResource) o;
+        CompetitionDocumentResource that = (CompetitionDocumentResource) o;
 
         return new EqualsBuilder()
                 .append(editable, that.editable)

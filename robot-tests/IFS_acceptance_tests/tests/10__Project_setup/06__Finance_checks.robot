@@ -1111,6 +1111,8 @@ Project finance user adds, modifies and removes labour rows
     When the user clicks the button/link           jQuery = section:nth-of-type(1) a:contains("Edit")
     And the user clicks the button/link            jQuery = section:nth-of-type(1) button:contains("Add another role")
     And the user adds data into labour row         4  test  2000  100
+    And the user clicks the button/link            css = section:nth-of-type(1) .govuk-button[name = save-eligibility]
+    When the user clicks the button/link           jQuery = section:nth-of-type(1) a:contains("Edit")
     And the user clicks the button/link            jQuery = section:nth-of-type(1) button:contains("Add another role")
     And the user adds data into labour row         5  test 1  1450  100
     Then verify percentage and total               1  £5,886
