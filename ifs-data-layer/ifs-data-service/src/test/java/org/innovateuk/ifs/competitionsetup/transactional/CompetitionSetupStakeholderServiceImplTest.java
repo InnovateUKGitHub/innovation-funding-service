@@ -152,7 +152,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
                 .build(2);
 
         when(stakeholderInviteRepositoryMock.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, email1)).thenReturn(false);
-        when(stakeholderRepositoryMock.findStakeholderByCompetitionIdAndStakeholderEmail(competitionId, email2)).thenReturn(true);
+        when(stakeholderRepositoryMock.existsByCompetitionIdAndStakeholderEmail(competitionId, email2)).thenReturn(true);
 
         ServiceResult<Void> result = service.inviteStakeholder(invitedUser, 1L);
 
@@ -183,7 +183,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         ArgumentCaptor<Notification> notificationCaptor = ArgumentCaptor.forClass(Notification.class);
 
         when(stakeholderInviteRepositoryMock.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, stakeholderUser.getEmail())).thenReturn(false);
-        when(stakeholderRepositoryMock.findStakeholderByCompetitionIdAndStakeholderEmail(competitionId, stakeholderUser.getEmail())).thenReturn(false);
+        when(stakeholderRepositoryMock.existsByCompetitionIdAndStakeholderEmail(competitionId, stakeholderUser.getEmail())).thenReturn(false);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(user));
         when(userRepositoryMock.save(any(User.class))).thenReturn(stakeholderUser);
         when(userRepositoryMock.findOne(stakeholderUserId)).thenReturn(stakeholderUser);

@@ -131,7 +131,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     }
 
     private ServiceResult<Void> validateUserNotAlreadyStakeholderOnCompetition(long competitionId, String email) {
-        boolean isUserStakeholderOnCompetition =  stakeholderRepository.findStakeholderByCompetitionIdAndStakeholderEmail(competitionId, email);
+        boolean isUserStakeholderOnCompetition =  stakeholderRepository.existsByCompetitionIdAndStakeholderEmail(competitionId, email);
         return isUserStakeholderOnCompetition ? serviceFailure(STAKEHOLDER_HAS_ACCEPTED_INVITE) : serviceSuccess();
     }
 
