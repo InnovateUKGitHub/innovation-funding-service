@@ -107,12 +107,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @AsyncMethod
     public String viewEligibility(@PathVariable long projectId,
                                   @PathVariable Long organisationId,
-                                  @ModelAttribute(name = FORM_ATTR_NAME, binding = false) YourProjectCostsForm form,
                                   @RequestParam(value = "financeType", required = false) FinanceRowType rowType,
-                                  BindingResult bindingResult,
                                   Model model,
                                   UserResource user) {
-        return doViewEligibility(projectId, organisationId, model, null, form, rowType);
+        return doViewEligibility(projectId, organisationId, model, null, null, rowType);
     }
 
     private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, FinanceRowType rowType) {
@@ -133,7 +131,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             boolean isUsingJesFinances = financeUtil.isUsingJesFinances(competition.get(), organisation.get().getOrganisationType());
             if (!isUsingJesFinances) {
                 model.addAttribute("model", new FinanceChecksProjectCostsViewModel(!eligibilityApproved, rowType));
-                formPopulator.populateForm(form, projectId, organisationId);
+                if (form == null) {
+                    form = formPopulator.populateForm(projectId, organisationId);
+                }
+                model.addAttribute("form", form);
             } else {
                 ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(project.getApplication(), organisation.get().getId());
                 if (applicationFinanceResource.getFinanceFileEntry() != null) {
@@ -166,6 +167,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save-eligibility")
+    @AsyncMethod
     public String projectFinanceFormSubmit(@PathVariable final Long projectId,
                                            @PathVariable Long organisationId,
                                            @RequestParam("save-eligibility") FinanceRowType type,
@@ -176,7 +178,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                                            UserResource user) {
 
         Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
-        Supplier<String> failureView = () -> viewEligibility(projectId, organisationId, form, type, bindingResult, model, user);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, form, null);
         yourProjectCostsFormValidator.validateType(form, type, validationHandler);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(yourProjectCostsSaver.saveType(form, type, projectId, organisationId));
