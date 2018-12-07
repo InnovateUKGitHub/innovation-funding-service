@@ -2,25 +2,25 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 
 /**
  * Holder of model attributes for the Assessment Detailed Finances view.
  */
 public class AssessmentDetailedFinancesViewModel {
 
-    private long assessmentId;
-    private long applicationId;
-    private String applicationName;
-    private String financeView;
+    private final long assessmentId;
+    private final long applicationId;
+    private final ApplicationResource application;
+    private final String applicationName;
+    private final boolean academic;
 
-    public AssessmentDetailedFinancesViewModel(long assessmentId,
-                                               long applicationId,
-                                               String applicationName,
-                                               String financeView) {
+    public AssessmentDetailedFinancesViewModel(long assessmentId, long applicationId, ApplicationResource application, String applicationName, boolean academic) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
+        this.application = application;
         this.applicationName = applicationName;
-        this.financeView = financeView;
+        this.academic = academic;
     }
 
     public long getAssessmentId() {
@@ -35,8 +35,12 @@ public class AssessmentDetailedFinancesViewModel {
         return applicationName;
     }
 
-    public String getFinanceView() {
-        return financeView;
+    public boolean isAcademic() {
+        return academic;
+    }
+
+    public ApplicationResource getApplication() {
+        return application;
     }
 
     @Override
@@ -51,7 +55,7 @@ public class AssessmentDetailedFinancesViewModel {
                 .append(assessmentId, that.assessmentId)
                 .append(applicationId, that.applicationId)
                 .append(applicationName, that.applicationName)
-                .append(financeView, that.financeView)
+                .append(academic, that.academic)
                 .isEquals();
     }
 
@@ -61,7 +65,7 @@ public class AssessmentDetailedFinancesViewModel {
                 .append(assessmentId)
                 .append(applicationId)
                 .append(applicationName)
-                .append(financeView)
+                .append(academic)
                 .toHashCode();
     }
 }

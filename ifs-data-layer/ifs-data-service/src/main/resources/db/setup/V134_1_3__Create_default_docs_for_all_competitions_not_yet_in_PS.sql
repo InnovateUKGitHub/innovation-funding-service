@@ -16,7 +16,7 @@ SELECT c.id AS competition_id,
  <li>less than 10MB in file size</li></ul>' AS guidance,
 false AS editable,
 true AS enabled,
-'ProjectDocument' AS type FROM competition c
+'CompetitionDocument' AS type FROM competition c
 WHERE c.id NOT IN (
 	SELECT c.id FROM competition c
 	LEFT JOIN competition_type ct ON (c.competition_type_id = ct.id)
@@ -45,7 +45,7 @@ SELECT c.id AS competition_id,
  <li>less than 10MB in file size</li></ul>' AS guidance,
 false AS editable,
 true AS enabled,
-'ProjectDocument' AS type FROM competition c
+'CompetitionDocument' AS type FROM competition c
 WHERE c.id NOT IN (
 	SELECT c.id FROM competition c
 	LEFT JOIN competition_type ct ON (c.competition_type_id = ct.id)

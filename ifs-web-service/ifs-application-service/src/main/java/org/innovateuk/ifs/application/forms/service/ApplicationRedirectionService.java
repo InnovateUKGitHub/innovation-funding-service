@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.forms.service;
 
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
-import org.innovateuk.ifs.application.finance.view.jes.JESFinanceFormHandler;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -45,17 +44,12 @@ public class ApplicationRedirectionService {
                 && (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
                 request.getParameter(MARK_AS_INCOMPLETE) != null ||
                 request.getParameter(MARK_SECTION_AS_INCOMPLETE) != null ||
-                request.getParameter(ADD_COST) != null ||
-                request.getParameter(REMOVE_COST) != null ||
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
                 request.getParameter(UPLOAD_FILE) != null ||
-                request.getParameter(JESFinanceFormHandler.REMOVE_FINANCE_DOCUMENT) != null ||
-                request.getParameter(JESFinanceFormHandler.UPLOAD_FINANCE_DOCUMENT) != null ||
                 request.getParameter(EDIT_QUESTION) != null ||
                 request.getParameter(REQUESTING_FUNDING) != null ||
-                request.getParameter(NOT_REQUESTING_FUNDING) != null ||
-                request.getParameter(ACADEMIC_FINANCE_REMOVE) != null)) {
+                request.getParameter(NOT_REQUESTING_FUNDING) != null)) {
             // user did a action, just display the same page.
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();

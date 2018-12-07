@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.documents.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 
@@ -36,8 +37,8 @@ public class ProjectDocumentResourceBuilder extends BaseBuilder<ProjectDocumentR
         return withArray((id, project) -> setField("id", id, project), ids);
     }
 
-    public ProjectDocumentResourceBuilder withProjectDocument(org.innovateuk.ifs.competition.resource.ProjectDocumentResource... projectDocumentResources){
-        return withArray((projectConfigDocumentResource, projectDocumentResource) -> projectDocumentResource.setProjectDocument(projectConfigDocumentResource), projectDocumentResources);
+    public ProjectDocumentResourceBuilder withCompetitionDocument(CompetitionDocumentResource... competitionDocumentResources){
+        return withArray((projectConfigDocumentResource, projectDocumentResource) -> projectDocumentResource.setCompetitionDocument(projectConfigDocumentResource), competitionDocumentResources);
     }
 
     public ProjectDocumentResourceBuilder withStatus(DocumentStatus... statuses){

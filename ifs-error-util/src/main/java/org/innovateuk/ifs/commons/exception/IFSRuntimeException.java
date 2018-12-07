@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.commons.exception;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 public class IFSRuntimeException extends RuntimeException {
     // Arguments returned by data api.  Useful for composing error messages with details from request.
@@ -9,12 +10,17 @@ public class IFSRuntimeException extends RuntimeException {
 
     public IFSRuntimeException() {
         super();
-        this.arguments = new ArrayList<>();
+        this.arguments = emptyList();
     }
 
     public IFSRuntimeException(List<Object> arguments) {
         super();
         this.arguments = arguments;
+    }
+
+    public IFSRuntimeException(String message) {
+        super(message);
+        this.arguments = emptyList();
     }
 
     public IFSRuntimeException(String message, List<Object> arguments) {
