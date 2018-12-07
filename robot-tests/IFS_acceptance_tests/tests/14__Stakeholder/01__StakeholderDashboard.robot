@@ -25,7 +25,7 @@ The internal user cannot invite a Stakeholder when they have triggered the name 
     And the user clicks the button/link    link = ${openProgrammeCompetitionName}
     And The user clicks the button/link    link = View and update competition setup
     And The user clicks the button/link    link = Stakeholders
-    When the user clicks the button/link             jQuery = span:contains("Invite a new stakeholder")
+    When the user clicks the button/link   jQuery = span:contains("Invite a new stakeholder")
     And the user triggers the name validation
     Then the user should see the name validation messages
 
