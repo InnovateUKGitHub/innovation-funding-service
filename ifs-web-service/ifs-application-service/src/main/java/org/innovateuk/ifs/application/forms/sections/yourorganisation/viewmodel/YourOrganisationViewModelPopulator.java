@@ -15,8 +15,12 @@ public class YourOrganisationViewModelPopulator {
         this.yourOrganisationService = yourOrganisationService;
     }
 
-    public YourOrganisationViewModel populate(long applicationId, long organisationId) {
+    public YourOrganisationViewModel populate(long applicationId, long competitionId, long organisationId) {
+
         boolean showStateAidAgreement = yourOrganisationService.isShowStateAidAgreement(applicationId, organisationId).getSuccess();
-        return new YourOrganisationViewModel(showStateAidAgreement);
+
+        boolean includesGrowthTable = yourOrganisationService.isIncludingGrowthTable(competitionId).getSuccess();
+
+        return new YourOrganisationViewModel(showStateAidAgreement, includesGrowthTable);
     }
 }

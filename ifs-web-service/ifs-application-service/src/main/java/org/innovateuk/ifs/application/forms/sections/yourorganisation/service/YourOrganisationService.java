@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.Growt
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -32,9 +32,11 @@ public interface YourOrganisationService {
 
     ServiceResult<Boolean> isIncludingGrowthTable(long competitionId);
 
-    ServiceResult<LocalDateTime> getFinancialYearEnd(long applicationId, long competitionId, long organisationId);
+    ServiceResult<LocalDate> getFinancialYearEnd(long applicationId, long competitionId, long organisationId);
 
-    ServiceResult<List<GrowthTableRow>> getGrowthTableRows(long applicationId, long organisationId);
+    ServiceResult<List<GrowthTableRow>> getGrowthTableRows(long applicationId, long competitionId, long organisationId);
 
-    ServiceResult<Long> getHeadCountAtLastFinancialYear(long applicationId, long organisationId);
+    ServiceResult<Long> getHeadCountAtLastFinancialYear(long applicationId, long competitionId, long organisationId);
+
+    ServiceResult<Void> updateFinancialYearEnd(long applicationId, long competitionId, long userId, LocalDate financialYearEnd);
 }

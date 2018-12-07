@@ -23,7 +23,7 @@ Available parameters:
 */-->
 <th:block th:fragment="checkbox(legend, label, id, value, checked)">
 
-    <div class="govuk-form-group">
+    <div class="govuk-form-group" th:classappend="${#fields.hasErrors(id)} ? 'govuk-form-group--error'">
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden"
                     th:utext="${legend}" />

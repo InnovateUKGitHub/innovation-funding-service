@@ -21,7 +21,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
@@ -46,13 +46,15 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     private ApplicationFinanceRestService applicationFinanceRestService;
     private OrganisationRestService organisationRestService;
 
-    public FormInputBasedYourOrganisationService(QuestionRestService questionRestService,
+    public FormInputBasedYourOrganisationService(CompetitionRestService competitionRestService,
+                                                 QuestionRestService questionRestService,
                                                  FormInputRestService formInputRestService,
                                                  FormInputResponseRestService formInputResponseRestService,
                                                  ApplicationRestService applicationRestService,
                                                  ApplicationFinanceRestService applicationFinanceRestService,
                                                  OrganisationRestService organisationRestService) {
 
+        this.competitionRestService = competitionRestService;
         this.questionRestService = questionRestService;
         this.formInputRestService = formInputRestService;
         this.formInputResponseRestService = formInputResponseRestService;
@@ -140,6 +142,11 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     }
 
     @Override
+    public ServiceResult<Void> updateFinancialYearEnd(long applicationId, long competitionId, long userId, LocalDate financialYearEnd) {
+        return updateLongValueForFormInput(applicationId, competitionId, userId, value, FormInputType.ORGANISATION_TURNOVER);
+    }
+
+    @Override
     public ServiceResult<Boolean> isIncludingGrowthTable(long competitionId) {
         return competitionRestService.getCompetitionById(competitionId).
                 andOnSuccessReturn(CompetitionResource::getIncludeProjectGrowthTable).
@@ -147,18 +154,18 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     }
 
     @Override
-    public ServiceResult<LocalDateTime> getFinancialYearEnd(long applicationId, long competitionId, long organisationId) {
-        return getLocalDateTimeValueForFormInputType(applicationId, competitionId, organisationId, FormInputType.FINANCIAL_YEAR_END);
+    public ServiceResult<LocalDate> getFinancialYearEnd(long applicationId, long competitionId, long organisationId) {
+        return getLocalDateValueForFormInputType(applicationId, competitionId, organisationId, FormInputType.FINANCIAL_YEAR_END);
     }
 
     @Override
-    public ServiceResult<List<GrowthTableRow>> getGrowthTableRows(long applicationId, long organisationId) {
+    public ServiceResult<List<GrowthTableRow>> getGrowthTableRows(long applicationId, long competitionId, long organisationId) {
         return serviceSuccess(emptyList());
     }
 
     @Override
-    public ServiceResult<Long> getHeadCountAtLastFinancialYear(long applicationId, long organisationId) {
-        return null;
+    public ServiceResult<Long> getHeadCountAtLastFinancialYear(long applicationId, long competitionId, long organisationId) {
+        return getLongValueForFormInputType(applicationId, competitionId, organisationId, FormInputType.FINANCIAL_STAFF_COUNT);
     }
 
     private ServiceResult<Long> getLongValueForFormInputType(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {
@@ -167,13 +174,21 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
                 toServiceResult();
     }
 
-    private ServiceResult<LocalDateTime> getLocalDateTimeValueForFormInputType(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {
+    private ServiceResult<LocalDate> getLocalDateValueForFormInputType(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {
         return getFormInputResponseForOrganisation(applicationId, competitionId, organisationId, formInputType).
-                andOnSuccessReturn(this::getLocalDateTimeValueFromFormInputResponses).
+                andOnSuccessReturn(this::getLocalDateValueFromFormInputResponses).
                 toServiceResult();
     }
 
     private ServiceResult<Void> updateLongValueForFormInput(long applicationId, long competitionId, long userId, Long value, FormInputType formInputType) {
+        return updateValueForFormInput(applicationId, competitionId, userId, value != null ? value.toString() : null, formInputType);
+    }
+
+    private ServiceResult<Void> updateLocalDateValueForFormInput(long applicationId, long competitionId, long userId, LocalDate value, FormInputType formInputType) {
+        return updateValueForFormInput(applicationId, competitionId, userId, value != null ? value.toString() : null, formInputType);
+    }
+
+    private ServiceResult<Void> updateValueForFormInput(long applicationId, long competitionId, long userId, String stringValue, FormInputType formInputType) {
 
         return getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType).
                 andOnSuccess(question -> formInputRestService.getByQuestionId(question.getId())).
@@ -205,12 +220,12 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
                 orElse(null);
     }
 
-    private LocalDateTime getLocalDateTimeValueFromFormInputResponses(Optional<FormInputResponseResource> formInputResponse) {
+    private LocalDate getLocalDateValueFromFormInputResponses(Optional<FormInputResponseResource> formInputResponse) {
 
         return formInputResponse.
                 map(response -> {
                     try {
-                        return LocalDateTime.parse(response.getValue());
+                        return LocalDate.parse(response.getValue());
                     } catch (DateTimeParseException e) {
                         return null;
                     }

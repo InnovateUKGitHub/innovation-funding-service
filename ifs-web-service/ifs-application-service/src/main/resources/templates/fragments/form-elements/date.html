@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--/*
+
+A fragment to render a standard checkbox within a form.
+
+Available parameters:
+
+  Mandatory
+
+    * legend
+    * id
+    * monthValue
+    * yearValue
+
+  Optional
+
+    * hint - hint text
+    * required - whether or not these fields are required
+
+*/-->
+<th:block th:fragment="month-and-year(legend, id, monthValue, yearValue)">
+    <div class="govuk-form-group" th:classappend="${#fields.hasErrors(id)} ? 'govuk-form-group--error'">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" th:id="${id}">
+                <h2 class="govuk-fieldset__heading" th:text="${legend}">End of last financial year</h2>
+            </legend>
+            <span th:if="${hint != null}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
+
+            <th:block th:if="${#fields.hasErrors(id)}">
+                <span class="govuk-error-message" th:each="err : ${#fields.errors(id)}" th:text="${err}"></span>
+            </th:block>
+
+            <div class="date-group" data-past-date="">
+                <!--/* this is added for javascript date validation, if we have more mm yyyy fields we might want to do this in a cleaner way */-->
+                <div class="day">
+                    <input th:id="'year-end-day-' + ${id}" type="hidden" value="1" class="js-visited day" disabled="disabled" />
+                </div>
+                <div class="month">
+                    <label class="govuk-label" th:for="${id} + '.monthValue'">
+                        Month
+                    </label>
+                    <input class="govuk-input govuk-input--width-2"
+                           placeholder="MM"
+                           max="12"
+                           min="0"
+                           type="number"
+                           th:id="${id} + '.monthValue'"
+                           th:name="${id} + '].monthValue'"
+                           th:value="${monthValue}"
+                           th:classappend="${#fields.hasErrors(id)} ? 'govuk-input--error'"
+                           th:attrappend="required=${required ?: null}"
+                           />
+                </div>
+                <div class="year">
+                    <label class="govuk-label" th:for="${id} + '.year'">
+                        Year
+                    </label>
+                    <input class="govuk-input govuk-input--width-4"
+                           placeholder="YYYY"
+                           required="required"
+                           min="0"
+                           type="number"
+                           th:id="${id} + '.year'"
+                           th:name="${id} + '.year'"
+                           th:value="${yearValue}"
+                           th:classappend="${#fields.hasErrors(id)} ? 'govuk-input--error'"
+                           th:attrappend="required=${required ?: null}"
+                           />
+                </div>
+                <!--/* The hidden field below is used as a dummy value that is essentially ignored by the LocalDatePropertyEditor in order to allow
+                  us to get the LocalDatePropertyEditor to kick in when Spring attempts to bind the current field to the LocalDate value in the
+                  backing form. */-->
+                <input type="hidden" data-date-month-year th:name="${id}" th:value="${id}" />
+            </div>
+        </fieldset>
+    </div>
+</th:block>
+</html>

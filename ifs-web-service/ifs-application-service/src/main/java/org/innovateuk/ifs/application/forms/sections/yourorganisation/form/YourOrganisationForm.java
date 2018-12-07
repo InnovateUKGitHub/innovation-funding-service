@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -12,14 +12,13 @@ import static java.util.Collections.emptyList;
  */
 public class YourOrganisationForm {
 
-    private LocalDateTime financialYearEnd;
+    private LocalDate financialYearEnd;
     private Long headCountAtLastFinancialYear;
     private OrganisationSize organisationSize;
     private Long turnover;
     private Long headCount;
     private Boolean stateAidAgreed;
     private List<GrowthTableRow> growthTableRows;
-    private boolean growthTableIncluded;
 
     private YourOrganisationForm(
             OrganisationSize organisationSize,
@@ -27,9 +26,8 @@ public class YourOrganisationForm {
             Long headCount,
             Boolean stateAidAgreed,
             List<GrowthTableRow> growthTableRows,
-            LocalDateTime financialYearEnd,
-            Long headCountAtLastFinancialYear,
-            boolean growthTableIncluded) {
+            LocalDate financialYearEnd,
+            Long headCountAtLastFinancialYear) {
 
         this.organisationSize = organisationSize;
         this.turnover = turnover;
@@ -38,7 +36,9 @@ public class YourOrganisationForm {
         this.growthTableRows = growthTableRows;
         this.financialYearEnd = financialYearEnd;
         this.headCountAtLastFinancialYear = headCountAtLastFinancialYear;
-        this.growthTableIncluded = growthTableIncluded;
+    }
+
+    YourOrganisationForm() {
     }
 
     public OrganisationSize getOrganisationSize() {
@@ -77,11 +77,11 @@ public class YourOrganisationForm {
         return growthTableRows;
     }
 
-    public LocalDateTime getFinancialYearEnd() {
+    public LocalDate getFinancialYearEnd() {
         return financialYearEnd;
     }
 
-    public void setFinancialYearEnd(LocalDateTime financialYearEnd) {
+    public void setFinancialYearEnd(LocalDate financialYearEnd) {
         this.financialYearEnd = financialYearEnd;
     }
 
@@ -93,15 +93,11 @@ public class YourOrganisationForm {
         this.headCountAtLastFinancialYear = headCountAtLastFinancialYear;
     }
 
-    public boolean isGrowthTableIncluded() {
-        return growthTableIncluded;
-    }
-
     public static YourOrganisationForm noGrowthTable(OrganisationSize organisationSize, Long turnover, Long headCount, Boolean stateAidAgreed) {
-        return new YourOrganisationForm(organisationSize, turnover, headCount, stateAidAgreed, emptyList(), null, null, false);
+        return new YourOrganisationForm(organisationSize, turnover, headCount, stateAidAgreed, emptyList(), null, null);
     }
 
-    public static YourOrganisationForm withGrowthTable(OrganisationSize organisationSize, Long headCount, Boolean stateAidAgreed, List<GrowthTableRow> growthTableRows, LocalDateTime financialYearEnd, Long headCountAtLastFinancialYear) {
-        return new YourOrganisationForm(organisationSize, null, headCount, stateAidAgreed, growthTableRows, financialYearEnd, headCountAtLastFinancialYear, true);
+    public static YourOrganisationForm withGrowthTable(OrganisationSize organisationSize, Long headCount, Boolean stateAidAgreed, List<GrowthTableRow> growthTableRows, LocalDate financialYearEnd, Long headCountAtLastFinancialYear) {
+        return new YourOrganisationForm(organisationSize, null, headCount, stateAidAgreed, growthTableRows, financialYearEnd, headCountAtLastFinancialYear);
     }
 }

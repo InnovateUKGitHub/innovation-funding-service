@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.Yo
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -21,21 +21,21 @@ public class YourOrganisationFormPopulator {
 
     public YourOrganisationForm populate(long applicationId, long competitionId, long organisationId) {
 
-        boolean stateAidAgreed = yourOrganisationService.getStateAidAgreed(applicationId).getSuccess();
+        Boolean stateAidAgreed = yourOrganisationService.getStateAidAgreed(applicationId).getSuccess();
         OrganisationSize organisationSize = yourOrganisationService.getOrganisationSize(applicationId, organisationId).getSuccess();
 
         boolean includesGrowthTable = yourOrganisationService.isIncludingGrowthTable(competitionId).getSuccess();
 
         if (includesGrowthTable) {
 
-            LocalDateTime financialYearEnd =
+            LocalDate financialYearEnd =
                     yourOrganisationService.getFinancialYearEnd(applicationId, competitionId, organisationId).getSuccess();
 
             List<GrowthTableRow> growthTableRows =
-                    yourOrganisationService.getGrowthTableRows(applicationId, organisationId).getSuccess();
+                    yourOrganisationService.getGrowthTableRows(applicationId, competitionId, organisationId).getSuccess();
 
             Long headCountAtLastFinancialYear =
-                    yourOrganisationService.getHeadCountAtLastFinancialYear(applicationId, organisationId).getSuccess();
+                    yourOrganisationService.getHeadCountAtLastFinancialYear(applicationId, competitionId, organisationId).getSuccess();
 
             return YourOrganisationForm.withGrowthTable(organisationSize, null, stateAidAgreed, growthTableRows, financialYearEnd, headCountAtLastFinancialYear);
 

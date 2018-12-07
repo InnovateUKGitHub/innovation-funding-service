@@ -86,7 +86,7 @@ public class YourOrganisationController extends AsyncAdaptor {
                 getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
-                getViewModel(applicationId, organisationId));
+                getViewModel(applicationId, competitionId, organisationId));
 
         Future<YourOrganisationForm> formRequest = async(() ->
                 formPopulator.populate(applicationId, competitionId, organisationId));
@@ -142,7 +142,7 @@ public class YourOrganisationController extends AsyncAdaptor {
 
         Supplier<String> failureHandler = () -> {
             CommonYourFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, false);
-            YourOrganisationViewModel viewModel = getViewModel(applicationId, organisationId);
+            YourOrganisationViewModel viewModel = getViewModel(applicationId, competitionId, organisationId);
             model.addAttribute("commonFinancesModel", commonViewModel);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
@@ -186,18 +186,30 @@ public class YourOrganisationController extends AsyncAdaptor {
                                         long userId,
                                         YourOrganisationForm form) {
 
+        boolean growthTableIncluded = yourOrganisationService.isIncludingGrowthTable(competitionId).getSuccess();
+        boolean stateAidIncluded = yourOrganisationService.isShowStateAidAgreement(applicationId, organisationId).getSuccess();
+
         yourOrganisationService.updateOrganisationSize(applicationId, organisationId, form.getOrganisationSize()).getSuccess();
-        yourOrganisationService.updateHeadCount(applicationId, competitionId, userId, form.getHeadCount()).getSuccess();
-        yourOrganisationService.updateTurnover(applicationId, competitionId, userId, form.getTurnover()).getSuccess();
-        yourOrganisationService.updateStateAidAgreed(applicationId, form.getStateAidAgreed()).getSuccess();
+
+        if (growthTableIncluded) {
+            yourOrganisationService.updateFinancialYearEnd(applicationId, competitionId, userId, form.getFinancialYearEnd()).getSuccess();
+
+        } else {
+            yourOrganisationService.updateHeadCount(applicationId, competitionId, userId, form.getHeadCount()).getSuccess();
+            yourOrganisationService.updateTurnover(applicationId, competitionId, userId, form.getTurnover()).getSuccess();
+        }
+
+        if (stateAidIncluded) {
+            yourOrganisationService.updateStateAidAgreed(applicationId, form.getStateAidAgreed()).getSuccess();
+        }
     }
 
     private List<Error> validateYourOrganisation(YourOrganisationForm form) {
         return emptyList();
     }
 
-    private YourOrganisationViewModel getViewModel(long applicationId, long organisationId) {
-        return viewModelPopulator.populate(applicationId, organisationId);
+    private YourOrganisationViewModel getViewModel(long applicationId, long competitionId, long organisationId) {
+        return viewModelPopulator.populate(applicationId, competitionId, organisationId);
     }
 
     private CommonYourFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
