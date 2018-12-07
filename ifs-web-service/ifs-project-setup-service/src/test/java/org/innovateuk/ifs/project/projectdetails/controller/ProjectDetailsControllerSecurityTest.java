@@ -87,34 +87,4 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
         assertSecured(() -> classUnderTest.updateStartDate(projectCompositeId.id(), null, null, null, null, null),
                 permissionRules -> permissionRules.leadCanAccessProjectStartDatePage(eq(projectCompositeId), isA(UserResource.class)));
     }
-
-    @Test
-    public void testViewAddress() {
-        assertSecured(() -> classUnderTest.viewAddress(projectCompositeId.id(), null, null),
-                permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testUpdateAddress() {
-        assertSecured(() -> classUnderTest.updateAddress(projectCompositeId.id(), null, null, null, null),
-                permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testSearchAddress() {
-        assertSecured(() -> classUnderTest.searchAddress(projectCompositeId.id(), null, null, null),
-                permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testSelectAddress() {
-        assertSecured(() -> classUnderTest.selectAddress(projectCompositeId.id(), null, null),
-                permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testManualAddress() {
-        assertSecured(() -> classUnderTest.manualAddress(projectCompositeId.id(), null, null),
-                permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(projectCompositeId), isA(UserResource.class)));
-    }
 }

@@ -180,10 +180,9 @@ public class ApplicationSectionController {
                 ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
 
                 if (!financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
-                    return String.format("redirect:/application/%d/form/your-project-costs/%d/%d%s", applicationId, sectionId, applicantOrganisationId, originQuery);
+                    return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d%s", applicationId, applicantOrganisationId, sectionId, originQuery);
                 } else {
-                    return populateGenericApplicationFormSectionForInternalUser(
-                            form, bindingResult, model, applicantOrganisationId, user, originQuery, applicantSection);
+                    return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d%s", applicationId, applicantOrganisationId, sectionId, originQuery);
                 }
             }
             case PROJECT_LOCATION: {

@@ -25,4 +25,7 @@ public interface CompetitionParticipantRepository<ParticipantType extends Compet
 
     boolean existsByCompetitionIdAndUserIdAndRole(long competitionId, long userId, CompetitionParticipantRole role);
 
+    boolean existsByCompetitionIdAndUserEmailAndRole(long competitionId, String email, CompetitionParticipantRole
+            role);
+
 }

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.projectdetails.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectDetailsController;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
@@ -238,13 +237,12 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         long projectId = 123L;
         long leadOrganisationId = 456L;
-        OrganisationAddressType addressType = OrganisationAddressType.PROJECT;
 
         AddressResource address = newAddressResource().build();
 
-        when(projectDetailsServiceMock.updateProjectAddress(leadOrganisationId, projectId, addressType, address)).thenReturn(serviceSuccess());
+        when(projectDetailsServiceMock.updateProjectAddress(leadOrganisationId, projectId, address)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/address?leadOrganisationId={leadOrganisationId}&addressType={addressType}", projectId, leadOrganisationId, addressType)
+        mockMvc.perform(post("/project/{projectId}/address?leadOrganisationId={leadOrganisationId}", projectId, leadOrganisationId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(address)))
@@ -254,8 +252,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                                 parameterWithName("projectId").description("Id of project that the project address is being set on")
                         ),
                         requestParameters(
-                                parameterWithName("leadOrganisationId").description("Id of the Lead Organisation for this Project"),
-                                parameterWithName("addressType").description("The type of address that is being selected")
+                                parameterWithName("leadOrganisationId").description("Id of the Lead Organisation for this Project")
                         )
                 ));
     }

@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.documents.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentConfigRepository;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -50,7 +50,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements DocumentsService {
 
     @Autowired
-    private ProjectDocumentConfigRepository projectDocumentConfigRepository;
+    private CompetitionDocumentConfigRepository competitionDocumentConfigRepository;
 
     @Autowired
     private ProjectDocumentRepository projectDocumentRepository;
@@ -75,12 +75,12 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     @Override
     public ServiceResult<List<String>> getValidMediaTypesForDocument(long documentConfigId) {
-        return getProjectDocumentConfig(documentConfigId)
+        return getCompetitionDocumentConfig(documentConfigId)
                 .andOnSuccessReturn(projectDocumentConfig -> getMediaTypes(projectDocumentConfig.getFileTypes()));
     }
 
-    private ServiceResult<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> getProjectDocumentConfig(final long documentConfigId) {
-        return find(projectDocumentConfigRepository.findOne(documentConfigId), notFoundError(org.innovateuk.ifs.competitionsetup.domain.ProjectDocument.class, documentConfigId));
+    private ServiceResult<CompetitionDocument> getCompetitionDocumentConfig(final long documentConfigId) {
+        return find(competitionDocumentConfigRepository.findOne(documentConfigId), notFoundError(CompetitionDocument.class, documentConfigId));
     }
 
     private List<String> getMediaTypes(List<FileType> fileTypes) {
@@ -102,7 +102,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Override
     @Transactional
     public ServiceResult<FileEntryResource> createDocumentFileEntry(long projectId, long documentConfigId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
+        return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
                         .andOnSuccess(() -> fileService.createFile(fileEntryResource, inputStreamSupplier))
                         .andOnSuccessReturn(fileDetails -> createProjectDocument(project, projectDocumentConfig, fileDetails)));
@@ -116,10 +116,10 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         return serviceSuccess();
     }
 
-    private FileEntryResource createProjectDocument(Project project, org.innovateuk.ifs.competitionsetup.domain.ProjectDocument projectDocumentConfig, Pair<File, FileEntry> fileDetails) {
+    private FileEntryResource createProjectDocument(Project project, CompetitionDocument competitionDocumentConfig, Pair<File, FileEntry> fileDetails) {
 
         FileEntry fileEntry = fileDetails.getValue();
-        ProjectDocument projectDocument = new ProjectDocument(project, projectDocumentConfig, fileEntry, UPLOADED);
+        ProjectDocument projectDocument = new ProjectDocument(project, competitionDocumentConfig, fileEntry, UPLOADED);
         projectDocumentRepository.save(projectDocument);
         return fileEntryMapper.mapToResource(fileEntry);
     }
@@ -141,7 +141,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     }
 
     private ProjectDocument getProjectDocument(Project project, long documentConfigId) {
-        return simpleFindAny(project.getProjectDocuments(), projectDocument -> projectDocument.getProjectDocument().getId().equals(documentConfigId))
+        return simpleFindAny(project.getProjectDocuments(), projectDocument -> projectDocument.getCompetitionDocument().getId().equals(documentConfigId))
                 .orElse(null);
     }
 
@@ -154,7 +154,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Override
     @Transactional
     public ServiceResult<Void> deleteDocument(long projectId, long documentConfigId) {
-        return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
+        return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
                         .andOnSuccess(() -> deleteProjectDocument(project, documentConfigId))
                         .andOnSuccess(() -> deleteFile(project, documentConfigId))
@@ -179,7 +179,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Override
     @Transactional
     public ServiceResult<Void> submitDocument(long projectId, long documentConfigId) {
-        return find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
+        return find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                 andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
                         .andOnSuccess(() -> submitDocument(project, documentConfigId))
                 );
@@ -203,7 +203,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     private boolean allDocumentsSubmitted(Project project) {
         List<PartnerOrganisation> projectOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
-        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> expectedDocuments = projectDocumentConfigRepository.findByCompetitionId(project.getApplication().getCompetition().getId());
+        List<CompetitionDocument> expectedDocuments = competitionDocumentConfigRepository.findByCompetitionId(project.getApplication().getCompetition().getId());
 
         if (projectOrganisations.size() == 1) {
             expectedDocuments.removeIf(
@@ -218,7 +218,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     public ServiceResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision) {
 
         return validateProjectDocumentDecision(decision)
-                .andOnSuccess(() -> find(getProject(projectId), getProjectDocumentConfig(documentConfigId)).
+                .andOnSuccess(() -> find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                         andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
                                 .andOnSuccess(() -> applyDocumentDecision(project, documentConfigId, decision))
                                 .andOnSuccess(() -> generateGrantOfferLetterIfReady(projectId))

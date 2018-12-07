@@ -205,7 +205,6 @@ Log in and create a new application for the Aerospace competition
             Run Keyword If    '${status}' == 'PASS'    the user selects the radio button     selectedOrganisationId  21
     the user clicks the button/link    css = .govuk-button[type="submit"]   #Save and continue
 
-    The user clicks the button/link       jQuery = button:contains("Save and return to application overview")
     The user clicks the button/link       link = Application details
     The user enters text to a text field  id = application.name  ${aeroApplication}
     The user clicks the button/link       id = application-question-save

@@ -38,9 +38,8 @@
             <input type="hidden" id="cacheTest" value=""/>
             <th:block th:if="${!commonFinancesModel.readOnly}" >
                 <div class="govuk-!-margin-top-6">
-                    <th:block th:unless="${commonFinancesModel.readOnly}">
-
-                        <p class="govuk-body">Where will most of the project work take place?</p>
+                    
+                    <p class="govuk-body">Where will most of the project work take place?</p>
 
                         <th:block th:insert="fragments/form-elements/textfield ::
                             textfield(

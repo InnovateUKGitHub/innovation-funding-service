@@ -22,6 +22,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandato
  */
 @Service
 public class FormInputBasedYourOrganisationService implements YourOrganisationService {
+
+    private static final DateTimeFormatter MONTH_YEAR_FORMAT = DateTimeFormatter.ofPattern("MM-yyyy");
 
     private CompetitionRestService competitionRestService;
     private QuestionRestService questionRestService;
@@ -143,7 +146,7 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
 
     @Override
     public ServiceResult<Void> updateFinancialYearEnd(long applicationId, long competitionId, long userId, LocalDate financialYearEnd) {
-        return updateLongValueForFormInput(applicationId, competitionId, userId, value, FormInputType.ORGANISATION_TURNOVER);
+        return updateLocalDateValueForFormInput(applicationId, competitionId, userId, financialYearEnd, FormInputType.ORGANISATION_TURNOVER);
     }
 
     @Override
@@ -185,7 +188,8 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     }
 
     private ServiceResult<Void> updateLocalDateValueForFormInput(long applicationId, long competitionId, long userId, LocalDate value, FormInputType formInputType) {
-        return updateValueForFormInput(applicationId, competitionId, userId, value != null ? value.toString() : null, formInputType);
+        return updateValueForFormInput(applicationId, competitionId, userId,
+                value != null ? value.format(MONTH_YEAR_FORMAT) : null, formInputType);
     }
 
     private ServiceResult<Void> updateValueForFormInput(long applicationId, long competitionId, long userId, String stringValue, FormInputType formInputType) {
@@ -197,7 +201,7 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
                         userId,
                         applicationId,
                         formInput.getId(),
-                        value != null ? value.toString() : null,
+                        stringValue,
                         false)).
                 toServiceResult().
                 andOnSuccessReturnVoid();
@@ -225,7 +229,7 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
         return formInputResponse.
                 map(response -> {
                     try {
-                        return LocalDate.parse(response.getValue());
+                        return LocalDate.parse(response.getValue(), MONTH_YEAR_FORMAT);
                     } catch (DateTimeParseException e) {
                         return null;
                     }

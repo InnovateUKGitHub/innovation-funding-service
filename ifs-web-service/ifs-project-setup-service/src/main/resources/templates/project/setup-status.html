@@ -76,7 +76,7 @@
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectDetailsStatus.getSectionStatus()})"/>
                 </li>
                    <!--/* ========================= Documents ========================= */-->
-                <li th:if="${model.projectDocuments}" th:class="${model.documentsSection.notAccessible} ? 'read-only'" th:classappend="${model.DocumentsStatus.getSectionStatus()}">
+                <li th:if="${model.competitionDocuments}" th:class="${model.documentsSection.notAccessible} ? 'read-only'" th:classappend="${model.DocumentsStatus.getSectionStatus()}">
                     <div class="task">
                         <h2 class="govuk-heading-s">
                             <a th:if="${model.documentsSection.accessible and not model.projectComplete}"

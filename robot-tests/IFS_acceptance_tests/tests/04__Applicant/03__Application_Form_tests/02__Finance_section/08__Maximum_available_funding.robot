@@ -18,7 +18,6 @@ Maximum funding level available for lead business
     [Tags]  HappyPath
     Given we create a new user                               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  Oscar  business  ${lead_business_email}  ${BUSINESS_TYPE_ID}
     When the user clicks the button/link                     link = Untitled application (start here)
-    And the user clicks the button/link                      jQuery = button:contains("Save and return to application overview")
     And the applicant completes the application details      Application details
     And the user selects Research category                   Experimental development
     And the user fills the organisation details with Project growth table     ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
@@ -67,7 +66,6 @@ Maximum funding level available for RTO lead
     [Setup]  logout as user
     Given we create a new user                                              ${openCompetitionRTO}  Smith  rto  ${lead_rto_email}    ${RTO_TYPE_ID}
     When the user clicks the button/link                                    link = Untitled application (start here)
-    And the user clicks the button/link                                     jQuery = button:contains("Save and return to application overview")
     And the applicant completes the application details for RTO lead appln  Application details
     And the user selects Research category                                  Experimental development
     And the user fills in the organisation information                      ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
@@ -231,9 +229,9 @@ the correct funding is displayed to academic user
 
 the academic user marks your project costs as complete
     the user clicks the button/link        link = Your project costs
-    the user enters text to a text field   css = input[name$="tsb_reference"]  academic costs
+    the user enters text to a text field   css = input[name$="tsbReference"]  academic costs
     the user uploads the file              css = .upload-section input  ${5mb_pdf}
-    then the user selects the checkbox     agree-terms-page
+    the user selects the checkbox          agree-terms-page
     wait for autosave
     the user clicks the button/link        jQuery = button:contains("Mark as complete")
 
