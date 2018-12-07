@@ -17,7 +17,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
 public abstract class AbstractYourProjectCostsFormPopulator {
 
-    public void populateForm(YourProjectCostsForm form, long targetId, Long organisationId) {
+    public YourProjectCostsForm populateForm(long targetId, Long organisationId) {
+        YourProjectCostsForm form = new YourProjectCostsForm();
         BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
 
         form.setLabour(labour(finance));
@@ -27,7 +28,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setOtherRows(otherRows(finance));
         form.setSubcontractingRows(subcontractingRows(finance));
         form.setTravelRows(travelRows(finance));
-
+        return form;
     }
 
     private LabourForm labour(BaseFinanceResource finance) {

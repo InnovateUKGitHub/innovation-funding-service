@@ -229,9 +229,9 @@ the correct funding is displayed to academic user
 
 the academic user marks your project costs as complete
     the user clicks the button/link        link = Your project costs
-    the user enters text to a text field   css = input[name$="tsb_reference"]  academic costs
+    the user enters text to a text field   css = input[name$="tsbReference"]  academic costs
     the user uploads the file              css = .upload-section input  ${5mb_pdf}
-    then the user selects the checkbox     agree-terms-page
+    the user selects the checkbox          agree-terms-page
     wait for autosave
     the user clicks the button/link        jQuery = button:contains("Mark as complete")
 

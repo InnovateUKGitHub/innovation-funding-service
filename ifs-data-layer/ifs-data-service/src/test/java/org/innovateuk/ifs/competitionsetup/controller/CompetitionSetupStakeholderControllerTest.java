@@ -61,7 +61,6 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
 
         when(competitionSetupStakeholderService.inviteStakeholder(inviteUserResource.getInvitedUser(), competitionId)).thenReturn(serviceSuccess());
 
-
         mockMvc.perform(post("/competition/setup/{competitionId}/stakeholder/invite", competitionId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteUserResource)))

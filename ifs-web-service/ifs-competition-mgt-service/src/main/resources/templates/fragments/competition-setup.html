@@ -57,6 +57,16 @@
                                 </h3>
                             </div>
                         </li>
+                        <li>
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <th:block th:if="${model.general.initialComplete}">
+                                        <a th:href="@{/competition/setup/{competitionId}/manage-stakeholders(competitionId=${competition.id})}" class="govuk-link">Stakeholders</a>
+                                    </th:block>
+                                    <th:block th:unless="${model.general.initialComplete}">Stakeholders</th:block>
+                                </h3>
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 <div class="highlight-panel govuk-!-margin-top-6 govuk-!-padding-6 govuk-!-padding-top-3">
