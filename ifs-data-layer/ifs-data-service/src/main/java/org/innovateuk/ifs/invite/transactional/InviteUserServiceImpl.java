@@ -127,7 +127,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         internalUserEmailDomains = StringUtils.defaultIfBlank(internalUserEmailDomains, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
         String[] domains = internalUserEmailDomains.split(",");
         for (String acceptedDomain : domains) {
-            if (acceptedDomain.equalsIgnoreCase(domain)) {
+            if (!acceptedDomain.equalsIgnoreCase(domain)) {
                 return serviceFailure(USER_ROLE_INVITE_INVALID_EMAIL);
             }
         }
