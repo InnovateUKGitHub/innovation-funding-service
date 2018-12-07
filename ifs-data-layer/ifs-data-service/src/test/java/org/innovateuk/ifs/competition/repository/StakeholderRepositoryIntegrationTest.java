@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -15,9 +14,7 @@ import org.springframework.test.annotation.Rollback;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 
@@ -77,14 +74,6 @@ public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrat
         loginSteveSmith();
 
         User expectedUser = userRepository.save(new User("New", "User", "new@example.com", "", "my-uid"));
-        Profile profile = newProfile()
-                .withId((Long) null)
-                .withAddress(newAddress()
-                        .withId((Long) null)
-                        .withAddressLine1("Electric Works")
-                        .build())
-                .build();
-        profileRepository.save(profile);
 
         Stakeholder expectedStakeholder = new Stakeholder(competition, expectedUser);
 
