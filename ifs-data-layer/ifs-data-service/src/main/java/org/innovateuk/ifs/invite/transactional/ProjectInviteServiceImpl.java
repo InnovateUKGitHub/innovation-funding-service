@@ -188,15 +188,15 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
         Optional<User> existingUser = userRepository.findByEmail(targetEmail);
 
         return existingUser.map(user ->
-                validateUserIsNotAlreadyPartnerInOrganisation(invite, user)).
+                validateUserIsNotAlreadyOnProject(invite, user)).
                 orElse(serviceSuccess());
     }
 
-    private ServiceResult<Void> validateUserIsNotAlreadyPartnerInOrganisation(ProjectInviteResource invite, User user) {
+    private ServiceResult<Void> validateUserIsNotAlreadyOnProject(ProjectInviteResource invite, User user) {
 
-        List<ProjectUser> existingUserEntryForOrganisation = projectUserRepository.findByProjectIdAndUserIdAndRole(invite.getProject(), user.getId(), PROJECT_PARTNER);
+        List<ProjectUser> existingUserEntryForProject = projectUserRepository.findByProjectIdAndUserIdAndRole(invite.getProject(), user.getId(), PROJECT_PARTNER);
 
-        return existingUserEntryForOrganisation.isEmpty() ? serviceSuccess() :
+        return existingUserEntryForProject.isEmpty() ? serviceSuccess() :
                 serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_EXISTS_ON_PROJECT);
     }
 }

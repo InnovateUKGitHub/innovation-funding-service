@@ -385,7 +385,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void validateUserWhenUserDoesntExistSuccess() throws Exception {
+    public void validateUserWithNoOrganisationCanBeInvitedIntoProjectSuccess() throws Exception {
 
         Organisation organisation = newOrganisation().build();
 
@@ -403,8 +403,6 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
                 withName("project name").
                 withEmail(user.getEmail()).
                 build();
-
-        ProjectUser projectUser = newProjectUser().withProject(project).build();
 
         ProjectInviteResource projectInviteResource = getMapper(ProjectInviteMapper.class).mapToResource(projectInvite);
 
