@@ -21,9 +21,11 @@ ${previousStakeholderEmail}      blake.wood@gmail.com
 The internal user cannot invite a Stakeholder when they have triggered the name validation
     [Documentation]  IFS-4190
     [Tags]
-    Given the user logs-in in new browser            &{Comp_admin1_credentials}
-    And the user navigates to the page               ${SERVER}/management/competition/setup/${competition_ids['${openProgrammeCompetitionName}']}/manage-stakeholders
-    When the user clicks the button/link             jQuery = span:contains("Invite a new stakeholder")
+    Given the user logs-in in new browser  &{Comp_admin1_credentials}
+    And the user clicks the button/link    link = ${openProgrammeCompetitionName}
+    And The user clicks the button/link    link = View and update competition setup
+    And The user clicks the button/link    link = Stakeholders
+    When the user clicks the button/link   jQuery = span:contains("Invite a new stakeholder")
     And the user triggers the name validation
     Then the user should see the name validation messages
 
