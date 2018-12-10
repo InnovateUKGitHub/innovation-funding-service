@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.yourfunding.populator;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.yourfunding.form.OtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.yourfunding.form.YourFundingForm;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
@@ -138,7 +139,8 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         assertEquals(row.getDate(), "12-MMM");
         assertEquals(row.getSource(), "someSource");
 
-        OtherFundingRowForm emptyRow = form.getOtherFundingRows().get(YourFundingForm.EMPTY_ROW_ID);
+        String unsavedRowId = form.getOtherFundingRows().keySet().stream().filter(id -> id.startsWith(AbstractCostRowForm.UNSAVED_ROW_PREFIX)).findFirst().get();
+        OtherFundingRowForm emptyRow = form.getOtherFundingRows().get(unsavedRowId);
         assertNull(emptyRow.getFundingAmount());
         assertNull(emptyRow.getCostId());
         assertNull(emptyRow.getDate());

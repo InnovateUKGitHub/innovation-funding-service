@@ -512,8 +512,8 @@ public class CompetitionSetupServiceImplTest {
         Competition savedCompetition = captor.getValue();
         assertEquals(false, savedCompetition.getSetupComplete());
         assertEquals(grantTermsAndConditions, savedCompetition.getTermsAndConditions());
-        assertEquals(2, savedCompetition.getProjectDocuments().size());
-        assertEquals("Collaboration agreement", savedCompetition.getProjectDocuments().get(0).getTitle());
-        assertEquals("Exploitation plan", savedCompetition.getProjectDocuments().get(1).getTitle());
+        assertEquals(2, savedCompetition.getCompetitionDocuments().size());
+        assertEquals("Collaboration agreement", savedCompetition.getCompetitionDocuments().get(0).getTitle());
+        assertEquals("Exploitation plan", savedCompetition.getCompetitionDocuments().get(1).getTitle());
     }
 }

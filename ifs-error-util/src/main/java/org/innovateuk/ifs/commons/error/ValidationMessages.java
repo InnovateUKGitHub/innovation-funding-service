@@ -53,8 +53,9 @@ public class ValidationMessages implements ErrorHolder, Serializable {
     public <T> ValidationMessages(Set<ConstraintViolation<T>> constraintViolations) {
         List<Error> fieldErrors = simpleMap(constraintViolations,
                 violation -> fieldError(violation.getPropertyPath().toString(),
-                        violation.getLeafBean(),
-                        stripCurlyBrackets(violation.getMessageTemplate())));
+                        violation.getInvalidValue(),
+                        stripCurlyBrackets(violation.getMessageTemplate()),
+                        asList(violation.getConstraintDescriptor().getAttributes().get("value"))));
 
         errors.addAll(fieldErrors);
     }

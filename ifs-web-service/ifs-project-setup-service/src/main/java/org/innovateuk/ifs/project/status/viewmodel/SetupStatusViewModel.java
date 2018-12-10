@@ -30,7 +30,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private SectionAccessList sectionAccesses;
     private SectionStatusList sectionStatuses;
     private boolean collaborationAgreementRequired;
-    private boolean projectDocuments;
+    private boolean competitionDocuments;
     private boolean projectManager;
     private boolean pendingQuery;
     private String originQuery;
@@ -45,7 +45,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 SectionAccessList sectionAccesses,
                                 SectionStatusList sectionStatuses,
                                 boolean collaborationAgreementRequired,
-                                boolean projectDocuments,
+                                boolean competitionDocuments,
                                 boolean projectManager,
                                 boolean pendingQuery,
                                 String originQuery) {
@@ -64,7 +64,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.sectionStatuses = sectionStatuses;
         this.projectComplete = sectionStatuses.isProjectComplete();
         this.collaborationAgreementRequired = collaborationAgreementRequired;
-        this.projectDocuments = projectDocuments;
+        this.competitionDocuments = competitionDocuments;
         this.projectManager = projectManager;
         this.pendingQuery = pendingQuery;
         this.originQuery = originQuery;
@@ -178,8 +178,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public boolean isCollaborationAgreementRequired() { return collaborationAgreementRequired; }
 
-    public boolean isProjectDocuments() {
-        return projectDocuments;
+    public boolean isCompetitionDocuments() {
+        return competitionDocuments;
     }
 
     public boolean isProjectManager() { return projectManager; }

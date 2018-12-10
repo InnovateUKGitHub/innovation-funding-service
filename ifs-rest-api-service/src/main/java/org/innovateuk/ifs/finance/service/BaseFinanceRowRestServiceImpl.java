@@ -22,20 +22,26 @@ public abstract class BaseFinanceRowRestServiceImpl extends BaseRestService impl
     }
 
     @Override
-    public RestResult<ValidationMessages> add(Long applicationFinanceId, Long questionId, FinanceRowItem costItem) {
-        return postWithRestResult(costRestUrl + "/add/" + applicationFinanceId + "/" + questionId, costItem,
+    public RestResult<ValidationMessages> add(Long financeId, Long questionId, FinanceRowItem costItem) {
+        return postWithRestResult(costRestUrl + "/add/" + financeId + "/" + questionId, costItem,
                 ValidationMessages.class);
     }
 
     @Override
-    public RestResult<FinanceRowItem> addWithoutPersisting(Long applicationFinanceId, Long questionId) {
-        return postWithRestResult(costRestUrl + "/add-without-persisting/" + applicationFinanceId + "/" +
+    public RestResult<FinanceRowItem> addWithoutPersisting(Long financeId, Long questionId) {
+        return postWithRestResult(costRestUrl + "/add-without-persisting/" + financeId + "/" +
                 questionId, FinanceRowItem.class);
     }
 
     @Override
-    public RestResult<List<FinanceRowItem>> getCosts(Long applicationFinanceId) {
-        return getWithRestResult(costRestUrl + "/get/" + applicationFinanceId, costItemListType());
+    public RestResult<FinanceRowItem> addWithResponse(long financeId, FinanceRowItem costItem) {
+        return postWithRestResult(costRestUrl + "/add-with-response/" + financeId, costItem,
+                FinanceRowItem.class);
+    }
+
+    @Override
+    public RestResult<List<FinanceRowItem>> getCosts(Long financeId) {
+        return getWithRestResult(costRestUrl + "/get/" + financeId, costItemListType());
     }
 
     @Override
@@ -46,6 +52,11 @@ public abstract class BaseFinanceRowRestServiceImpl extends BaseRestService impl
     @Override
     public RestResult<FinanceRowItem> findById(Long id) {
         return getWithRestResult(costRestUrl + "/" + id, FinanceRowItem.class);
+    }
+
+    @Override
+    public RestResult<Void> delete(long costId) {
+        return deleteWithRestResult(costRestUrl + "/delete/" + costId);
     }
 
     protected String getCostRestUrl() {

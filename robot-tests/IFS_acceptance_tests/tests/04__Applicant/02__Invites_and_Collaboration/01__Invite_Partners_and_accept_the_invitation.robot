@@ -130,9 +130,8 @@ Partner organisation Server-side validations
     And browser validations have been disabled
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Add organisation and invite applicants")
     Then the user should see a field and summary error    An organisation name is required.
-    #TODO remove below uncommented once IFS-4760 is done.
-    #And the user should see a field and summary error     Please enter a name.
-    #And the user should see a field and summary error     Please enter an email address.
+    And the user should see a field and summary error     Please enter a name.
+    And the user should see a field and summary error     Please enter an email address.
     [Teardown]  the user goes back to the previous page
 
 Partner organisation Client-side validations
@@ -352,8 +351,6 @@ the user creates an account and signs in
 the lead applicant invites the collaborator
     Logging in and error checking    ${newLeadApplicant}  ${correct_password}
     The user clicks the button/link  link = Untitled application (start here)
-    The user clicks the button/link  link = Application overview
-    #On purpose here i am not clicking on the Begin Application to see whether we are able to continue without pressing it.
     the user fills in the inviting steps no Edit  ${newCollaborator}
     The user logs out if they are logged in
 

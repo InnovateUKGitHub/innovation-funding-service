@@ -9,6 +9,7 @@ items:
     DB_NAME: "${DB_NAME}"
     DB_USER: "${DB_USER}"
     DB_PASS: "${DB_PASS}"
+    DB_ANON_PASS: "${DB_ANON_PASS}"
     DB_HOST: "${DB_HOST}"
     DB_PORT: "${DB_PORT}"
 - apiVersion: v1
@@ -46,4 +47,9 @@ items:
           configMapKeyRef:
             name: db-dump-config
             key: DB_PASS
+      - name: DB_ANON_PASS
+        valueFrom:
+          configMapKeyRef:
+            name: db-dump-config
+            key: DB_ANON_PASS
     restartPolicy: Never

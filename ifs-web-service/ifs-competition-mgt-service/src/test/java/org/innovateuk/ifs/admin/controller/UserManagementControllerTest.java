@@ -54,8 +54,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
     private InviteUserRestService inviteUserRestServiceMock;
 
     @Before
-    public void setUp(){
-        super.setUp();
+    public void setUpCommonExpectations() {
 
         userPageResource = new UserPageResource();
 

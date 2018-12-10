@@ -13,7 +13,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
 
 /**
  * Controller to manage Assessor Registration.
@@ -84,15 +85,12 @@ public class AssessorRegistrationController {
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
-
-        addAddressOptions(registrationForm);
-        validateAddressForm(registrationForm, bindingResult);
-        registrationForm.getAddressForm().setTriedToSave(true);
-
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> result = assessorService.createAssessorByInviteHash(inviteHash, registrationForm);
+
+            ServiceResult<Void> result = assessorService.createAssessorByInviteHash(inviteHash, registrationForm,
+                    registrationForm.getAddressForm().getSelectedAddress(this::searchPostcode));
 
             result.getErrors().forEach(error -> {
                 if (StringUtils.hasText(error.getFieldName())) {
@@ -128,77 +126,22 @@ public class AssessorRegistrationController {
         }).getSuccess();
     }
 
-    @PostMapping(value = "/{inviteHash}/register", params = "manual-address")
-    public String manualAddress(Model model,
+    @PostMapping(value = "/{inviteHash}/register", params = FORM_ACTION_PARAMETER)
+    public String addressFormAction(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
+                                BindingResult bindingResult,
+                                ValidationHandler validationHandler,
                                 @PathVariable("inviteHash") String inviteHash) {
-        registrationForm.setAddressForm(new AddressForm());
-        registrationForm.getAddressForm().setManualAddress(true);
 
-        return doViewYourDetails(model, inviteHash);
-    }
-
-    @PostMapping(value = "/{inviteHash}/register", params = "search-address")
-    public String searchAddress(Model model,
-                                @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
-                                @PathVariable("inviteHash") String inviteHash,
-                                BindingResult bindingResult, ValidationHandler validationHandler) {
-
-        Supplier<String> view = () -> doViewYourDetails(model, inviteHash);
-
-        addAddressOptions(registrationForm);
-        registrationForm.getAddressForm().setTriedToSearch(true);
-        registrationForm.getAddressForm().setSelectedPostcodeIndex(null);
-
-        if (registrationForm.getAddressForm().getPostcodeInput().isEmpty()) {
-            bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
+        registrationForm.getAddressForm().validateAction(bindingResult);
+        if (validationHandler.hasErrors()) {
+            return doViewYourDetails(model, inviteHash);
         }
 
-        return validationHandler.failNowOrSucceedWith(view, view);
-    }
-
-    @PostMapping(value = "/{inviteHash}/register", params = "select-address")
-    public String selectAddress(Model model,
-                                @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
-                                @PathVariable("inviteHash") String inviteHash) {
-        addAddressOptions(registrationForm);
-        addSelectedAddress(registrationForm);
-
-        return doViewYourDetails(model, inviteHash);
-    }
-
-    private boolean postcodeIndexIsSubmitted(AssessorRegistrationForm assessorRegistrationForm) {
-        return StringUtils.hasText(assessorRegistrationForm.getAddressForm().getSelectedPostcodeIndex());
-    }
-
-    private boolean postcodeIsSelected(AssessorRegistrationForm assessorRegistrationForm) {
-        if (assessorRegistrationForm.getAddressForm() == null) {
-            return false;
-        }
-        return assessorRegistrationForm.getAddressForm().getSelectedPostcode() != null;
-    }
-
-    private void addAddressOptions(AssessorRegistrationForm registrationForm) {
-        if (StringUtils.hasText(registrationForm.getAddressForm().getPostcodeInput())) {
-            AddressForm addressForm = registrationForm.getAddressForm();
-            addressForm.setPostcodeOptions(searchPostcode(registrationForm.getAddressForm().getPostcodeInput()));
-            addressForm.setPostcodeInput(registrationForm.getAddressForm().getPostcodeInput());
-            registrationForm.setAddressForm(addressForm);
-        }
-    }
-
-    private void addSelectedAddress(AssessorRegistrationForm registrationForm) {
         AddressForm addressForm = registrationForm.getAddressForm();
-        if (postcodeIndexIsSubmitted(registrationForm)) {
-            try {
-                AddressResource selectedAddress = addressForm.getPostcodeOptions().get(
-                        Integer.parseInt(
-                                addressForm.getSelectedPostcodeIndex()));
-                addressForm.setSelectedPostcode(selectedAddress);
-            } catch (IndexOutOfBoundsException e) {
-                LOG.info(e);
-            }
-        }
+        addressForm.handleAction(this::searchPostcode);
+
+        return doViewYourDetails(model, inviteHash);
     }
 
     private List<AddressResource> searchPostcode(String postcodeInput) {
@@ -213,18 +156,5 @@ public class AssessorRegistrationController {
     private String doViewYourDetails(Model model, String inviteHash) {
         model.addAttribute("model", yourDetailsModelPopulator.populateModel(inviteHash));
         return "registration/register";
-    }
-
-    private void validateAddressForm(AssessorRegistrationForm assessorRegistrationForm, BindingResult bindingResult) {
-        if (!postcodeIsSelected(assessorRegistrationForm)) {
-            if (postcodeIndexIsSubmitted(assessorRegistrationForm)) {
-                bindingResult.rejectValue("addressForm.selectedPostcodeIndex", "validation.standard.postcodeoptions.required");
-                assessorRegistrationForm.getAddressForm().setSelectedPostcodeIndex(null);
-            } else {
-                bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
-                assessorRegistrationForm.getAddressForm().setTriedToSearch(true);
-                assessorRegistrationForm.getAddressForm().setTriedToSave(true);
-            }
-        }
     }
 }

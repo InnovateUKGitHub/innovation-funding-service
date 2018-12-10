@@ -202,6 +202,10 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
 
         List<Long> usersOrganisations = simpleMap(organisationRepository.findDistinctByUsers(user), Organisation::getId);
 
+        if(usersOrganisations.size() > 0) {
+            return serviceSuccess();
+        }
+
         if (!usersOrganisations.contains(invite.getOrganisation())) {
             return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION);
         }

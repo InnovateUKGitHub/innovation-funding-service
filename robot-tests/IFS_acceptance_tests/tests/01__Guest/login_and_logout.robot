@@ -26,7 +26,7 @@ Valid login with double role as Applicant
     [Tags]
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
     And The guest user clicks the log-in button
-    Then The user should see the text in the page             Please choose the role you are signing in as today
+    Then The user should see the element                      jQuery = h1:contains("Select a dashboard")
     And The user clicks the button/link                       id = continue
     Then the user should see a field and summary error        Please select a role.
     And the user selects the radio button                     selectedRole    APPLICANT

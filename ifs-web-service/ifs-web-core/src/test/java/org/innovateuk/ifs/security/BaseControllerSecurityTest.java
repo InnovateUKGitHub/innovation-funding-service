@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.security;
 
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.security.BaseDocumentingSecurityTest;
 
 import java.io.FileWriter;

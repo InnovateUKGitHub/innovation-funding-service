@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class UpcomingCompetitionPermissionRules {
 
     private boolean assessorHasAcceptedInvite(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
 
-        List<CompetitionParticipantResource> competitionParticipantList = competitionParticipantRestService.getParticipants(loggedInUser.getId(), CompetitionParticipantRoleResource.ASSESSOR).getSuccess();
+        List<CompetitionParticipantResource> competitionParticipantList = competitionParticipantRestService.getAssessorParticipants(loggedInUser.getId()).getSuccess();
 
         competitionParticipantList = competitionParticipantList.stream()
                 .filter(participant -> participant.getCompetitionId().equals(competitionCompositeId.id()))

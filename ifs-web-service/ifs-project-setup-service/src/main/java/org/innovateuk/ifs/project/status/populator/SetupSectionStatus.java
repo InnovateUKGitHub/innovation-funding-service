@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.populator;
 
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
@@ -77,7 +78,7 @@ public class SetupSectionStatus {
     }
 
     public SectionStatus documentsSectionStatus(final boolean isProjectManager,
-                                                List<org.innovateuk.ifs.competition.resource.ProjectDocumentResource> expectedDocuments,
+                                                List<CompetitionDocumentResource> expectedDocuments,
                                                 List<ProjectDocumentResource> projectDocuments) {
 
         int actualNumberOfDocuments = projectDocuments.size();

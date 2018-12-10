@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.commons.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
@@ -321,6 +323,28 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
                 },
                 success -> restSuccess(getOptionalSuccessObject())
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RestResult<?> that = (RestResult<?>) o;
+
+        return new EqualsBuilder()
+                .append(result, that.result)
+                .append(successfulStatusCode, that.successfulStatusCode)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(result)
+                .append(successfulStatusCode)
+                .toHashCode();
     }
 
     public static <T1> T1 getLeftOrRight(Either<T1, T1> either) {

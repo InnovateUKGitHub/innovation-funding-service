@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.bankdetails.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 
 import java.util.List;
@@ -50,8 +50,8 @@ public class BankDetailsResourceBuilder extends BaseBuilder<BankDetailsResource,
         return with((bankDetails) -> bankDetails.setCompanyName(companyName));
     }
 
-    public BankDetailsResourceBuilder withOrganiationAddress(OrganisationAddressResource organisationAddressResource) {
-        return with(bankDetails -> bankDetails.setOrganisationAddress(organisationAddressResource));
+    public BankDetailsResourceBuilder withAddress(AddressResource addressResource) {
+        return with(bankDetails -> bankDetails.setAddress(addressResource));
     }
 
     public BankDetailsResourceBuilder withProject(Long project) {

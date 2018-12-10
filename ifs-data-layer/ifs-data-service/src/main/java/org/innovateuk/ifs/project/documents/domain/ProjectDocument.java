@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.documents.domain;
 
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
@@ -33,7 +34,7 @@ public class ProjectDocument {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "documentConfigId", referencedColumnName = "id")
-    public org.innovateuk.ifs.competitionsetup.domain.ProjectDocument projectDocument;
+    public CompetitionDocument competitionDocument;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="fileEntryId", referencedColumnName = "id")
@@ -48,9 +49,9 @@ public class ProjectDocument {
     public ProjectDocument() {
     }
 
-    public ProjectDocument(Project project, org.innovateuk.ifs.competitionsetup.domain.ProjectDocument projectDocument, FileEntry fileEntry, DocumentStatus status) {
+    public ProjectDocument(Project project, CompetitionDocument competitionDocument, FileEntry fileEntry, DocumentStatus status) {
         this.project = project;
-        this.projectDocument = projectDocument;
+        this.competitionDocument = competitionDocument;
         this.fileEntry = fileEntry;
         this.status = status;
     }
@@ -71,12 +72,12 @@ public class ProjectDocument {
         this.project = project;
     }
 
-    public org.innovateuk.ifs.competitionsetup.domain.ProjectDocument getProjectDocument() {
-        return projectDocument;
+    public CompetitionDocument getCompetitionDocument() {
+        return competitionDocument;
     }
 
-    public void setProjectDocument(org.innovateuk.ifs.competitionsetup.domain.ProjectDocument projectDocument) {
-        this.projectDocument = projectDocument;
+    public void setCompetitionDocument(CompetitionDocument competitionDocument) {
+        this.competitionDocument = competitionDocument;
     }
 
     public FileEntry getFileEntry() {
