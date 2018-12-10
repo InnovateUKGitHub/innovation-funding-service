@@ -210,6 +210,74 @@ include::{snippets}/project/save-mo-when-project-details-not-yet-submitted/http-
 include::{snippets}/project/save-mo-when-unable-to-send-notifications/http-response.adoc[]
 
 
+=== Get Document file contents for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-file-contents/http-request.adoc[]
+
+==== Response
+include::{snippets}/project/get-file-contents/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-file-contents/curl-request.adoc[]
+
+
+=== Get Document file details for a Project
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/get-file-entry-details/http-request.adoc[]
+include::{snippets}/project/get-file-entry-details/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/get-file-entry-details/http-response.adoc[]
+include::{snippets}/project/get-file-entry-details/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/get-file-entry-details/curl-request.adoc[]
+
+
+=== Delete Document during Project Setup
+For failure cases, please refer to the documentation for Form Input Response File Uploads.
+
+==== Request
+include::{snippets}/project/delete-document/http-request.adoc[]
+include::{snippets}/project/delete-document/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/delete-document/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/delete-document/curl-request.adoc[]
+
+
+=== Submit Documents during Project Setup
+==== Success
+===== Request
+include::{snippets}/project/submit-document/http-request.adoc[]
+include::{snippets}/project/submit-document/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/submit-document/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/submit-document/curl-request.adoc[]
+
+
+=== Accept or reject Documents
+==== Success
+===== Request
+include::{snippets}/project/document-decision/http-request.adoc[]
+include::{snippets}/project/document-decision/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/document-decision/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/document-decision/curl-request.adoc[]
+
+
 === Generate Spend Profile during Project Setup
 
 ==== Request
@@ -617,5 +685,3 @@ include::{snippets}/project/get-partner-organisation/curl-request.adoc[]
 
 === Get Finance Check Eligibility
 include::{snippets}/project/get-partner-organisation/curl-request.adoc[]
-
-
