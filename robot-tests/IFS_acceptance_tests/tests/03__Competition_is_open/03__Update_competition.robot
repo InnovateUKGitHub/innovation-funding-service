@@ -121,6 +121,7 @@ Milestones are editable (Open)
     [Documentation]    INFUND-6694
     [Tags]
     When the user clicks the button/link                     link = Milestones
+    And the user clicks the button/link                      jQuery = a:contains("Next")
     And the user clicks the button/link                      jQuery = button:contains(Edit)
     Then the user should see that the element is disabled    css = tr:nth-child(1) .year input
     And the user should see that the element is disabled     css = tr:nth-child(2) .year input

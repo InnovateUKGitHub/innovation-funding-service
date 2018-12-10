@@ -86,13 +86,11 @@ the user selects Research Participation if required
 
 the user fills in the CS Milestones
     [Arguments]  ${month}  ${nextyear}
-    the user clicks the button/link              link = Milestones
-        ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
-        Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
-        Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  project-setup-completion-stage
-        Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
-    #the user selects the radio button            selectedCompletionStage  project-setup-completion-stage
-    #the user clicks the button/link              jQuery = button:contains("Done")
+    the user clicks the button/link    link = Milestones
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  project-setup-completion-stage
+    Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}
       \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.day input  ${i}
