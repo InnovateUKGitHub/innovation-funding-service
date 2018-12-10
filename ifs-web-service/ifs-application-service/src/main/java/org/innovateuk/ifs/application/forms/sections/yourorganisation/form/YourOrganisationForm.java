@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 import java.time.LocalDate;
@@ -12,13 +13,14 @@ import static java.util.Collections.emptyList;
  */
 public class YourOrganisationForm {
 
-    private LocalDate financialYearEnd;
-    private Long headCountAtLastFinancialYear;
+    @NotBlank(message = "APPLICATION_ORGANISATION_SIZE_REQUIRED")
     private OrganisationSize organisationSize;
     private Long turnover;
     private Long headCount;
     private Boolean stateAidAgreed;
     private List<GrowthTableRow> growthTableRows;
+    private LocalDate financialYearEnd;
+    private Long headCountAtLastFinancialYear;
 
     private YourOrganisationForm(
             OrganisationSize organisationSize,

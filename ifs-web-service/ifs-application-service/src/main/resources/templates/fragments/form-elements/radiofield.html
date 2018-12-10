@@ -19,7 +19,7 @@ Available parameters:
 
     * hint - additional guidance text to explain the textfield - defaults to not showing a hint
     * required - true|false
-    * requiredErrorMessage
+    * requiredMessage
 
 */-->
 <th:block th:fragment="radiofield(legend, id, value, optionDescriptionsAndValues)">
@@ -46,7 +46,7 @@ Available parameters:
                            th:checked="${value == null ? false : (value.toString().equals(option.value.toString()))}"
                            th:attrappend="
                                 required=${required ? 'required' : null},
-                                data-required-errormessage=${requiredErrorMessage ?: null}
+                                data-required-errormessage=${requiredMessage ?: null}
                                 "/>
 
                     <label th:for="${id + '-' + option.value}"

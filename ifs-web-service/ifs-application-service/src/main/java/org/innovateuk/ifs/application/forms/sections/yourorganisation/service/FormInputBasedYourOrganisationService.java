@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -95,10 +94,9 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     }
 
     private ServiceResult<Boolean> getStateAidEligibilityForCompetition(long applicationId) {
-        CompetitionResource competition =
-                applicationRestService.getCompetitionByApplicationId(applicationId).getSuccess();
-
-        return serviceSuccess(TRUE.equals(competition.getStateAid()));
+        return applicationRestService.getCompetitionByApplicationId(applicationId).
+                toServiceResult().
+                andOnSuccessReturn(competition -> TRUE.equals(competition.getStateAid()));
     }
 
     private ServiceResult<Boolean> isBusinessOrganisation(Long organisationId) {
@@ -152,7 +150,7 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     @Override
     public ServiceResult<Boolean> isIncludingGrowthTable(long competitionId) {
         return competitionRestService.getCompetitionById(competitionId).
-                andOnSuccessReturn(CompetitionResource::getIncludeProjectGrowthTable).
+                andOnSuccessReturn(competition -> TRUE.equals(competition.getIncludeProjectGrowthTable())).
                 toServiceResult();
     }
 
