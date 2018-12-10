@@ -51,6 +51,7 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Tags]
     Given the user should see the element    jQuery = div:contains("Milestones") ~ .task-status-complete
     When the user clicks the button/link     link = Milestones
+    And the user clicks the button/link      jQuery = a:contains("Next")
     Then the user should see the element     jQuery = button:contains("Edit")
     And the user should see the dates in full format
     Then the user clicks the button/link     link = Competition setup
