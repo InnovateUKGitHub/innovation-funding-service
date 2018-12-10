@@ -184,6 +184,8 @@ Milestones: Server side validations, submission time is default
     [Tags]
     [Setup]  The user navigates to the Validation competition
     Given the user clicks the button/link             link = Milestones
+    And the user selects the radio button             selectedCompletionStage  project-setup-completion-stage
+    And the user clicks the button/link               jQuery = button:contains("Done")
     When the user fills the milestones with invalid data
     And the users waits until the page is autosaved
     And the user clicks the button/link               jQuery = button:contains(Done)
@@ -199,7 +201,11 @@ Milestones: Client side validations, submission time is non-default
 Milestones: Autosave
     [Documentation]  INFUND-2993 INFUND-7632
     [Tags]
-    When the user clicks the button/link    link = Milestones
+    When the user clicks the button/link              link = Milestones
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  project-setup-completion-stage
+    Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
     Then the user should see the correct inputs in the Milestones form
 
 Application finances: validation empty
