@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,11 +13,17 @@ import static java.util.Collections.emptyList;
  */
 public class YourOrganisationForm {
 
-    @NotBlank(message = "APPLICATION_ORGANISATION_SIZE_REQUIRED")
+    @NotNull(message = "{validation.yourorganisation.organisation.size.required}")
     private OrganisationSize organisationSize;
+
+    @NotNull(message = "{validation.field.must.not.be.blank}")
     private Long turnover;
+
+    @NotNull(message = "{validation.field.must.not.be.blank}")
     private Long headCount;
+
     private Boolean stateAidAgreed;
+
     private List<GrowthTableRow> growthTableRows;
     private LocalDate financialYearEnd;
     private Long headCountAtLastFinancialYear;

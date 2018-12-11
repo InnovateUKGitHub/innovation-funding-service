@@ -26,7 +26,7 @@ Available parameters:
 
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors(id)} ? 'govuk-form-group--error'">
         <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="${id}" th:utext="${legend}">Legend text</legend>
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" th:id="${id}" th:utext="${legend}">Legend text</legend>
 
             <span th:if="${hint != null}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
 
