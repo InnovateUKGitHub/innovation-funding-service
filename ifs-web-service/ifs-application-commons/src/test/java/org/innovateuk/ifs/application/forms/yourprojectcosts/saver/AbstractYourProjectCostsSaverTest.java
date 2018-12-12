@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.saver;
 
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.*;
+import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.builder.BaseFinanceResourceBuilder;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,7 +18,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.util.concurrent.ExecutionException;
 
+import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -33,6 +37,14 @@ public class AbstractYourProjectCostsSaverTest {
     @Mock
     private FinanceRowRestService financeRowRestService;
 
+    @Mock
+    private AsyncFuturesGenerator futuresGeneratorMock;
+
+    @Before
+    public void setupExpectations() {
+        setupAsyncExpectations(futuresGeneratorMock);
+    }
+
     @InjectMocks
     private AbstractYourProjectCostsSaver target = new AbstractYourProjectCostsSaver() {
         @Override
@@ -47,7 +59,7 @@ public class AbstractYourProjectCostsSaverTest {
     };
 
     @Test
-    public void save() {
+    public void save() throws ExecutionException, InterruptedException {
         YourProjectCostsForm form = new YourProjectCostsForm();
 
         LabourForm labourForm = new LabourForm();

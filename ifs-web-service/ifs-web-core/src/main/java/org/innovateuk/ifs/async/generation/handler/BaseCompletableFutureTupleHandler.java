@@ -145,7 +145,7 @@ abstract class BaseCompletableFutureTupleHandler {
         return getResult(futures[index]);
     }
 
-    List<?> getResultsAsList()  {
+    <P> List<P> getResultsAsList()  {
         return simpleMap(futures, this::getResult);
     }
 

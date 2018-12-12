@@ -226,13 +226,19 @@ Other costs server side
     And the user should see a field and summary error    ${empty_field_warning_message}
     [Teardown]    Remove row    jQuery = button:contains("Other costs")    jQuery = #other-costs-table button:contains("Remove")
 
+Project location client side validations
+    [Documentation]  IFS-4681
+    [Setup]  the user clicks the button/link   link = Your finances
+    Given the user clicks the button/link      link = Your project location
+    When the user enters text to a text field  id = postcode  ${EMPTY}
+    Then the user should see a field error     Enter a valid postcode.
+
 Project location server-side validations
     [Documentation]  IFS-4569
-    [Setup]  the user clicks the button/link  link = Your finances
-    Given the user clicks the button/link     link = Your project location
-    And The user enters text to a text field  id = postcode  ${EMPTY}
-    When the user clicks the button/link      id = mark_as_complete
+    Given the user clicks the button/link               id = mark_as_complete
     Then The user should see a field and summary error  Enter a valid postcode.
+    And the user enters text to a text field            id = postcode  BAN
+    And the user cannot see a validation error in the page
 #Funding level client side is covered in 02__Org_size_validation.robot
 
 Funding level server side

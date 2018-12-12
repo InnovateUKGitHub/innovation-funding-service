@@ -7,6 +7,8 @@ public class YourProjectCostsViewModel {
 
     private final Long sectionId;
 
+    private final Long organisationId;
+
     private final Long competitionId;
 
     private final boolean complete;
@@ -26,6 +28,7 @@ public class YourProjectCostsViewModel {
     public YourProjectCostsViewModel(long applicationId,
                                      long sectionId,
                                      long competitionId,
+                                     long organisationId,
                                      boolean complete,
                                      boolean open,
                                      boolean includeVat,
@@ -34,6 +37,7 @@ public class YourProjectCostsViewModel {
                                      String financesUrl) {
         this.internal = false;
 
+        this.organisationId = organisationId;
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.competitionId = competitionId;
@@ -54,20 +58,25 @@ public class YourProjectCostsViewModel {
         this.organisationName = null;
         this.financesUrl = null;
         this.applicationId = null;
+        this.organisationId = null;
         this.sectionId = null;
         this.competitionId = null;
         this.includeVat = false;
     }
 
-    public long getApplicationId() {
+    public Long getApplicationId() {
         return applicationId;
     }
 
-    public long getSectionId() {
+    public Long getSectionId() {
         return sectionId;
     }
 
-    public long getCompetitionId() {
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public Long getCompetitionId() {
         return competitionId;
     }
 

@@ -118,14 +118,14 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
     @Before
     public void setupData() {
-        
+
         industrialOrganisation = newOrganisationResource()
-                    .withId(2L)
-                    .withName("Industrial Org")
-                    .withCompaniesHouseNumber("123456789")
-                    .withOrganisationTypeName(OrganisationTypeEnum.BUSINESS.name())
-                    .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
-                    .build();
+                .withId(2L)
+                .withName("Industrial Org")
+                .withCompaniesHouseNumber("123456789")
+                .withOrganisationTypeName(OrganisationTypeEnum.BUSINESS.name())
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
 
         academicOrganisation = newOrganisationResource()
                 .withId(1L)
@@ -484,7 +484,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         when(yourProjectCostsSaver.saveType(isA(YourProjectCostsForm.class), eq(rowType), eq(projectId), eq(organisationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
-                        param("save-eligibility", rowType.name())).
+                param("save-eligibility", rowType.name())).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + 2 +"/eligibility"));
     }

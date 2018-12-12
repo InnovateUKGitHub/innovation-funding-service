@@ -100,6 +100,12 @@ describe('test form validation', () => {
         expect(IFS.core.formValidation.checkPattern(invalidPatternField)).toBeFalsy()
     })
 
+    test("check postcode", () => {
+        expect(IFS.core.formValidation.checkPostcode(createInputField("AB1 23DD"))).toBeTruthy()
+        expect(IFS.core.formValidation.checkPostcode(createInputField("X"))).toBeFalsy()
+        expect(IFS.core.formValidation.checkPostcode(createInputField("This is text instead"))).toBeFalsy()
+    })
+
     test("check phone validation", () => {
         expect(IFS.core.formValidation.checkTel(createInputField("0123676767"))).toBeTruthy()
         expect(IFS.core.formValidation.checkTel(createInputField("banana"))).toBeFalsy()
