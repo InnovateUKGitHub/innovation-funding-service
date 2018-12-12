@@ -84,12 +84,20 @@ the user selects Research Participation if required
     Run Keyword If  '${status}' == 'PASS'  the user selects the index from the drop-down menu  ${percentage}  researchParticipation
     Run Keyword If  '${status}' == 'FAIL'  the user should not see the element  id = researchParticipation
 
-the user fills in the CS Milestones
+the user fills in the CS Milestones with Project setup completion stage
     [Arguments]  ${month}  ${nextyear}
+    the user fills in the CS Milestones   project-setup-completion-stage   ${month}   ${nextyear}
+
+the user fills in the CS Milestones with Release feedback completion stage
+    [Arguments]  ${month}  ${nextyear}
+    the user fills in the CS Milestones   release-feedback-completion-stage   ${month}   ${nextyear}
+
+the user fills in the CS Milestones
+    [Arguments]  ${completionStage}  ${month}  ${nextyear}
     the user clicks the button/link    link = Milestones
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
-    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  project-setup-completion-stage
+    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  ${completionStage}
     Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}

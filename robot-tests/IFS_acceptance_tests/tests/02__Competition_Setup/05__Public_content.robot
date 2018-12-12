@@ -463,7 +463,7 @@ User creates a new competition
     When the user clicks the button/link    jQuery = .govuk-button:contains("Create competition")
     When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}  2
     And the user selects the Terms and Conditions
-    And the user fills in the CS Milestones  ${month}  ${nextyear}
+    And the user fills in the CS Milestones with Project setup completion stage  ${month}  ${nextyear}
 
 the user enters valid data in the summary details
     The user enters text to a text field    css = .editor  This is a Summary description
