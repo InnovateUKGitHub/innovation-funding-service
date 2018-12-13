@@ -523,9 +523,11 @@ td {
 
     &.disabled,
     &[disabled] {
-      text-decoration: none;
-      color: $govuk-secondary-text-colour;
-      background: transparent;
+      &, &:hover, &:focus {
+        text-decoration: none;
+        color: $govuk-secondary-text-colour;
+        background: transparent;
+      }
     }
 
     &:hover {
