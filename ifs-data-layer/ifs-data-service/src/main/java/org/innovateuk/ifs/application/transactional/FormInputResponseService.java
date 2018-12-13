@@ -36,4 +36,7 @@ public interface FormInputResponseService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<FormInputResponseResource> findResponseByApplicationIdQuestionIdOrganisationIdAndFormInputType(long applicationId, long questionId, long organisationId, FormInputType formInputType);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<FormInputResponseResource> findResponseByApplicationIdQuestionIdOrganisationIdFormInputTypeAndDescription(long applicationId, long questionId, long organisationId, FormInputType formInputType, String description);
 }

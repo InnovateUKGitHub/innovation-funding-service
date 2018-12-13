@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.service;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.GrowthTableRow;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.time.YearMonth;
 
 /**
  * TODO DW - document this class
@@ -32,11 +30,27 @@ public interface YourOrganisationService {
 
     ServiceResult<Boolean> isIncludingGrowthTable(long competitionId);
 
-    ServiceResult<LocalDate> getFinancialYearEnd(long applicationId, long competitionId, long organisationId);
+    ServiceResult<YearMonth> getFinancialYearEnd(long applicationId, long competitionId, long organisationId);
 
-    ServiceResult<List<GrowthTableRow>> getGrowthTableRows(long applicationId, long competitionId, long organisationId);
+    ServiceResult<Long> getAnnualTurnoverAtEndOfFinancialYear(long applicationId, long competitionId, long organisationId);
+
+    ServiceResult<Long> getAnnualProfitsAtEndOfFinancialYear(long applicationId, long competitionId, long organisationId);
+
+    ServiceResult<Long> getAnnualExportAtEndOfFinancialYear(long applicationId, long competitionId, long organisationId);
+
+    ServiceResult<Long> getResearchAndDevelopmentSpendAtEndOfFinancialYear(long applicationId, long competitionId, long organisationId);
 
     ServiceResult<Long> getHeadCountAtLastFinancialYear(long applicationId, long competitionId, long organisationId);
 
-    ServiceResult<Void> updateFinancialYearEnd(long applicationId, long competitionId, long userId, LocalDate financialYearEnd);
+    ServiceResult<Void> updateFinancialYearEnd(long applicationId, long competitionId, long userId, YearMonth financialYearEnd);
+
+    ServiceResult<Void> updateAnnualTurnoverAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value);
+
+    ServiceResult<Void> updateAnnualProfitsAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value);
+
+    ServiceResult<Void> updateAnnualExportAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value);
+
+    ServiceResult<Void> updateResearchAndDevelopmentSpendAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value);
+
+    ServiceResult<Void> updateHeadCountAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value);
 }

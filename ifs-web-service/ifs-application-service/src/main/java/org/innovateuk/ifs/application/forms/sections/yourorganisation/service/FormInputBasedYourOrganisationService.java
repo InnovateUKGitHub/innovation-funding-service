@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.service;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.GrowthTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -12,6 +11,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -20,14 +20,13 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static java.lang.Boolean.TRUE;
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputType.ORGANISATION_TURNOVER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
@@ -39,6 +38,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandato
 public class FormInputBasedYourOrganisationService implements YourOrganisationService {
 
     private static final DateTimeFormatter MONTH_YEAR_FORMAT = DateTimeFormatter.ofPattern("MM-yyyy");
+
+    private static final String ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION = "Annual turnover";
+    private static final String ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION = "Annual profits";
+    private static final String ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION = "Annual export";
+    private static final String RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION = "Research and development spend";
 
     private CompetitionRestService competitionRestService;
     private QuestionRestService questionRestService;
@@ -143,8 +147,8 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     }
 
     @Override
-    public ServiceResult<Void> updateFinancialYearEnd(long applicationId, long competitionId, long userId, LocalDate financialYearEnd) {
-        return updateLocalDateValueForFormInput(applicationId, competitionId, userId, financialYearEnd, FormInputType.ORGANISATION_TURNOVER);
+    public ServiceResult<Void> updateFinancialYearEnd(long applicationId, long competitionId, long userId, YearMonth financialYearEnd) {
+        return updateYearMonthValueForFormInput(applicationId, competitionId, userId, financialYearEnd, FormInputType.FINANCIAL_YEAR_END);
     }
 
     @Override
@@ -155,18 +159,77 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
     }
 
     @Override
-    public ServiceResult<LocalDate> getFinancialYearEnd(long applicationId, long competitionId, long organisationId) {
-        return getLocalDateValueForFormInputType(applicationId, competitionId, organisationId, FormInputType.FINANCIAL_YEAR_END);
+    public ServiceResult<YearMonth> getFinancialYearEnd(long applicationId, long competitionId, long organisationId) {
+        return getYearMonthValueForFormInputType(applicationId, competitionId, organisationId, FormInputType.FINANCIAL_YEAR_END);
     }
 
     @Override
-    public ServiceResult<List<GrowthTableRow>> getGrowthTableRows(long applicationId, long competitionId, long organisationId) {
-        return serviceSuccess(emptyList());
+    public ServiceResult<Long> getAnnualTurnoverAtEndOfFinancialYear(long applicationId, long competitionId, long organisationId) {
+        return getLongValueForFormInputTypeAndDescription(applicationId, competitionId, organisationId,
+                FormInputType.FINANCIAL_OVERVIEW_ROW, ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION);
+    }
+
+    @Override
+    public ServiceResult<Long> getAnnualProfitsAtEndOfFinancialYear(long applicationId, long competitionId, long organisationId) {
+        return getLongValueForFormInputTypeAndDescription(applicationId, competitionId, organisationId,
+                FormInputType.FINANCIAL_OVERVIEW_ROW, ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION);
+    }
+
+    @Override
+    public ServiceResult<Long> getAnnualExportAtEndOfFinancialYear(long applicationId, long competitionId, long organisationId) {
+        return getLongValueForFormInputTypeAndDescription(applicationId, competitionId, organisationId,
+                FormInputType.FINANCIAL_OVERVIEW_ROW, ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION);
+    }
+
+    @Override
+    public ServiceResult<Long> getResearchAndDevelopmentSpendAtEndOfFinancialYear(long applicationId, long competitionId, long organisationId) {
+        return getLongValueForFormInputTypeAndDescription(applicationId, competitionId, organisationId,
+                FormInputType.FINANCIAL_OVERVIEW_ROW, RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION);
     }
 
     @Override
     public ServiceResult<Long> getHeadCountAtLastFinancialYear(long applicationId, long competitionId, long organisationId) {
         return getLongValueForFormInputType(applicationId, competitionId, organisationId, FormInputType.FINANCIAL_STAFF_COUNT);
+    }
+
+    @Override
+    public ServiceResult<Void> updateAnnualTurnoverAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value) {
+        return updateLongValueForFormInputAndDescription(applicationId, competitionId, userId, value,
+                FormInputType.FINANCIAL_OVERVIEW_ROW, ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION);
+    }
+
+    @Override
+    public ServiceResult<Void> updateAnnualProfitsAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value) {
+        return updateLongValueForFormInputAndDescription(applicationId, competitionId, userId, value,
+                FormInputType.FINANCIAL_OVERVIEW_ROW, ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION);
+    }
+
+    @Override
+    public ServiceResult<Void> updateAnnualExportAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value) {
+        return updateLongValueForFormInputAndDescription(applicationId, competitionId, userId, value,
+                FormInputType.FINANCIAL_OVERVIEW_ROW, ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION);
+    }
+
+    @Override
+    public ServiceResult<Void> updateResearchAndDevelopmentSpendAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value) {
+        return updateLongValueForFormInputAndDescription(applicationId, competitionId, userId, value,
+                FormInputType.FINANCIAL_OVERVIEW_ROW, RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION);
+    }
+
+    @Override
+    public ServiceResult<Void> updateHeadCountAtEndOfFinancialYear(long applicationId, long competitionId, long userId, Long value) {
+        return updateLongValueForFormInput(applicationId, competitionId, userId, value, FormInputType.FINANCIAL_STAFF_COUNT);
+    }
+
+    private ServiceResult<Long> getLongValueForFormInputTypeAndDescription(long applicationId,
+                                                                           long competitionId,
+                                                                           long organisationId,
+                                                                           FormInputType formInputType,
+                                                                           String description) {
+
+        return getFormInputResponseForOrganisationByDescription(applicationId, competitionId, organisationId, formInputType, description).
+                andOnSuccessReturn(this::getLongValueFromFormInputResponses).
+                toServiceResult();
     }
 
     private ServiceResult<Long> getLongValueForFormInputType(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {
@@ -175,9 +238,9 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
                 toServiceResult();
     }
 
-    private ServiceResult<LocalDate> getLocalDateValueForFormInputType(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {
+    private ServiceResult<YearMonth> getYearMonthValueForFormInputType(long applicationId, long competitionId, long organisationId, FormInputType formInputType) {
         return getFormInputResponseForOrganisation(applicationId, competitionId, organisationId, formInputType).
-                andOnSuccessReturn(this::getLocalDateValueFromFormInputResponses).
+                andOnSuccessReturn(this::getYearMonthValueFromFormInputResponses).
                 toServiceResult();
     }
 
@@ -185,16 +248,36 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
         return updateValueForFormInput(applicationId, competitionId, userId, value != null ? value.toString() : null, formInputType);
     }
 
-    private ServiceResult<Void> updateLocalDateValueForFormInput(long applicationId, long competitionId, long userId, LocalDate value, FormInputType formInputType) {
+    private ServiceResult<Void> updateLongValueForFormInputAndDescription(long applicationId, long competitionId, long userId, Long value, FormInputType formInputType, String description) {
+        return updateValueForFormInputAndDescription(applicationId, competitionId, userId, value != null ? value.toString() : null, formInputType, description);
+    }
+
+    private ServiceResult<Void> updateYearMonthValueForFormInput(long applicationId, long competitionId, long userId, YearMonth value, FormInputType formInputType) {
         return updateValueForFormInput(applicationId, competitionId, userId,
                 value != null ? value.format(MONTH_YEAR_FORMAT) : null, formInputType);
     }
 
     private ServiceResult<Void> updateValueForFormInput(long applicationId, long competitionId, long userId, String stringValue, FormInputType formInputType) {
 
+        Predicate<FormInputResource> matchingType = fi -> formInputType.equals(fi.getType());
+
+        return updateValueForFormInput(applicationId, competitionId, userId, stringValue, formInputType,
+                matchingType);
+    }
+
+    private ServiceResult<Void> updateValueForFormInputAndDescription(long applicationId, long competitionId, long userId, String stringValue, FormInputType formInputType, String description) {
+
+        Predicate<FormInputResource> matchingTypeAndDescription = fi -> formInputType.equals(fi.getType()) && description.equals(fi.getDescription());
+
+        return updateValueForFormInput(applicationId, competitionId, userId, stringValue, formInputType,
+                matchingTypeAndDescription);
+    }
+
+    private ServiceResult<Void> updateValueForFormInput(long applicationId, long competitionId, long userId, String stringValue, FormInputType formInputType, Predicate<FormInputResource> correctFormInputTest) {
+
         return getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType).
                 andOnSuccess(question -> formInputRestService.getByQuestionId(question.getId())).
-                andOnSuccessReturn(formInputs -> simpleFindFirstMandatory(formInputs, fi -> formInputType.equals(fi.getType()))).
+                andOnSuccessReturn(formInputs -> simpleFindFirstMandatory(formInputs, correctFormInputTest::test)).
                 andOnSuccessReturn(formInput -> formInputResponseRestService.saveQuestionResponse(
                         userId,
                         applicationId,
@@ -211,6 +294,12 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
                 toOptionalIfNotFound();
     }
 
+    private RestResult<Optional<FormInputResponseResource>> getFormInputResponseForOrganisationByDescription(long applicationId, long competitionId, long organisationId, FormInputType formInputType, String description) {
+        return getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType).
+                andOnSuccess(question -> formInputResponseRestService.getByApplicationIdQuestionIdOrganisationIdFormInputTypeAndDescription(applicationId, question.getId(), organisationId, formInputType, description)).
+                toOptionalIfNotFound();
+    }
+
     private RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(long competitionId, FormInputType formInputType) {
         return questionRestService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType);
     }
@@ -222,12 +311,12 @@ public class FormInputBasedYourOrganisationService implements YourOrganisationSe
                 orElse(null);
     }
 
-    private LocalDate getLocalDateValueFromFormInputResponses(Optional<FormInputResponseResource> formInputResponse) {
+    private YearMonth getYearMonthValueFromFormInputResponses(Optional<FormInputResponseResource> formInputResponse) {
 
         return formInputResponse.
                 map(response -> {
                     try {
-                        return LocalDate.parse(response.getValue(), MONTH_YEAR_FORMAT);
+                        return YearMonth.parse(response.getValue(), MONTH_YEAR_FORMAT);
                     } catch (DateTimeParseException e) {
                         return null;
                     }

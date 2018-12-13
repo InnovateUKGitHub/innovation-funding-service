@@ -74,7 +74,18 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
                         applicationId, questionId, organisationId, formInputType);
 
         return formInputResponse.map(response -> serviceSuccess(formInputResponseMapper.mapToResource(response))).
-                        orElseGet(() -> serviceFailure(notFoundError(FormInputResponse.class, applicationId, questionId, organisationId)));
+                        orElseGet(() -> serviceFailure(notFoundError(FormInputResponse.class, applicationId, questionId, organisationId, formInputType)));
+    }
+
+    @Override
+    public ServiceResult<FormInputResponseResource> findResponseByApplicationIdQuestionIdOrganisationIdFormInputTypeAndDescription(long applicationId, long questionId, long organisationId, FormInputType formInputType, String description) {
+
+        Optional<FormInputResponse> formInputResponse =
+                formInputResponseRepository.findByApplicationIdAndFormInputQuestionIdAndUpdatedByOrganisationIdAndFormInputTypeAndFormInputDescription(
+                        applicationId, questionId, organisationId, formInputType, description);
+
+        return formInputResponse.map(response -> serviceSuccess(formInputResponseMapper.mapToResource(response))).
+                orElseGet(() -> serviceFailure(notFoundError(FormInputResponse.class, applicationId, questionId, organisationId, formInputType, description)));
     }
 
     @Override

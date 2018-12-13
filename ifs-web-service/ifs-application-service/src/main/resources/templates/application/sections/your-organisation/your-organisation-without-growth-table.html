@@ -37,6 +37,8 @@
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
 
+            <input type="hidden" name="growthTable" th:value="false" />
+
             <th:block th:if="${!commonFinancesModel.readOnly}" >
 
                 <th:block th:insert="fragments/form-elements/radiofield ::
@@ -52,48 +54,23 @@
                         requiredMessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED}
                         )" />
 
-                <th:block th:if="${model.showGrowthTable}">
+                <th:block th:insert="fragments/form-elements/textfield ::
+                    textfield-integer(
+                        label='Turnover (£)',
+                        hint='Your turnover from the last financial year.',
+                        id='turnover',
+                        value=${form.turnover},
+                        required=true,
+                        )" />
 
-                    <th:block th:insert="fragments/form-elements/date ::
-                        month-and-year(
-                            legend='End of last financial year',
-                            hint='Enter the date of your last financial year.',
-                            id='financialYearEnd',
-                            monthValue=${form.financialYearEnd != null ? form.financialYearEnd.monthValue : ''},
-                            yearValue=${form.financialYearEnd != null ? form.financialYearEnd.yearValue : ''},
-                            required=true,
-                            )" />
-
-                    <th:block th:insert="fragments/form-elements/textfield ::
-                        textfield-integer(
-                            label='Full time employees',
-                            hint='How many full-time employees did you have on the project at the close of your last financial year?',
-                            id='headCountAtLastFinancialYear',
-                            value=${form.headCountAtLastFinancialYear},
-                            required=true,
-                            )" />
-                </th:block>
-
-                <th:block th:if="${!model.showGrowthTable}">
-
-                    <th:block th:insert="fragments/form-elements/textfield ::
-                        textfield-integer(
-                            label='Turnover (£)',
-                            hint='Your turnover from the last financial year.',
-                            id='turnover',
-                            value=${form.turnover},
-                            required=true,
-                            )" />
-
-                    <th:block th:insert="fragments/form-elements/textfield ::
-                        textfield-integer(
-                            label='Full time employees',
-                            hint='Number of full time employees at your organisation.',
-                            id='headCount',
-                            value=${form.headCount},
-                            required=true,
-                            )" />
-                </th:block>
+                <th:block th:insert="fragments/form-elements/textfield ::
+                    textfield-integer(
+                        label='Full time employees',
+                        hint='Number of full time employees at your organisation.',
+                        id='headCount',
+                        value=${form.headCount},
+                        required=true,
+                        )" />
 
                 <div class="agree-to-terms-container" th:if="${model.showStateAidAgreement}">
 

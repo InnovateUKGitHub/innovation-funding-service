@@ -54,7 +54,7 @@ Available parameters:
                            />
                 </div>
                 <div class="year">
-                    <label class="govuk-label" th:for="${id} + '.year'">
+                    <label class="govuk-label" th:for="${id} + '.yearValue'">
                         Year
                     </label>
                     <input class="govuk-input govuk-input--width-4"
@@ -62,8 +62,8 @@ Available parameters:
                            required="required"
                            min="0"
                            type="number"
-                           th:id="${id} + '.year'"
-                           th:name="${id} + '.year'"
+                           th:id="${id} + '.yearValue'"
+                           th:name="${id} + '.yearValue'"
                            th:value="${yearValue}"
                            th:classappend="${#fields.hasErrors(id)} ? 'govuk-input--error'"
                            th:attrappend="required=${required ?: null}"

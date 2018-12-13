@@ -59,13 +59,27 @@ public class FormInputResponseController {
     }
 
     @GetMapping("/application/{applicationId}/question/{questionId}/organisation/{organisationId}/form-input-type/{formInputType}")
-    public RestResult<FormInputResponseResource> findByApplicationIdQuestionIdAndOrganisationId(@PathVariable long applicationId,
-                                                                                                @PathVariable long questionId,
-                                                                                                @PathVariable long organisationId,
-                                                                                                @PathVariable FormInputType formInputType) {
+    public RestResult<FormInputResponseResource> findByApplicationIdQuestionIdOrganisationIdAndFormInputType(@PathVariable long applicationId,
+                                                                                                             @PathVariable long questionId,
+                                                                                                             @PathVariable long organisationId,
+                                                                                                             @PathVariable FormInputType formInputType) {
 
         return formInputResponseService.findResponseByApplicationIdQuestionIdOrganisationIdAndFormInputType(
                 applicationId, questionId, organisationId, formInputType).toGetResponse();
+    }
+
+    @GetMapping(
+            value = "/application/{applicationId}/question/{questionId}/organisation/{organisationId}/form-input-type/{formInputType}",
+            params = "description")
+    public RestResult<FormInputResponseResource> findByApplicationIdQuestionIdOrganisationIdFormInputTypeAndDescription(
+            @PathVariable long applicationId,
+            @PathVariable long questionId,
+            @PathVariable long organisationId,
+            @PathVariable FormInputType formInputType,
+            @RequestParam("description") String description) {
+
+        return formInputResponseService.findResponseByApplicationIdQuestionIdOrganisationIdFormInputTypeAndDescription(
+                applicationId, questionId, organisationId, formInputType, description).toGetResponse();
     }
 
     @PostMapping("/saveQuestionResponse")
