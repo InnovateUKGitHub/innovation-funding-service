@@ -196,7 +196,9 @@ Milestones: Server side validations, submission time is default
 Milestones: Client side validations, submission time is non-default
     [Documentation]  INFUND-2993, INFUND-7632
     [Tags]
-    the user fills in the CS Milestones with Project setup completion stage  ${month}  ${nextYear}
+    Given the user clicks the button/link     jQuery = button:contains("Done")
+    When the user should see a field error    Select a completion stage.
+    And the user fills in the CS Milestones   project-setup-completion-stage   ${month}   ${nextyear}
 
 Milestones: Autosave
     [Documentation]  INFUND-2993 INFUND-7632

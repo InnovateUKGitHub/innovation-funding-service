@@ -30,7 +30,7 @@ Comp Admin creates an ATI competition
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${business_type_id}  1  true  collaborative  # 1 means 30%
     And user fills in funding overide
-    And the user fills in the CS Milestones with Project setup completion stage        ${month}  ${nextyear}
+    And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
     And the user marks the application as done     yes  ${compType_Programme}
     And the user fills in the CS Assessors
     And the user fills in the CS Documents in other projects
