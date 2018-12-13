@@ -43,7 +43,7 @@ Comp Admin starts a new Competition
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    the user fills in the CS Milestones            project-setup-completion-stage   ${month}   ${nextyear}
+    And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
