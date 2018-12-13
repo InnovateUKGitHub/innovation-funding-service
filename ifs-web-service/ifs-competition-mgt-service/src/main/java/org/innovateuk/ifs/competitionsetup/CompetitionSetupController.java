@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.application.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.assessor.form.AssessorsForm;
+import org.innovateuk.ifs.competitionsetup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupSummaryForm;
 import org.innovateuk.ifs.competitionsetup.core.form.FunderRowForm;
@@ -133,7 +134,7 @@ public class CompetitionSetupController {
                     if (!competition.isSetupAndLive()) {
                         competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
                     }
-                    return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
+                    return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPostMarkIncompletePath();
                 }
         );
     }
@@ -302,6 +303,19 @@ public class CompetitionSetupController {
         }
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ELIGIBILITY, model);
+    }
+
+    @PostMapping("/{competitionId}/section/completion-stage")
+    public String submitCompletionStageSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompletionStageForm competitionSetupForm,
+                                                 BindingResult bindingResult,
+                                                 ValidationHandler validationHandler,
+                                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                 Model model) {
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition,
+                CompetitionSetupSection.COMPLETION_STAGE, model);
     }
 
     @PostMapping("/{competitionId}/section/milestones")
@@ -484,7 +498,7 @@ public class CompetitionSetupController {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        Supplier<String> successView = () -> "redirect:/competition/setup/" + competition.getId() + "/section/" + section.getPath();
+        Supplier<String> successView = () -> "redirect:/competition/setup/" + competition.getId() + "/section/" + section.getPostMarkCompletePath();
         Supplier<String> failureView = () -> {
             model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
             return "competition/setup";

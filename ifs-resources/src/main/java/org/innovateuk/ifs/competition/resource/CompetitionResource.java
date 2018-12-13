@@ -111,6 +111,8 @@ public class CompetitionResource {
 
     private boolean nonFinanceType;
 
+    private CompetitionCompletionStage completionStage;
+
     public CompetitionResource() {
         // no-arg constructor
     }
@@ -720,6 +722,14 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean showJesFinances(long organisationType) {
         return includeJesForm && OrganisationTypeEnum.isResearch(organisationType);
+    }
+
+    public CompetitionCompletionStage getCompletionStage() {
+        return completionStage;
+    }
+
+    public void setCompletionStage(CompetitionCompletionStage completionStage) {
+        this.completionStage = completionStage;
     }
 
     @Override

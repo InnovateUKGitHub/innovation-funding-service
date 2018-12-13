@@ -34,7 +34,13 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition setup',size='govuk-heading-xl'" />
         </th:block>
 
-        <th:block th:insert="fragments/competition-setup :: comp-setup-navigation(${model.general.allSections}, ${model.general.currentSection}, ${model.general.competition}, ${readyToOpen})" th:if="${currentSectionIsHome}" />
+        <th:block th:insert="fragments/competition-setup :: comp-setup-navigation(
+                ${model.general.publishSections},
+                ${model.general.competitionSetupSections},
+                ${model.general.assessmentSections},
+                ${model.general.currentSection},
+                ${model.general.competition},
+                ${readyToOpen})" th:if="${currentSectionIsHome}" />
 
         <th:block th:if="${model.general.currentSectionFragment != null}">
             <th:block th:replace="fragments/competition-setup-sections :: ${model.general.currentSectionFragment}" />
