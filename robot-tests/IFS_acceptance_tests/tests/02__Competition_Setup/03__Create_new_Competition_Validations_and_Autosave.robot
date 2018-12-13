@@ -180,10 +180,12 @@ Eligibility Autosave
     Then the user should see the correct details in the eligibility form
 
 Milestones: Server side validations, submission time is default
-    [Documentation]  INFUND-2993, INFUND-7632
+    [Documentation]  INFUND-2993, INFUND-7632, IFS-4650
     [Tags]
     [Setup]  The user navigates to the Validation competition
     Given the user clicks the button/link             link = Milestones
+    When the user clicks the button/link              jQuery = button:contains("Done")
+    Then the user should see a field error            Select a completion stage.
     And the user selects the radio button             selectedCompletionStage  project-setup-completion-stage
     And the user clicks the button/link               jQuery = button:contains("Done")
     When the user fills the milestones with invalid data
@@ -196,9 +198,7 @@ Milestones: Server side validations, submission time is default
 Milestones: Client side validations, submission time is non-default
     [Documentation]  INFUND-2993, INFUND-7632
     [Tags]
-    Given the user clicks the button/link     jQuery = button:contains("Done")
-    When the user should see a field error    Select a completion stage.
-    And the user fills in the CS Milestones   project-setup-completion-stage   ${month}   ${nextyear}
+    Given the user fills in the CS Milestones   project-setup-completion-stage   ${month}   ${nextyear}
 
 Milestones: Autosave
     [Documentation]  INFUND-2993 INFUND-7632
