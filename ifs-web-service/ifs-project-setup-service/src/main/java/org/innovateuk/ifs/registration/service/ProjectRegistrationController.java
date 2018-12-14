@@ -71,6 +71,8 @@ public class ProjectRegistrationController {
         String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
+            model.addAttribute("invitee", true);
+
             if (bindingResult.hasErrors()) {
                 model.addAttribute("failureMessageKeys", bindingResult.getAllErrors());
                 return restSuccess(REGISTRATION_REGISTER_VIEW);

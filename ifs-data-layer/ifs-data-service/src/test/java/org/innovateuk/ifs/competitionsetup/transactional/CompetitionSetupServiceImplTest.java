@@ -36,9 +36,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -54,6 +56,7 @@ import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -328,6 +331,108 @@ public class CompetitionSetupServiceImplTest {
 
         when(setupStatusService.findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId))
                 .thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+        when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
+
+        service.markSectionIncomplete(competitionId, section);
+
+        verify(setupStatusService, times(1)).findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId);
+        verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
+    }
+
+    /**
+     * This test asserts that when marking a section as incomplete when it is in a chain of related sections (in
+     * this case, COMPLETION_STAGE then MILESTONES), it marks future sections as incomplete as they are
+     * potentially affected by this one being edited.
+     */
+    @Test
+    public void testMarkSectionIncompleteWithNextSections() {
+
+        final long competitionId = 32L;
+
+        final CompetitionSetupSection section1 = CompetitionSetupSection.COMPLETION_STAGE;
+        final CompetitionSetupSection section2 = CompetitionSetupSection.MILESTONES;
+
+        final List<SetupStatusResource> savingStatuses = newSetupStatusResource()
+                .withId()
+                .withClassName(CompetitionSetupSection.class.getName())
+                .withClassPk(section1.getId(), section2.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(false)
+                .build(2);
+
+        final List<SetupStatusResource> savedStatuses = newSetupStatusResource()
+                .withClassName(CompetitionSetupSection.class.getName())
+                .withClassPk(section1.getId(), section2.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(false)
+                .build(2);
+
+        List<CompetitionSetupSection> expectedSectionsToMarkIncomplete = asList(section1, section2);
+
+        zip(expectedSectionsToMarkIncomplete, savingStatuses, savedStatuses, (section, savingStatus, savedStatus) -> {
+
+            when(setupStatusService.findSetupStatusAndTarget(
+                    CompetitionSetupSection.class.getName(),
+                    section.getId(),
+                    Competition.class.getName(),
+                    competitionId)).thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+
+            when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
+        });
+
+        ServiceResult<List<SetupStatusResource>> markIncompleteResults =
+                service.markSectionIncomplete(competitionId, section1);
+
+        assertTrue(markIncompleteResults.isSuccess());
+        assertEquals(savedStatuses, markIncompleteResults.getSuccess());
+
+        zip(expectedSectionsToMarkIncomplete, savingStatuses, savedStatuses, (section, savingStatus, savedStatus) -> {
+
+            verify(setupStatusService, times(1)).findSetupStatusAndTarget(
+                    CompetitionSetupSection.class.getName(),
+                    section.getId(),
+                    Competition.class.getName(),
+                    competitionId);
+
+            verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
+        });
+    }
+
+    /**
+     * This test asserts that when marking a section as incomplete when it is in a chain of related sections (in
+     * this case, COMPLETION_STAGE then MILESTONES), it does not mark previous sections as incomplete as they are
+     * not affected by this one being edited.
+     */
+    @Test
+    public void testMarkSectionIncompleteWithPreviousSections() {
+
+        final Long competitionId = 32L;
+
+        final CompetitionSetupSection section = CompetitionSetupSection.MILESTONES;
+
+        final SetupStatusResource savingStatus = newSetupStatusResource()
+                .withId()
+                .withClassName(CompetitionSetupSection.class.getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE)
+                .build();
+
+        final SetupStatusResource savedStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE)
+                .build();
+
+        when(setupStatusService.findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+
         when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
 
         service.markSectionIncomplete(competitionId, section);

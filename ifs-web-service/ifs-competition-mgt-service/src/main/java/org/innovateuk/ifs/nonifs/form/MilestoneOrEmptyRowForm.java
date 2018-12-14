@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.milestone.form;
+package org.innovateuk.ifs.nonifs.form;
 
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
 import org.innovateuk.ifs.competition.resource.MilestoneType;

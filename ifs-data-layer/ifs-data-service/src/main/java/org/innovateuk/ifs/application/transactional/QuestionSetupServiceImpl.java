@@ -88,7 +88,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
 
         return parentStatusOpt
                 .orElseGet(() -> competitionSetupService.markSectionIncomplete(competitionId, parentSection)
-                        .getSuccess())
+                        .getSuccess().get(0))
                 .getId();
     }
 }

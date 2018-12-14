@@ -28,7 +28,7 @@ Comp Admin creates an APC competition
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${business_type_id}  1  true  single   # 1 means 30%
-    And the user fills in the CS Milestones        ${month}  ${nextyear}
+    And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
     And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
     And the user fills in the CS Assessors
     And the user fills in the CS Documents in other projects

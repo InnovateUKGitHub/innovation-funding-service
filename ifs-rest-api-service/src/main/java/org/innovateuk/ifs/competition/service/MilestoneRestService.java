@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
@@ -24,4 +26,6 @@ public interface MilestoneRestService {
     RestResult<MilestoneResource> create(MilestoneType type, Long competitionId);
 
     RestResult<Void> resetMilestone(MilestoneResource milestone);
+
+    RestResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage);
 }

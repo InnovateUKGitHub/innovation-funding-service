@@ -168,6 +168,24 @@
                 </div>
             </section>
 
+            <section
+                th:with="expressionOfInterestComps=${model.getCompetitions().mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PREVIOUS)}">
+                <div th:unless="${expressionOfInterestComps == null}">
+                    <h2 class="govuk-heading-m"
+                        th:text="'Expression of interest ('+${expressionOfInterestComps == null ? '0' : expressionOfInterestComps.size()}+')'"></h2>
+                    <ul class="govuk-list list-overview">
+                        <li class="govuk-grid-row section" th:each="competition : ${expressionOfInterestComps}">
+                            <th:block
+                                th:insert="competition/dashboard :: dashboard-row"
+                                th:with="competition=${competition},
+                                innovationAreas=competition.innovationAreaNames,
+                                cell4=${competition.numberOfApplications + ' applicants'}">
+                            </th:block>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
             <th:block
                 th:insert="fragments/competition-management :: applications-pagination(results=${model.getCompetitions()})"/>
 
