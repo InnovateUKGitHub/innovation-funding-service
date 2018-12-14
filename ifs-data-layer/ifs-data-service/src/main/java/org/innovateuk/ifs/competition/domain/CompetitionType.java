@@ -10,6 +10,7 @@ import java.util.List;
 public class CompetitionType {
 
     private static final String SECTOR = "Sector";
+    private static final String EOI = "Expression of interest";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -62,6 +63,10 @@ public class CompetitionType {
 
     public boolean isSector() {
         return this.name.equals(SECTOR);
+    }
+
+    public boolean isEOI() {
+        return this.name.equals(EOI);
     }
 
     @Override

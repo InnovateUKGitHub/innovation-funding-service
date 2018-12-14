@@ -612,7 +612,13 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .withType(RELEASE_FEEDBACK)
                 .build(1));
 
-        Competition competition = newCompetition().withSetupComplete(true)
+        CompetitionType competitionType = newCompetitionType()
+                .withName("Sector")
+                .build();
+
+        Competition competition = newCompetition()
+                .withSetupComplete(true)
+                .withCompetitionType(competitionType)
                 .withMilestones(milestones)
                 .build();
 

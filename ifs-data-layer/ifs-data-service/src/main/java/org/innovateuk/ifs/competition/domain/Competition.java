@@ -188,6 +188,8 @@ public class Competition extends AuditableEntity implements ProcessActivity {
                 return CompetitionStatus.FUNDERS_PANEL;
             } else if (!isMilestoneReached(MilestoneType.FEEDBACK_RELEASED)) {
                 return ASSESSOR_FEEDBACK;
+            } else if (isMilestoneReached(MilestoneType.FEEDBACK_RELEASED) && getCompetitionType().isEOI()) {
+                return PREVIOUS;
             } else {
                 return PROJECT_SETUP;
             }
