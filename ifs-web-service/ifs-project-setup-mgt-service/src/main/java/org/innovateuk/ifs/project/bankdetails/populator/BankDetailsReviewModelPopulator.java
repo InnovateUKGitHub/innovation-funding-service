@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.bankdetails.populator;
 
-import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.form.ChangeBankDetailsForm;
@@ -44,7 +44,7 @@ public class BankDetailsReviewModelPopulator {
                 organisation.getCompaniesHouseNumber(),
                 bankDetails.getAccountNumber(),
                 bankDetails.getSortCode(),
-                bankDetails.getOrganisationAddress().getAddress().getAsSingleLine(),
+                bankDetails.getAddress().getAsSingleLine(),
                 bankDetails.isVerified(),
                 bankDetails.getCompanyNameScore(),
                 bankDetails.getRegistrationNumberMatched(),
@@ -61,9 +61,9 @@ public class BankDetailsReviewModelPopulator {
         populateAddress(form.getAddressForm(), bankDetails);
     }
 
-    private void populateAddress(AddressForm addressForm, BankDetailsResource bankDetails){
-        addressForm.setManualAddress(true);
-        addressForm.setSelectedPostcode(bankDetails.getOrganisationAddress().getAddress());
+    private void populateAddress(AddressForm addressForm, BankDetailsResource bankDetails) {
+        addressForm.setAddressType(AddressForm.AddressType.MANUAL_ENTRY);
+        addressForm.setManualAddress(bankDetails.getAddress());
     }
 
 }

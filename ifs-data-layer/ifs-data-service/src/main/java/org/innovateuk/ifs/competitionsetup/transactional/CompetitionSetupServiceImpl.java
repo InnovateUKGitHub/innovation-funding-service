@@ -14,7 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
@@ -38,7 +38,10 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.util.ReflectionUtils.*;
 
@@ -226,17 +229,34 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<SetupStatusResource> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
         SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, section.getClass().getName(), section.getId(), Optional.empty());
-        setupStatus.setCompleted(Boolean.TRUE);
+        setupStatus.setCompleted(true);
 
         return setupStatusService.saveSetupStatus(setupStatus);
     }
 
     @Override
     @Transactional
-    public ServiceResult<SetupStatusResource> markSectionIncomplete(Long competitionId, CompetitionSetupSection section) {
-        SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, section.getClass().getName(), section.getId(), Optional.empty());
-        setupStatus.setCompleted(Boolean.FALSE);
+    public ServiceResult<List<SetupStatusResource>> markSectionIncomplete(long competitionId, CompetitionSetupSection section) {
 
+        List<CompetitionSetupSection> allSectionsToMarkIncomplete = getAllSectionsToMarkIncomplete(section);
+
+        List<ServiceResult<SetupStatusResource>> markIncompleteResults = simpleMap(allSectionsToMarkIncomplete,
+                sectionToMarkIncomplete -> setSectionIncompleteAndUpdate(competitionId, sectionToMarkIncomplete));
+
+        return aggregate(markIncompleteResults);
+    }
+
+    /**
+     * When marking a section as incomplete, mark any next sections as incomplete also as they will need revisiting
+     * based on changes to this section.
+     */
+    private List<CompetitionSetupSection> getAllSectionsToMarkIncomplete(CompetitionSetupSection section) {
+        return combineLists(section, section.getAllNextSections());
+    }
+
+    private ServiceResult<SetupStatusResource> setSectionIncompleteAndUpdate(Long competitionId, CompetitionSetupSection section) {
+        SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, section.getClass().getName(), section.getId(), Optional.empty());
+        setupStatus.setCompleted(false);
         return setupStatusService.saveSetupStatus(setupStatus);
     }
 
@@ -244,7 +264,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<SetupStatusResource> markSubsectionComplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
         SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, subsection.getClass().getName(), subsection.getId(), Optional.of(parentSection));
-        setupStatus.setCompleted(Boolean.TRUE);
+        setupStatus.setCompleted(true);
 
         return setupStatusService.saveSetupStatus(setupStatus);
     }
@@ -253,7 +273,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<SetupStatusResource> markSubsectionIncomplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
         SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, subsection.getClass().getName(), subsection.getId(), Optional.of(parentSection));
-        setupStatus.setCompleted(Boolean.FALSE);
+        setupStatus.setCompleted(false);
 
         return setupStatusService.saveSetupStatus(setupStatus);
     }
@@ -269,14 +289,16 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         SetupStatusResource newSetupStatusResource = new SetupStatusResource(sectionClassName, sectionId, Competition.class.getName(), competitionId);
 
         parentSectionOpt.ifPresent(parentSection -> {
+
             Optional<SetupStatusResource> parentSetupStatusOpt =
                     setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId)
                             .getOptionalSuccessObject();
 
+            long parentStatus = parentSetupStatusOpt.orElseGet(() ->
+                    markSectionIncomplete(competitionId, parentSection).getSuccess().get(0)).getId();
+
             newSetupStatusResource.setParentId(
-                    parentSetupStatusOpt
-                            .orElseGet(() -> markSectionIncomplete(competitionId, parentSection).getSuccess())
-                            .getId()
+                    parentStatus
             );
         });
 
@@ -303,7 +325,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
         return competitionSetupTemplateService.initializeCompetitionByCompetitionTemplate(competitionId, competitionTypeId)
-                .andOnSuccess(() -> serviceSuccess());
+                .andOnSuccessReturnVoid();
     }
 
     @Override
@@ -359,26 +381,26 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 (GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
 
         competition.setTermsAndConditions(defaultTermsAndConditions);
-        competition.setProjectDocuments(createDefaultProjectDocuments(competition));
+        competition.setCompetitionDocuments(createDefaultProjectDocuments(competition));
 
         Competition savedCompetition = competitionRepository.save(competition);
         return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
                 .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
     }
 
-    private List<ProjectDocument> createDefaultProjectDocuments(Competition competition) {
+    private List<CompetitionDocument> createDefaultProjectDocuments(Competition competition) {
 
         FileType pdfFileType = fileTypeRepository.findByName("PDF");
 
-        List<ProjectDocument> defaultProjectDocuments = new ArrayList<>();
-        defaultProjectDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
-        defaultProjectDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
+        List<CompetitionDocument> defaultCompetitionDocuments = new ArrayList<>();
+        defaultCompetitionDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
+        defaultCompetitionDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
 
-        return defaultProjectDocuments;
+        return defaultCompetitionDocuments;
     }
 
-    private ProjectDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
-        return new ProjectDocument(competition, "Collaboration agreement", "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
+    private CompetitionDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
+        return new CompetitionDocument(competition, "Collaboration agreement", "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
                 "\n" +
                 "<p>Please allow enough time to complete this document before your project start date.</p>\n" +
                 "\n" +
@@ -391,8 +413,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 false, true, fileTypes);
     }
 
-    private ProjectDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
-        return new ProjectDocument(competition, "Exploitation plan", "<p>This is a confirmation of your overall plan, setting out the business case for your project. This plan will change during the lifetime of the project.</p>\n" +
+    private CompetitionDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
+        return new CompetitionDocument(competition, "Exploitation plan", "<p>This is a confirmation of your overall plan, setting out the business case for your project. This plan will change during the lifetime of the project.</p>\n" +
                 "\n" +
                 "<p>It should also describe partner activities that will exploit the results of the project so that:</p>\n" +
                 "<ul class=\"list-bullet\"><li>changes in the commercial environment can be monitored and accounted for</li>\n" +

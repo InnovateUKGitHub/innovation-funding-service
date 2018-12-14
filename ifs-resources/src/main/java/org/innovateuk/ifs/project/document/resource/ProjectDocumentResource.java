@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.document.resource;
 
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 public class ProjectDocumentResource {
@@ -8,7 +9,7 @@ public class ProjectDocumentResource {
 
     private Long project;
 
-    private org.innovateuk.ifs.competition.resource.ProjectDocumentResource projectDocument;
+    private CompetitionDocumentResource competitionDocument;
 
     private FileEntryResource fileEntry;
 
@@ -32,12 +33,12 @@ public class ProjectDocumentResource {
         this.project = project;
     }
 
-    public org.innovateuk.ifs.competition.resource.ProjectDocumentResource getProjectDocument() {
-        return projectDocument;
+    public CompetitionDocumentResource getCompetitionDocument() {
+        return competitionDocument;
     }
 
-    public void setProjectDocument(org.innovateuk.ifs.competition.resource.ProjectDocumentResource projectDocument) {
-        this.projectDocument = projectDocument;
+    public void setCompetitionDocument(CompetitionDocumentResource competitionDocument) {
+        this.competitionDocument = competitionDocument;
     }
 
     public FileEntryResource getFileEntry() {

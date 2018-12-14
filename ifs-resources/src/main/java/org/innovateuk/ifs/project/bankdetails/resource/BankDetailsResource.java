@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.address.resource.AddressResource;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -32,7 +32,7 @@ public class BankDetailsResource {
     private Long project;
 
     @NotNull(message = "{validation.bankdetailsresource.organisationaddress.required}")
-    private OrganisationAddressResource organisationAddress;
+    private AddressResource address;
 
     @NotNull(message = "{validation.bankdetailsresource.organisation.required}")
     private Long organisation;
@@ -85,12 +85,12 @@ public class BankDetailsResource {
         this.project = project;
     }
 
-    public OrganisationAddressResource getOrganisationAddress() {
-        return organisationAddress;
+    public AddressResource getAddress() {
+        return address;
     }
 
-    public void setOrganisationAddress(OrganisationAddressResource organisationAddressResource) {
-        this.organisationAddress = organisationAddressResource;
+    public void setAddress(AddressResource address) {
+        this.address = address;
     }
 
     public Long getOrganisation() {
@@ -194,7 +194,7 @@ public class BankDetailsResource {
                 .append(sortCode, that.sortCode)
                 .append(accountNumber, that.accountNumber)
                 .append(project, that.project)
-                .append(organisationAddress, that.organisationAddress)
+                .append(address, that.address)
                 .append(organisation, that.organisation)
                 .append(organisationTypeName, that.organisationTypeName)
                 .append(companyName, that.companyName)
@@ -209,7 +209,7 @@ public class BankDetailsResource {
                 .append(sortCode)
                 .append(accountNumber)
                 .append(project)
-                .append(organisationAddress)
+                .append(address)
                 .append(organisation)
                 .append(organisationTypeName)
                 .append(companyName)
@@ -229,7 +229,7 @@ public class BankDetailsResource {
                 .append("sortCode", sortCode)
                 .append("accountNumber", accountNumber)
                 .append("project", project)
-                .append("organisationAddress", organisationAddress)
+                .append("address", address)
                 .append("organisation", organisation)
                 .append("organisationTypeName", organisationTypeName)
                 .append("companyName", companyName)

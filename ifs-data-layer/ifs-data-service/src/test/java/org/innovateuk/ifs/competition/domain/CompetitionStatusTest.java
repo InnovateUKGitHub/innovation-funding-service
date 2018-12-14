@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.time.ZonedDateTime;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.junit.Assert.*;
 
 public class CompetitionStatusTest {
@@ -15,16 +16,22 @@ public class CompetitionStatusTest {
     private ZonedDateTime currentDate;
     private ZonedDateTime future;
     private ZonedDateTime past;
+    private CompetitionType competitionType;
 	
     @Before
     public void setUp() {
     	currentDate = ZonedDateTime.now();
     	future = currentDate.plusMinutes(1);
     	past = currentDate.minusMinutes(1);
+
+        competitionType = newCompetitionType()
+                .withName("Sector")
+                .build();
     	
 
     	competition = new Competition();
         competition.setSetupComplete(true);
+        competition.setCompetitionType(competitionType);
     }
 
     @Test
@@ -216,6 +223,30 @@ public class CompetitionStatusTest {
 
         assertEquals(CompetitionStatus.PROJECT_SETUP, competition.getCompetitionStatus());
         assertTrue(competition.getCompetitionStatus().isFeedbackReleased());
+    }
+
+    @Test
+    public void competitionStatusPreviousIfFeedbackReleasedDateMetAndEOI(){
+
+        CompetitionType competitionType = newCompetitionType()
+                .withName("Expression of interest")
+                .build();
+
+        Competition expressionOfInterest = new Competition();
+
+        expressionOfInterest.setSetupComplete(true);
+        expressionOfInterest.setStartDate(past);
+        expressionOfInterest.setEndDate(past);
+        expressionOfInterest.setFundersPanelDate(past);
+        expressionOfInterest.notifyAssessors(past);
+        expressionOfInterest.closeAssessment(past);
+        expressionOfInterest.setFundersPanelEndDate(past);
+        expressionOfInterest.setReleaseFeedbackDate(currentDate);
+        expressionOfInterest.releaseFeedback(currentDate);
+        expressionOfInterest.setCompetitionType(competitionType);
+
+        assertEquals(CompetitionStatus.PREVIOUS, expressionOfInterest.getCompetitionStatus());
+        assertTrue(expressionOfInterest.getCompetitionStatus().isFeedbackReleased());
     }
 
     /**

@@ -40,7 +40,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.repository.CompetitionRepository.EOI_COMPETITION_TYPE;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -143,9 +142,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 competitions = competitionRepository.findProjectSetup();
             }
             return serviceSuccess(simpleMap(
-                    CollectionFunctions.reverse(competitions.stream()
-                            .filter(competition -> !competition.getCompetitionType().getName().equals(EOI_COMPETITION_TYPE))
-                            .collect(Collectors.toList())),
+                    CollectionFunctions.reverse(competitions),
                     this::searchResultFromCompetition));
         });
     }

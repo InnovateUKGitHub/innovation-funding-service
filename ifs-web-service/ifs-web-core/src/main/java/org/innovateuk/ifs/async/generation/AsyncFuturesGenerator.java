@@ -168,11 +168,11 @@ public class AsyncFuturesGenerator {
         return awaitAll(randomName(), future1, future2, future3, future4);
     }
 
-    public CompletableFutureTupleNHandler awaitAll(CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
+    public CompletableFutureTupleNHandler<?> awaitAll(CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
         return awaitAll(randomName(), future1, future2, future3, future4, moreFutures);
     }
 
-    public CompletableFutureTupleNHandler awaitAll(List<? extends CompletableFuture<?>> futures) {
+    public <R> CompletableFutureTupleNHandler<R> awaitAll(List<CompletableFuture<R>> futures) {
         return awaitAll(randomName(), futures);
     }
 
@@ -192,12 +192,12 @@ public class AsyncFuturesGenerator {
         return new CompletableFutureTuple4Handler<>(futureName, getExecutorForChainedFutures(), timeoutValue, future1, future2, future3, future4);
     }
 
-    public CompletableFutureTupleNHandler awaitAll(String futureName, CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
+    public CompletableFutureTupleNHandler<?> awaitAll(String futureName, CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
         List<CompletableFuture<?>> allFutures = combineLists(asList(future1, future2, future3, future4), moreFutures);
         return new CompletableFutureTupleNHandler(futureName, getExecutorForChainedFutures(), timeoutValue, allFutures);
     }
 
-    public CompletableFutureTupleNHandler awaitAll(String futureName, List<? extends CompletableFuture<?>> futures) {
+    public <R> CompletableFutureTupleNHandler<R> awaitAll(String futureName, List<CompletableFuture<R>> futures) {
         return new CompletableFutureTupleNHandler(futureName, getExecutorForChainedFutures(), timeoutValue, futures);
     }
 

@@ -16,11 +16,20 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to invite this user.</h2>
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Stakeholders', subTitle=${model.competitionId + ': ' + model.competitionName}, size='govuk-heading-xl'" />
+
+        <p class="govuk-body">Make sure it is appropriate for the stakeholder to see this competition before you invite them.</p>
+        <p class="govuk-body">They will be able to view (but not edit):</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>information, statistics and milestones while the competition is open</li>
+            <li>applications that are submitted or marked as ineligible, including detailed finances</li>
+            <li>an overview of project setup</li>
+            <li>competition details and applications once they move to the 'Previous' tab</li>
+        </ul>
 
         <h2 class="govuk-heading-m">Key statistics</h2>
 

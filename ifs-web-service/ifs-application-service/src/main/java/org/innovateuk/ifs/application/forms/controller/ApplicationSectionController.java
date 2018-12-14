@@ -133,16 +133,13 @@ public class ApplicationSectionController {
             case FUNDING_FINANCES:
                 return String.format("redirect:/application/%d/form/your-funding/%d", applicationId, sectionId);
             case PROJECT_COST_FINANCES:
-                if (!financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {		
-                    return String.format("redirect:/application/%d/form/your-project-costs/%d", applicationId, sectionId);
+                if (financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
+                    return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
                 } else {
-                    populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), false);
-                    return APPLICATION_FORM;
+                    return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
                 }
             case PROJECT_LOCATION:
-
                 long organisationId = applicantSection.getCurrentApplicant().getOrganisation().getId();
-
                 return String.format("redirect:/application/%d/form/your-project-location/organisation/%d/section/%d",
                         applicationId, organisationId, sectionId);
             default:
@@ -165,7 +162,6 @@ public class ApplicationSectionController {
                                                                 @RequestParam MultiValueMap<String, String> queryParams) {
 
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
-
         SectionResource section = sectionService.getById(sectionId);
 
         switch (section.getType()) {
@@ -173,14 +169,11 @@ public class ApplicationSectionController {
                 return String.format("redirect:/application/%d/form/your-funding/%d/%d%s", applicationId, sectionId,
                         applicantOrganisationId, originQuery);
             case PROJECT_COST_FINANCES: {
-
                 ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
-
-                if (!financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
-                    return String.format("redirect:/application/%d/form/your-project-costs/%d/%d%s", applicationId, sectionId, applicantOrganisationId, originQuery);
+                if (financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
+                    return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d%s", applicationId, applicantOrganisationId, sectionId, originQuery);
                 } else {
-                    return populateGenericApplicationFormSectionForInternalUser(
-                            form, bindingResult, model, applicantOrganisationId, user, originQuery, applicantSection);
+                    return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d%s", applicationId, applicantOrganisationId, sectionId, originQuery);
                 }
             }
             case PROJECT_LOCATION: {

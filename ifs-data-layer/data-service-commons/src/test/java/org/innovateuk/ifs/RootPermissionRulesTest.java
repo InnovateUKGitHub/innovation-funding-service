@@ -34,6 +34,8 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected List<UserResource> allInternalUsers;
 
+    protected List<UserResource> compAdminAndProjectFinance;
+
     protected UserResource compAdminUser() {
         return getUserWithRole(COMP_ADMIN);
     }
@@ -75,6 +77,7 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         allRoles = asList(Role.values());
         allGlobalRoleUsers = simpleMap(allRoles, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
         allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser(), ifsAdminUser());
+        compAdminAndProjectFinance = asList(compAdminUser(), projectFinanceUser());
     }
 
     protected UserResource getUserWithRole(Role type) {

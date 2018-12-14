@@ -11,8 +11,9 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,7 @@ class EmailNotificationSender implements NotificationSender {
     }
 
     @Override
-    @Transactional(Transactional.TxType.MANDATORY)
+    @Transactional(propagation = Propagation.MANDATORY)
     public ServiceResult<Notification> sendNotificationWithFlush(Notification notification) {
 
         // flush any pending SQL updates to the database before proceeding to send the Notification, in case any SQL

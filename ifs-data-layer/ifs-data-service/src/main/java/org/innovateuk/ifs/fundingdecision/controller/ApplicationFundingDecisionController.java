@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
@@ -35,7 +36,7 @@ public class ApplicationFundingDecisionController {
 
     @PostMapping(value="/sendNotifications")
     public RestResult<Void> sendFundingDecisions(@RequestBody FundingNotificationResource fundingNotificationResource) {
-        if (isCompetitionTypeEOI(fundingNotificationResource.getFundingDecisions())) {
+        if (isReleaseFeedbackCompletionStage(fundingNotificationResource.getFundingDecisions())) {
             return applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource)
                     .toPostResponse();
         } else {
@@ -51,11 +52,11 @@ public class ApplicationFundingDecisionController {
                 toPutResponse();
     }
 
-    private boolean isCompetitionTypeEOI(Map<Long, FundingDecision> fundingDecisions) {
+    private boolean isReleaseFeedbackCompletionStage(Map<Long, FundingDecision> fundingDecisions) {
         return fundingDecisions.keySet().stream().findFirst().map(applicationId -> {
             ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
             CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccess();
-            return ("Expression of interest").equals(competition.getCompetitionTypeName());
+            return CompetitionCompletionStage.RELEASE_FEEDBACK.equals(competition.getCompletionStage());
         }).orElse(false);
     }
 }

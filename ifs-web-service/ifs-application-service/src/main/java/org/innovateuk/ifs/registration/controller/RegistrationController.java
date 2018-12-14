@@ -40,7 +40,7 @@ import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
-import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
+import static org.innovateuk.ifs.login.controller.HomeController.getRedirectUrlForUser;
 
 @Controller
 @RequestMapping("/registration")

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.InvalidURLException;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
-import org.innovateuk.ifs.login.LoginController;
 import org.innovateuk.ifs.token.resource.TokenResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;

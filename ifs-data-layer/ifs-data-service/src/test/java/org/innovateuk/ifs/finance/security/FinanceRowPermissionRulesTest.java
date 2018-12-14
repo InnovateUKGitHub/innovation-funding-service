@@ -9,6 +9,7 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -71,7 +72,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
             final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
             cost = newApplicationFinanceRow().withOwningFinance(applicationFinance).build();
-            costItem = new AcademicCost(cost.getId(), "", ZERO, "");
+            costItem = new AcademicCost(cost.getId(), "", ZERO, "", FinanceRowType.LABOUR);
 
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();

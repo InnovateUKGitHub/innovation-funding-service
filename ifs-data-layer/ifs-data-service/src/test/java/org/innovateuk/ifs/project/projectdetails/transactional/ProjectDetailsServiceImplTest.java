@@ -71,33 +71,17 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.PROJECT;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
@@ -111,16 +95,10 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDetailsService> {
 
@@ -983,48 +961,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void updateProjectAddressToBeRegisteredAddress() {
-        AddressResource existingRegisteredAddressResource = newAddressResource().build();
-        Address registeredAddress = newAddress().build();
-
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
-        when(addressRepositoryMock.exists(existingRegisteredAddressResource.getId())).thenReturn(true);
-        when(addressRepositoryMock.findOne(existingRegisteredAddressResource.getId())).thenReturn(registeredAddress);
-
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), REGISTERED, existingRegisteredAddressResource);
-        assertTrue(result.isSuccess());
-        assertEquals(registeredAddress, project.getAddress());
-    }
-
-    @Test
-    public void updateProjectAddressToBeOperatingAddress() {
-        AddressResource existingOperatingAddressResource = newAddressResource().build();
-        Address operatingAddress = newAddress().build();
-
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
-        when(addressRepositoryMock.exists(existingOperatingAddressResource.getId())).thenReturn(true);
-        when(addressRepositoryMock.findOne(existingOperatingAddressResource.getId())).thenReturn(operatingAddress);
-
-        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), OPERATING, existingOperatingAddressResource);
-        assertTrue(result.isSuccess());
-        assertEquals(operatingAddress, project.getAddress());
-    }
-
-    @Test
     public void updateProjectAddressToNewProjectAddress() {
 
         Organisation leadOrganisation = newOrganisation()
@@ -1059,7 +995,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), newAddressResource);
         assertTrue(result.isSuccess());
         verify(organisationAddressRepositoryMock, never()).delete(Mockito.any(OrganisationAddress.class));
         assertEquals(newAddress, project.getAddress());
@@ -1088,9 +1024,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), newAddressResource);
         assertTrue(result.isSuccess());
-        verify(organisationAddressRepositoryMock).delete(singletonList(organisationAddress));
         assertEquals(newAddress, project.getAddress());
     }
 

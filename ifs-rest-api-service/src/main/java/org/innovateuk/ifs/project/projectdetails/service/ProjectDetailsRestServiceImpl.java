@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
@@ -34,8 +33,8 @@ public class ProjectDetailsRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<Void> updateProjectAddress(long leadOrganisationId, long projectId, OrganisationAddressType addressType, AddressResource address) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/address?addressType=" + addressType.name() + "&leadOrganisationId=" + leadOrganisationId, address, Void.class);
+    public RestResult<Void> updateProjectAddress(long leadOrganisationId, long projectId, AddressResource address) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/address?leadOrganisationId=" + leadOrganisationId, address, Void.class);
     }
 
     @Override

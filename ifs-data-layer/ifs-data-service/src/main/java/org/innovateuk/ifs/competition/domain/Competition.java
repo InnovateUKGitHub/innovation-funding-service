@@ -6,7 +6,7 @@ import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
@@ -89,7 +89,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     private Set<CompetitionResearchCategoryLink> researchCategories = new HashSet<>();
 
     @OneToMany(mappedBy = "competition", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private List<ProjectDocument> projectDocuments = new ArrayList<>();
+    private List<CompetitionDocument> competitionDocuments = new ArrayList<>();
 
     private String activityCode;
 
@@ -143,6 +143,9 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     private Boolean includeProjectGrowthTable;
 
+    @Enumerated(EnumType.STRING)
+    private CompetitionCompletionStage completionStage;
+
     public Competition() {
         setupComplete = false;
     }
@@ -185,6 +188,8 @@ public class Competition extends AuditableEntity implements ProcessActivity {
                 return CompetitionStatus.FUNDERS_PANEL;
             } else if (!isMilestoneReached(MilestoneType.FEEDBACK_RELEASED)) {
                 return ASSESSOR_FEEDBACK;
+            } else if (isMilestoneReached(MilestoneType.FEEDBACK_RELEASED) && getCompetitionType().isEOI()) {
+                return PREVIOUS;
             } else {
                 return PROJECT_SETUP;
             }
@@ -521,12 +526,12 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         researchCategories.forEach(this::addResearchCategory);
     }
 
-    public List<ProjectDocument> getProjectDocuments() {
-        return projectDocuments;
+    public List<CompetitionDocument> getCompetitionDocuments() {
+        return competitionDocuments;
     }
 
-    public void setProjectDocuments(List<ProjectDocument> projectDocuments) {
-        this.projectDocuments = projectDocuments;
+    public void setCompetitionDocuments(List<CompetitionDocument> competitionDocuments) {
+        this.competitionDocuments = competitionDocuments;
     }
 
     public List<Milestone> getMilestones() {
@@ -779,6 +784,14 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     public void setIncludeProjectGrowthTable(final Boolean includeProjectGrowthTable) {
         this.includeProjectGrowthTable = includeProjectGrowthTable;
+    }
+
+    public CompetitionCompletionStage getCompletionStage() {
+        return completionStage;
+    }
+
+    public void setCompletionStage(CompetitionCompletionStage completionStage) {
+        this.completionStage = completionStage;
     }
 }
 
