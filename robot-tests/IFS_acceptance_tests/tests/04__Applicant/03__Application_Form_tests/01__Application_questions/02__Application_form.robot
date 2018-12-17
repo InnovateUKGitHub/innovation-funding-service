@@ -49,7 +49,7 @@ Application details: Innovation area section is visible
     And the user should see the element        jQuery = label:contains("My innovation area is not listed")
     And the user should see the element        jQuery = a:contains("Cancel")
     When the user clicks the button/link       jQuery = button:contains("Save")
-    Then the user should see an error          This field cannot be left blank
+    Then the user should see a field error     ${empty_field_warning_message}
     When the user clicks the button/link       jQuery = label:contains("Digital manufacturing")
     And the user clicks the button/link        jQuery = button:contains("Save")
     Then the user should see the element       jQuery = button:contains("Change your innovation area")
@@ -127,7 +127,7 @@ Research category validation
     [Documentation]  IFS-2123
     Given The user clicks the button/link                 link = Research category
     When The user clicks the button/link                  id = application-question-complete
-    Then The user should see a field and summary error    This field cannot be left blank.
+    Then The user should see a field and summary error    ${empty_field_warning_message}
     [Teardown]  the user clicks the button/link           link = Application overview
 
 Mark research section as complete
@@ -205,7 +205,6 @@ Log in and create a new application for the Aerospace competition
             Run Keyword If    '${status}' == 'PASS'    the user selects the radio button     selectedOrganisationId  21
     the user clicks the button/link    css = .govuk-button[type="submit"]   #Save and continue
 
-    The user clicks the button/link       jQuery = button:contains("Save and return to application overview")
     The user clicks the button/link       link = Application details
     The user enters text to a text field  id = application.name  ${aeroApplication}
     The user clicks the button/link       id = application-question-save

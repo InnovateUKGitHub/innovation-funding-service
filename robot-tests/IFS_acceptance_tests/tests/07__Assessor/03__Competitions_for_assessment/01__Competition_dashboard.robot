@@ -94,7 +94,7 @@ Reject an application for assessment
     And the user should not see the element              id = rejectComment
     And the user selects the radio button                assessmentAccept  false
     And The user clicks the button/link                  jQuery = button:contains("Confirm")
-    Then the user should see an error                    Please enter a reason.
+    Then the user should see a field and summary error   Please enter a reason.
     And the assessor fills all fields with valid inputs
     And the user clicks the button/link                  jQuery = .govuk-button:contains("Confirm")
     And the application for assessment should be removed
@@ -127,7 +127,7 @@ Comp admin can see the application is rejected on manage assessment page
 *** Keywords ***
 Custom Suite Setup
    The user logs-in in new browser  &{assessor2_credentials}
-   ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Sign in successful")
+   ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Select a dashboard")
    Run Keyword If  '${status}' == 'PASS'  Run keywords   the user selects the checkbox   selectedRole1
    ...                              AND    the user clicks the button/link   css = .button[type = "submit"]   #Continue
 
@@ -135,7 +135,7 @@ the assessor fills all fields with valid inputs
     Select From List By Index                             id = rejectReasonValid    2
     The user should not see the text in the page          Please enter a reason
     the user enters multiple strings into a text field    id = rejectComment  a${SPACE}  102
-    The user should see an error                          Maximum word count exceeded. Please reduce your word count to 100.
+    the user should see a field and summary error         Maximum word count exceeded. Please reduce your word count to 100.
     The user enters text to a text field                  id = rejectComment    Unable to assess the application as i'm on holiday.
 
 the application for assessment should be removed

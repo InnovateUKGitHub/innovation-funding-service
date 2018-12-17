@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -30,6 +31,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProj
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -62,6 +64,17 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
                 assertTrue(rules.internalUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
                 assertFalse(rules.internalUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void stakeholdersCanSeeAllOrganisations() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(STAKEHOLDER)) {
+                assertTrue(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            } else {
+                assertFalse(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             }
         });
     }

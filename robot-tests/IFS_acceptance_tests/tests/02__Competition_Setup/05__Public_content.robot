@@ -269,7 +269,7 @@ How to apply: Contains the correct values when viewed, Edit sections
     And the user should see the element       link = Return to public content
     When the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
     And the user enters text to a text field  css = .contentGroup:nth-of-type(1) .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
-    And the user moves focus to the element   css = #contentGroup-row-1 >div.govuk-form-group.textarea-wrapped >div.editor
+    And Set Focus To Element                  css = #contentGroup-row-1 >div.govuk-form-group.textarea-wrapped >div.editor
     And The user enters text to a text field  css = .contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
     Then the user clicks the button/link      jQuery = button:contains("+ add new section")
     And The user enters text to a text field  css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="heading"]    Application Rules -- Competition Procedures
@@ -523,7 +523,7 @@ the user can add and remove multiple content groups for summary
 the user can add and remove multiple event groups
     When the user clicks the button/link       jQuery = button:contains("+ add new event")
     And the user clicks the button/link        jQuery = button:contains("Save and review")
-    Then The user should see a summary error   Please enter a valid date.
+    Then The user should see a summary error   ${enter_a_valid_date}
     #TODO add keywork to check field error check when IFS-3126 done
     And The user should see a field and summary error    Please enter valid content.
     And the user enters text to a text field   id = dates[0].day      60

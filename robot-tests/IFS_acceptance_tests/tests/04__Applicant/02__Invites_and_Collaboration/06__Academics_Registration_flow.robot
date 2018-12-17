@@ -9,21 +9,21 @@ Resource          ../../../resources/defaultResources.robot
 Academic organisations search
     [Documentation]    INFUND-1231
     [Tags]  HappyPath
-    Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com  ${BUSINESS_TYPE_ID}
+    Given we create a new user                            ${openCompetitionBusinessRTO}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com  ${BUSINESS_TYPE_ID}
     And logout as user
-    Given the lead applicant invites a registered user  ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
-    When the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation   2
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Yes, accept invitation")
-    When the user selects the radio button              organisationType    2
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Save and continue")
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Search")
-    Then the user should see an error                   Please enter an organisation name to search.
-    When the user enters text to a text field           id = organisationSearchName    abcd
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Search")
-    Then the user should see the text in the page       No results found.
-    When the user enters text to a text field           id = organisationSearchName    !!
-    And the user clicks the button/link                 jQuery = .govuk-button:contains("Search")
-    Then the user should see the text in the page       No results found.
+    Given the lead applicant invites a registered user    ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
+    When the user reads his email and clicks the link     ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation   2
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Yes, accept invitation")
+    When the user selects the radio button                organisationType    2
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Save and continue")
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Search")
+    Then the user should see a field error                Please enter an organisation name to search.
+    When the user enters text to a text field             id = organisationSearchName    abcd
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Search")
+    Then the user should see the text in the page         No results found.
+    When the user enters text to a text field             id = organisationSearchName    !!
+    And the user clicks the button/link                   jQuery = .govuk-button:contains("Search")
+    Then the user should see the text in the page         No results found.
 
 Accept invitation as academic
     [Documentation]    INFUND-1166, INFUND-917, INFUND-2450, INFUND-2256

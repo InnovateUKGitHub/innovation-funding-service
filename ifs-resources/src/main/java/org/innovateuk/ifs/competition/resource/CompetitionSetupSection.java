@@ -7,6 +7,7 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 
 /**
  * This enum defines all sections of competition setup.
@@ -74,6 +75,8 @@ public enum CompetitionSetupSection {
         }
         if (this == ASSESSORS) {
             return competitionResource.isAssessmentClosed();
+        } else if (this == PROJECT_DOCUMENT) {
+            return competitionResource.getCompetitionStatus().equals(PROJECT_SETUP);
         } else if (competitionResource.isSetupAndLive()) {
             return !this.getEditableAfterSetupAndLive();
         }

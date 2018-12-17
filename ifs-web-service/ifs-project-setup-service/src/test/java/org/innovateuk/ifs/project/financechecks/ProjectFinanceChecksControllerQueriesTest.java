@@ -4,9 +4,12 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -57,6 +60,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
@@ -79,8 +83,12 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     private Long organisationId = 234L;
     private Long projectFinanceId = 45L;
     private Long queryId = 1L;
+    private Long applicationId = 3L;
+    private Long competitionId = 4L;
 
-    ApplicationResource applicationResource = newApplicationResource().build();
+    ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
+
+    CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withIncludeJesForm(true).build();
 
     OrganisationResource innovateOrganisationResource = newOrganisationResource().withName("Innovate").withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
 
@@ -99,6 +107,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
     ProjectResource project = newProjectResource().withId(projectId).withName("Project1").
             withApplication(applicationResource).
+            withCompetition(competitionId).
             withProjectUsers(singletonList(financeContactProjectUser.getId())).build();
 
     QueryResource thread;
@@ -140,6 +149,12 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Mock
     private FinanceUtil financeUtil;
 
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     @Spy
     @InjectMocks
     @SuppressWarnings("unused")
@@ -147,14 +162,17 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
 
     @Before
-    public void setup() {
-        super.setUp();
+    public void setupCommonExpectations() {
+
         setupCookieUtil(cookieUtil);
+
         when(userRestService.retrieveUserById(financeTeamUser.getId())).thenReturn(restSuccess(financeTeamUser));
         when(organisationRestService.getByUserAndProjectId(financeTeamUser.getId(), projectId)).thenReturn(restSuccess(innovateOrganisationResource));
         when(userRestService.retrieveUserById(financeContactUser.getId())).thenReturn(restSuccess(financeContactUser));
         when(organisationRestService.getByUserAndProjectId(financeContactUser.getId(), projectId)).thenReturn(restSuccess(leadOrganisationResource));
         when(userRestService.retrieveUserById(financeContactUser.getId())).thenReturn(restSuccess(financeContactUser));
+        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(project);

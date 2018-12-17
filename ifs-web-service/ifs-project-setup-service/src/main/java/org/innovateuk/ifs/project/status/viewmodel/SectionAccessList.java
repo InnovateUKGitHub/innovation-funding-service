@@ -14,17 +14,19 @@ public class SectionAccessList {
     private SectionAccess bankDetailsSection;
     private SectionAccess financeChecksSection;
     private SectionAccess spendProfileSection;
-    private SectionAccess otherDocumentsSection;
+    private SectionAccess documentsSection;
     private SectionAccess grantOfferLetterSection;
 
-    public SectionAccessList(SectionAccess companiesHouseSection, SectionAccess projectDetailsSection, SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection, SectionAccess financeChecksSection, SectionAccess spendProfileSection, SectionAccess otherDocumentsSection, SectionAccess grantOfferLetterSection) {
+    public SectionAccessList(SectionAccess companiesHouseSection, SectionAccess projectDetailsSection, SectionAccess monitoringOfficerSection,
+                             SectionAccess bankDetailsSection, SectionAccess financeChecksSection, SectionAccess spendProfileSection,
+                             SectionAccess documentsSection, SectionAccess grantOfferLetterSection) {
         this.companiesHouseSection = companiesHouseSection;
         this.projectDetailsSection = projectDetailsSection;
         this.monitoringOfficerSection = monitoringOfficerSection;
         this.bankDetailsSection = bankDetailsSection;
         this.financeChecksSection = financeChecksSection;
         this.spendProfileSection = spendProfileSection;
-        this.otherDocumentsSection = otherDocumentsSection;
+        this.documentsSection = documentsSection;
         this.grantOfferLetterSection = grantOfferLetterSection;
     }
 
@@ -52,8 +54,8 @@ public class SectionAccessList {
         return spendProfileSection;
     }
 
-    public SectionAccess getOtherDocumentsSection() {
-        return otherDocumentsSection;
+    public SectionAccess getDocumentsSection() {
+        return documentsSection;
     }
 
     public SectionAccess getGrantOfferLetterSection() {

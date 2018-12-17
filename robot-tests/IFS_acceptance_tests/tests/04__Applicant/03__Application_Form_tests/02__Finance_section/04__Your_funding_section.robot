@@ -35,7 +35,7 @@ Funding level validations
     [Tags]
     When the user provides invalid value as percentage then he should see the error  Funding level must be 50% or lower.  60
     When the user provides invalid value as percentage then he should see the error  Funding level must be above 0%.  -14
-    When the user provides invalid value as percentage then he should see the error  This field can only accept whole numbers.  15.35
+    When the user provides invalid value as percentage then he should see the error  ${only_accept_whole_numbers_message}  15.35
     #TODO add server side validation for the percentage field when double number is provided IFS-3066
     And the user selects the radio button         requestingFunding   true
     When the user enters text to a text field     css = [name^="grantClaimPercentage"]  24
@@ -132,7 +132,7 @@ the user provides invalid value as percentage then he should see the error
     [Arguments]  ${error}  ${value}
     the user selects the radio button     requestingFunding   true
     the user enters text to a text field  css = [name^="grantClaimPercentage"]  ${value}
-    the user moves focus to the element   css = button.govuk-button[type="submit"]
+    Set Focus To Element                  css = button.govuk-button[type="submit"]
     the user should see a field error     ${error}
 
 Complete the org size section
@@ -147,7 +147,7 @@ Complete the org size section
     the user enters text to a text field                jQuery = .govuk-hint:contains("turnover") + input    150
     the user enters text to a text field                jQuery = .govuk-hint:contains("employees") + input    0
     the user selects the checkbox                       agree-state-aid
-    the user moves focus to the element                 jQuery = button:contains("Mark as complete")
+    Set Focus To Element                                jQuery = button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    jQuery = button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    link = Your finances
 
@@ -156,21 +156,21 @@ the user adds more rows in other funding
     the user enters text to a text field    css = [name*=source]  Lottery funding
     the user enters text to a text field    css = [name*=date]  12-${nextyear}
     the user enters text to a text field    css = [name*=fundingAmount]  20000
-    the user moves focus to the element     jQuery = button:contains("Mark as complete")
+    Set Focus To Element                    jQuery = button:contains("Mark as complete")
     wait for autosave
     the user clicks the button/link         jQuery = button:contains("Add another source of funding")
     the user should see the element         css = tr:nth-of-type(2) input[name*=source]
     the user enters text to a text field    css = tr:nth-of-type(2) input[name*=source]  wealthy uncle
     the user enters text to a text field    css = tr:nth-of-type(2) input[name*=date]  02-${nextyear}
     the user enters text to a text field    css = tr:nth-of-type(2) input[name*=fundingAmount]  15000
-    the user moves focus to the element     jQuery = button:contains("Mark as complete")
+    Set Focus To Element                    jQuery = button:contains("Mark as complete")
     wait for autosave
     the user clicks the button/link         jQuery = button:contains("Add another source of funding")
     the user should see the element         css = tr:nth-of-type(3) input[name*=source]
     the user enters text to a text field    css = tr:nth-of-type(3) input[name*=source]  wealthy grandma
     the user enters text to a text field    css = tr:nth-of-type(3) input[name*=date]  11-${nextyear}
     the user enters text to a text field    css = tr:nth-of-type(3) input[name*=fundingAmount]  200000
-    the user moves focus to the element     jQuery = button:contains("Mark as complete")
+    Set Focus To Element                    jQuery = button:contains("Mark as complete")
     wait for autosave
     Textfield Value Should Be               jQuery = label:contains("Total other funding") + input    £235,000
 

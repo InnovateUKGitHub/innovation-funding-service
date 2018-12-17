@@ -110,8 +110,7 @@ User can create a new competition
     And The user should not see the element    link = Milestones
     And The user should not see the element    link = Application
     And The user should not see the element    link = Assessors
-    # TODO IFS-4609 Uncomment when this functionality is enabled.
-#    And The user should not see the element    link = Documents in project setup
+    And The user should not see the element    link = Documents
     And The user should not see the element    link = Public content
     And The user should see the element        link = Initial details
     And The user should not see the element    link = Stakeholders
@@ -173,8 +172,7 @@ User should have access to all the sections
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Funding information")
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Eligibility")
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Application")
-    # TODO IFS-4609 Uncomment when this functionality is enabled.
-#    And the user should see the element     link = Documents in project setup
+    And the user should see the element      link = Documents
     And The user should see the element      jQuery = h2:contains("Assessment") ~ ul a:contains("Assessors")
     And The user should see the element      jQuery = h2:contains("Competition access") ~ ul a:contains("Innovation leads")
 
@@ -391,14 +389,14 @@ Application: Application details validations
     # TODO IFS-3188
 
     When the user selects the radio button       useResubmissionQuestion  true
-    Then the user should see the element         jQuery = label[for="minProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
-    And the user should see the element          jQuery = label[for="maxProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
+    Then the user should see the element         jQuery = label[for="minProjectDuration"] + .govuk-error-message:contains("${empty_field_warning_message}")
+    And the user should see the element          jQuery = label[for="maxProjectDuration"] + .govuk-error-message:contains("${empty_field_warning_message}")
     When the user clicks the button/link         css = button[type="submit"]
     Then the user should see the element         css = .govuk-error-summary__list
 
     When the user enters text to a text field    id = minProjectDuration  -2
     And the user enters text to a text field     id = maxProjectDuration  -3
-    Then the user should see a field error       This field should be 1 or higher.
+    Then the user should see a field error       ${field_should_be_1_or_higher}
     And the user should see a field error        The maximum must be larger than the minimum.
 
     When the user enters text to a text field    id = minProjectDuration  66
@@ -535,11 +533,14 @@ Application: Finances
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element        css = input[id="include-growth-table-no"]
     When the user selects the radio button         includeGrowthTable  true
+    And the user selects the radio button          includeYourOrganisationSection  true
+    And the user selects the radio button          includeJesForm  true
     And the user enters text to a text field       css = .editor  Funding rules for this competition are now entered.
     Then The user clicks the button/link           css = button[type="submit"]  #Save and close
     When the user clicks the button/link           link = Finances
     Then the user should see the element           jQuery = dt:contains("Include project growth table")+dd:contains("Yes")
     And the user should see the element            jQuery = dt:contains("Funding rules for this competition")+dd:contains("Funding rules for this competition are now entered.")
+    And the user should see the element            jQuery = dt:contains("Include Je-S form for research organisations") + dd:contains("Yes")
     [Teardown]  the user clicks the button/link    link = Return to application questions
 
 Application: Done enabled when all questions are marked as complete
@@ -550,28 +551,26 @@ Application: Done enabled when all questions are marked as complete
     When The user clicks the button/link      link = Return to setup overview
     Then the user should see the element      jQuery = li:contains("Application") .task-status-complete
 
-# TODO IFS-4609 Uncomment when this functionality is enabled.
-#Documents in project setup: The competition admin adds document requirements
-#    [Documentation]    IFS-3916
-#    [Tags]  HappyPath
-#    Given the user clicks the button/link        link = Documents in project setup
-#    And the user clicks the button/link          link = Add document type
-#    When the user enters text to a text field    id = title    Test document type
-#    And the user clicks the button/link          jQuery = span:contains("PDF")
-#    And the user clicks the button/link          jQuery = span:contains("Spreadsheet")
-#    And the user enters text to a text field     css = .editor    Guidance test.
-#    And the user clicks the button/link          css = button[type = "submit"]
-#    And the user should see the element          jQuery = span:contains("Test document type")
+Documents in project setup: The competition admin adds document requirements
+    [Documentation]    IFS-3916
+    [Tags]  HappyPath
+    Given the user clicks the button/link        link = Documents
+    And the user clicks the button/link          link = Add document type
+    When the user enters text to a text field    id = title    Test document type
+    And the user clicks the button/link          jQuery = span:contains("PDF")
+    And the user clicks the button/link          jQuery = span:contains("Spreadsheet")
+    And the user enters text to a text field     css = .editor    Guidance test.
+    And the user clicks the button/link          css = button[type = "submit"]
+    And the user should see the element          jQuery = span:contains("Test document type")
 
-# TODO IFS-4609 Uncomment when this functionality is enabled.
-#Documents in project setup: The competition admin removes a document
-#    [Documentation]    IFS-3916
-#    [Tags]  HappyPath
-#    Given the user clicks the button/link       jQuery = span:contains("Test document type") ~ a:contains("Edit")
-#    When the user clicks the button/link        css = button[name = "removeDocument"]
-#    And the user clicks the button/link         jQuery = button:contains("Confirm")
-#    Then the user should not see the element    jQuery = span:contains("Test document type")
-#    And the user clicks the button/link         link = Competition setup
+Documents in project setup: The competition admin removes a document
+    [Documentation]    IFS-3916
+    [Tags]  HappyPath
+    Given the user clicks the button/link       jQuery = span:contains("Test document type") ~ a:contains("Edit")
+    When the user clicks the button/link        css = button[name = "removeDocument"]
+    And the user clicks the button/link         jQuery = button:contains("Confirm")
+    Then the user should not see the element    jQuery = span:contains("Test document type")
+    And the user clicks the button/link         link = Competition setup
 
 Public content is required for a Competition to be setup
     [Documentation]
@@ -752,10 +751,6 @@ The user can see the VAT text in Your project costs
     Then the user should see the element       jQuery = p:contains("You must include VAT in all figures where appropriate.")
 
 *** Keywords ***
-the user moves focus and waits for autosave
-    Set Focus To Element    link=Sign out
-    Wait For Autosave
-
 the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input

@@ -38,12 +38,12 @@ Validations for invalid inputs
     And the user enters text to a text field     id = addressForm.town    ${EMPTY}
     And the user enters text to a text field     id = addressForm.postcode    ${EMPTY}
     And the user clicks the button/link          jQuery = button:contains("Save and return to your details")
-    Then the user should see an error            Invalid first name.
-    And the user should see an error             Invalid last name.
-    And the user should see an error             Please enter a valid phone number between 8 and 20 digits.
-    And the user should see an error             The first line of the address cannot be blank.
-    And the user should see an error             The postcode cannot be blank.
-    And the user should see an error             The town cannot be blank.
+    Then the user should see a field and summary error    Invalid first name.
+    And the user should see a field and summary error     Invalid last name.
+    And the user should see a field and summary error     ${enter_a_phone_number_between_8_and_20_digits}
+    And the user should see a field and summary error     The first line of the address cannot be blank.
+    And the user should see a field and summary error     The postcode cannot be blank.
+    And the user should see a field and summary error     The town cannot be blank.
 
 Valid Profile Update
     [Documentation]    INFUND-1480
@@ -55,15 +55,15 @@ Valid Profile Update
 *** Keywords ***
 Custom Suite Setup
    the assessor logs-in
-   ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Sign in successful")
-   Run Keyword If   '${status}' == 'PASS'  Run keywords    the user selects the checkbox   selectedRole1
+   ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Select a dashboard")
+   Run Keyword If   '${status}' == 'PASS'  Run keywords    the user selects the radio button    selectedRole   ASSESSOR
    ...                              AND    the user clicks the button/link   css = .govuk-button[type="submit"]   #Continue
    User opens the edit details form
 
 the assessor updates profile details
     The user enters text to a text field  id = firstName    Joy
     The user enters text to a text field  id = lastName    Archer
-    the user moves focus to the element   id = firstName
+    Set Focus To Element                  id = firstName
     the user enters text to a text field  id = addressForm.addressLine1    7, Phoenix house
     the user enters text to a text field  id = addressForm.town    Reading
     the user enters text to a text field  id = addressForm.postcode    RG1 7UH

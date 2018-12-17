@@ -14,6 +14,8 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -42,7 +44,6 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PA
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
-import static org.innovateuk.ifs.project.resource.ApprovalType.UNSET;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -93,14 +94,24 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         return projectUserRepository.findByProjectId(projectId);
     }
 
-    protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
-        if (APPROVED.equals(project.getOtherDocumentsApproved())) {
+    protected ProjectActivityStates createDocumentStatus(Project project) {
+
+        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
+        int expectedNumberOfDocuments = project.getApplication().getCompetition().getCompetitionDocuments().size();
+        int actualNumberOfDocuments = projectDocuments.size();
+
+        if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
+                .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()))) {
             return COMPLETE;
-        } else if (UNSET.equals(project.getOtherDocumentsApproved()) && project.getDocumentsSubmittedDate() != null) {
-            return PENDING;
-        } else {
+        }
+
+        if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()
+                .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
+                        || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
             return ACTION_REQUIRED;
         }
+
+        return PENDING;
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {

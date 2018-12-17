@@ -152,7 +152,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
 
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competition.getId(), OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
         when(projectFinanceRowRepositoryMock.findOne(costItemId)).thenReturn(materialCost);
 
@@ -219,18 +219,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testDeleteCost(){
-        ServiceResult<Void> result = service.deleteCost(project.getId(), organisation.getId(), materialCost.getId());
+    public void testDeleteCost() {
+        ServiceResult<Void> result = service.deleteCost(materialCost.getId());
         assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testDeleteCostFailsWhenNotMatchingOrg(){
-        ProjectFinance otherProjectFinance = new ProjectFinance(organisation, SMALL, project);
-        ProjectFinanceRow costFromOtherProjectFinance = newProjectFinanceRow().withQuestion(costTypeQuestion.get(FinanceRowType.MATERIALS)).withTarget(otherProjectFinance).build();
-        ServiceResult<Void> result = service.deleteCost(project.getId(), organisation.getId(), costFromOtherProjectFinance.getId());
-        assertTrue(result.isFailure());
-        assertTrue(result.getErrors().contains(notFoundError(ProjectFinanceRow.class)));
     }
 
     @Test

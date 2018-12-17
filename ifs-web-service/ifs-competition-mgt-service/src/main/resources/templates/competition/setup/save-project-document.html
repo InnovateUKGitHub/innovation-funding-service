@@ -14,7 +14,7 @@
          <main class="govuk-main-wrapper" id="main-content" role="main">
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1">
-                 <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
+                 <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
                  <th:block th:insert="fragments/elements :: error-summary-list(form)" />
              </div>
 
@@ -39,13 +39,17 @@
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
                         </th:block>
                      </label>
-                     <input id="title"
+                     <input
+                        id="title"
                         class="govuk-input govuk-input--width-10"
                         th:errorclass="govuk-input--error"
                         type="text"
                         th:field="${form.title}"
+                        th:disabled="${form.editable ? 'false' : 'true'}"
                         required="required"
-                        th:attr="data-required-errormessage=#{validation.standard.title.required}" />
+                        th:attr="data-required-errormessage=#{validation.standard.title.required},
+                           data-anychange-errormessage=#{PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED}" />
+                      <input th:if="${!form.editable}" type="hidden" th:field="${form.title}"/>
                   </div>
 
                   <div class="govuk-form-group" th:classappend="${#fields.hasErrors('acceptedFileTypesId')} ? 'govuk-form-group--error'">
@@ -109,7 +113,7 @@
                </th:block>
                <th:form th:if="${form.projectDocumentId}">
                   <p>
-                     <button type="submit" data-js-modal="modal-confirm-document-remove" formnovalidate name="removeDocument" class="button-clear">Remove</button>
+                     <button type="submit" th:if="${form.editable}" data-js-modal="modal-confirm-document-remove" formnovalidate name="removeDocument" class="button-clear">Remove</button>
                   </p>
                </th:form>
                <th:block th:insert="fragments/modals :: modal-confirm-document-remove" />

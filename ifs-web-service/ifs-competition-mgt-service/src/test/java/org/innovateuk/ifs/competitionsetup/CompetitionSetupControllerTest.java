@@ -104,7 +104,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Before
     public void setUp() {
-        super.setUp();
 
         when(userRestService.findByUserRole(COMP_ADMIN))
                 .thenReturn(

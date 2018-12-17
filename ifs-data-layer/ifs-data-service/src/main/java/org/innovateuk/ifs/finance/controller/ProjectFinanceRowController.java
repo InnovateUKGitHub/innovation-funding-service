@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.controller;
 
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -35,8 +36,8 @@ public class ProjectFinanceRowController {
      */
     @PostMapping("/add/{projectFinanceId}/{questionId}")
     public RestResult<ValidationMessages> add(
-            @PathVariable("projectFinanceId") final Long projectFinanceId,
-            @PathVariable("questionId") final Long questionId,
+            @PathVariable("projectFinanceId") final long projectFinanceId,
+            @PathVariable("questionId") final long questionId,
             @RequestBody(required=false) final FinanceRowItem newCostItem) {
         ValidationMessages validationMessages = validationUtil.validateProjectCostItem(newCostItem);
 
@@ -53,6 +54,13 @@ public class ProjectFinanceRowController {
         }
     }
 
+    @PostMapping("/add-with-response/{financeId}")
+    public RestResult<FinanceRowItem> addWithResponse(
+            @PathVariable final long financeId,
+            @RequestBody final FinanceRowItem newCostItem) {
+        return projectFinanceRowService.addCost(financeId, newCostItem).toPostCreateResponse();
+    }
+
     /**
      * Used to add new empty rows on load of project finances page.  This is done to be consistent with how application
      * finances work.  It may be possible to build resource object without going to data layer.  That will require
@@ -63,13 +71,13 @@ public class ProjectFinanceRowController {
      */
     @PostMapping("/add-without-persisting/{projectFinanceId}/{questionId}")
     public RestResult<FinanceRowItem> addProjectCostWithoutPersisting(
-            @PathVariable("projectFinanceId") final Long projectFinanceId,
-            @PathVariable("questionId") final Long questionId) {
+            @PathVariable("projectFinanceId") final long projectFinanceId,
+            @PathVariable("questionId") final long questionId) {
         return projectFinanceRowService.addCostWithoutPersisting(projectFinanceId, questionId).toPostCreateResponse();
     }
 
     @GetMapping("/{id}")
-    public RestResult<FinanceRowItem> get(@PathVariable("id") final Long id) {
+    public RestResult<FinanceRowItem> get(@PathVariable("id") final long id) {
         return projectFinanceRowService.getCostItem(id).toGetResponse();
     }
 
@@ -78,7 +86,7 @@ public class ProjectFinanceRowController {
      * @return ValidationMessages resource object to store validation messages about invalid user input.
      */
     @PutMapping("/update/{id}")
-    public RestResult<ValidationMessages> update(@PathVariable("id") final Long id, @RequestBody final FinanceRowItem newCostItem) {
+    public RestResult<ValidationMessages> update(@PathVariable("id") final long id, @RequestBody final FinanceRowItem newCostItem) {
         ValidationMessages validationMessages = validationUtil.validateProjectCostItem(newCostItem);
         if(!validationMessages.hasErrors()){
             RestResult<FinanceRowItem> updateResult = projectFinanceRowService.updateCost(id, newCostItem).toGetResponse();
@@ -88,10 +96,10 @@ public class ProjectFinanceRowController {
         }
         return restSuccess(validationMessages);
     }
-    @DeleteMapping("/{projectId}/organisation/{organisationId}/delete/{costId}")
-    public RestResult<Void> delete(@PathVariable("projectId") final Long projectId,
-                                   @PathVariable("organisationId") final Long organisationId,
-                                   @PathVariable("costId") final Long costId) {
-        return projectFinanceRowService.deleteCost(projectId, organisationId, costId).toDeleteResponse();
+
+    @ZeroDowntime(reference = "IFS-3486", description = "Remove old mapping")
+    @DeleteMapping({"/delete/{costId}", "/{projectId}/organisation/{organisationId}/delete/{costId}"})
+    public RestResult<Void> delete(@PathVariable("costId") final long costId) {
+        return projectFinanceRowService.deleteCost(costId).toDeleteResponse();
     }
 }

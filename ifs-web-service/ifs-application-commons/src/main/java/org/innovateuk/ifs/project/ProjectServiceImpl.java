@@ -76,13 +76,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public OrganisationResource getLeadOrganisation(Long projectId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-
-        if (project.getApplication() == null){
-            return null;
-        } else {
-            ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(project.getApplication());
-            return organisationRestService.getOrganisationById(leadApplicantProcessRole.getOrganisationId()).getSuccess();
-        }
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(project.getApplication());
+        return organisationRestService.getOrganisationById(leadApplicantProcessRole.getOrganisationId()).getSuccess();
     }
 
     @Override

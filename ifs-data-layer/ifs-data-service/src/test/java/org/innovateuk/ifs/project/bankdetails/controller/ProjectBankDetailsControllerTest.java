@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.bankdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
@@ -11,9 +11,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -39,12 +39,12 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
     public void submitBanksDetailsSuccessfully() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
+        AddressResource addressResource = newAddressResource().build();
         BankDetailsResource bankDetailsResource = newBankDetailsResource()
                 .withProject(projectId).withSortCode("123456")
                 .withAccountNumber("12345678")
                 .withOrganisation(organisationId)
-                .withOrganiationAddress(organisationAddressResource)
+                .withAddress(addressResource)
                 .withCompanyName("Company name")
                 .build();
 
@@ -58,12 +58,12 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
         Long projectId = 1L;
         Long organisationId = 1L;
 
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
+        AddressResource addressResource = newAddressResource().build();
         BankDetailsResource bankDetailsResource = newBankDetailsResource()
                 .withProject(projectId).withSortCode("123")
                 .withAccountNumber("1234567")
                 .withOrganisation(organisationId)
-                .withOrganiationAddress(organisationAddressResource)
+                .withAddress(addressResource)
                 .build();
 
         when(bankDetailsServiceMock.submitBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
@@ -72,7 +72,7 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
         Error sortCodeNotProvided = fieldError("sortCode", null, "validation.standard.sortcode.required", "");
         Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "validation.standard.accountnumber.format", "", "", "\\d{8}");
         Error accountNumberNotProvided = fieldError("accountNumber", null, "validation.standard.accountnumber.required", "");
-        Error organisationAddressNotProvided = fieldError("organisationAddress", null, "validation.bankdetailsresource.organisationaddress.required", "");
+        Error organisationAddressNotProvided = fieldError("address", null, "validation.bankdetailsresource.organisationaddress.required", "");
         Error organisationIdNotProvided = fieldError("organisation", null, "validation.bankdetailsresource.organisation.required", "");
         Error projectIdNotProvided = fieldError("project", null, "validation.bankdetailsresource.project.required", "");
 
@@ -109,13 +109,13 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
     public void updateBanksDetailsSuccessfully() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().build();
+        AddressResource addressResource = newAddressResource().build();
         BankDetailsResource bankDetailsResource = newBankDetailsResource()
                 .withProject(projectId).withSortCode("123456")
                 .withAccountNumber("12345678")
                 .withOrganisation(organisationId)
                 .withCompanyName("Company name")
-                .withOrganiationAddress(organisationAddressResource)
+                .withAddress(addressResource)
                 .build();
 
         when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
@@ -128,14 +128,12 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
         Long projectId = 1L;
         Long organisationId = 1L;
 
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource()
-                .withOrganisation()
-                .build();
+        AddressResource addressResource = newAddressResource().build();
         BankDetailsResource bankDetailsResource = newBankDetailsResource()
                 .withProject(projectId).withSortCode("123")
                 .withAccountNumber("1234567")
                 .withOrganisation(organisationId)
-                .withOrganiationAddress(organisationAddressResource)
+                .withAddress(addressResource)
                 .build();
 
         when(bankDetailsServiceMock.updateBankDetails(bankDetailsResource)).thenReturn(serviceSuccess());
@@ -144,7 +142,7 @@ public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<
         Error sortCodeNotProvided = fieldError("sortCode", null, "validation.standard.sortcode.required", "");
         Error invalidAccountNumberError = fieldError("accountNumber", "1234567", "validation.standard.accountnumber.format", "", "", "\\d{8}");
         Error accountNumberNotProvided = fieldError("accountNumber", null, "validation.standard.accountnumber.required", "");
-        Error organisationAddressNotProvided = fieldError("organisationAddress", null, "validation.bankdetailsresource.organisationaddress.required", "");
+        Error organisationAddressNotProvided = fieldError("address", null, "validation.bankdetailsresource.organisationaddress.required", "");
         Error organisationIdNotProvided = fieldError("organisation", null, "validation.bankdetailsresource.organisation.required", "");
         Error projectIdNotProvided = fieldError("project", null, "validation.bankdetailsresource.project.required", "");
 

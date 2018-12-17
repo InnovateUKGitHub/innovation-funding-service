@@ -21,6 +21,7 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 function checkVariables() {
     if [ -z "${DB_USER}" ];                                 then echo "Set DB_USER environment variable"; exit -1; fi
     if [ -z "${DB_PASS}" ];                                 then echo "Set DB_PASS environment variable"; exit -1; fi
+    if [ -z "${DB_ANON_PASS}" ];                            then echo "Set DB_ANON_PASS environment variable"; exit -1; fi
     if [ -z "${DB_NAME}" ];                                 then echo "Set DB_NAME environment variable"; exit -1; fi
     if [ -z "${DB_HOST}" ];                                 then echo "Set DB_HOST environment variable"; exit -1; fi
     if [ -z "${DESTINATION_SYSTEM_USER_UID}" ];             then echo "Set DESTINATION_SYSTEM_USER_UID environment variable"; exit -1; fi

@@ -1,0 +1,107 @@
+<div class="govuk-width-container">
+
+    <div class="govuk-inset-text">
+        <p class="govuk-body">This is a GDS pattern. Example and code can be found at:<br />
+            <a class="govuk-link" href="https://design-system.service.gov.uk/components/checkboxes/">https://design-system.service.gov.uk/components/checkboxes/</a>
+        </p>
+    </div>
+
+    <h2 class="govuk-heading-m">Example</h2>
+
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-visually-hidden">
+                <span class="govuk-fieldset__heading">Website terms and conditions</span>
+            </legend>
+            <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input id="agree"
+                           class="govuk-checkboxes__input"
+                           type="checkbox"
+                           required="required"
+                           data-required-errormessage="In order to continue you must agree to the terms and conditions." />
+                    <label for="agree"
+                           class="govuk-label govuk-checkboxes__label">I agree to the <a href="/info/terms-and-conditions" class="govuk-link">terms and conditions</a> (this link will open in a new window)</label>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+
+    <h2 class="govuk-heading-m govuk-!-margin-top-9">Example, checkboxes in tables</h2>
+
+    <div class="govuk-grid-row sorting">
+        <div class="govuk-grid-column-one-half select-all">
+            <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input type="checkbox"
+                           data-select-all=""
+                           class="govuk-checkboxes__input"
+                           id="select-all-check">
+                    <label for="select-all-check"
+                           class="govuk-label govuk-checkboxes__label">
+                        Select all assessors
+                    </label>
+                </div>
+            </div>
+
+            <span class="govuk-hint">
+                <span data-count-selected="">97</span> assessors selected
+            </span>
+        </div>
+        <div class="govuk-grid-column-one-half select-all alignright">
+            <button class="govuk-button" name="addSelected" data-submit-el="">
+                Add selected to invite list
+            </button>
+        </div>
+    </div>
+
+    <div class="table-overflow">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Select assessor</th>
+                <th class="govuk-table__header" scope="col">Assessor name</th>
+                <th class="govuk-table__header" scope="col">Type</th>
+                <th class="govuk-table__header" scope="col">Innovation area</th>
+                <th class="govuk-table__header" scope="col">Contract and DOI</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input type="checkbox"
+                                   class="govuk-checkboxes__input"
+                                   id="assessor-row-1"
+                                   value="205"
+                                   name="selectedAssessorIds">
+                            <input type="hidden" name="_selectedAssessorIds" value="on">
+                            <label for="assessor-row-1"
+                                   class="govuk-label govuk-checkboxes__label">
+                                <span class="govuk-visually-hidden">Add</span>
+                            </label>
+                        </div>
+                    </div>
+
+                </td>
+                <td class="govuk-table__cell">
+                    <a class="govuk-link" href="/management/competition/11/assessors/profile/205?origin=ASSESSOR_FIND">Addison Shannon</a>
+                </td>
+                <td class="govuk-table__cell"></td>
+                <td class="govuk-table__cell">Digital manufacturing</td>
+                <td class="govuk-table__cell">
+                    <span class="no">No</span>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="govuk-heading-m govuk-!-margin-top-9">Example, checkboxes in tables</h2>
+
+    {{ render '@assessor-apps-for-assessment' }}
+
+</div>

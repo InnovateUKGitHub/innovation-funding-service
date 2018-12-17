@@ -23,7 +23,6 @@ public class InProgressDashboardRowViewModel extends
     private final long daysLeft;
     private final int applicationProgress;
     private final boolean assignedToInterview;
-    private final long applicationTeamQuestionId;
 
     public InProgressDashboardRowViewModel(String title,
                                            long applicationId,
@@ -34,8 +33,7 @@ public class InProgressDashboardRowViewModel extends
                                            ZonedDateTime endDate,
                                            long daysLeft,
                                            int applicationProgress,
-                                           boolean assignedToInterview,
-                                           Long applicationTeamQuestionId) {
+                                           boolean assignedToInterview) {
         super(title, applicationId, competitionTitle);
         this.assignedToMe = assignedToMe;
         this.applicationState = applicationState;
@@ -44,7 +42,6 @@ public class InProgressDashboardRowViewModel extends
         this.daysLeft = daysLeft;
         this.applicationProgress = applicationProgress;
         this.assignedToInterview = assignedToInterview;
-        this.applicationTeamQuestionId = applicationTeamQuestionId;
     }
 
     public boolean isAssignedToMe() {
@@ -77,10 +74,6 @@ public class InProgressDashboardRowViewModel extends
                 INELIGIBLE.equals(applicationState);
     }
 
-    public boolean isCreated() {
-        return CREATED.equals(applicationState);
-    }
-
     public boolean isWithin24Hours() {
         long hoursLeft = getHoursLeftBeforeSubmit();
         return hoursLeft >= 0 && hoursLeft < 24;
@@ -105,8 +98,6 @@ public class InProgressDashboardRowViewModel extends
             } else {
                 return format("/application/%s/track", getApplicationNumber());
             }
-        } else if (isCreated() && leadApplicant) {
-            return format("/application/%s/form/question/%s", getApplicationNumber(), applicationTeamQuestionId);
         } else {
             return format("/application/%s", getApplicationNumber());
         }

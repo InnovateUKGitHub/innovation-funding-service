@@ -82,11 +82,12 @@ Status updates correctly for internal user's table    # This uses the Elbow grea
     [Tags]
     Given the user navigates to the page    ${internal_competition_status}
     And the competition admin should see the status of each project setup stage
-    #Internal user can view project details via the clickable 'hour glass' for Project details
+    # Internal user can view project details via the clickable 'hour glass' for Project details
     When the user clicks the button/link    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting a
     Then the user should see the element    jQuery = h1:contains("Project details")
     And the user clicks the button/link     link = Projects in setup
-    And the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting
+    And the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(2)  # Project details
 
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805, INFUND-7432
@@ -94,7 +95,7 @@ Non-lead partner can see the project setup page
     Given log in as a different user                &{collaborator1_credentials}
     When The user clicks the button/link            link = ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the element             link = view application feedback
-    And the user clicks the button/link             link = view the grant terms and conditions
+    And the user clicks the button/link             link = view the competition terms and conditions
     And the user goes back to the previous page
     And the user should see the element             css = li.require-action:nth-of-type(1)    #Action required, seen by non-lead
     And the user should see the project setup stages
@@ -160,7 +161,7 @@ Lead partner can see the overview of the project details
     When the user clicks the button/link   link = Project details
     Then the user should see the element   jQuery = p:contains("Please supply the following details for your project and the team")
     And the user should see the element    link = Target start date
-    And the user should see the element    link = Project address
+    And the user should see the element    link = Correspondence address
     And the user should see the element    link = Project Manager
     And the user should see the element    jQuery = h2:contains("Partner details")
 
@@ -213,18 +214,18 @@ Inviting project manager client side validations
     [Documentation]    INFUND-3483, INFUND-6882
     [Tags]
     When the user enters text to a text field            id = name-project-manager    John Smith
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name.
     When the user enters text to a text field            id = email-project-manager    test
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name.
-    And the user should see the text in the page         Please enter a valid email address.
+    And the user should see the text in the page         ${enter_a_valid_email}
     When the user selects the radio button               projectManager    projectManager1
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page     Please enter a valid name.
     When the user selects the radio button               projectManager    new
     And the user enters text to a text field             id = email-project-manager    test@example.com
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page     Please enter a valid name.
     And the user should not see an error in the page
@@ -249,8 +250,8 @@ Invited project manager registration validation
     [Tags]  HappyPath
     Given the user accepts invitation                   ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com  ${PROJECT_SETUP_COMPETITION_NAME}: Project Manager invitation for project  managing the project
     When the user clicks the button/link                css = button[type = "submit"][name = "create-account"]
-    Then The user should see a field and summary error  Please enter a first name.
-    And the user should see a field and summary error   Please enter a last name.
+    Then The user should see a field and summary error  ${enter_a_first_name}
+    And the user should see a field and summary error   ${enter_a_last_name}
     And the user should see a field and summary error   To create a new account you must agree to the website terms and conditions.
     And the user should see a field and summary error   Please enter your password.
 
@@ -276,9 +277,9 @@ Lead partner selects a project manager
     [Documentation]    INFUND-2616 INFUND-2996 INFUND-5610
     [Tags]  HappyPath
     Given the user navigates to the page             ${project_in_setup_details_page}
-    And the user clicks the button/link              link = Project Manager
-    When the user clicks the button/link             jQuery = .govuk-button:contains("Save")
-    Then the user should see a validation error      You need to select a Project Manager before you can continue.
+    When the user clicks the button/link             link = Project Manager
+    Then the user clicks the button/link             jQuery = .govuk-button:contains("Save")
+    And the user should see a validation error       You need to select a Project Manager before you can continue.
     When the user selects the radio button           projectManager    projectManager1
     And the user should not see the text in the page    You need to select a Project Manager before you can continue.
     And the user clicks the button/link              jQuery = .govuk-button:contains("Save")
@@ -295,22 +296,17 @@ Lead partner can change the project address
     [Documentation]    INFUND-3157 INFUND-2165
     [Tags]  HappyPath
     Given the user navigates to the page             ${project_in_setup_details_page}
-    And the user clicks the button/link              link = Project address
+    And the user clicks the button/link              link = Correspondence address
     When the user clicks the button/link             jQuery = .govuk-button:contains("Save")
-    Then the user should see the text in the page    You need to select an address before you can continue.
-    When the user selects the radio button           addressType    ADD_NEW
-    And the user enters text to a text field         id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link              jQuery = .govuk-button:contains("Find UK address")
-    And the user clicks the button/link              jQuery = .govuk-button:contains("Find UK address")
-    Then the user should see the element             css = #select-address-block
-    And the user clicks the button/link              css = #select-address-block > button
-    And the address fields should be filled
-    And the user clicks the button/link              jQuery = .govuk-button:contains("Save project address")
+    And the user should see a field and summary error   Search using a valid postcode or enter the address manually.
+    And the user enters text to a text field         id = addressForm.postcodeInput  BS1 4NT
+    And the user clicks the button/link              id = postcode-lookup
+    And the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    And the user clicks the button/link              jQuery = .govuk-button:contains("Save address")
     And the user should see the address data
-    When the user clicks the button/link             link = Project address
-    And the user selects the radio button            addressType    REGISTERED
-    And the user clicks the button/link              jQuery = .govuk-button:contains("Save project address")
-    Then the user should see the text in the page    1, Sheffield, S1 2ED
+    When the user clicks the button/link             link = Correspondence address
+    And the user clicks the button/link              jQuery = .govuk-button:contains("Save address")
+    Then the user should see the text in the page    Montrose House 1, Neston, CH64 3RU
 
 Project details can be submitted with PM, project address and start date
     [Documentation]    INFUND-4583
@@ -398,14 +394,14 @@ Inviting finance contact client side validations
     [Documentation]    INFUND-3483
     [Tags]
     When the user enters text to a text field            id = name-finance-contact    John Smith
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save finance contact")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
     When the user enters text to a text field            id = email-finance-contact    test
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save finance contact")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
-    And the user should see the text in the page         Please enter a valid email address
+    And the user should see the text in the page         ${enter_a_valid_email}
     When the user enters text to a text field            id = email-finance-contact    test@example.com
-    And the user moves focus to the element              jQuery = .govuk-button:contains("Save finance contact")
+    And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page     Please enter a valid name.
 
@@ -459,7 +455,7 @@ Non-lead partner cannot change start date, project manager or project address
     When the user navigates to the page         ${project_in_setup_page}
     Then the user should not see the element    link = Target start date
     And the user should not see the element     link = Project Manager
-    And the user should not see the element     link = Project address
+    And the user should not see the element     link = Correspondence address
 
 Internal user should see project details are incomplete
     [Documentation]    INFUND-6781
@@ -496,10 +492,11 @@ Validation for project location
     [Setup]  log in as a different user                 &{lead_applicant_credentials}
     Given the user navigates to the page                ${project_in_setup_details_page}
     Given the user clicks the button/link               jQuery = #project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
-    And the user moves focus to the element             id = postcode
-    And the user should see an error                    This field cannot be left blank.
+    And Set Focus To Element                            id = postcode
+    And Set Focus To Element                            link = Contact us
+    And the user should see a field error               ${empty_field_warning_message}
     When the user clicks the button/link                css = button[type = "submit"]
-    Then the user should see a field and summary error  This field cannot be left blank.
+    Then the user should see a field and summary error  ${empty_field_warning_message}
 
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
@@ -521,7 +518,6 @@ Lead partner can see the status update when all Project details are submitted
     When the user clicks the button/link   link = View the status of partners
     Then the user should see the element   id = table-project-status
     And the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
-    And the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
 
 Project details links are still enabled after submission
     [Documentation]    INFUND-3381
@@ -529,7 +525,7 @@ Project details links are still enabled after submission
     Given the user navigates to the page    ${project_in_setup_details_page}
     When all the fields are completed
     Then The user should see the element    link = Target start date
-    And the user should see the element     link = Project address
+    And the user should see the element     link = Correspondence address
     And the user should see the element     link = Project Manager
 
 All partners can view submitted project details
@@ -562,9 +558,9 @@ Non-lead partner cannot change any project details
     And the user should see the text in the page    Project Manager
     And the user should see the text in the page    Elmo Chenault
     And the user should not see the element         link = Project Manager
-    And the user should see the text in the page    Project address
-    And the user should see the text in the page    1, Sheffield, S1 2ED
-    And the user should not see the element         link = Project address
+    And the user should see the text in the page    Correspondence address
+    And the user should see the text in the page    Montrose House 1, Neston, CH64 3RU
+    And the user should not see the element         link = Correspondence address
     When the user navigates to the page and gets a custom error message    ${project_start_date_page}    ${403_error_message}
     When the user navigates to the page and gets a custom error message    ${project_address_page}    ${403_error_message}
 
@@ -606,7 +602,7 @@ the user should see a validation error
     [Arguments]    ${ERROR1}
     Set Focus To Element    jQuery = button:contains("Save")
     wait for autosave
-    Then the user should see an error    ${ERROR1}
+    Then the user should see a field error    ${ERROR1}
 
 the matching status checkbox is updated
     [Arguments]    ${table_id}    ${ROW}    ${STATUS}
@@ -640,7 +636,7 @@ the user should not see duplicated select options
 
 the user can see all project details completed
     the user should see the element  jQuery = #start-date:contains("1 Jan ${nextyear}")
-    the user should see the element  jQuery = #project-address:contains("1, Sheffield, S1 2ED")
+    the user should see the element  jQuery = #project-address:contains("Montrose House 1, Neston, CH64 3RU")
     the user should see the element  jQuery = #project-manager:contains("Elmo Chenault")
 
 the user can see all finance contacts completed
@@ -694,16 +690,16 @@ the user should see the project setup stages
     the user should see the element    jQuery = h2:contains("Bank details")
     the user should see the element    jQuery = h2:contains("Finance checks")
     the user should see the element    jQuery = h2:contains("Spend profile")
-    the user should see the element    link = Other documents
+    the user should see the element    link = Documents
     the user should see the element    jQuery = h2:contains("Grant offer letter")
 
 the competition admin should see the status of each project setup stage
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(2).status             # Monitoring officer
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(3).status             # Bank details
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action      # Finance checks
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(5).status             # Spend Profile
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting     # Other Docs
-    the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status             # GOL
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)                       # Documents
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4)                       # Monitoring Officer
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)                       # Bank details
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action    # Finance checks
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)                       # Spend Profile
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(8)                       # GOL
 
 the competition admin should see that their Project details aren't completed
     the user should see the element    jQuery = p:contains("These project details were supplied by the lead partner on behalf of the project.")

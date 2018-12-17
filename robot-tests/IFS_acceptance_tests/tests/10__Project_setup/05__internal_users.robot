@@ -22,15 +22,6 @@ Resource          PS_Common.robot
 
 
 *** Test Cases ***
-Project Finance user can see the internal project summary page
-    [Documentation]    INFUND-4049, INFUND-5144
-    [Tags]
-    Given the user navigates to the page             ${internal_competition_status}
-    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user clicks the button/link              css = #table-project-status tr:nth-child(2) td:nth-child(3) a   #Monitoring officer page link
-    And the user goes back to the previous page
-    And the user should not see the element          css = #table-project-status tr:nth-child(2) td:nth-child(6) a  #SP element is not seen
-
 Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300, IFS-1881
     [Tags]  HappyPath
@@ -62,9 +53,9 @@ Project Finance can see the status of projects in PS
     [Tags]
     Given the user navigates to the page    ${internal_competition_status}
     Then the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok
-    And the user should see the element     css = #table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.ok
+    And the user should see the element     css = #table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.waiting
     And the user should not see the element  css = #table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.waiting
-    And the user should see the element     css = #table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
+    And the user should see the element     css = #table-project-status tr:nth-of-type(2) td:nth-of-type(5).status.action
 
 # Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
 Other internal users cannot see Bank details or Finance checks
@@ -85,12 +76,8 @@ Comp Admin user can see the internal project summary page
     [Tags]
     Given the user navigates to the page             ${internal_competition_status}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user clicks the button/link              css = #table-project-status tr:nth-child(2) td:nth-child(3) a   #Monitoring officer page link
+    And the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(4) > a   # Monitoring officer page link
     And the user should not see an error in the page
-    And the user goes back to the previous page
-    When the user clicks the button/link             link = Competition dashboard
-    Then the user should see the text in the page    All competitions
-
 
 *** Keywords ***
 the project is completed if it is not already complete
