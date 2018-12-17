@@ -95,14 +95,14 @@ public class QuestionSetupServiceTest extends BaseUnitTestMocksTest {
                 .withTargetClassName(Competition.class.getName())
                 .withTargetId(competitionId)
                 .withCompleted(Boolean.FALSE).build();
-        final SetupStatusResource parentSectionStatus = newSetupStatusResource()
+        final List<SetupStatusResource> parentSectionStatus = newSetupStatusResource()
                 .withId(12L)
                 .withClassName(parentSection.getClass().getName())
                 .withClassPk(parentSection.getId())
                 .withParentId()
                 .withTargetClassName(Competition.class.getName())
                 .withTargetId(competitionId)
-                .withCompleted(Boolean.FALSE).build();
+                .withCompleted(Boolean.FALSE).build(1);
 
         when(setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId))
                 .thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));

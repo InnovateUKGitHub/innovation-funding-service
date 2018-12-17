@@ -90,6 +90,11 @@
                            class="govuk-link">
                             <th:block th:insert="competition/dashboard :: competition-name"/>
                         </a>
+                        <a th:href="@{'/competition/'+${competition.id}+'/applications/previous'}"
+                           th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PREVIOUS}"
+                           class="govuk-link">
+                            <th:block th:insert="competition/dashboard :: competition-name"/>
+                        </a>
                         <th:block th:if="${competition.competitionStatus.inFlight}">
                             <a th:href="@{${competition.topLevelNavigationLink}}"
                                class="govuk-link">

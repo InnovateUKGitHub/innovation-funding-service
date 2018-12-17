@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PREVIOUS;
+
 /**
  * Implementation of the competition dashboard searches.
  */
@@ -64,7 +66,7 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
 
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getPreviousCompetitions() {
-        return mapToStatus(competitionPostSubmissionRestService.findFeedbackReleasedCompetitions().getSuccess());
+        return mapToPrevious(competitionPostSubmissionRestService.findFeedbackReleasedCompetitions().getSuccess());
     }
 
     @Override
@@ -86,5 +88,9 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
 
     private Map<CompetitionStatus, List<CompetitionSearchResultItem>> mapToStatus(List<CompetitionSearchResultItem> resources) {
         return resources.stream().collect(Collectors.groupingBy(CompetitionSearchResultItem::getCompetitionStatus));
+    }
+
+    private Map<CompetitionStatus, List<CompetitionSearchResultItem>> mapToPrevious(List<CompetitionSearchResultItem> resources) {
+        return resources.stream().collect(Collectors.groupingBy(CompetitionStatus -> PREVIOUS));
     }
 }

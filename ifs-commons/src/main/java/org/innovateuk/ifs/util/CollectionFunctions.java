@@ -27,10 +27,6 @@ public final class CollectionFunctions {
     private CollectionFunctions() {
     }
 
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(CollectionFunctions.class);
-
-
     /**
      * Flatten the given 2-dimensional {@link Collection} into a 1-dimensional List
      *
@@ -143,6 +139,14 @@ public final class CollectionFunctions {
      */
     public static <T, S> void zip(List<T> list1, List<S> list2, BiConsumer<T, S> consumer) {
         forEachWithIndex(list1, (i, item1) -> consumer.accept(item1, list2.get(i)));
+    }
+
+    /**
+     * Given 3 Lists, this method will iterate through all lists, presenting the consumer with the equivalent elements
+     * in from each list at index 0, 1, 2 etc
+     */
+    public static <R, S, T> void zip(List<R> list1, List<S> list2, List<T> list3, TriConsumer<R, S, T> consumer) {
+        forEachWithIndex(list1, (i, item1) -> consumer.accept(item1, list2.get(i), list3.get(i)));
     }
 
     /**

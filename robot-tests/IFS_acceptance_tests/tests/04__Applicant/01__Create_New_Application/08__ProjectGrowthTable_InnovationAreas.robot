@@ -43,7 +43,7 @@ Comp Admin starts a new Competition
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS Milestones        ${month}  ${nextyear}
+    And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
@@ -51,6 +51,7 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Tags]
     Given the user should see the element    jQuery = div:contains("Milestones") ~ .task-status-complete
     When the user clicks the button/link     link = Milestones
+    And the user clicks the button/link      jQuery = a:contains("Next")
     Then the user should see the element     jQuery = button:contains("Edit")
     And the user should see the dates in full format
     Then the user clicks the button/link     link = Competition setup
@@ -126,7 +127,7 @@ Once the project growth table is selected
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS Milestones              ${month}  ${nextyear}
+    And the user fills in the CS Milestones              project-setup-completion-stage   ${month}   ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
     And the user fills in the CS Documents in other projects

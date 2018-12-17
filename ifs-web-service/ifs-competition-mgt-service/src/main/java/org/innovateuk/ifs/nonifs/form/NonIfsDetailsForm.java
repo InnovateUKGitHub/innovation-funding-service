@@ -3,7 +3,6 @@ package org.innovateuk.ifs.nonifs.form;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
-import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneOrEmptyRowForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
 
 import javax.validation.Valid;
