@@ -18,6 +18,7 @@ Available parameters:
 
     * hint - hint text
     * required - whether or not these fields are required
+    * readOnly - whether or not this field should be disabled
 
 */-->
 <th:block th:fragment="month-and-year(legend, id, monthValue, yearValue)">
@@ -50,8 +51,10 @@ Available parameters:
                            th:name="${id} + '].monthValue'"
                            th:value="${monthValue}"
                            th:classappend="${#fields.hasErrors(id)} ? 'govuk-input--error'"
-                           th:attrappend="required=${required ?: null}"
-                           />
+                           th:attrappend="
+                                required=${#bools.isTrue(required) ?: null},
+                                disabled=${#bools.isTrue(readOnly) ? 'disabled' : null}
+                           " />
                 </div>
                 <div class="year">
                     <label class="govuk-label" th:for="${id} + '.yearValue'">
@@ -66,8 +69,10 @@ Available parameters:
                            th:name="${id} + '.yearValue'"
                            th:value="${yearValue}"
                            th:classappend="${#fields.hasErrors(id)} ? 'govuk-input--error'"
-                           th:attrappend="required=${required ?: null}"
-                           />
+                           th:attrappend="
+                                required=${#bools.isTrue(required) ?: null},
+                                disabled=${#bools.isTrue(readOnly) ? 'disabled' : null}
+                           " />
                 </div>
                 <!--/* The hidden field below is used as a dummy value that is essentially ignored by the LocalDatePropertyEditor in order to allow
                   us to get the LocalDatePropertyEditor to kick in when Spring attempts to bind the current field to the LocalDate value in the

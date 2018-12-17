@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your organisation'" />
 </head>
-<body class="govuk-template__body your-organisation">
+<body class="govuk-template__body your-organisation app-form">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -36,8 +36,6 @@
 
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
-
-            <input type="hidden" name="growthTable" th:value="false" />
 
             <th:block th:if="${!commonFinancesModel.readOnly}" >
 

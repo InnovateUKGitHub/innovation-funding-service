@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandato
 @Service
 public class FormInputBasedYourOrganisationService implements YourOrganisationService {
 
-    private static final DateTimeFormatter MONTH_YEAR_FORMAT = DateTimeFormatter.ofPattern("MM-yyyy");
+    private static final DateTimeFormatter MONTH_YEAR_FORMAT = DateTimeFormatter.ofPattern("MM-uuuu");
 
     private static final String ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION = "Annual turnover";
     private static final String ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION = "Annual profits";

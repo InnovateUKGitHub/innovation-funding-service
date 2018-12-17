@@ -21,32 +21,44 @@ Available parameters:
     * pattern - a regex for the allowed input, to be used in the "pattern" attribute - defaults to no pattern
     * min - the minimum numerical value, if this is an input of type="number"
     * max - the maximum numerical value, if this is an input of type="number"
+    * readOnly - whether this field is displayed as a definition list or not
 
 */-->
 <th:block th:fragment="textfield(label, id, value)">
 
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors(id)} ? 'govuk-form-group--error'">
 
-        <label class="govuk-label govuk-label--s" th:for="headCount" th:text="${label}">Label text</label>
+        <th:block th:unless="${readOnly}">
 
-        <span th:if="${hint != null}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
+            <label class="govuk-label govuk-label--s" th:for="headCount" th:text="${label}">Label text</label>
 
-        <th:block th:if="${#fields.hasErrors(id)}">
-            <span class="govuk-error-message" th:each="err : ${#fields.errors(id)}" th:text="${err}"></span>
+            <span th:if="${hint != null}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
+
+            <th:block th:if="${#fields.hasErrors(id)}">
+                <span class="govuk-error-message" th:each="err : ${#fields.errors(id)}" th:text="${err}"></span>
+            </th:block>
+
+            <input class="govuk-input govuk-input--width-10"
+                   th:type="${type ?: 'text'}"
+                   th:id="${id}"
+                   th:name="${id}"
+                   th:value="${value}"
+                   th:attrappend="
+                        pattern=${pattern ?: null},
+                        data-prevent-input-regex=${preventInputRegex ?: null},
+                        min=${min ?: null},
+                        max=${max ?: null},
+                        required=${#bools.isTrue(required) ? 'required' : null}
+                   " />
+
         </th:block>
 
-        <input class="govuk-input govuk-input--width-10"
-               th:type="${type ?: 'text'}"
-               th:id="${id}"
-               th:name="${id}"
-               th:value="${value}"
-               th:attrappend="
-                    pattern=${pattern ?: null},
-                    data-prevent-input-regex=${preventInputRegex ?: null},
-                    min=${min ?: null},
-                    max=${max ?: null},
-                    required=${required ? 'required' : null}
-                    " />
+        <th:block th:if="${readOnly}" th:insert="fragments/form-elements/definition-list ::
+            definition-list(
+                label=${label},
+                value=${value},
+            )" />
+
     </div>
 
 </th:block>
@@ -75,6 +87,8 @@ Other mandatory and optional values can be seen on the "textfield" fragment.
             label=${label},
             id=${id},
             value=${value},
+            readOnly=${readOnly},
+            hint=${hint},
             type='number',
             pattern='[0-9]',
             preventInputRegex='[^0-9]',

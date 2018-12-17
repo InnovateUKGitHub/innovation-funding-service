@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your project location'" />
 </head>
-<body class="govuk-template__body your-project-location">
+<body class="govuk-template__body your-project-location app-form">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -36,28 +36,20 @@
 
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
-            <th:block th:if="${!commonFinancesModel.readOnly}" >
-                <div class="govuk-!-margin-top-6">
-                    
-                    <p class="govuk-body">Where will most of the project work take place?</p>
 
-                        <th:block th:insert="fragments/form-elements/textfield ::
-                            textfield(
-                                label='Postcode',
-                                id='postcode',
-                                value=${form.postcode}
-                                )" />
+            <div class="govuk-!-margin-top-6">
 
-                    </th:block>
-                </div>
-            </th:block>
-            <th:block th:if="${commonFinancesModel.complete}">
-                <!--/* view  */-->
-                <dl class="govuk-list readonly-data">
-                    <dt>Postcode</dt>
-                    <dd th:if="${form.postcode != null}" th:text="${form.postcode}">Postcode</dd>
-                </dl>
-            </th:block>
+                <p class="govuk-body" th:if="${!commonFinancesModel.readOnly}">Where will most of the project work take place?</p>
+
+                <th:block th:insert="fragments/form-elements/textfield ::
+                    textfield(
+                        label='Postcode',
+                        id='postcode',
+                        value=${form.postcode},
+                        readOnly=${commonFinancesModel.readOnly},
+                        )" />
+            </div>
+
             <div class="form-footer" th:if="${commonFinancesModel.open}">
                 <div class="form-footer__actions">
                     <button id="mark_as_complete" th:unless="${commonFinancesModel.readOnly}" type="submit" name="mark-as-complete"

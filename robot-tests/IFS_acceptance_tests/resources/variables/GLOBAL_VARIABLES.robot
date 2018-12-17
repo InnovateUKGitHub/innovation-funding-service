@@ -148,9 +148,9 @@ ${application_bus_name}    Submit business test application
 ${application_rto_name}    Submit rto test application
 ${Competition_E2E}    Evolution of the global phosphorus cycle
 ${test_title}     test title
-${SMALL_ORGANISATION_SIZE}     1
-${MEDIUM_ORGANISATION_SIZE}    2
-${LARGE_ORGANISATION_SIZE}     3
+${SMALL_ORGANISATION_SIZE}     SMALL
+${MEDIUM_ORGANISATION_SIZE}    MEDIUM
+${LARGE_ORGANISATION_SIZE}     LARGE
 
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files
