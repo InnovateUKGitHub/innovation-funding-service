@@ -190,6 +190,12 @@ function runTests() {
         wait $job
     done
 
+    markAsComplete
+
+}
+
+function markAsComplete(){
+  touch ${scriptDir}/testsComplete
 }
 
 function deleteEmails() {
