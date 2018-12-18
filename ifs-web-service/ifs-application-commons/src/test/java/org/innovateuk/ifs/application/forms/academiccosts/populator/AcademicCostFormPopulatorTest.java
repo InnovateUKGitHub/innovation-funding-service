@@ -22,7 +22,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.builder.BaseFinanceResourceBuilder.ACADEMIC_FINANCES;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.argThat;
@@ -55,7 +54,7 @@ public class AcademicCostFormPopulatorTest extends BaseServiceUnitTest<AcademicC
         AcademicCostForm form = new AcademicCostForm();
 
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(newApplicationFinanceResource()
-                .withFinanceOrganisationDetails(ACADEMIC_FINANCES)
+                .withAcademicCosts()
                 .withFinanceFileEntry(FILE_ENTRY_ID)
                 .build()));
 

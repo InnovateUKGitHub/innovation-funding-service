@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.form.*;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.builder.BaseFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
@@ -18,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.concurrent.ExecutionException;
 
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.application.forms.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
@@ -33,7 +31,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractYourProjectCostsSaverTest {
-    private static ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE = newApplicationFinanceResource().withFinanceOrganisationDetails(BaseFinanceResourceBuilder.INDUSTRIAL_FINANCES).build();
+    private static ApplicationFinanceResource APPLICATION_FINANCE_RESOURCE = newApplicationFinanceResource().withIndustrialCosts().build();
     @Mock
     private FinanceRowRestService financeRowRestService;
 
@@ -59,7 +57,7 @@ public class AbstractYourProjectCostsSaverTest {
     };
 
     @Test
-    public void save() throws ExecutionException, InterruptedException {
+    public void save() {
         YourProjectCostsForm form = new YourProjectCostsForm();
 
         LabourForm labourForm = new LabourForm();
