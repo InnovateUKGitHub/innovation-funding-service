@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.forms.yourprojectcosts.populator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.builder.BaseFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
@@ -31,7 +30,7 @@ public class AbstractYourProjectCostsFormPopulatorTest {
     private AbstractYourProjectCostsFormPopulator target = new AbstractYourProjectCostsFormPopulator() {
         @Override
         protected BaseFinanceResource getFinanceResource(long targetId, long organisationId) {
-            return newApplicationFinanceResource().withFinanceOrganisationDetails(BaseFinanceResourceBuilder.INDUSTRIAL_FINANCES).build();
+            return newApplicationFinanceResource().withIndustrialCosts().build();
         }
 
         @Override

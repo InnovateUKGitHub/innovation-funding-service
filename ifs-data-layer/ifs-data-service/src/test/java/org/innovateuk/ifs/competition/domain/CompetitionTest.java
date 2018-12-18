@@ -214,36 +214,4 @@ public class CompetitionTest {
         competition.setFundersPanelEndDate(ZonedDateTime.now().minusDays(1));
         assertEquals(ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
-
-    @Test
-    public void competitionStatusFeedbackReleased() {
-        competition.setEndDate(ZonedDateTime.now().minusDays(7));
-        competition.setAssessorAcceptsDate(ZonedDateTime.now().minusDays(6));
-        competition.notifyAssessors(ZonedDateTime.now().minusDays(5));
-        competition.closeAssessment(ZonedDateTime.now().minusDays(4));
-        competition.setFundersPanelDate(ZonedDateTime.now().minusDays(3));
-        competition.setFundersPanelEndDate(ZonedDateTime.now().minusDays(2));
-        competition.setReleaseFeedbackDate(ZonedDateTime.now().minusDays(1));
-        competition.releaseFeedback(ZonedDateTime.now().minusDays(1));
-        assertEquals(PROJECT_SETUP, competition.getCompetitionStatus());
-    }
-
-    @Test
-    public void expressionOfInterestCompetitionStatusFeedbackReleased() {
-
-        CompetitionType competitionType = newCompetitionType()
-                .withName("Expression of interest")
-                .build();
-
-        competition.setCompetitionType(competitionType);
-        competition.setEndDate(ZonedDateTime.now().minusDays(7));
-        competition.setAssessorAcceptsDate(ZonedDateTime.now().minusDays(6));
-        competition.notifyAssessors(ZonedDateTime.now().minusDays(5));
-        competition.closeAssessment(ZonedDateTime.now().minusDays(4));
-        competition.setFundersPanelDate(ZonedDateTime.now().minusDays(3));
-        competition.setFundersPanelEndDate(ZonedDateTime.now().minusDays(2));
-        competition.setReleaseFeedbackDate(ZonedDateTime.now().minusDays(1));
-        competition.releaseFeedback(ZonedDateTime.now().minusDays(1));
-        assertEquals(PREVIOUS, competition.getCompetitionStatus());
-    }
 }

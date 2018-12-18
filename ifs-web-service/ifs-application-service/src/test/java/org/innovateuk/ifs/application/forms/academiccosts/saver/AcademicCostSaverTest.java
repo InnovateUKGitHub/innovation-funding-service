@@ -7,7 +7,6 @@ import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.builder.BaseFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -24,9 +23,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver> {
 
@@ -55,7 +52,7 @@ public class AcademicCostSaverTest extends BaseServiceUnitTest<AcademicCostSaver
     @Test
     public void save() {
         ApplicationFinanceResource finance = newApplicationFinanceResource()
-                .withFinanceOrganisationDetails(BaseFinanceResourceBuilder.ACADEMIC_FINANCES)
+                .withAcademicCosts()
                 .build();
         AcademicCostForm form = new AcademicCostForm();
         BigDecimal cost = new BigDecimal("50");
