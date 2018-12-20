@@ -489,6 +489,6 @@ the logged in user should not be able to apply in a competition he has not right
     the user clicks the button/link     link = Innovation Funding Service
     the user clicks the button/link in the paginated list  link = ${competition}
     the user clicks the button/link     link = Start new application
-    the user clicks the button/link     link = Apply with a different organisation.
+    the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")

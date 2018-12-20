@@ -86,7 +86,7 @@ Create new application with the same user
     the user navigates to the page             ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link            jQuery=a:contains("Start new application")
     check if there is an existing application in progress for this competition
-    the user clicks the button/link            link=Apply with a different organisation.
+    the user clicks the button/link            link=Apply with a different organisation
     the user selects the radio button          organisationTypeId  ${orgType}
     the user clicks the button/link            jQuery = button:contains("Save and continue")
     the user clicks the button/link            jQuery=summary:contains("Enter details manually")
