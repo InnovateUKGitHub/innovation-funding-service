@@ -9,6 +9,7 @@ import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.security.WebUserSecuritySetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -29,7 +30,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 /**
  * A scheduled job that looks for an EU Grant csv file containing rows of EU Grant project information, and imports
  * them into the EU Grant Registration database.
- *
+ * <p>
  * It will produce a report file with the results of the import, recording successfully imported Grants' Short Codes
  * and import failure reasons if and when they should occur.
  */
@@ -61,9 +62,7 @@ public class ScheduledEuGrantFileImporter {
         this.webUserSecuritySetter = webUserSecuritySetter;
     }
 
-    // TODO IFS-4655 - temporarily disabled scheduled job from running so it can be merged pending
-    // a free environment to test on
-    //    @Scheduled(cron = "${ifs.eu.data.service.grant.importer.cron.expression}")
+    @Scheduled(cron = "${ifs.eu.data.service.grant.importer.cron.expression}")
     void importEuGrantsFile() {
 
         ServiceResult<File> sourceFileCheck = grantsFileHandler.getSourceFileIfExists();
@@ -78,10 +77,10 @@ public class ScheduledEuGrantFileImporter {
 
         try {
             ServiceResult<Pair<File, List<ServiceResult<EuGrantResource>>>> importResult = sourceFileCheck.
-                andOnSuccess(sourceFile -> grantsRecordsExtractor.processFile(sourceFile).
-                andOnSuccess(this::saveSuccessfullyExtractedGrants).
-                andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile).
-                andOnSuccessReturn(resultsFile -> Pair.of(resultsFile, results))));
+                    andOnSuccess(sourceFile -> grantsRecordsExtractor.processFile(sourceFile).
+                            andOnSuccess(this::saveSuccessfullyExtractedGrants).
+                            andOnSuccess(results -> resultsFileGenerator.generateResultsFile(results, sourceFile).
+                                    andOnSuccessReturn(resultsFile -> Pair.of(resultsFile, results))));
 
             grantsImportResultHandler.recordResult(importResult);
 
