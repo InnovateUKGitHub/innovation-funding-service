@@ -124,13 +124,13 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
     private void handleGrantClaimMaximumChanges(CompetitionResource competition,
                                                 EligibilityForm eligibilityForm) {
 
-        if (eligibilityForm.getFundingLevelPercentage() != null) {
+        if (eligibilityForm.getConfiguredFundingLevelPercentage() != null) {
             Set<GrantClaimMaximumResource> grantClaimMaximums = competition.getGrantClaimMaximums().stream()
                     .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
                     .collect(Collectors.toSet());
 
             grantClaimMaximums.forEach(oldGCM -> {
-                GrantClaimMaximumResource toSaveGCM = createNewGCM(oldGCM, eligibilityForm.getFundingLevelPercentage());
+                GrantClaimMaximumResource toSaveGCM = createNewGCM(oldGCM, eligibilityForm.getConfiguredFundingLevelPercentage());
 
                 if (!toSaveGCM.getMaximum().equals(oldGCM.getMaximum())) {
                     // remove the old

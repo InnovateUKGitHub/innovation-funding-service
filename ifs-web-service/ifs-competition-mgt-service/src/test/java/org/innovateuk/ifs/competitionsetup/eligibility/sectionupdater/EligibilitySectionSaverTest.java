@@ -74,7 +74,7 @@ public class EligibilitySectionSaverTest {
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setResearchCategoryId(asLinkedSet(1L, 2L, 3L));
         competitionSetupForm.setOverrideFundingRules(true);
-        competitionSetupForm.setFundingLevelPercentage(10);
+        competitionSetupForm.setFundingLevelPercentageOverride(10);
         competitionSetupForm.setMultipleStream("yes");
         competitionSetupForm.setStreamName("streamname");
         competitionSetupForm.setLeadApplicantTypes(asList(1L, 2L));
@@ -247,7 +247,7 @@ public class EligibilitySectionSaverTest {
         EligibilityForm competitionSetupForm = new EligibilityForm();
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setOverrideFundingRules(true);
-        competitionSetupForm.setFundingLevelPercentage(50);
+        competitionSetupForm.setFundingLevelPercentageOverride(50);
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
                 .build(2);
 
@@ -280,7 +280,7 @@ public class EligibilitySectionSaverTest {
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.HUNDRED.getId());
         competitionSetupForm.setOverrideFundingRules(true);
-        competitionSetupForm.setFundingLevelPercentage(50);
+        competitionSetupForm.setFundingLevelPercentageOverride(50);
 
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
 
