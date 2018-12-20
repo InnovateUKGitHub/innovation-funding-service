@@ -360,7 +360,7 @@ the user search for organisation name on Companies house
 logged in user applies to competition research
     [Arguments]  ${competition}  ${applicationType}
     the user select the competition and starts application   ${competition}
-    the user clicks the button/link     link = Apply with a different organisation.
+    the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    Bath  Bath Spa University
@@ -368,7 +368,7 @@ logged in user applies to competition research
 logged in user applies to competition public
     [Arguments]  ${competition}  ${applicationType}
     the user select the competition and starts application   ${competition}
-    the user clicks the button/link     link = Apply with a different organisation.
+    the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    Innovate  INNOVATE LTD
