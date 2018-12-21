@@ -22,8 +22,10 @@
                        th:value="${value}"
                        th:classappend="${#fields.hasErrors(id)} ? 'govuk-input--error'"
                        th:disabled="${readOnly}"
-                       required="required"
-                       type="number" />
+                       type="number"
+                       pattern='[0-9]'
+                       data-prevent-input-regex='[^0-9]'
+                       required="required" />
             </td>
         </tr>
 

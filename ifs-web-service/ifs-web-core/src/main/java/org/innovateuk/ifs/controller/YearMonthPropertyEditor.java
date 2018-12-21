@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.context.request.WebRequest;
 
 import java.beans.PropertyEditorSupport;
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.ChronoField;
 import java.util.Map;
@@ -25,26 +24,30 @@ public class YearMonthPropertyEditor extends PropertyEditorSupport {
 
     @Override
     public void setAsText(String dateFieldName) throws IllegalArgumentException {
+
         Map<String, String[]> parameterMap = webRequest.getParameterMap();
 
-        Integer year = returnZeroWhenNotValid(parameterMap, dateFieldName + ".yearValue", ChronoField.YEAR, LocalDate.MIN.getYear());
-        Integer month = returnZeroWhenNotValid(parameterMap, dateFieldName + ".monthValue", ChronoField.MONTH_OF_YEAR, LocalDate.MIN.getMonthValue());
+        int year = returnMinusOneWhenNotValid(parameterMap, dateFieldName + "YearValue", ChronoField.YEAR);
+        int month = returnMinusOneWhenNotValid(parameterMap, dateFieldName + "MonthValue", ChronoField.MONTH_OF_YEAR);
 
-        try {
-            setValue(YearMonth.of(year, month));
-
-        } catch (Exception ex) {
-            LOG.error(ex);
-            setValue(LocalDate.MIN);
+        if (year == -1 || month == -1) {
+            setValue(null);
+        } else {
+            try {
+                setValue(YearMonth.of(year, month));
+            } catch (Exception ex) {
+                LOG.error(ex);
+                setValue(null);
+            }
         }
     }
 
-    private Integer returnZeroWhenNotValid(Map<String, String[]> parameterMap, String parameterName, ChronoField chronoField, int defaultValueIfInvalid) {
+    private int returnMinusOneWhenNotValid(Map<String, String[]> parameterMap, String parameterName, ChronoField chronoField) {
         try {
             return chronoField.checkValidIntValue(Long.valueOf(parameterMap.get(parameterName)[0]));
         } catch (Exception e){
             LOG.error(e);
-            return defaultValueIfInvalid;
+            return -1;
         }
     }
 }

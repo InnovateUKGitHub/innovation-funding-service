@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
+import org.innovateuk.ifs.commons.validation.constraints.PastYearMonth;
+import org.innovateuk.ifs.commons.validation.constraints.PositiveYearMonth;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 import javax.validation.constraints.NotNull;
@@ -15,7 +17,9 @@ public class YourOrganisationWithGrowthTableForm {
 
     private Boolean stateAidAgreed;
 
-    @NotNull(message = "{validation.field.must.not.be.blank}")
+    @NotNull(message = "{validation.standard.mm.yyyy.format}")
+    @PastYearMonth
+    @PositiveYearMonth
     private YearMonth financialYearEnd;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")

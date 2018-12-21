@@ -9,12 +9,12 @@ Available parameters:
 
   Mandatory
 
-    * label
     * id
     * value
 
   Optional
 
+    * label
     * hint - additional guidance text to explain the textfield - defaults to not showing a hint
     * type - the "type" attribute of input - default value of type="text"
     * preventInputRegex - a regex of the input that is not allowed, for the attribute "data-prevent-input-regex" - defaults to no regex
@@ -22,17 +22,27 @@ Available parameters:
     * min - the minimum numerical value, if this is an input of type="number"
     * max - the maximum numerical value, if this is an input of type="number"
     * readOnly - whether this field is displayed as a definition list or not
-
 */-->
-<th:block th:fragment="textfield(label, id, value)">
+<th:block th:fragment="textfield(id, value)">
 
-    <div class="govuk-form-group" th:classappend="${#fields.hasErrors(id)} ? 'govuk-form-group--error'">
+    <div class="govuk-form-group"
+         th:id="${id + '-form-group'}"
+         th:classappend="${#fields.hasErrors(id)} ? 'govuk-form-group--error'">
 
         <th:block th:unless="${readOnly}">
 
-            <label class="govuk-label govuk-label--s" th:for="headCount" th:text="${label}">Label text</label>
+            <label class="govuk-label govuk-label--s"
+                   th:if="${label}"
+                   th:for="${id}"
+                   th:text="${label}">
+                Label text
+            </label>
 
-            <span th:if="${hint != null}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
+            <span class="govuk-hint"
+                  th:if="${hint != null}"
+                  th:utext="${hint}">
+                Hint text.
+            </span>
 
             <th:block th:if="${#fields.hasErrors(id)}">
                 <span class="govuk-error-message" th:each="err : ${#fields.errors(id)}" th:text="${err}"></span>
@@ -53,7 +63,8 @@ Available parameters:
 
         </th:block>
 
-        <th:block th:if="${readOnly}" th:insert="fragments/form-elements/definition-list ::
+        <th:block th:if="${readOnly}"
+                  th:insert="fragments/form-elements/definition-list ::
             definition-list(
                 label=${label},
                 value=${value},
@@ -75,8 +86,8 @@ Includes the following attribute values:
     * type="number"
     * pattern="[0-9]"
     * data-prevent-input-regex="[^0-9]"
-    * min="0"
-    * max="2147483647"
+    * min="0" - unless overridden
+    * max="2147483647" - unless overridden
 
 Other mandatory and optional values can be seen on the "textfield" fragment.
 
@@ -88,11 +99,14 @@ Other mandatory and optional values can be seen on the "textfield" fragment.
             id=${id},
             value=${value},
             readOnly=${readOnly},
+            disabled=${disabled},
+            required=${required},
             hint=${hint},
             type='number',
             pattern='[0-9]',
             preventInputRegex='[^0-9]',
-            min='0',
-            max='2147483647')" />
+            min=${min ?: 0},
+            max=${max ?: 2147483647},
+          )" />
 
 </html>

@@ -170,14 +170,14 @@ Organisation client side validation when no
     [Documentation]    INFUND-6393
     [Tags]
     Given the user selects medium organisation size
-    When the user enters text to a text field           jQuery = .govuk-hint:contains("Your turnover from the last financial year") + + input  ${empty}
-    And Set Focus To Element                            jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input
+    When the user enters text to a text field           css = #turnover  ${empty}
+    And Set Focus To Element                            css = #headCount
     Then the user should see a field and summary error  ${empty_field_warning_message}
-    And the user enters text to a text field            jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input  ${empty}
+    And the user enters text to a text field            css = #headCount  ${empty}
     When Set Focus To Element                           jQuery = button:contains("Mark as complete")
     Then the user should see a field and summary error  ${empty_field_warning_message}
-    When the user enters text to a text field           jQuery = .govuk-hint:contains("Your turnover from the last financial year") + + input  150
-    And the user enters text to a text field            jQuery = .govuk-hint:contains("Number of full time employees at your organisation") + + input  0
+    When the user enters text to a text field           css = #turnover  150
+    And the user enters text to a text field            css = #headCount  0
     And Set Focus To Element                            jQuery = button:contains("Mark as complete")
     Then the user should not see the element            css = .govuk-error-message
 
@@ -186,8 +186,8 @@ Mark Organisation as complete when no
     [Tags]  HappyPath
     [Setup]  the user navigates to Your-finances page        ${applicationWithoutGrowth}
     Given the user clicks the button/link                  link = Your organisation
-    And the user enters text to a text field    jQuery = .govuk-hint:contains("employees") + input    42
-    And the user enters text to a text field      jQuery = .govuk-hint:contains("turnover") + input    17506
+    And the user enters text to a text field      css = #headCount    42
+    And the user enters text to a text field      css = #turnover    17506
     And the user selects medium organisation size
     And the user selects the checkbox             agree-state-aid
     When the user clicks the button/link          jQuery = button:contains("Mark as complete")
@@ -200,7 +200,7 @@ Mark Organisation as complete when no
 The Lead applicant is able to edit and re-submit when no
     [Documentation]    INFUND-8518
     [Tags]
-    The user can edit resubmit and read only of the organisation
+    The user can edit resubmit and read only of the organisation   headCount
 
 Funding subsection opens when Appl details and organisation info are provided
     [Documentation]    INFUND-6895
@@ -231,25 +231,20 @@ Organisation server side validation when yes
 Organisation client side validation when yes
     [Documentation]    INFUND-6395
     [Tags]
-    When the user enters text to a text field                 css = input[name$="month"]    42
+    When the user enters text to a text field                 css = #financialYearEndMonthValue    42
     Then the user should see a field and summary error        ${enter_a_valid_date}
-    When the user enters text to a text field                 css = input[name$="month"]    12
-    And the user enters text to a text field                  css = input[name$="year"]    ${nextyear}
+    When the user enters text to a text field                 css = #financialYearEndMonthValue    12
+    And the user enters text to a text field                  css = #financialYearEndYearValue    ${nextyear}
     Then the user should see a field and summary error        Please enter a past date.
-    When the user enters text to a text field                 css = input[name$="year"]    2016
-    And the user enters value to field                        Annual turnover    ${EMPTY}
+    When the user enters text to a text field                 css = #financialYearEndYearValue    2016
+    And the user enters text to a text field                  css = #annualTurnoverAtLastFinancialYear    ${EMPTY}
     Then the user should see a field and summary error        ${empty_field_warning_message}
-    When the user enters value to field                       Annual turnover    8.5
-    And Set Focus To Element                                  jQuery = td:contains("Annual profit") + td input
-    Then the user should see a field and summary error        ${only_accept_whole_numbers_message}
-    And the user enters value to field                        Annual profit    -5
-    When the user enters value to field                       Annual export    ${empty}
+    When the user enters text to a text field                 css = #annualTurnoverAtLastFinancialYear    8
+    Then the user should not see the element                  css = #annualTurnoverAtLastFinancialYear-form-group .govuk-error-message
+    And the user enters text to a text field                  css = #annualProfitsAtLastFinancialYear    -5
+    When the user enters text to a text field                 css = #annualExportAtLastFinancialYear    ${empty}
     Then the user should see a field and summary error        ${empty_field_warning_message}
-    And the user enters value to field                        Research and development spend    2147483647
-    When the user enters text to a text field                 jQuery = .govuk-hint:contains("employees") + + input    22.4
-    Then the user should see a field and summary error        ${only_accept_whole_numbers_message}
-    When the user enters text to a text field                 jQuery = .govuk-hint:contains("employees") + input    1
-    Then the user should not see the element                  jQuery = span:contains("employees") + .govuk-error-message
+    And the user enters text to a text field                  css = #researchAndDevelopmentSpendAtLastFinancialYear    2147483647
 
 Mark Organisation as complete when yes
     [Documentation]    INFUND-6393
@@ -257,13 +252,13 @@ Mark Organisation as complete when yes
     [Setup]    the user navigates to the growth table finances
     Given the user clicks the button/link        link = Your organisation
     And the user selects medium organisation size
-    Then the user enters text to a text field    css = input[name$="month"]    12
-    And the user enters text to a text field     css = input[name$="year"]    2016
+    Then the user enters text to a text field    css = #financialYearEndMonthValue    12
+    And the user enters text to a text field     css = #financialYearEndYearValue    2016
     And the user populates the project growth table
-    When the user enters text to a text field    jQuery = .govuk-hint:contains("employees") + input    4
+    When the user enters text to a text field    css = #headCountAtLastFinancialYear  4
     And the user clicks the button/link          jQuery = button:contains("Save and return to finances")
     And the user clicks the button/link          link = Your organisation
-    Then the user should see the element         jQuery = td:contains("Research and development spend") + td input[value = "15000"]
+    Then the user should see the element         jQuery = #researchAndDevelopmentSpendAtLastFinancialYear[value = "15000"]
     And the user selects the checkbox            agree-state-aid
     When the user clicks the button/link         jQuery = button:contains("Mark as complete")
     Then the user should see the element         jQuery = li:contains("Your organisation") > .task-status-complete
@@ -271,7 +266,7 @@ Mark Organisation as complete when yes
 The Lead Applicant is able to edit and re-submit when yes
     [Documentation]    INFUND-8518
     [Tags]
-    Given the user can edit resubmit and read only of the organisation
+    Given the user can edit resubmit and read only of the organisation  headCountAtLastFinancialYear
 
 Lead applicant can see all innovation areas
     [Documentation]  IFS-40
@@ -324,8 +319,8 @@ Newly created collaborator can view and edit project Growth table
     Given the user navigates to Your-finances page  ${applicationWithGrowth}
     And the user clicks the button/link             link = Your organisation
     And the user selects medium organisation size
-    Then the user enters text to a text field       css = input[name$="month"]    12
-    And the user enters text to a text field        css = input[name$="year"]    2016
+    Then the user enters text to a text field       css = #financialYearEndMonthValue    12
+    And the user enters text to a text field        css = #financialYearEndYearValue    2016
     And the user populates the project growth table
     And the user selects the checkbox                agree-state-aid
     And the user clicks the button/link             jQuery = button:contains("Mark as complete")
@@ -347,10 +342,10 @@ Non-lead can mark Organisation as complete
     Given the user navigates to Your-finances page  ${applicationWithGrowth}
     And the user clicks the button/link             link = Your organisation
     Then the user selects medium organisation size
-    And the user enters text to a text field        css = input[name$="month"]    12
-    And the user enters text to a text field        css = input[name$="year"]    2016
+    And the user enters text to a text field        css = #financialYearEndMonthValue    12
+    And the user enters text to a text field        css = #financialYearEndYearValue    2016
     Then the user populates the project growth table
-    And the user enters text to a text field        jQuery = .govuk-hint:contains("employees") + input    42
+    And the user enters text to a text field        css = #headCountAtLastFinancialYear    42
     And the user selects the checkbox               agree-state-aid
     When the user clicks the button/link            jQuery = button:contains("Mark as complete")
     Then the user should see the element            jQuery = li:contains("Your organisation") > .task-status-complete
@@ -358,7 +353,7 @@ Non-lead can mark Organisation as complete
 Non-lead can can edit and remark Organisation as Complete
     [Documentation]    INFUND-8518 INFUND-8561
     [Tags]
-    Given the user can edit resubmit and read only of the organisation
+    Given the user can edit resubmit and read only of the organisation    headCountAtLastFinancialYear
 
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
     [Documentation]  IFS-1015
@@ -430,10 +425,11 @@ the applicant enters valid inputs
     The user clicks the button/link         jquery = button:contains("Save changes")
 
 the user can edit resubmit and read only of the organisation
+    [Arguments]    ${headcount_field_id}
     the user should see the element         jQuery = li:contains("Your organisation") > .task-status-complete
     the user clicks the button/link         link = Your organisation
     the user clicks the button/link         jQuery = button:contains("Edit")
-    the user enters text to a text field    jQuery = .govuk-hint:contains("employees") + input    2
+    the user enters text to a text field    css = #${headcount_field_id}    2
     the user selects the checkbox           agree-state-aid
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
     the user should not see an error in the page
