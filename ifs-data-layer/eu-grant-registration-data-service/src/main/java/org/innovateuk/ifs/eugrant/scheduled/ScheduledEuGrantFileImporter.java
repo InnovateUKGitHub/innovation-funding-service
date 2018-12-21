@@ -30,7 +30,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 /**
  * A scheduled job that looks for an EU Grant csv file containing rows of EU Grant project information, and imports
  * them into the EU Grant Registration database.
- * <p>
+ *
  * It will produce a report file with the results of the import, recording successfully imported Grants' Short Codes
  * and import failure reasons if and when they should occur.
  */
