@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -35,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
@@ -90,6 +92,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     @Autowired
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
 
+
     List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
         return projectUserRepository.findByProjectId(projectId);
     }
@@ -97,7 +100,18 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     protected ProjectActivityStates createDocumentStatus(Project project) {
 
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
-        int expectedNumberOfDocuments = project.getApplication().getCompetition().getCompetitionDocuments().size();
+
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
+
+        int expectedNumberOfDocuments = expectedDocuments.size();
+        if (partnerOrganisations.size() == 1) {
+            List<String> documentNames = expectedDocuments.stream().map(document -> document.getTitle()).collect(Collectors.toList());
+            if (documentNames.contains("Collaboration agreement")) {
+                expectedNumberOfDocuments = expectedDocuments.size() - 1;
+            }
+        }
+
         int actualNumberOfDocuments = projectDocuments.size();
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
