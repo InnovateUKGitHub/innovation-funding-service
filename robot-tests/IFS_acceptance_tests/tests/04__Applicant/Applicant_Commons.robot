@@ -231,7 +231,7 @@ the user fills the organisation details with Project growth table
     the user enters text to a text field                    css = #annualExportAtLastFinancialYear    4000
     the user enters text to a text field                    css = #researchAndDevelopmentSpendAtLastFinancialYear    5660
     the user enters text to a text field                    css = #headCountAtLastFinancialYear    0
-    the user selects the checkbox                           agree-state-aid
+    the user selects the checkbox                           stateAidAgreed
     the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 the user fills in the organisation information
@@ -241,9 +241,9 @@ the user fills in the organisation information
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery = button:contains("Edit")
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery = button:contains("Edit")
     the user selects the radio button       organisationSize  ${org_size}
-    the user enters text to a text field    jQuery = .govuk-hint:contains("turnover") + input    150
+    the user enters text to a text field    css = #turnover    150
     the user enters text to a text field    css = #headCount   3
-    the user selects the checkbox           agree-state-aid
+    the user selects the checkbox           stateAidAgreed
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
     the user clicks the button/link         link = Your organisation
     the user should see the element         jQuery = button:contains("Edit")

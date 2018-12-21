@@ -136,11 +136,10 @@ public class ApplicationSectionController {
             case FUNDING_FINANCES:
                 return String.format("redirect:/application/%d/form/your-funding/%d", applicationId, sectionId);
             case PROJECT_COST_FINANCES:
-                if (!financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {		
-                    return String.format("redirect:/application/%d/form/your-project-costs/%d", applicationId, sectionId);
+                if (financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
+                    return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
                 } else {
-                    populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), false);
-                    return APPLICATION_FORM;
+                    return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, applicantSection.getCurrentApplicant().getOrganisation().getId(), sectionId);
                 }
             case PROJECT_LOCATION:
                 return String.format("redirect:/application/%d/form/your-project-location/organisation/%d/section/%d",
@@ -179,10 +178,10 @@ public class ApplicationSectionController {
 
                 ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
 
-                if (!financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
-                    return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d%s", applicationId, applicantOrganisationId, sectionId, originQuery);
-                } else {
+                if (financeUtil.isUsingJesFinances(applicantSection.getCompetition(), applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType())) {
                     return String.format("redirect:/application/%d/form/academic-costs/organisation/%d/section/%d%s", applicationId, applicantOrganisationId, sectionId, originQuery);
+                } else {
+                    return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d%s", applicationId, applicantOrganisationId, sectionId, originQuery);
                 }
             }
             case PROJECT_LOCATION: {
