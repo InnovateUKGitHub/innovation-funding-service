@@ -163,9 +163,9 @@ public class EligibilityFormPopulatorTest {
         competitionSetupForm.setFundingLevelPercentage(ResearchCategoryFieldValue);
 
         competitionSetupForm.setOverrideFundingRules(Boolean.TRUE);
-        assert(competitionSetupForm.getConfiguredFundingLevelPercentage() == OverrideFieldValue);
+        assertEquals(competitionSetupForm.getConfiguredFundingLevelPercentage(), OverrideFieldValue);
 
         competitionSetupForm.setOverrideFundingRules(Boolean.FALSE);
-        assert(competitionSetupForm.getConfiguredFundingLevelPercentage() == ResearchCategoryFieldValue);
+        assertEquals(competitionSetupForm.getConfiguredFundingLevelPercentage(), ResearchCategoryFieldValue);
     }
 }
