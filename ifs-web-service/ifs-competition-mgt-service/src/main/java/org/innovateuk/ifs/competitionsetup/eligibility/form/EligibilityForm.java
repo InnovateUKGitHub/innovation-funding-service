@@ -114,8 +114,7 @@ public class EligibilityForm extends CompetitionSetupForm {
         this.overrideFundingRules = overrideFundingRules;
     }
 
-    public Integer getConfiguredFundingLevelPercentage()
-    {
+    public Integer getConfiguredFundingLevelPercentage() {
         if (Boolean.TRUE.equals(getOverrideFundingRules())) {
             return getFundingLevelPercentageOverride();
         }

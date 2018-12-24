@@ -105,11 +105,11 @@
                             </label>
                         </div>
 
-                        <div id="funding-level-rc" class="panel">
+                        <div id="funding-level" class="panel">
                             <div class="govuk-form-group"
                                  th:classappend="${#fields.hasErrors('fundingLevelPercentage')} ? 'govuk-form-group--error'">
                                 <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingLevels-rc">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingLevels">
                                         <h2 class="govuk-fieldset__heading">Set the maximum funding level that applicants can apply for.</h2>
                                     </legend>
                                     <span th:if="${#fields.hasErrors('fundingLevelPercentage')}" class="govuk-error-message"
@@ -161,11 +161,11 @@
                             </label>
                         </div>
 
-                        <div id="funding-level" class="panel">
+                        <div id="funding-level-override" class="panel">
                             <div class="govuk-form-group"
                                  th:classappend="${#fields.hasErrors('fundingLevelPercentageOverride')} ? 'govuk-form-group--error'">
                                 <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingLevels">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingLevelsOverride">
                                         <h2 class="govuk-fieldset__heading">Set the maximum funding level that applicants can apply for.</h2>
                                     </legend>
                                     <span th:if="${#fields.hasErrors('fundingLevelPercentageOverride')}" class="govuk-error-message"
