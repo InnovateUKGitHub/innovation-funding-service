@@ -151,4 +151,21 @@ public class EligibilityFormPopulatorTest {
         EligibilityForm form = (EligibilityForm) result;
         assertFalse(form.getResearchCategoriesApplicable());
     }
+
+    @Test
+    public void checkConfiguredFundingLevelLogic() {
+        EligibilityForm competitionSetupForm = new EligibilityForm();
+
+        Integer OverrideFieldValue = 40;
+        Integer ResearchCategoryFieldValue = 70;
+
+        competitionSetupForm.setFundingLevelPercentageOverride(OverrideFieldValue);
+        competitionSetupForm.setFundingLevelPercentage(ResearchCategoryFieldValue);
+
+        competitionSetupForm.setOverrideFundingRules(Boolean.TRUE);
+        assert(competitionSetupForm.getConfiguredFundingLevelPercentage() == OverrideFieldValue);
+
+        competitionSetupForm.setOverrideFundingRules(Boolean.FALSE);
+        assert(competitionSetupForm.getConfiguredFundingLevelPercentage() == ResearchCategoryFieldValue);
+    }
 }
