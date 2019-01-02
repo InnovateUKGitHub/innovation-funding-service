@@ -15,6 +15,15 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
+        <div th:if="${#fields.hasErrors('${organisationForm.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(organisationForm)" />
+        </div>
+
         <th:block th:with="orgTitle=${organisationType.name}">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter organisation details',subTitle=${isLeadApplicant ? 'Start new application' : 'Join application'},size='govuk-heading-xl'" />
         </th:block>
