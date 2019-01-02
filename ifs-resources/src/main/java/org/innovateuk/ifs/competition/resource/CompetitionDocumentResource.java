@@ -11,6 +11,7 @@ import java.util.List;
  */
 
 public class CompetitionDocumentResource {
+    public static final String COLLABORATION_AGREEMENT_TITLE = "Collaboration agreement";
 
     private Long id;
 

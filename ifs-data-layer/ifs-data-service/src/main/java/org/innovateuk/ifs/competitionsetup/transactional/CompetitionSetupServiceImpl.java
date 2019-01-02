@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.util.ReflectionUtils.*;
 
@@ -378,7 +379,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private CompetitionDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
-        return new CompetitionDocument(competition, "Collaboration agreement", "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
+        return new CompetitionDocument(competition, COLLABORATION_AGREEMENT_TITLE, "<p>The collaboration agreement covers how the consortium will work together on the project and exploit its results. It must be signed by all partners.</p>\n" +
                 "\n" +
                 "<p>Please allow enough time to complete this document before your project start date.</p>\n" +
                 "\n" +
