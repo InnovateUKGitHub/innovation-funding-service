@@ -192,6 +192,8 @@ public class ApplicationSectionController {
     private ApplicantSectionResource getApplicantSectionForInternalUser(@PathVariable(APPLICATION_ID) Long applicationId, @PathVariable("sectionId") Long sectionId, @PathVariable("applicantOrganisationId") Long applicantOrganisationId) {
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
 
+        processRoles.removeIf(pr -> pr.getOrganisationId() == null);
+
         ProcessRoleResource arbitraryProcessRole = simpleFindFirstMandatory(processRoles, pr ->
                 pr.getOrganisationId().equals(applicantOrganisationId) && APPLICANT_AND_COLLABORATOR_ROLES.contains(pr.getRole()));
 
