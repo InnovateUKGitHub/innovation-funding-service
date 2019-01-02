@@ -92,7 +92,6 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     @Autowired
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
 
-
     List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
         return projectUserRepository.findByProjectId(projectId);
     }
