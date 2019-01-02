@@ -100,17 +100,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
 
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
-
-        int expectedNumberOfDocuments = expectedDocuments.size();
-        if (partnerOrganisations.size() == 1) {
-            List<String> documentNames = expectedDocuments.stream().map(document -> document.getTitle()).collect(Collectors.toList());
-            if (documentNames.contains("Collaboration agreement")) {
-                expectedNumberOfDocuments = expectedDocuments.size() - 1;
-            }
-        }
-
+        int expectedNumberOfDocuments = expectedNumberOfDocuments(project);
         int actualNumberOfDocuments = projectDocuments.size();
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
@@ -125,6 +115,20 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
 
         return PENDING;
+    }
+
+    private int expectedNumberOfDocuments(Project project) {
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
+
+        int expectedNumberOfDocuments = expectedDocuments.size();
+        if (partnerOrganisations.size() == 1) {
+            List<String> documentNames = expectedDocuments.stream().map(document -> document.getTitle()).collect(Collectors.toList());
+            if (documentNames.contains("Collaboration agreement")) {
+                expectedNumberOfDocuments = expectedDocuments.size() - 1;
+            }
+        }
+        return expectedNumberOfDocuments;
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
@@ -240,7 +244,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         return getCurrentlyLoggedInProjectUser(project, PROJECT_PARTNER);
     }
 
-    protected ServiceResult<ProjectUser> getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
+    private ServiceResult<ProjectUser> getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 simpleFindFirst(project.getProjectUsers(), pu -> findUserAndRole(role, currentUser, pu)).
