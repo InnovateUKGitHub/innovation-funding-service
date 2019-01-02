@@ -14,9 +14,12 @@ import org.innovateuk.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -68,8 +71,13 @@ public class RestIdentityProviderService implements IdentityProviderService {
     @Value("${idp.rest.user}")
     private String idpUserPath;
 
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
     @Override
     public ServiceResult<String> createUserRecordWithUid(String emailAddress, String password) {
+
+        applicationEventPublisher.publishEvent(emailAddress);
 
         return handlingErrors(() -> {
 
@@ -80,6 +88,11 @@ public class RestIdentityProviderService implements IdentityProviderService {
                     success -> serviceSuccess(success.getUuid())
             );
         });
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
+    private static void rollbackUser(String emailAddress) {
+        LOG.info("Rollback user in the ldap");
     }
 
     private static List<Error> errors(HttpStatus code, IdentityProviderError... errors) {
