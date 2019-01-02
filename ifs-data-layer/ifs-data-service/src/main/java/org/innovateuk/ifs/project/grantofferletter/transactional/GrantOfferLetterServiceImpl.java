@@ -65,6 +65,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.io.File.separator;
 import static java.util.Collections.singletonList;
@@ -72,7 +73,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
@@ -380,12 +380,13 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
 
         List<PartnerOrganisationResource> partnerOrganisations = partnerOrganisationService.getProjectPartnerOrganisations(project.getId()).getSuccess();
 
-        if (partnerOrganisations.size() == 1) {
-            expectedDocuments.removeIf(
-                    document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
-        }
-
         int expectedNumberOfDocuments = expectedDocuments.size();
+        if (partnerOrganisations.size() == 1) {
+            List<String> documentNames = expectedDocuments.stream().map(CompetitionDocument::getTitle).collect(Collectors.toList());
+            if (documentNames.contains("Collaboration agreement")) {
+                expectedNumberOfDocuments = expectedDocuments.size() - 1;
+            }
+        }
 
         return actualNumberOfDocuments == expectedNumberOfDocuments && project.getProjectDocuments().stream()
                 .allMatch(projectDocumentResource -> APPROVED.equals(projectDocumentResource.getStatus()));
