@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -127,7 +126,7 @@ public class MilestonesSectionUpdater extends AbstractSectionUpdater implements 
             }
             milestoneRestService.updateMilestone(milestone).getSuccess();
         } catch (Exception ex) {
-            LOG.error(ex.getMessage(), ex);
+            LOG.debug(ex.getMessage(), ex);
             return makeErrorList();
         }
         return errors;
