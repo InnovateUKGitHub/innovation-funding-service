@@ -72,6 +72,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
@@ -381,7 +382,7 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
 
         if (partnerOrganisations.size() == 1) {
             expectedDocuments.removeIf(
-                    document -> document.getTitle().equals("Collaboration agreement"));
+                    document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
         }
 
         int expectedNumberOfDocuments = expectedDocuments.size();
