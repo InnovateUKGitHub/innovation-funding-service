@@ -2,10 +2,7 @@ package org.innovateuk.ifs.authentication.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.authentication.resource.CreateUserResource;
-import org.innovateuk.ifs.authentication.resource.CreateUserResponse;
-import org.innovateuk.ifs.authentication.resource.IdentityProviderError;
-import org.innovateuk.ifs.authentication.resource.UpdateUserResource;
+import org.innovateuk.ifs.authentication.resource.*;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
@@ -77,22 +74,24 @@ public class RestIdentityProviderService implements IdentityProviderService {
     @Override
     public ServiceResult<String> createUserRecordWithUid(String emailAddress, String password) {
 
-        applicationEventPublisher.publishEvent(emailAddress);
-
         return handlingErrors(() -> {
 
             CreateUserResource createUserRequest = new CreateUserResource(emailAddress, password);
             Either<ResponseEntity<IdentityProviderError[]>, CreateUserResponse> response = restPost(idpBaseURL + idpUserPath, createUserRequest, CreateUserResponse.class, IdentityProviderError[].class, CREATED);
             return response.mapLeftOrRight(
                     failure -> serviceFailure(errors(failure.getStatusCode(), failure.getBody())),
-                    success -> serviceSuccess(success.getUuid())
+                    success -> {
+                        applicationEventPublisher.publishEvent(success.getUuid());
+                        return serviceSuccess(success.getUuid());
+                    }
             );
         });
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
-    private static void rollbackUser(String emailAddress) {
-        LOG.info("Rollback user in the ldap");
+    protected void rollbackUser(String uuid) {
+        LOG.info("Rolling back user in ldap");
+        adaptor.restDelete(idpBaseURL + idpUserPath + uuid);
     }
 
     private static List<Error> errors(HttpStatus code, IdentityProviderError... errors) {
