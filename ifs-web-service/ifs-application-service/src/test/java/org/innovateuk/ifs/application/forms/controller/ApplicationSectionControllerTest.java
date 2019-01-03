@@ -452,12 +452,10 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         when(applicantRestService.getSection(applicantProcessRole.getUser(), application.getId(), currentSectionId)).thenReturn(sectionBuilder.build());
         when(financeUtil.isUsingJesFinances(any(CompetitionResource.class), anyLong())).thenReturn(false);
 
-        MvcResult result = mockMvc.perform(get("/application/{applicationId}/form/section/{sectionId}/{applicantOrganisationId}", application.getId(), currentSectionId, applicantProcessRole.getOrganisationId()))
-                .andExpect(status().is3xxRedirection())
-                .andReturn();
+        mockMvc.perform(get("/application/{applicationId}/form/section/{sectionId}/{applicantOrganisationId}", application.getId(), currentSectionId, applicantProcessRole.getOrganisationId()))
+                .andExpect(status().is3xxRedirection());
 
-        Object viewModelResult = result.getModelAndView().getModelMap().get("model");
-
+        verify(sectionService).getById(anyLong());
         verify(userRestService).findProcessRole(application.getId());
         verify(applicantRestService).getSection(applicantProcessRole.getUser(), application.getId(), currentSectionId);
     }
