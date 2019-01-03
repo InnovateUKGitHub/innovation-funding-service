@@ -19,12 +19,14 @@ import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopul
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
@@ -34,6 +36,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
@@ -44,10 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
@@ -63,6 +63,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -109,6 +110,9 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
 
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
+
+    @Mock
+    private FinanceUtil financeUtil;
 
     @Mock
     @SuppressWarnings("unused")
@@ -274,7 +278,8 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                         .param("financePosition-projectLocation", projectLocationPostcode)
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"));    }
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"));
+    }
 
     @Test
     public void applicationFormSubmit_markSectionInComplete() throws Exception {
@@ -429,5 +434,31 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
 
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
+    }
+
+    @Test
+    public void applicationFormWithOpenSectionForInternal() throws Exception {
+
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
+
+        Long currentSectionId = sectionResources.get(7).getId();
+        ApplicationResource application = newApplicationResource().build();
+        ProcessRoleResource applicantProcessRole = newProcessRoleResource().withOrganisation(2L).withRole(Role.APPLICANT).build();
+        ProcessRoleResource assessorProcessRole = newProcessRoleResource().withRole(Role.ASSESSOR).build();
+        ProcessRoleResource collabProcessRole = newProcessRoleResource().withOrganisation(2L).withRole(Role.COLLABORATOR).build();
+
+        when(sectionService.getById(anyLong())).thenReturn(sectionResources.get(7));
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(new ArrayList<ProcessRoleResource>(asList(applicantProcessRole, assessorProcessRole, collabProcessRole))));
+        when(applicantRestService.getSection(applicantProcessRole.getUser(), application.getId(), currentSectionId)).thenReturn(sectionBuilder.build());
+        when(financeUtil.isUsingJesFinances(any(CompetitionResource.class), anyLong())).thenReturn(false);
+
+        MvcResult result = mockMvc.perform(get("/application/{applicationId}/form/section/{sectionId}/{applicantOrganisationId}", application.getId(), currentSectionId, applicantProcessRole.getOrganisationId()))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+
+        Object viewModelResult = result.getModelAndView().getModelMap().get("model");
+
+        verify(userRestService).findProcessRole(application.getId());
+        verify(applicantRestService).getSection(applicantProcessRole.getUser(), application.getId(), currentSectionId);
     }
 }
