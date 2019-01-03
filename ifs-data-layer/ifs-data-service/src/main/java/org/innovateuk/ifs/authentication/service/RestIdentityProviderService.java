@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.events.UserCreationEvent;
 import org.innovateuk.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -82,7 +83,7 @@ public class RestIdentityProviderService implements IdentityProviderService, App
             return response.mapLeftOrRight(
                     failure -> serviceFailure(errors(failure.getStatusCode(), failure.getBody())),
                     success -> {
-                        applicationEventPublisher.publishEvent(success.getUuid());
+                        applicationEventPublisher.publishEvent(new UserCreationEvent(this, success.getUuid()));
                         return serviceSuccess(success.getUuid());
                     }
             );
@@ -90,9 +91,9 @@ public class RestIdentityProviderService implements IdentityProviderService, App
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
-    protected void rollbackUser(String uuid) {
+    public void rollbackUser(UserCreationEvent userCreationEvent) {
         LOG.info("Rolling back user in ldap");
-        adaptor.restDelete(idpBaseURL + idpUserPath + uuid);
+        adaptor.restDelete(idpBaseURL + idpUserPath + userCreationEvent.getUuid());
     }
 
     private static List<Error> errors(HttpStatus code, IdentityProviderError... errors) {
@@ -172,8 +173,7 @@ public class RestIdentityProviderService implements IdentityProviderService, App
 
     @Override
     @NotSecured(value = "Does not need securing", mustBeSecuredByOtherServices = false)
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-    {
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 }
