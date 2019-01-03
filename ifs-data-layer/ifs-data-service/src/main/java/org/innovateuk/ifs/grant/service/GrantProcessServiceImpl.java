@@ -21,6 +21,7 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     @Override
     public void sendRequested(long applicationId) {
         GrantProcess process = new GrantProcess();
+        process.setPending(true);
         process.setSentRequested(ZonedDateTime.now());
         process.setApplicationId(applicationId);
         grantProcessRepository.save(process);

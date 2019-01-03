@@ -52,6 +52,14 @@ public class GrantProcess {
         return pending;
     }
 
+    /**
+     * If pending is false then the grant should not be sent to downstream systems. This can be false if the project
+     * has been filtered out - see GrantProcessApplicationFilter. A grant process entry is still created since
+     * a subsequent configuration change and process execution could later take place that could switch this flag and
+     * trigger processing.
+     *
+     * @return whether grant should be sent
+     */
     public String getMessage() {
         return message;
     }
