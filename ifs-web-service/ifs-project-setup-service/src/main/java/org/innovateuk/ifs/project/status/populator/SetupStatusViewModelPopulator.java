@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 
 /**
@@ -54,7 +55,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private CompetitionRestService competitionRestService;
-
+    
     public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId,
                                                                      UserResource loggedInUser,
                                                                      String originQuery) {
@@ -75,6 +76,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         return awaitAll(basicDetailsRequest, teamStatusRequest, monitoringOfficerRequest, isProjectManagerRequest, partnerOrganisationsRequest).thenApply(futureResults -> {
 
             BasicDetails basicDetails = basicDetailsRequest.get();
+
             ProjectTeamStatusResource teamStatus = teamStatusRequest.get();
             Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerRequest.get();
             boolean isProjectManager = isProjectManagerRequest.get();
@@ -105,7 +107,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         boolean pendingQueries = SectionStatus.FLAG.equals(sectionStatuses.getFinanceChecksStatus());
 
         boolean leadPartner = isLeadPartner(teamStatus, basicDetails.getOrganisation());
-        boolean projectDocuments = basicDetails.getCompetition().getProjectDocuments().size() > 0;
+        boolean projectDocuments = basicDetails.getCompetition().getCompetitionDocuments().size() > 0;
 
         return new SetupStatusViewModel(
                 basicDetails.getProject(),
@@ -163,13 +165,13 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 financeChecksStatus, spendProfileStatus, documentsStatus, grantOfferStatus);
     }
 
-    private List<ProjectDocumentResource> getCompetitionDocuments(CompetitionResource competition, boolean collaborationAgreementRequired) {
+    private List<CompetitionDocumentResource> getCompetitionDocuments(CompetitionResource competition, boolean collaborationAgreementRequired) {
 
-        List<ProjectDocumentResource> competitionDocuments = competition.getProjectDocuments();
+        List<CompetitionDocumentResource> competitionDocuments = competition.getCompetitionDocuments();
 
         if (!collaborationAgreementRequired) {
             competitionDocuments.removeIf(
-                    document -> document.getTitle().equals("Collaboration agreement"));
+                    document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
         }
 
         return competitionDocuments;

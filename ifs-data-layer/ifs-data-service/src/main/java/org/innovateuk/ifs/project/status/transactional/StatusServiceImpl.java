@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
@@ -48,6 +49,7 @@ import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.SUBMITTED;
@@ -288,7 +290,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
 
-        List<org.innovateuk.ifs.competitionsetup.domain.ProjectDocument> expectedDocuments = project.getApplication().getCompetition().getProjectDocuments();
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
 
         List<PartnerOrganisationResource> partnerOrganisations =
                 partnerOrganisationService.getProjectPartnerOrganisations(project.getId()).getSuccess();
@@ -296,7 +298,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         if (partnerOrganisations.size() == 1) {
 
             List<String> documentNames = expectedDocuments.stream().map(document -> document.getTitle()).collect(Collectors.toList());
-            if (documentNames.contains("Collaboration agreement")) {
+            if (documentNames.contains(COLLABORATION_AGREEMENT_TITLE)) {
                 return getDocumentsState(projectDocuments, projectDocuments.size(), expectedDocuments.size() - 1);
             }
         }

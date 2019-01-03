@@ -6,11 +6,8 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.Milestone;
-import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
-import org.innovateuk.ifs.competition.resource.CollaborationLevel;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.user.domain.User;
@@ -24,6 +21,7 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
 public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuilder> {
@@ -187,8 +185,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("stateAid", stateAid);
     }
 
-    public CompetitionBuilder withProjectDocuments(List<ProjectDocument>... projectDocuments) {
-        return withArraySetFieldByReflection("projectDocuments", projectDocuments);
+    public CompetitionBuilder withCompetitionDocuments(List<CompetitionDocument>... projectDocuments) {
+        return withArraySetFieldByReflection("competitionDocuments", projectDocuments);
     }
 
     public CompetitionBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSection) {
@@ -242,6 +240,19 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
                     .withAssessorFeedbackDate(now.minusDays(2L))
                     .withReleaseFeedbackDate(now.minusDays(10L))
                     .withFeedbackReleased(now.minusDays(1L));
+        } else if(PREVIOUS.equals(status)) {
+            return withSetupComplete(true)
+                    .withStartDate(now.minusDays(9L))
+                    .withEndDate(now.minusDays(8L))
+                    .withAssessorAcceptsDate(now.minusDays(7L))
+                    .withAssessorsNotifiedDate(now.minusDays(6L))
+                    .withFundersPanelDate(now.minusDays(5L))
+                    .withFundersPanelEndDate(now.minusDays(4L))
+                    .withAssessmentClosedDate(now.minusDays(3L))
+                    .withAssessorFeedbackDate(now.minusDays(2L))
+                    .withReleaseFeedbackDate(now.minusDays(10L))
+                    .withFeedbackReleased(now.minusDays(1L))
+                    .withCompetitionType(newCompetitionType().withName("Expression of interest").build());
         } else if(COMPETITION_SETUP.equals(status)) {
             return withSetupComplete(false);
         } else {
@@ -307,6 +318,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withIncludeJesForm(boolean... includeJesForms) {
         return withArraySetFieldByReflection("includeJesForm", includeJesForms);
+    }
+
+    public CompetitionBuilder withCompletionStage(CompetitionCompletionStage... completionStage) {
+        return withArraySetFieldByReflection("completionStage", completionStage);
     }
 
 }

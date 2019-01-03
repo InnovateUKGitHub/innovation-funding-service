@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.mapper.MilestoneMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
@@ -317,6 +318,21 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
         assertTrue(result.isFailure());
         assertEquals(result.getErrors().get(0).getErrorKey(), "error.title.status.400");
+    }
+
+    @Test
+    public void updateCompletionStage() {
+
+        Competition competition = newCompetition().build();
+
+        assertNull(competition.getCompletionStage());
+
+        when(competitionRepository.findOne(1L)).thenReturn(competition);
+
+        ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
+
+        assertTrue(result.isSuccess());
+        assertEquals(CompetitionCompletionStage.PROJECT_SETUP, competition.getCompletionStage());
     }
 
     @Override

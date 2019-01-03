@@ -14,7 +14,7 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -66,6 +66,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.io.File.separator;
 import static java.util.Collections.singletonList;
@@ -73,6 +74,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
@@ -378,17 +380,18 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
 
     private boolean allProjectDocumentsApproved(Project project) {
         Competition competition = project.getApplication().getCompetition();
-        List<ProjectDocument> expectedDocuments = competition.getProjectDocuments();
+        List<CompetitionDocument> expectedDocuments = competition.getCompetitionDocuments();
         int actualNumberOfDocuments = project.getProjectDocuments().size();
 
         List<PartnerOrganisationResource> partnerOrganisations = partnerOrganisationService.getProjectPartnerOrganisations(project.getId()).getSuccess();
 
-        if (partnerOrganisations.size() == 1) {
-            expectedDocuments.removeIf(
-                    document -> document.getTitle().equals("Collaboration agreement"));
-        }
-
         int expectedNumberOfDocuments = expectedDocuments.size();
+        if (partnerOrganisations.size() == 1) {
+            List<String> documentNames = expectedDocuments.stream().map(CompetitionDocument::getTitle).collect(Collectors.toList());
+            if (documentNames.contains(COLLABORATION_AGREEMENT_TITLE)) {
+                expectedNumberOfDocuments = expectedDocuments.size() - 1;
+            }
+        }
 
         return actualNumberOfDocuments == expectedNumberOfDocuments && project.getProjectDocuments().stream()
                 .allMatch(projectDocumentResource -> APPROVED.equals(projectDocumentResource.getStatus()));

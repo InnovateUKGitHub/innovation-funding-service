@@ -324,7 +324,7 @@ Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
     [Tags]
     When the user clicks the button/link            link = Milestones
-    Then the user should see the text in the page   Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
+    Then the user should see the text in the page   Select the stage at which the competition is complete for Innovate UK.
     When The user should see the text in the page   1. Open date
     And the user should see the text in the page    2. Briefing event
     And the user should see the text in the page    3. Submission date
@@ -338,6 +338,9 @@ Milestones: Page should contain the correct fields
     And the user should see the text in the page    11. Funders panel
     And the user should see the text in the page    12. Notifications
     And the user should see the text in the page    13. Release feedback
+    And the user should see the text in the page    14. Project setup
+    And the user selects the radio button           selectedCompletionStage  project-setup-completion-stage
+    And the user clicks the button/link             jQuery = button:contains("Done")
     And the pre-field date should be correct
 
 Milestones: Correct Weekdays should show

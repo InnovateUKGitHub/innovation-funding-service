@@ -177,59 +177,6 @@
     </div>
 </th:block>
 
-<th:block th:fragment="project_cost_finances (model, internalView)">
-    <th:block th:insert="'finance/'+${model.financeView} :: your_finance(${model}, ${internalView})" />
-    <div th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'"
-        class="agree-to-terms-container" th:if="${model.showTerms}"></div>
-    <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
-</th:block>
-
-<th:block th:fragment="assessment_finances(model, internalView)">
-    <th:block th:insert="'finance/'+${detailedCostings.financeView} :: assessment_detailed_finance(model=${model}, internalView=${internalView})" />
-</th:block>
-
-<th:block th:fragment="funding_finances(model, internalView)">
-    <th:block th:if="${model.fundingSectionLocked}">
-        <p class="govuk-body" th:if="${model.leadApplicant}">
-            Before you can supply your funding details you must:
-        </p>
-        <p class="govuk-body" th:unless="${model.leadApplicant}">
-            Before you can supply your funding details:
-        </p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li th:if="${model.researchCategoryRequired and model.leadApplicant}">
-                mark the
-                <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.researchCategoryQuestionId})}"
-                    class="govuk-link">
-                    research category
-                </a>
-                page as complete
-            </li>
-            <li th:if="${model.yourOrganisationRequired}">
-                <th:block th:unless="${model.leadApplicant}">you must </th:block>mark the
-                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}"
-                    class="govuk-link">
-                    your organisation
-                </a>
-                page as complete
-            </li>
-            <li th:if="${model.researchCategoryRequired and !model.leadApplicant}">
-                the lead applicant must mark the research category page as complete
-            </li>
-        </ul>
-    </th:block>
-    <th:block th:unless="${model.fundingSectionLocked}">
-        <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
-            <div class="question" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel}, internalView=${internalView})" />
-            </div>
-        </th:block>
-        <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})" th:with="fieldName='form.termsAgreed'"
-            th:unless="${model.allReadOnly}"></div>
-        <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
-    </th:block>
-</th:block>
-
 <th:block th:fragment="overview_finances(model, internalView)">
     <h2 class="govuk-heading-m">Funding rules for this competition</h2>
     <th:block th:each="formInputViewModel : ${model.formInputViewModels}"
@@ -253,33 +200,6 @@
     </th:block>
     <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return
         to application overview</a>
-</th:block>
-
-<th:block th:fragment="project_location(model)">
-    <div class="govuk-!-margin-top-6">
-        <th:block th:unless="${model.readonly}">
-            <p class="govuk-body">Where will most of the project work take place?</p>
-            <!--/* edit */-->
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="projectLocation">
-                    Postcode
-                </label>
-                <th:block th:if="${#fields.hasErrors('projectLocation')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
-                </th:block>
-                <input class="govuk-input govuk-input--width-10" id="projectLocation" th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
-                    type="text" name="financePosition-projectLocation" th:value="${model.projectLocationValue}" />
-            </div>
-        </th:block>
-        <th:block th:if="${model.readonly}">
-            <!--/* view  */-->
-            <dl class="govuk-list readonly-data">
-                <dt>Postcode</dt>
-                <dd th:if="${model.projectLocationValue != null}" th:text="${model.projectLocationValue}">Postcode</dd>
-            </dl>
-        </th:block>
-    </div>
-    <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
 </th:block>
 
 </html>

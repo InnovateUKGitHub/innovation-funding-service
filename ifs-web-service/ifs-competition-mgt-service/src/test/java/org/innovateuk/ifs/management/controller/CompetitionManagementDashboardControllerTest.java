@@ -71,10 +71,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     private Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions;
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
 
         competitions = new HashMap<>();
         addInnovationAreaNamesToCompetitions(competitions);
@@ -108,6 +106,32 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertEquals(competitions, viewModel.getCompetitions());
         assertEquals(counts, viewModel.getCounts());
         assertTrue(viewModel.getTabs().live());
+    }
+
+    @Test
+    public void stakeholderLiveDashboard() throws Exception {
+
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.STAKEHOLDER)).build());
+
+        when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/live"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/live"))
+                .andReturn();
+
+        Object model = result.getModelAndView().getModelMap().get("model");
+        assertTrue(model.getClass().equals(LiveDashboardViewModel.class));
+
+        LiveDashboardViewModel viewModel = (LiveDashboardViewModel) model;
+        assertEquals(competitions, viewModel.getCompetitions());
+        assertEquals(counts, viewModel.getCounts());
+        assertTrue(viewModel.getTabs().live());
+        assertFalse(viewModel.getTabs().upcoming());
+        assertFalse(viewModel.getTabs().nonIFS());
+        assertTrue(viewModel.getTabs().projectSetup());
+        assertTrue(viewModel.getTabs().previous());
+        assertFalse(viewModel.getTabs().support());
     }
 
     @Test

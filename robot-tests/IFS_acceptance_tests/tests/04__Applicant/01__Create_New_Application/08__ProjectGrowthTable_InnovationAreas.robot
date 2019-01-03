@@ -43,7 +43,7 @@ Comp Admin starts a new Competition
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS Milestones        ${month}  ${nextyear}
+    And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
@@ -51,6 +51,7 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Tags]
     Given the user should see the element    jQuery = div:contains("Milestones") ~ .task-status-complete
     When the user clicks the button/link     link = Milestones
+    And the user clicks the button/link      jQuery = a:contains("Next")
     Then the user should see the element     jQuery = button:contains("Edit")
     And the user should see the dates in full format
     Then the user clicks the button/link     link = Competition setup
@@ -98,6 +99,14 @@ Applicant fills in the Application Details
     Then The user fills in the Application details   ${applicationWithoutGrowth}  ${tomorrowday}  ${month}  ${nextyear}
     And the user selects Research category           Feasibility studies
 
+Application details read only view shows correct details without innovation area
+    [Documentation]  IFS-4722
+    [Tags]
+    Given The user clicks the button/link    link = Application details
+    Then the user should see the element     jQuery = dt:contains("Application name") + dd:contains("NewApplFromNewComp without GrowthTable")
+    And The user should not see the element  jQuery = dt:contains("Innovation area")
+    [Teardown]  the user clicks the button/link  link = Application overview
+
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
     [Tags]  HappyPath
@@ -118,7 +127,7 @@ Once the project growth table is selected
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS Milestones              ${month}  ${nextyear}
+    And the user fills in the CS Milestones              project-setup-completion-stage   ${month}   ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
     And the user fills in the CS Documents in other projects
@@ -300,6 +309,14 @@ The Lead Applicant fills in the Application Details for App with Growth
     When the user clicks the button/link            link = Application details
     Then the user fills in the Application details  ${applicationWithGrowth}  ${tomorrowday}  ${month}  ${nextyear}
 
+Application details read only view shows correct details with innovation area
+    [Documentation]  IFS-4722
+    [Tags]
+    Given The user clicks the button/link    link = Application details
+    Then the user should see the element     jQuery = dt:contains("Application name") + dd:contains("All-Innov-Areas Application With GrowthTable")
+    And The user should see the element  jQuery = dt:contains("Innovation area") + dd:contains("Biosciences")
+    [Teardown]  the user clicks the button/link  link = Application overview
+
 Newly created collaborator can view and edit project Growth table
     [Documentation]    INFUND-8426
     [Tags]
@@ -472,6 +489,6 @@ the logged in user should not be able to apply in a competition he has not right
     the user clicks the button/link     link = Innovation Funding Service
     the user clicks the button/link in the paginated list  link = ${competition}
     the user clicks the button/link     link = Start new application
-    the user clicks the button/link     link = Apply with a different organisation.
+    the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")

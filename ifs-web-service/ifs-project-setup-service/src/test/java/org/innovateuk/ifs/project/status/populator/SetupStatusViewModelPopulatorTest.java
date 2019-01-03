@@ -6,6 +6,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
@@ -45,6 +47,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
@@ -91,8 +94,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     private static final boolean monitoringOfficerExpected = true;
 
-    List<org.innovateuk.ifs.competition.resource.ProjectDocumentResource> projectDocumentConfig =
-            org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource()
+    List<CompetitionDocumentResource> projectDocumentConfig =
+            CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
             .withTitle("Risk Register", "Plan Document")
             .build(2);
 
@@ -164,7 +167,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
         assertFalse(viewModel.isProjectComplete());
-        assertTrue(viewModel.isProjectDocuments());
+        assertTrue(viewModel.isCompetitionDocuments());
 
     }
 
@@ -1429,15 +1432,15 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        List<org.innovateuk.ifs.competition.resource.ProjectDocumentResource> competitionDocuments = org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.newProjectDocumentResource()
-                .withTitle("Collaboration agreement", "Other Document")
+        List<CompetitionDocumentResource> competitionDocuments = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+                .withTitle(COLLABORATION_AGREEMENT_TITLE, "Other Document")
                 .withCompetition(competition.getId())
                 .build(2);
 
-        competition.setProjectDocuments(competitionDocuments);
+        competition.setCompetitionDocuments(competitionDocuments);
 
         List<ProjectDocumentResource> projectDocuments = ProjectDocumentResourceBuilder.newProjectResource()
-                .withProjectDocument(competitionDocuments.get(1))
+                .withCompetitionDocument(competitionDocuments.get(1))
                 .withStatus(DocumentStatus.APPROVED)
                 .build(1);
 

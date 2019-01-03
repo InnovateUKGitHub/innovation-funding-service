@@ -44,7 +44,7 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
             when(competitionRestService.getCompetitionById(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionWithoutInterviewStage));
 
             switch (competitionStatus) {
-                case ASSESSOR_FEEDBACK: case PROJECT_SETUP:
+                case ASSESSOR_FEEDBACK: case PROJECT_SETUP: case PREVIOUS:
                     assertFalse("With interview stage and status " + competitionStatus.toString(),
                             rules.interviewPanel(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
                     break;

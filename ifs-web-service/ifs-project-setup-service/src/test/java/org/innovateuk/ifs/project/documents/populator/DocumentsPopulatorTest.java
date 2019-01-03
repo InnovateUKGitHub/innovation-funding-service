@@ -3,7 +3,9 @@ package org.innovateuk.ifs.project.documents.populator;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -24,6 +26,7 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UNSET;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
@@ -55,7 +58,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     private String documentConfigTitle2 = "Plan Document";
     private String documentConfigGuidance1 = "Guidance Risk Register";
     private String documentConfigGuidance2 = "Guidance Plan Document";
-    private String collaborationAgreement = "Collaboration agreement";
+    private String collaborationAgreement = COLLABORATION_AGREEMENT_TITLE;
 
     private UserResource user;
 
@@ -67,8 +70,8 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
         user = UserResourceBuilder.newUserResource().build();
 
-        List<org.innovateuk.ifs.competition.resource.ProjectDocumentResource> configuredProjectDocuments = org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder
-                .newProjectDocumentResource()
+        List<CompetitionDocumentResource> configuredProjectDocuments = CompetitionDocumentResourceBuilder
+                .neCompetitionDocumentResource()
                 .withId(documentConfigId1, documentConfigId2, collaborationAgreementId)
                 .withTitle(documentConfigTitle1, documentConfigTitle2, collaborationAgreement)
                 .withGuidance(documentConfigGuidance1, documentConfigGuidance2)
@@ -86,7 +89,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
         ProjectDocumentResource projectDocumentResource = ProjectDocumentResourceBuilder
                 .newProjectResource()
-                .withProjectDocument(configuredProjectDocuments.get(0))
+                .withCompetitionDocument(configuredProjectDocuments.get(0))
                 .withStatus(UPLOADED)
                 .build();
 

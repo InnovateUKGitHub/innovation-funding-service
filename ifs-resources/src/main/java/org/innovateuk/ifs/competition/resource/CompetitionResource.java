@@ -30,7 +30,7 @@ public class CompetitionResource {
     private Long id;
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
-    private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
+    private List<CompetitionDocumentResource> competitionDocuments = new ArrayList<>();
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String name;
     private ZonedDateTime startDate;
@@ -110,6 +110,8 @@ public class CompetitionResource {
     private Boolean includeJesForm;
 
     private boolean nonFinanceType;
+
+    private CompetitionCompletionStage completionStage;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -520,12 +522,12 @@ public class CompetitionResource {
         this.funders = funders;
     }
 
-    public List<ProjectDocumentResource> getProjectDocuments() {
-        return projectDocuments;
+    public List<CompetitionDocumentResource> getCompetitionDocuments() {
+        return competitionDocuments;
     }
 
-    public void setProjectDocuments(List<ProjectDocumentResource> projectDocuments) {
-        this.projectDocuments = projectDocuments;
+    public void setCompetitionDocuments(List<CompetitionDocumentResource> competitionDocuments) {
+        this.competitionDocuments = competitionDocuments;
     }
 
     public Boolean getUseResubmissionQuestion() {
@@ -722,6 +724,14 @@ public class CompetitionResource {
         return includeJesForm && OrganisationTypeEnum.isResearch(organisationType);
     }
 
+    public CompetitionCompletionStage getCompletionStage() {
+        return completionStage;
+    }
+
+    public void setCompletionStage(CompetitionCompletionStage completionStage) {
+        this.completionStage = completionStage;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -741,7 +751,7 @@ public class CompetitionResource {
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
-                .append(projectDocuments, that.projectDocuments)
+                .append(competitionDocuments, that.competitionDocuments)
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
@@ -805,7 +815,7 @@ public class CompetitionResource {
                 .append(id)
                 .append(milestones)
                 .append(funders)
-                .append(projectDocuments)
+                .append(competitionDocuments)
                 .append(name)
                 .append(startDate)
                 .append(endDate)

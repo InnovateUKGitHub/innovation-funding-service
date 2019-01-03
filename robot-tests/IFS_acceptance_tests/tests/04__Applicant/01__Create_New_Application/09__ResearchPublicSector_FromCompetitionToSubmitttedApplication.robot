@@ -99,9 +99,9 @@ The competition admin creates a competition for
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility                    ${orgType}  1  true  collaborative     # 1 means 30%
-    the user fills in the CS Milestones                     ${month}  ${nextyear}
+    the user fills in the CS Milestones                     project-setup-completion-stage   ${month}   ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
-    The user removes the Project details questions and marks the Application section as done  yes  Generic
+    the user removes the Project details questions and marks the Application section as done  yes  Generic
     the user fills in the CS Assessors
     the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
