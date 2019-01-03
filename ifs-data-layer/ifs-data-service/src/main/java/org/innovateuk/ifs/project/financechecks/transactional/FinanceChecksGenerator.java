@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financechecks.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
@@ -60,6 +61,9 @@ public class FinanceChecksGenerator {
     @Autowired
     private PartnerOrganisationRepository partnerOrganisationRepository;
 
+    @Autowired
+    private CompetitionService competitionService;
+
     public ServiceResult<Void> createMvpFinanceChecksFigures(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         FinanceCheck newFinanceCheck = createMvpFinanceCheckEmptyCosts(newProject, organisation, costCategoryType);
         populateFinanceCheck(newFinanceCheck);
@@ -78,7 +82,7 @@ public class FinanceChecksGenerator {
 
         ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject);
 
-        if (financeUtil.isUsingJesFinances(organisation.getOrganisationType().getId())) {
+        if (financeUtil.isUsingJesFinances(competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess(), organisation.getOrganisationType().getId())) {
 
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             viabilityWorkflowHandler.organisationIsAcademic(partnerOrganisation, null);

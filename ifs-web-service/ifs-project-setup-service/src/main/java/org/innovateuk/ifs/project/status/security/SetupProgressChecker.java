@@ -59,8 +59,8 @@ class SetupProgressChecker {
         return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 
-    public boolean isOtherDocumentsApproved() {
-        return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getOtherDocumentsStatus());
+    public boolean isDocumentsApproved() {
+        return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getDocumentsStatus());
     }
 
     public boolean isGrantOfferLetterAvailable() {

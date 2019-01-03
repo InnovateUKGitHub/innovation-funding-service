@@ -180,10 +180,14 @@ Eligibility Autosave
     Then the user should see the correct details in the eligibility form
 
 Milestones: Server side validations, submission time is default
-    [Documentation]  INFUND-2993, INFUND-7632
+    [Documentation]  INFUND-2993, INFUND-7632, IFS-4650
     [Tags]
     [Setup]  The user navigates to the Validation competition
     Given the user clicks the button/link             link = Milestones
+    When the user clicks the button/link              jQuery = button:contains("Done")
+    Then the user should see a field error            Select a completion stage.
+    And the user selects the radio button             selectedCompletionStage  project-setup-completion-stage
+    And the user clicks the button/link               jQuery = button:contains("Done")
     When the user fills the milestones with invalid data
     And the users waits until the page is autosaved
     And the user clicks the button/link               jQuery = button:contains(Done)
@@ -194,12 +198,16 @@ Milestones: Server side validations, submission time is default
 Milestones: Client side validations, submission time is non-default
     [Documentation]  INFUND-2993, INFUND-7632
     [Tags]
-    The user fills in the CS Milestones  ${month}  ${nextYear}
+    Given the user fills in the CS Milestones   project-setup-completion-stage   ${month}   ${nextyear}
 
 Milestones: Autosave
     [Documentation]  INFUND-2993 INFUND-7632
     [Tags]
-    When the user clicks the button/link    link = Milestones
+    When the user clicks the button/link              link = Milestones
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  project-setup-completion-stage
+    Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
     Then the user should see the correct inputs in the Milestones form
 
 Application finances: validation empty
@@ -211,10 +219,13 @@ Application finances: validation empty
     And the user enters text to a text field                   css = .editor  ${EMPTY}
     When The user clicks the button/link                       jQuery = button:contains("Done")
     Then the user should see a field and summary error         This field cannot be left blank.
+    And the user should see a field and summary error          Select whether to include the Je-S form.
     And the user should see a field and summary error          Select whether to include the project growth table.
     And the user enters text to a text field                   css = .editor  Funding rules for this competition added
     And the user selects the radio button                      applicationFinanceType  STANDARD
     And the user selects the radio button                      includeGrowthTable  false
+    And the user selects the radio button                      includeYourOrganisationSection  true
+    And the user selects the radio button                      includeJesForm  true
     And the user clicks the button/link                        jQuery = button:contains("Done")
 
 Application finances: able to edit the field
@@ -251,27 +262,26 @@ Assessor: Client-side validation
     Then The user should not see the text in the page  This field can only accept whole numbers
     And the user clicks the button/link          link = Competition setup
 
-# TODO IFS-4609 Uncomment when this functionality is enabled.
-#Documents in project setup: The competition admin is required to enter a title and guidance message
-#    [Documentation]
-#    [Tags]
-#    Given the user clicks the button/link       link = Documents in project setup
-#    And the user clicks the button/link         link = Add document type
-#    When the user clicks the button/link        css = button[type = "submit"]
-#    Then the user should see the group of errors
-#
-#Documents in project setup: The competition admin addresses the errors
-#    [Documentation]
-#    [Tags]
-#    Given the user enters text to a text field    id = title    Test document type
-#    And the user moves focus and waits for autosave
-#    Then the user should not see the element      jQuery = a:contains("Please enter a title.")
-#    When the user clicks the button/link          jQuery = span:contains("PDF")
-#    #And the user moves focus and waits for autosave
-#    Then the user should not see the element      jQuery = a:contains("You need to select at least one file type.")
-#    When the user enters text to a text field     css = .editor    Guidance test.
-#    And the user moves focus and waits for autosave
-#    Then the user should not see the element      jQuery = a:contains("Please enter guidance for the applicant.")
+Documents in project setup: The competition admin is required to enter a title and guidance message
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link       link = Documents
+    And the user clicks the button/link         link = Add document type
+    When the user clicks the button/link        css = button[type = "submit"]
+    Then the user should see the group of errors
+
+Documents in project setup: The competition admin addresses the errors
+    [Documentation]
+    [Tags]
+    Given the user enters text to a text field    id = title    Test document type
+    And the user moves focus and waits for autosave
+    Then the user should not see the element      jQuery = a:contains("Please enter a title.")
+    When the user clicks the button/link          jQuery = span:contains("PDF")
+    And the user moves focus and waits for autosave
+    Then the user should not see the element      jQuery = a:contains("You need to select at least one file type.")
+    When the user enters text to a text field     css = .editor    Guidance test.
+    And the user moves focus and waits for autosave
+    Then the user should not see the element      jQuery = a:contains("Please enter guidance for the applicant.")
 
 *** Keywords ***
 Custom suite setup
@@ -282,10 +292,6 @@ Custom suite setup
     Set suite variable  ${nextYear}
     ${tomorrowMonthWord} =  get tomorrow month as word
     set suite variable  ${tomorrowMonthWord}
-
-the user moves focus and waits for autosave
-    Set Focus To Element    link=Sign out
-    Wait For Autosave
 
 the validation error above the question should be visible
     [Arguments]    ${QUESTION}    ${ERROR}
@@ -428,10 +434,10 @@ the user should see the correct details in the funding information form
 
 the user should see the correct details in the eligibility form
     the user sees that the radio button is selected     singleOrCollaborative    single
-    the user should see that the checkbox is selected   research-categories-33
-    the user should see that the checkbox is selected   research-categories-34
-    the user should see that the checkbox is selected   research-categories-35
-    the user should see that the checkbox is selected   lead-applicant-type-1  # business
+    Checkbox Should Be Selected   research-categories-33
+    Checkbox Should Be Selected   research-categories-34
+    Checkbox Should Be Selected   research-categories-35
+    Checkbox Should Be Selected   lead-applicant-type-1  # business
     Page Should Contain    50%
     the user sees that the radio button is selected    resubmission    no
 

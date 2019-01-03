@@ -45,7 +45,7 @@ Guidance in the your project costs
     When the user clicks the button/link    jQuery = button:contains("Labour")
     And the user clicks the button/link     css = .govuk-details summary
     Then the user should see the element    css = .govuk-details__text p
-    And the user should see the element     css = .labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
+    And the user should see the element     css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 Working days per year should be 232
     [Documentation]    INFUND-2961
@@ -129,10 +129,9 @@ Applicant chooses Calculate overheads option
     When the user clicks the button/link                    link = Your project costs
     Then the user should see the text in the page           ${excel_file}
     And the user clicks the button/link                     jQuery = button:contains("Edit your project costs")
-    And the user clicks the button/link                     css = button[name="overheadfiledelete"]
+    And the user clicks the button/link                     css = button[name="removeOverheadFile"]
     When the user selects the checkbox                      stateAidAgreed
     And the user clicks the button/link                     jQuery = button:contains("Mark as complete")
-    Then the user should see a summary error                You cannot mark as complete.
 
 *** Keywords ***
 Custom Suite Setup
@@ -148,14 +147,14 @@ the user adds three material rows
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(2) td:nth-of-type(2) input  01
     the user clicks the button/link       jQuery = button:contains("Add another materials cost")
     the user enters text to a text field  css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
-    the user moves focus to the element   link = Please refer to our guide to project costs for further information.
+    Set Focus To Element                  link = Please refer to our guide to project costs for further information.
     Wait for autosave
 
 the user removes the materials rows
     [Documentation]    INFUND-2965
     the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
-    the user moves focus to the element                      jQuery = table[id=material-costs-table] button:contains("Remove")
+    Set Focus To Element                                     jQuery = table[id=material-costs-table] button:contains("Remove")
     the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
     Wait Until Element Is Not Visible Without Screenshots    css = table[id=material-costs-table] tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
     the user clicks the button/link                          jQuery = table[id=material-costs-table] button:contains("Remove")
@@ -164,8 +163,8 @@ the user removes the materials rows
     the user clicks the button/link                          jQuery = button:contains("Materials")
 
 the working days per year should be 232 by default
-    the user should see the element    css = [name^="labour-labourDaysYearly"]
-    ${Days_value} =   Get Value        css = [name^="labour-labourDaysYearly"]
+    the user should see the element    id = working-days-per-year
+    ${Days_value} =   Get Value        id = working-days-per-year
     Should Be Equal As Strings         ${Days_value}    232
 
 the user navigates to another page

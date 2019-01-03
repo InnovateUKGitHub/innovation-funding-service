@@ -5,6 +5,8 @@ Dear ${notificationTarget.name}
 You have been invited to view the following competition on the Innovation Funding Service:
 ${competitionName}
 
+Before you accept this invitation, make sure you are acting within all agreements you have signed with Innovate UK. You cannot apply to this competition yourself, nor can your family members or other associates.
+
 Please sign in here: ${dashboardUrl}
 
 Yours sincerely

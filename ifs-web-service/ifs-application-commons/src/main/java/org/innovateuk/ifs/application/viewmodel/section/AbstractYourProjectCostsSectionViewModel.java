@@ -55,7 +55,7 @@ public abstract class AbstractYourProjectCostsSectionViewModel extends AbstractS
     }
 
     public boolean getShowTerms() {
-        return !(getCurrentApplicant().isResearch() ||
+        return !(getCompetition().showJesFinances(getCurrentApplicant().getOrganisation().getOrganisationType()) ||
                 isAllReadOnly() ||
                 getApplication().getCompetitionStatus().isLaterThan(OPEN));
     }

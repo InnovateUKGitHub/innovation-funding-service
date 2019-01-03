@@ -83,7 +83,7 @@ public class GrantClaimCostPopulatorTest {
         GrantClaim grantClaim = mock(GrantClaim.class);
         when(applicationFinanceRestService.getFinanceDetails(section.getApplication().getId(), currentApplicant.getOrganisation().getId())).thenReturn(restSuccess(financeResource));
         when(financeResource.getFinanceOrganisationDetails(FinanceRowType.FINANCE)).thenReturn(category);
-        when(financeViewHandlerProvider.getFinanceFormHandler(currentApplicant.getOrganisation().getOrganisationType())).thenReturn(formHandler);
+        when(financeViewHandlerProvider.getFinanceFormHandler(section.getCompetition(), currentApplicant.getOrganisation().getOrganisationType())).thenReturn(formHandler);
         when(formHandler.addCostWithoutPersisting(section.getApplication().getId(), section.getCurrentUser().getId(), question.getQuestion().getId())).thenReturn(rowItem);
         when(financeResource.getMaximumFundingLevel()).thenReturn(MAXIMUM_GRANT_CLAIM);
         when(financeResource.getGrantClaim()).thenReturn(grantClaim);

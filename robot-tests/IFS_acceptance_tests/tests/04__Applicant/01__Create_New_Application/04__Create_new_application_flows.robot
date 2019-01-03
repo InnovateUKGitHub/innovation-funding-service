@@ -61,8 +61,8 @@ Verify the name of the new application
 Marketing emails information should have updated on the profile
     [Documentation]    INFUND-9243
     [Tags]  HappyPath
-    When the user navigates to the page                     ${edit_profile_url}
-    Then the user should see that the checkbox is selected  allowMarketingEmails
+    When the user navigates to the page    ${edit_profile_url}
+    Then Checkbox Should Be Selected       allowMarketingEmails
 
 *** Keywords ***
 the new application should be visible in the dashboard page
@@ -100,8 +100,6 @@ the user directed to correct dashboard
     [Arguments]    ${Application_name}
     the user should see the text in the page  Dashboard
     the user clicks the button/link           link = ${Application_name}
-    the user should see the element           jQuery = button:contains("Save and return to application overview")
-    the user clicks the button/link           link = Application overview
     the user is redirected to overview page if he has been there already
 
 the user is redirected to overview page if he has been there already

@@ -7,7 +7,7 @@ IFS.core.passwordToggle = (function () {
       var passwordInput = button.prev()
       var form = button.closest('form')
       var submitButton = form.find('[type=submit]')
-      fieldName = passwordInput.prop('name')
+      IFS.core.passwordToggle.setFieldName(passwordInput.prop('name'))
       button.on('click', function (e) {
         e.preventDefault()
         var inputType = passwordInput.prop('type')
@@ -17,6 +17,9 @@ IFS.core.passwordToggle = (function () {
           IFS.core.passwordToggle.hidePassword(button, passwordInput)
         }
       })
+    },
+    setFieldName: function (value) {
+      fieldName = value
     },
     showPassword: function (button, passwordInput, submitButton, form) {
       form.off('submit')

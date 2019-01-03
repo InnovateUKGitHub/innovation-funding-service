@@ -47,7 +47,7 @@ Large pdf upload not allowed
     [Documentation]    INFUND-2720
     [Tags]    Upload
     Given the user clicks the button/link         jQuery = .button-clear:contains("Edit your project costs")
-    Then the user clicks the button/link          css = button[name="remove_finance_document"]
+    Then the user clicks the button/link          css = button[name="remove_jes"]
     When the academic partner uploads a file      ${too_large_pdf}
     Then the user should get an error page        ${too_large_pdf_validation_error}
     [Teardown]    the user goes back to the previous page
@@ -114,8 +114,8 @@ Mark all as complete
     And the user navigates to Your-finances page   Academic robot test application
     And the user clicks the button/link            link = Your project costs
     And the user should see the element            link = ${5mb_pdf}
-    When the user enters text to a text field      css = input[name$="tsb_reference"]  123123
-    Then textfield value should be                 css = input[name$="tsb_reference"]  123123
+    When the user enters text to a text field      css = input[name="tsbReference"]  123123
+    Then textfield value should be                 css = input[name="tsbReference"]  123123
     And the user selects the checkbox              termsAgreed
     When the user clicks the button/link           jQuery = button:contains("Mark as complete")
     And the user enters the project location
@@ -132,7 +132,7 @@ User should not be able to edit or upload the form
     And the user should see correct grant percentage
     And the user clicks the button/link               link = Your project costs
     Then the user should not see the element          jQuery = button:contains("Remove")
-    And the user should see the element               css = [name$="incurred_staff"][readonly]
+    And the user should see the element               css = [name$="incurredStaff"][readonly]
 
 File delete should not be allowed when marked as complete
     [Documentation]    INFUND-2437
@@ -191,17 +191,16 @@ the user can see JeS details
     the user should see the element  css = a[href*="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system"]
 
 the applicant enters invalid inputs
-    The user enters text to a text field  css = [name$="incurred_staff"]  ${EMPTY}
-    The user enters text to a text field  css = [name$="incurred_travel_subsistence"]  ${EMPTY}
-    The user enters text to a text field  css = [name$="incurred_other_costs"]  ${EMPTY}
-    The user enters text to a text field  css = [name$="allocated_investigators"]  ${EMPTY}
-    The user enters text to a text field  css = [name$="allocated_estates_costs"]  ${EMPTY}
-    The user enters text to a text field  css = [name$="allocated_other_costs"]  ${EMPTY}
-    The user enters text to a text field  css = [name$="indirect_costs"]  ${EMPTY}
-    The user enters text to a text field  css = [name$="exceptions_staff"]  ${EMPTY}
-    The user enters text to a text field  css = [name$="exceptions_other_costs"]  ${EMPTY}
-    The user enters text to a text field  css = [name$="tsb_reference"]  ${EMPTY}
-    the user should see a field error  This field cannot be left blank.
+    The user enters text to a text field  css = [name="incurredStaff"]  ${EMPTY}
+    The user enters text to a text field  css = [name="incurredTravel"]  ${EMPTY}
+    The user enters text to a text field  css = [name="incurredOtherCosts"]  ${EMPTY}
+    The user enters text to a text field  css = [name="allocatedInvestigators"]  ${EMPTY}
+    The user enters text to a text field  css = [name="allocatedEstateCosts"]  ${EMPTY}
+    The user enters text to a text field  css = [name="allocatedOtherCosts"]  ${EMPTY}
+    The user enters text to a text field  css = [name="indirectCosts"]  ${EMPTY}
+    The user enters text to a text field  css = [name="exceptionsStaff"]  ${EMPTY}
+    The user enters text to a text field  css = [name="exceptionsOtherCosts"]  ${EMPTY}
+    The user enters text to a text field  css = [name="tsbReference"]  ${EMPTY}
 
 Mark academic finances as complete
     the user selects the checkbox    termsAgreed

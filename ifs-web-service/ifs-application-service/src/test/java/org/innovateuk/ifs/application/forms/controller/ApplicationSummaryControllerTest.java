@@ -118,8 +118,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     }
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

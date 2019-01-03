@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,11 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     public RestResult<Void> resetMilestone(MilestoneResource milestone) {
         milestone.setDate(null);
         return putWithRestResult(milestonesRestURL + "/", milestone, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage) {
+        return putWithRestResult(milestonesRestURL + "/competition/" + competitionId +
+                "/completion-stage?completionStage=" + completionStage.name(), Void.class);
     }
 }

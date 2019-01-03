@@ -59,7 +59,7 @@
                                <a class="govuk-link" th:text="${publicContentItem.competitionTitle}" th:href="@{/competition/{competitionId}/overview(competitionId=${publicContentItem.competitionId})}">Competition title</a>
                            </h2>
                            <div class="wysiwyg-styles govuk-!-margin-bottom-4" ifs:utext="${publicContentItem.shortDescription}">Description of the competition</div>
-                           <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Eligibility:</h3>
+                           <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Eligibility</h3>
                            <div class="wysiwyg-styles govuk-!-margin-bottom-4" ifs:utext="${publicContentItem.eligibilitySummary}"></div>
                            <h3 class="govuk-heading-s govuk-!-margin-bottom-0" th:text="${publicContentItem.publicContentStatusText?.getHeader()}"/>
                            <dl class="date-definition-list govuk-!-margin-top-0">

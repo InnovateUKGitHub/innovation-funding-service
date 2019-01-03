@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapKeyAndValue;
+
 /**
  * General populator for non section specific
  */
@@ -24,10 +26,13 @@ public class CompetitionSetupPopulator {
     private CompetitionSetupRestService competitionSetupRestService;
 
     public GeneralSetupViewModel populateGeneralModelAttributes(CompetitionResource competitionResource, CompetitionSetupSection section) {
+
         Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId())
                 .getSuccess();
 
-        boolean editable = isSectionEditable(statuses, section, competitionResource);
+        Map<CompetitionSetupSection, Boolean> statusesAndValues = simpleMapKeyAndValue(statuses, key -> key, value -> value.orElse(false));
+
+        boolean editable = isSectionEditable(statusesAndValues, section, competitionResource);
 
         GeneralSetupViewModel viewModel = new GeneralSetupViewModel(editable, competitionResource, section, CompetitionSetupSection.values(),
                 competitionSetupService.isInitialDetailsCompleteOrTouched(competitionResource.getId()));
@@ -41,9 +46,8 @@ public class CompetitionSetupPopulator {
         return viewModel;
     }
 
-    private boolean isSectionEditable(Map<CompetitionSetupSection, Optional<Boolean>> statuses, CompetitionSetupSection section, CompetitionResource competitionResource) {
-        return (!statuses.get(section).isPresent() || !statuses.get(section).get())
-                && !section.preventEdit(competitionResource);
+    private boolean isSectionEditable(Map<CompetitionSetupSection, Boolean> statuses, CompetitionSetupSection section, CompetitionResource competitionResource) {
+        return !statuses.getOrDefault(section, false) && !section.preventEdit(competitionResource);
     }
 
     private CompetitionStateSetupViewModel populateCompetitionStateModelAttributes(CompetitionResource competitionResource, CompetitionSetupSection section) {

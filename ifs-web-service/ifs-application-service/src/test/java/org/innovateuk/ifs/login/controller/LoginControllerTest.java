@@ -5,11 +5,9 @@ import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.InvalidURLException;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
-import org.innovateuk.ifs.login.LoginController;
 import org.innovateuk.ifs.token.resource.TokenResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -22,7 +20,6 @@ import java.util.UUID;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,14 +41,8 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
     private UserService userService;
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void logOutUsers() {
         setLoggedInUser(null);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
     }
 
     @Test

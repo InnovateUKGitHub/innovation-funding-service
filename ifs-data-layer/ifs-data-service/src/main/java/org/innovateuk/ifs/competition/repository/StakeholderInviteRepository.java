@@ -9,6 +9,8 @@ import java.util.List;
 public interface StakeholderInviteRepository extends InviteRepository<StakeholderInvite> {
 
     List<StakeholderInvite> findByCompetitionIdAndStatus(long competitionId, InviteStatus status);
+
+    boolean existsByCompetitionIdAndStatusAndEmail(long competitionId, InviteStatus sent, String email);
 }
 
 

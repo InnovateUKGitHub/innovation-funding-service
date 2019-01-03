@@ -7,7 +7,7 @@ ${competitionName}
 
 Please create an account to view this competition.
 
-Name: ${notificationTarget.name}
+Before you accept this invitation, make sure you are acting within all agreements you have signed with Innovate UK. You cannot apply to this competition yourself, nor can your family members or other associates.
 
 Please confirm your account and create your password here: ${inviteUrl}
 

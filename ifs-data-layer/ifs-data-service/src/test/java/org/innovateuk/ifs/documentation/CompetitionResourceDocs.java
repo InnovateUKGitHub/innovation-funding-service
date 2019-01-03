@@ -57,6 +57,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
             fieldWithPath("applicationFinanceType").description("The type of finances for the application"),
             fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date"),
+            fieldWithPath("completionStage").description("The stage at which the Competition is deemed closed"),
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)"),
             fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition"),
             fieldWithPath("hasAssessmentPanel").description("Indicates if the competition will have an assessment panel stage"),
@@ -68,9 +69,11 @@ public class CompetitionResourceDocs {
             fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last"),
             fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility"),
             fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition"),
-            fieldWithPath("projectDocuments").description("List of documents required during the project setup phase"),
+            fieldWithPath("competitionDocuments").description("List of documents required during the project setup phase"),
             fieldWithPath("nonFinanceType").description("Does the competition have finance questions"),
+            fieldWithPath("includeJesForm").description("Does the competition include the Je-S form for academics"),
             fieldWithPath("includeProjectGrowthTable").description("Indicate if the competition has a project growth table"),
+            fieldWithPath("includeYourOrganisationSection").description("Indicate if the competition has a your organisation section"),
             fieldWithPath("createdBy").description("user who created this competition"),
             fieldWithPath("createdOn").description("when the competition was created"),
             fieldWithPath("modifiedBy").description("user who modified this competition"),
@@ -111,5 +114,6 @@ public class CompetitionResourceDocs {
             .withHasInterviewStage(false)
             .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
             .withTermsAndConditions(new GrantTermsAndConditionsResource("T&C", "terms-and-conditions-template", 1))
-            .withStateAid(true);
+            .withStateAid(true)
+            .withIncludeJesForm(true);
 }

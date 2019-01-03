@@ -13,6 +13,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -28,6 +30,7 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
@@ -37,6 +40,7 @@ import org.innovateuk.ifs.project.grantofferletter.model.*;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
@@ -61,6 +65,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.io.File.separator;
 import static java.util.Collections.singletonList;
@@ -68,12 +73,15 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
-public class GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOfferLetterService {
+public class
+GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOfferLetterService {
 
     private static final String GOL_CONTENT_TYPE = "application/pdf";
 
@@ -129,6 +137,9 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private GrantOfferLetterFinanceTotalsTablePopulator grantOfferLetterFinanceTotalsTablePopulator;
+
+    @Autowired
+    private PartnerOrganisationService partnerOrganisationService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -360,7 +371,26 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
         ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccess();
 
-        return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && ApprovalType.APPROVED.equals(project1.getOtherDocumentsApproved()) && project1.getGrantOfferLetter() == null).orElse(false);
+        return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && allProjectDocumentsApproved(project1) && project1.getGrantOfferLetter() == null).orElse(false);
+    }
+
+    private boolean allProjectDocumentsApproved(Project project) {
+        Competition competition = project.getApplication().getCompetition();
+        List<CompetitionDocument> expectedDocuments = competition.getCompetitionDocuments();
+        int actualNumberOfDocuments = project.getProjectDocuments().size();
+
+        List<PartnerOrganisationResource> partnerOrganisations = partnerOrganisationService.getProjectPartnerOrganisations(project.getId()).getSuccess();
+
+        int expectedNumberOfDocuments = expectedDocuments.size();
+        if (partnerOrganisations.size() == 1) {
+            List<String> documentNames = expectedDocuments.stream().map(CompetitionDocument::getTitle).collect(Collectors.toList());
+            if (documentNames.contains(COLLABORATION_AGREEMENT_TITLE)) {
+                expectedNumberOfDocuments = expectedDocuments.size() - 1;
+            }
+        }
+
+        return actualNumberOfDocuments == expectedNumberOfDocuments && project.getProjectDocuments().stream()
+                .allMatch(projectDocumentResource -> APPROVED.equals(projectDocumentResource.getStatus()));
     }
 
     private FileEntryResource linkGrantOfferLetterFileToProject(Project project, Pair<File, FileEntry> fileDetails, boolean signed) {

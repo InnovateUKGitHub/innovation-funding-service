@@ -15,7 +15,7 @@
 
 <div class="govuk-width-container">
 
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${endSet ? '/prototypes/IFS-4650-end-milestone?selectedStage=' + param.completionStage[0] : '/prototypes/IFS-4650-end-milestone'})" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${endSet ? '/prototypes/IFS-4650-end-milestone?selectedStage=' + param.completionStage[0] : '/prototypes/IFS-4650-comp-setup'})" />
 
     <main class="govuk-main-wrapper" id="content">
 
@@ -79,7 +79,7 @@
 
 
                 <th:block th:if="${!endSet}">
-                    <form id="lead-organisation-type-form" th:action="${#httpServletRequest.requestURI}" method="GET">
+                    <form id="lead-organisation-type-form" th:action="${'/prototypes/IFS-4650-milestones'}" method="GET">
 
                         <div class="govuk-form-group">
                             <fieldset class="govuk-fieldset">
@@ -121,7 +121,7 @@
 
                 <ul class="govuk-list pagination">
                     <li class="prev">
-                        <a rel="prev" title="Navigate to next part" href="#">
+                        <a rel="prev" title="Navigate to previous part" href="#">
                             <span class="pagination-label">Previous</span>
                             <span class="pagination-part-title">Eligibility</span>
                         </a>

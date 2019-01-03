@@ -2,7 +2,6 @@ package org.innovateuk.ifs.eugrant.transactional;
 
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.config.WebUserOnlyFilter;
 import org.innovateuk.ifs.euactiontype.repository.EuActionTypeRepository;
 import org.innovateuk.ifs.eugrant.EuContactResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
@@ -10,6 +9,7 @@ import org.innovateuk.ifs.eugrant.EuOrganisationResource;
 import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.innovateuk.ifs.eugrant.repository.EuGrantRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,8 @@ import static org.innovateuk.ifs.eugrant.domain.EuContactBuilder.newEuContact;
 import static org.innovateuk.ifs.eugrant.domain.EuFundingBuilder.newEuFunding;
 import static org.innovateuk.ifs.eugrant.domain.EuGrantBuilder.newEuGrant;
 import static org.innovateuk.ifs.eugrant.domain.EuOrganisationBuilder.newEuOrganisation;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -46,9 +48,12 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
         euGrantRepository.deleteAll();
     }
 
+    private UserResource webUser = newUserResource().withRoleGlobal(SYSTEM_REGISTRATION_USER).build();
+
     @Test
     public void update() {
-        setLoggedInUser(WebUserOnlyFilter.webUser);
+
+        setLoggedInUser(webUser);
 
         EuGrant euGrant = euGrantRepository.save(newEuGrant().build());
 
@@ -93,7 +98,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void findById() {
-        setLoggedInUser(WebUserOnlyFilter.webUser);
+        setLoggedInUser(webUser);
         EuGrant grant = new EuGrant();
         grant = euGrantRepository.save(grant);
 
@@ -104,8 +109,8 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void create() throws Exception {
-        setLoggedInUser(WebUserOnlyFilter.webUser);
+    public void create() {
+        setLoggedInUser(webUser);
         ServiceResult<EuGrantResource> result = euGrantService.create();
 
         List<EuGrant> grants = newArrayList(euGrantRepository.findAll());
@@ -115,12 +120,12 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void submit() throws Exception {
-        setLoggedInUser(WebUserOnlyFilter.webUser);
+    public void submit() {
+        setLoggedInUser(webUser);
 
         EuGrant euGrant = newEuGrant()
                 .withContact(newEuContact()
-                        .withEmail("blah@gmail.com")
+                        .withEmail("blah@example.com")
                         .withJobTitle("King")
                         .withName("Bob")
                         .withTelephone("999")
@@ -144,7 +149,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
         euGrant = euGrantRepository.save(euGrant);
 
-        ServiceResult<EuGrantResource> result = euGrantService.submit(euGrant.getId());
+        ServiceResult<EuGrantResource> result = euGrantService.submit(euGrant.getId(), true);
 
         assertTrue(result.isSuccess());
 
