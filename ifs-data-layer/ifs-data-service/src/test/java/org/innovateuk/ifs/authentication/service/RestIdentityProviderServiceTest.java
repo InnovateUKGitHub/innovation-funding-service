@@ -11,6 +11,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.config.rest.RestTemplateAdaptorFactory;
+import org.innovateuk.ifs.events.UserCreationEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,7 +83,7 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
 
         ServiceResult<String> result = service.createUserRecordWithUid("email@example.com", "thepassword");
 
-        verify(applicationEventPublisher).publishEvent(any(String.class));
+        verify(applicationEventPublisher).publishEvent(any(UserCreationEvent.class));
         assertTrue(result.isSuccess());
         assertEquals("new-uid", result.getSuccess());
     }

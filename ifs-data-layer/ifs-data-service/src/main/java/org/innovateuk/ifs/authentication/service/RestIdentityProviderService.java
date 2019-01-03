@@ -91,7 +91,7 @@ public class RestIdentityProviderService implements IdentityProviderService, App
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
-    public void rollbackUser(UserCreationEvent userCreationEvent) {
+    protected void rollbackUser(UserCreationEvent userCreationEvent) {
         LOG.info("Rolling back user in ldap");
         adaptor.restDelete(idpBaseURL + idpUserPath + userCreationEvent.getUuid());
     }
