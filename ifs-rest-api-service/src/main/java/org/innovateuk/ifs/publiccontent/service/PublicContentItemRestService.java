@@ -17,5 +17,5 @@ public interface PublicContentItemRestService {
                                                                 Optional<Integer> pageNumber,
                                                                 Integer pageSize) throws UnsupportedEncodingException;
 
-    RestResult<PublicContentItemResource> getItemByCompetitionId(final Long competitionId);
+    RestResult<PublicContentItemResource> getItemByCompetitionId(long competitionId);
 }

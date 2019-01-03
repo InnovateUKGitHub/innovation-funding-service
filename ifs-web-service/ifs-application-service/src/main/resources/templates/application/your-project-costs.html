@@ -86,7 +86,8 @@
                         <label for="stateAidAgreed"
                                class="govuk-label govuk-checkboxes__label">
                             By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
-                            <a target="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance" class="govuk-link">project costs guidance</a>
+                            <a th:unless="${model.procurementCompetition}" target="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance" class="govuk-link">project costs guidance</a>
+                            <a th:if="${model.procurementCompetition}" ttarget="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance" class="govuk-link">project costs guidance</a>
                             (opens in a new window).
                         </label>
                     </div>
