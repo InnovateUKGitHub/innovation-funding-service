@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindAny;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -48,7 +49,7 @@ public class DocumentsPopulator {
 
         if (partnerOrganisations.size() == 1) {
             configuredProjectDocuments.removeIf(
-                    document -> document.getTitle().equals("Collaboration agreement"));
+                    document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
         }
 
         List<ProjectDocumentResource> projectDocuments = project.getProjectDocuments();
