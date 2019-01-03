@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.test.annotation.Rollback;
 
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
@@ -74,6 +75,7 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
     }
 
     @Test
+    @Rollback
     public void createOrganisationUserWithEmailServiceUnavailableRollbacksUserFromLdap() {
 
         regApiHelper.withMockIdpRestTemplate(mockIdpRestTemplate -> {
@@ -86,9 +88,9 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
 
                 UserResource registrationInfo = newUserResource().
                         withTitle(Title.Dr).
-                        withFirstName("Bob").
-                        withLastName("Spiggot").
-                        withEmail("rollback@example.com").
+                        withFirstName("Kieran").
+                        withLastName("Worth").
+                        withEmail("rollback@worth.com").
                         withPassword("thebspig").
                         build();
 
@@ -110,9 +112,9 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
 
                 UserResource registrationInfo = newUserResource().
                         withTitle(Title.Dr).
-                        withFirstName("Bob").
-                        withLastName("Spiggot").
-                        withEmail("rollback@example.com").
+                        withFirstName("Kieran").
+                        withLastName("Worth").
+                        withEmail("rollback@worth.com").
                         withPassword("thebspig").
                         build();
 
