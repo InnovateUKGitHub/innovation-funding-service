@@ -67,7 +67,6 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
         ReflectionTestUtils.setField(service, "adaptor", adaptor);
         ReflectionTestUtils.setField(service, "idpBaseURL", "http://idprest");
         ReflectionTestUtils.setField(service, "idpUserPath", "/user");
-        applicationEventPublisher = Mockito.mock(ApplicationEventPublisher.class);
         service.setApplicationEventPublisher(applicationEventPublisher);
     }
 

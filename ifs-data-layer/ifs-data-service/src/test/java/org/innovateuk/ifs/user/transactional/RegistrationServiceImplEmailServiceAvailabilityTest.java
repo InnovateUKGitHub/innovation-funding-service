@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.hibernate.Hibernate;
+import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -11,9 +13,12 @@ import org.innovateuk.ifs.testutil.DatabaseTestHelper;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests that this Service will roll back its work if the email service is not available for sending out emails
@@ -22,6 +27,9 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
 
     @Autowired
     private RegistrationServiceImpl registrationService;
+
+    @Autowired
+    private RestIdentityProviderService idpService;
 
     @Autowired
     private OrganisationRepository organisationRepository;
@@ -37,6 +45,8 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
 
     @Autowired
     private DatabaseTestHelper databaseTestHelper;
+
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Test
     public void createOrganisationUserWithEmailServiceUnavailableDoesntLeavePartialDataInDatabase() {
@@ -59,6 +69,56 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
 
                 return databaseTestHelper.assertingNoDatabaseChangesOccur(() ->
                         registrationService.createUser(registrationInfo));
+            });
+        });
+    }
+
+    @Test
+    public void createOrganisationUserWithEmailServiceUnavailableRollbacksUserFromLdap() {
+
+        regApiHelper.withMockIdpRestTemplate(mockIdpRestTemplate -> {
+
+            withServiceUnavailableFromEmailService(() -> {
+
+                regApiHelper.setupSuccessfulResponseExpectationsFromCreateUserCall(mockIdpRestTemplate);
+
+                testService.doWithinTransaction(this::loginSystemRegistrationUser);
+
+                UserResource registrationInfo = newUserResource().
+                        withTitle(Title.Dr).
+                        withFirstName("Bob").
+                        withLastName("Spiggot").
+                        withEmail("rollback@example.com").
+                        withPassword("thebspig").
+                        build();
+
+                return databaseTestHelper.assertingNoDatabaseChangesOccur(() ->
+                        registrationService.createUser(registrationInfo));
+            });
+        });
+
+        applicationEventPublisher = Mockito.mock(ApplicationEventPublisher.class);
+        idpService.setApplicationEventPublisher(applicationEventPublisher);
+
+       regApiHelper.withMockIdpRestTemplate(mockIdpRestTemplate -> {
+
+            withServiceAvailableFromEmailService(() -> {
+
+                regApiHelper.setupSuccessfulResponseExpectationsFromCreateUserCall(mockIdpRestTemplate);
+
+                testService.doWithinTransaction(this::loginSystemRegistrationUser);
+
+                UserResource registrationInfo = newUserResource().
+                        withTitle(Title.Dr).
+                        withFirstName("Bob").
+                        withLastName("Spiggot").
+                        withEmail("rollback@example.com").
+                        withPassword("thebspig").
+                        build();
+
+                ServiceResult<UserResource> result = registrationService.createUser(registrationInfo);
+                assertTrue(result.isSuccess());
+                return result;
             });
         });
     }
