@@ -12,6 +12,7 @@ import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.validator.OtherFundingValidator;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUND
  * Handles the other funding, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@Component
 public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     public static final String COST_KEY = "other-funding";
     public static final String OTHER_FUNDING_NAME = OTHER_FUNDING.getName();

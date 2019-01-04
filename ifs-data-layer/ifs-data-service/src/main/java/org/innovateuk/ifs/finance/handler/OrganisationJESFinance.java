@@ -9,7 +9,6 @@ import org.innovateuk.ifs.finance.handler.item.OtherFundingHandler;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumMap;
@@ -26,7 +25,13 @@ public class OrganisationJESFinance extends AbstractOrganisationFinanceHandler i
     private static final Log LOG = LogFactory.getLog(OrganisationJESFinance.class);
 
     @Autowired
-    private AutowireCapableBeanFactory beanFactory;
+    private GrantClaimHandler grantClaimHandler;
+
+    @Autowired
+    private OtherFundingHandler otherFundingHandler;
+
+    @Autowired
+    private JESCostHandler jesCostHandler;
 
     @Override
     protected boolean initialiseCostTypeSupported(FinanceRowType costType) {
@@ -73,17 +78,16 @@ public class OrganisationJESFinance extends AbstractOrganisationFinanceHandler i
             case TRAVEL:
             case YOUR_FINANCE:
             case ACADEMIC:
-                handler = new JESCostHandler();
+                handler = jesCostHandler;
                 break;
             case FINANCE:
-                handler = new GrantClaimHandler();
+                handler = grantClaimHandler;
                 break;
             case OTHER_FUNDING:
-                handler = new OtherFundingHandler();
+                handler = otherFundingHandler;
                 break;
         }
         if (handler != null) {
-            beanFactory.autowireBean(handler);
             return handler;
         }
         LOG.error("Not a valid FinanceType: " + costType);

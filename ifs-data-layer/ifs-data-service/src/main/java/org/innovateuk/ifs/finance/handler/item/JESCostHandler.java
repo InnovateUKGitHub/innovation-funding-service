@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.validator.AcademicValidator;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull;
 /***
  *  Handle conversion and validation of the AcademicCost and FinanceRowItem objects.
  */
+@Component
 public class JESCostHandler extends FinanceRowHandler<AcademicCost> {
 
     @Override

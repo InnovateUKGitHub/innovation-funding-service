@@ -12,6 +12,7 @@ import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.transactional.OverheadFileService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -26,6 +27,7 @@ import static java.util.Collections.singletonList;
  * Handles the overheads, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@Component
 public class OverheadsHandler extends FinanceRowHandler<Overhead> {
     public static final String COST_KEY = "overhead";
 

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
  * Handles the labour costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@Component
 public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     public static final String COST_KEY = "labour";
     public static final Integer DEFAULT_WORKING_DAYS = 232;
