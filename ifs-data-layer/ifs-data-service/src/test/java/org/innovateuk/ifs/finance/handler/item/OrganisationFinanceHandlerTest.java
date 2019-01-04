@@ -43,15 +43,15 @@ import static org.mockito.Mockito.when;
 
 public class OrganisationFinanceHandlerTest {
     @InjectMocks
-    OrganisationFinanceHandler handler = new OrganisationFinanceDefaultHandler();
+    private OrganisationFinanceHandler handler = new OrganisationFinanceDefaultHandler();
     @Mock
-    AutowireCapableBeanFactory beanFactory;
+    private AutowireCapableBeanFactory beanFactory;
     @Mock
-    ApplicationFinanceRowRepository financeRowRepositoryMock;
+    private ApplicationFinanceRowRepository financeRowRepositoryMock;
     @Mock
-    FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
+    private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
     @Mock
-    QuestionService questionService;
+    private QuestionService questionService;
     private Competition competition;
     private Application application;
     private ApplicationFinance applicationFinance;

@@ -49,7 +49,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
             long competitionId = applicationFinance.getApplication().getCompetition().getId();
             Question question = getQuestionByCostType(competitionId, costType);
             try {
-                List<ApplicationFinanceRow> cost = getCostHandler(costType).initializeCost();
+                List<ApplicationFinanceRow> cost = getCostHandler(costType).initializeCost(applicationFinance);
                 cost.forEach(c -> {
                     c.setQuestion(question);
                     c.setTarget(applicationFinance);

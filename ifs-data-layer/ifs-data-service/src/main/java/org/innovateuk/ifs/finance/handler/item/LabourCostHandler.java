@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -68,7 +69,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     }
 
     @Override
-    public List<ApplicationFinanceRow> initializeCost() {
+    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
         ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
         costs.add(initializeWorkingDays());
         return costs;

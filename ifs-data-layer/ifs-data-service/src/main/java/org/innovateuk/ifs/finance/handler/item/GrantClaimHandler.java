@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.finance.handler.item;
 
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.validator.GrantClaimValidator;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -25,7 +29,11 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
     public static final String COST_KEY = "grant-claim";
 
     @Autowired
-    private  GrantClaimValidator grantClaimValidator;
+    private GrantClaimValidator grantClaimValidator;
+
+    //TODO remove IFS-4982
+    @Autowired
+    private PublicContentRepository publicContentRepository;
 
     @Override
     public void validate(GrantClaim grantClaim, BindingResult bindingResult) {
@@ -58,15 +66,20 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
     }
 
     @Override
-    public List<ApplicationFinanceRow> initializeCost() {
+    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
+        Competition competition = applicationFinance.getApplication().getCompetition();
         ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(initializeFundingLevel());
+        costs.add(initializeFundingLevel(competition));
         return costs;
     }
 
-    private ApplicationFinanceRow initializeFundingLevel() {
+    private ApplicationFinanceRow initializeFundingLevel(Competition competition) {
         GrantClaim costItem = new GrantClaim();
-        costItem.setGrantClaimPercentage(null);
+        if (publicContentRepository.findByCompetitionId(competition.getId()).getFundingType() == FundingType.PROCUREMENT) {
+            costItem.setGrantClaimPercentage(100);
+        } else {
+            costItem.setGrantClaimPercentage(null);
+        }
         return toCost(costItem);
     }
 }

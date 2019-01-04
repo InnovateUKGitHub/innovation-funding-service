@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -89,7 +90,7 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
     }
 
     @Override
-    public List<ApplicationFinanceRow> initializeCost() {
+    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
         return singletonList(initializeAcceptRate());
     }
 

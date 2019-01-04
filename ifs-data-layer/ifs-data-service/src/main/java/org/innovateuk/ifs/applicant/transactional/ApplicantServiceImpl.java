@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -18,6 +19,7 @@ import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
@@ -63,7 +65,9 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     private UserService userService;
     @Autowired
     private BaseUserService baseUserService;
-
+    //TODO remove IFS-4982
+    @Autowired
+    private PublicContentRepository publicContentRepository;
 
     @Override
     public ServiceResult<ApplicantQuestionResource> getQuestion(Long userId, Long questionId, Long applicationId) {
@@ -196,12 +200,17 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
     private boolean isSectionExcluded(SectionResource section, OrganisationResource organisation,
                                       CompetitionResource competition) {
-        boolean isYourOrganisationSection = section.getType() == SectionType.ORGANISATION_FINANCES;
-        boolean isResearchOrganisation = organisation != null  && OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
-        boolean excludeYourOrganisationSectionForResearchOrgs =
-                Boolean.FALSE.equals(competition.getIncludeYourOrganisationSection());
+        if (section.getType() == SectionType.ORGANISATION_FINANCES) {
+            boolean isResearchOrganisation = organisation != null && OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
+            boolean excludeYourOrganisationSectionForResearchOrgs =
+                    Boolean.FALSE.equals(competition.getIncludeYourOrganisationSection());
+            return isResearchOrganisation && excludeYourOrganisationSectionForResearchOrgs;
+        } else if (section.getType() == SectionType.FUNDING_FINANCES) {
+            return publicContentRepository.findByCompetitionId(competition.getId()).getFundingType() == FundingType.PROCUREMENT;
+        } else {
+            return false;
+        }
 
-        return isYourOrganisationSection && isResearchOrganisation && excludeYourOrganisationSectionForResearchOrgs;
     }
 
     private class ServiceResults {
