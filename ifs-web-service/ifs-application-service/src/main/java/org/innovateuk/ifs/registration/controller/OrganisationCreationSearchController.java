@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -49,7 +48,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private MessageSource messageSource;
 
     private static final String SEARCH_ORGANISATION = "search-organisation";
-    private static final String NOT_IN_COMPANIES_HOUSE = "not-in-companies-house";
 
     @GetMapping(value = {"/" + FIND_ORGANISATION,"/" + FIND_ORGANISATION + "/**"})
     public String createOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
@@ -83,38 +81,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
     }
 
-    @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANIES_HOUSE)
-    public String manualOrganisationEntry(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                          HttpServletRequest request, HttpServletResponse response) {
-        addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
-        organisationForm.setOrganisationSearching(false);
-        boolean currentManualEntryValue = organisationForm.isManualEntry();
-        organisationForm.setManualEntry(!currentManualEntryValue);
-        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-        return "redirect:/organisation/create/" + FIND_ORGANISATION;
-    }
-
-    @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")
-    public String amendOrganisationAddress(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
-                                           Model model,
-                                           @PathVariable("searchOrganisationId") final String searchOrganisationId,
-                                           HttpServletRequest request,
-                                           HttpServletResponse response) {
-        organisationForm = getFormDataFromCookie(organisationForm, model, request);
-        organisationForm.setSearchOrganisationId(searchOrganisationId);
-
-        addSelectedOrganisation(organisationForm, model);
-
-        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-
-        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
-        model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
-        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
-
-        return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
-    }
-
     @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SAVE_ORGANISATION_DETAILS)
     public String saveOrganisation(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                    BindingResult bindingResult,
@@ -125,6 +91,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationCreationForm.setOrganisationName(organisationForm.getOrganisationName());
         organisationCreationForm.setSearchOrganisationId(organisationForm.getSearchOrganisationId());
         organisationCreationForm.setTriedToSave(true);
+        organisationCreationForm.setManualEntry(true);
         organisationForm.setTriedToSave(true);
 
         addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
