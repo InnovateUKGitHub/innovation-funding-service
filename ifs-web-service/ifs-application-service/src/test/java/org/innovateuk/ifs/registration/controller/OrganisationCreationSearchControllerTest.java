@@ -121,7 +121,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testManualOrganisationEntry() throws Exception {
+    public void manualOrganisationEntry() throws Exception {
         OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
         organisationFormCookieValue.setManualEntry(true);
 
@@ -143,7 +143,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSearchOrganisation_findBusinessSearchCompaniesHouse() throws Exception {
+    public void searchOrganisation_findBusinessSearchCompaniesHouse() throws Exception {
         OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
         organisationFormCookieValue.setOrganisationSearching(true);
 
@@ -160,7 +160,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testFindBusinessSearchCompaniesHouseInvalid() throws Exception {
+    public void findBusinessSearchCompaniesHouseInvalid() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
 
         mockMvc.perform(post("/organisation/create/find-organisation")
@@ -171,7 +171,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSaveOrganisationtest_findBusinessConfirmCompaniesDetailsInvalid() throws Exception {
+    public void saveOrganisationtest_findBusinessConfirmCompaniesDetailsInvalid() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
@@ -187,7 +187,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSaveOrganisation_successfulSaveShouldRedirectToConfirmCompaniesDetailsPage() throws Exception {
+    public void saveOrganisation_successfulSaveShouldRedirectToConfirmCompaniesDetailsPage() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
@@ -201,7 +201,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testCreateOrganisation() throws Exception {
+    public void createOrganisation() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
@@ -212,7 +212,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSelectedBusinessGet() throws Exception {
+    public void selectedBusinessGet() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
@@ -222,7 +222,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSelectedBusinessSaveBusiness() throws Exception {
+    public void selectedBusinessSaveBusiness() throws Exception {
 
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
