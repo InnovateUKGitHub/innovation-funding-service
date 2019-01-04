@@ -33,6 +33,8 @@ public class YourProjectCostsCompleter {
     //TODO remove IFS-4982
     private PublicContentItemRestService publicContentItemRestService;
 
+    YourProjectCostsCompleter() {}
+
     public YourProjectCostsCompleter(SectionService sectionService, OrganisationRestService organisationRestService, ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, PublicContentItemRestService publicContentItemRestService) {
         this.sectionService = sectionService;
         this.organisationRestService = organisationRestService;
@@ -60,8 +62,8 @@ public class YourProjectCostsCompleter {
     private void handleMarkProcurementYourFundingAsNotRequired(Long competitionId, Long applicationId, Long processRoleId) {
         PublicContentItemResource publicContent = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
         if (publicContent.getPublicContentResource().getFundingType() == FundingType.PROCUREMENT) {
-            SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
-            sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
+            SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
+            sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
         }
     }
 
