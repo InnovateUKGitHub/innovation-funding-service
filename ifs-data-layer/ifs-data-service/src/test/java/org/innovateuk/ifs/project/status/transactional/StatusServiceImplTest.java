@@ -77,6 +77,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionDocumentBuilder.newCompetitionDocument;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -940,7 +941,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .withStatus(DocumentStatus.APPROVED, DocumentStatus.APPROVED)
                 .build(2);
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().build(2);
-        competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Collaboration agreement", "Exploitation plan").build(2));
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").build(2));
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
         project.setProjectDocuments(docs);
         project.setApplication(application);
@@ -964,7 +965,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .build(1);
         PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
 
-        competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Collaboration agreement", "Exploitation plan").build(2));
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").build(2));
         Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
         project.setProjectDocuments(docs);
         project.setApplication(application);
