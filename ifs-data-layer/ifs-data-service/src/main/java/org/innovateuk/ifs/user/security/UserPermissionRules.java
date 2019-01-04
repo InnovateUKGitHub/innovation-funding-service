@@ -99,6 +99,11 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "Internal support users can update a user's email address")
+    public boolean internalUsersCanUpdateUserEmailAddress(UserResource userToUpdate, UserResource user) {
+        return isInternal(user);
+    }
+
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
     public boolean internalUsersCanViewEveryone(UserPageResource userToView, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);

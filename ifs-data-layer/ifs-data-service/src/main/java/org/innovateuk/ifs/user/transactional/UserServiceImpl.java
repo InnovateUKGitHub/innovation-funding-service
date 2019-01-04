@@ -178,6 +178,13 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         );
     }
 
+    private ServiceResult<Void> updateUserEmail(User existingUser, String emailToUpdate) {
+        existingUser.setEmail(emailToUpdate);
+        userRepository.save(existingUser);
+        return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
+                .andOnSuccessReturnVoid();
+    }
+
     private String getRandomHash() {
         return randomHashSupplier.get();
     }
@@ -270,6 +277,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     public ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand) {
         return getUser(grantRoleCommand.getUserId())
                 .andOnSuccessReturnVoid(user -> user.getRoles().add(grantRoleCommand.getTargetRole()));
+    }
+
+    @Override
+    public ServiceResult<Void> updateEmail(long id, String email) {
+        return find(userRepository.findOne(id), notFoundError(User.class, id))
+                .andOnSuccess( user -> updateUserEmail(user, email));
     }
 
     private ServiceResult<Void> validateSearchString(String searchString) {
