@@ -14,6 +14,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,6 +36,7 @@ public class YourProjectCostsCompleter {
 
     YourProjectCostsCompleter() {}
 
+    @Autowired
     public YourProjectCostsCompleter(SectionService sectionService, OrganisationRestService organisationRestService, ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, PublicContentItemRestService publicContentItemRestService) {
         this.sectionService = sectionService;
         this.organisationRestService = organisationRestService;
