@@ -242,7 +242,7 @@ Funding information: can be saved
     And the user should see the element     jQuery = dt:contains("PAF number") ~ dd:contains("2016")
     And the user should see the element     jQuery = dt:contains("Budget code") ~ dd:contains("2004")
     And the user should see the element     jQuery = dt:contains("Activity code") ~ dd:contains("4242")
-    And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("1901-1")
+    And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("2001-1")
     And the user should see the element     jQuery = button:contains("Edit")
 
 Funding information: can be edited
