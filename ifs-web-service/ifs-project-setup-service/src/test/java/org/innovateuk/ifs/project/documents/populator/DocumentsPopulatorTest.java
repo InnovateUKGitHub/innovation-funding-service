@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UNSET;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
@@ -57,7 +58,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     private String documentConfigTitle2 = "Plan Document";
     private String documentConfigGuidance1 = "Guidance Risk Register";
     private String documentConfigGuidance2 = "Guidance Plan Document";
-    private String collaborationAgreement = "Collaboration agreement";
+    private String collaborationAgreement = COLLABORATION_AGREEMENT_TITLE;
 
     private UserResource user;
 
