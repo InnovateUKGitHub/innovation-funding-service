@@ -819,7 +819,7 @@ the weekdays should be correct
     element should contain    css = tr:nth-child(13) td:nth-child(3)    Tue
 
 the pre-field date should be correct
-    Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Thu
+    Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Fri
     ${YEAR} =    Get Value        css = #milestoneWeekdayEntry-OPEN_DATE ~ .year .govuk-input--width-4  # Get the value within the YEAR field
     Should Be Equal As Strings    ${YEAR}  ${nextyear}
     ${MONTH} =    Get Value       css = #milestoneWeekdayEntry-OPEN_DATE ~ .month .govuk-input--width-4  # Get the value within the MONTH field
