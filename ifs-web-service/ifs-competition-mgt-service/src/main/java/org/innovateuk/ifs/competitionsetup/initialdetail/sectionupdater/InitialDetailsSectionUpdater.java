@@ -112,6 +112,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
         competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
         competition.setStateAid(initialDetailsForm.getStateAid());
+        competition.setFundingType(initialDetailsForm.getFundingType());
 
         errors.addAll(attemptOpeningMilestoneSave(initialDetailsForm, competition));
         errors.addAll(attemptAddingInnovationAreasToCompetition(initialDetailsForm, competition));

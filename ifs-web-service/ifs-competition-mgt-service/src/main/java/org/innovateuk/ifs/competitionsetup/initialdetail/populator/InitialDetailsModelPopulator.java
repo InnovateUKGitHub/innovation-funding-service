@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSectionModelPopulator;
+import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.InitialDetailsViewModel;
@@ -26,13 +27,15 @@ public class
 InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<InitialDetailsViewModel> {
 
     private CompetitionRestService competitionRestService;
+    private CompetitionSetupService competitionSetupService;
     private UserRestService userRestService;
     private CategoryRestService categoryRestService;
 
     public InitialDetailsModelPopulator(CompetitionRestService competitionRestService,
-                                        UserRestService userRestService,
+                                        CompetitionSetupService competitionSetupService, UserRestService userRestService,
                                         CategoryRestService categoryRestService) {
         this.competitionRestService = competitionRestService;
+        this.competitionSetupService = competitionSetupService;
         this.userRestService = userRestService;
         this.categoryRestService = categoryRestService;
     }
@@ -49,7 +52,8 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
                 categoryRestService.getInnovationSectors().getSuccess(),
                 addAllInnovationAreaOption(categoryRestService.getInnovationAreasExcludingNone().getSuccess()),
                 competitionRestService.getCompetitionTypes().getSuccess(),
-                userRestService.findByUserRole(INNOVATION_LEAD).getSuccess());
+                userRestService.findByUserRole(INNOVATION_LEAD).getSuccess(),
+                competitionSetupService.isInitialDetailsCompleteOrTouched(competitionResource.getId()));
     }
 
     private List<InnovationAreaResource> addAllInnovationAreaOption(List<InnovationAreaResource> innovationAreas) {
@@ -60,7 +64,6 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
         innovationAreaResource.setName("All");
 
         returnList.add(0, innovationAreaResource);
-
         return returnList;
     }
 }

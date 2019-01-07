@@ -30,8 +30,6 @@ public class PublicContentResource {
 
     private Boolean inviteOnly;
 
-    private FundingType fundingType;
-
     private List<PublicContentSectionResource> contentSections;
 
     private List<ContentEventResource> contentEvents;
