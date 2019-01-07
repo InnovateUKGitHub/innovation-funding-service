@@ -21,7 +21,6 @@ import org.innovateuk.ifs.sil.grant.resource.Participant;
 import org.innovateuk.ifs.sil.grant.resource.Period;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -132,7 +131,7 @@ class GrantMapper {
          */
         ProjectFinance projectFinance = projectFinanceRepository
                 .findByProjectIdAndOrganisationId(context.getProjectId(), organisation.getId());
-        participant.setSize(projectFinance.getOrganisationSize().name());
+        participant.setSize(projectFinance.getOrganisationSize() != null ? projectFinance.getOrganisationSize().name() : null);
         List<ProjectFinanceRow> projectFinanceRows = projectFinanceRowRepository.findByTargetId(projectFinance.getId());
         BigDecimal awardPercentage = projectFinanceRows.stream()
                 .filter(row -> GRANT_CLAIM_IDENTIFIER.equals(row.getName()))
