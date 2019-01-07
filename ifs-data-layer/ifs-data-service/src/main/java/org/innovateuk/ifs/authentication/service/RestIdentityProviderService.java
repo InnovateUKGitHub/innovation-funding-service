@@ -83,7 +83,7 @@ public class RestIdentityProviderService implements IdentityProviderService, App
             return response.mapLeftOrRight(
                     failure -> serviceFailure(errors(failure.getStatusCode(), failure.getBody())),
                     success -> {
-                        applicationEventPublisher.publishEvent(new UserCreationEvent(this, success.getUuid()));
+                        applicationEventPublisher.publishEvent(new UserCreationEvent(this, success.getUuid(), emailAddress));
                         return serviceSuccess(success.getUuid());
                     }
             );
@@ -92,7 +92,7 @@ public class RestIdentityProviderService implements IdentityProviderService, App
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
     protected void rollbackUser(UserCreationEvent userCreationEvent) {
-        LOG.info("Rolling back user in ldap");
+        LOG.info("Rolling back user in ldap: " + userCreationEvent.getEmailAddress());
         adaptor.restDelete(idpBaseURL + idpUserPath + userCreationEvent.getUuid());
     }
 

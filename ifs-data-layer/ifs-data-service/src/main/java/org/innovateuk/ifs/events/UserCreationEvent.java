@@ -10,13 +10,21 @@ import org.springframework.context.ApplicationEvent;
 public class UserCreationEvent extends ApplicationEvent {
 
     private String uuid;
+    private String emailAddress;
 
-    public UserCreationEvent(Object source, String uuid) {
+    public UserCreationEvent(Object source,
+                             String uuid,
+                             String emailAddress) {
         super(source);
         this.uuid = uuid;
+        this.emailAddress = emailAddress;
     }
 
     public String getUuid() {
         return uuid;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
     }
 }
