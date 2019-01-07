@@ -117,21 +117,24 @@
     <section th:if="${hasFinanceSection}">
         <h2 class="govuk-heading-m govuk-!-margin-top-6">Finance</h2>
         <div class="collapsible">
-            <h3>Finances summary
-                <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
-                    <div class="section-status section-complete"
-                         th:if="${completedViewModel.financeOverviewSectionComplete}">Complete
-                    </div>
-                    <div class="section-status section-incomplete"
-                         th:unless="${completedViewModel.financeOverviewSectionComplete}">
-                        Incomplete
-                    </div>
-                </th:block>
-            </h3>
+            <th:block unless="${model.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+                <h3>Finances summary
+                    <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
+                        <div class="section-status section-complete"
+                             th:if="${completedViewModel.financeOverviewSectionComplete}">Complete
+                        </div>
+                        <div class="section-status section-incomplete"
+                             th:unless="${completedViewModel.financeOverviewSectionComplete}">
+                            Incomplete
+                        </div>
+                    </th:block>
+                </h3>
+            </th:block>
 
             <div class="question">
 
                 <p class="govuk-body">This is the overview of the finances provided by all partners in this project.</p>
+
                 <p class="govuk-body" th:if="${(currentApplication.open and isApplicant)}">
                     To make changes to your organisations' finances, go back to the
                     <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${currentApplication.id},financeSectionId=${financeSectionId})}"
