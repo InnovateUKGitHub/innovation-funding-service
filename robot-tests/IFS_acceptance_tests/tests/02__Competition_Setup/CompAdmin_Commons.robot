@@ -56,7 +56,7 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id = activityCode  133t
     the user clicks the button/link       jQuery = button:contains("Generate code")
     sleep  2s  #This sleeps is intended as the competition Code needs some time
-    textfield should contain              css = input[name="competitionCode"]  19
+    textfield should contain              css = input[name="competitionCode"]  20
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Competition setup
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
