@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.competition.populator.publiccontent.section;
 
 import org.innovateuk.ifs.competition.populator.publiccontent.AbstractPublicContentSectionViewModelPopulator;
-import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.competition.publiccontent.resource.*;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.DatesViewModel;
@@ -31,9 +28,9 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
     }
 
     @Override
-    protected void populateSection(DatesViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource section, Boolean nonIFS) {
-        List<DateViewModel> publicContentDates = mapContentEventsToDatesViewModel(publicContentResource.getContentEvents());
-        publicContentDates.addAll(getMilestonesAsDatesViewModel(publicContentResource.getCompetitionId()));
+    protected void populateSection(DatesViewModel model, PublicContentItemResource publicContentItemResource, PublicContentSectionResource section, Boolean nonIFS) {
+        List<DateViewModel> publicContentDates = mapContentEventsToDatesViewModel(publicContentItemResource.getPublicContentResource().getContentEvents());
+        publicContentDates.addAll(getMilestonesAsDatesViewModel(publicContentItemResource.getPublicContentResource().getCompetitionId()));
 
         model.setPublicContentDates(publicContentDates);
     }

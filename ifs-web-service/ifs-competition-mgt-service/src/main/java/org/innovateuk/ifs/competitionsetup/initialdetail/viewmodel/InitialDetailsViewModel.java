@@ -59,7 +59,7 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
         return fundingTypes;
     }
 
-    public boolean restricted() {
+    public boolean getRestricted() {
         return restricted || generalSetupViewModel.getCompetition().isSetupAndLive();
     }
 }

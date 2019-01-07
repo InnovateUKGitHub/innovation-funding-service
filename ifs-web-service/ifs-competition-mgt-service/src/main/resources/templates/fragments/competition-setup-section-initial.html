@@ -8,7 +8,8 @@
     </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Initial details',size='govuk-heading-xl'" />
-    <div class="govuk-body panel">
+
+    <div th:unless="${model.restricted}" class="govuk-body panel">
         This will create a new competition. You will be able to add more details later on.
     </div>
 
@@ -26,14 +27,16 @@
                 <dd th:each="(competitionType : ${model.competitionTypes})" th:text="${competitionType.name}"  th:if="${competitionType.id == competitionSetupForm.competitionTypeId}">Competition Type</dd>
 
                 <dt>Opening date</dt>
-                <dd th:text="${competitionSetupForm.openingDateDay+'/'+competitionSetupForm.openingDateMonth+'/'+competitionSetupForm.openingDateYear}"></dd>
+                <dd>
+                    <div th:text="${#temporals.format(competitionSetupForm.openingDate, 'd MMMM yyyy')}"></div>
+                    <p class="govuk-hint">You are able to edit this date if needed in the milestones section.</p>
+                </dd>
 
                 <input type="hidden" th:field="${competitionSetupForm.fundingType}" />
                 <input type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
                 <input type="hidden" th:field="${competitionSetupForm.openingDateDay}" />
                 <input type="hidden" th:field="${competitionSetupForm.openingDateMonth}" />
                 <input type="hidden" th:field="${competitionSetupForm.openingDateYear}" />
-
             </dl>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'">
@@ -68,12 +71,12 @@
                                 <input type="radio"
                                        class="govuk-radios__input"
                                        name="fundingType"
-                                       th:id="${'fundingType-'+fundingType.displayName}"
-                                       th:value="${fundingType.displayName}"
+                                       th:id="${'fundingType-'+fundingType}"
+                                       th:value="${fundingType}"
                                        required="required"
-                                       th:checked="${competitionSetupForm.fundingType == fundingType.displayName}"
+                                       th:checked="${competitionSetupForm.fundingType == fundingType}"
                                        th:attr="data-required-errormessage=#{validation.initialdetailsform.fundingType.required}" />
-                                <label th:for="${'fundingType-'+fundingType.displayName}"
+                                <label th:for="${'fundingType-'+fundingType}"
                                        th:text="${fundingType.displayName}"
                                        class="govuk-label govuk-radios__label"></label>
                             </div>
@@ -328,7 +331,7 @@
                 <dd th:text="${competitionSetupForm.innovationAreaNamesFormatted}"></dd>
 
                 <dt>Opening date</dt>
-                <dd th:text="${competitionSetupForm.openingDateDay+'/'+competitionSetupForm.openingDateMonth+'/'+competitionSetupForm.openingDateYear}"></dd>
+                <dd th:text="${#temporals.format(competitionSetupForm.openingDate, 'd MMMM yyyy')}"></dd>
 
                 <dt>Competition Lead</dt>
                 <dd th:each="(innovationLeadTechUser : ${model.innovationLeadTechUsers})" th:text="${innovationLeadTechUser.name}" th:if="${innovationLeadTechUser.id == competitionSetupForm.innovationLeadUserId}">Innovation Lead</dd>

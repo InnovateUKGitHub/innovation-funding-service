@@ -42,7 +42,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String title;
 
-    @NotBlank (message="{validation.initialdetailsform.fundingType.required}", groups = Unrestricted.class)
+    @NotNull(message="{validation.initialdetailsform.fundingType.required}", groups = Unrestricted.class)
     private FundingType fundingType;
 
     @NotNull(message = "{validation.initialdetailsform.innovationsectorcategoryid.required}")
