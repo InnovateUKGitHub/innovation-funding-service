@@ -721,6 +721,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void internalUsersCanUpdateUserEmailAddress(){
+
+        UserResource userResource = UserResourceBuilder.newUserResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isInternal(user)) {
+                assertTrue(rules.internalUsersCanUpdateUserEmailAddress(userResource, user));
+            } else {
+                assertFalse(rules.internalUsersCanUpdateUserEmailAddress(userResource, user));
+            }
+        });
+    }
+
+    @Test
     public void usersCanAgreeSiteTermsAndConditionsForThemselves() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {

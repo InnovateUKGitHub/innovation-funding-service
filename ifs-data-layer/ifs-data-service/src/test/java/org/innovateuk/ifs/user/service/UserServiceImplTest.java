@@ -689,6 +689,18 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertTrue(user.hasRole(APPLICANT));
     }
 
+    @Test
+    public void updateEmail() {
+        User user = newUser().build();
+        String updateEmail = "new@gmail.com";
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceSuccess("uid"));
+
+        ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
+
+        assertTrue(result.isSuccess());
+    }
+
     private User createUserExpectations(Long userId, Set<Long> termsAndConditionsIds) {
         return createLambdaMatcher(user -> {
             assertEquals(userId, user.getId());
