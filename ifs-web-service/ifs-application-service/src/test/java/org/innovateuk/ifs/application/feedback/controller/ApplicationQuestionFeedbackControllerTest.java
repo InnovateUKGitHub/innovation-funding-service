@@ -81,8 +81,7 @@ public class ApplicationQuestionFeedbackControllerTest extends AbstractApplicati
     private InterviewResponseRestService interviewResponseRestService;
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

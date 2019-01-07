@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.forms.yourprojectcosts.populator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.builder.BaseFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
@@ -31,7 +30,7 @@ public class AbstractYourProjectCostsFormPopulatorTest {
     private AbstractYourProjectCostsFormPopulator target = new AbstractYourProjectCostsFormPopulator() {
         @Override
         protected BaseFinanceResource getFinanceResource(long targetId, long organisationId) {
-            return newApplicationFinanceResource().withFinanceOrganisationDetails(BaseFinanceResourceBuilder.INDUSTRIAL_FINANCES).build();
+            return newApplicationFinanceResource().withIndustrialCosts().build();
         }
 
         @Override
@@ -47,10 +46,9 @@ public class AbstractYourProjectCostsFormPopulatorTest {
 
     @Test
     public void populate() {
-        YourProjectCostsForm form = new YourProjectCostsForm();
         when(overheadFileRestService.getOverheadFileDetails(any())).thenReturn(RestResult.restSuccess(newFileEntryResource().withName("filename").build()));
 
-        target.populateForm(form, 1L, 2L);
+        YourProjectCostsForm form = target.populateForm( 1L, 2L);
 
         Assert.assertEquals((Integer) 250, form.getLabour().getWorkingDaysPerYear());
         Assert.assertEquals(3, form.getLabour().getRows().size());

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.viewmodel;
 
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 
 /**
  * View model backing the internal Finance Team members view of the Finance Check summary page
@@ -13,16 +14,21 @@ public class ProjectFinanceCheckSummaryViewModel {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
     }
 
-    public boolean isShowEnabledGenerateSpendProfilesButton() {
+    private boolean isGenerateSpendProfileReady() {
         return financeCheckSummaryResource.isFinanceChecksAllApproved() &&
                 financeCheckSummaryResource.isBankDetailsApproved() &&
-               !financeCheckSummaryResource.isSpendProfilesGenerated();
+                !simpleAnyMatch(financeCheckSummaryResource.getPartnerStatusResources(),
+                        partnerStatusResource -> !partnerStatusResource.isFinanceContactProvided());
+    }
+
+    public boolean isShowEnabledGenerateSpendProfilesButton() {
+        return !financeCheckSummaryResource.isSpendProfilesGenerated() &&
+                isGenerateSpendProfileReady();
     }
 
     public boolean isShowDisabledGenerateSpendProfilesButton() {
-        return (!financeCheckSummaryResource.isFinanceChecksAllApproved() ||
-                !financeCheckSummaryResource.isBankDetailsApproved()) &&
-                !financeCheckSummaryResource.isSpendProfilesGenerated();
+        return !financeCheckSummaryResource.isSpendProfilesGenerated() &&
+                !isGenerateSpendProfileReady();
     }
 
     public boolean isShowSpendProfilesGeneratedMessage() {

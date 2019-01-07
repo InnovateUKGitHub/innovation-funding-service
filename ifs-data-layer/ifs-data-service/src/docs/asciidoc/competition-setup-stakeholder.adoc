@@ -24,27 +24,26 @@ include::{snippets}/competition/setup/stakeholder/find-stakeholders/curl-request
 
 === Find Stakeholder invites for a given invite hash
 ==== Request
-include::{snippets}/competition/setup/get-invites/http-request.adoc[]
-include::{snippets}/competition/setup/get-invites/path-parameters.adoc[]
+include::{snippets}/competition/setup/get-invite/http-request.adoc[]
+include::{snippets}/competition/setup/get-invite/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competition/setup/get-invites/http-response.adoc[]
-include::{snippets}/competition/setup/get-invites/response-fields.adoc[]
+include::{snippets}/competition/setup/get-invite/http-response.adoc[]
+include::{snippets}/competition/setup/get-invite/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/competition/setup/get-invites/curl-request.adoc[]
+include::{snippets}/competition/setup/get-invite/curl-request.adoc[]
 
 === Create a stakeholder user and associate them with a competition
 ==== Request
-include::{snippets}/competition/setup/stakeholder/create/http-request.adoc[]
-include::{snippets}/competition/setup/stakeholder/create/path-parameters.adoc[]
+include::{snippets}/competition/setup/stakeholder/create-stakeholder/http-request.adoc[]
+include::{snippets}/competition/setup/stakeholder/create-stakeholder/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competition/setup/stakeholder/create/http-response.adoc[]
-include::{snippets}/competition/setup/stakeholder/create/response-fields.adoc[]
+include::{snippets}/competition/setup/stakeholder/create-stakeholder/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/competition/setup/stakeholder/create/curl-request.adoc[]
+include::{snippets}/competition/setup/stakeholder/create-stakeholder/curl-request.adoc[]
 
 
 === Add stakeholder to a competition

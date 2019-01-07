@@ -126,7 +126,7 @@ The competition admin creates a EOI Comp
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility                    ${orgType}  1  true  collaborative     # 1 means 30%
-    the user fills in the CS Milestones                     ${month}  ${nextyear}
+    the user fills in the CS Milestones                     release-feedback-completion-stage   ${month}   ${nextyear}
     the user marks the Application as done  no              ${compType_EOI}
     the user fills in the CS Assessors
     the user fills in the CS Documents in other projects
@@ -171,4 +171,3 @@ logged in user applies to competition
     the user clicks the button/link      jQuery = button:contains("Save and continue")
     the user selects the checkbox        agree
     the user clicks the button/link      css = .govuk-button[type="submit"]    #Continue
-    the user clicks the button/link      id = application-question-save

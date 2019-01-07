@@ -32,7 +32,7 @@ public abstract class AbstractSectionUpdater implements CompetitionSetupUpdater 
             setNestedProperty(form, fieldName, convertValue(value, propertyType));
             return saveSection(competitionResource, form);
         } catch (Exception e) {
-            LOG.error("exception thrown auto saving section field", e);
+            LOG.debug("exception thrown auto saving section field", e);
             return handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
         }
     }

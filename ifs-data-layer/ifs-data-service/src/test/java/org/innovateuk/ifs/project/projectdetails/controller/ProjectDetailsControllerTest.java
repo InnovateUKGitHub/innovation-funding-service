@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -111,16 +110,15 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void updateProjectAddress() throws Exception {
         AddressResource addressResource = newAddressResource().withId(1L).build();
 
-        when(projectDetailsServiceMock.updateProjectAddress(123L, 456L, OrganisationAddressType.REGISTERED, addressResource)).thenReturn(serviceSuccess());
+        when(projectDetailsServiceMock.updateProjectAddress(123L, 456L, addressResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/address", 456L)
                 .param("leadOrganisationId", "123")
-                .param("addressType", OrganisationAddressType.REGISTERED.name())
                 .contentType(APPLICATION_JSON)
                 .content(toJson(addressResource)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        verify(projectDetailsServiceMock).updateProjectAddress(123L, 456L, OrganisationAddressType.REGISTERED, addressResource);
+        verify(projectDetailsServiceMock).updateProjectAddress(123L, 456L, addressResource);
     }
 }

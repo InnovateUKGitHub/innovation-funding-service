@@ -27,7 +27,6 @@ new account complete all but one
 create new account for submitting
     [Arguments]  ${application_name}
     the user clicks the button/link                   link=Untitled application (start here)
-    the user clicks the button/link                   jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link                   link=Application details
     the user enters text to a text field              css=[id="application.name"]    ${application_name}
     the user clicks the button/link                   jQuery=button:contains("Save and return")
@@ -87,14 +86,13 @@ Create new application with the same user
     the user navigates to the page             ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link            jQuery=a:contains("Start new application")
     check if there is an existing application in progress for this competition
-    the user clicks the button/link            link=Apply with a different organisation.
+    the user clicks the button/link            link=Apply with a different organisation
     the user selects the radio button          organisationTypeId  ${orgType}
     the user clicks the button/link            jQuery = button:contains("Save and continue")
     the user clicks the button/link            jQuery=summary:contains("Enter details manually")
     The user enters text to a text field       name=organisationName    org2
     the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
     the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
-    the user clicks the button/link            id=application-question-save
     the user clicks the button/link            link=Application details
     the user enters text to a text field       css=[id="application.name"]  ${Application_title}
     the user clicks the button/link            jQuery=button:contains("Save and return")
@@ -109,7 +107,6 @@ create new submit application
     [Arguments]  ${overview}  ${email}  ${application_name}
     And The guest user inserts user email and password  ${email}   ${correct_password}
     And the guest user clicks the log-in button
-    And the user clicks the button/link                 jQuery=button:contains("Save and return to application overview")
     And the user clicks the button/link                 link=Application details
     And the user enters text to a text field            css=[id="application.name"]    ${application_name}
     And the user clicks the button/link                 jQuery=button:contains("Save and return")
@@ -176,6 +173,7 @@ invite a registered user
     the user follows the flow to register their organisation   ${BUSINESS_TYPE_ID}
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                            link = Application team
     the user clicks the button/link                            link=Add a collaborator organisation
     the user enters text to a text field                       css=#organisationName  New Organisation's Name
     the user enters text to a text field                       css=[id="applicants[0].name"]  Partner's name

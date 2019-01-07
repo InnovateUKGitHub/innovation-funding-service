@@ -14,6 +14,14 @@
         </div>
     </div>
 
+    <div class="govuk-form-group">
+        <h2 class="govuk-heading-s">Project title</h2>
+        <div class="textarea-wrapped">
+            <div class="readonly">
+                <p class="govuk-body" th:text="${currentApplication.name}" data-md-to-html=""></p>
+            </div>
+        </div>
+    </div>
 
     <div class="govuk-form-group" th:if="${researchCategoryRequired}">
         <h2 class="govuk-heading-s">Research category</h2>

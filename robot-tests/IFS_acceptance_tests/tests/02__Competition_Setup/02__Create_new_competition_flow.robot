@@ -242,7 +242,7 @@ Funding information: can be saved
     And the user should see the element     jQuery = dt:contains("PAF number") ~ dd:contains("2016")
     And the user should see the element     jQuery = dt:contains("Budget code") ~ dd:contains("2004")
     And the user should see the element     jQuery = dt:contains("Activity code") ~ dd:contains("4242")
-    And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("1901-1")
+    And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("2001-1")
     And the user should see the element     jQuery = button:contains("Edit")
 
 Funding information: can be edited
@@ -324,7 +324,7 @@ Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
     [Tags]
     When the user clicks the button/link            link = Milestones
-    Then the user should see the text in the page   Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
+    Then the user should see the text in the page   Select the stage at which the competition is complete for Innovate UK.
     When The user should see the text in the page   1. Open date
     And the user should see the text in the page    2. Briefing event
     And the user should see the text in the page    3. Submission date
@@ -338,6 +338,9 @@ Milestones: Page should contain the correct fields
     And the user should see the text in the page    11. Funders panel
     And the user should see the text in the page    12. Notifications
     And the user should see the text in the page    13. Release feedback
+    And the user should see the text in the page    14. Project setup
+    And the user selects the radio button           selectedCompletionStage  project-setup-completion-stage
+    And the user clicks the button/link             jQuery = button:contains("Done")
     And the pre-field date should be correct
 
 Milestones: Correct Weekdays should show
@@ -816,7 +819,7 @@ the weekdays should be correct
     element should contain    css = tr:nth-child(13) td:nth-child(3)    Tue
 
 the pre-field date should be correct
-    Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Thu
+    Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Fri
     ${YEAR} =    Get Value        css = #milestoneWeekdayEntry-OPEN_DATE ~ .year .govuk-input--width-4  # Get the value within the YEAR field
     Should Be Equal As Strings    ${YEAR}  ${nextyear}
     ${MONTH} =    Get Value       css = #milestoneWeekdayEntry-OPEN_DATE ~ .month .govuk-input--width-4  # Get the value within the MONTH field

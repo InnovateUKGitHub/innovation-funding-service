@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -82,7 +83,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     public void markSectionIncomplete() throws Exception {
         final Long competitionId = 5L;
         final CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
-        final SetupStatusResource setupStatusResource = newSetupStatusResource().build();
+        final List<SetupStatusResource> setupStatusResource = newSetupStatusResource().build(1);
 
         when(competitionSetupServiceMock.markSectionIncomplete(competitionId, section))
                 .thenReturn(serviceSuccess(setupStatusResource));

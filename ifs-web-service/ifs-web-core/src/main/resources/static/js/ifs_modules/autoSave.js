@@ -136,6 +136,9 @@ IFS.core.autoSave = (function () {
             value: field.val()
           }
           break
+        case 'autosaveFormPost':
+          jsonObj = form.serialize()
+          break
         default :
           jsonObj = {
             field: field.attr('name'),
@@ -173,6 +176,9 @@ IFS.core.autoSave = (function () {
           var formInputId = field.closest('.question').prop('id').replace('form-input-', '')
           var assessmentId = form.attr('action').split('/')[2]
           url = '/assessment/' + assessmentId + '/formInput/' + formInputId
+          break
+        case 'autosaveFormPost':
+          url = form.attr('action') + '/auto-save'
           break
         default:
           url = saveType

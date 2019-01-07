@@ -56,7 +56,7 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id = activityCode  133t
     the user clicks the button/link       jQuery = button:contains("Generate code")
     sleep  2s  #This sleeps is intended as the competition Code needs some time
-    textfield should contain              css = input[name="competitionCode"]  19
+    textfield should contain              css = input[name="competitionCode"]  20
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Competition setup
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
@@ -66,13 +66,13 @@ the user fills in the CS Eligibility
     the user clicks the button/link    link = Eligibility
     the user clicks the button twice   css = label[for="single-or-collaborative-${collaborative}"]
     the user selects the radio button  researchCategoriesApplicable    ${researchCategory}
-    Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage  #if
+    Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
     the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
     the user selects Research Participation if required  ${researchParticipation}
     the user clicks the button/link    css = label[for="comp-resubmissions-yes"]
     the user clicks the button twice   css = label[for="comp-resubmissions-yes"]
-    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]  #if
+    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
     the user clicks the button/link    jQuery = button:contains("Done")
     the user clicks the button/link    link = Competition setup
     the user should see the element    jQuery = div:contains("Eligibility") ~ .task-status-complete
@@ -85,8 +85,12 @@ the user selects Research Participation if required
     Run Keyword If  '${status}' == 'FAIL'  the user should not see the element  id = researchParticipation
 
 the user fills in the CS Milestones
-    [Arguments]  ${month}  ${nextyear}
-    the user clicks the button/link              link = Milestones
+    [Arguments]  ${completionStage}  ${month}  ${nextyear}
+    the user clicks the button/link    link = Milestones
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  ${completionStage}
+    Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}
       \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.day input  ${i}

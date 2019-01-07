@@ -970,6 +970,20 @@ public class CollectionFunctionsTest {
     }
 
     @Test
+    public void zipTriple() {
+
+        List<Integer> list1 = asList(1, 2, 3);
+        List<String> list2 = asList("4", "5", "6");
+        List<Boolean> list3 = asList(true, false, true);
+
+        List<String> results = new ArrayList<>();
+
+        CollectionFunctions.zip(list1, list2, list3, (o1, o2, o3) -> results.add(o1 + o2 + o3));
+
+        assertEquals(asList("14true", "25false", "36true"), results);
+    }
+
+    @Test
     public void zipWithIndex() {
 
         List<String> list1 = asList("a", "b", "c");

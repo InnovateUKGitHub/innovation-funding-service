@@ -20,7 +20,7 @@
             </h2>
             <th:block  th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'previous'}, counts=${model.counts}, tabs=${model.tabs})" />
 
-            <section th:with="previousComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}"
+            <section th:with="previousComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PREVIOUS)}"
                      class="govuk-tabs__panel">
                 <h2 class="govuk-heading-m"
                     th:text="'Previous competitions ('+${model.counts.feedbackReleasedCount}+')'"></h2>
