@@ -22,11 +22,11 @@ IFS.competitionManagement.eligibility = (function () {
     handleErrorMessages: function () {
       var summaryBox = jQuery('.govuk-error-summary')
       var list = jQuery('.govuk-error-summary__list')
-      var errors = jQuery('.govuk-error-summary__list li:contains(Please select the maximum funding level that applicants can apply for.)')
-      var fieldError = jQuery('.govuk-error-message:contains(Please select the maximum funding level that applicants can apply for.)')
+      var listError = jQuery('.govuk-error-summary a[href$="#fundingLevelPercentage"]')
+      var fieldError = jQuery('#funding-level .govuk-error-message')
 
-      if (errors.length) {
-        errors.parent().remove()
+      if (listError.length) {
+        listError.parent().remove()
         if (list.length) {
           summaryBox.remove()
           fieldError.remove()
