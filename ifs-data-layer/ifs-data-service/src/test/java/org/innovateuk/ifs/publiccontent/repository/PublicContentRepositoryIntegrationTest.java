@@ -13,7 +13,7 @@ import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 // TODO IFS-4982 remove along with the triggers
 public class PublicContentRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<PublicContentRepository> {
@@ -30,7 +30,7 @@ public class PublicContentRepositoryIntegrationTest extends BaseRepositoryIntegr
     @Test
     public void testDbUpdateTrigger() {
         loginIfsAdmin();
-        Competition competition = newCompetition().withFundingType(GRANT).with(id(null)).build();
+        Competition competition = newCompetition().with(id(null)).build();
         competitionRepository.save(competition);
         flushAndClearSession();
 
@@ -64,6 +64,6 @@ public class PublicContentRepositoryIntegrationTest extends BaseRepositoryIntegr
 
         Competition actual = competitionRepository.findById(competition.getId());
 
-        assertNull(actual.getFundingType());
+        assertNotNull(actual.getFundingType());
     }
 }
