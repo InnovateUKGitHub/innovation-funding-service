@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 
 import java.math.BigDecimal;
@@ -273,6 +274,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withCompletionStage(CompetitionCompletionStage... completionStage) {
         return withArraySetFieldByReflection("completionStage", completionStage);
+    }
+
+    public CompetitionResourceBuilder withFundingType(FundingType... fundingTypes) {
+        return withArray((fundingType, competitionResource) -> competitionResource.setFundingType(fundingType), fundingTypes);
     }
 
     @Override
