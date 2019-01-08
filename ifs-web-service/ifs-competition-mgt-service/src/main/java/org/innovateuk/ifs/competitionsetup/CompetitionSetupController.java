@@ -124,7 +124,7 @@ public class CompetitionSetupController {
             return DASHBOARD_REDIRECT;
         }
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -146,7 +146,7 @@ public class CompetitionSetupController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -400,7 +400,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -416,7 +416,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -433,7 +433,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -454,7 +454,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -490,7 +490,7 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competition.getId();
         }
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 

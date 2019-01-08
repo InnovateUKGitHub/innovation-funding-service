@@ -83,7 +83,7 @@ public class InitialDetailsModelPopulatorTest {
         when(categoryRestService.getInnovationAreasExcludingNone()).thenReturn(restSuccess(innovationAreas));
         when(competitionRestService.getCompetitionTypes()).thenReturn(restSuccess(competitionTypes));
         when(userRestService.findByUserRole(INNOVATION_LEAD)).thenReturn(restSuccess(leadTechs));
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId())).thenReturn(true);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
 
         InitialDetailsViewModel viewModel =  populator.populateModel(getBasicGeneralSetupView(competition), competition);
 
@@ -101,7 +101,7 @@ public class InitialDetailsModelPopulatorTest {
         inOrder.verify(categoryRestService).getInnovationAreasExcludingNone();
         inOrder.verify(competitionRestService).getCompetitionTypes();
         inOrder.verify(userRestService).findByUserRole(INNOVATION_LEAD);
-        inOrder.verify(competitionSetupService).isInitialDetailsCompleteOrTouched(competition.getId());
+        inOrder.verify(competitionSetupService).hasInitialDetailsBeenPreviouslySubmitted(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 

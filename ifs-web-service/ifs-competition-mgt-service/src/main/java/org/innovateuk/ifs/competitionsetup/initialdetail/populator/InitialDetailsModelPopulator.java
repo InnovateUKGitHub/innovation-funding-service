@@ -53,7 +53,7 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
                 addAllInnovationAreaOption(categoryRestService.getInnovationAreasExcludingNone().getSuccess()),
                 competitionRestService.getCompetitionTypes().getSuccess(),
                 userRestService.findByUserRole(INNOVATION_LEAD).getSuccess(),
-                competitionSetupService.isInitialDetailsCompleteOrTouched(competitionResource.getId()));
+                competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()));
     }
 
     private List<InnovationAreaResource> addAllInnovationAreaOption(List<InnovationAreaResource> innovationAreas) {

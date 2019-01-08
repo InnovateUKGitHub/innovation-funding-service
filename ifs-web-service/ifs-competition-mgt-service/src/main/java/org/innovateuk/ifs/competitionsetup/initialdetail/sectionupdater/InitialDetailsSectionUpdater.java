@@ -102,7 +102,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
     }
 
     private boolean applicationFormHasNotBeenInitialised(CompetitionResource competition) {
-        return !competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId());
+        return !competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId());
     }
 
     private List<Error> doSetupComplete(final CompetitionResource competition, final InitialDetailsForm initialDetailsForm) {

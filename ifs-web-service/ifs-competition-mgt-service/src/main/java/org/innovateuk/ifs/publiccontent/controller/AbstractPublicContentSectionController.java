@@ -78,7 +78,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId())) {
+        if (!competition.isNonIfs() && !competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -95,7 +95,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccess();
 
-        if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+        if (!competition.isNonIfs() && !competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
