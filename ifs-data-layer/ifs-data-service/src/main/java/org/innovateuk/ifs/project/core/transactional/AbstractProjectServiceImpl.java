@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -35,11 +36,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
@@ -97,7 +100,8 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     protected ProjectActivityStates createDocumentStatus(Project project) {
 
         List<ProjectDocument> projectDocuments = project.getProjectDocuments();
-        int expectedNumberOfDocuments = project.getApplication().getCompetition().getCompetitionDocuments().size();
+
+        int expectedNumberOfDocuments = expectedNumberOfDocuments(project);
         int actualNumberOfDocuments = projectDocuments.size();
 
         if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
@@ -112,6 +116,20 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
 
         return PENDING;
+    }
+
+    private int expectedNumberOfDocuments(Project project) {
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
+
+        int expectedNumberOfDocuments = expectedDocuments.size();
+        if (partnerOrganisations.size() == 1) {
+            List<String> documentNames = expectedDocuments.stream().map(CompetitionDocument::getTitle).collect(Collectors.toList());
+            if (documentNames.contains(COLLABORATION_AGREEMENT_TITLE)) {
+                expectedNumberOfDocuments = expectedDocuments.size() - 1;
+            }
+        }
+        return expectedNumberOfDocuments;
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
@@ -227,7 +245,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         return getCurrentlyLoggedInProjectUser(project, PROJECT_PARTNER);
     }
 
-    protected ServiceResult<ProjectUser> getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
+    private ServiceResult<ProjectUser> getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 simpleFindFirst(project.getProjectUsers(), pu -> findUserAndRole(role, currentUser, pu)).

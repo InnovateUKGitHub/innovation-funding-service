@@ -40,6 +40,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.*;
@@ -207,7 +208,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
         if (projectOrganisations.size() == 1) {
             expectedDocuments.removeIf(
-                    document -> document.getTitle().equals("Collaboration agreement"));
+                    document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
         }
 
         return project.getProjectDocuments().size() == expectedDocuments.size();

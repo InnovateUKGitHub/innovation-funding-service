@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
@@ -324,4 +325,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("completionStage", completionStage);
     }
 
+    public CompetitionBuilder withFundingType(FundingType... fundingTypes) {
+        return withArray((fundingType, competition) -> competition.setFundingType(fundingType), fundingTypes);
+    }
 }
