@@ -49,7 +49,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
     private static final String SEARCH_ORGANISATION = "search-organisation";
 
-    @GetMapping(value = {"/" + FIND_ORGANISATION,"/" + FIND_ORGANISATION + "/**"})
+    @GetMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"})
     public String createOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                      Model model,
                                      HttpServletRequest request,
@@ -63,8 +63,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute(ORGANISATION_FORM, organisationForm);
 
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
-        model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
-        model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
+        model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
+        model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
@@ -82,11 +82,11 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SAVE_ORGANISATION_DETAILS)
-    public String saveOrganisation(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                   BindingResult bindingResult,
-                                   Model model,
-                                   HttpServletRequest request, HttpServletResponse response,
-                                   @RequestHeader(value = REFERER, required = false) final String referer) {
+    public String manualOrganisationSave(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                         BindingResult bindingResult,
+                                         Model model,
+                                         HttpServletRequest request, HttpServletResponse response,
+                                         @RequestHeader(value = REFERER, required = false) final String referer) {
         OrganisationCreationForm organisationCreationForm = registrationCookieService.getOrganisationCreationCookieValue(request).get();
         organisationCreationForm.setOrganisationName(organisationForm.getOrganisationName());
         organisationCreationForm.setSearchOrganisationId(organisationForm.getSearchOrganisationId());
