@@ -13,11 +13,25 @@ IFS.competitionManagement.eligibility = (function () {
     handleResearchCategoriesApplicableChange: function (el) {
       var researchCategoriesApplicable = jQuery(el)
       var status = researchCategoriesApplicable.val() === 'true'
-
+      IFS.competitionManagement.eligibility.handleErrorMessages()
       IFS.competitionManagement.eligibility.setOverrideFundingRulesVisibility()
-
       if (!status) {
         jQuery('#override-funding-rules').find('input[name="overrideFundingRules"]').prop('checked', false)
+      }
+    },
+    handleErrorMessages: function () {
+      var summaryBox = jQuery('.govuk-error-summary')
+      var list = jQuery('.govuk-error-summary__list')
+      var errors = jQuery('.govuk-error-summary__list li:contains(Please select the maximum funding level that applicants can apply for.)')
+      var fieldError = jQuery('.govuk-error-message:contains(Please select the maximum funding level that applicants can apply for.)')
+
+      if (errors.length) {
+        errors.parent().remove()
+        if (list.length) {
+          summaryBox.remove()
+          fieldError.remove()
+          jQuery('#funding-level .govuk-form-group').removeClass('govuk-form-group--error')
+        }
       }
     },
     handleOverrideFundingRulesChange: function (el) {
@@ -44,5 +58,6 @@ IFS.competitionManagement.eligibility = (function () {
         container.find('select').val('').prop('disabled', true)
       }
     }
+
   }
 })()

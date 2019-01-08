@@ -43,7 +43,6 @@ public class EligibilityForm extends CompetitionSetupForm {
 
     private Integer fundingLevelPercentageOverride;
 
-
     @NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
     private int researchParticipationAmountId = ResearchParticipationAmount.NONE.getId();
 
