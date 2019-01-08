@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newP
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-// TODO IFS-4982 remove along with the triggers
+// TODO IFS-5010 remove along with the triggers
 public class PublicContentRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<PublicContentRepository> {
 
     @Autowired
