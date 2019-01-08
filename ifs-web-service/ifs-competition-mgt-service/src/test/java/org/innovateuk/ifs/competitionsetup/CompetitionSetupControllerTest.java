@@ -5,6 +5,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -42,7 +43,6 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
@@ -349,7 +349,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         bindingResult.getAllErrors();
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(9, bindingResult.getFieldErrorCount());
+        assertEquals(10, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("executiveUserId"));
         assertEquals(
                 "Please select a Portfolio Manager.",
@@ -382,6 +382,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(
                 "Please select a competition type.",
                 bindingResult.getFieldError("competitionTypeId").getDefaultMessage()
+        );
+        assertEquals(
+                "Please enter a funding type.",
+                bindingResult.getFieldError("fundingType").getDefaultMessage()
         );
         assertTrue(bindingResult.hasFieldErrors("stateAid"));
         assertEquals(
@@ -479,6 +483,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
+                .param("fundingType", FundingType.GRANT.name())
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1")
@@ -524,6 +529,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
+                .param("fundingType", FundingType.GRANT.name())
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1")
@@ -578,6 +584,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
+                .param("fundingType", FundingType.GRANT.name())
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1"))
@@ -637,6 +644,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationSectorCategoryId", "1")
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
+                .param("fundingType", FundingType.GRANT.name())
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("stateAid", "true"))
@@ -1005,38 +1013,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals(1, bindingResult.getGlobalErrorCount());
         assertEquals("competition.setup.not.ready.to.open", bindingResult.getGlobalErrors().get(0).getCode());
     }
-
-    @Test
-    public void testInitialDetailsRestriction() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .withId(COMPETITION_ID)
-                .build();
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-
-        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("competition/setup"))
-                .andExpect(model().attribute("restrictInitialDetailsEdit", Boolean.TRUE));
-    }
-
-    @Test
-    public void testInitialDetailsNoRestriction() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .withId(COMPETITION_ID)
-                .build();
-
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(Boolean.FALSE);
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-
-        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("competition/setup"))
-                .andExpect(model().attribute("restrictInitialDetailsEdit", nullValue()));
-    }
-
 
     @Test
     public void testSubmitAssessorsSectionDetailsWithErrors() throws Exception {

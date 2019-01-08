@@ -47,7 +47,6 @@ public class SummaryViewModelPopulatorTest {
 
         PublicContentResource resource = newPublicContentResource()
                 .withSummary(DESCRIPTION)
-                .withFundingType(FUNDING_TYPE)
                 .withProjectSize(PROJECT_SIZE)
                 .withPublishDate(ZonedDateTime.now())
                 .withCompetitionId(COMPETITION_ID)
