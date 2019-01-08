@@ -72,7 +72,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                                                 HttpServletResponse response) {
 
         Long organisationTypeId = organisationForm.getOrganisationTypeId();
-        if (!isValidLeadOrganisationType(organisationTypeId)) {
+        if ( !bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID) && !isValidLeadOrganisationType(organisationTypeId)) {
             bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "Please select an organisation type."));
         }
 

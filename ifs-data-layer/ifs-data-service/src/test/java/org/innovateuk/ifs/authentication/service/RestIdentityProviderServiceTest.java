@@ -8,9 +8,14 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.config.rest.RestTemplateAdaptorFactory;
+import org.innovateuk.ifs.events.UserCreationEvent;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.AsyncRestTemplate;
@@ -24,6 +29,8 @@ import static org.innovateuk.ifs.authentication.service.RestIdentityProviderServ
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.*;
@@ -31,6 +38,7 @@ import static org.springframework.http.HttpStatus.*;
 /**
  * Tests around the RestIdentityProviderService talking to the Shib REST API via the restTemplate
  */
+@RunWith(MockitoJUnitRunner.class)
 public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
 
     @Mock
@@ -38,6 +46,9 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
 
     @Mock
     protected AsyncRestTemplate mockAsyncRestTemplate;
+
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private RestIdentityProviderService service;
 
@@ -54,10 +65,11 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
         ReflectionTestUtils.setField(service, "adaptor", adaptor);
         ReflectionTestUtils.setField(service, "idpBaseURL", "http://idprest");
         ReflectionTestUtils.setField(service, "idpUserPath", "/user");
+        service.setApplicationEventPublisher(applicationEventPublisher);
     }
 
     @Test
-    public void testCreateUserRecordWithUid() throws JsonProcessingException {
+    public void createUserRecordWithUid() throws JsonProcessingException {
 
         CreateUserResource createRequest = new CreateUserResource("email@example.com", "thepassword");
         CreateUserResponse successResponse = new CreateUserResponse("new-uid", "email@example.com", null, null);
@@ -67,12 +79,14 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
         when(mockRestTemplate.postForEntity("http://idprest/user", adaptor.jsonEntity(createRequest), String.class)).thenReturn(successResponseEntity);
 
         ServiceResult<String> result = service.createUserRecordWithUid("email@example.com", "thepassword");
+
+        verify(applicationEventPublisher).publishEvent(any(UserCreationEvent.class));
         assertTrue(result.isSuccess());
         assertEquals("new-uid", result.getSuccess());
     }
 
     @Test
-    public void testCreateUserRecordWithUidButDuplicateEmailFailureResponseReturned() throws JsonProcessingException {
+    public void createUserRecordWithUidButDuplicateEmailFailureResponseReturned() throws JsonProcessingException {
 
         CreateUserResource createRequest = new CreateUserResource("email@example.com", "thepassword");
         IdentityProviderError[] errorResponse = new IdentityProviderError[]{new IdentityProviderError(DUPLICATE_EMAIL_ADDRESS.name(), emptyList())};
@@ -86,7 +100,7 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
     }
 
     @Test
-    public void testCreateUserRecordWithUidButOtherFailureResponseReturned() throws JsonProcessingException {
+    public void createUserRecordWithUidButOtherFailureResponseReturned() throws JsonProcessingException {
 
         CreateUserResource createRequest = new CreateUserResource("email@example.com", "thepassword");
         IdentityProviderError[] errorResponse = new IdentityProviderError[]{new IdentityProviderError(UNABLE_TO_CREATE_USER.name(), emptyList())};
@@ -100,7 +114,7 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
     }
 
     @Test
-    public void testUpdateUserRecordWithUid() {
+    public void updateUserRecordWithUid() {
 
         UpdateUserResource updateRequest = new UpdateUserResource("newpassword");
         ResponseEntity<String> successResponseEntity = new ResponseEntity<>(OK);
@@ -126,7 +140,7 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
     }
 
     @Test
-    public void testUpdateUserRecordWithUidButFailureResponseReturned() throws JsonProcessingException {
+    public void updateUserRecordWithUidButFailureResponseReturned() throws JsonProcessingException {
 
         UpdateUserResource updateRequest = new UpdateUserResource("newpassword");
         ResponseEntity<String> failureResponseEntity = new ResponseEntity<>(asJson(new IdentityProviderError("Error!", emptyList())), BAD_REQUEST);
@@ -139,7 +153,7 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
     }
 
     @Test
-    public void testWeakPasswordError() throws JsonProcessingException {
+    public void weakPasswordError() throws JsonProcessingException {
         CreateUserResource createRequest = new CreateUserResource("email@example.com", "Password123");
         IdentityProviderError[] errorResponse = new IdentityProviderError[]{new IdentityProviderError(RestIdentityProviderService.INVALID_PASSWORD_KEY, Arrays.asList(new String[]{"blacklisted"}))};
         ResponseEntity<String> errorResponseEntity = new ResponseEntity<>(asJson(errorResponse), BAD_REQUEST);
