@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
-import static org.innovateuk.ifs.util.RedirectUtils.buildRedirect;
+import static org.innovateuk.ifs.util.NavigationUtils.getRedirectToLandingPageUrl;
 
 /**
  * A controller for users to complete the satisfaction survey after submitting an application.
@@ -50,10 +50,8 @@ public class SurveyController {
                                  UserResource user,
                                  Model model) {
 
-        String userUrl = user.getRoles().get(0).getUrl();
-
         Supplier<String> failureView = () -> viewFeedback(feedbackForm, bindingResult, competitionId, model);
-        Supplier<String> successView = () -> buildRedirect(request, userUrl);
+        Supplier<String> successView = () -> getRedirectToLandingPageUrl(request);
 
         SurveyResource surveyResource = getSurveyResource(feedbackForm, competitionId);
 

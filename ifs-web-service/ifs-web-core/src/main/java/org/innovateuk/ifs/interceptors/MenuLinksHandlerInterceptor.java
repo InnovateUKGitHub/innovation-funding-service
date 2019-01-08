@@ -2,7 +2,6 @@ package org.innovateuk.ifs.interceptors;
 
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.util.NavigationUtils.getDirectLandingPageUrl;
 
 /**
  * Have the menu links globally available for each controller.
@@ -51,7 +51,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void addUserDashboardLink(HttpServletRequest request, ModelAndView modelAndView) {
-        String dashboardUrl = getUserDashboardUrl(request);
+        String dashboardUrl = getDirectLandingPageUrl(request);
         modelAndView.getModelMap().addAttribute(USER_DASHBOARD_LINK, dashboardUrl);
     }
 
@@ -97,30 +97,5 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
 
     public static void addLogoutLink(ModelAndView modelAndView, String logoutUrl) {
         modelAndView.addObject(USER_LOGOUT_LINK, logoutUrl);
-    }
-
-    /**
-     * Get the dashboard url, from the Role object.
-     */
-    private String getUserDashboardUrl(HttpServletRequest request) {
-        UserAuthentication authentication = (UserAuthentication) userAuthenticationService.getAuthentication(request);
-        if (authentication != null) {
-            Optional<SimpleGrantedAuthority> simpleGrantedAuthority = (Optional<SimpleGrantedAuthority>) authentication.getAuthorities().stream().findFirst();
-            if (simpleGrantedAuthority.isPresent()) {
-                UserResource user = authentication.getDetails();
-                String role = cookieUtil.getCookieValue(request, "role");
-                if (!role.isEmpty()) {
-                    Optional<Role> r = user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst();
-                    if (r.isPresent()) {
-                        String url = r.get().getUrl();
-                        if (url != null) {
-                            return "/" + url;
-                        }
-                    }
-                }
-                return "/" + user.getRoles().get(0).getUrl();
-            }
-        }
-        return "/";
     }
 }

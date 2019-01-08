@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.util.RedirectUtils.buildRedirect;
+import static org.innovateuk.ifs.util.NavigationUtils.getRedirectToLandingPageUrl;
 import static org.innovateuk.ifs.util.RestLookupCallbacks.find;
 
 /**
@@ -138,7 +138,7 @@ public class AcceptProjectInviteController {
                     }
                     // Accept the invite - adding the user to the project
                     return projectInviteRestService.acceptInvite(hash, userExists.getId()).andOnSuccessReturn(() ->
-                            buildRedirect(request, "applicant/dashboard"));
+                            getRedirectToLandingPageUrl(request));
                 }
         ).getSuccess();
     }

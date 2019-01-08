@@ -40,7 +40,7 @@ import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
-import static org.innovateuk.ifs.login.controller.HomeController.getRedirectUrlForUser;
+import static org.innovateuk.ifs.util.NavigationUtils.getRedirectToLandingPageUrl;
 
 @Controller
 @RequestMapping("/registration")
@@ -116,11 +116,11 @@ public class RegistrationController {
                                HttpServletRequest request,
                                HttpServletResponse response) {
         if (user != null) {
-            return getRedirectUrlForUser(user);
+            return getRedirectToLandingPageUrl(request);
         }
 
         if (getOrganisationId(request) == null) {
-            return "redirect:/";
+            return getRedirectToLandingPageUrl(request);
         }
 
         try {
@@ -251,7 +251,7 @@ public class RegistrationController {
         return registrationCookieService.getCompetitionIdCookieValue(request).orElse(null);
     }
 
-    private boolean acceptInvite(HttpServletResponse response, HttpServletRequest request, UserResource userResource) {
+    private void acceptInvite(HttpServletResponse response, HttpServletRequest request, UserResource userResource) {
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
         if (inviteHash.isPresent()) {
             Optional<Long> organisationId = registrationCookieService.getOrganisationIdCookieValue(request);
@@ -259,9 +259,8 @@ public class RegistrationController {
             if (restResult.isSuccess()) {
                 registrationCookieService.deleteInviteHashCookie(response);
             }
-            return restResult.isSuccess();
+            restResult.isSuccess();
         }
-        return false;
     }
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {

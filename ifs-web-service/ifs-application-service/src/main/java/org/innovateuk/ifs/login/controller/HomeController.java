@@ -9,6 +9,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,11 +22,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -40,15 +45,24 @@ public class HomeController {
     @Autowired
     private CookieUtil cookieUtil;
 
-    public static String getRedirectUrlForUser(UserResource user) {
+    @Value("${ifs.acc.landing.page.url}")
+    private String accLandingPageUrl;
 
-        String roleUrl = !user.getRoles().isEmpty() ? user.getRoles().get(0).getUrl() : "";
-
-        return format("redirect:/%s", hasText(roleUrl) ? roleUrl : "dashboard");
-    }
+    private static final Map<Role, String> DEFAULT_LANDING_PAGE_URLS_FOR_ROLES =
+            asMap(
+                    ASSESSOR, "assessment/assessor/dashboard",
+                    APPLICANT, "applicant/dashboard",
+                    COMP_ADMIN, "management/dashboard",
+                    PROJECT_FINANCE, "management/dashboard",
+                    INNOVATION_LEAD, "management/dashboard",
+                    IFS_ADMINISTRATOR, "management/dashboard",
+                    SUPPORT, "management/dashboard",
+                    MONITORING_OFFICER, "applicant/dashboard",
+                    STAKEHOLDER, "management/dashboard"
+            );
 
     @GetMapping("/")
-    public String login(Model model) {
+    public String login() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (unauthenticated(authentication)) {
@@ -56,7 +70,8 @@ public class HomeController {
         }
 
         UserResource user = (UserResource) authentication.getDetails();
-        if (user.hasMoreThanOneRoleOf(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER)) {
+
+        if (user.hasMoreThanOneRoleOf(ASSESSOR, APPLICANT, STAKEHOLDER, ACC_USER)) {
             return "redirect:/roleSelection";
         }
 
@@ -69,7 +84,7 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (unauthenticated(authentication) || (!user.hasMoreThanOneRoleOf(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER))){
+        if (unauthenticated(authentication) || (!user.hasMoreThanOneRoleOf(ASSESSOR, APPLICANT, STAKEHOLDER, ACC_USER))){
             return "redirect:/";
         }
 
@@ -99,12 +114,33 @@ public class HomeController {
         return "login/multiple-user-choice";
     }
 
-    private String redirectToChosenDashboard(UserResource user, String role) {
-        String url = user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
-        return format("redirect:/%s", url);
+    private String redirectToChosenDashboard(UserResource user, String roleName) {
+        Role chosenRole = simpleFindFirstMandatory(user.getRoles(), role -> role.getName().equals(roleName));
+        return getLandingPageForRole(chosenRole);
     }
 
     private static boolean unauthenticated(Authentication authentication) {
         return authentication == null || !authentication.isAuthenticated() || authentication.getDetails() == null;
+    }
+
+    private String getRedirectUrlForUser(UserResource user) {
+
+        if (user.getRoles().isEmpty()) {
+            return "";
+        }
+
+        Role role = user.getRoles().get(0);
+        return getLandingPageForRole(role);
+    }
+
+    private String getLandingPageForRole(Role role) {
+
+        if (ACC_USER.equals(role)) {
+            return "redirect:" + accLandingPageUrl;
+        }
+
+        String roleUrl = DEFAULT_LANDING_PAGE_URLS_FOR_ROLES.get(role);
+
+        return format("redirect:/%s", hasText(roleUrl) ? roleUrl : "dashboard");
     }
 }

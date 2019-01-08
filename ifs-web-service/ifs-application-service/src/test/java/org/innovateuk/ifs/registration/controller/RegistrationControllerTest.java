@@ -502,7 +502,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         mockMvc.perform(get("/registration/register")
                 .cookie(organisationCookie)
         ).andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/" + Role.APPLICANT.getUrl()));
+                .andExpect(view().name("redirect:/applicant/dashboard"));
 
     }
 
@@ -513,7 +513,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         mockMvc.perform(post("/registration/register")
                 .cookie(organisationCookie)
         ).andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/" + Role.APPLICANT.getUrl()));
+                .andExpect(view().name("redirect:/applicant/dashboard"));
     }
 
     @Test
