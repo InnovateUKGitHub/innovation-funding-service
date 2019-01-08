@@ -13,6 +13,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.sil.grant.resource.Forecast;
@@ -31,12 +32,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTablePopulator.GRANT_CLAIM_IDENTIFIER;
 
 @Mapper(config = GlobalMapperConfig.class)
 class GrantMapper {
     private static final String NO_PROJECT_SUMMARY = "no project summary";
     private static final String NO_PUBLIC_DESCRIPTION = "no public description";
+    public static final String ACADEMIC_ORGANISATION_SIZE_VALUE = "ACADEMIC";
 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
@@ -91,6 +94,7 @@ class GrantMapper {
     private Participant toParticipant(Context context, PartnerOrganisation partnerOrganisation) {
         Participant participant = new Participant();
         Organisation organisation = partnerOrganisation.getOrganisation();
+        participant.setSourceSystem("IFS");
         participant.setId(organisation.getId());
         participant.setOrgType(organisation.getOrganisationType().getName());
         participant.setOrgProjectRole(partnerOrganisation.isLeadOrganisation() ? "lead" : "collaborator");
@@ -131,7 +135,11 @@ class GrantMapper {
          */
         ProjectFinance projectFinance = projectFinanceRepository
                 .findByProjectIdAndOrganisationId(context.getProjectId(), organisation.getId());
-        participant.setSize(projectFinance.getOrganisationSize() != null ? projectFinance.getOrganisationSize().name() : null);
+
+        String organisationSizeOrAcademic = projectFinance.getOrganisationSize() != null ?
+                projectFinance.getOrganisationSize().name() : ACADEMIC_ORGANISATION_SIZE_VALUE;
+        participant.setSize(organisationSizeOrAcademic);
+
         List<ProjectFinanceRow> projectFinanceRows = projectFinanceRowRepository.findByTargetId(projectFinance.getId());
         BigDecimal awardPercentage = projectFinanceRows.stream()
                 .filter(row -> GRANT_CLAIM_IDENTIFIER.equals(row.getName()))
@@ -143,22 +151,27 @@ class GrantMapper {
         participant.setForecasts(spendProfile.get()
                 .getSpendProfileFigures()
                 .getCosts().stream()
-                .sorted(Comparator.comparing(cost -> cost.getCostCategory().getName()))
-                .collect(
-                        groupingBy(cost -> cost.getCostCategory().getName())
-                ).values().stream()
+                .sorted(Comparator.comparing(this::getFullCostCategoryName))
+                .collect(groupingBy(this::getFullCostCategoryName))
+                .values().stream()
                 .map(this::toForecast)
                 .collect(Collectors.toList())
         );
         return participant;
     }
 
+    private String getFullCostCategoryName(Cost cost) {
+        CostCategory category = cost.getCostCategory();
+        return !isBlank(category.getLabel()) ?
+                category.getLabel() + " - " + category.getName() :
+                category.getName();
+    }
+
     private Forecast toForecast(List<Cost> costs) {
         Forecast forecast = new Forecast();
-        forecast.setCostCategory(costs.stream()
+        forecast.setCostCategory(getFullCostCategoryName(costs.stream()
                 .findFirst()
-                .orElseThrow(IllegalStateException::new)
-                .getCostCategory().getName());
+                .orElseThrow(IllegalStateException::new)));
         forecast.setCost(costs.stream()
                 .map(Cost::getValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)

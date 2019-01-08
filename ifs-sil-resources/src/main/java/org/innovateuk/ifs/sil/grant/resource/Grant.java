@@ -3,6 +3,7 @@ package org.innovateuk.ifs.sil.grant.resource;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.sil.grant.resource.json.LocalDateDeserializer;
 import org.innovateuk.ifs.sil.grant.resource.json.LocalDateSerializer;
@@ -14,13 +15,20 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 
 public class Grant {
+
     @JsonProperty("ifsAppNumber")
+    @JsonSerialize(using = ToStringSerializer.class)
     private long id;
+
+    @JsonSerialize(using = ToStringSerializer.class)
     private long competitionCode;
+
     @JsonProperty("projectTitle")
     private String title;
+
     @JsonProperty("projectSummary")
     private String summary;
+
     @JsonProperty("publicDesc")
     private String publicDescription;
 
@@ -28,10 +36,13 @@ public class Grant {
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime grantOfferLetterDate;
+
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate startDate;
+
     private long duration;
+
     @JsonProperty("participant")
     private Collection<Participant> participants;
 

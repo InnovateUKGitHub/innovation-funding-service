@@ -3,6 +3,7 @@ package org.innovateuk.ifs.sil.grant.resource;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.innovateuk.ifs.sil.grant.resource.json.PercentageDeserializer;
 import org.innovateuk.ifs.sil.grant.resource.json.PercentageSerializer;
 
@@ -10,25 +11,38 @@ import java.math.BigDecimal;
 import java.util.Collection;
 
 public class Participant {
+
+    private String sourceSystem;
+
     @JsonProperty("orgId")
     private long id;
+
     private String orgType;
+
     private String orgProjectRole;
+
+    @JsonSerialize(using = ToStringSerializer.class)
     private long contactId;
+
     private String contactRole;
+
     private String contactEmail;
+
     @JsonProperty("orgSize")
     private String size;
 
     @JsonSerialize(using = PercentageSerializer.class)
     @JsonDeserialize(using = PercentageDeserializer.class)
     private BigDecimal capLimit;
+
     @JsonSerialize(using = PercentageSerializer.class)
     @JsonDeserialize(using = PercentageDeserializer.class)
     private BigDecimal awardRate;
+
     @JsonSerialize(using = PercentageSerializer.class)
     @JsonDeserialize(using = PercentageDeserializer.class)
     private BigDecimal overheadRate;
+
     @JsonProperty("forecast")
     private Collection<Forecast> forecasts;
 
@@ -118,5 +132,13 @@ public class Participant {
 
     public void setForecasts(Collection<Forecast> forecasts) {
         this.forecasts = forecasts;
+    }
+
+    public String getSourceSystem() {
+        return sourceSystem;
+    }
+
+    public void setSourceSystem(String sourceSystem) {
+        this.sourceSystem = sourceSystem;
     }
 }
