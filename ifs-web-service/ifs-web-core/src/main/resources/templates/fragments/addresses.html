@@ -250,7 +250,8 @@
         <input class="govuk-input"
                id="organisationName"
                th:field="*{organisationName}"
-               type="text" value="" />
+               th:attr="data-required-errormessage=#{validation.standard.organisationname.required}"
+               type="text" required="required" />
     </div>
 </th:block>
 
