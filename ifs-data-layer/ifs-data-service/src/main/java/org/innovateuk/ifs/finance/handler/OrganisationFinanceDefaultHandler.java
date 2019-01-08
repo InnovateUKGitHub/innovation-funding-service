@@ -5,12 +5,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.*;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -26,35 +26,50 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinanceHandler implements OrganisationFinanceHandler {
     private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
 
-    @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
-    @Autowired
     private LabourCostHandler labourCostHandler;
 
-    @Autowired
     private CapitalUsageHandler capitalUsageHandler;
 
-    @Autowired
     private MaterialsHandler materialsHandler;
 
-    @Autowired
     private OtherCostHandler otherCostHandler;
 
-    @Autowired
     private OverheadsHandler overheadsHandler;
 
-    @Autowired
     private SubContractingCostHandler subContractingCostHandler;
 
-    @Autowired
     private TravelCostHandler travelCostHandler;
 
-    @Autowired
     private GrantClaimHandler grantClaimHandler;
 
-    @Autowired
     private OtherFundingHandler otherFundingHandler;
+
+    public OrganisationFinanceDefaultHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
+                                             ProjectFinanceRowRepository projectFinanceRowRepository,
+                                             FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
+                                             QuestionService questionService,
+                                             ApplicationFinanceRepository applicationFinanceRepository,
+                                             ProjectFinanceRepository projectFinanceRepository,
+                                             LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
+                                             MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
+                                             OverheadsHandler overheadsHandler,
+                                             SubContractingCostHandler subContractingCostHandler,
+                                             TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
+                                             OtherFundingHandler otherFundingHandler) {
+        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository);
+        this.projectFinanceRepository = projectFinanceRepository;
+        this.labourCostHandler = labourCostHandler;
+        this.capitalUsageHandler = capitalUsageHandler;
+        this.materialsHandler = materialsHandler;
+        this.otherCostHandler = otherCostHandler;
+        this.overheadsHandler = overheadsHandler;
+        this.subContractingCostHandler = subContractingCostHandler;
+        this.travelCostHandler = travelCostHandler;
+        this.grantClaimHandler = grantClaimHandler;
+        this.otherFundingHandler = otherFundingHandler;
+    }
 
     @Override
     public Map<FinanceRowType, List<ChangedFinanceRowPair>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {

@@ -9,7 +9,6 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.validator.GrantClaimValidator;
-import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -30,10 +29,6 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
 
     @Autowired
     private GrantClaimValidator grantClaimValidator;
-
-    //TODO remove IFS-4982
-    @Autowired
-    private PublicContentRepository publicContentRepository;
 
     @Override
     public void validate(GrantClaim grantClaim, BindingResult bindingResult) {
@@ -75,7 +70,7 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
 
     private ApplicationFinanceRow initializeFundingLevel(Competition competition) {
         GrantClaim costItem = new GrantClaim();
-        if (publicContentRepository.findByCompetitionId(competition.getId()).getFundingType() == FundingType.PROCUREMENT) {
+        if (competition.getFundingType() == FundingType.PROCUREMENT) {
             costItem.setGrantClaimPercentage(100);
         } else {
             costItem.setGrantClaimPercentage(null);

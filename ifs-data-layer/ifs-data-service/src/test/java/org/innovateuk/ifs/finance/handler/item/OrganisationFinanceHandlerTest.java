@@ -14,7 +14,6 @@ import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,7 +36,6 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newAp
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
-import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
@@ -56,8 +53,6 @@ public class OrganisationFinanceHandlerTest {
     private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
     @Mock
     private QuestionService questionService;
-    @Mock
-    private PublicContentRepository publicContentRepository;
     @Spy
     private LabourCostHandler labourCostHandler;
     @Spy
@@ -93,7 +88,7 @@ public class OrganisationFinanceHandlerTest {
     public void setUp() throws Exception {
         when(financeRowRepositoryMock.save(anyList())).then(returnsFirstArg());
 
-        competition = newCompetition().build();
+        competition = newCompetition().withFundingType(FundingType.GRANT).build();
         application = newApplication().withCompetition(competition).build();
         applicationFinance = newApplicationFinance().withApplication(application).build();
         costTypeQuestion = new HashMap<>();
@@ -103,10 +98,6 @@ public class OrganisationFinanceHandlerTest {
                 setUpCostTypeQuestions(competition, costType);
             }
         }
-        when(publicContentRepository.findByCompetitionId(competition.getId())).thenReturn(newPublicContent().withFundingType(FundingType.GRANT).build());
-        ReflectionTestUtils.setField(grantClaimHandler, "publicContentRepository", publicContentRepository);
-        ReflectionTestUtils.setField(otherFundingHandler, "publicContentRepository", publicContentRepository);
-
         List<ApplicationFinanceRow> costs = new ArrayList<>();
 
         Iterable<ApplicationFinanceRow> init;

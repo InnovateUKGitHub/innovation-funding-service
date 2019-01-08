@@ -5,14 +5,12 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
@@ -25,8 +23,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
-import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,9 +41,6 @@ public class YourProjectCostsCompleterTest extends BaseServiceUnitTest<YourProje
     @Mock
     private CompetitionRestService competitionRestService;
 
-    @Mock
-    private PublicContentItemRestService publicContentItemRestService;
-
     @Override
     protected YourProjectCostsCompleter supplyServiceUnderTest() {
         return new YourProjectCostsCompleter();
@@ -58,6 +51,7 @@ public class YourProjectCostsCompleterTest extends BaseServiceUnitTest<YourProje
         long sectionId = 1L;
         CompetitionResource competition = newCompetitionResource()
                 .withIncludeYourOrganisationSection(false)
+                .withFundingType(FundingType.PROCUREMENT)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -71,10 +65,6 @@ public class YourProjectCostsCompleterTest extends BaseServiceUnitTest<YourProje
                 .build();
         SectionResource organisationSection = newSectionResource().build();
         SectionResource fundingSection = newSectionResource().build();
-        PublicContentItemResource publicContent = newPublicContentItemResource()
-                .withPublicContentResource(newPublicContentResource()
-                        .withFundingType(FundingType.PROCUREMENT).build())
-                .build();
 
         when(sectionService.markAsComplete(sectionId, application.getId(), role.getId())).thenReturn(emptyList());
         when(applicationRestService.getApplicationById(role.getApplicationId())).thenReturn(restSuccess(application));
@@ -82,7 +72,6 @@ public class YourProjectCostsCompleterTest extends BaseServiceUnitTest<YourProje
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(sectionService.getSectionsForCompetitionByType(competition.getId(), SectionType.ORGANISATION_FINANCES)).thenReturn(singletonList(organisationSection));
         when(sectionService.getSectionsForCompetitionByType(competition.getId(), SectionType.FUNDING_FINANCES)).thenReturn(singletonList(fundingSection));
-        when(publicContentItemRestService.getItemByCompetitionId(competition.getId())).thenReturn(restSuccess(publicContent));
 
         service.markAsComplete(sectionId, application.getId(), role);
 

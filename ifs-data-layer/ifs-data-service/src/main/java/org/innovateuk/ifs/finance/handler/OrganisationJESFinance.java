@@ -6,9 +6,13 @@ import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.handler.item.GrantClaimHandler;
 import org.innovateuk.ifs.finance.handler.item.JESCostHandler;
 import org.innovateuk.ifs.finance.handler.item.OtherFundingHandler;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumMap;
@@ -24,14 +28,24 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUND
 public class OrganisationJESFinance extends AbstractOrganisationFinanceHandler implements OrganisationFinanceHandler {
     private static final Log LOG = LogFactory.getLog(OrganisationJESFinance.class);
 
-    @Autowired
     private GrantClaimHandler grantClaimHandler;
 
-    @Autowired
     private OtherFundingHandler otherFundingHandler;
 
-    @Autowired
     private JESCostHandler jesCostHandler;
+
+    public OrganisationJESFinance(ApplicationFinanceRowRepository applicationFinanceRowRepository,
+                                  ProjectFinanceRowRepository projectFinanceRowRepository,
+                                  FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
+                                  QuestionService questionService,
+                                  ApplicationFinanceRepository applicationFinanceRepository,
+                                  GrantClaimHandler grantClaimHandler, OtherFundingHandler otherFundingHandler,
+                                  JESCostHandler jesCostHandler) {
+        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository);
+        this.grantClaimHandler = grantClaimHandler;
+        this.otherFundingHandler = otherFundingHandler;
+        this.jesCostHandler = jesCostHandler;
+    }
 
     @Override
     protected boolean initialiseCostTypeSupported(FinanceRowType costType) {
