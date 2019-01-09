@@ -85,6 +85,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-4345 As a Portfolio Manager I am able to select the Standard with VAT form for certain competitions
 ...
 ...               IFS-4186 Competition Setup - change layout to separate items not required for open
+...
+...               IFS-4982 Move Funding type selection from front door to Initial details
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -117,7 +119,7 @@ User can create a new competition
     And The user should see the element        jQuery = p:contains("When complete, this competition will open on the date set in Milestones.")
 
 Initial details - User enters valid values and marks as done
-    [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
+    [Documentation]  INFUND-2982  INFUND-3888  INFUND-2983  INFUND-6478  INFUND-6479  IFS-4982
     [Tags]  HappyPath
     Given the user clicks the button/link                       link = Initial details
     And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
@@ -153,8 +155,8 @@ Initial Details - drop down menu is populated with comp admin users
 Initial details - Comp Type and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
     [Tags]
-    And The element should be disabled        css = #competitionTypeId
-    And The element should be disabled        css = #openingDateDay
+    And the user should not see the element   id = competitionTypeId
+    And the user should not see the element   id = openingDateDay
     And the user clicks the button/link       jQuery = button:contains("Done")
 
 Initial details - should have a green check
@@ -216,7 +218,7 @@ Funding information: calculations
     [Documentation]  INFUND-2985 INFUND-4894
     [Tags]  HappyPath
     [Setup]  the user navigates to the page     ${SERVER}/management/competition/setup/${competitionId}
-    Given the user clicks the button/link         link = Funding information
+    Given the user clicks the button/link       link = Funding information
     And the user clicks the button/link         id = generate-code
     And the user enters text to a text field    id = funders[0].funder    FunderName
     And the user enters text to a text field    id = funders[0].funderBudget    20000
@@ -832,6 +834,7 @@ the resubmission should not have a default selection
 
 The user enters valid data in the initial details
     Given the user enters text to a text field                 css = #title  ${competitionTitle}
+    And the user selects the radio button                      fundingType  LOAN
     When the user selects the option from the drop-down menu   Sector  id = competitionTypeId
     And the user selects the option from the drop-down menu    Infrastructure systems  id = innovationSectorCategoryId
     And the user selects the value from the drop-down menu     32   name = innovationAreaCategoryIds[0]
@@ -911,11 +914,12 @@ the user marks question as complete
 
 the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Competition title")
+    the user should see the element    jQuery = dt:contains("Funding type") ~ dd:contains("Grant")
     the user should see the element    jQuery = dd:contains("Sector")
     the user should see the element    jQuery = dd:contains("Emerging and enabling")
     the user should see the element    jQuery = dd:contains("Satellite applications")
     the user should see the element    jQuery = dd:contains("Space technology")
-    the user should see the element    jQuery = dd:contains("10/1/${nextyear}")
+    the user should see the element    jQuery = dd:contains("10 January ${nextyear}")
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")

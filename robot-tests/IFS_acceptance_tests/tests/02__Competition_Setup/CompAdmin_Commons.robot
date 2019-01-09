@@ -28,6 +28,7 @@ the user fills in the CS Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${stateAid}
     the user clicks the button/link                      link = Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
+    the user selects the radio button                    fundingType  GRANT
     the user selects the option from the drop-down menu  ${compType}  id = competitionTypeId
     the user selects the option from the drop-down menu  Emerging and enabling  id = innovationSectorCategoryId
     the user selects the option from the drop-down menu  Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
@@ -233,7 +234,6 @@ the user fills in the Public content and publishes
     # Fill in the Summary
     the user clicks the button/link         link = Summary
     the user enters text to a text field    css = .editor  This is a Summary description
-    the user selects the radio button       fundingType  Grant
     the user enters text to a text field    id = projectSize   10 millions
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content

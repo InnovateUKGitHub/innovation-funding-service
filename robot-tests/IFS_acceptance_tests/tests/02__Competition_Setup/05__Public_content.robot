@@ -16,6 +16,8 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               INFUND-7490 Create Competition > How to apply tab for external "Front Door" view of competition eligibility
 ...
 ...               IFS-1969 As a comp exec I am able to set a Funding type of Loan in Public content > Summary
+...
+...               IFS-4982 Move Funding type selection from front door to Initial details
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  MySQL
@@ -99,14 +101,13 @@ Competition information and search: ReadOnly
     And the user clicks the button/link     link = Return to public content
 
 Summary: server side validation and autosave
-    [Documentation]    INFUND-6916  INFUND-7486
+    [Documentation]    INFUND-6916  INFUND-7486  IFS-4982
     [Tags]
     # Using Loan as a funding Type in order to check the ticket IFS-1969
     Given the user clicks the button/link         link = Summary
     And the user should see the text in the page  Text entered into this section will appear in the summary tab
     When the user clicks the button/link          jQuery = .govuk-button:contains("Save and review")
-    Then the user should see a summary error      Please enter a funding type.
-    And the user should see a summary error       Please enter a project size.
+    Then the user should see a summary error      Please enter a project size.
     And the user should see a summary error       Please enter a competition description.
     When the user enters valid data in the summary details
     And the user should see the element           jQuery = .button-clear:contains("+ add new section")
@@ -135,8 +136,6 @@ Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916, INFUND-7486, IFS-1969
     [Tags]
     When the user clicks the button/link      link = Summary
-    Then the user should see the element      jQuery = h2:contains("Funding type")
-    And the user should see the element       jQuery = div:contains("Loan")
     Then the user should see the element      jQuery = h2:contains("Project size")
     And the user should see the element       jQuery = div:contains("10 millions")
     And the user should see the element       jQuery = h2:contains("A nice new Heading")
@@ -315,7 +314,6 @@ Publish public content: Publish once all sections are complete
     And the user should see the element                 jQuery = button:contains("Publish and review")
     Then the user clicks the button/link                jQuery = a:contains("Public content")
 
-
 User can view the competition url for invite only competitions
     [Documentation]    IFS-262
     [Tags]
@@ -384,7 +382,6 @@ Guest user can see the updated Summary information
     Given the user clicks the button/link                  link = Public content competition
     And the user clicks the button/link                    link = Summary
     Then the user should see the element                   jQuery = .govuk-grid-column-one-third:contains("Description") ~ .govuk-grid-column-two-thirds:contains("This is a Summary description")
-    And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Funding type") ~ .govuk-grid-column-two-thirds:contains("Loan")
     And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Project size") ~ .govuk-grid-column-two-thirds:contains("10 millions")
     And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("A nice new Heading") ~ .govuk-grid-column-two-thirds:contains("Ut enim ad minim veniam,")
     Then guest user downloads the file                     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
@@ -467,7 +464,6 @@ User creates a new competition
 
 the user enters valid data in the summary details
     The user enters text to a text field    css = .editor  This is a Summary description
-    the user selects the radio button       fundingType  Loan
     the user enters text to a text field    id = projectSize   10 millions
 
 the user enters valid data in the eligibility details
