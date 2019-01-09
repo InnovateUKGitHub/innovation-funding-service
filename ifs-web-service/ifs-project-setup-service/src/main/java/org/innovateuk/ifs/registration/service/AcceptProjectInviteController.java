@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,6 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.util.NavigationUtils.getRedirectToLandingPageUrl;
 import static org.innovateuk.ifs.util.RestLookupCallbacks.find;
 
 /**
@@ -39,8 +39,12 @@ public class AcceptProjectInviteController {
 
     @Autowired
     private ProjectInviteRestService projectInviteRestService;
+
     @Autowired
     private CookieUtil cookieUtil;
+
+    @Autowired
+    private NavigationUtils navigationUtils;
 
     public static final String ACCEPT_INVITE_MAPPING = "/accept-invite/";
     public static final String ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING = "/registration/accept-invite-user-does-not-yet-exist-show-project";
@@ -138,7 +142,7 @@ public class AcceptProjectInviteController {
                     }
                     // Accept the invite - adding the user to the project
                     return projectInviteRestService.acceptInvite(hash, userExists.getId()).andOnSuccessReturn(() ->
-                            getRedirectToLandingPageUrl(request));
+                            navigationUtils.getRedirectToLandingPageUrl(request));
                 }
         ).getSuccess();
     }

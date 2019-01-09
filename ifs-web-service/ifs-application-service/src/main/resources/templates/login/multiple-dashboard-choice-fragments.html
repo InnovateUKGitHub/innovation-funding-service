@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <th:block th:fragment="dashboard-block(title, description, url, linkText)">
+
+        <li class="govuk-grid-column-one-third">
+            <div class="highlight-panel highlight-panel-padded">
+                <span class="govuk-heading-m govuk-!-margin-top-6" th:text="${title}">Live projects</span>
+                <small th:text="${description}">Manage your live projects.</small>
+                <br />
+                <span class="secondary-notification govuk-body">
+                      <a class="govuk-link" th:href="${url}" th:text="${linkText}">Live projects</a>
+                    </span>
+            </div>
+        </li>
+
+    </th:block>
+
+</html>

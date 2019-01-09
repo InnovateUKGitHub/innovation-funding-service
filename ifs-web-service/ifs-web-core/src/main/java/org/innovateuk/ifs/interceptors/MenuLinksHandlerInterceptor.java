@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.NavigationUtils.getDirectLandingPageUrl;
 
 /**
  * Have the menu links globally available for each controller.
@@ -40,6 +40,9 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private CookieUtil cookieUtil;
 
+    @Autowired
+    private NavigationUtils navigationUtils;
+
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if (modelAndView != null && !(modelAndView.getView() instanceof RedirectView || modelAndView.getViewName().startsWith("redirect:"))) {
@@ -51,7 +54,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void addUserDashboardLink(HttpServletRequest request, ModelAndView modelAndView) {
-        String dashboardUrl = getDirectLandingPageUrl(request);
+        String dashboardUrl = navigationUtils.getDirectLandingPageUrl(request);
         modelAndView.getModelMap().addAttribute(USER_DASHBOARD_LINK, dashboardUrl);
     }
 

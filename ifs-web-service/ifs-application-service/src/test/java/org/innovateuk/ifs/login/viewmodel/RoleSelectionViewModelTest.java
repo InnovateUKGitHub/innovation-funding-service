@@ -20,33 +20,33 @@ import static org.junit.Assert.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class RoleSelectionViewModelTest {
 
-    private RoleSelectionViewModel viewModel;
+    private DashboardSelectionViewModel viewModel;
 
     @Before
     public void setUp() throws Exception {
         List<Role> roles = Arrays.asList(ASSESSOR, APPLICANT, STAKEHOLDER);
         UserResource user = newUserResource().withRolesGlobal(roles).build();
-        viewModel = new RoleSelectionViewModel(user);
+        viewModel = new DashboardSelectionViewModel(user);
     }
 
     @Test
     public void getApplicantRoleDescription() {
-        assertThat(viewModel.getRoleDescription(Role.APPLICANT), is(equalTo(RoleSelectionViewModel.APPLICANT_ROLE_DESCRIPTION)));
+        assertThat(viewModel.getRoleDescription(Role.APPLICANT), is(equalTo(DashboardSelectionViewModel.APPLICANT_ROLE_DESCRIPTION)));
     }
 
     @Test
     public void getAssessorRoleDescription() {
-        assertThat(viewModel.getRoleDescription(Role.ASSESSOR), is(equalTo(RoleSelectionViewModel.ASSESSOR_ROLE_DESCRIPTION)));
+        assertThat(viewModel.getRoleDescription(Role.ASSESSOR), is(equalTo(DashboardSelectionViewModel.ASSESSOR_ROLE_DESCRIPTION)));
     }
 
     @Test
     public void getStakeholderRoleDescription() {
-        assertThat(viewModel.getRoleDescription(Role.STAKEHOLDER), is(equalTo(RoleSelectionViewModel.STAKEHOLDER_ROLE_DESCRIPTION)));
+        assertThat(viewModel.getRoleDescription(Role.STAKEHOLDER), is(equalTo(DashboardSelectionViewModel.STAKEHOLDER_ROLE_DESCRIPTION)));
     }
 
     @Test
     public void getRoleDescriptionForRoleNotInAcceptedRoles() {
-        assertThat(viewModel.getRoleDescription(Role.COMP_ADMIN), is(equalTo(RoleSelectionViewModel.EMPTY_DESCRIPTION)));
+        assertThat(viewModel.getRoleDescription(Role.COMP_ADMIN), is(equalTo(DashboardSelectionViewModel.EMPTY_DESCRIPTION)));
     }
 
 }

@@ -21,6 +21,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +41,6 @@ import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
-import static org.innovateuk.ifs.util.NavigationUtils.getRedirectToLandingPageUrl;
 
 @Controller
 @RequestMapping("/registration")
@@ -75,6 +75,9 @@ public class RegistrationController {
 
     @Autowired
     protected CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Autowired
+    private NavigationUtils navigationUtils;
 
     private static final Log LOG = LogFactory.getLog(RegistrationController.class);
 
@@ -116,11 +119,11 @@ public class RegistrationController {
                                HttpServletRequest request,
                                HttpServletResponse response) {
         if (user != null) {
-            return getRedirectToLandingPageUrl(request);
+            return navigationUtils.getRedirectToLandingPageUrl(request);
         }
 
         if (getOrganisationId(request) == null) {
-            return getRedirectToLandingPageUrl(request);
+            return navigationUtils.getRedirectToLandingPageUrl(request);
         }
 
         try {

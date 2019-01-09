@@ -128,7 +128,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
 
         mockMvc.perform(get("/roleSelection"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("login/multiple-user-choice"));
+                .andExpect(view().name("login/multiple-dashboard-choice"));
     }
 
     @Test
@@ -199,7 +199,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "selectedRole"))
-                .andExpect(view().name("login/multiple-user-choice"))
+                .andExpect(view().name("login/multiple-dashboard-choice"))
                 .andReturn();
 
         RoleSelectionForm form = (RoleSelectionForm) result.getModelAndView().getModel().get("form");

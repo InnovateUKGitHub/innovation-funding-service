@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dashboard'" />
+    </head>
+
+    <body class="govuk-template__body app-overview">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" th:with="hideDashboardLink=true" />
+
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
+
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='govuk-heading-l govuk-!-margin-top-6 govuk-!-margin-bottom-6'"/>
+
+                <ul class="govuk-list govuk-grid-row">
+
+                    <th:block th:each="dashboard : ${model.availableDashboards}">
+
+                        <th:block th:insert="login/multiple-dashboard-choice-fragments ::
+                            dashboard-block(
+                                title=${#messages.msg('ifs.dashboards.title.' + dashboard.role.name())},
+                                description=${#messages.msg('ifs.dashboards.description.' + dashboard.role.name())},
+                                url=${dashboard.url},
+                                linkText=${#messages.msg('ifs.dashboards.link.text.' + dashboard.role.name())}
+                            )"
+                        />
+
+                    </th:block>
+
+                </ul>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+
+</html>
