@@ -11,7 +11,7 @@ FOR EACH ROW
 
 UPDATE competition c SET funding_type = (SELECT funding_type FROM public_content pc WHERE pc.competition_id = c.id);
 
--- TODO IFS-4982 drop sync triggers and drop public_content.funding_type
+-- TODO IFS-5010 drop sync triggers and drop public_content.funding_type
 -- DROP TRIGGER insert_public_content_to_competition;
 -- DROP TRIGGER update_public_content_to_competition;
--- ALTER TABLE public_content DROP column fun'ding_type;
+-- ALTER TABLE public_content DROP column funding_type;
