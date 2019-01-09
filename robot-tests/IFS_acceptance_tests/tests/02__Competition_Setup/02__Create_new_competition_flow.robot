@@ -242,7 +242,7 @@ Funding information: can be saved
     And the user should see the element     jQuery = dt:contains("PAF number") ~ dd:contains("2016")
     And the user should see the element     jQuery = dt:contains("Budget code") ~ dd:contains("2004")
     And the user should see the element     jQuery = dt:contains("Activity code") ~ dd:contains("4242")
-    And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("1901-1")
+    And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("2001-1")
     And the user should see the element     jQuery = button:contains("Edit")
 
 Funding information: can be edited
@@ -819,7 +819,7 @@ the weekdays should be correct
     element should contain    css = tr:nth-child(13) td:nth-child(3)    Tue
 
 the pre-field date should be correct
-    Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Thu
+    Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Fri
     ${YEAR} =    Get Value        css = #milestoneWeekdayEntry-OPEN_DATE ~ .year .govuk-input--width-4  # Get the value within the YEAR field
     Should Be Equal As Strings    ${YEAR}  ${nextyear}
     ${MONTH} =    Get Value       css = #milestoneWeekdayEntry-OPEN_DATE ~ .month .govuk-input--width-4  # Get the value within the MONTH field
