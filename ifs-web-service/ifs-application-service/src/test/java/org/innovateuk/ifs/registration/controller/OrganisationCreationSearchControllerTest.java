@@ -187,4 +187,28 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
                 .andExpect(view().name("registration/organisation/find-organisation"))
                 .andExpect(model().attributeExists("organisationForm"));
     }
+
+    @Test
+    public void selectedBusinessGet() throws Exception {
+        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
+
+        mockMvc.perform(get("/organisation/create/selected-organisation/" + COMPANY_ID)
+                .header("referer", "/organisation/create/selected-organisation/"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void selectedBusinessSaveBusiness() throws Exception {
+
+        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
+
+        mockMvc.perform(post("/organisation/create/selected-organisation/" + COMPANY_ID)
+                .param("save-organisation-details", "true")
+                .param("searchOrganisationId", COMPANY_ID)
+                .header("referer", "/organisation/create/selected-organisation/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/organisation/create/selected-organisation/" + COMPANY_ID));
+    }
 }

@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
+import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -79,6 +80,27 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
 
+    }
+
+    @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")
+    public String amendOrganisationAddress(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+                                           Model model,
+                                           @PathVariable("searchOrganisationId") final String searchOrganisationId,
+                                           HttpServletRequest request,
+                                           HttpServletResponse response) {
+        organisationForm = getFormDataFromCookie(organisationForm, model, request);
+        organisationForm.setSearchOrganisationId(searchOrganisationId);
+
+        addSelectedOrganisation(organisationForm, model);
+
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+
+        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
+
+        return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
     }
 
     @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SAVE_ORGANISATION_DETAILS)
