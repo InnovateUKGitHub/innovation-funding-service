@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your project costs'"/>
+</head>
+<body class="govuk-template__body finance-row-form overheads">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Your project costs',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
+
+        <form th:object="${form}"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
+                       data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              method="POST">
+            <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+            <input type="hidden" id="cacheTest" value=""/>
+
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.includeVat}">
+                <p class="govuk-body">You must include VAT in all figures where appropriate.</p>
+            </div>
+
+            <h2 class="govuk-heading-m govuk-!-margin-0"
+                th:text="|Provide the project costs for '${model.organisationName}'|"></h2>
+            <p class="govuk-body">Only your organisation can see this level of detail. All members of your
+                organisation can access and edit your finances. We recommend assigning completion of your finances
+                to one member of your team.</p>
+
+            <th:block th:insert="application/your-project-costs-fragments :: labour" />
+            <th:block th:insert="application/your-project-costs-fragments :: overheads" />
+            <th:block th:insert="application/your-project-costs-fragments :: materials" />
+            <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
+            <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
+            <th:block th:insert="application/your-project-costs-fragments :: travel" />
+            <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
+
+            <div class="govuk-grid-row total-cost">
+                <div class="govuk-grid-column-one-half">
+                    <label for="total-cost" class="govuk-heading-m" th:text="|'${model.organisationName}' Total project costs|">'Bobs' Total project costs</label>
+                </div>
+                <div class="govuk-grid-column-one-half alignright">
+                    <input type="text"
+                           id="total-cost"
+                           readonly="readonly"
+                           class="govuk-heading-m alignright"
+                           data-calculation-fields="[id*=section-total]"
+                           data-calculation-operations="+"
+                           th:value="'£' + ${#numbers.formatInteger(form.organisationFinanceTotal, 0, 'DEFAULT')}"/>
+                </div>
+            </div>
+
+            <div th:unless="${model.readOnly}" class="govuk-form-group" th:classappend="${#fields.hasErrors('eligibleAgreement')} ? 'govuk-form-group--error': ''">
+                <th:block th:if="${#fields.hasErrors('eligibleAgreement')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('eligibleAgreement')}" th:text="${err}" />
+                </th:block>
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input id="stateAidAgreed"
+                               class="govuk-checkboxes__input"
+                               th:field="${form.eligibleAgreement}"
+                               type="checkbox"
+                               value="true"
+                               data-switches-button-status="#mark-all-as-complete"
+                               data-autosave-disabled />
+                        <label for="stateAidAgreed"
+                               class="govuk-label govuk-checkboxes__label">
+                            By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
+                            <a target="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance" class="govuk-link">project costs guidance</a>
+                            (opens in a new window).
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-footer" th:if="${model.open}">
+                <div class="form-footer__actions">
+                    <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="complete"
+                            class="button-clear" value="true">Mark as complete
+                    </button>
+                    <button th:if="${model.complete}" type="submit" name="edit" class="button-clear" value="true">
+                        Edit your project costs
+                    </button>
+                </div>
+            </div>
+            <div>
+                <a th:href="${model.financesUrl}"
+                   th:if="${model.readOnly}"
+                   class="govuk-!-margin-top-6 button-secondary">Return to finances
+                </a>
+                <button type="submit" th:unless="${model.readOnly}"
+                        class="govuk-!-margin-top-6 govuk-button">
+                    Save and return to finances
+                </button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+</body>
+</html>

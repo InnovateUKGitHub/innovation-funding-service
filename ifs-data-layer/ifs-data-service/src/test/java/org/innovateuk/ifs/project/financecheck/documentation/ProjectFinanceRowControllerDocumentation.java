@@ -98,7 +98,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
         GrantClaim costItem = new GrantClaim();
         when(projectFinanceRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
         when(validationUtil.validateProjectCostItem(isA(FinanceRowItem.class))).thenReturn(new ValidationMessages());
-        mockMvc.perform(put("/cost/project/update/{id}", "123")
+        mockMvc.perform(put(BASE_URL + "/update/{id}", "123")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(costItem)))
@@ -114,9 +114,9 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
     @Test
     public void deleteCostItem() throws Exception {
 
-        when(projectFinanceRowServiceMock.deleteCost(456L, 789L, 123L)).thenReturn(serviceSuccess());
+        when(projectFinanceRowServiceMock.deleteCost(123L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/cost/project/456/organisation/789/delete/{id}", "123")
+        mockMvc.perform(delete(BASE_URL + "/delete/{id}", "123")
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent()).

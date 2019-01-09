@@ -13,32 +13,46 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+
 /**
  * Controller for finding generic categories by type or parentId
  */
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
+
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/findInnovationAreas")
+    @GetMapping("find-innovation-areas")
     public RestResult<List<InnovationAreaResource>> findInnovationAreas() {
         return categoryService.getInnovationAreas().toGetResponse();
     }
 
-    @GetMapping("/findInnovationSectors")
+    @GetMapping("/find-innovation-areas-excluding-none")
+    public RestResult<List<InnovationAreaResource>> findInnovationAreasExcludingNone() {
+        return categoryService.getInnovationAreas()
+                .andOnSuccessReturn(CategoryController::filterNoneInnovationArea)
+                .toGetResponse();
+    }
+
+    @GetMapping("find-innovation-sectors")
     public RestResult<List<InnovationSectorResource>> findInnovationSectors() {
         return categoryService.getInnovationSectors().toGetResponse();
     }
 
-    @GetMapping("/findResearchCategories")
+    @GetMapping("find-research-categories")
     public RestResult<List<ResearchCategoryResource>> findResearchCategories() {
         return categoryService.getResearchCategories().toGetResponse();
     }
 
-    @GetMapping("/findByInnovationSector/{sectorId}")
+    @GetMapping("/find-by-innovation-sector/{sectorId}")
     public RestResult<List<InnovationAreaResource>> findInnovationAreasBySector(@PathVariable("sectorId") final long sectorId){
         return categoryService.getInnovationAreasBySector(sectorId).toGetResponse();
+    }
+
+    private static List<InnovationAreaResource> filterNoneInnovationArea(List<InnovationAreaResource> innovationAreaResources) {
+        return simpleFilter(innovationAreaResources, InnovationAreaResource::isNotNone);
     }
 }

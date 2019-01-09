@@ -9,6 +9,8 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -21,7 +23,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,12 +31,14 @@ import java.util.Map;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * Tests {@link ApplicationSectionSaver}
@@ -76,7 +79,11 @@ public class ApplicationSectionSaverTest {
     @Mock
     private ApplicationQuestionNonFileSaver nonFileSaver;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     private final ApplicationResource application = newApplicationResource().withId(1234L).build();
+    private final CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).build();
     private final Long competitionId = 23412L;
     private final ApplicationForm form = new ApplicationForm();
     private final Long sectionId = 912509L;
@@ -97,30 +104,9 @@ public class ApplicationSectionSaverTest {
         when(organisationService.getOrganisationType(userId, application.getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getId());
         FinanceFormHandler defaultFinanceFormHandler = mock(DefaultFinanceFormHandler.class);
         when(defaultFinanceFormHandler.update(request, userId, application.getId(), competitionId)).thenReturn(new ValidationMessages());
-        when(financeViewHandlerProvider.getFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceFormHandler);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(financeViewHandlerProvider.getFinanceFormHandler(competition, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceFormHandler);
         when(overheadFileSaver.isOverheadFileRequest(request)).thenReturn(false);
-    }
-
-    @Test
-    public void saveApplicationForm_isFundingRequest_request() {
-        Map<String, String[]> params = asMap(REQUESTING_FUNDING, new String[]{});
-        when(request.getParameterMap()).thenReturn(params);
-
-        ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
-
-        assertFalse(result.hasErrors());
-        verify(financeSaver, times(1)).handleRequestFundingRequests(params, application.getId(), competitionId, processRoleId);
-    }
-
-    @Test
-    public void saveApplicationForm_isFundingRequest_notRequesting() {
-        Map<String, String[]> params = asMap(NOT_REQUESTING_FUNDING, new String[]{});
-        when(request.getParameterMap()).thenReturn(params);
-
-        ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
-
-        assertFalse(result.hasErrors());
-        verify(financeSaver, times(1)).handleRequestFundingRequests(params, application.getId(), competitionId, processRoleId);
     }
 
     @Test
@@ -131,9 +117,7 @@ public class ApplicationSectionSaverTest {
         ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
 
         assertFalse(result.hasErrors());
-        verify(financeSaver, times(1)).handleMarkAcademicFinancesAsNotRequired(anyLong(), any(SectionResource.class), anyLong(), anyLong(), anyLong());
         verify(organisationService, times(1)).getOrganisationType(userId, application.getId());
-        verify(financeSaver, never()).handleRequestFundingRequests(params, application.getId(), competitionId, processRoleId);
     }
 
     @Test
@@ -147,7 +131,6 @@ public class ApplicationSectionSaverTest {
 
         assertFalse(result.hasErrors());
         verify(overheadFileSaver, times(1)).handleOverheadFileRequest(request);
-        verify(financeSaver, never()).handleRequestFundingRequests(params, application.getId(), competitionId, processRoleId);
     }
 
     @Test
@@ -157,14 +140,13 @@ public class ApplicationSectionSaverTest {
         when(overheadFileSaver.isOverheadFileRequest(request)).thenReturn(true);
 
         ValidationMessages messages = new ValidationMessages();
-        messages.addError(new Error("Some error", HttpStatus.BAD_REQUEST));
+        messages.addError(new Error("Some error", BAD_REQUEST));
         when(overheadFileSaver.handleOverheadFileRequest(request)).thenReturn(messages);
 
         ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
 
         assertTrue(result.hasErrors());
         verify(overheadFileSaver, times(1)).handleOverheadFileRequest(request);
-        verify(financeSaver, never()).handleRequestFundingRequests(params, application.getId(), competitionId, processRoleId);
     }
 
     @Test

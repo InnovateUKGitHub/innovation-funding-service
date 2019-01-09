@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapKeyAndValue;
+
 /**
  * populates the model for the competition setup menu page section.
  */
@@ -35,7 +37,8 @@ public class MenuModelPopulator implements CompetitionSetupSectionModelPopulator
 	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
 		PublicContentResource publicContent = publicContentService.getCompetitionById(competitionResource.getId());
 		Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccess();
-		return new MenuViewModel(generalViewModel, publicContent.getPublishDate(), isPublicContentPublished(publicContent), statuses);
+		Map<CompetitionSetupSection, Boolean> statusesWithValues = simpleMapKeyAndValue(statuses, key -> key, status -> status.orElse(false));
+		return new MenuViewModel(generalViewModel, publicContent.getPublishDate(), isPublicContentPublished(publicContent), statusesWithValues);
 	}
 
 	private boolean isPublicContentPublished(PublicContentResource publicContent) {

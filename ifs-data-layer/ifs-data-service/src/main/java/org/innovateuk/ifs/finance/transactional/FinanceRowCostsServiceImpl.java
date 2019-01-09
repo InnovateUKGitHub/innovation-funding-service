@@ -13,13 +13,17 @@ import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceRowMapper;
 import org.innovateuk.ifs.finance.mapper.FinanceRowMetaFieldMapper;
-import org.innovateuk.ifs.finance.repository.*;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,6 +71,9 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
 
+    @Autowired
+    private QuestionService questionService;
+
     @Override
     public ServiceResult<FinanceRowMetaField> getCostFieldById(Long id) {
         return find(financeRowMetaFieldRepository.findById(id), notFoundError(FinanceRowMetaField.class, id));
@@ -83,20 +90,30 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     public ServiceResult<FinanceRowItem> getCostItem(final Long costItemId) {
         ApplicationFinanceRow cost = financeRowRepository.findById(costItemId).get();
         ApplicationFinance applicationFinance = cost.getTarget();
-        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
 
         return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
     }
 
     @Override
     @Transactional
-    public ServiceResult<FinanceRowItem> addCost(final Long applicationFinanceId, final Long questionId, final FinanceRowItem newCostItem) {
+    public ServiceResult<FinanceRowItem> addCost(final Long applicationFinanceId, final FinanceRowItem newCostItem) {
+        return find(applicationFinance(applicationFinanceId)).andOnSuccess((applicationFinance) ->
+                getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(application ->
+                        getQuestion(newCostItem, application).andOnSuccess(question ->
+                                addCost(applicationFinanceId, question.getId(), newCostItem)))
+        );
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<FinanceRowItem> addCost(final Long applicationFinanceId, Long questionId, final FinanceRowItem newCostItem) {
         return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) ->
                 getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(application -> {
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
+                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
                     if (newCostItem != null) {
                         FinanceRow newCost = addCostItem(applicationFinance, question, newCostItem);
-                        return serviceSuccess(organisationFinanceHandler.costToCostItem((ApplicationFinanceRow)newCost));
+                        return serviceSuccess(organisationFinanceHandler.costToCostItem((ApplicationFinanceRow) newCost));
                     } else {
                         ApplicationFinanceRow cost = new ApplicationFinanceRow(applicationFinance, question);
                         organisationFinanceHandler.addCost(cost.getTarget().getId(), cost.getQuestion().getId(), cost);
@@ -110,9 +127,9 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     public ServiceResult<FinanceRowItem> addCostWithoutPersisting(final Long applicationFinanceId, final Long questionId) {
         return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) ->
                 getOpenOrLaterApplication(applicationFinance.getApplication().getId()).andOnSuccess(application -> {
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
+                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
                     FinanceRow cost = new ApplicationFinanceRow(applicationFinance, question);
-                    return serviceSuccess(organisationFinanceHandler.costToCostItem((ApplicationFinanceRow)cost));
+                    return serviceSuccess(organisationFinanceHandler.costToCostItem((ApplicationFinanceRow) cost));
                 })
         );
     }
@@ -123,8 +140,8 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         Application application = financeRowRepository.findById(id).get().getTarget().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 doUpdate(id, newCostItem).andOnSuccessReturn(cost -> {
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(((ApplicationFinanceRow)cost).getTarget().getOrganisation().getOrganisationType().getId());
-                    return organisationFinanceHandler.costToCostItem((ApplicationFinanceRow)cost);
+                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(((ApplicationFinanceRow) cost).getTarget().getApplication().getCompetition().getId(), ((ApplicationFinanceRow) cost).getTarget().getOrganisation().getOrganisationType().getId());
+                    return organisationFinanceHandler.costToCostItem((ApplicationFinanceRow) cost);
                 })
         );
     }
@@ -138,7 +155,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     @Override
     public ServiceResult<List<FinanceRowItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId) {
         return getApplicationFinance(applicationFinanceId).andOnSuccessReturn(applicationFinance -> {
-            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
             List<ApplicationFinanceRow> costs = financeRowRepository.findByTargetIdAndNameAndQuestionId(applicationFinanceId, costTypeName, questionId);
             return organisationFinanceHandler.costToCostItem(costs);
         });
@@ -147,7 +164,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     @Override
     public ServiceResult<List<FinanceRowItem>> getCostItems(Long applicationFinanceId, Long questionId) {
         return getApplicationFinance(applicationFinanceId).andOnSuccessReturn(applicationFinance -> {
-            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
             List<ApplicationFinanceRow> costs = financeRowRepository.findByTargetIdAndQuestionId(applicationFinanceId, questionId);
             return organisationFinanceHandler.costToCostItem(costs);
         });
@@ -158,7 +175,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 find(cost(id)).andOnSuccessReturn(existingCost -> {
                     ApplicationFinance applicationFinance = existingCost.getTarget();
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
+                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
                     ApplicationFinanceRow newCost = organisationFinanceHandler.costItemToCost(newCostItem);
                     ApplicationFinanceRow updatedCost = mapCost(existingCost, newCost);
 
@@ -230,6 +247,11 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         );
     }
 
+    private ServiceResult<Question> getQuestion(FinanceRowItem newCostItem, Application application) {
+        return questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition().getId(), newCostItem.getCostType().getFormInputType())
+                .andOnSuccess(questionResource -> getQuestion(questionResource.getId()));
+    }
+
     private ApplicationFinance setFinanceUpload(ApplicationFinance applicationFinance, Long fileEntryId) {
         if (fileEntryId == null || fileEntryId == 0L) {
             applicationFinance.setFinanceFileEntry(null);
@@ -243,7 +265,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     }
 
     private FinanceRow addCostItem(ApplicationFinance applicationFinance, Question question, FinanceRowItem newCostItem) {
-        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
 
         FinanceRow cost = organisationFinanceHandler.costItemToCost(newCostItem);
         cost.setQuestion(question);
@@ -256,7 +278,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
 
         List<FinanceRowMetaValue> costValues = cost.getFinanceRowMetadata();
         cost.setFinanceRowMetadata(new ArrayList<>());
-        ApplicationFinanceRow persistedCost = financeHandler.addCost(cost.getTarget().getId(), cost.getQuestion().getId(),(ApplicationFinanceRow)cost);
+        ApplicationFinanceRow persistedCost = financeHandler.addCost(cost.getTarget().getId(), cost.getQuestion().getId(), (ApplicationFinanceRow) cost);
         costValues.stream().forEach(costVal -> costVal.setFinanceRowId(persistedCost.getId()));
         persistedCost.setFinanceRowMetadata(costValues);
         financeRowMetaValueRepository.saveAll(costValues);
@@ -264,7 +286,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     }
 
     private ApplicationFinanceRow mapCost(ApplicationFinanceRow currentCost, ApplicationFinanceRow newCost) {
-        if (newCost.getCost() != null ||  costIsForOtherFunding(newCost)) {
+        if (newCost.getCost() != null || costIsForOtherFunding(newCost)) {
             currentCost.setCost(newCost.getCost());
         }
         if (newCost.getDescription() != null) {
@@ -295,8 +317,10 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
 
         getMetaValueByFieldForFinanceRow(newMetaValue, savedCost)
                 .andOnSuccessReturnVoid(currentMetaValue -> updateCostValue(currentMetaValue, newMetaValue))
-                .andOnFailure(() -> {   createCostValue(newMetaValue, savedCost);
-                                        return serviceSuccess(); });
+                .andOnFailure(() -> {
+                    createCostValue(newMetaValue, savedCost);
+                    return serviceSuccess();
+                });
 
     }
 
@@ -340,7 +364,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
      * so there are some objects that need to be created before loading the form.
      */
     private void initialize(ApplicationFinance applicationFinance) {
-        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
 
         for (FinanceRowType costType : FinanceRowType.values()) {
             organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
@@ -353,8 +377,8 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     @Override
     public FinanceRowHandler getCostHandler(Long costItemId) {
         FinanceRow cost = applicationFinanceRowMapper.mapIdToDomain(costItemId);
-        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(((ApplicationFinanceRow)cost).getTarget().getOrganisation().getOrganisationType().getId());
-        FinanceRowItem costItem = organisationFinanceHandler.costToCostItem((ApplicationFinanceRow)cost);
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(((ApplicationFinanceRow) cost).getTarget().getApplication().getCompetition().getId(), ((ApplicationFinanceRow) cost).getTarget().getOrganisation().getOrganisationType().getId());
+        FinanceRowItem costItem = organisationFinanceHandler.costToCostItem((ApplicationFinanceRow) cost);
         FinanceRowHandler financeRowHandler = organisationFinanceHandler.getCostHandler(costItem.getCostType());
         return financeRowHandler;
     }

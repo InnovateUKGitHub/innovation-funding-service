@@ -30,7 +30,6 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
@@ -110,10 +109,7 @@ public class BankDetailsManagementController {
         return validationHandler.performActionOrBindErrorsToField("",
                 failureView,
                 () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
-                () -> {
-                    Void result = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).getSuccess();
-                    return serviceSuccess(result);
-                }
+                () -> bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource)
         );
     }
 
@@ -163,8 +159,8 @@ public class BankDetailsManagementController {
         });
     }
 
-    private OrganisationAddressResource buildOrganisationAddressResource(OrganisationResource organisation, ChangeBankDetailsForm form){
-        AddressResource address = form.getAddressForm().getSelectedPostcode();
+    private OrganisationAddressResource buildOrganisationAddressResource(OrganisationResource organisation, ChangeBankDetailsForm form) {
+        AddressResource address = form.getAddressForm().getManualAddress();
         return new OrganisationAddressResource(organisation, address, new AddressTypeResource(BANK_DETAILS.getOrdinal(), BANK_DETAILS.name()));
     }
 
@@ -196,7 +192,7 @@ public class BankDetailsManagementController {
         bankDetailsResource.setOrganisation(organisation.getId());
         bankDetailsResource.setCompanyName(organisation.getName());
         bankDetailsResource.setRegistrationNumber(organisation.getCompaniesHouseNumber());
-        bankDetailsResource.setOrganisationAddress(organisationAddressResource);
+        bankDetailsResource.setAddress(organisationAddressResource.getAddress());
 
         return bankDetailsResource;
     }

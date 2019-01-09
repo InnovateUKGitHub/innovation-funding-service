@@ -71,6 +71,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.ne
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.isA;
@@ -249,10 +250,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Organisation organisation1 = newOrganisation().withId(1L).withName("test organisation 1").build();
         Organisation organisation2 = newOrganisation().withId(2L).withName("test organisation 2").build();
 
-        ProcessRole testProcessRole1 = newProcessRole().withId(0L).withUser(testUser1).withApplication(testApplication1).withRole(Role.APPLICANT).withOrganisationId( organisation1.getId()).build();
-        ProcessRole testProcessRole2 = newProcessRole().withId(1L).withUser(testUser1).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId( organisation1.getId()).build();
-        ProcessRole testProcessRole3 = newProcessRole().withId(2L).withUser(testUser2).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId( organisation2.getId()).build();
-        ProcessRole testProcessRole4 = newProcessRole().withId(3L).withUser(testUser2).withApplication(testApplication3).withRole(Role.APPLICANT).withOrganisationId( organisation2.getId()).build();
+        ProcessRole testProcessRole1 = newProcessRole().withId(0L).withUser(testUser1).withApplication(testApplication1).withRole(Role.APPLICANT).withOrganisationId(organisation1.getId()).build();
+        ProcessRole testProcessRole2 = newProcessRole().withId(1L).withUser(testUser1).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId(organisation1.getId()).build();
+        ProcessRole testProcessRole3 = newProcessRole().withId(2L).withUser(testUser2).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId(organisation2.getId()).build();
+        ProcessRole testProcessRole4 = newProcessRole().withId(3L).withUser(testUser2).withApplication(testApplication3).withRole(Role.APPLICANT).withOrganisationId(organisation2.getId()).build();
 
         when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(testUser1));
         when(userRepositoryMock.findById(2L)).thenReturn(Optional.of(testUser2));
@@ -292,7 +293,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         String searchString = "12";
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
 
-        Pageable pageable = setUpMockingWildcardSearchById(searchString, applicationResource, 5);
+        Pageable pageable = setUpPageable(Role.SUPPORT, searchString, applicationResource, 5);
 
         ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
 
@@ -306,7 +307,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         String searchString = "12";
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
 
-        Pageable pageable = setUpMockingWildcardSearchById(searchString, applicationResource, 2);
+        Pageable pageable = setUpPageable(Role.COMP_ADMIN, searchString, applicationResource, 2);
 
         ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
 
@@ -314,8 +315,39 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     }
 
-    private Pageable setUpMockingWildcardSearchById(String searchString, ApplicationResource applicationResource,
+    @Test
+    public void SearchApplicationAsInnovationLead() {
+
+        String searchString = "12";
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        Pageable pageable = setUpPageable(INNOVATION_LEAD, searchString, applicationResource, 2);
+
+        ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
+
+        assertWildcardSearchById(result, applicationResource, 2, 3, 5);
+    }
+
+    @Test
+    public void SearchApplicationAsStakeholder() {
+        String searchString = "12";
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        Pageable pageable = setUpPageable(Role.STAKEHOLDER, searchString, applicationResource, 2);
+
+        ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
+
+        assertWildcardSearchById(result, applicationResource, 2, 3, 5);
+    }
+
+    private Pageable setUpPageable(Role role, String searchString, ApplicationResource applicationResource,
                                                     int pageSize) {
+
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(role)).build();
+        User user = newUser().withId(userResource.getId()).withRoles(singleton(role)).build();
+
+        setLoggedInUser(userResource);
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
         List<Application> applications = ApplicationBuilder.newApplication().build(5);
 
@@ -323,6 +355,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Page<Application> pagedResult = new PageImpl<>(applications, pageable, applications.size());
 
         when(applicationRepositoryMock.searchByIdLike(searchString, pageable)).thenReturn(pagedResult);
+        when(applicationRepositoryMock.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), searchString, pageable)).thenReturn(pagedResult);
+        when(applicationRepositoryMock.searchApplicationsByUserIdAndStakeholderRole(user.getId(), searchString, pageable)).thenReturn(pagedResult);
         when(applicationMapperMock.mapToResource(any(Application.class))).thenReturn(applicationResource);
 
         return pageable;
@@ -537,6 +571,17 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     public void showApplicationTeam() {
         User user = newUser().withRoles(singleton(Role.COMP_ADMIN)).build();
         when(userRepositoryMock.findById(234L)).thenReturn(Optional.of(user));
+
+        ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
+
+        assertTrue(serviceResult.isSuccess());
+        assertTrue(serviceResult.getSuccess());
+    }
+
+    @Test
+    public void showApplicationTeamWhenStakeholder() {
+        User user = newUser().withRoles(singleton(Role.STAKEHOLDER)).build();
+        when(userRepositoryMock.findOne(234L)).thenReturn(user);
 
         ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
 

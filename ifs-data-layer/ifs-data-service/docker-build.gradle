@@ -40,3 +40,4 @@ ext.activeProfile="local"
 
 // Following is required to override allowed suffix on test environments. See comments on IFS-27.
 ext.internalUserEmailDomain="innovateuk.ukri.test"
+ext.allValidInternalUserEmailDomains="innovateuk.ukri.test,innovateuk.test"

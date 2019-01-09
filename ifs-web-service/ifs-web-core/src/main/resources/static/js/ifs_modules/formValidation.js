@@ -70,6 +70,10 @@ IFS.core.formValidation = (function () {
         fields: '[data-maxwordslength]',
         messageInvalid: 'This field has a maximum number of words.'
       },
+      postcode: {
+        fields: '[data-postcode-errormessage]:not([readonly])',
+        messageInvalid: 'Enter a valid postcode.'
+      },
       date: {
         fields: '.date-group input',
         messageInvalid: {
@@ -134,6 +138,7 @@ IFS.core.formValidation = (function () {
       jQuery('body').on('change ifsValidate', s.maxlength.fields, function () { IFS.core.formValidation.checkMaxLength(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.minwordslength.fields, function () { IFS.core.formValidation.checkMinWordsLength(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.maxwordslength.fields, function () { IFS.core.formValidation.checkMaxWordsLength(jQuery(this)) })
+      jQuery('body').on('blur change ifsValidate', s.postcode.fields, function () { IFS.core.formValidation.checkPostcode(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.tel.fields, function () { IFS.core.formValidation.checkTel(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.date.fields, function () { IFS.core.formValidation.checkDate(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.pattern.fields, function () { IFS.core.formValidation.checkPattern(jQuery(this)) })
@@ -532,6 +537,24 @@ IFS.core.formValidation = (function () {
         return true
       }
     },
+    checkPostcode: function (field) {
+      // matches postcode validation in ApplicationSectionController.java
+      var postcodeAttribute = 'postcode'
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, postcodeAttribute)
+      var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, postcodeAttribute)
+      var re = /^.{3,10}$/
+
+      var postcode = field.val()
+      var validPostcode = re.test(postcode)
+
+      if (!validPostcode) {
+        IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
+        return false
+      } else {
+        IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+        return true
+      }
+    },
     checkTel: function (field) {
       var telAttribute = 'tel'
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, telAttribute)
@@ -792,6 +815,9 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
+
+      var formInTable = field.parents('.form-in-table').length > 0
+
       var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
@@ -802,10 +828,17 @@ IFS.core.formValidation = (function () {
 
       if (formGroup.length) {
         if (s.html5validationMode) { field[0].setCustomValidity(message) }
-        if (visuallyhidden === false) { formGroup.addClass('govuk-form-group--error') }
+        if (visuallyhidden === false) {
+          formGroup.addClass('govuk-form-group--error')
+          if (formInTable) {
+            field.closest('.form-in-table').addClass('govuk-form-group--error')
+          }
+        }
         var errorEl = formGroup.find('.govuk-error-message:contains("' + message + '")')
         if (errorEl.length === 0) {
-          if (visuallyhidden === false) { field.addClass('govuk-input--error') }
+          if (visuallyhidden === false) {
+            field.addClass('govuk-input--error')
+          }
           formGroup.find('legend,label').first().after('<span class="govuk-error-message' + (visuallyhidden ? ' govuk-visually-hidden' : '') + '">' + message + '</span>')
         }
       }
@@ -843,6 +876,10 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
+
+      var formInTable = field.parents('.form-in-table').length > 0
+      var formInTableErrors = field.parents('.form-in-table').find('.govuk-input--error').length
+
       var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
@@ -864,6 +901,9 @@ IFS.core.formValidation = (function () {
         if (formGroup.find('.govuk-error-message').length === 0) {
           formGroup.removeClass('govuk-form-group--error')
           field.removeClass('govuk-input--error')
+          if (formInTable && formInTableErrors === 0) {
+            field.closest('.form-in-table').removeClass('govuk-form-group--error')
+          }
           // set corresponding radios/checkboxes valid
           if (s.html5validationMode) {
             jQuery('[name="' + name + '"]').each(function () { this.setCustomValidity('') })

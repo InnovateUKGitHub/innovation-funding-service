@@ -91,8 +91,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     }
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

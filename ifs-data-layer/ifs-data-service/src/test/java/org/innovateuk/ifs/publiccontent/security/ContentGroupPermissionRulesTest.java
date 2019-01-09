@@ -50,7 +50,6 @@ public class ContentGroupPermissionRulesTest extends BasePermissionRulesTest<Con
                 Optional.of(newContentGroup().withContentSection(newContentSection()
                         .withPublicContent(newPublicContent().withPublishDate(ZonedDateTime.now()).build()).build()).build()));
 
-
         assertFalse(rules.externalUsersCanViewPublishedContentGroupFiles(unpublishedContentGroupId, systemRegistrationUser()));
         assertTrue(rules.externalUsersCanViewPublishedContentGroupFiles(publishedContentGroupId, systemRegistrationUser()));
 

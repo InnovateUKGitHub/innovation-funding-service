@@ -17,7 +17,7 @@ Not in Companies House: Enter details manually link
 
 Companies House: Valid company name
     [Documentation]    INFUND-887
-    [Tags]
+    [Tags]  HappyPath
     When the user enters text to a text field    id = organisationSearchName    Hive IT
     And the user clicks the button/link          id = org-search
     Then the user should see the element         Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
@@ -25,10 +25,10 @@ Companies House: Valid company name
 
 Companies House: User can choose the organisation address
     [Documentation]    INFUND-887
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link    Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user should see the element     jQuery = h3:contains("Registered name")
-    And the user should see the element     jQuery = h3:contains("Registered Address")
+    And the user should see the element     jQuery = h3:contains("Registered address")
     And the user should see the element     jQuery = h3:contains("Registration number")
     [Teardown]    the user goes back to the previous page
 
@@ -41,7 +41,7 @@ Companies House: Invalid company name
 
 Companies House: Valid registration number
     [Documentation]    INFUND-887
-    [Tags]
+    [Tags]  HappyPath
     When the user enters text to a text field    id = organisationSearchName    05493105
     And the user clicks the button/link          id = org-search
     Then the user should see the element         Link = INNOVATE LTD
@@ -50,15 +50,15 @@ Companies House: Valid registration number
 Companies House: Empty company name field
     [Documentation]    INFUND-887
     [Tags]
-    Given the user should see the element        jQuery = h1 span:contains("Start new application")
-    When the user enters text to a text field    id = organisationSearchName    ${EMPTY}
-    And the user clicks the button/link          id = org-search
-    Then the user should see an error            Please enter an organisation name to search
+    Given the user should see the element         jQuery = h1 span:contains("Start new application")
+    When the user enters text to a text field     id = organisationSearchName    ${EMPTY}
+    And the user clicks the button/link           id = org-search
+    Then the user should see a field error        Please enter an organisation name to search
 
 Manually add the details and pass to the confirmation page
     [Documentation]    INFUND-888
-    [Tags]
-    [Setup]  the user clicks the button/link      jQuery = .govuk-details span:contains("Enter details manually")
+    [Tags]  HappyPath
+    [Setup]  the user expands enter details manually
     Given the user enters text to a text field    name = organisationName    Top of the Popps
     When the user clicks the button/link          jQuery = button:contains("Continue")
     Then the user should see the element          jQuery = h3:contains("Organisation type")~ p:contains("Business")
@@ -79,5 +79,5 @@ the backslash doesnt give errors
     Run Keyword If    '${status}' == 'FAIL'    Wait Until Page Contains Without Screenshots    No results were found
 
 the user expands enter details manually
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = summary:contains("Enter details manually")[aria-expanded="false"]
-    run keyword if  '${status}' == 'PASS'  the user clicks the button/link  jQuery = summary:contains("Enter details manually")[aria-expanded="false"]
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   css = .govuk-details__summary[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link                                       css = .govuk-details__summary[aria-expanded="false"]

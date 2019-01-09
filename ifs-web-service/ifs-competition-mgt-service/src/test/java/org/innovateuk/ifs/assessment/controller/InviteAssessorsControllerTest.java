@@ -127,10 +127,8 @@ public class InviteAssessorsControllerTest extends BaseControllerMockMVCTest<Inv
         return new InviteAssessorsController();
     }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()

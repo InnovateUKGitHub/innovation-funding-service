@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.assessment.transactional.CompetitionParticipantService;
 import org.innovateuk.ifs.assessment.transactional.CompetitionParticipantServiceImpl;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -44,10 +43,10 @@ public class CompetitionParticipantServiceSecurityTest extends BaseServiceSecuri
 
         setLoggedInUser(assessorUserResource);
 
-        when(classUnderTestMock.getCompetitionParticipants(7L, CompetitionParticipantRoleResource.ASSESSOR))
+        when(classUnderTestMock.getCompetitionAssessors(7L))
                 .thenReturn(serviceSuccess(newCompetitionParticipantResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
 
-        assertTrue(classUnderTest.getCompetitionParticipants(7L, CompetitionParticipantRoleResource.ASSESSOR).getSuccess().isEmpty());
+        assertTrue(classUnderTest.getCompetitionAssessors(7L).getSuccess().isEmpty());
 
         verify(competitionParticipantPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
                 .userCanViewTheirOwnCompetitionParticipation(any(CompetitionParticipantResource.class), eq(assessorUserResource));

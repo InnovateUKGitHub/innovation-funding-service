@@ -4,11 +4,14 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -17,13 +20,17 @@ import org.mockito.Mock;
 
 import java.util.Optional;
 
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -32,11 +39,15 @@ import static org.mockito.Mockito.when;
 public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTest<ApplicationFinancePermissionRules> {
 
     private ApplicationFinanceResource applicationFinance;
+    private Application application;
     private OrganisationResource organisation;
     private UserResource assessor;
     private UserResource leadApplicant;
     private UserResource collaborator;
     private UserResource compAdmin;
+    private UserResource stakeholderResource;
+    private User stakeholderUser;
+    private Stakeholder stakeholder;
 
     private ApplicationFinanceResource otherApplicationFinance;
     private UserResource otherLeadApplicant;
@@ -53,6 +64,9 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     @Mock
     private CompetitionRepository competitionRepositoryMock;
 
+    @Mock
+    private StakeholderRepository stakeholderRepositoryMock;
+
     @Before
     public void setup() throws Exception {
 
@@ -66,13 +80,16 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
             Competition competition = newCompetition()
                     .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
-            Application application = newApplication().with(id(applicationId)).withCompetition(competition).build();
+            application = newApplication().with(id(applicationId)).withCompetition(competition).build();
 
             organisation = newOrganisationResource().with(id(organisationId)).build();
             applicationFinance = newApplicationFinanceResource().withOrganisation(organisation.getId()).withApplication(application.getId()).build();
             leadApplicant = newUserResource().build();
             assessor = newUserResource().build();
             collaborator = newUserResource().build();
+            stakeholderResource = newUserResource().withRoleGlobal(STAKEHOLDER).build();
+            stakeholderUser = newUser().withId(stakeholderResource.getId()).build();
+            stakeholder = newStakeholder().withUser(stakeholderUser).build();
 
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
@@ -132,6 +149,22 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
+    public void stakeholdersCanSeeApplicationFinancesForOrganisations() {
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withApplication(application.getId())
+                .build();
+
+        when(applicationRepositoryMock.findById(applicationFinanceResource.getApplication())).thenReturn(application);
+        when(stakeholderRepositoryMock.findStakeholders(application.getCompetition().getId())).thenReturn(asList(stakeholder));
+
+        assertTrue(rules.stakeholdersCanSeeApplicationFinancesForOrganisations(applicationFinanceResource, stakeholderResource));
+        allInternalUsers.forEach(user -> {
+            assertFalse(rules.stakeholdersCanSeeApplicationFinancesForOrganisations(applicationFinanceResource, user));
+        });
+    }
+
+    @Test
     public void updateCosts() {
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
@@ -157,6 +190,22 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
 
         assertFalse(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, systemRegistrationUser()));
+    }
+
+    @Test
+    public void stakeholdersCanViewCostsToApplicationFinance() {
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withApplication(application.getId())
+                .build();
+
+        when(applicationRepositoryMock.findById(applicationFinanceResource.getApplication())).thenReturn(application);
+        when(stakeholderRepositoryMock.findStakeholders(application.getCompetition().getId())).thenReturn(asList(stakeholder));
+
+        assertTrue(rules.stakeholdersCanAddACostToApplicationFinance(applicationFinanceResource, stakeholderResource));
+        allInternalUsers.forEach(user -> {
+            assertFalse(rules.stakeholdersCanAddACostToApplicationFinance(applicationFinanceResource, user));
+        });
     }
 
     @Test

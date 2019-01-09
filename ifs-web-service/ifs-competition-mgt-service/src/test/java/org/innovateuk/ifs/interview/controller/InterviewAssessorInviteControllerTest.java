@@ -126,10 +126,8 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
         return new InterviewAssessorInviteController(interviewInviteRestService, interviewInviteAssessorsFindModelPopulator, interviewInviteAssessorsInviteModelPopulator, interviewInviteAssessorsAcceptedModelPopulator);
     }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()

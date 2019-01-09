@@ -1,31 +1,19 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.projectdetails.form.PartnerProjectLocationForm;
-import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.PartnerProjectLocationViewModel;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsAddressViewModel;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsStartDateViewModel;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInviteModel;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.SelectFinanceContactViewModel;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.SelectProjectManagerViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -50,7 +38,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,11 +45,6 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.ADD_NEW;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.PROJECT;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED;
@@ -73,7 +55,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
@@ -94,10 +75,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
@@ -137,9 +115,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     @Mock
     private UserRestService userRestService;
-
-    @Mock
-    private OrganisationAddressRestService organisationAddressRestService;
 
     @Override
     protected ProjectDetailsController supplyControllerUnderTest() {
@@ -426,7 +401,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectDetailsStartDateViewModel viewModel = (ProjectDetailsStartDateViewModel) model.get("model");
 
         assertEquals(project.getId(), viewModel.getProjectId());
-        assertEquals(project.getApplication(), viewModel.getApplicationId());
+        assertEquals(project.getApplication(), (long) viewModel.getApplicationId());
         assertEquals(project.getName(), viewModel.getProjectName());
         assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));
 
@@ -755,150 +730,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andReturn();
     }
 
-    @Test
-    public void testAddressTypeValidation() throws Exception {
-        ApplicationResource applicationResource = newApplicationResource().build();
-        ProjectResource project = newProjectResource().withApplication(applicationResource).build();
-        OrganisationResource organisationResource = newOrganisationResource().build();
-
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
-        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
-
-        mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
-                contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                param("addressType", "")).
-                andExpect(status().isOk()).
-                andExpect(view().name("project/details-address")).
-                andExpect(model().hasErrors()).
-                andExpect(model().attributeHasFieldErrors("form", "addressType")).
-                andReturn();
-    }
-
-    @Test
-    public void testViewAddress() throws Exception {
-        OrganisationResource organisationResource = newOrganisationResource().build();
-        AddressResource addressResource = newAddressResource().build();
-        AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long) REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
-        organisationResource.setAddresses(Collections.singletonList(organisationAddressResource));
-        ApplicationResource applicationResource = newApplicationResource().build();
-        ProjectResource project = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();
-
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
-        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
-        when(organisationAddressRestService.findByOrganisationIdAndAddressId(organisationResource.getId(), project.getAddress().getId())).thenReturn(restSuccess(organisationAddressResource));
-
-        MvcResult result = mockMvc.perform(get("/project/{id}/details/project-address", project.getId())).
-                andExpect(status().isOk()).
-                andExpect(view().name("project/details-address")).
-                andExpect(model().hasNoErrors()).
-                andReturn();
-
-        Map<String, Object> model = result.getModelAndView().getModel();
-
-        ProjectDetailsAddressViewModel viewModel = (ProjectDetailsAddressViewModel) model.get("model");
-        assertEquals(project.getId(), viewModel.getProjectId());
-        assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(project.getApplication(), viewModel.getApplicationId());
-        assertNull(viewModel.getOperatingAddress());
-        assertEquals(addressResource, viewModel.getRegisteredAddress());
-        assertNull(viewModel.getProjectAddress());
-
-        ProjectDetailsAddressForm form = (ProjectDetailsAddressForm) model.get(FORM_ATTR_NAME);
-        assertEquals(OrganisationAddressType.valueOf(organisationAddressResource.getAddressType().getName()), form.getAddressType());
-    }
-
-    @Test
-    public void testUpdateProjectAddressToBeSameAsRegistered() throws Exception {
-        OrganisationResource leadOrganisation = newOrganisationResource().build();
-        AddressResource addressResource = newAddressResource().build();
-        AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long) REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
-        leadOrganisation.setAddresses(Collections.singletonList(organisationAddressResource));
-        CompetitionResource competitionResource = newCompetitionResource().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource project = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();
-
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-        when(projectDetailsService.updateAddress(leadOrganisation.getId(), project.getId(), REGISTERED, addressResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
-                contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                param("addressType", REGISTERED.name())).
-                andExpect(status().is3xxRedirection()).
-                andExpect(model().attributeDoesNotExist("readOnlyView")).
-                andExpect(redirectedUrl("/project/" + project.getId() + "/details")).
-                andReturn();
-    }
-
-    @Test
-    public void testUpdateProjectAddressAddNewManually() throws Exception {
-        OrganisationResource leadOrganisation = newOrganisationResource().build();
-
-        AddressResource addressResource = newAddressResource().
-                withId().
-                withAddressLine1("Address Line 1").
-                withAddressLine2().
-                withAddressLine3().
-                withTown("Sheffield").
-                withCounty().
-                withPostcode("S1 2LB").
-                build();
-
-        AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long) REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
-        leadOrganisation.setAddresses(Collections.singletonList(organisationAddressResource));
-        CompetitionResource competitionResource = newCompetitionResource().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource project = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();
-
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-        when(projectDetailsService.updateAddress(leadOrganisation.getId(), project.getId(), PROJECT, addressResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
-                contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("addressType", ADD_NEW.name())
-                .param("manualEntry", "true")
-                .param("addressForm.postcodeInput", "S101LB")
-                .param("addressForm.selectedPostcode.addressLine1", addressResource.getAddressLine1())
-                .param("addressForm.selectedPostcode.town", addressResource.getTown())
-                .param("addressForm.selectedPostcode.postcode", addressResource.getPostcode()))
-                .andExpect(redirectedUrl("/project/" + project.getId() + "/details"))
-                .andExpect(model().attributeDoesNotExist("readOnlyView"))
-                .andReturn();
-    }
-
-    @Test
-    public void testSearchAddressFailsWithFieldErrorOnEmpty() throws Exception {
-        OrganisationResource leadOrganisation = newOrganisationResource().build();
-        AddressResource addressResource = newAddressResource().withPostcode("S1 2LB").withAddressLine1("Address Line 1").withTown("Sheffield").build();
-        addressResource.setId(null);
-        AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long) REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
-        leadOrganisation.setAddresses(Collections.singletonList(organisationAddressResource));
-        CompetitionResource competitionResource = newCompetitionResource().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource project = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();
-
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-
-        mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
-                contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("addressType", ADD_NEW.name())
-                .param("search-address", "")
-                .param("addressForm.postcodeInput", "")).
-                andExpect(model().hasErrors()).
-                andExpect(model().attributeDoesNotExist("readOnlyView")).
-                andExpect(model().attributeHasFieldErrors("form", "addressForm.postcodeInput")).
-                andReturn();
-    }
-
-    @Test
     public void testFinanceContactInviteNotYetAccepted() throws Exception {
 
         long applicationId = 16L;

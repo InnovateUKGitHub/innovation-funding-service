@@ -14,7 +14,8 @@ public enum CompetitionStatus {
     IN_ASSESSMENT("In assessment", true, false),
     FUNDERS_PANEL("Panel", true, false),
     ASSESSOR_FEEDBACK("Inform", true, false),
-    PROJECT_SETUP("Project setup",false, true);
+    PROJECT_SETUP("Project setup", false, true),
+    PREVIOUS("Previous", false, true);
 
     private String displayName;
     private boolean inFlight;

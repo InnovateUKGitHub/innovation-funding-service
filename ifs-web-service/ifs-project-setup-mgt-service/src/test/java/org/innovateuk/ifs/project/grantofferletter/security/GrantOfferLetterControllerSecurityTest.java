@@ -42,7 +42,7 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
     }
 
     @Test
-    public void testDownloadExploitationPlanFile() {
+    public void testDownloadGeneratedGrantOfferLetter() {
         assertSecured(() -> classUnderTest.downloadGeneratedGrantOfferLetterFile(projectCompositeId.id()));
     }
 

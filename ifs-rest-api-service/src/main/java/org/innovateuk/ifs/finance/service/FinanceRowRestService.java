@@ -15,9 +15,13 @@ public interface FinanceRowRestService {
 
     RestResult<FinanceRowItem> addWithoutPersisting(Long applicationFinanceId, Long questionId);
 
+    RestResult<FinanceRowItem> addWithResponse(long applicationFinanceId, FinanceRowItem costItem);
+
     RestResult<List<FinanceRowItem>> getCosts(Long applicationFinanceId);
 
     RestResult<ValidationMessages> update(FinanceRowItem costItem);
 
     RestResult<FinanceRowItem> findById(Long id);
+
+     RestResult<Void> delete(long costId);
 }

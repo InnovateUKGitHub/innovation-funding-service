@@ -25,9 +25,7 @@ import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -96,8 +94,9 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Mock
     private CookieUtil cookieUtil;
 
-    @Before public void setup() {
-        super.setUp();
+    @Before
+    public void setupCommonExpectations() {
+
         setupCookieUtil(cookieUtil);
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.controller.MilestoneController;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
@@ -14,6 +15,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.documentation.MilestoneResourceDocs.milestoneResourceFields;
+import static org.mockito.Mockito.verify;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
@@ -143,5 +145,30 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
                 .andDo(document("milestone/{method-name}",
                         requestFields(milestoneResourceFields)
                 ));
+    }
+
+    @Test
+    public void updateCompletionStage() throws Exception {
+
+        long competitionId = 123L;
+
+        when(milestoneService.updateCompletionStage(123L, CompetitionCompletionStage.PROJECT_SETUP))
+                .thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/milestone/competition/{competitionId}/completion-stage?completionStage=" +
+                    CompetitionCompletionStage.PROJECT_SETUP, competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andDo(document("milestone/{method-name}",
+                        pathParameters(
+                            parameterWithName("competitionId").
+                                description("The id of the competition that is having its completion stage updated")
+                        ),
+                        requestParameters(
+                            parameterWithName("completionStage").
+                                description("The selected completion stage value to update")
+                        )));
+
+        verify(milestoneService).updateCompletionStage(123L, CompetitionCompletionStage.PROJECT_SETUP);
     }
 }

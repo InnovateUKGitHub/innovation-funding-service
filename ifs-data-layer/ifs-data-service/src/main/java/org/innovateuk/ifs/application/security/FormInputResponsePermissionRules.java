@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.security;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
@@ -9,7 +10,7 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 @PermissionRules
 @Component
-public class FormInputResponsePermissionRules {
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
+public class FormInputResponsePermissionRules extends BasePermissionRules {
 
     @Autowired
     private FormInputRepository formInputRepository;
@@ -71,6 +69,12 @@ public class FormInputResponsePermissionRules {
     @PermissionRule(value = "READ", description = "An internal user can see form input responses for applications")
     public boolean internalUserCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
         return isInternal(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Stakeholders can see form input responses for applications they are assigned to")
+    public boolean stakeholdersCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
+        Application application = applicationRepository.findById(response.getApplication());
+        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(value = "SAVE",

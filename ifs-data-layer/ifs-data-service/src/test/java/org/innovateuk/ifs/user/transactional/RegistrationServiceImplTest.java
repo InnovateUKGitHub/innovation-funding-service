@@ -9,6 +9,10 @@ import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.competition.domain.StakeholderInvite;
+import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -19,6 +23,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
@@ -52,12 +57,15 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder.newSiteTermsAndConditionsResource;
+import static org.innovateuk.ifs.competition.builder.StakeholderInviteBuilder.newStakeholderInvite;
 import static org.innovateuk.ifs.invite.builder.RoleInviteBuilder.newRoleInvite;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
+import static org.innovateuk.ifs.stakeholder.builder.StakeholderRegistrationResourceBuilder.newStakeholderRegistrationResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
@@ -115,6 +123,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
     @Mock
     private RegistrationNotificationService registrationEmailServiceMock;
+
+    @Mock
+    private StakeholderInviteRepository stakeholderInviteRepository;
+
+    @Mock
+    private StakeholderRepository stakeholderRepository;
 
     @Test
     public void createUser() {
@@ -301,7 +315,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void createInternalUser() throws Exception {
+    public void createInternalUser() {
         RoleInvite roleInvite = newRoleInvite().withRole(Role.PROJECT_FINANCE).build();
         InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
                 .withFirstName("First")
@@ -332,6 +346,40 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
+    public void createStakeholderUser() {
+        StakeholderRegistrationResource stakeholderRegistrationResource = newStakeholderRegistrationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPassword("Passw0rd")
+                .build();
+
+        User userToCreate = newUser()
+                .withId((Long) null)
+                .withFirstName("First")
+                .withLastName("Last")
+                .withEmailAddress("test@test.test")
+                .withRoles(singleton(Role.STAKEHOLDER))
+                .build();
+
+        StakeholderInvite invite = newStakeholderInvite().build();
+        Stakeholder stakeholder = new Stakeholder(newCompetition().build(), newUser().build());
+
+        when(stakeholderInviteRepository.getByHash("hash1234")).thenReturn(invite);
+        when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
+        when(idpServiceMock.createUserRecordWithUid("test@test.test", "Passw0rd")).thenReturn(serviceSuccess("new-uid"));
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
+        when(userMapperMock.mapToDomain(any(UserResource.class))).thenReturn(userToCreate);
+        when(idpServiceMock.activateUser("new-uid")).thenReturn(serviceSuccess("new-uid"));
+        when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
+        when(stakeholderRepository.save(any(Stakeholder.class))).thenReturn(stakeholder);
+
+        ServiceResult<Void> result = service.createStakeholder("hash1234", stakeholderRegistrationResource);
+
+        assertTrue(result.isSuccess());
+        assertEquals(InviteStatus.OPENED, invite.getStatus());
+    }
+
+    @Test
     public void editInternalUser_whenNewRoleIsNotInternalRole() {
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
@@ -340,7 +388,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));
-
     }
 
     @Test
@@ -354,7 +401,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         assertTrue(result.isFailure());
         assertEquals(GENERAL_NOT_FOUND.getErrorKey(), result.getErrors().get(0).getErrorKey());
-
     }
 
     @Test
@@ -374,7 +420,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         assertTrue(userInDB.getRoles().stream().anyMatch(role1 -> role1.equals(Role.SUPPORT)));
         assertEquals(userInDB.getFirstName(), userToEdit.getFirstName());
         assertEquals(userInDB.getLastName(), userToEdit.getLastName());
-
     }
 
     @Test

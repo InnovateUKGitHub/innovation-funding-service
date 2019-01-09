@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Eligibility'" />
 </head>
 
-<body class="govuk-template__body competition-management eligibility-form finance">
+<body class="govuk-template__body competition-management eligibility-form finance-row-form overheads">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <th:block th:insert="fragments/layout :: body-start" />
@@ -37,7 +37,7 @@
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Project duration</th>
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
-                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">&percnt; Grant</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding level (%)</th>
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)</th>
                     <th:block th:unless="${summaryModel.usingJesFinances}">
                         <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
@@ -82,45 +82,19 @@
                 </th:block>
             </th:block>
 
-            <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
-                <h3>
-                    <th:block th:text="${subSection.getName()}"/>
-                    <span class="finance-total" th:attr="data-mirror='#section-total-'+${subSection.id}"></span>
-                    <span th:unless="${summaryModel.isExternalView()}" class="finance-total" data-calculation-format="percentage" data-calculation-operations="/,*"
-                          th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data"
+                  th:attr="data-row-operation-url=@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
+                <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1" name="save-and-continue">Save form</button>
 
-                    <span class="finance-total" th:if="${subSection.name == 'Overhead costs'}">(<span data-calculation-format="percentage" data-calculation-on-pageload="" data-calculation-operations="/,*" data-calculation-fields="[data-current-overhead-total], [class~=labour-total] ,100"></span> of Labour)</span>
-                </h3>
-                <div class="collapsible-content"
-                     th:with="viewmode=${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly'">
-                    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
-                          enctype="multipart/form-data">
+                <th:block th:insert="application/your-project-costs-fragments :: labour" />
+                <th:block th:insert="application/your-project-costs-fragments :: overheads" />
+                <th:block th:insert="application/your-project-costs-fragments :: materials" />
+                <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
+                <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
+                <th:block th:insert="application/your-project-costs-fragments :: travel" />
+                <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
 
-                        <!--/* To eat up any enter key presses thereby preventing first submit button to trigger See IFS-1905 */-->
-                        <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1" name="save-eligibility">Save form</button>
-
-                        <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
-                            <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
-
-                                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
-                                          th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
-                                                               organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
-                                                               organisationFinanceSize=(${model.finance.organisationFinanceSize}), internalView=(${!summaryModel.isExternalView()})">
-                                    <!--/*
-                                        viewmode=readonly, generates the inputs as text,
-                                        viewmode=edit, generates the editable inputs + repeating row elements)
-                                    */-->
-                                    <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode=${viewmode}, internalView=${internalView})" th:with="formInputIndex=(${status.index})" />
-                                </th:block>
-                            </th:block>
-                        </th:block>
-                        <div class="alignright-button" th:unless="${summaryModel.isExternalView() || summaryModel.isApproved()}">
-                            <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button-secondary">Edit</a>
-                            <button th:if="${viewmode=='edit'}" name="save-eligibility" class="govuk-button">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </section>
+            </form>
             <div class="govuk-grid-row total-cost">
                 <div class="govuk-grid-column-one-half">
                     <label for="total-cost" class="govuk-heading-m">Total project costs</label>
@@ -132,11 +106,11 @@
                            class="govuk-heading-m alignright"
                            data-calculation-fields="[id*=section-total]"
                            data-calculation-operations="+"
-                           th:value="'£' + ${#numbers.formatInteger(model.finance.organisationFinanceTotal, 0, 'DEFAULT')}"/>
+                           th:value="'£' + ${#numbers.formatInteger(form.organisationFinanceTotal, 0, 'DEFAULT')}"/>
+
                 </div>
             </div>
         </th:block>
-
         <th:block th:if="${summaryModel.usingJesFinances}">
             <h2 class="govuk-heading-m">Je-S Form overview</h2>
             <p class="govuk-body">These finances were initially submitted at the application stage, from the details in the Je-S form.</p>

@@ -287,13 +287,68 @@ function pushAnonymisedDatabaseDumpImages() {
 }
 
 function blockUntilServiceIsUp() {
+    while oc get pods ${SVC_ACCOUNT_CLAUSE} 2>&1 | grep "No resources found."; do
+        echo "No pods are deployed yet.."
+        sleep 15
+    done
+
+    RETRIES=0
     UNREADY_PODS=1
-    while [ ${UNREADY_PODS} -ne "0" ]
+    UNSATISFIED_DEPLOYMENTS=1
+    while [ ${UNREADY_PODS} -ne "0" ] || [ ${UNSATISFIED_DEPLOYMENTS} -ne "0" ];
     do
-        UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
-        oc get pods ${SVC_ACCOUNT_CLAUSE}
-        echo "$UNREADY_PODS pods still not ready"
-        sleep 5s
+        UNREADY_PODS=$(oc get pods ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
+        UNSATISFIED_DEPLOYMENTS=$(oc get dc ${SVC_ACCOUNT_CLAUSE} | sed 1d | awk '{ print $4 }' | grep -v 1 | wc -l)
+        ERRORRED_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep Error | wc -l)
+        DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | wc -l)
+        ERRORRED_DEPLOY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | grep Error | wc -l)
+        ERRORRED_CRASHLOOPING_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep -E "CrashLoopBackOff|Error" | wc -l)
+        OUTOFPODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep -E "OutOfpods" | wc -l)
+
+        if [ ${DEPLOY_PODS} -eq "0" ]; then
+            if [ ${ERRORRED_PODS} -ne "0" ]; then
+                echo "$ERRORRED_PODS pods stuck in error state.."
+                POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep Error | awk '{ print $1 }')
+                if ! (( $(isNamedEnvironment ${TARGET}) )); then
+                    oc logs ${SVC_ACCOUNT_CLAUSE} $POD
+                fi
+                exit 1
+            fi
+        else
+            if [ ${ERRORRED_DEPLOY_PODS} -ne "0" ]; then
+                if [ "$RETRIES" -lt 1 ]; then
+                    echo "$ERRORRED_DEPLOY_PODS deploy pods in error state.. Retrying"
+                    RETRIES=$((RETRIES + 1))
+                    POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep deploy | grep Error | awk '{ print $1 }')
+                    oc deploy ${SVC_ACCOUNT_CLAUSE} --retry dc/${POD%-1-deploy}
+                else
+                    echo "$ERRORRED_DEPLOY_PODS deploy pods stuck in error state after $RETRIES retries.. Exiting"
+                    exit 1
+                fi
+            fi
+
+            if [ ${ERRORRED_CRASHLOOPING_PODS} -ne "0" ]; then
+                POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep -E "CrashLoopBackOff|Error" | awk '{ print $1 }')
+                SINCE=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep -E "CrashLoopBackOff|Error" | awk '{ print $5 }')
+                echo "$POD is crashlooping for ${SINCE%m} minutes. Pod logs are:"
+                if [ ${SINCE%m} -gt "5" ]; then
+                    if ! (( $(isNamedEnvironment ${TARGET}) )); then
+                        oc logs ${SVC_ACCOUNT_CLAUSE} $POD
+                    fi
+                fi
+            fi
+        fi
+
+        oc get pods ${SVC_ACCOUNT_CLAUSE} -o wide
+        echo "$UNREADY_PODS pods still not ready.."
+        echo "$UNSATISFIED_DEPLOYMENTS deployments still not ready.."
+        
+        if [ ${OUTOFPODS} -ne "0" ]; then
+            echo "CLUSTER IS FULL - Delete some projects and retry"
+            exit 1
+        fi
+
+        sleep 10s
     done
     oc get routes ${SVC_ACCOUNT_CLAUSE}
 }
@@ -309,6 +364,10 @@ function scaleFinanceDataService() {
 
 function scaleSurveyDataService() {
     oc scale dc survey-data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
+}
+
+function scaleEuDataService() {
+    oc scale dc eu-grant-registration-data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
 }
 
 function createProject() {

@@ -6,11 +6,11 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
-import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -24,6 +24,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.ArgumentMatchers.any;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -51,7 +52,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     @Test
     public void testSaveApplicationFundingDecisionData() throws Exception {
         Long competitionId = 1L;
-        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
+        Map<Long, FundingDecision> decision = asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
 
         when(applicationFundingServiceMock.saveFundingDecisionData(competitionId, decision)).thenReturn(serviceSuccess());
 
@@ -60,17 +61,20 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         			.content(objectMapper.writeValueAsString(decision)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
+
+        verify(applicationFundingServiceMock).saveFundingDecisionData(competitionId, decision);
     }
 
     @Test
     public void testSendNotificationsShouldReturnAppropriateStatusCode() throws Exception {
 
-        Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
+        Map<Long, FundingDecision> decisions = asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
         ApplicationResource application = newApplicationResource().withCompetition(4L).build();
+
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeName("Programme")
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
         when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
@@ -83,17 +87,21 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
                 .content(objectMapper.writeValueAsString(notification)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
+
+        verify(projectServiceMock, times(1)).createProjectsFromFundingDecisions(decisions);
+        verify(applicationFundingServiceMock, times(1)).notifyApplicantsOfFundingDecisions(notification);
     }
 
     @Test
-    public void testSendNotificationsForEOICompetition() throws Exception {
+    public void testSendNotificationsForCompetitionWithReleaseFeedbackCompletionStage() throws Exception {
 
-        Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
+        Map<Long, FundingDecision> decisions = asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
         ApplicationResource application = newApplicationResource().withCompetition(4L).build();
+
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeName("Expression of interest")
+                .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .build();
 
         when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
@@ -105,17 +113,21 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
                 .content(objectMapper.writeValueAsString(notification)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
+
+        verify(projectServiceMock, never()).createProjectsFromFundingDecisions(decisions);
+        verify(applicationFundingServiceMock, times(1)).notifyApplicantsOfFundingDecisions(notification);
     }
 
     @Test
     public void testSendNotificationsButErrorOccursCreatingProjects() throws Exception {
 
-        Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
+        Map<Long, FundingDecision> decisions = asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
         ApplicationResource application = newApplicationResource().withCompetition(4L).build();
+
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeName("Programme")
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
         when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
@@ -128,18 +140,20 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError()))));
 
+        verify(projectServiceMock, times(1)).createProjectsFromFundingDecisions(decisions);
         verify(applicationFundingServiceMock, never()).notifyApplicantsOfFundingDecisions(any(FundingNotificationResource.class));
     }
 
     @Test
     public void testSendNotificationsButErrorOccursSendingNotifications() throws Exception {
 
-        Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
+        Map<Long, FundingDecision> decisions = asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
         ApplicationResource application = newApplicationResource().withCompetition(4L).build();
+
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeName("Programme")
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
         when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
@@ -152,5 +166,8 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
                 .content(objectMapper.writeValueAsString(notification)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError()))));
+
+        verify(projectServiceMock, times(1)).createProjectsFromFundingDecisions(decisions);
+        verify(applicationFundingServiceMock, times(1)).notifyApplicantsOfFundingDecisions(notification);
     }
 }

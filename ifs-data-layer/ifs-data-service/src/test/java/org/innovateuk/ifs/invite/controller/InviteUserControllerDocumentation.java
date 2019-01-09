@@ -94,10 +94,9 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                                 parameterWithName("inviteHash").description("hash of the invite being requested")
                         ),
                         responseFields(InviteUserResourceDocs.roleInviteResourceFields)
-                ));;
+                ));
 
         verify(inviteUserServiceMock).getInvite("SomeHashString");
-
     }
 
     @Test
@@ -128,7 +127,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 .andDo(document("inviteUser/internal/pending/{method-name}",
                         responseFields(PageResourceDocs.pageResourceFields)
                         .andWithPrefix("content[].", RoleInviteResourceDocs.roleInviteResourceFields)
-                ));;
+                ));
     }
 
     @Test

@@ -25,6 +25,10 @@ public class ApplicationFinanceResourceBuilder extends BaseFinanceResourceBuilde
         return withArray((id, applicationFinanceResource) -> applicationFinanceResource.setId(id), ids);
     }
 
+    public ApplicationFinanceResourceBuilder withMaximumFundingLevel(Integer... maximumFundingLevels) {
+        return withArray((maximumFundingLevel, applicationFinanceResource) -> applicationFinanceResource.setMaximumFundingLevel(maximumFundingLevel), maximumFundingLevels);
+    }
+
     private ApplicationFinanceResourceBuilder(List<BiConsumer<Integer, ApplicationFinanceResource>> newMultiActions) {
         super(newMultiActions);
     }

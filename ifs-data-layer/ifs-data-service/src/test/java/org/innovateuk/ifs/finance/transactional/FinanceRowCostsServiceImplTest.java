@@ -52,9 +52,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
-/**
- *
- */
 public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceRowCostsServiceImpl> {
 
     @Mock
@@ -114,7 +111,7 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
                 .withType(metaFieldType).build();
 
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(application.getCompetition().getId(), organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
     }
 
 
@@ -127,6 +124,9 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
         when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.of(application));
         when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(organisation));
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.of(application));
+        when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(organisation));
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(application.getCompetition().getId(), OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
         ApplicationFinance newFinance = new ApplicationFinance(application, organisation);
 
@@ -135,7 +135,6 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
             assertEquals(organisation, finance.getOrganisation());
             return true;
         }));
-
 
         ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
                 with(id(newFinance.getId())).

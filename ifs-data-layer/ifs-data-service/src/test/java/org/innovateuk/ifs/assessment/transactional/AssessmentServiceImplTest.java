@@ -15,7 +15,6 @@ import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHa
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -208,7 +207,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withStatus(ParticipantStatusResource.ACCEPTED)
                 .build(1);
 
-        when(competitionParticipantServiceMock.getCompetitionParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR)).thenReturn(serviceSuccess(competitionParticipantList));
+        when(competitionParticipantServiceMock.getCompetitionAssessors(userId)).thenReturn(serviceSuccess(competitionParticipantList));
         when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId)).thenReturn(assessments);
         when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
         when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(expected.get(1));

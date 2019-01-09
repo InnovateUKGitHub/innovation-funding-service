@@ -246,7 +246,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
         );
         flushAndClearSession();
 
-        List<AssessmentParticipant> retrievedParticipants = repository.getByUserIdAndRole(user.getId(), ASSESSOR);
+        List<AssessmentParticipant> retrievedParticipants = repository.getByAssessorId(user.getId());
         assertEqualParticipants(savedParticipant, getOnlyElement(retrievedParticipants));
     }
 

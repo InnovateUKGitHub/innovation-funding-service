@@ -127,8 +127,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     }
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -242,5 +241,18 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         ApplicationSummaryViewModel model = testApplicationSummary();
         assertTrue(model.isSupport());
 
+    }
+
+    @Test
+    public void applicationFeedbackWhenLoggedInAsNonSupport() throws Exception {
+
+        setLoggedInUser(applicant);
+
+        ApplicationResource app = applications.get(0);
+        when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(true));
+
+        mockMvc.perform(get("/application/{applicationId}/summary", app.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/" + app.getId() + "/feedback"));
     }
 }

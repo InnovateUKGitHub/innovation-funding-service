@@ -8,7 +8,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.function.Consumer;
 
 import static org.innovateuk.ifs.util.Either.left;
+import static org.innovateuk.ifs.util.Either.right;
 import static org.mockito.Mockito.mock;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 /**
@@ -19,6 +21,9 @@ public class AvailabliltyHelperUtils {
 
     public static final Either<ResponseEntity<Object>, ResponseEntity<Object>> SERVICE_UNAVAILABLE_RESPONSE_FROM_REST_TEMPLATE =
             left(new ResponseEntity<>(SERVICE_UNAVAILABLE));
+
+    public static final Either<ResponseEntity<Object>, ResponseEntity<Object>> SERVICE_AVAILABLE_RESPONSE_FROM_REST_TEMPLATE =
+            right(new ResponseEntity<>(OK));
 
     public static void temporarilySwapOutRestTemplateAdaptor(Consumer<AbstractRestTemplateAdaptor> testCode, Object restTemplateAdaptorOwner) {
 

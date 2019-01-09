@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.domain.*;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
@@ -97,25 +98,36 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Test
     @Rollback
     public void fundedAndInformed() {
-        CompetitionType competitionType = newCompetitionType()
-                .withId(1L)
-                .withName("Programme")
-                .build();
+
+        loginCompAdmin();
 
         Competition compFundedAndInformed = newCompetition()
+                .withId()
                 .withNonIfs(false)
                 .withSetupComplete(true)
-                .withCompetitionType(competitionType)
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
         compFundedAndInformed = repository.save(compFundedAndInformed);
+
+        Milestone feedbackReleasedMilestone =
+                new Milestone(MilestoneType.FEEDBACK_RELEASED, ZonedDateTime.now().minusDays(1), compFundedAndInformed);
+
+        milestoneRepository.save(feedbackReleasedMilestone);
 
         Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed)
                 .withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
         applicationRepository.save(applicationFundedAndInformed);
 
+        // as the Competition is deemed closed when it is in Project Setup, it will appear in the Project Setup
+        // Competition list
         assertEquals(1L, repository.countProjectSetup().longValue());
         assertEquals(1, repository.findProjectSetup().size());
+
+        // and will also appear in the Previous competitions list
+        assertEquals(1L, repository.countFeedbackReleased().longValue());
+        assertEquals(1, repository.findFeedbackReleased().size());
+
         assertEquals(compFundedAndInformed.getId().longValue(), repository.findProjectSetup().get(0).getId()
                 .longValue());
     }
@@ -123,17 +135,21 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Test
     @Rollback
     public void multipleFundedAndInformed() {
+
         loginCompAdmin();
+
         CompetitionType competitionType = newCompetitionType()
                 .withId(1L)
                 .withName("Programme")
                 .build();
 
         Competition compWithFeedBackReleased = newCompetition()
+                .withId()
                 .withName("Comp1")
                 .withNonIfs(false)
                 .withSetupComplete(true)
                 .withCompetitionType(competitionType)
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
         compWithFeedBackReleased = repository.save(compWithFeedBackReleased);
@@ -147,6 +163,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withNonIfs(false)
                 .withSetupComplete(true)
                 .withCompetitionType(competitionType)
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
         compFundedAndInformed = repository.save(compFundedAndInformed);
@@ -167,13 +184,50 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     @Rollback
+    public void fundedAndInformedWithReleaseFeedbackCompletionStage() {
+
+        loginCompAdmin();
+
+        Competition compFundedAndInformed = newCompetition()
+                .withId()
+                .withNonIfs(false)
+                .withSetupComplete(true)
+                .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
+                .build();
+
+        compFundedAndInformed = repository.save(compFundedAndInformed);
+
+        Milestone feedbackReleasedMilestone =
+                new Milestone(MilestoneType.FEEDBACK_RELEASED, ZonedDateTime.now().minusDays(1), compFundedAndInformed);
+
+        milestoneRepository.save(feedbackReleasedMilestone);
+
+        Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed)
+                .withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
+        applicationRepository.save(applicationFundedAndInformed);
+
+        // when a Competition is considered closed at the Release Feedback stage, the Competition does not show
+        // in Project Setup state but just Previous state
+        assertEquals(0L, repository.countProjectSetup().longValue());
+        assertEquals(0, repository.findProjectSetup().size());
+
+        assertEquals(1L, repository.countFeedbackReleased().longValue());
+        assertEquals(1, repository.findFeedbackReleased().size());
+
+        assertEquals(compFundedAndInformed.getId().longValue(), repository.findFeedbackReleased().get(0).getId()
+                .longValue());
+    }
+
+    @Test
+    @Rollback
     public void fundedAndNotInformed() {
         loginCompAdmin();
 
         Competition compFundedAndInformed = newCompetition()
-                .with(id(null))
+                .withId()
                 .withNonIfs(false)
                 .withSetupComplete(true)
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
         compFundedAndInformed = repository.save(compFundedAndInformed);
@@ -192,9 +246,10 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         loginCompAdmin();
 
         Competition compFundedAndInformed = newCompetition()
-                .with(id(null))
+                .withId()
                 .withNonIfs(false)
                 .withSetupComplete(true)
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
         compFundedAndInformed = repository.save(compFundedAndInformed);
@@ -313,7 +368,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Page<Competition> searchResults = repository.search("%o%", pageable);
         List<Competition> filteredSearchResults = searchResults.getContent().stream().filter(r ->
-                existingSearchResults.stream().filter(er -> er.getId().equals(r.getId())).count() == 0L).collect
+                existingSearchResults.stream().noneMatch(er -> er.getId().equals(r.getId()))).collect
                 (Collectors.toList());
         assertEquals(7, filteredSearchResults.size());
         assertEquals("earliestOpenComp", filteredSearchResults.get(0).getName());

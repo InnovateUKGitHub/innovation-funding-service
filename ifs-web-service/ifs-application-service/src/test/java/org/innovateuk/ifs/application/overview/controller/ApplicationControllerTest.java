@@ -144,8 +144,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     }
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

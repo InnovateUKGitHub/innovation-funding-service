@@ -1,63 +1,93 @@
 package org.innovateuk.ifs.finance.handler;
 
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.domain.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
+import org.innovateuk.ifs.finance.handler.item.GrantClaimHandler;
 import org.innovateuk.ifs.finance.handler.item.JESCostHandler;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
-import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
-import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
-import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
-import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.handler.item.OtherFundingHandler;
+import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
 
 @Component
-public class OrganisationJESFinance implements OrganisationFinanceHandler {
+public class OrganisationJESFinance extends AbstractOrganisationFinanceHandler implements OrganisationFinanceHandler {
+    private static final Log LOG = LogFactory.getLog(OrganisationJESFinance.class);
 
     @Autowired
-    private ApplicationFinanceRowRepository applicationFinanceRowRepository;
-
-    @Autowired
-    private ProjectFinanceRowRepository projectFinanceRowRepository;
-
-    @Autowired
-    private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
+    private AutowireCapableBeanFactory beanFactory;
 
     @Override
-    public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType) {
-        return null;
+    protected boolean initialiseCostTypeSupported(FinanceRowType costType) {
+        return asList(FINANCE, OTHER_FUNDING).contains(costType);
     }
 
     @Override
-    public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition) {
-        List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
-        return updateCostCategoryValuesForTotals(competition, addCostsAndTotalsToCategories(costs));
+    protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories() {
+        Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
+
+        for (FinanceRowType costType : FinanceRowType.values()) {
+            FinanceRowCostCategory financeRowCostCategory;
+            switch (costType) {
+                case FINANCE:
+                    financeRowCostCategory = new GrantClaimCategory();
+                    break;
+                case OTHER_FUNDING:
+                    financeRowCostCategory = new OtherFundingCostCategory();
+                    break;
+                default:
+                    financeRowCostCategory = new DefaultCostCategory();
+
+            }
+            costCategories.put(costType, financeRowCostCategory);
+        }
+        return costCategories;
     }
 
     @Override
-    public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId, Competition competition) {
-        List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
-        return updateCostCategoryValuesForTotals(competition, addCostsAndTotalsToCategories(costs));
+    protected Map<FinanceRowType, FinanceRowCostCategory> afterTotalCalculation(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
+        return costCategories;
+    }
+
+    @Override
+    public FinanceRowHandler getCostHandler(FinanceRowType costType) {
+        FinanceRowHandler handler = null;
+        switch (costType) {
+            case LABOUR:
+            case CAPITAL_USAGE:
+            case MATERIALS:
+            case OTHER_COSTS:
+            case OVERHEADS:
+            case SUBCONTRACTING_COSTS:
+            case TRAVEL:
+            case YOUR_FINANCE:
+            case ACADEMIC:
+                handler = new JESCostHandler();
+                break;
+            case FINANCE:
+                handler = new GrantClaimHandler();
+                break;
+            case OTHER_FUNDING:
+                handler = new OtherFundingHandler();
+                break;
+        }
+        if (handler != null) {
+            beanFactory.autowireBean(handler);
+            return handler;
+        }
+        LOG.error("Not a valid FinanceType: " + costType);
+        throw new IllegalArgumentException("Not a valid FinanceType: " + costType);
     }
 
     @Override
@@ -69,127 +99,4 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
         return emptyMap();
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs) {
-        Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
-        costCategories = addCostsToCategories(costCategories, costs);
-        costCategories = calculateTotals(costCategories);
-        return costCategories;
-    }
-
-    private Map<FinanceRowType, FinanceRowCostCategory> updateCostCategoryValuesForTotals(Competition competition, Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
-        costCategories = setGrantClaimPercentage(costCategories, competition);
-        costCategories = calculateTotals(costCategories);
-        return costCategories;
-    }
-
-    private Map<FinanceRowType, FinanceRowCostCategory> setGrantClaimPercentage(Map<FinanceRowType, FinanceRowCostCategory> costCategories, Competition competition) {
-        FinanceRowItem costItem = new GrantClaim(0L, competition.getAcademicGrantPercentage());
-        costCategories.get(FinanceRowType.FINANCE).addCost(costItem);
-        return costCategories;
-    }
-
-    private Map<FinanceRowType, FinanceRowCostCategory> calculateTotals(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
-        costCategories.values()
-                .forEach(cc -> cc.calculateTotal());
-        return costCategories;
-    }
-
-    private Map<FinanceRowType, FinanceRowCostCategory> createCostCategories() {
-        Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
-
-        for(FinanceRowType costType : FinanceRowType.values()) {
-            FinanceRowCostCategory financeRowCostCategory;
-            switch (costType) {
-                case FINANCE:
-                    financeRowCostCategory = new GrantClaimCategory();
-                    break;
-                default:
-                    financeRowCostCategory = new DefaultCostCategory();
-
-            }
-            costCategories.put(costType, financeRowCostCategory);
-        }
-        return costCategories;
-    }
-
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostsToCategories(Map<FinanceRowType, FinanceRowCostCategory> costCategories, List<? extends FinanceRow> costs) {
-        costs.stream().forEach(c -> addCostToCategory(costCategories, c));
-        return costCategories;
-    }
-
-    private void addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories, FinanceRow cost) {
-        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
-        FinanceRowItem costItem = toCostItem(cost);
-        FinanceRowCostCategory financeRowCostCategory = costCategories.get(costType);
-        financeRowCostCategory.addCost(costItem);
-    }
-
-    private FinanceRowItem toCostItem(FinanceRow cost) {
-        return new AcademicCost(cost.getId(), cost.getName(), cost.getCost(), cost.getItem());
-    }
-
-    @Override
-    public ApplicationFinanceRow costItemToCost(FinanceRowItem costItem) {
-        return buildFinanceRowHandler().toCost(costItem);
-    }
-
-    @Override
-    public ProjectFinanceRow costItemToProjectCost(FinanceRowItem costItem) {
-        return buildFinanceRowHandler().toProjectCost(costItem);
-    }
-
-    private FinanceRowHandler buildFinanceRowHandler(){
-        FinanceRowHandler financeRowHandler = new JESCostHandler();
-        List<FinanceRowMetaField> financeRowMetaFields = financeRowMetaFieldRepository.findAll();
-        financeRowHandler.setCostFields(financeRowMetaFields);
-        return financeRowHandler;
-    }
-
-    @Override
-    public FinanceRowItem costToCostItem(ApplicationFinanceRow cost) {
-        FinanceRowHandler financeRowHandler = new JESCostHandler();
-        return financeRowHandler.toCostItem(cost);
-    }
-
-    @Override
-    public FinanceRowItem costToCostItem(ProjectFinanceRow cost) {
-        FinanceRowHandler financeRowHandler = new JESCostHandler();
-        return financeRowHandler.toCostItem(cost);
-    }
-
-    @Override
-    public FinanceRowHandler getCostHandler(FinanceRowType costType) {
-        return new JESCostHandler();
-    }
-
-    @Override
-    public List<FinanceRowItem> costToCostItem(List<ApplicationFinanceRow> costs) {
-        return costs.stream().map(c -> costToCostItem(c)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ApplicationFinanceRow> costItemsToCost(List<FinanceRowItem> costItems) {
-        return costItems.stream().map(c -> costItemToCost(c)).collect(Collectors.toList());
-    }
-
-    @Override
-    public ApplicationFinanceRow updateCost(final ApplicationFinanceRow newCostItem) {
-        return find(applicationFinanceRowRepository.findById(newCostItem.getId()),  notFoundError(ApplicationFinanceRow.class, newCostItem.getId()))
-                .andOnSuccess(costItem -> serviceSuccess(applicationFinanceRowRepository.save(newCostItem))).getSuccess();
-    }
-
-    @Override
-    public ApplicationFinanceRow addCost(Long applicationFinanceId, Long questionId, ApplicationFinanceRow newCostItem) {
-        List<ApplicationFinanceRow> financeRows = applicationFinanceRowRepository.findByTargetIdAndNameAndQuestionId(applicationFinanceId, newCostItem.getName(), questionId);
-        return checkAndAddCostItem(newCostItem, financeRows).getSuccess();
-
-    }
-
-    private ServiceResult<ApplicationFinanceRow> checkAndAddCostItem(final ApplicationFinanceRow newCostItem, List<ApplicationFinanceRow> foundApplicationFinanceRows) {
-        if(foundApplicationFinanceRows.isEmpty()) {
-            return serviceSuccess(applicationFinanceRowRepository.save(newCostItem));
-        }
-
-        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-    }
 }

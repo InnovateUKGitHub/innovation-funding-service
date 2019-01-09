@@ -169,7 +169,7 @@ public class DefaultFinanceModelManagerTest {
 
         when(organisationService.getOrganisationType(userId, applicationId)).thenReturn(organisationType);
 
-        when(financeViewHandlerProvider.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
+        when(financeViewHandlerProvider.getFinanceFormHandler(competition, organisationType)).thenReturn(financeFormHandler);
 
         when(formInputRestService.getByQuestionIdAndScope(isA(Long.class), eq(APPLICATION))).thenReturn(restSuccess(asList(newFormInputResource().withType(FormInputType.LABOUR).build())));
 

@@ -58,10 +58,9 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
         return new CompetitionManagementSendInviteController();
     }
 
-    @Override
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpCompetition() {
+
         setupCookieUtil(cookieUtil);
 
         competition = newCompetitionResource()

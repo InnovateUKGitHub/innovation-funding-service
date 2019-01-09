@@ -26,7 +26,6 @@ import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
@@ -142,9 +141,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     public OrganisationTypeResource businessOrganisationType;
     public OrganisationTypeResource researchOrganisationType;
     public OrganisationTypeResource academicOrganisationType;
-    public ApplicationInviteResource invite;
-    public ApplicationInviteResource acceptedInvite;
-    public ApplicationInviteResource existingUserInvite;
 
     public static final String INVITE_HASH =
             "b157879c18511630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
@@ -190,6 +186,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withMinProjectDuration(1)
                 .withMaxProjectDuration(36)
+                .withIncludeJesForm(true)
                 .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource
@@ -582,8 +579,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn
                 (applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeViewHandlerProvider.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
-        when(financeViewHandlerProvider.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandlerProvider.getFinanceFormHandler(competitionResource, 1L)).thenReturn(defaultFinanceFormHandler);
+        when(financeViewHandlerProvider.getFinanceModelManager(competitionResource, 1L)).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupQuestionStatus(ApplicationResource application) {

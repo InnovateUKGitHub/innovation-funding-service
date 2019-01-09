@@ -98,8 +98,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
     private InviteService inviteService;
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

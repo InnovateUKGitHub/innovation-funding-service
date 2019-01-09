@@ -136,7 +136,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
                 .ifPresent(applicationFinanceResources ->
                         applicationFinanceResources.forEach(applicationFinance -> {
                             if (applicationFinance.getGrantClaim() != null && financeQuestion.isPresent()) {
-                                applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
+                                applicationFinance.getGrantClaim().setGrantClaimPercentage(null);
                                 financeRowCostsService.addCost(applicationFinance.getId(), financeQuestion.get().getId(), applicationFinance.getGrantClaim());
                             }
                         })

@@ -11,6 +11,8 @@ import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.domain.StakeholderInvite;
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
+import org.innovateuk.ifs.invite.mapper.StakeholderInviteMapper;
+import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -20,6 +22,7 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,13 +33,11 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_EMAIL_TAKEN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID_EMAIL;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
@@ -70,16 +71,19 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     private StakeholderRepository stakeholderRepository;
 
     @Autowired
+    private StakeholderInviteMapper stakeholderInviteMapper;
+
+    @Autowired
     private UserMapper userMapper;
 
-    @Value("${ifs.system.internal.user.email.domain}")
-    private String internalUserEmailDomain;
+    @Value("${ifs.system.internal.user.email.domains}")
+    private String internalUserEmailDomains;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
     private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.ukri.org";
-    private static final String WEB_CONTEXT = "/management/competition/setup/stakeholder";
+    private static final String WEB_CONTEXT = "/management/stakeholder";
 
     enum Notifications {
         STAKEHOLDER_INVITE,
@@ -91,45 +95,58 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     public ServiceResult<Void> inviteStakeholder(UserResource invitedUser, long competitionId) {
 
         return validateInvite(invitedUser)
-                .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
-                .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
-                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
+                .andOnSuccess(() -> validateUserIsNotInternal(invitedUser.getEmail()))
+                .andOnSuccess(() -> validateUserInviteNotPending(competitionId, invitedUser))
+                .andOnSuccess(() -> validateUserNotAlreadyStakeholderOnCompetition(competitionId, invitedUser.getEmail()))
                 .andOnSuccess(() -> getCompetition(competitionId))
-                .andOnSuccess(competition -> saveInvite(invitedUser, competition)
-                                    .andOnSuccess(stakeholderInvite -> sendStakeholderInviteNotification(stakeholderInvite, competition))
-                             );
+                .andOnSuccess(competition -> addOrInviteUser(competition, invitedUser)
+                );
     }
 
     private ServiceResult<Void> validateInvite(UserResource invitedUser) {
 
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
-                || StringUtils.isEmpty(invitedUser.getLastName())){
+                || StringUtils.isEmpty(invitedUser.getLastName())) {
             return serviceFailure(STAKEHOLDER_INVITE_INVALID);
         }
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateEmail(String email) {
-
-        internalUserEmailDomain = StringUtils.defaultIfBlank(internalUserEmailDomain, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
-
-        String domain = StringUtils.substringAfter(email, "@");
-
-        if (internalUserEmailDomain.equalsIgnoreCase(domain)) {
-            return serviceFailure(STAKEHOLDER_INVITE_INVALID_EMAIL);
+    private ServiceResult<Void> validateUserIsNotInternal(String emailAddress) {
+        String domain = StringUtils.substringAfter(emailAddress, "@");
+        internalUserEmailDomains = StringUtils.defaultIfBlank(internalUserEmailDomains, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
+        String[] domains = internalUserEmailDomains.split(",");
+        for (String acceptedDomain : domains) {
+            if (acceptedDomain.equalsIgnoreCase(domain)) {
+                return serviceFailure(STAKEHOLDERS_CANNOT_BE_INTERNAL_USERS);
+            }
         }
 
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateUserEmailAvailable(UserResource invitedUser) {
-        return userRepository.findByEmail(invitedUser.getEmail()).isPresent() ? serviceFailure(STAKEHOLDER_INVITE_EMAIL_TAKEN) : serviceSuccess() ;
+    private ServiceResult<Void> validateUserInviteNotPending(long competitionId, UserResource invitedUser) {
+        boolean foundPendingInvite = stakeholderInviteRepository.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, invitedUser.getEmail());
+        return foundPendingInvite ? serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess();
     }
 
-    private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource invitedUser) {
+    private ServiceResult<Void> validateUserNotAlreadyStakeholderOnCompetition(long competitionId, String email) {
+        boolean isUserStakeholderOnCompetition = stakeholderRepository.existsByCompetitionIdAndStakeholderEmail(competitionId, email);
+        return isUserStakeholderOnCompetition ? serviceFailure(STAKEHOLDER_HAS_ACCEPTED_INVITE) : serviceSuccess();
+    }
 
-        List<StakeholderInvite> existingInvites = stakeholderInviteRepository.findByEmail(invitedUser.getEmail());
-        return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED);
+    private ServiceResult<Void> addOrInviteUser(Competition competition, UserResource invitedUser) {
+        Optional<User> user = userRepository.findByEmail(invitedUser.getEmail());
+
+        if (user.isPresent()) {
+            if (!user.get().hasRole(Role.STAKEHOLDER)) {
+                addStakeholderRoleToUser(user.get());
+            }
+            return addStakeholder(competition.getId(), user.get().getId());
+        } else {
+            return saveInvite(invitedUser, competition)
+                    .andOnSuccess(stakeholderInvite -> sendStakeholderInviteNotification(stakeholderInvite, competition));
+        }
     }
 
     private ServiceResult<StakeholderInvite> saveInvite(UserResource invitedUser, Competition competition) {
@@ -150,15 +167,15 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         Map<String, Object> globalArgs = createGlobalArgsForStakeholderInvite(stakeholderInvite, competition);
 
         Notification notification = new Notification(systemNotificationSource,
-                                        singletonList(createStakeholderInviteNotificationTarget(stakeholderInvite)),
-                                        Notifications.STAKEHOLDER_INVITE, globalArgs);
+                singletonList(createStakeholderInviteNotificationTarget(stakeholderInvite)),
+                Notifications.STAKEHOLDER_INVITE, globalArgs);
 
         ServiceResult<Void> stakeholderInviteEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
 
         stakeholderInviteEmailSendResult.handleSuccessOrFailure(
-                                            failure -> handleInviteError(stakeholderInvite, failure),
-                                            success -> handleInviteSuccess(stakeholderInvite)
-                                            );
+                failure -> handleInviteError(stakeholderInvite, failure),
+                success -> handleInviteSuccess(stakeholderInvite)
+        );
 
         return stakeholderInviteEmailSendResult;
     }
@@ -199,17 +216,28 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     }
 
     @Override
+    public ServiceResult<StakeholderInviteResource> getInviteByHash(String hash) {
+        StakeholderInvite stakeholderInvite = stakeholderInviteRepository.getByHash(hash);
+        return serviceSuccess(stakeholderInviteMapper.mapToResource(stakeholderInvite));
+    }
+
+    @Override
     @Transactional
     public ServiceResult<Void> addStakeholder(long competitionId, long stakeholderUserId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturnVoid(competition ->
                         find(userRepository.findById(stakeholderUserId),
                                 notFoundError(User.class, stakeholderUserId))
-                        .andOnSuccess(stakeholder -> {
-                            Stakeholder savedStakeholder = stakeholderRepository.save(new Stakeholder(competition, stakeholder));
-                            return sendAddStakeholderNotification(savedStakeholder, competition);
-                        })
+                                .andOnSuccess(stakeholderUser -> {
+                                    Stakeholder savedStakeholder = stakeholderRepository.save(new Stakeholder(competition, stakeholderUser));
+                                    return sendAddStakeholderNotification(savedStakeholder, competition);
+                                })
                 );
+    }
+
+    private void addStakeholderRoleToUser(User user) {
+        user.addRole(Role.STAKEHOLDER);
+        userRepository.save(user);
     }
 
     private ServiceResult<Void> sendAddStakeholderNotification(Stakeholder stakeholder, Competition competition) {

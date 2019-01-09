@@ -3,10 +3,16 @@ package org.innovateuk.ifs.competitionsetup.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupStakeholderController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupStakeholderService;
+import org.innovateuk.ifs.documentation.CompetitionInviteDocs;
 import org.innovateuk.ifs.documentation.InviteUserResourceDocs;
+import org.innovateuk.ifs.documentation.UserRegistrationResourceDocs;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
+import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -14,21 +20,22 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.stakeholder.builder.StakeholderInviteResourceBuilder.newStakeholderInviteResource;
+import static org.innovateuk.ifs.stakeholder.builder.StakeholderRegistrationResourceBuilder.newStakeholderRegistrationResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 
 public class CompetitionSetupStakeholderControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSetupStakeholderController> {
 
@@ -36,6 +43,11 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
 
     @Mock
     private CompetitionSetupStakeholderService competitionSetupStakeholderService;
+
+    @Mock
+    private RegistrationService registrationService;
+
+    private final String TEST_HASH = "hash1234";
 
     @Override
     protected CompetitionSetupStakeholderController supplyControllerUnderTest() {
@@ -100,6 +112,50 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
                 ));
 
         verify(competitionSetupStakeholderService).findStakeholders(competitionId);
+    }
+
+    @Test
+    public void getInvite() throws Exception {
+        StakeholderInviteResource invite = newStakeholderInviteResource()
+                .withHash(TEST_HASH)
+                .withCompetition(1L)
+                .withEmail("test@test.test")
+                .withStatus(InviteStatus.SENT)
+                .build();
+
+        when(competitionSetupStakeholderService.getInviteByHash(TEST_HASH)).thenReturn(serviceSuccess(invite));
+
+        mockMvc.perform(get("/competition/setup/get-stakeholder-invite/{inviteHash}", TEST_HASH))
+                .andExpect(status().isOk())
+                .andDo(document("competition/setup/{method-name}",
+                                pathParameters(
+                                        parameterWithName("inviteHash").description("Hash of the invite being requested")
+                                ),
+                                responseFields(CompetitionInviteDocs.stakeholderInviteResourceFields)
+                ));
+    }
+
+    @Test
+    public void createStakeholder() throws Exception {
+
+        StakeholderRegistrationResource resource = newStakeholderRegistrationResource()
+                .withFirstName("John")
+                .withLastName("Smith")
+                .withPassword("superSecurePassword")
+                .build();
+
+        when(registrationService.createStakeholder(TEST_HASH, resource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/setup/stakeholder/create/{inviteHash}", TEST_HASH)
+                                .contentType(APPLICATION_JSON)
+                                .content(toJson(resource)))
+                .andExpect(status().is2xxSuccessful())
+                .andDo(document("competition/setup/stakeholder/{method-name}",
+                                pathParameters(
+                                        parameterWithName("inviteHash").description("Hash of the invite to create a user for")
+                                ),
+                                requestFields(UserRegistrationResourceDocs.stakeholderRegistrationResourceFields)
+                                ));
     }
 
     @Test

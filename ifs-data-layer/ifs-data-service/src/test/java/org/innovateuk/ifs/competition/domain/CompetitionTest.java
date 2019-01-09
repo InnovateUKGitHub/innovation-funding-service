@@ -16,6 +16,7 @@ import java.util.List;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static junit.framework.TestCase.assertFalse;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -65,6 +66,10 @@ public class CompetitionTest {
         GrantTermsAndConditions termsAndConditions = new GrantTermsAndConditions();
         termsAndConditions.setId(1L);
 
+        CompetitionType competitionType = newCompetitionType()
+                .withName("Sector")
+                .build();
+
         competition = new Competition(questions, sections, name, startDate, endDate, registrationDate, termsAndConditions);
         competition.setMaxResearchRatio(maxResearchRatio);
         competition.setAcademicGrantPercentage(academicGrantPercentage);
@@ -72,6 +77,7 @@ public class CompetitionTest {
         competition.setBudgetCode(budgetCode);
         competition.setActivityCode(activityCode);
         competition.setFunders(getTestFunders(competition));
+        competition.setCompetitionType(competitionType);
     }
 
 
@@ -207,18 +213,5 @@ public class CompetitionTest {
         competition.setFundersPanelDate(ZonedDateTime.now().minusDays(2));
         competition.setFundersPanelEndDate(ZonedDateTime.now().minusDays(1));
         assertEquals(ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
-    }
-
-    @Test
-    public void competitionStatusFeedbackReleased() {
-        competition.setEndDate(ZonedDateTime.now().minusDays(7));
-        competition.setAssessorAcceptsDate(ZonedDateTime.now().minusDays(6));
-        competition.notifyAssessors(ZonedDateTime.now().minusDays(5));
-        competition.closeAssessment(ZonedDateTime.now().minusDays(4));
-        competition.setFundersPanelDate(ZonedDateTime.now().minusDays(3));
-        competition.setFundersPanelEndDate(ZonedDateTime.now().minusDays(2));
-        competition.setReleaseFeedbackDate(ZonedDateTime.now().minusDays(1));
-        competition.releaseFeedback(ZonedDateTime.now().minusDays(1));
-        assertEquals(PROJECT_SETUP, competition.getCompetitionStatus());
     }
 }

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
+import org.innovateuk.ifs.project.documents.mapper.ProjectDocumentsMapper;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
                 AddressMapper.class,
                 ApplicationMapper.class,
                 ProjectUserMapper.class,
-                FileEntryMapper.class
+                FileEntryMapper.class,
+                ProjectDocumentsMapper.class
         }
 )
 public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource, Long> {
@@ -27,7 +29,8 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     private ProjectProcessRepository projectProcessRepository;
 
     @Mappings({
-            @Mapping(target = "projectState", ignore = true)
+            @Mapping(target = "projectState", ignore = true),
+            @Mapping(target = "competition", source = "application.competition.id")
     })
     @Override
     public abstract ProjectResource mapToResource(Project project);

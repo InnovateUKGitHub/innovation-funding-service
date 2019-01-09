@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -19,7 +18,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class ScheduledJesOrganisationListImporterFileDownloaderTest {
 
     @Test
-    public void downloadFile() throws URISyntaxException, IOException {
+    public void downloadFile() throws IOException {
 
         ScheduledJesOrganisationListImporterFileDownloader fileDownloader = new ScheduledJesOrganisationListImporterFileDownloader();
         URL dummyFileUrl = currentThread().getContextClassLoader().getResource("test-jes-download.csv");
@@ -39,7 +38,7 @@ public class ScheduledJesOrganisationListImporterFileDownloaderTest {
     }
 
     @Test
-    public void downloadFileWhenFileNotFound() throws URISyntaxException, IOException {
+    public void downloadFileWhenFileNotFound() throws IOException {
 
         ScheduledJesOrganisationListImporterFileDownloader fileDownloader = new ScheduledJesOrganisationListImporterFileDownloader();
 

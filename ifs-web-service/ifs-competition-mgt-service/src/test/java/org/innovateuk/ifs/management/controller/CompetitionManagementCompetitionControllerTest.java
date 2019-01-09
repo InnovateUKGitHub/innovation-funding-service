@@ -9,10 +9,7 @@ import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
@@ -230,7 +227,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         long competitionId = 1L;
 
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeName("Programme")
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
         when(competitionPostSubmissionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
@@ -247,11 +244,11 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     }
 
     @Test
-    public void releaseFeedbackEOICompetition() throws Exception {
+    public void releaseFeedbackWithReleaseFeedbackCompletionStage() throws Exception {
         long competitionId = 1L;
 
         CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeName("Expression of interest")
+                .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .build();
 
         when(competitionPostSubmissionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());

@@ -32,7 +32,7 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               IFS-2256 Missing print button and sections of the application cannot be viewed when in 'feedback' status.
 ...
 ...               IFS-2640 Innovation Leads can access ‘Previous’ tab
-Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
+Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -45,8 +45,7 @@ ${proj_app_with_ineligible}  ${application_ids['Application with ineligible']}
 Competition Dashboard
     [Documentation]    INFUND-7365
     [Tags]
-    When The user clicks the button/link            link = ${INFORM_COMPETITION_NAME}
-    Then The user should see the element            jQuery = span:contains("${INFORM_COMPETITION_NAME}")
+    Given The user should see the element           jQuery = span:contains("${INFORM_COMPETITION_NAME}")
     And The user should see the element             jQuery = h1:contains("Inform")
     And The user should see the element             jQuery = dd:contains("Programme")
     And The user should see the element             jQuery = dd:contains("Materials and manufacturing")
@@ -64,7 +63,7 @@ Milestones for the In inform competition
 
 Filtering on the Manage funding applications page
     [Documentation]    INFUND-8066
-    [Tags]
+    [Tags]  HappyPath
     Given The user clicks the button/link                      jQuery = .govuk-button:contains("Manage funding notifications")
     And the user enters text to a text field                   id = stringFilter    ${application_ids['Climate control solution']}
     And the user selects the option from the drop-down menu    Yes    id = sendFilter
@@ -88,7 +87,7 @@ Checking release feedback button state is correct
 
 Release feedback
     [Documentation]    INFUND-8050
-    [Tags]
+    [Tags]  HappyPath
     When The user clicks the button/link                 jQuery = button:contains("Release feedback")
     Then The user should not see the element             jQuery = h1:contains("Inform")
     When The user clicks the button/link                 jQuery = a:contains("Live")
@@ -97,7 +96,7 @@ Release feedback
 
 Unsuccessful applicant sees unsuccessful alert
     [Documentation]    INFUND-7861
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user    &{unsuccessful_released_credentials}
     Given the user should see the element    jQuery = .status:contains("Unsuccessful")
     When the user clicks the button/link     jQuery = a:contains("Electric Drive")
@@ -112,7 +111,7 @@ Internal user can see ineligible and unsuccessful applications in the Previous t
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    log in as a different user    &{successful_released_credentials}
     Given the user should see the element    jQuery = .status:contains("Successful")
     When the user clicks the button/link     jQuery = .previous-applications a:contains("High Performance Gasoline Stratified")
@@ -120,14 +119,14 @@ Successful applicant see successful alert
 
 View feedback from each assessor
     [Documentation]    INFUND-8172
-    [Tags]
+    [Tags]  HappyPath
     Then the user should see the element    jQuery = h3:contains("Assessor 1") ~ .wysiwyg-styles p:contains("I have no problem recommending this application")
     And the user should see the element     jQuery = h3:contains("Assessor 2") ~ .wysiwyg-styles p:contains("Very good, but could have been better in areas")
     And the user should see the element     jQuery = h3:contains("Assessor 3") ~ .wysiwyg-styles p:contains("I enjoyed reading this application, well done")
 
 Question scores and application details are correct
     [Documentation]    INFUND-8169 INFUND-7861
-    [Tags]
+    [Tags]  HappyPath
     Then the application question scores are correct
     And the application details are correct
 
@@ -143,7 +142,7 @@ User can see the Application details along with feedback
 
 User can see feedback to individual questions
     [Documentation]    INFUND-8005
-    [Tags]
+    [Tags]  HappyPath
     Given the user clicks the button/link            jQuery = a:contains("6. Innovation")
     Then the user should see the element             jQuery = h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
     And the user should see the element              jQuery = h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
@@ -163,6 +162,10 @@ Selecting the dashboard link takes user back to the dashboard
     Then the user should see the element     jQuery = h1:contains("Dashboard")
 
 *** Keywords ***
+Custom Suite Setup
+    The user logs-in in new browser       &{Comp_admin1_credentials}
+    The user clicks the button/link       link = ${INFORM_COMPETITION_NAME}
+
 the application question scores are correct
     the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Business opportunity") + div .govuk-grid-column-one-third:contains("Average score 6 / 10")
     the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Potential market") + div .govuk-grid-column-one-third:contains("Average score 5 / 10")

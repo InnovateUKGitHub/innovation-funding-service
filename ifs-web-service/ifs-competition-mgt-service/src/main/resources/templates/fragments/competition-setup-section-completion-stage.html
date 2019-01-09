@@ -1,0 +1,113 @@
+
+<!-- ================= Section: Completion stage (11) =========================== -->
+<th:block th:fragment="section-content">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
+    </div>
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Completion stage',size='govuk-heading-xl'" />
+
+    <div th:if="${model.general.editable}" class="govuk-body panel govuk-!-margin-bottom-6">
+        <p class="govuk-body govuk-!-margin-bottom-0">Select the stage at which the competition is complete for Innovate UK.</p>
+    </div>
+
+    <div th:if="${model.general.editable}" id="section-4-edit">
+
+        <ul class="govuk-list govuk-!-padding-0 govuk-!-margin-0 govuk-!-margin-bottom-2">
+
+            <li th:each="milestone : ${model.nonSelectableMilestones}" class="govuk-radios__item">
+                <span class="govuk-label govuk-radios__label"
+                      th:text="${milestone.milestoneDescription}">
+                    1. Milestone name
+                </span>
+            </li>
+        </ul>
+
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              method="post"
+              th:object="${competitionSetupForm}"
+              novalidate="novalidate">
+
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectedCompletionStage')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend id="selectedCompletionStage">
+                        <h2 class="govuk-visually-hidden">Select a completion stage</h2>
+                    </legend>
+                    <span th:if="${#fields.hasErrors('selectedCompletionStage')}" class="govuk-error-message"
+                          th:each="err : ${#fields.errors('selectedCompletionStage')}" th:text="${err}"/>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input"
+                                   id="release-feedback-completion-stage" type="radio" required="required"
+                                   th:value='${model.releaseFeedbackCompletionStage}'
+                                   name="selectedCompletionStage"
+                                   th:checked="${competitionSetupForm.selectedCompletionStage == model.releaseFeedbackCompletionStage}" />
+                            <label class="govuk-label govuk-radios__label" for="release-feedback-completion-stage">
+                                13. Release feedback
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input"
+                                   id="project-setup-completion-stage" type="radio" required="required" value='14'
+                                   th:value='${model.projectSetupCompletionStage}'
+                                   name="selectedCompletionStage"
+                                   th:checked="${competitionSetupForm.selectedCompletionStage == model.projectSetupCompletionStage}" />
+                            <label class="govuk-label govuk-radios__label" for="project-setup-completion-stage">
+                                14. Project setup
+                            </label>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+
+            <button type="submit" class="govuk-button">
+                Done
+            </button>
+
+        </form>
+
+    </div>
+
+    <th:block th:unless="${model.general.editable}">
+        <ul class="govuk-list govuk-!-padding-0 govuk-!-margin-0 govuk-!-margin-bottom-6">
+            <li th:each="milestone : ${model.nonSelectableMilestones}"
+                th:text="${milestone.milestoneDescription}"
+                class="govuk-!-margin-bottom-4">
+                1. Milestone name
+            </li>
+            <th:block th:if="${competitionSetupForm.selectedCompletionStage == model.releaseFeedbackCompletionStage}">
+                <li class="govuk-!-margin-bottom-4">13. Release feedback</li>
+                <li class="govuk-!-margin-bottom-4"><s class="govuk-hint">14. Project setup</s></li>
+            </th:block>
+            <th:block th:if="${competitionSetupForm.selectedCompletionStage == model.projectSetupCompletionStage}">
+                <li class="govuk-!-margin-bottom-4">13. Release feedback</li>
+                <li class="govuk-!-margin-bottom-4">14. Project setup</li>
+            </th:block>
+        </ul>
+
+        <form th:action="@{('completion-stage/edit')}" method="post">
+
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
+
+        </form>
+
+    </th:block>
+
+    <ul class="govuk-list pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to previous part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='initial')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Initial details</span>
+            </a>
+        </li>
+        <li class="next" th:if="${!model.general.editable}">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='milestones')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Milestones</span>
+            </a>
+        </li>
+    </ul>
+</th:block>

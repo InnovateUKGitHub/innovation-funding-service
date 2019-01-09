@@ -93,10 +93,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Override
     protected CompetitionSetupApplicationController supplyControllerUnderTest() { return new CompetitionSetupApplicationController(); }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
@@ -165,11 +163,15 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("financesRequired", String.valueOf(true)))
                 .andExpect(status().isOk())
-                .andExpect(model().errorCount(3))
+                .andExpect(model().errorCount(5))
                 .andExpect(model().attributeExists("competitionSetupForm"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "applicationFinanceType",
                         "NotNull"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeGrowthTable",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeYourOrganisationSection",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeJesForm",
                         "FieldRequiredIf"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "fundingRules",
                         "FieldRequiredIf"));

@@ -2,7 +2,9 @@ package org.innovateuk.ifs.project.bankdetails.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.repository.AddressRepository;
+import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.Error;
@@ -12,6 +14,7 @@ import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
+import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -47,12 +50,12 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
@@ -105,24 +108,30 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     @Mock
     private OrganisationRepository organisationRepositoryMock;
 
+    @Mock
+    private AddressTypeRepository addressTypeRepository;
+
+    @Mock
+    private OrganisationAddressMapper organisationAddressMapper;
+
     @Before
     public void setUp(){
         organisation = newOrganisation().build();
         project = newProject().build();
         AddressResource addressResource = newAddressResource().build();
         Address address = newAddress().build();
-        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddress(addressResource).build();
         OrganisationAddress organisationAddress = newOrganisationAddress().build();
-        bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withSortCode("123123").withAccountNumber("12345678").withOrganisation(organisation.getId()).withOrganiationAddress(organisationAddressResource).build();
+        bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withSortCode("123123").withAccountNumber("12345678").withOrganisation(organisation.getId()).withAddress(addressResource).build();
         bankDetails = BankDetailsBuilder.newBankDetails().withSortCode(bankDetailsResource.getSortCode()).withAccountNumber(bankDetailsResource.getAccountNumber()).withOrganisation(organisation).withOrganiationAddress(organisationAddress).build();
         accountDetails = silBankDetailsMapper.toAccountDetails(bankDetailsResource);
         silBankDetails = silBankDetailsMapper.toSILBankDetails(bankDetailsResource);
 
         when(bankDetailsMapperMock.mapToDomain(bankDetailsResource)).thenReturn(bankDetails);
-        when(organisationAddressRepositoryMock.findById(organisationAddressResource.getId())).thenReturn(Optional.of(organisationAddress));
         when(addressRepositoryMock.findById(addressResource.getId())).thenReturn(Optional.of(address));
         when(bankDetailsRepositoryMock.save(bankDetails)).thenReturn(bankDetails);
         when(projectRepositoryMock.findById(bankDetailsResource.getProject())).thenReturn(Optional.of(project));
+        when(addressTypeRepository.findById(BANK_DETAILS.getOrdinal())).thenReturn(Optional.of(new AddressType()));
+        when(organisationAddressMapper.mapToDomain(any(OrganisationAddressResource.class))).thenReturn(organisationAddress);
     }
 
     @Test

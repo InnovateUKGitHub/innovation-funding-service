@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.project.bankdetails.controller;
 
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.address.form.AddressForm;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.form.AddressForm;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.form.BankDetailsForm;
@@ -22,15 +21,13 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
+import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 
 /**
@@ -50,7 +47,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     private BankDetailsRestService bankDetailsRestService;
 
     @Autowired
-    private OrganisationAddressRestService organisationAddressRestService;
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @GetMapping
@@ -94,20 +91,14 @@ public class BankDetailsController extends AddressLookupBaseController {
                                     @P("projectId")@PathVariable("projectId") final Long projectId,
                                     UserResource loggedInUser) {
 
-        form.getAddressForm().setTriedToSave(true);
-
         final Supplier<String> failureView = () -> bankDetails(model, projectId, loggedInUser, form);
 
-        return validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains("addressForm"), failureView,
+        return validationHandler.failNowOrSucceedWith(failureView,
                 () -> {
-                    if (isNewAddressNotValid(form)) {
-                        return bankDetails(model, projectId, loggedInUser, form);
-                    }
-
                     OrganisationResource organisationResource = projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess();
-                    OrganisationAddressResource organisationAddressResource = getOrganisationAddressResourceOrNull(form, organisationResource, BANK_DETAILS);
+                    AddressResource address = form.getAddressForm().getSelectedAddress(this::searchPostcode);
 
-                    BankDetailsResource bankDetailsResource = buildBankDetailsResource(projectId, organisationResource, organisationAddressResource, form);
+                    BankDetailsResource bankDetailsResource = buildBankDetailsResource(projectId, organisationResource, address, form);
                     ServiceResult<Void> updateResult = bankDetailsRestService.submitBankDetails(projectId, bankDetailsResource).toServiceResult();
 
                     if (updateResult.isFailure()) {
@@ -134,70 +125,39 @@ public class BankDetailsController extends AddressLookupBaseController {
 
         final Supplier<String> failureView = () -> doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser, false);
 
-        return validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains("addressForm"), failureView,
+        return validationHandler.failNowOrSucceedWith(failureView,
                 () -> doViewConfirmBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
-    @PostMapping(params = SEARCH_ADDRESS)
-    public String searchAddress(Model model,
+    @PostMapping(params = FORM_ACTION_PARAMETER)
+    public String addressFormAction(Model model,
                                 @P("projectId")@PathVariable("projectId") Long projectId,
-                                @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
+                                @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                 BindingResult bindingResult,
+                                ValidationHandler validationHandler,
                                 UserResource loggedInUser) {
-        if(StringUtils.isEmpty(form.getAddressForm().getPostcodeInput())){
-            bindingResult.addError(createPostcodeSearchFieldError());
+        ProjectResource project = projectService.getById(projectId);
+        OrganisationResource organisationResource = projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess();
+        RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
+
+        form.getAddressForm().validateAction(bindingResult);
+        if (validationHandler.hasErrors()) {
+            return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser, false);
         }
-        form.getAddressForm().setSelectedPostcodeIndex(null);
-        form.getAddressForm().setTriedToSearch(true);
-        ProjectResource project = projectService.getById(projectId);
-        OrganisationResource organisationResource = projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess();
-        RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
-        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser, false);
-    }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
-    @PostMapping(params = SELECT_ADDRESS)
-    public String selectAddress(Model model,
-                                @P("projectId")@PathVariable("projectId") Long projectId,
-                                @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
-                                UserResource loggedInUser) {
-        form.getAddressForm().setSelectedPostcode(null);
-        ProjectResource project = projectService.getById(projectId);
-        OrganisationResource organisationResource = projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess();
-        RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
-        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser, false);
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
-    @PostMapping(params = MANUAL_ADDRESS)
-    public String manualAddress(Model model,
-                                @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
-                                @P("projectId")@PathVariable("projectId") Long projectId,
-                                UserResource loggedInUser) {
         AddressForm addressForm = form.getAddressForm();
-        addressForm.setManualAddress(true);
-        ProjectResource project = projectService.getById(projectId);
-        OrganisationResource organisationResource = projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess();
-        RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
+        addressForm.handleAction(this::searchPostcode);
+
         return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser, false);
     }
 
-    private boolean isNewAddressNotValid(BankDetailsForm form) {
-
-        return ( (form.getAddressForm().getSelectedPostcode() == null
-                || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getAddressLine1())
-                || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getPostcode())
-                || StringUtils.isEmpty(form.getAddressForm().getSelectedPostcode().getTown())
-        ) && OrganisationAddressType.ADD_NEW.name().equals(form.getAddressType().name()));
-    }
 
     private String doViewBankDetails(Model model, BankDetailsForm form, ProjectResource projectResource,
                                      RestResult<BankDetailsResource> bankDetailsResourceRestResult,
                                      UserResource loggedInUser,
                                      boolean isReadOnly) {
         populateBankDetailsModel(model, form, loggedInUser, projectResource, bankDetailsResourceRestResult, isReadOnly);
-        processAddressLookupFields(form);
         return "project/bank-details";
     }
 
@@ -206,7 +166,6 @@ public class BankDetailsController extends AddressLookupBaseController {
                                             UserResource loggedInUser) {
         populateBankDetailsModel(model, form, loggedInUser, projectResource,
                 bankDetailsResourceRestResult, false);
-        processAddressLookupFields(form);
         return "project/bank-details-confirm";
     }
 
@@ -221,6 +180,10 @@ public class BankDetailsController extends AddressLookupBaseController {
             model.addAttribute("bankDetails", bankDetailsResourceRestResult.getSuccess());
         }
 
+        if (!readOnlyView && form.getAddressForm().isPostcodeAddressEntry()) {
+            form.getAddressForm().setPostcodeResults(searchPostcode(form.getAddressForm().getPostcodeInput()));
+        }
+
         model.addAttribute("project", project);
         model.addAttribute("applicationId", project.getApplication());
         model.addAttribute("currentUser", loggedInUser);
@@ -232,7 +195,7 @@ public class BankDetailsController extends AddressLookupBaseController {
 
     private BankDetailsResource buildBankDetailsResource(Long projectId,
                                                      OrganisationResource organisation,
-                                                     OrganisationAddressResource organisationAddressResource,
+                                                     AddressResource addressResource,
                                                      BankDetailsForm form){
         BankDetailsResource bankDetailsResource = new BankDetailsResource();
         bankDetailsResource.setAccountNumber(form.getAccountNumber());
@@ -242,30 +205,17 @@ public class BankDetailsController extends AddressLookupBaseController {
         bankDetailsResource.setCompanyName(organisation.getName());
         bankDetailsResource.setOrganisationTypeName(organisation.getOrganisationTypeName());
         bankDetailsResource.setRegistrationNumber(organisation.getCompaniesHouseNumber());
-        bankDetailsResource.setOrganisationAddress(organisationAddressResource);
+        bankDetailsResource.setAddress(addressResource);
         return bankDetailsResource;
     }
 
     private void populateExitingBankDetailsInForm(BankDetailsResource bankDetails, BankDetailsForm bankDetailsForm){
-        OrganisationAddressResource organisationAddressResource = organisationAddressRestService.findOne(bankDetails.getOrganisationAddress().getId()).getSuccess();
-        bankDetailsForm.setAddressType(OrganisationAddressType.valueOf(organisationAddressResource.getAddressType().getName()));
         bankDetailsForm.setSortCode(bankDetails.getSortCode());
         bankDetailsForm.setAccountNumber(bankDetails.getAccountNumber());
     }
 
-    private BankDetailsViewModel loadDataIntoModelResource(final ProjectResource project, final OrganisationResource organisationResource){
-        BankDetailsViewModel bankDetailsViewModel = new BankDetailsViewModel(project);
-
-        Optional<OrganisationAddressResource> registeredAddress = getAddress(organisationResource, REGISTERED);
-        registeredAddress.ifPresent(organisationAddressResource -> bankDetailsViewModel.setRegisteredAddress(organisationAddressResource.getAddress()));
-
-        Optional<OrganisationAddressResource> operatingAddress = getAddress(organisationResource, OPERATING);
-        operatingAddress.ifPresent(organisationAddressResource -> bankDetailsViewModel.setOperatingAddress(organisationAddressResource.getAddress()));
-
-        Optional<OrganisationAddressResource> bankAddress = getAddress(organisationResource, BANK_DETAILS);
-        bankAddress.ifPresent(organisationAddressResource -> bankDetailsViewModel.setBankAddress(organisationAddressResource.getAddress()));
-
-        return bankDetailsViewModel;
+    private BankDetailsViewModel loadDataIntoModelResource(final ProjectResource project, final OrganisationResource organisationResource) {
+        return new BankDetailsViewModel(project);
     }
 
     private String redirectToBankDetails(long projectId) {

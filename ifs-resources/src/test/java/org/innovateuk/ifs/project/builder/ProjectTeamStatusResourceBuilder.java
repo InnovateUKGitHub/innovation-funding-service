@@ -41,5 +41,4 @@ public class ProjectTeamStatusResourceBuilder extends BaseBuilder<ProjectTeamSta
     public ProjectTeamStatusResourceBuilder withProjectLeadStatus(ProjectPartnerStatusResource... projectLeadStatus) {
         return withArray((status, projectTeamStatusResource) -> addToList("partnerStatuses", status, projectTeamStatusResource), projectLeadStatus);
     }
-
 }

@@ -29,13 +29,13 @@ Day field client side
     [Tags]
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id = application_details-startdate_day    32
-    Then the user should see an error            Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_day    0
-    Then the user should see an error            Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_day    -1
-    Then the user should see an error            Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_day    ${EMPTY}
-    Then the user should see an error            Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -44,13 +44,13 @@ Month field client side
     [Tags]
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id = application_details-startdate_month    0
-    Then the user should see an error            Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_month    13
-    Then the user should see an error            Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_month    -1
-    Then the user should see an error            Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the user enters text to a text field    id = application_details-startdate_month    ${EMPTY}
-    Then the user should see an error            Please enter a valid date.
+    Then the user should see a field error       ${enter_a_valid_date}
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -59,9 +59,9 @@ Year field client side
     [Tags]
     Given the user enters text to a text field    id = application.durationInMonths  15
     When the applicant inserts an invalid date
-    Then the user should see an error             Please enter a future date.
+    Then the user should see a field error        Please enter a future date.
     When the user enters text to a text field     id = application_details-startdate_year    ${EMPTY}
-    Then the user should see an error             Please enter a future date.
+    Then the user should see a field error        Please enter a future date.
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -77,7 +77,7 @@ Duration field client side
     Then the user should see a field and summary error  Your project should last between 1 and 36 months.
 
     When the user enters text to a text field  id = application.durationInMonths  ${EMPTY}
-    Then the user should see a field error     This field cannot be left blank.
+    Then the user should see a field error     ${empty_field_warning_message}
 
     And the user enters text to a text field   id = application.durationInMonths  25
     And the applicant should not see the validation error of the duration any more
@@ -95,19 +95,19 @@ Application details server side
     And the user clicks the button/link       id = application-question-complete
     And The user should see a field and summary error   Please enter the full title of the project.
     And the user should see a field and summary error   Please enter a future date.
-    And the user should see a field and summary error   This field cannot be left blank.
+    And the user should see a field and summary error   ${empty_field_warning_message}
     And the user should see a field and summary error   Please enter the full title of the project.
     [Teardown]  the user enters text to a text field    id = application.name  ${applicationTitle}
 
 Empty text area
     [Documentation]    INFUND-43
     [Tags]
-    [Setup]    The user clicks the button/link    link = Application overview
-    Given the user clicks the button/link         link = Project summary
+    [Setup]    The user clicks the button/link            link = Application overview
+    Given the user clicks the button/link                 link = Project summary
     When the applicant clears the text area of the "Project Summary"
-    When the user clicks the button/link          id = application-question-complete
-    Then the user should see an error             Please enter some text.
-    When The user enters text to a text field     css = .textarea-wrapped .editor    Test 123
+    When the user clicks the button/link                  id = application-question-complete
+    Then the user should see a field and summary error    Please enter some text.
+    When The user enters text to a text field             css = .textarea-wrapped .editor    Test 123
     Then the applicant should not see the validation error any more
 
 *** Keywords ***
@@ -117,7 +117,7 @@ Custom Suite Setup
 
 the applicant should not see the validation error any more
     Run Keyword And Ignore Error Without Screenshots    Mouse Out    css = input
-    Run Keyword And Ignore Error Without Screenshots    Focus  id = application-question-complete
+    Run Keyword And Ignore Error Without Screenshots    Set Focus To Element    id = application-question-complete
     wait for autosave
     the user should not see the element    css = .govuk-error-message
 
@@ -140,7 +140,7 @@ the applicant inserts an invalid date
 the applicant clears the text area of the "Project Summary"
     Clear Element Text    css = .textarea-wrapped .editor
     Press Key             css = .textarea-wrapped .editor    \\8
-    Focus                 css = .app-submit-btn
+    Set Focus To Element                   css = .app-submit-btn
     wait for autosave
 
 Applicant goes to the application details page of the Robot application
@@ -149,9 +149,9 @@ Applicant goes to the application details page of the Robot application
     And the user clicks the button/link     link = Application details
 
 the applicant should not see the validation error of the duration any more
-    Focus    css = .app-submit-btn
+    Set Focus To Element      css = .app-submit-btn
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = input
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = .editor
-    Focus    css = .app-submit-btn
+    Set Focus To Element      css = .app-submit-btn
     wait for autosave
     The user should not see the text in the page    Your project should last between 1 and 36 months

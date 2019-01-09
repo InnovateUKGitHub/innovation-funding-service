@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
@@ -64,7 +63,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             Long leadApplicantId = data.getLeadApplicant().getId();
             OrganisationResource leadOrganisation = organisationService.getByUserAndApplicationId(leadApplicantId, data.getApplication().getId()).getSuccess();
             AddressResource address = leadOrganisation.getAddresses().get(0).getAddress();
-            projectDetailsService.updateProjectAddress(leadOrganisation.getId(), data.getProject().getId(), OrganisationAddressType.PROJECT, address).getSuccess();
+            projectDetailsService.updateProjectAddress(leadOrganisation.getId(), data.getProject().getId(), address).getSuccess();
         }));
     }
 
@@ -102,7 +101,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
                 bankDetails.setProject(data.getProject().getId());
                 bankDetails.setOrganisation(organisationResource.getId());
                 bankDetails.setCompanyName(organisationResource.getName());
-                bankDetails.setOrganisationAddress(organisationResource.getAddresses().get(0));
+                bankDetails.setAddress(organisationResource.getAddresses().get(0).getAddress());
                 bankDetails.setOrganisationTypeName(organisationType.getName());
                 bankDetails.setRegistrationNumber(organisationResource.getCompaniesHouseNumber());
 

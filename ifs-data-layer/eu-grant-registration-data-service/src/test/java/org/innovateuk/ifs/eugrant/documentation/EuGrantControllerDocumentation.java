@@ -144,7 +144,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
 
     @Test
     public void submit() throws Exception {
-        when(euGrantService.submit(uuid)).thenReturn(serviceSuccess(euGrantResource));
+        when(euGrantService.submit(uuid, true)).thenReturn(serviceSuccess(euGrantResource));
 
         mockMvc.perform(
                 post("/eu-grant/{uuid}/submit", uuid.toString()))

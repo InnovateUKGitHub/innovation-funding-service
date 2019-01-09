@@ -13,8 +13,8 @@ public class SILBankDetailsMapper {
     public AccountDetails toAccountDetails(BankDetailsResource bankDetailsResource) {
         Address address = null;
 
-        if(bankDetailsResource.getOrganisationAddress() != null && bankDetailsResource.getOrganisationAddress().getAddress() != null){
-            AddressResource addressResource = bankDetailsResource.getOrganisationAddress().getAddress();
+        if(bankDetailsResource.getAddress() != null){
+            AddressResource addressResource = bankDetailsResource.getAddress();
             address = new Address(null,
                     addressResource.getAddressLine1(),
                     addressResource.getAddressLine2(),

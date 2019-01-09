@@ -3,21 +3,26 @@ package org.innovateuk.ifs.competitionsetup.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupStakeholderService;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
+import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.stakeholder.builder.StakeholderInviteResourceBuilder.newStakeholderInviteResource;
+import static org.innovateuk.ifs.stakeholder.builder.StakeholderRegistrationResourceBuilder.newStakeholderRegistrationResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,6 +32,11 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
 
     @Mock
     private CompetitionSetupStakeholderService competitionSetupStakeholderService;
+
+    @Mock
+    private RegistrationService registrationService;
+
+    private final String TEST_HASH = "hash1234";
 
     @Override
     protected CompetitionSetupStakeholderController supplyControllerUnderTest() {
@@ -51,7 +61,6 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
 
         when(competitionSetupStakeholderService.inviteStakeholder(inviteUserResource.getInvitedUser(), competitionId)).thenReturn(serviceSuccess());
 
-
         mockMvc.perform(post("/competition/setup/{competitionId}/stakeholder/invite", competitionId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteUserResource)))
@@ -74,6 +83,40 @@ public class CompetitionSetupStakeholderControllerTest extends BaseControllerMoc
                 .andExpect(content().json(toJson(stakeholderUsers)));
 
         verify(competitionSetupStakeholderService).findStakeholders(competitionId);
+    }
+
+    @Test
+    public void getInvite() throws Exception {
+
+        StakeholderInviteResource invite = newStakeholderInviteResource()
+                .withHash(TEST_HASH)
+                .build();
+
+        when(competitionSetupStakeholderService.getInviteByHash(TEST_HASH)).thenReturn(serviceSuccess(invite));
+
+        mockMvc.perform(get("/competition/setup/get-stakeholder-invite/" + TEST_HASH))
+                .andExpect(status().isOk());
+
+        verify(competitionSetupStakeholderService).getInviteByHash(TEST_HASH);
+    }
+
+    @Test
+    public void createStakeholder() throws Exception {
+
+        StakeholderRegistrationResource resource = newStakeholderRegistrationResource()
+                .withFirstName("John")
+                .withLastName("Smith")
+                .withPassword("superSecurePassword")
+                .build();
+
+        when(registrationService.createStakeholder(TEST_HASH, resource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/setup/stakeholder/create/{inviteHash}", TEST_HASH)
+                                .contentType(APPLICATION_JSON)
+                                .content(toJson(resource)))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(registrationService).createStakeholder(TEST_HASH, resource);
     }
 
     @Test

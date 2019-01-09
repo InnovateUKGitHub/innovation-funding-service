@@ -3,7 +3,11 @@ package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.form.builder.FormInputBuilder;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -12,19 +16,28 @@ import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import scala.App;
 
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertFalse;
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -48,6 +61,11 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
     @Mock
     private FormInputRepository formInputRepositoryMock;
 
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private StakeholderRepository stakeholderRepositoryMock;
 
     @Override
     protected FormInputResponsePermissionRules supplyPermissionRulesUnderTest() {
@@ -62,14 +80,14 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
         organisation2 = newOrganisation().build();
 
         // Set up a lead applicant who has answered a question.
-        leadApplicantForApplicationOnOrganisation1 = UserResourceBuilder.newUserResource().build();
+        leadApplicantForApplicationOnOrganisation1 = newUserResource().build();
         processRoleForLeadOnApplicationOnOrganisation1 = newProcessRole().withApplication(application).withOrganisationId(organisation1.getId()).build();
         formInputResponseUpdatedByLead = newFormInputResponseResource().withUpdatedBy(processRoleForLeadOnApplicationOnOrganisation1.getId()).withApplication(application.getId()).build();
         when(processRoleRepositoryMock.findById(processRoleForLeadOnApplicationOnOrganisation1.getId())).thenReturn(Optional.of(processRoleForLeadOnApplicationOnOrganisation1));
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicantForApplicationOnOrganisation1.getId(),  Role.LEADAPPLICANT, application.getId(), organisation1.getId())).thenReturn(newProcessRole().build());
 
         // Set up a collaborator who has answered a question
-        collaboratorForApplicationOnOrganisation2 = UserResourceBuilder.newUserResource().build();
+        collaboratorForApplicationOnOrganisation2 = newUserResource().build();
         processRoleForCollaboratorOnApplicationOnOrganisation2 = newProcessRole().withApplication(application).withOrganisationId(organisation2.getId()).build();
         formInputResponseUpdatedByCollaborator = newFormInputResponseResource().withUpdatedBy(processRoleForCollaboratorOnApplicationOnOrganisation2.getId()).withApplication(application.getId()).build();
         when(processRoleRepositoryMock.findById(processRoleForCollaboratorOnApplicationOnOrganisation2.getId())).thenReturn(Optional.of(processRoleForCollaboratorOnApplicationOnOrganisation2));
@@ -83,13 +101,13 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadApplicantForApplicationOnOrganisation1.getId(), application.getId(), Role.LEADAPPLICANT)).thenReturn(true);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(collaboratorForApplicationOnOrganisation2.getId(), application.getId(), Role.COLLABORATOR)).thenReturn(true);
 
-        userNotOnApplication = UserResourceBuilder.newUserResource().build();
+        userNotOnApplication = newUserResource().build();
 
-        assessorForApplication = UserResourceBuilder.newUserResource().build();
+        assessorForApplication = newUserResource().build();
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessorForApplication.getId(), application.getId(), Role.ASSESSOR)).thenReturn(true);
-        panelAssessorForApplication = UserResourceBuilder.newUserResource().build();
+        panelAssessorForApplication = newUserResource().build();
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(panelAssessorForApplication.getId(), application.getId(), Role.PANEL_ASSESSOR)).thenReturn(true);
-        interviewAssessorForApplication = UserResourceBuilder.newUserResource().build();
+        interviewAssessorForApplication = newUserResource().build();
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(interviewAssessorForApplication.getId(), application.getId(), Role.INTERVIEW_ASSESSOR)).thenReturn(true);
 
     }
@@ -115,6 +133,29 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
         assertTrue(rules.internalUserCanSeeFormInputResponsesForApplications(sharedInputResponse, compAdminUser()));
         assertTrue(rules.internalUserCanSeeFormInputResponsesForApplications(sharedInputResponse, projectFinanceUser()));
         assertFalse(rules.internalUserCanSeeFormInputResponsesForApplications(sharedInputResponse, leadApplicantForApplicationOnOrganisation1));
+    }
+
+    @Test
+    public void stakeholdersCanSeeFormInputResponsesForApplications() {
+        Competition competition = newCompetition().build();
+        application.setCompetition(competition);
+        UserResource stakeholderUserResource = newUserResource()
+                .withRoleGlobal(STAKEHOLDER)
+                .build();
+        User stakeholderUser = newUser()
+                .withId(stakeholderUserResource.getId())
+                .build();
+        Stakeholder stakeholder = newStakeholder()
+                .withUser(stakeholderUser)
+                .build();
+
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(application);
+        when(stakeholderRepositoryMock.findStakeholders(competition.getId())).thenReturn(asList(stakeholder));
+
+        assertTrue(rules.stakeholdersCanSeeFormInputResponsesForApplications(sharedInputResponse, stakeholderUserResource));
+        allInternalUsers.forEach(user -> {
+            Assert.assertFalse(rules.stakeholdersCanSeeFormInputResponsesForApplications(sharedInputResponse, user));
+        });
     }
 
     @Test

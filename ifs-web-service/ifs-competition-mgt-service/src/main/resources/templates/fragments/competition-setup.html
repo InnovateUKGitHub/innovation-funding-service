@@ -3,7 +3,7 @@
 
 <!-- =================== Comp setup section - Overview (1) ============================== -->
 
-<th:block th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)" xmlns:th="http://www.w3.org/1999/html">
+<th:block th:fragment="comp-setup-navigation(publishSections, competitionSetupSections, assessmentSections, currentSection, competition, readyToOpen)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${(param.section != null)}">
         <div th:if="${setupComplete}" class="govuk-!-margin-bottom-6">
             <div class="message-alert">
@@ -15,14 +15,12 @@
                 <div class="highlight-panel govuk-!-padding-6 govuk-!-padding-top-3">
                     <h2 class="govuk-heading-m">Publish</h2>
                     <ul class="task-list">
-                        <th:block th:each="(section, iteration : ${sections})"
-                                  th:if="${model.sectionIsNotHome(section) && !model.sectionIsDocuments(section) && (model.sectionIsInitialDetails(section) || model.sectionIsPublicContent(section) || model.sectionIsMilestones(section))}"
+                        <th:block th:each="(section, iteration : ${publishSections})"
                                   th:insert="fragments/competition-setup :: comp-setup-navigation-list-item(section)" />
                     </ul>
                     <h2 class="govuk-heading-m">Competition setup</h2>
                     <ul class="task-list">
-                        <th:block th:each="(section, iteration : ${sections})"
-                                  th:if="${model.sectionIsNotHome(section) && !model.sectionIsDocuments(section) && !model.sectionIsInitialDetails(section) && !model.sectionIsPublicContent(section) && !model.sectionIsMilestones(section) && !model.sectionIsAssessor(section)}"
+                        <th:block th:each="(section, iteration : ${competitionSetupSections})"
                                   th:insert="fragments/competition-setup :: comp-setup-navigation-list-item(section)" />
                     </ul>
                     <p th:if="${!isReadyToOpen}"
@@ -39,8 +37,7 @@
                 <div class="highlight-panel govuk-!-padding-6 govuk-!-padding-top-3">
                     <h2 class="govuk-heading-m">Assessment</h2>
                     <ul class="task-list">
-                        <th:block th:each="(section, iteration : ${sections})"
-                                  th:if="${model.sectionIsNotHome(section) && !model.sectionIsDocuments(section) && model.sectionIsAssessor(section)}"
+                        <th:block th:each="(section, iteration : ${assessmentSections})"
                                   th:insert="fragments/competition-setup :: comp-setup-navigation-list-item(section)" />
                     </ul>
                 </div>
@@ -57,20 +54,33 @@
                                 </h3>
                             </div>
                         </li>
+                        <li>
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <th:block th:if="${model.general.initialComplete}">
+                                        <a th:href="@{/competition/setup/{competitionId}/manage-stakeholders(competitionId=${competition.id})}" class="govuk-link">Stakeholders</a>
+                                    </th:block>
+                                    <th:block th:unless="${model.general.initialComplete}">Stakeholders</th:block>
+                                </h3>
+                            </div>
+                        </li>
                     </ul>
                 </div>
-                <!--/*<div class="highlight-panel govuk-!-margin-top-6 govuk-!-padding-6 govuk-!-padding-top-3">
+                <div class="highlight-panel govuk-!-margin-top-6 govuk-!-padding-6 govuk-!-padding-top-3">
                     <h2 class="govuk-heading-m">Project setup</h2>
                     <ul class="task-list">
                         <li>
                             <div class="task">
                                 <h3 class="govuk-heading-s">
-                                    <a href="/" class="govuk-link">Documents</a>
+                                    <th:block th:if="${model.general.initialComplete}">
+                                        <a th:href="@{/competition/setup/{competitionId}/section/project-document/landing-page(competitionId=${competition.id})}" class="govuk-link">Documents</a>
+                                    </th:block>
+                                    <th:block th:unless="${model.general.initialComplete}">Documents</th:block>
                                 </h3>
                             </div>
                         </li>
                     </ul>
-                </div>*/-->
+                </div>
             </div>
         </div>
     </th:block>

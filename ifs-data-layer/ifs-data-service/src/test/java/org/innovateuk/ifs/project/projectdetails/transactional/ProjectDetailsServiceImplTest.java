@@ -73,6 +73,7 @@ import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.PROJECT;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -1038,7 +1039,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), newAddressResource);
         assertTrue(result.isSuccess());
         verify(organisationAddressRepositoryMock, never()).delete(Mockito.any(OrganisationAddress.class));
         assertEquals(newAddress, project.getAddress());
@@ -1067,9 +1068,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), newAddressResource);
         assertTrue(result.isSuccess());
-        verify(organisationAddressRepositoryMock).deleteAll(singletonList(organisationAddress));
         assertEquals(newAddress, project.getAddress());
     }
 

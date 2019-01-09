@@ -50,23 +50,6 @@ public class OrganisationJESFinanceTest extends BaseUnitTestMocksTest {
         verify(applicationFinanceRowRepository, times(1)).save(any(ApplicationFinanceRow.class));
     }
 
-    @Test(expected = RuntimeException.class)
-    public void addCost_shouldReturnFailureWhenAFinanceRowForNameCanBeFound() throws Exception {
-        Long applicationFinanceId = 1L;
-        Long questionId = 2L;
-        String financeRowName = "unique-name";
-
-        ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().withName(financeRowName).build();
-
-
-        when(applicationFinanceRowRepository.findByTargetIdAndNameAndQuestionId(any(), any(), any())).thenReturn(Arrays.asList(applicationFinanceRow));
-
-        ApplicationFinanceRow result = organisationJESFinance.addCost(applicationFinanceId, questionId, applicationFinanceRow);
-
-        assertNull(result);
-        verify(applicationFinanceRowRepository, times(0)).save(any(ApplicationFinanceRow.class));
-    }
-
     @Test
     public void addCost_shouldSaveEntityWhenAFinanceRowForNameCannotBeFound() throws Exception {
         String financeRowName = "unique-name";

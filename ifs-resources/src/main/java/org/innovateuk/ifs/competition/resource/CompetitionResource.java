@@ -3,6 +3,8 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -29,7 +31,7 @@ public class CompetitionResource {
     private Long id;
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
-    private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
+    private List<CompetitionDocumentResource> competitionDocuments = new ArrayList<>();
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String name;
     private ZonedDateTime startDate;
@@ -94,6 +96,7 @@ public class CompetitionResource {
 
     private boolean locationPerPartner = true;
     private Boolean stateAid;
+    private Boolean includeYourOrganisationSection;
 
     private Set<Long> grantClaimMaximums;
 
@@ -105,7 +108,13 @@ public class CompetitionResource {
     private String modifiedBy;
     private ZonedDateTime modifiedOn;
 
+    private Boolean includeJesForm;
+
     private boolean nonFinanceType;
+
+    private CompetitionCompletionStage completionStage;
+
+    private FundingType fundingType;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -516,12 +525,12 @@ public class CompetitionResource {
         this.funders = funders;
     }
 
-    public List<ProjectDocumentResource> getProjectDocuments() {
-        return projectDocuments;
+    public List<CompetitionDocumentResource> getCompetitionDocuments() {
+        return competitionDocuments;
     }
 
-    public void setProjectDocuments(List<ProjectDocumentResource> projectDocuments) {
-        this.projectDocuments = projectDocuments;
+    public void setCompetitionDocuments(List<CompetitionDocumentResource> competitionDocuments) {
+        this.competitionDocuments = competitionDocuments;
     }
 
     public Boolean getUseResubmissionQuestion() {
@@ -641,6 +650,14 @@ public class CompetitionResource {
         this.stateAid = stateAid;
     }
 
+    public Boolean getIncludeYourOrganisationSection() {
+        return includeYourOrganisationSection;
+    }
+
+    public void setIncludeYourOrganisationSection(final Boolean includeYourOrganisationSection) {
+        this.includeYourOrganisationSection = includeYourOrganisationSection;
+    }
+
     public Set<Long> getGrantClaimMaximums() {
         return grantClaimMaximums;
     }
@@ -697,6 +714,35 @@ public class CompetitionResource {
         this.modifiedOn = modifiedOn;
     }
 
+    public Boolean getIncludeJesForm() {
+        return includeJesForm;
+    }
+
+    public void setIncludeJesForm(Boolean includeJesForm) {
+        this.includeJesForm = includeJesForm;
+    }
+
+    @JsonIgnore
+    public boolean showJesFinances(long organisationType) {
+        return includeJesForm && OrganisationTypeEnum.isResearch(organisationType);
+    }
+
+    public CompetitionCompletionStage getCompletionStage() {
+        return completionStage;
+    }
+
+    public void setCompletionStage(CompetitionCompletionStage completionStage) {
+        this.completionStage = completionStage;
+    }
+
+    public FundingType getFundingType() {
+        return fundingType;
+    }
+
+    public void setFundingType(FundingType fundingType) {
+        this.fundingType = fundingType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -716,7 +762,7 @@ public class CompetitionResource {
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
-                .append(projectDocuments, that.projectDocuments)
+                .append(competitionDocuments, that.competitionDocuments)
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
@@ -763,9 +809,11 @@ public class CompetitionResource {
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
                 .append(stateAid, that.stateAid)
+                .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
                 .append(includeProjectGrowthTable, that.includeProjectGrowthTable)
+                .append(fundingType, that.fundingType)
                 .append(createdBy, that.createdBy)
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
@@ -779,7 +827,7 @@ public class CompetitionResource {
                 .append(id)
                 .append(milestones)
                 .append(funders)
-                .append(projectDocuments)
+                .append(competitionDocuments)
                 .append(name)
                 .append(startDate)
                 .append(endDate)
@@ -829,9 +877,11 @@ public class CompetitionResource {
                 .append(termsAndConditions)
                 .append(locationPerPartner)
                 .append(stateAid)
+                .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)
                 .append(includeProjectGrowthTable)
+                .append(fundingType)
                 .append(createdBy)
                 .append(createdOn)
                 .append(modifiedBy)

@@ -4,13 +4,14 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.validator.ApplicationDetailsMarkAsCompleteValidator;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
-import org.innovateuk.ifs.finance.validator.AcademicJesValidator;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -23,12 +24,16 @@ import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.fromBindingResult;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * Class to validate several objects
@@ -55,9 +60,6 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     private ApplicationValidationUtil applicationValidationUtil;
 
     @Autowired
-    private AcademicJesValidator academicJesValidator;
-
-    @Autowired
     private OrganisationService organisationService;
 
     @Override
@@ -82,13 +84,14 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     }
 
     @Override
-    public BindingResult validateFormInputResponse(Application application, Long formInputId, Long markedAsCompleteById) {
+    public ValidationMessages validateFormInputResponse(Application application, long formInputId, long markedAsCompleteById) {
         FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         BindingResult result = applicationValidationUtil.validateResponse(response, false);
 
-        validateFileUploads(application, formInputId).forEach(objectError -> result.addError(objectError));
+        ValidationMessages validationMessages = fromBindingResult(result);
+        validationMessages.addAll(validateFileUploads(application, formInputId));
 
-        return result;
+        return validationMessages;
     }
 
 
@@ -113,26 +116,42 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         return projectFinanceRowService.getCostHandler(costItem);
     }
 
-    private List<ObjectError> validateFileUploads(Application application, Long formInputId) {
-        List<ObjectError> errors = new ArrayList<>();
+    private ValidationMessages validateFileUploads(Application application, Long formInputId) {
         FormInput formInput = formInputRepository.findById(formInputId).get();
 
-        if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser(application.getId())) {
-            errors.addAll(applicationValidationUtil.addValidation(application, academicJesValidator).getAllErrors());
-        }
-
-        return errors;
-    }
-
-    private boolean isResearchUser(long applicationId) {
-        Optional<User> userResult = getCurrentlyLoggedInUser().getOptionalSuccessObject();
-        if(userResult.isPresent()) {
-            Optional<OrganisationResource> organisationResult = organisationService.getByUserAndApplicationId(userResult.get().getId(), applicationId).getOptionalSuccessObject();
-            if(organisationResult.isPresent()) {
-                return OrganisationTypeEnum.RESEARCH.getId() == organisationResult.get().getOrganisationType();
+        if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && jesFinances(application)) {
+            if (financeFileIsNotPresent(application)) {
+                Error error = fieldError("jesFileUpload", null, "validation.application.jes.upload.required");
+                return new ValidationMessages(error);
             }
         }
 
+        return noErrors(formInputId);
+    }
+
+    //This method is duplicating work in FinanceUtil
+    private boolean jesFinances(Application application) {
+        Optional<User> userResult = getCurrentlyLoggedInUser().getOptionalSuccessObject();
+        if(userResult.isPresent()) {
+            OrganisationResource organisationResource = organisationService.getByUserAndApplicationId(userResult.get().getId(), application.getId()).getSuccess();
+            return application.getCompetition().getIncludeJesForm() && OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
+        }
+
         return false;
+    }
+
+    private boolean financeFileIsNotPresent(Application application) {
+        List<ApplicationFinance> applicationFinances = application.getApplicationFinances();
+        Optional<User> user = getCurrentlyLoggedInUser().getOptionalSuccessObject();
+        Optional<OrganisationResource> organisation = organisationService.getByUserAndApplicationId(user.get().getId(), application.getId()).getOptionalSuccessObject();
+
+        if (applicationFinances == null || !organisation.isPresent()) {
+            return true;
+        }
+
+        Optional<ApplicationFinance> applicationFinance =
+                simpleFindFirst(applicationFinances, af -> af.getOrganisation().getId().equals(organisation.get().getId()));
+
+        return applicationFinance.map(af -> af.getFinanceFileEntry() == null).orElse(true);
     }
 }

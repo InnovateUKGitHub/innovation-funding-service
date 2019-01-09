@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.mapper.MilestoneMapper;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -119,6 +120,14 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
         Milestone milestone = new Milestone(type, competition);
         return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage) {
+
+        return getCompetition(competitionId).andOnSuccessReturnVoid(competition ->
+                competition.setCompletionStage(completionStage));
     }
 
     private ValidationMessages validate(List<MilestoneResource> milestones) {

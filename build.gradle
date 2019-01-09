@@ -27,11 +27,11 @@ def isSysIntEnv() {
     "sysint".equals(openshiftEnv)
 }
 
-apply from: "gradle-support/openshift-support.gradle"
-
 if (!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
 }
+
+apply from: "gradle-support/openshift-support.gradle"
 
 buildscript {
 

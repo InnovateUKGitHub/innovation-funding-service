@@ -108,8 +108,7 @@ public class ProjectSpendProfileApprovalController {
     private String redirectToCompetitionSummaryPage(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        return "redirect:/competition/" + competition.getId() + "/status";
+        return "redirect:/competition/" + application.getCompetition() + "/status";
     }
 }

@@ -60,7 +60,7 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
     public void markAsIncomplete() throws Exception {
         Long competitionId = 2L;
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
-        when(competitionSetupService.markSectionIncomplete(competitionId, section)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
+        when(competitionSetupService.markSectionIncomplete(competitionId, section)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build(1)));
 
         mockMvc.perform(put("/competition/setup/section-status/incomplete/{competitionId}/{section}", competitionId, section)
                 .header("IFS_AUTH_TOKEN", "123abc"))

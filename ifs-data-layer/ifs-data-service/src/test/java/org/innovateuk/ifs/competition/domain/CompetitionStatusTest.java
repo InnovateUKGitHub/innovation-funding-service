@@ -1,11 +1,16 @@
 package org.innovateuk.ifs.competition.domain;
 
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
+import static org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.PROJECT_SETUP;
+import static org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.RELEASE_FEEDBACK;
 import static org.junit.Assert.*;
 
 public class CompetitionStatusTest {
@@ -15,16 +20,22 @@ public class CompetitionStatusTest {
     private ZonedDateTime currentDate;
     private ZonedDateTime future;
     private ZonedDateTime past;
+    private CompetitionType competitionType;
 	
     @Before
     public void setUp() {
     	currentDate = ZonedDateTime.now();
     	future = currentDate.plusMinutes(1);
     	past = currentDate.minusMinutes(1);
+
+        competitionType = newCompetitionType()
+                .withName("Sector")
+                .build();
     	
 
     	competition = new Competition();
         competition.setSetupComplete(true);
+        competition.setCompetitionType(competitionType);
     }
 
     @Test
@@ -204,17 +215,35 @@ public class CompetitionStatusTest {
     }
     
     @Test
-    public void competitionStatusProjectSetupIfFeedbackReleasedDateMet(){
-    	competition.setStartDate(past);
-    	competition.setEndDate(past);
+    public void competitionStatusPreviousIfFeedbackReleasedDateMetAndReleaseFeedbackCompletionStage(){
+        assertCompetitionStatusUponReleasingFeedback(RELEASE_FEEDBACK, CompetitionStatus.PREVIOUS);
+    }
+
+    @Test
+    public void competitionStatusProjectSetupIfFeedbackReleasedDateMetAndProjectSetupCompletionStage(){
+        assertCompetitionStatusUponReleasingFeedback(PROJECT_SETUP, CompetitionStatus.PROJECT_SETUP);
+    }
+
+    private void assertCompetitionStatusUponReleasingFeedback(
+            CompetitionCompletionStage completionStage,
+            CompetitionStatus expectedStatus) {
+
+        Competition competition = newCompetition().
+                withCompletionStage(completionStage).
+                build();
+
+        competition.setSetupComplete(true);
+        competition.setStartDate(past);
+        competition.setEndDate(past);
         competition.setFundersPanelDate(past);
         competition.notifyAssessors(past);
         competition.closeAssessment(past);
-    	competition.setFundersPanelEndDate(past);
-    	competition.setReleaseFeedbackDate(currentDate);
-    	competition.releaseFeedback(currentDate);
+        competition.setFundersPanelEndDate(past);
+        competition.setReleaseFeedbackDate(currentDate);
+        competition.releaseFeedback(currentDate);
+        competition.setCompetitionType(competitionType);
 
-        assertEquals(CompetitionStatus.PROJECT_SETUP, competition.getCompetitionStatus());
+        assertEquals(expectedStatus, competition.getCompetitionStatus());
         assertTrue(competition.getCompetitionStatus().isFeedbackReleased());
     }
 

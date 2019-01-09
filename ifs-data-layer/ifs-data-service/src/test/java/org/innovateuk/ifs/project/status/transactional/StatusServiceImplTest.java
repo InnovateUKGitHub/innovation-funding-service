@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -28,7 +29,10 @@ import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -41,10 +45,7 @@ import org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBui
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
-import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
@@ -75,6 +76,8 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionDocumentBuilder.newCompetitionDocument;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -84,6 +87,7 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PA
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -91,6 +95,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -103,10 +108,13 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     private Application application;
+    private Competition competition;
     private Role partnerRole;
     private User u;
     private List<PartnerOrganisation> po;
@@ -176,6 +184,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     private PartnerOrganisationRepository partnerOrganisationRepositoryMock;
 
     @Mock
+    private PartnerOrganisationService partnerOrganisationServiceMock;
+
+    @Mock
     private FinanceCheckService financeCheckServiceMock;
 
     @Mock
@@ -196,7 +207,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         Role leadApplicantRole = Role.LEADAPPLICANT;
 
-        Long userId = 7L;
+        long userId = 7L;
         User user = newUser().
                 withId(userId).
                 build();
@@ -213,20 +224,32 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withUser(user).
                 build();
 
-        Long applicationId = 456L;
+        competition = newCompetition()
+                .withCompetitionDocuments(singletonList(newCompetitionDocument().build()))
+                .build();
+
+        long applicationId = 456L;
         application = newApplication().
                 withId(applicationId).
                 withProcessRoles(leadApplicantProcessRole).
                 withName("My Application").
+                withCompetition(competition).
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 build();
 
-        Long projectId = 123L;
+        long projectId = 123L;
+
+        List<ProjectDocument> projectDocuments = newProjectDocument()
+                .withProject(project)
+                .withStatus(DocumentStatus.APPROVED)
+                .build(1);
+
         project = newProject().
                 withId(projectId).
                 withApplication(application).
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
+                withProjectDocuments(projectDocuments).
                 build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
@@ -259,7 +282,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withApplication(application).
                 withPartnerOrganisations(po).
                 withDateSubmitted(ZonedDateTime.now()).
-                withOtherDocumentsApproved(ApprovalType.APPROVED).
                 withSpendProfileSubmittedDate(ZonedDateTime.now()).
                 build();
 
@@ -290,47 +312,58 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getCompetitionStatus() {
-        Long competitionId = 123L;
+        long competitionId = 123L;
         String applicationSearchString = "1";
 
         Competition competition = newCompetition().withId(competitionId).build();
 
-        /**
-         * Create 3 organisations:
-         * 2 Business, 1 Academic
-         ***/
-        OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
-        List<Organisation> organisations = newOrganisation().withOrganisationType(businessOrganisationType).build(2);
+        OrganisationType businessOrganisationType = newOrganisationType()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS)
+                .build();
+
+        OrganisationType academicOrganisationType = newOrganisationType()
+                .withOrganisationType(OrganisationTypeEnum.RESEARCH)
+                .build();
+
+        List<Organisation> organisations = newOrganisation()
+                .withOrganisationType(businessOrganisationType)
+                .build(2);
         organisations.add(newOrganisation().withOrganisationType(academicOrganisationType).build());
 
-
-        /**
-         * Create 3 users, one for each organisation
-         */
         List<User> users = newUser().build(3);
 
-        /**
-         * Create 3 applications, one for each org, with process roles
-         */
-        List<ProcessRole> applicantProcessRoles = newProcessRole().withUser(users.get(0), users.get(1), users.get(2)).withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.APPLICANT).withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).build(3);
-        List<Application> applications = newApplication().withCompetition(competition).withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2)).build(3);
+        List<ProcessRole> applicantProcessRoles = newProcessRole()
+                .withUser(users.get(0), users.get(1), users.get(2))
+                .withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.APPLICANT)
+                .withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId())
+                .build(3);
 
-        /**
-         * Create 3 project with 3 Project Users from 3 different organisations with associated applications
-         */
-        List<ProjectUser> projectUsers = newProjectUser().withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
-        List<Project> projects = newProject().withApplication(applications.get(0), applications.get(1), applications.get(2)).withProjectUsers(projectUsers).build(3);
+        List<Application> applications = newApplication()
+                .withCompetition(competition)
+                .withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2))
+                .build(3);
 
-        /**
-         * Create 3 bank detail records, one for each organisation
-         */
-        List<BankDetails> bankDetails = newBankDetails().withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2))
+                .build(3);
 
-        /**
-         * Build spend profile object for use with one of the partners
-         */
+        List<Project> projects = newProject()
+                .withApplication(applications.get(0), applications.get(1), applications.get(2)).withProjectUsers(projectUsers)
+                .build(3);
+
+        List<BankDetails> bankDetails = newBankDetails()
+                .withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2))
+                .build(3);
+
         SpendProfile spendProfile = newSpendProfile().build();
+
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().withOrganisation(organisations.get(0), organisations.get(1)).build(3);
+        List<PartnerOrganisationResource> partnerOrganisationResources =
+                newPartnerOrganisationResource()
+                        .withId(partnerOrganisations.get(0).getId(),
+                                partnerOrganisations.get(1).getId(),
+                                partnerOrganisations.get(2).getId())
+                        .build(3);
 
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
 
@@ -409,6 +442,10 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(spendProfileServiceMock.getSpendProfileStatus(projects.get(1).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
         when(spendProfileServiceMock.getSpendProfileStatus(projects.get(2).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
 
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projects.get(0).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(0))));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projects.get(1).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(1))));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projects.get(2).getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResources.get(2))));
+
         ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId, applicationSearchString);
 
         assertTrue(result.isSuccess());
@@ -430,12 +467,12 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusResourceByProject() {
-        Long projectId = 2345L;
+        long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null, true);
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, true);
 
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -450,7 +487,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
@@ -463,19 +499,19 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusFinanceContactComplete() {
-        Long projectId = 2345L;
-        Long organisationId = 123L;
+        long projectId = 2345L;
+        long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null, false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -490,7 +526,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
@@ -503,19 +538,19 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusFinanceContactCompleteButPartnerLocationsRequiredAndNotComplete() {
-        Long projectId = 2345L;
-        Long organisationId = 123L;
+        long projectId = 2345L;
+        long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null, true);
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, true);
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -530,11 +565,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
-
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -544,13 +577,13 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusFinanceContactCompleteAndPartnerLocationsRequiredAndComplete() {
-        Long projectId = 2345L;
-        Long organisationId = 123L;
+        long projectId = 2345L;
+        long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null, true);
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, true);
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = asList(newPartnerOrganisation()
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation()
                 .withOrganisation(o)
                 .withPostcode("TW14 9QG")
                 .build());
@@ -559,7 +592,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -574,7 +607,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
@@ -587,19 +619,19 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusFinanceContactIncomplete() {
-        Long projectId = 2345L;
-        Long organisationId = 123L;
+        long projectId = 2345L;
+        long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null, false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
 
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(Optional.empty());
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
         when(monitoringOfficerRepositoryMock.findOneByProjectId(projectId)).thenReturn(null);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -614,7 +646,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
@@ -627,12 +658,12 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusResourceByProjectSpendProfileRejected() {
-        Long projectId = 2345L;
+        long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.REJECTED, ApprovalType.UNSET, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null, false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.REJECTED, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
 
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
         ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
@@ -646,7 +677,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(REJECTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
@@ -659,12 +689,12 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolRejected() {
-        Long projectId = 2345L;
+        long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, ZonedDateTime.now(), false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, false);
 
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -679,12 +709,10 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(COMPLETE, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(REJECTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, REJECTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
-
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -693,12 +721,14 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolApproved() {
-        Long projectId = 2345L;
+        long projectId = 2345L;
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, ZonedDateTime.now(), false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
+                Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, false);
 
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrg)));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -713,12 +743,10 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(COMPLETE, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, COMPLETE);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
-
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -727,11 +755,11 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolSent() {
-        Long projectId = 2345L;
+        long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now(), false);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
+                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -746,7 +774,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(COMPLETE, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, PENDING);
@@ -760,11 +787,11 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndSignedGolSubmitted() {
-        Long projectId = 2345L;
+        long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.TRUE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now(), false);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -779,12 +806,10 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(COMPLETE, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, ACTION_REQUIRED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
-
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
@@ -793,11 +818,11 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolReadyToSend() {
-        Long projectId = 2345L;
+        long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now(), false);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -812,67 +837,165 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(COMPLETE, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, ACTION_REQUIRED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
-
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
         assertTrue(resultFailure.isFailure());
     }
 
     @Test
-    public void getProjectStatusResourceByProjectOtherDocumentsRejected() {
-        Long projectId = 2345L;
+    public void getProjectStatusProjectDocumentsNotFullyApproved() {
+        long projectId = 2345L;
+        List<ProjectDocument> docs = newProjectDocument()
+                .withStatus(DocumentStatus.SUBMITTED, DocumentStatus.APPROVED)
+                .build(2);
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.REJECTED, Boolean.FALSE,
-                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now(), false);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
+                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        project.setProjectDocuments(docs);
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
+        verify(financeServiceMock).organisationSeeksFunding(any(long.class), any(long.class), any(long.class));
         ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
-        assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
-        assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
-        assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
+        assertEquals(ProjectActivityStates.ACTION_REQUIRED, returnedProjectStatusResource.getDocumentsStatus());
+    }
 
-        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
-        assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
-        assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(REJECTED, returnedProjectStatusResource.getOtherDocumentsStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
+    @Test
+    public void getProjectStatusProjectDocumentsApproved() {
+        long projectId = 2345L;
+        List<ProjectDocument> docs = newProjectDocument()
+                .withStatus(DocumentStatus.APPROVED)
+                .build(1);
 
-        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
-        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").build(1));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
+                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        project.setProjectDocuments(docs);
+        project.setApplication(application);
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
-        ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
-        assertTrue(resultFailure.isFailure());
+        verify(financeServiceMock).organisationSeeksFunding(any(long.class), any(long.class), any(long.class));
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(ProjectActivityStates.COMPLETE, returnedProjectStatusResource.getDocumentsStatus());
+    }
+
+    @Test
+    public void getProjectStatusProjectDocumentsRejected() {
+        long projectId = 2345L;
+        List<ProjectDocument> docs = newProjectDocument()
+                .withStatus(DocumentStatus.REJECTED)
+                .build(1);
+
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").build(1));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
+                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        project.setProjectDocuments(docs);
+        project.setApplication(application);
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        verify(financeServiceMock).organisationSeeksFunding(any(long.class), any(long.class), any(long.class));
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(ProjectActivityStates.REJECTED, returnedProjectStatusResource.getDocumentsStatus());
+    }
+
+    @Test
+    public void getProjectStatusProjectDocumentsPending() {
+        long projectId = 2345L;
+        List<ProjectDocument> docs = newProjectDocument()
+                .withStatus(DocumentStatus.APPROVED)
+                .build(1);
+
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle("Exploitation plan").build(2));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE,
+                Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        project.setProjectDocuments(docs);
+        project.setApplication(application);
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        verify(financeServiceMock).organisationSeeksFunding(any(long.class), any(long.class), any(long.class));
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(ProjectActivityStates.PENDING, returnedProjectStatusResource.getDocumentsStatus());
+    }
+
+    @Test
+    public void getProjectStatusProjectDocumentsApprovedWithMultipleOrganisations() {
+        long projectId = 2345L;
+        List<ProjectDocument> docs = newProjectDocument()
+                .withStatus(DocumentStatus.APPROVED, DocumentStatus.APPROVED)
+                .build(2);
+        List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().build(2);
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").build(2));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        project.setProjectDocuments(docs);
+        project.setApplication(application);
+
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        verify(financeServiceMock).organisationSeeksFunding(any(long.class), any(long.class), any(long.class));
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(ProjectActivityStates.COMPLETE, returnedProjectStatusResource.getDocumentsStatus());
+    }
+
+    @Test
+    public void getProjectStatusProjectDocumentsApprovedWithSingleOrganisations() {
+        long projectId = 2345L;
+        List<ProjectDocument> docs = newProjectDocument()
+                .withStatus(DocumentStatus.APPROVED)
+                .build(1);
+        PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
+
+        competition.setCompetitionDocuments(newCompetitionDocument().withTitle(COLLABORATION_AGREEMENT_TITLE, "Exploitation plan").build(2));
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, false);
+        project.setProjectDocuments(docs);
+        project.setApplication(application);
+
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(singletonList(partnerOrganisationResource)));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        verify(financeServiceMock).organisationSeeksFunding(any(long.class), any(long.class), any(long.class));
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(ProjectActivityStates.COMPLETE, returnedProjectStatusResource.getDocumentsStatus());
     }
 
     @Test
     public void getProjectStatusBankDetailsCompleteNotApproved() {
-        Long projectId = 2345L;
-        Long organisationId = 123L;
+        long projectId = 2345L;
+        long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null, false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(new BankDetails());
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -887,7 +1010,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
@@ -895,12 +1017,12 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusBankDetailsIncomplete() {
-        Long projectId = 2345L;
-        Long organisationId = 123L;
-        Long organisationId2 = 234L;
+        long projectId = 2345L;
+        long organisationId = 123L;
+        long organisationId2 = 234L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null, false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
         Organisation o = newOrganisation().withId(organisationId).build();
         Organisation o2 = newOrganisation().withId(organisationId2).build();
         List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build(), newPartnerOrganisation().withOrganisation(o2).build());
@@ -912,7 +1034,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId2)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -927,7 +1049,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
@@ -935,20 +1056,20 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void getProjectStatusBankDetailsApproved() {
-        Long projectId = 2345L;
-        Long organisationId = 123L;
+        long projectId = 2345L;
+        long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null, false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -963,22 +1084,24 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
         Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
     }
 
-
-    private Project createProjectStatusResource(Long projectId, ApprovalType spendProfileStatus,
-                                                ApprovalType otherDocsApproved, Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved,
+    private Project createProjectStatusResource(long projectId, ApprovalType spendProfileStatus,
+                                                Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved,
                                                 Boolean golRejected,
-                                                ZonedDateTime otherDocsSubmittedDate,
                                                 boolean locationPerPartnerRequired) {
 
-        Long competitionId = 112L;
+        long competitionId = 112L;
+
+        List<CompetitionDocument> competitionDocuments
+                = newCompetitionDocument().withTitle("document").build(1);
+
         Competition competition = CompetitionBuilder.newCompetition()
                 .withId(competitionId)
+                .withCompetitionDocuments(competitionDocuments)
                 .withLocationPerPartner(locationPerPartnerRequired)
                 .build();
 
@@ -993,12 +1116,18 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withOrganisationId(organisation.getId()).
                 build();
         PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
+        PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().withId(partnerOrganisation.getId()).build();
+
+        List<ProjectDocument> projectDocuments = newProjectDocument()
+                .withProject(project)
+                .withStatus(DocumentStatus.APPROVED)
+                .build(1);
+
         Project project = newProject().
                 withId(projectId).
                 withApplication(application).
                 withPartnerOrganisations(asList(partnerOrganisation)).
-                withOtherDocumentsApproved(otherDocsApproved).
-                withOtherDocumentsSubmittedDate(otherDocsSubmittedDate).
+                withProjectDocuments(projectDocuments).
                 build();
 
         BankDetails bankDetail = newBankDetails().withProject(project).build();
@@ -1010,8 +1139,8 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
+        when(partnerOrganisationServiceMock.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
         when(organisationRepositoryMock.findById(processRole.getOrganisationId())).thenReturn(Optional.of(organisation));
-
         when(spendProfileServiceMock.getSpendProfileStatus(projectId)).thenReturn(serviceSuccess(spendProfileStatus));
         when(golWorkflowHandlerMock.isApproved(project)).thenReturn(golIsApproved);
         when(golWorkflowHandlerMock.isRejected(project)).thenReturn(golRejected);
@@ -1028,13 +1157,13 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
      */
     @Test
     public void getProjectStatusShowMOStatusForSupportAndInnoLeadAndStakeholder() {
-        Long projectId = 2345L;
-        Long organisationId = 123L;
+        long projectId = 2345L;
+        long organisationId = 123L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE,
-                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null, false);
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE,
+                Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, false);
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
         MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
@@ -1042,7 +1171,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
         when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
-        when(financeServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeServiceMock.organisationSeeksFunding(any(long.class), any(long.class), any(long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         // Status shown to support user when MO is set is COMPLETE
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
@@ -1099,11 +1228,11 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     }
 
     @Test
-    public void getProjectTeamStatus(){
-        /**
-         * Create 3 organisations:
-         * 2 Business, 1 Academic
-         * **/
+    public void getProjectTeamStatus() {
+        /*
+          Create 3 organisations:
+          2 Business, 1 Academic
+         */
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
         OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
         List<Organisation> organisations = new ArrayList<>();
@@ -1118,28 +1247,28 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         organisations.add(partnerOrganisation1);
         organisations.add(partnerOrganisation2);
 
-        /**
+        /*
          * Create 3 users project partner roles for each of the 3 organisations above
          */
         List<User> users = newUser().build(3);
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_PARTNER).withUser(users.get(0), users.get(1), users.get(2)).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
 
-        /**
+        /*
          * Create a project with 3 Project Users from 3 different organisations with an associated application
          */
         Project p = newProject().withProjectUsers(pu).withApplication(application).build();
 
-        /**
+        /*
          * Create 3 bank detail records, one for each organisation
          */
         List<BankDetails> bankDetails = newBankDetails().withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
 
-        /**
+        /*
          * Build spend profile object for use with one of the partners
          */
         SpendProfile spendProfile = newSpendProfile().build();
 
-        /**
+        /*
          * Create Finance Check information for each Organisation
          */
         List<PartnerOrganisation> partnerOrganisations = PartnerOrganisationBuilder.newPartnerOrganisation()
@@ -1214,7 +1343,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withBankDetailsStatus(PENDING).
                 withFinanceChecksStatus(PENDING).
                 withSpendProfileStatus(NOT_STARTED).
-                withOtherDocumentsStatus(ACTION_REQUIRED).
+                withDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
                 withIsLeadPartner(true).
                 build();
@@ -1232,7 +1361,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withBankDetailsStatus(NOT_REQUIRED, NOT_STARTED).
                 withFinanceChecksStatus(PENDING, ACTION_REQUIRED).
                 withSpendProfileStatus(NOT_STARTED, NOT_STARTED).
-                withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
+                withDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
                 build(2);
 
@@ -1258,7 +1387,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withBankDetailsStatus(NOT_STARTED).
                 withFinanceChecksStatus(ACTION_REQUIRED).
                 withSpendProfileStatus(NOT_STARTED).
-                withOtherDocumentsStatus(NOT_REQUIRED).
+                withDocumentsStatus(NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
                 build(1);
 
@@ -1298,7 +1427,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withBankDetailsStatus(PENDING).
                 withFinanceChecksStatus(PENDING).
                 withSpendProfileStatus(NOT_STARTED).
-                withOtherDocumentsStatus(ACTION_REQUIRED).
+                withDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
                 withIsLeadPartner(true).
                 build();
@@ -1318,10 +1447,31 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newProjectInvite().build()).build(1);
-        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(TRUE).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).build();
-        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
+        List<ProjectUser> pu = newProjectUser()
+                .withRole(PROJECT_FINANCE_CONTACT)
+                .withUser(u).withOrganisation(o)
+                .withInvite(newProjectInvite().build())
+                .build(1);
+
+        List<PartnerOrganisation> po = newPartnerOrganisation()
+                .withOrganisation(o)
+                .withLeadOrganisation(TRUE)
+                .build(1);
+
+
+        Project p = newProject()
+                .withProjectUsers(pu)
+                .withApplication(application)
+                .withPartnerOrganisations(po)
+                .withDateSubmitted(ZonedDateTime.now())
+                .withGrantOfferLetter(golFile).build();
+
+        List<ProjectUserResource> puResource = newProjectUserResource()
+                .withProject(p.getId()
+                ).withOrganisation(o.getId())
+                .withRole(partnerRole.getId())
+                .withRoleName(PROJECT_PARTNER.getName())
+                .build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
         SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(TRUE).build();
@@ -1335,7 +1485,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         Mockito.when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         Mockito.when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
+        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(), o.getId())).thenReturn(serviceSuccess(FALSE));
         Mockito.when(golWorkflowHandlerMock.getState(p)).thenReturn(GrantOfferLetterState.SENT);
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
@@ -1353,7 +1503,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newProjectInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(TRUE).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).build();
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
@@ -1368,7 +1518,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         Mockito.when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         Mockito.when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
+        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(), o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
         Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
@@ -1401,7 +1551,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(nonLeadOrg).withInvite(newProjectInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(nonLeadOrg).withLeadOrganisation(FALSE).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(ZonedDateTime.now()).build();
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(ZonedDateTime.now()).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(nonLeadOrg.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
@@ -1425,7 +1575,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         Mockito.when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), o.getId())).thenReturn(serviceSuccess(TRUE));
         Mockito.when(financeServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), nonLeadOrg.getId())).thenReturn(serviceSuccess(TRUE));
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(anyLong(),anyLong())).thenReturn(serviceSuccess(FALSE));
+        Mockito.when(financeCheckServiceMock.isQueryActionRequired(anyLong(), anyLong())).thenReturn(serviceSuccess(FALSE));
 
 
         // Call the service again
@@ -1442,7 +1592,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newProjectInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(TRUE).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withOfferSubmittedDate(ZonedDateTime.now()).build();
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withOfferSubmittedDate(ZonedDateTime.now()).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         Mockito.when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
@@ -1455,7 +1605,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         Mockito.when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
         Mockito.when(golWorkflowHandlerMock.getState(p)).thenReturn(GrantOfferLetterState.APPROVED);
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
+        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(), o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
         Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
@@ -1479,7 +1629,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         Mockito.when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         Mockito.when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
+        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(), o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
         Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
@@ -1500,7 +1650,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.empty());
         Mockito.when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.REVIEW);
         Mockito.when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
+        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(), o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
         Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
@@ -1522,7 +1672,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.empty());
         Mockito.when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         Mockito.when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.REVIEW);
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
+        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(), o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
         Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
@@ -1546,7 +1696,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         Mockito.when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         Mockito.when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.NOT_APPLICABLE);
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
+        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(), o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
         Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
@@ -1570,7 +1720,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         Mockito.when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         Mockito.when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
+        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(), o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
         Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
@@ -1592,7 +1742,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         Mockito.when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         Mockito.when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
+        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(), o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
         Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
@@ -1615,7 +1765,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         Mockito.when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         Mockito.when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
+        Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(), o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
         Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
@@ -1625,5 +1775,4 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
         assertTrue(project.getSpendProfileSubmittedDate() == null);
     }
-
 }

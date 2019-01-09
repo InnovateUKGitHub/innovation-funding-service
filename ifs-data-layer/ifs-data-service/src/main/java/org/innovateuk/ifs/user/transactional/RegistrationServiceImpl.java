@@ -5,12 +5,18 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.competition.domain.StakeholderInvite;
+import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
@@ -69,6 +75,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private RegistrationNotificationService registrationEmailService;
 
+    @Autowired
+    private StakeholderInviteRepository stakeholderInviteRepository;
+
+    @Autowired
+    private StakeholderRepository stakeholderRepository;
+
     @Override
     @Transactional
     public ServiceResult<UserResource> createUser(UserRegistrationResource userRegistrationResource) {
@@ -102,21 +114,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 andOnSuccess(createdUser -> sendUserVerificationEmail(competitionId, organisationId, createdUser));
     }
 
-    private ServiceResult<UserResource> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, UserResource createdUser) {
-
-        return registrationEmailService.sendUserVerificationEmail(createdUser, competitionId, organisationId).
-                andOnSuccessReturn(() -> createdUser);
-    }
-
-    private ServiceResult<User> markLatestSiteTermsAndConditionsAgreedToIfApplicant(User userWithRole) {
-        return userWithRole.hasRole(Role.APPLICANT) ?
-                agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole);
-    }
-
-    private ServiceResult<User> addApplicantRoleToUserIfNoRolesAssigned(UserResource userResource, User user) {
-        return userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user);
-    }
-
     private ServiceResult<UserResource> validateUser(UserResource userResource) {
         return passwordPolicyValidator.validatePassword(userResource.getPassword(), userResource)
                 .handleSuccessOrFailure(
@@ -128,6 +125,51 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                         ),
                         success -> serviceSuccess(userResource)
                 );
+    }
+
+    private User assembleUserFromResource(UserResource userResource) {
+        User newUser = new User();
+        newUser.setFirstName(userResource.getFirstName());
+        newUser.setLastName(userResource.getLastName());
+        newUser.setEmail(userResource.getEmail());
+        newUser.setTitle(userResource.getTitle());
+        newUser.setPhoneNumber(userResource.getPhoneNumber());
+        newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
+        newUser.setRoles(new HashSet<>(userResource.getRoles()));
+
+        return newUser;
+    }
+
+    private ServiceResult<User> addApplicantRoleToUserIfNoRolesAssigned(UserResource userResource, User user) {
+        return userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user);
+    }
+
+    private ServiceResult<User> markLatestSiteTermsAndConditionsAgreedToIfApplicant(User userWithRole) {
+        return userWithRole.hasRole(Role.APPLICANT) ?
+                agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole);
+    }
+
+    private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {
+
+        ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
+
+        return uidFromIdpResult.andOnSuccessReturn(uidFromIdp -> {
+            user.setUid(uidFromIdp);
+            user.setStatus(UserStatus.INACTIVE);
+            Profile profile = new Profile();
+            if (addressResource != null) profile.setAddress(addressMapper.mapToDomain(addressResource));
+            Profile savedProfile = profileRepository.save(profile);
+            user.setProfileId(savedProfile.getId());
+            User savedUser = userRepository.save(user);
+
+            return userMapper.mapToResource(savedUser);
+        });
+    }
+
+    private ServiceResult<UserResource> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, UserResource createdUser) {
+
+        return registrationEmailService.sendUserVerificationEmail(createdUser, competitionId, organisationId).
+                andOnSuccessReturn(() -> createdUser);
     }
 
     @Override
@@ -184,41 +226,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return userSurveyService.sendAssessorDiversitySurvey(user);
     }
 
-    private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {
-
-        ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
-
-        return uidFromIdpResult.andOnSuccessReturn(uidFromIdp -> {
-            user.setUid(uidFromIdp);
-            user.setStatus(UserStatus.INACTIVE);
-            Profile profile = new Profile();
-            if (addressResource != null) profile.setAddress(addressMapper.mapToDomain(addressResource));
-            Profile savedProfile = profileRepository.save(profile);
-            user.setProfileId(savedProfile.getId());
-            User savedUser = userRepository.save(user);
-
-            return userMapper.mapToResource(savedUser);
-        });
-    }
-
     private ServiceResult<User> addRoleToUser(User user, Role role) {
         if (!user.hasRole(role)) {
             user.addRole(role);
         }
         return serviceSuccess(user);
-    }
-
-    private User assembleUserFromResource(UserResource userResource) {
-        User newUser = new User();
-        newUser.setFirstName(userResource.getFirstName());
-        newUser.setLastName(userResource.getLastName());
-        newUser.setEmail(userResource.getEmail());
-        newUser.setTitle(userResource.getTitle());
-        newUser.setPhoneNumber(userResource.getPhoneNumber());
-        newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
-        newUser.setRoles(new HashSet<>(userResource.getRoles()));
-
-        return newUser;
     }
 
     private ServiceResult<User> agreeLatestSiteTermsAndConditionsForUser(User user) {
@@ -250,6 +262,21 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 }));
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> createStakeholder(String hash, StakeholderRegistrationResource stakeholderRegistrationResource) {
+        return getStakeholderInviteByHash(hash)
+                .andOnSuccess(stakeholderInvite -> createStakeholderUser(stakeholderRegistrationResource, stakeholderInvite)
+                        .andOnSuccess(user -> associateUserWithCompetition(stakeholderInvite.getTarget(), user))
+                        .andOnSuccess(() -> updateStakeholderInviteStatus(stakeholderInvite))
+                        .andOnSuccessReturnVoid());
+    }
+
+    private ServiceResult<Void> associateUserWithCompetition(Competition competition, User user) {
+        stakeholderRepository.save(new Stakeholder(competition, user));
+        return serviceSuccess();
+    }
+
     private ServiceResult<List<Role>> getInternalRoleResources(Role role) {
         if (role == IFS_ADMINISTRATOR){
             return getIFSAdminRoles(role); // IFS Admin has multiple roles
@@ -269,9 +296,28 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 });
     }
 
+    private ServiceResult<User> createStakeholderUser(StakeholderRegistrationResource stakeholderRegistrationResource, StakeholderInvite stakeholderInvite) {
+        final UserResource userResource = stakeholderRegistrationResource.toUserResource();
+        userResource.setEmail(stakeholderInvite.getEmail());
+        userResource.setRoles(singletonList(Role.STAKEHOLDER));
+        return validateUser(userResource).
+                andOnSuccess(validUser -> {
+                    final User user = userMapper.mapToDomain(userResource);
+                    return createUserWithUid(user, userResource.getPassword()).
+                            andOnSuccess(this::activateUser)
+                            .andOnSuccessReturn(() -> user);
+                });
+    }
+
     private ServiceResult<Void> updateInviteStatus(RoleInvite roleInvite) {
         roleInvite.open();
         roleInviteRepository.save(roleInvite);
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> updateStakeholderInviteStatus(StakeholderInvite stakeholderInvite) {
+        stakeholderInvite.open();
+        stakeholderInviteRepository.save(stakeholderInvite);
         return serviceSuccess();
     }
 
@@ -281,6 +327,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<RoleInvite> getByHash(String hash) {
         return find(roleInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
+    }
+
+    private ServiceResult<StakeholderInvite> getStakeholderInviteByHash(String hash) {
+        return find(stakeholderInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
     }
 
     private ServiceResult<User> createUserWithUid(User user, String password) {
@@ -303,14 +353,14 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return validateInternalUserRole(userRoleType)
                 .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findById(userToEdit.getId()).orElse(null), notFoundError(User.class)))
                 .andOnSuccess(user -> getInternalRoleResources(userRoleType)
-                        .andOnSuccess(roleResources -> {
-                            Set<Role> roleList = new HashSet<>(roleResources);
-                            user.setFirstName(userToEdit.getFirstName());
-                            user.setLastName(userToEdit.getLastName());
-                            user.setRoles(roleList);
-                            userRepository.save(user);
-                            return serviceSuccess();
-                        })
+                    .andOnSuccess(roleResources -> {
+                        Set<Role> roleList = new HashSet<>(roleResources);
+                        user.setFirstName(userToEdit.getFirstName());
+                        user.setLastName(userToEdit.getLastName());
+                        user.setRoles(roleList);
+                        userRepository.save(user);
+                        return serviceSuccess();
+                    })
                 );
     }
 

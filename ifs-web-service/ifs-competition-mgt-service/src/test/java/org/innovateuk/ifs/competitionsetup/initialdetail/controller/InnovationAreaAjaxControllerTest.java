@@ -7,9 +7,11 @@ import org.innovateuk.ifs.competitionsetup.CompetitionSetupController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static java.util.Collections.singletonList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
@@ -38,19 +40,24 @@ public class InnovationAreaAjaxControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void getInnovationAreas() throws Exception {
-        Long innovationSectorId = 1L;
-        InnovationAreaResource category = newInnovationAreaResource()
-                .withId(1L)
-                .withName("Innovation Area 1")
-                .build();
+        Long innovationAreaId = 5L;
+        String innovationAreaName = "Innovation Area 1";
+        long innovationSectorId = 7L;
+        List<InnovationAreaResource> innovationAreas = newInnovationAreaResource()
+                .withId(innovationAreaId)
+                .withName(innovationAreaName)
+                .build(1);
 
-        when(categoryRestService.getInnovationAreasBySector(innovationSectorId)).thenReturn(restSuccess(singletonList(category)));
+        when(categoryRestService.getInnovationAreasBySector(innovationSectorId))
+                .thenReturn(restSuccess(innovationAreas));
 
-        mockMvc.perform(get(URL_PREFIX + "/getInnovationArea/" + innovationSectorId))
+        mockMvc.perform(get(URL_PREFIX + "/get-innovation-areas/" + innovationSectorId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("[0]id", is(1)))
-                .andExpect(jsonPath("[0]name", is("Innovation Area 1")))
+                .andExpect(jsonPath("[0]id", is(5)))
+                .andExpect(jsonPath("[0]name", is(innovationAreaName)))
                 .andExpect(jsonPath("[0]type", is(INNOVATION_AREA.toString())));
 
+        Mockito.verify(categoryRestService).getInnovationAreasBySector(innovationSectorId);
+        Mockito.verifyNoMoreInteractions(categoryRestService);
     }
 }

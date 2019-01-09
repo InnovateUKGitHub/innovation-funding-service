@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
-import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
@@ -19,8 +17,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.time.format.DateTimeFormatter;
 
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
@@ -39,9 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTest<ApplicationAjaxController> {
 
     @Mock
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Mock
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
 
     @Mock
@@ -51,8 +44,6 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
     private Long questionId;
     private Long formInputId;
     private Long costId;
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
-    private ApplicantSectionResourceBuilder sectionBuilder;
 
     @Override
     protected ApplicationAjaxController supplyControllerUnderTest() {
@@ -60,9 +51,7 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
     }
 
     @Before
-    @Override
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

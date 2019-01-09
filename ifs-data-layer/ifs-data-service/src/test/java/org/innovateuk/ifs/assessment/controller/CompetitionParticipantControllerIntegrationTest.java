@@ -9,7 +9,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,10 +71,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
 
         flushAndClearSession();
 
-        List<CompetitionParticipantResource> participants = controller.getParticipants(
-                getPaulPlum().getId(),
-                CompetitionParticipantRoleResource.ASSESSOR
-        )
+        List<CompetitionParticipantResource> participants = controller.getAssessorParticipants(
+                getPaulPlum().getId())
                 .getSuccess();
 
         assertEquals(2, participants.size());
@@ -95,10 +92,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     public void getParticipants_differentUser() throws Exception {
         loginFelixWilson();
 
-        List<CompetitionParticipantResource> participants = controller.getParticipants(
-                getPaulPlum().getId(),
-                CompetitionParticipantRoleResource.ASSESSOR
-        )
+        List<CompetitionParticipantResource> participants = controller.getAssessorParticipants(
+                getPaulPlum().getId())
                 .getSuccess();
 
         assertTrue(participants.isEmpty());
@@ -123,10 +118,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
 
         flushAndClearSession();
 
-        List<CompetitionParticipantResource> participants = controller.getParticipants(
-                getPaulPlum().getId(),
-                CompetitionParticipantRoleResource.ASSESSOR
-        )
+        List<CompetitionParticipantResource> participants = controller.getAssessorParticipants(
+                getPaulPlum().getId())
                 .getSuccess();
 
         assertEquals(2, participants.size());
@@ -151,10 +144,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
 
         flushAndClearSession();
 
-        List<CompetitionParticipantResource> participants = controller.getParticipants(
-                getPaulPlum().getId(),
-                CompetitionParticipantRoleResource.ASSESSOR
-        )
+        List<CompetitionParticipantResource> participants = controller.getAssessorParticipants(
+                getPaulPlum().getId())
                 .getSuccess();
 
         assertEquals(0, participants.size());
@@ -175,10 +166,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
 
         flushAndClearSession();
 
-        List<CompetitionParticipantResource> participants = controller.getParticipants(
-                getPaulPlum().getId(),
-                CompetitionParticipantRoleResource.ASSESSOR
-        )
+        List<CompetitionParticipantResource> participants = controller.getAssessorParticipants(
+                getPaulPlum().getId())
                 .getSuccess();
 
         assertEquals(0, participants.size());

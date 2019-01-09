@@ -19,7 +19,7 @@ public class InProgressDashboardRowViewModelTest {
         ZonedDateTime end = ZonedDateTime.now().plusHours(2).minusMinutes(1);
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel("Application", 1L,
                 "Competition", true, ApplicationState.OPEN, true,
-                end, 0, 50 , false, 1L);
+                end, 0, 50 , false);
 
         assertThat(viewModel.getLinkUrl(), equalTo("/application/1"));
         assertThat(viewModel.getTitle(), equalTo("Application"));
@@ -33,20 +33,10 @@ public class InProgressDashboardRowViewModelTest {
     }
 
     @Test
-    public void testConstructCreated() {
-        InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
-                "Competition", true, ApplicationState.CREATED, true,
-                ZonedDateTime.now().plusDays(12), 12, 0 , false, 1L);
-
-        assertThat(viewModel.getLinkUrl(), equalTo("/application/1/form/question/1"));
-        assertThat(viewModel.getTitle(), equalTo( "Untitled application (start here)"));
-    }
-
-    @Test
     public void testConstructSubmitted() {
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
                 "Competition", true, ApplicationState.SUBMITTED, true,
-                ZonedDateTime.now().plusDays(12), 12, 100 , false, 1L);
+                ZonedDateTime.now().plusDays(12), 12, 100 , false);
 
         assertThat(viewModel.getLinkUrl(), equalTo("/application/1/track"));
         assertThat(viewModel.getTitle(), equalTo( "Untitled application"));
@@ -56,7 +46,7 @@ public class InProgressDashboardRowViewModelTest {
     public void testConstructInterview() {
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
                 "Competition", true, ApplicationState.SUBMITTED, true,
-                ZonedDateTime.now().plusDays(12), 12, 100 , true, 1L);
+                ZonedDateTime.now().plusDays(12), 12, 100 , true);
 
         assertThat(viewModel.getLinkUrl(), equalTo("/application/1/summary"));
     }

@@ -14,6 +14,14 @@
         </div>
     </div>
 
+    <div class="govuk-form-group">
+        <h2 class="govuk-heading-s">Project title</h2>
+        <div class="textarea-wrapped">
+            <div class="readonly">
+                <p class="govuk-body" th:text="${currentApplication.name}" data-md-to-html=""></p>
+            </div>
+        </div>
+    </div>
 
     <div class="govuk-form-group" th:if="${researchCategoryRequired}">
         <h2 class="govuk-heading-s">Research category</h2>
@@ -89,7 +97,7 @@
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" />
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
-                <th class="govuk-table__header govuk-table__header--numeric" scope="col">% Grant</th>
+                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding level (%)</th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)</th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project (&pound;)</th>

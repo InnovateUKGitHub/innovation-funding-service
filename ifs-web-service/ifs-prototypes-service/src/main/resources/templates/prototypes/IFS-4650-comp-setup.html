@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html class="govuk-template" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition completion stage'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="govuk-template__body" th:with="endSet=${param.completionStage != null ? TRUE : FALSE}">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-global-header" />
+
+<div class="govuk-width-container">
+
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${endSet ? '/prototypes/IFS-4650-end-milestone?selectedStage=' + param.completionStage[0] : '/prototypes/IFS-4650-end-milestone'})" />
+
+    <main class="govuk-main-wrapper" id="content">
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+
+                <h1 class="govuk-heading-xl">Competition setup</h1>
+
+                <ul class="task-list">
+
+                    <li>
+                        <div class="task">
+                            <h2 class="govuk-heading-s">
+                                <a href="/management/competition/setup/12/section/initial" class="govuk-link">Initial details</a>
+
+                            </h2>
+                        </div>
+
+                        <div class="task-status-complete"><span>Complete</span></div>
+                    </li>
+                    <li>
+                        <div class="task">
+                            <h2 class="govuk-heading-s">
+                                <a href="/management/competition/setup/12/section/terms-and-conditions" class="govuk-link">Terms and conditions</a>
+
+                            </h2>
+                        </div>
+
+                        <div class="task-status-complete"><span>Complete</span></div>
+                    </li>
+                    <li>
+                        <div class="task">
+                            <h2 class="govuk-heading-s">
+                                <a href="/management/competition/setup/12/section/additional" class="govuk-link">Funding information</a>
+
+                            </h2>
+                        </div>
+
+                        <div class="task-status-complete"><span>Complete</span></div>
+                    </li>
+                    <li>
+                        <div class="task">
+                            <h2 class="govuk-heading-s">
+                                <a href="/management/competition/setup/12/section/eligibility" class="govuk-link">Eligibility</a>
+
+                            </h2>
+                        </div>
+
+                        <div class="task-status-complete"><span>Complete</span></div>
+                    </li>
+                    <li>
+                        <div class="task">
+                            <h2 class="govuk-heading-s">
+                                <a href="/prototypes/IFS-4650-end-milestone" class="govuk-link">Milestones</a>
+
+                            </h2>
+                        </div>
+
+
+                    </li>
+                    <li>
+                        <div class="task">
+                            <h2 class="govuk-heading-s">
+                                <a href="/management/competition/setup/12/section/application" class="govuk-link">Application</a>
+
+                            </h2>
+                        </div>
+
+                        <div class="task-status-complete"><span>Complete</span></div>
+                    </li>
+                    <li>
+                        <div class="task">
+                            <h2 class="govuk-heading-s">
+                                <a href="/management/competition/setup/12/section/assessors" class="govuk-link">Assessors</a>
+
+                            </h2>
+                        </div>
+
+                        <div class="task-status-complete"><span>Complete</span></div>
+                    </li>
+                    <li>
+                        <div class="task">
+                            <h2 class="govuk-heading-s">
+                                <a href="/management/competition/setup/12/section/content" class="govuk-link">Public content</a>
+
+                            </h2>
+                        </div>
+                        <div class="notification">Last published 5 July 2018 1:59pm</div>
+                        <div class="task-status-complete"><span>Complete</span></div>
+                    </li>
+
+                    <li>
+                        <div class="task">
+                            <h2 class="govuk-heading-s">
+
+                                <a href="/management/competition/setup/12/manage-innovation-leads/find" class="govuk-link">Stakeholders</a>
+
+
+                            </h2>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+
+        <!-- END OF HARDCODED PROTOTYPE HTML -->
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+</div>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-non-ifs-footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+
+
+</body>
+</html>

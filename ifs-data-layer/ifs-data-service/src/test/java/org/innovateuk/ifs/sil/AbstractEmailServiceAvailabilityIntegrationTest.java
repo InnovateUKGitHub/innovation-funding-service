@@ -12,7 +12,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
-import static org.innovateuk.ifs.commons.service.ServiceFailureTestHelper.assertThatServiceFailureIs;
+import static org.innovateuk.ifs.service.ServiceFailureTestHelper.assertThatServiceFailureIs;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 /**
@@ -27,6 +28,10 @@ public abstract class AbstractEmailServiceAvailabilityIntegrationTest extends Ba
 
     protected void setupServiceUnavailableResponseExpectationsFromSendEmailCall(AbstractRestTemplateAdaptor mockEmailSilRestTemplate) {
         emailServiceAvailabilityHelper.setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+    }
+
+    protected void setupServiceAvailableResponseExpectationsFromSendEmailCall(AbstractRestTemplateAdaptor mockEmailSilRestTemplate) {
+        emailServiceAvailabilityHelper.setupServiceAvailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
     }
 
     protected void verifyServiceUnavailableResponseExpectationsFromSendEmailCall(AbstractRestTemplateAdaptor mockEmailSilRestTemplate) {
@@ -56,6 +61,19 @@ public abstract class AbstractEmailServiceAvailabilityIntegrationTest extends Ba
             assertThatServiceFailureIs(result, new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, SERVICE_UNAVAILABLE));
 
             verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+        });
+    }
+
+    public void withServiceAvailableFromEmailService(Supplier<ServiceResult<?>> action) {
+
+        withMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
+
+            setupServiceAvailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+
+            ServiceResult<?> result = action.get();
+
+            assertTrue(result.isSuccess());
+
         });
     }
 }

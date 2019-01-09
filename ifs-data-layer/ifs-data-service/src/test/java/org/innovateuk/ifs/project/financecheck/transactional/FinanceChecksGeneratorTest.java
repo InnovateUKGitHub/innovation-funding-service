@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.financecheck.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.form.domain.Question;
@@ -33,6 +35,9 @@ import java.util.Optional;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldBuilder.newFinanceRowMetaField;
@@ -88,11 +93,15 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     @Mock
     private FinanceRowMetaValueRepository financeRowMetaValueRepositoryMock;
 
+    @Mock
+    private CompetitionService competitionService;
+
     private Organisation organisation;
     private List<CostCategory> costCategories;
     private CostCategoryType costCategoryTypeForOrganisation;
     private PartnerOrganisation savedProjectPartnerOrganisation;
     private Project newProject;
+    private CompetitionResource competition;
 
     @Before
     public void setUp() {
@@ -100,6 +109,8 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
+
+        competition = newCompetitionResource().build();
 
         costCategories = newCostCategory().withName("Cat1", "Cat2").build(2);
 
@@ -166,8 +177,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
 
     @Test
     public void testCreateFinanceChecksFiguresWhenOrganisationIsUsingJesFinances() {
-
-        when(financeUtilMock.isUsingJesFinances(organisation.getOrganisationType().getId())).thenReturn(true);
+        when(financeUtilMock.isUsingJesFinances(competition, organisation.getOrganisationType().getId())).thenReturn(true);
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
         when(viabilityWorkflowHandlerMock.organisationIsAcademic(partnerOrganisation, null)).thenReturn(true);
@@ -188,7 +198,8 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     }
 
     private List<ProjectFinanceRow> setUpCreateFinanceChecksFiguresMocking() {
-        ApplicationFinance applicationFinance = newApplicationFinance().withOrganisationSize(SMALL).build();
+        ApplicationFinance applicationFinance = newApplicationFinance().withOrganisationSize(SMALL).withApplication(newApplication().withCompetition(newCompetition().build()).build()).build();
+        when(competitionService.getCompetitionById(applicationFinance.getApplication().getCompetition().getId())).thenReturn(serviceSuccess(competition));
         ProjectFinance newProjectFinance = new ProjectFinance(organisation, SMALL, newProject);
         newProjectFinance.setId(999L);
         List<Question> financeQuestions = newQuestion().build(2);

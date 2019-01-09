@@ -54,6 +54,7 @@ public class ApplicationFinanceSectionSaverTest {
     @Test
     public void doSaveSection() {
         final boolean isIncludeGrowthTable = true;
+        final boolean isIncludeYourOrganisationSection = true;
         final String fundingRules = "Funding rules for competition are fun, right?";
 
         SectionResource overviewFinanceSection = newSectionResource()
@@ -68,6 +69,7 @@ public class ApplicationFinanceSectionSaverTest {
                 .withCompetitionId(competition.getId())
                 .withApplicationFinanceType(STANDARD)
                 .withIncludeGrowthTable(isIncludeGrowthTable)
+                .withIncludeYourOrganisationSection(isIncludeYourOrganisationSection)
                 .build();
 
         when(competitionSetupFinanceRestService.save(competitionSetupFinanceResource)).thenReturn(restSuccess());
@@ -82,8 +84,9 @@ public class ApplicationFinanceSectionSaverTest {
                 ));
 
         FinanceForm competitionSetupForm = new FinanceForm();
-        competitionSetupForm.setIncludeGrowthTable(isIncludeGrowthTable);
         competitionSetupForm.setApplicationFinanceType(STANDARD);
+        competitionSetupForm.setIncludeGrowthTable(isIncludeGrowthTable);
+        competitionSetupForm.setIncludeYourOrganisationSection(isIncludeYourOrganisationSection);
 
         service.saveSection(competition, competitionSetupForm);
 
