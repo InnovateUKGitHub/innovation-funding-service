@@ -74,6 +74,7 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
         competitionSetupForm.setOverrideFundingRules(overrideFundingRuleSet);
 
         if (overrideFundingRuleSet != null && overrideFundingRuleSet) {
+            competitionSetupForm.setFundingLevelPercentageOverride(getFundingLevelPercentage(competitionResource));
             competitionSetupForm.setFundingLevelPercentage(getFundingLevelPercentage(competitionResource));
         }
 

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.handler.item;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -8,6 +10,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.validator.OtherFundingValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
@@ -21,12 +24,13 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUND
  * Handles the other funding, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@Component
 public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     public static final String COST_KEY = "other-funding";
     public static final String OTHER_FUNDING_NAME = OTHER_FUNDING.getName();
 
     @Autowired
-    OtherFundingValidator validator;
+    private OtherFundingValidator validator;
 
     @Override
     public void validate(@NotNull OtherFunding otherFunding, @NotNull BindingResult bindingResult) {
@@ -84,19 +88,23 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     }
 
     @Override
-    public List<ApplicationFinanceRow> initializeCost() {
+    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
         ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        costs.add(initializeOtherFunding());
-        return costs;
-    }
 
-    private ApplicationFinanceRow initializeOtherFunding() {
         Long id = null;
-        String otherPublicFunding = "";
+        String otherPublicFunding;
+        if (applicationFinance.getApplication().getCompetition().getFundingType() == FundingType.PROCUREMENT) {
+            otherPublicFunding = "No";
+        } else {
+            otherPublicFunding = "";
+        }
         String fundingSource = OtherFundingCostCategory.OTHER_FUNDING;
         String securedDate = null;
         BigDecimal fundingAmount = new BigDecimal(0);
         OtherFunding costItem = new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount);
-        return toCost(costItem);
+        ApplicationFinanceRow cost = toCost(costItem);
+
+        costs.add(cost);
+        return costs;
     }
 }

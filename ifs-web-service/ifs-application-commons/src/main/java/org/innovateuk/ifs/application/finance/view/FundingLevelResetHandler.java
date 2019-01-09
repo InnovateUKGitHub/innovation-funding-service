@@ -4,6 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -37,31 +40,35 @@ public class FundingLevelResetHandler {
     @Autowired
     private DefaultFinanceRowRestService financeRowRestService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     public void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        if (competition.getFundingType() != FundingType.PROCUREMENT) {
+
+            final Optional<ProcessRoleResource> processRole;
+            try {
+                processRole = processRoleService.findAssignableProcessRoles(applicationFinance.getApplication()).get().stream()
+                        .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
+                        .findFirst();
+            } catch (InterruptedException | ExecutionException e) {
+                LOG.error("Couldn't reset funding level for user " + userId, e);
+                return;
+            }
 
 
-        final Optional<ProcessRoleResource> processRole;
-        try {
-            processRole = processRoleService.findAssignableProcessRoles(applicationFinance.getApplication()).get().stream()
-                    .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
-                    .findFirst();
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.error("Couldn't reset funding level for user " + userId, e);
-            return;
+            sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
+                    .forEach(fundingSection ->
+                            sectionService.markAsInComplete(fundingSection.getId(),
+                                    applicationFinance.getApplication(),
+                                    (processRole.isPresent() ? processRole.get().getId() : null))
+                    );
+
+            QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccess();
+
+            resetFundingLevel(applicationFinance, financeQuestion.getId());
         }
-
-
-        sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
-                .forEach(fundingSection ->
-                        sectionService.markAsInComplete(fundingSection.getId(),
-                                applicationFinance.getApplication(),
-                                (processRole.isPresent() ? processRole.get().getId() : null))
-                );
-
-        QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccess();
-
-        resetFundingLevel(applicationFinance, financeQuestion.getId());
     }
 
     private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
