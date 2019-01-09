@@ -14,6 +14,9 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -22,6 +25,7 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -68,6 +72,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.io.File.separator;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -77,11 +82,14 @@ import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResourc
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
+import static org.innovateuk.ifs.user.resource.Role.LIVE_PROJECTS_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
 public class
 GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOfferLetterService {
+
+    private static final Log LOG = LogFactory.getLog(GrantOfferLetterServiceImpl.class);
 
     private static final String GOL_CONTENT_TYPE = "application/pdf";
 
@@ -91,13 +99,17 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
 
     private static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
 
-    private static final Log LOG = LogFactory.getLog(GrantOfferLetterServiceImpl.class);
-
     private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
 
     private static final String PROJECT_STATE_ERROR = "Set project status to live failed for project %s";
 
     private static final String GOL_TEMPLATES_PATH = "common" + separator + "grantoffer" + separator + "grant_offer_letter.html";
+
+    private static final List<ProjectParticipantRole> LIVE_PROJECT_ACCESS_ROLES =
+            asList(
+                    ProjectParticipantRole.PROJECT_MANAGER,
+                    ProjectParticipantRole.PROJECT_FINANCE_CONTACT
+            );
 
     @Autowired
     private FileService fileService;
@@ -140,6 +152,9 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
 
     @Autowired
     private PartnerOrganisationService partnerOrganisationService;
+
+    @Autowired
+    private InnovationLeadRepository innovationLeadRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -562,13 +577,50 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
                 if (golWorkflowHandler.isReadyToApprove(project)) {
                     if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
                         return approveGOL(project)
-                                .andOnSuccess(() -> moveProjectToLiveState(project));
+                                .andOnSuccess(() -> moveProjectToLiveState(project))
+                                .andOnSuccess(() -> addLiveProjectsRoleToUsers(project));
                     } else if (ApprovalType.REJECTED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
                         return rejectGOL(project, grantOfferLetterApprovalResource.getRejectionReason());
                     }
                 }
                 return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
         }));
+    }
+
+    private ServiceResult<Void> addLiveProjectsRoleToUsers(Project project) {
+        return addLiveProjectsRoleToProjectTeamUsers(project).
+                andOnSuccess(() -> addLiveProjectsRoleToInternalUsers(project));
+    }
+
+    private ServiceResult<Void> addLiveProjectsRoleToInternalUsers(Project project) {
+
+        long competitionId = project.getApplication().getCompetition().getId();
+
+        InnovationLead innovationLead =
+                innovationLeadRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD).get(0);
+
+        if (!innovationLead.getUser().hasRole(LIVE_PROJECTS_USER)) {
+            innovationLead.getUser().addRole(LIVE_PROJECTS_USER);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> addLiveProjectsRoleToProjectTeamUsers(Project project) {
+        List<ProjectUser> projectUsers = project.getProjectUsers();
+        List<ProjectUser> liveProjectAccessUsers = simpleFilter(projectUsers,
+                projectUser -> LIVE_PROJECT_ACCESS_ROLES.contains(projectUser.getRole()));
+
+        liveProjectAccessUsers.forEach(projectUser -> {
+
+            User user = projectUser.getUser();
+
+            if (!user.hasRole(LIVE_PROJECTS_USER)) {
+                user.addRole(LIVE_PROJECTS_USER);
+            }
+        });
+
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> validateApprovalOrRejection(GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {

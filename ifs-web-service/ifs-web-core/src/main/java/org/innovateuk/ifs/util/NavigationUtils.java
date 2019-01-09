@@ -38,7 +38,7 @@ public class NavigationUtils {
 
     public String getRedirectToDashboardUrlForRole(Role role) {
 
-        if (ACC_USER.equals(role)) {
+        if (LIVE_PROJECTS_USER.equals(role)) {
             return "redirect:" + accLandingPageUrl;
         }
 
@@ -49,7 +49,7 @@ public class NavigationUtils {
 
     public String getDirectDashboardUrlForRole(HttpServletRequest request, Role role) {
 
-        if (ACC_USER.equals(role)) {
+        if (LIVE_PROJECTS_USER.equals(role)) {
             return accLandingPageUrl;
         }
 

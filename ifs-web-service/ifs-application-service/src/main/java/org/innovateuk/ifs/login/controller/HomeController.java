@@ -20,9 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Comparator.comparingInt;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * This Controller redirects the request from http://<domain>/ to http://<domain>/login
@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @PreAuthorize("permitAll")
 public class HomeController {
 
-    private static final Role[] ROLES_WITH_DASHBOARDS = { ASSESSOR, APPLICANT, STAKEHOLDER, ACC_USER };
+    private static final Role[] ROLES_WITH_DASHBOARDS = { LIVE_PROJECTS_USER, APPLICANT, ASSESSOR, STAKEHOLDER };
     private static final List<Role> ROLES_WITH_DASHBOARDS_LIST = asList(ROLES_WITH_DASHBOARDS);
 
     @Autowired
@@ -74,7 +74,10 @@ public class HomeController {
 
         List<Role> dashboardRoles = simpleFilter(user.getRoles(), ROLES_WITH_DASHBOARDS_LIST::contains);
         List<DashboardPanel> dashboardPanels = simpleMap(dashboardRoles, role -> createDashboardPanelForRole(request, role));
-        model.addAttribute("model", new DashboardSelectionViewModel(dashboardPanels));
+        List<DashboardPanel> orderedPanels = sort(dashboardPanels,
+                comparingInt(panel -> ROLES_WITH_DASHBOARDS_LIST.indexOf(panel.getRole())));
+
+        model.addAttribute("model", new DashboardSelectionViewModel(orderedPanels));
         return "login/multiple-dashboard-choice";
     }
 

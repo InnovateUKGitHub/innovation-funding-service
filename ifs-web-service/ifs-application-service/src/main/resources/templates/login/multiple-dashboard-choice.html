@@ -24,7 +24,8 @@
                                 title=${#messages.msg('ifs.dashboards.title.' + dashboard.role.name())},
                                 description=${#messages.msg('ifs.dashboards.description.' + dashboard.role.name())},
                                 url=${dashboard.url},
-                                linkText=${#messages.msg('ifs.dashboards.link.text.' + dashboard.role.name())}
+                                linkText=${#messages.msg('ifs.dashboards.link.text.' + dashboard.role.name())},
+                                linkId=${'dashboard-link-' + dashboard.role.name()}
                             )"
                         />
 
