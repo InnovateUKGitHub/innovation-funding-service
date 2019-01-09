@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.application.summary.controller;
 
+import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
@@ -62,8 +62,8 @@ public class ApplicationSummaryController {
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
+                                     @ModelAttribute("applicationSubmitForm") ApplicationSubmitForm applicationSubmitForm,
                                      BindingResult bindingResult,
-                                     ValidationHandler validationHandler,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user,

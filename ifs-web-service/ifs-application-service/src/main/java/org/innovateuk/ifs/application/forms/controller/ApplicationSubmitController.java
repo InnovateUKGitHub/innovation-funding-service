@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.controller;
 
+import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -24,12 +26,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QUESTION_PARAM;
@@ -88,7 +90,7 @@ public class ApplicationSubmitController {
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/summary")
-    public String applicationSummarySubmit(@PathVariable("applicationId") long applicationId,
+    public String completeOrAssign(@PathVariable("applicationId") long applicationId,
                                            UserResource user,
                                            HttpServletRequest request) {
 
@@ -120,13 +122,35 @@ public class ApplicationSubmitController {
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
-    @GetMapping("/{applicationId}/confirm-submit")
-    public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                           UserResource user) {
-        ApplicationResource application = applicationService.getById(applicationId);
+    @PostMapping(value = "/{applicationId}/summary", params = "submit-application")
+    public String submitApplication(@PathVariable("applicationId") long applicationId,
+                                    @ModelAttribute("applicationSubmitForm") ApplicationSubmitForm applicationSubmitForm,
+                                    BindingResult bindingResult,
+                                    RedirectAttributes redirectAttributes) {
+
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
-        applicationModelPopulator.addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.empty());
+        if (competition.getFundingType() == FundingType.PROCUREMENT) {
+            if (!applicationSubmitForm.isAgreeTerms()) {
+                bindingResult.rejectValue("agreeTerms","validation.message");
+                redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.applicationSubmitForm", bindingResult);
+                redirectAttributes.addFlashAttribute("applicationSubmitForm", applicationSubmitForm);
+                return String.format("redirect:/application/%d/summary", applicationId);
+            }
+        }
+        redirectAttributes.addFlashAttribute("termsAgreed", true);
+        return "redirect:/application/%d/confirm-submit";
+    }
+
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAuthority('applicant')")
+    @GetMapping("/{applicationId}/confirm-submit")
+    public String applicationConfirmSubmit(@PathVariable("applicationId") long applicationId,
+                                           @ModelAttribute("termsAgreed") boolean termsAgreed,
+                                           UserResource user) {
+        if (!termsAgreed) {
+            return String.format("redirect:/application/%d/summary", applicationId);
+        }
         return "application-confirm-submit";
     }
 
@@ -150,7 +174,7 @@ public class ApplicationSubmitController {
 
         RestResult<Void> updateResult = applicationRestService.updateApplicationState(applicationId, SUBMITTED);
 
-        Supplier<String> failureView = () -> applicationConfirmSubmit(form, model, applicationId, user);
+        Supplier<String> failureView = () -> applicationConfirmSubmit(applicationId, true, user);
 
         return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
             CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
