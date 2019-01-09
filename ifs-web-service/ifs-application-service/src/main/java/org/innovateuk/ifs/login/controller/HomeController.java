@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @PreAuthorize("permitAll")
 public class HomeController {
 
-    private static final Role[] ROLES_WITH_DASHBOARDS = { LIVE_PROJECTS_USER, APPLICANT, ASSESSOR, STAKEHOLDER };
+    private static final Role[] ROLES_WITH_DASHBOARDS = { LIVE_PROJECTS_USER, APPLICANT, INNOVATION_LEAD, ASSESSOR, STAKEHOLDER };
     private static final List<Role> ROLES_WITH_DASHBOARDS_LIST = asList(ROLES_WITH_DASHBOARDS);
 
     @Autowired

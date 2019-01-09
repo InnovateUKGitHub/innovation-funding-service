@@ -32,14 +32,14 @@ public class NavigationUtils {
             );
 
     @Value("${ifs.live.projects.landing.page.url}")
-    private String accLandingPageUrl;
+    private String liveProjectsLandingPageUrl;
 
     private NavigationUtils() {}
 
     public String getRedirectToDashboardUrlForRole(Role role) {
 
         if (LIVE_PROJECTS_USER.equals(role)) {
-            return "redirect:" + accLandingPageUrl;
+            return "redirect:" + liveProjectsLandingPageUrl;
         }
 
         String roleUrl = DEFAULT_LANDING_PAGE_URLS_FOR_ROLES.get(role);
@@ -50,7 +50,7 @@ public class NavigationUtils {
     public String getDirectDashboardUrlForRole(HttpServletRequest request, Role role) {
 
         if (LIVE_PROJECTS_USER.equals(role)) {
-            return accLandingPageUrl;
+            return liveProjectsLandingPageUrl;
         }
 
         String roleUrl = DEFAULT_LANDING_PAGE_URLS_FOR_ROLES.get(role);
