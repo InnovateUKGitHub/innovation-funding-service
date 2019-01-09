@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
@@ -76,6 +77,7 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
 
     @Test
     @Rollback
+    @Transactional
     public void createOrganisationUserWithEmailServiceUnavailableRollbacksUserFromLdap() {
 
         regApiHelper.withMockIdpRestTemplate(mockIdpRestTemplate -> {

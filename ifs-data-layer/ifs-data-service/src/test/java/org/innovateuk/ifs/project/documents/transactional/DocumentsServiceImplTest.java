@@ -150,7 +150,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     @Test
     public void getValidMediaTypesForDocumentWhenConfiguredProjectDocumentNotPresent() {
 
-        when(competitionDocumentConfigRepositoryMock.findById(documentConfigId)).thenReturn(null);
+        when(competitionDocumentConfigRepositoryMock.findById(documentConfigId)).thenReturn(Optional.empty());
         ServiceResult<List<String>> result = service.getValidMediaTypesForDocument(documentConfigId);
 
         assertTrue(result.isFailure());

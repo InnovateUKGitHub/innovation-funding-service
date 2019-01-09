@@ -58,8 +58,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("category/{method-name}",
                         responseFields(
-                                categoryResourceFieldsWithSector("list with all innovation areas, excluding 'None'", "innovation area", "innovation sector this area belongs to")
-                        )
+                        ).andWithPrefix("[].", InnovationAreaResourceDocs.innovationAreaResourceFields)
                 ));
     }
 

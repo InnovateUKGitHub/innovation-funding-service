@@ -22,6 +22,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.BankDetailsDocs.bankDetailsResourceFields;
 import static org.innovateuk.ifs.documentation.BankDetailsDocs.projectBankDetailsStatusSummaryFields;
+import static org.innovateuk.ifs.documentation.ProjectDocumentResourceDocs.projectDocumentResourceFields;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
@@ -112,7 +113,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("projectId").description("Id of the project to be updated with bank details")
                         ),
                         requestFields(bankDetailsResourceFields)
-                        .andWithPrefix("organisationAddress.", OrganisationAddressDocs.organisationAddressResourceFields)
+                        .andWithPrefix("address.", OrganisationAddressDocs.organisationAddressResourceFields)
                 ))
                 .andReturn();
     }

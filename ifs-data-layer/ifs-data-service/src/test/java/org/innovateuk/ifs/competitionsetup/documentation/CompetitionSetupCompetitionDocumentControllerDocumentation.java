@@ -4,10 +4,12 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupDocumentController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupDocumentService;
+import org.innovateuk.ifs.documentation.InnovationAreaResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -95,8 +97,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                                 fieldWithPath("[]").description("List of Project Documents to save")
                         ),
                         responseFields(
-                                fieldWithPath("[]").description("List of Project Documents which were just saved to the database")
-                        )
+                        ).andWithPrefix("[].", projectDocumentResourceFields)
                 ));
 
         verify(competitionSetupDocumentServiceMock, only()).saveAll(competitionDocumentResources);
@@ -130,7 +131,8 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
 
         long competitionId = 1L;
 
-        List<CompetitionDocumentResource> competitionDocumentResources = neCompetitionDocumentResource().build(2);
+        List<CompetitionDocumentResource> competitionDocumentResources = neCompetitionDocumentResource()
+                .build(2);
 
         when(competitionSetupDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionDocumentResources));
 
@@ -143,8 +145,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                                 parameterWithName("competitionId").description("The competition id for which Project Documents need to be retrieved")
                         ),
                         responseFields(
-                                fieldWithPath("[]").description("list of Project Documents which were just saved to the database")
-                        )
+                        ).andWithPrefix("[].", projectDocumentResourceFields)
                 ));
 
         verify(competitionSetupDocumentServiceMock, only()).findByCompetitionId(competitionId);

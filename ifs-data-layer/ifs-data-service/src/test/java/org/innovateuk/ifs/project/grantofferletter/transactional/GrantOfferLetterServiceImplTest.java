@@ -31,6 +31,7 @@ import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.model.*;
@@ -628,7 +629,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
 
         verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
-        verify(costRepositoryMock, times(3)).findByCostGroupId(anyLong());
+        verify(costRepositoryMock, times(3)).findByCostGroupId(any());
         verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
         verify(academicFinanceTablePopulatorMock).createTable(anyMap());
         verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());
