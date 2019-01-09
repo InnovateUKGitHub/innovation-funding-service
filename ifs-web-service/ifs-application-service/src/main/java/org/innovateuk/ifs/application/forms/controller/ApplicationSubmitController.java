@@ -15,7 +15,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -38,8 +38,6 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QU
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_AS_COMPLETE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.collectValidationMessages;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
@@ -60,6 +58,7 @@ public class ApplicationSubmitController {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     private static final String FORM_ATTR_NAME = "form";
+    public static final String APPLICATION_SUBMIT_FROM_ATTR_NAME = "applicationSubmitForm";
 
     public ApplicationSubmitController() {
     }
@@ -132,33 +131,35 @@ public class ApplicationSubmitController {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         if (competition.getFundingType() == FundingType.PROCUREMENT) {
             if (!applicationSubmitForm.isAgreeTerms()) {
-                bindingResult.rejectValue("agreeTerms","validation.message");
-                redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.applicationSubmitForm", bindingResult);
-                redirectAttributes.addFlashAttribute("applicationSubmitForm", applicationSubmitForm);
+                bindingResult.rejectValue("agreeTerms","validation.application.procurement.terms.required");
+                redirectAttributes.addFlashAttribute(BindingResult.class.getCanonicalName() + "." + APPLICATION_SUBMIT_FROM_ATTR_NAME, bindingResult);
+                redirectAttributes.addFlashAttribute(APPLICATION_SUBMIT_FROM_ATTR_NAME, applicationSubmitForm);
                 return String.format("redirect:/application/%d/summary", applicationId);
             }
         }
         redirectAttributes.addFlashAttribute("termsAgreed", true);
-        return "redirect:/application/%d/confirm-submit";
+        return String.format("redirect:/application/%d/confirm-submit", applicationId);
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(@PathVariable("applicationId") long applicationId,
-                                           @ModelAttribute("termsAgreed") boolean termsAgreed,
-                                           UserResource user) {
-        if (!termsAgreed) {
+                                           @ModelAttribute("termsAgreed") Boolean termsAgreed,
+                                           @ModelAttribute(FORM_ATTR_NAME) Form form,
+                                           Model model) {
+        if (!Boolean.TRUE.equals(termsAgreed)) {
             return String.format("redirect:/application/%d/summary", applicationId);
         }
+        model.addAttribute("applicationId", applicationId);
         return "application-confirm-submit";
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
-    @PostMapping("/{applicationId}/submit")
+    @PostMapping("/{applicationId}/confirm-submit")
     public String applicationSubmit(Model model,
-                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
+                                    @ModelAttribute(FORM_ATTR_NAME) Form form,
                                     @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     @PathVariable("applicationId") long applicationId,
@@ -174,13 +175,10 @@ public class ApplicationSubmitController {
 
         RestResult<Void> updateResult = applicationRestService.updateApplicationState(applicationId, SUBMITTED);
 
-        Supplier<String> failureView = () -> applicationConfirmSubmit(applicationId, true, user);
+        Supplier<String> failureView = () -> applicationConfirmSubmit(applicationId, true, form, model);
 
-        return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
-            CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-            applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
-            return "application-submitted";
-        });
+        return validationHandler.addAnyErrors(updateResult)
+                .failNowOrSucceedWith(failureView, () -> String.format("redirect:/application/%d/track", applicationId));
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
