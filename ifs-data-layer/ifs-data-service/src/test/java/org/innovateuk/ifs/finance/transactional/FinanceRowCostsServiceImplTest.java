@@ -123,7 +123,7 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
 
         when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.of(application));
         when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(organisation));
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(openCompetition.getId(), OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
         when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.of(application));
         when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(organisation));
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(application.getCompetition().getId(), OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);

@@ -42,7 +42,7 @@ public class PublicContentRepositoryIntegrationTest extends BaseRepositoryIntegr
         repository.save(publicContent);
         flushAndClearSession();
 
-        Competition actual = competitionRepository.findById(competition.getId());
+        Competition actual = competitionRepository.findById(competition.getId()).get();
 
         assertEquals(publicContent.getFundingType(), actual.getFundingType());
     }
@@ -62,7 +62,7 @@ public class PublicContentRepositoryIntegrationTest extends BaseRepositoryIntegr
         repository.save(publicContent);
         flushAndClearSession();
 
-        Competition actual = competitionRepository.findById(competition.getId());
+        Competition actual = competitionRepository.findById(competition.getId()).get();
 
         assertNotNull(actual.getFundingType());
     }

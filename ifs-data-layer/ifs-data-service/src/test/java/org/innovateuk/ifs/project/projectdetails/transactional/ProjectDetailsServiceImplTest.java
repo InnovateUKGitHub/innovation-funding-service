@@ -978,7 +978,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), REGISTERED, existingRegisteredAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), existingRegisteredAddressResource);
         assertTrue(result.isSuccess());
         assertEquals(registeredAddress, project.getAddress());
     }
@@ -999,7 +999,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), OPERATING, existingOperatingAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), existingOperatingAddressResource);
         assertTrue(result.isSuccess());
         assertEquals(operatingAddress, project.getAddress());
     }

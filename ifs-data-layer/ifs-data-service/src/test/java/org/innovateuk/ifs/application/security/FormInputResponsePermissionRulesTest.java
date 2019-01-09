@@ -149,7 +149,7 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
                 .withUser(stakeholderUser)
                 .build();
 
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         when(stakeholderRepositoryMock.findStakeholders(competition.getId())).thenReturn(asList(stakeholder));
 
         assertTrue(rules.stakeholdersCanSeeFormInputResponsesForApplications(sharedInputResponse, stakeholderUserResource));

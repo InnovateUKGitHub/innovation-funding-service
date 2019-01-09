@@ -327,7 +327,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
         assertNull(competition.getCompletionStage());
 
-        when(competitionRepository.findOne(1L)).thenReturn(competition);
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
 
         ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
 

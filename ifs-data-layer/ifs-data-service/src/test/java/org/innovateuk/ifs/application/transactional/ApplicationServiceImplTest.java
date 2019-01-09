@@ -347,7 +347,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         User user = newUser().withId(userResource.getId()).withRoles(singleton(role)).build();
 
         setLoggedInUser(userResource);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         List<Application> applications = ApplicationBuilder.newApplication().build(5);
 
@@ -581,7 +581,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void showApplicationTeamWhenStakeholder() {
         User user = newUser().withRoles(singleton(Role.STAKEHOLDER)).build();
-        when(userRepositoryMock.findOne(234L)).thenReturn(user);
+        when(userRepositoryMock.findById(234L)).thenReturn(Optional.of(user));
 
         ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
 

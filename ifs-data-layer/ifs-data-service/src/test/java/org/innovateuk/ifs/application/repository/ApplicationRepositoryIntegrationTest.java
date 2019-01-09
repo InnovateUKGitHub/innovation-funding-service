@@ -275,8 +275,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Pageable pageable = new PageRequest(1, 40);
 
         userRepository.save(user);
-        competitionRepository.save(competitions);
-        applicationRepository.save(applications);
+        competitionRepository.saveAll(competitions);
+        applicationRepository.saveAll(applications);
         innovationLeadRepository.save(innovationLead);
 
         Page<Application> foundApplication = repository.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), applications.get(0).getId().toString(), pageable);
@@ -306,9 +306,9 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Pageable pageable = new PageRequest(1, 40);
 
         userRepository.save(user);
-        competitionRepository.save(competitions);
+        competitionRepository.saveAll(competitions);
         stakeholderRepository.save(stakeholder);
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
 
         Page<Application> foundApplication = repository.searchApplicationsByUserIdAndStakeholderRole(user.getId(), applications.get(0).getId().toString(), pageable);

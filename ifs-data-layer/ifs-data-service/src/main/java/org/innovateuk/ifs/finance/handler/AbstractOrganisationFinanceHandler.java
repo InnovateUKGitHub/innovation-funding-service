@@ -54,7 +54,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
                     c.setQuestion(question);
                     c.setTarget(applicationFinance);
                 });
-                return applicationFinanceRowRepository.save(cost);
+                return applicationFinanceRowRepository.saveAll(cost);
             } catch (IllegalArgumentException e) {
                 LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
             }
@@ -177,7 +177,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     @Override
     public ApplicationFinanceRow updateCost(final ApplicationFinanceRow newCostItem) {
-        return find(applicationFinanceRowRepository.findOne(newCostItem.getId()), notFoundError(ApplicationFinanceRow.class, newCostItem.getId()))
+        return find(applicationFinanceRowRepository.findById(newCostItem.getId()), notFoundError(ApplicationFinanceRow.class, newCostItem.getId()))
                 .andOnSuccess(costItem -> serviceSuccess(applicationFinanceRowRepository.save(newCostItem))).getSuccess();
     }
 

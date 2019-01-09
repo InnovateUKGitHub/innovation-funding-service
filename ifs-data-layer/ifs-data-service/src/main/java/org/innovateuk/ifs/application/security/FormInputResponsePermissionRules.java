@@ -73,7 +73,7 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Stakeholders can see form input responses for applications they are assigned to")
     public boolean stakeholdersCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
-        Application application = applicationRepository.findById(response.getApplication());
+        Application application = applicationRepository.findById(response.getApplication()).get();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 

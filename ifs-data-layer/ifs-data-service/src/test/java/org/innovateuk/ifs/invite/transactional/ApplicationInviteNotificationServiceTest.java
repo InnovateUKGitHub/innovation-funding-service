@@ -162,7 +162,7 @@ public class ApplicationInviteNotificationServiceTest {
 
         when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
         when(notificationServiceMock.sendNotificationWithFlush(isA(Notification.class), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
-        when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
         when(notificationServiceMock.sendNotificationWithFlush(createNotificationExpectations(invite, application,
                 competition, leadOrganisation), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
 
