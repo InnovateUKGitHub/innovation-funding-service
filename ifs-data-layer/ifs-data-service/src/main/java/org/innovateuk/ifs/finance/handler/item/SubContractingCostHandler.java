@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.SubContractingCost;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * Handles the subcontracting costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@Component
 public class SubContractingCostHandler extends FinanceRowHandler<SubContractingCost> {
     public static final String COST_FIELD_COUNTRY = "country";
     public static final String COST_KEY = "subcontracting";
