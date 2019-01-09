@@ -31,7 +31,7 @@ public class NavigationUtils {
                     STAKEHOLDER, "management/dashboard"
             );
 
-    @Value("${ifs.acc.landing.page.url}")
+    @Value("${ifs.live.projects.landing.page.url}")
     private String accLandingPageUrl;
 
     private NavigationUtils() {}
