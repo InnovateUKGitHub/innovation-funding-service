@@ -55,6 +55,37 @@
                         <div class="message-alert">
                             <p class="govuk-body">You will not be able to make changes to your application or resubmit after this point.</p>
                         </div>
+
+                        <th:block th:if="${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT and model.applicationReadyForSubmit}">
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('termsAgreed')} ? 'govuk-form-group--error'">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                                        <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
+                                    </legend>
+                                    <th:block th:if="${#fields.hasErrors('termsAgreed')}">
+                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
+                                    </th:block>
+                                    <div class="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item">
+                                            <input id="agree-terms-page"
+                                                   class="govuk-checkboxes__input"
+                                                   th:field="*{termsAgreed}"
+                                                   type="checkbox"
+                                                   value="true"
+                                                   data-switches-button-status="#mark-all-as-complete"
+                                                   data-autosave-disabled />
+                                            <label for="agree-terms-page"
+                                                   class="govuk-label govuk-checkboxes__label">
+                                                As a member of this consortium I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.competitionId})}" class="govuk-link">competition terms and conditions</a> set out by Innovate UK.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </th:block>
+
+
+
                         <a th:if="${model.applicationReadyForSubmit}" id="submit-application-button" class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-submit-application"
                            th:href="@{/application/{id}/confirm-submit(id=${model.currentApplication.getId()})}">Submit application</a>
                         <button disabled="disabled" class="govuk-button govuk-!-margin-top-6" th:unless="${model.applicationReadyForSubmit}">Submit application</button>
