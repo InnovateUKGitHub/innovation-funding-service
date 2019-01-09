@@ -42,14 +42,14 @@
 
         <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" novalidate="novalidate" method="POST">
 
-        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group-error'">
+        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
             <label class="govuk-label"
                    th:for="*{organisationSearchName}"
                    th:text="${searchLabel}">
                 Find your ? organisation
             </label>
             <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
-                <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}">
+                <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
                 </th:block>
                 <input class="govuk-input govuk-!-width-one-half"
