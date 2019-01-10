@@ -33,7 +33,7 @@ Submit button disabled when application is incomplete
     [Documentation]    INFUND-927, IFS-942, IFS-753
     [Tags]  HappyPath
     [Setup]  Log in as a different user                ${submit_bus_email}  ${correct_password}
-    Given the user navigates to the page               ${DASHBOARD_URL}
+    Given the user navigates to the page               ${APPLICANT_DASHBOARD_URL}
     When the user clicks the button/link               link = ${application_bus_name}
     And the user should not see the element            jQuery = .message-alert:contains("Now your application is complete, you need to review and then submit.")
     And the user clicks the button/link                link = Your finances
@@ -50,7 +50,7 @@ Submit button disabled when application is incomplete
 Applicant has read only view on review and submit page
     [Documentation]    INFUND-7405, INFUND-8599
     [Tags]  HappyPath
-    Given the user navigates to the page                  ${DASHBOARD_URL}
+    Given the user navigates to the page                  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                   link = ${application_bus_name}
     When the applicant completes the application details  ${application_bus_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the user clicks the button/link                   link = Your finances
@@ -108,7 +108,7 @@ The applicant should get a confirmation email
 Submitted application is read only
     [Documentation]    INFUND-1938, INFUND-9058
     [Tags]
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link     link = ${application_bus_name}
     When the user clicks the button/link    link = View application
     And The user should be redirected to the correct page    summary
@@ -117,7 +117,7 @@ Submitted application is read only
 Status of the submitted application
     [Documentation]    INFUND-1137
     [Tags]
-    When the user navigates to the page   ${DASHBOARD_URL}
+    When the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     Then the user should see the element  jQuery = .in-progress li:contains("${application_bus_name}") .msg-progress:contains("Application submitted")
     And the user clicks the button/link   link = ${application_bus_name}
     And the user should see the element   link = View application
@@ -127,7 +127,7 @@ RTO lead has read only view after submission
     [Documentation]    INFUND-7405, INFUND-8599
     [Tags]
     [Setup]  log in as a different user  ${submit_rto_email}  ${correct_password}
-    Given the user navigates to the page                   ${DASHBOARD_URL}
+    Given the user navigates to the page                   ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                    link = ${application_rto_name}
     When the applicant completes the application details   ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the user fills in the organisation information     ${application_rto_name}  ${SMALL_ORGANISATION_SIZE}
@@ -143,7 +143,7 @@ RTO lead has read only view after submission
 Submit flow rto lead (complete application)
     [Documentation]  IFS-1051
     [Tags]
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                     link = ${application_rto_name}
     And the user should see the text in the element         css = .message-alert  Now your application is complete, you need to review and then submit.
     When the user clicks the button/link                    link = Review and submit
@@ -173,7 +173,7 @@ the applicant clicks the submit button and the clicks cancel in the submit modal
 
 The user can check that the sections are read only
     [Arguments]  ${application_name}
-    the user navigates to the page         ${dashboard_url}
+    the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link        link = ${application_name}
     the user clicks the button/link        link = View application
     the user clicks the button/link        css = .section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
@@ -191,7 +191,7 @@ the applicant accepts the terms and conditions
     the user selects the checkbox    stateAidAgreed
 
 the applicant marks the first section as complete
-    the user navigates to the page    ${DASHBOARD_URL}
+    the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link    link = ${application_name}
     the applicant completes the application details  ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
 

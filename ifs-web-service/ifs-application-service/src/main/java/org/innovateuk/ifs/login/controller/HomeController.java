@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.login.controller;
 
+import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.login.form.RoleSelectionForm;
 import org.innovateuk.ifs.login.viewmodel.DashboardPanel;
 import org.innovateuk.ifs.login.viewmodel.DashboardSelectionViewModel;
 import org.innovateuk.ifs.user.resource.Role;
@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -40,26 +39,26 @@ public class HomeController {
     private NavigationUtils navigationUtils;
 
     @GetMapping("/")
+    @PreAuthorize("isAuthenticated()")
     public String login() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (unauthenticated(authentication)) {
-            return "redirect:/";
+            throw new ForbiddenActionException("Unable to access root url without being authenticated first");
         }
 
         UserResource user = (UserResource) authentication.getDetails();
 
         if (user.hasMoreThanOneRoleOf(ROLES_WITH_DASHBOARDS)) {
-            return "redirect:/roleSelection";
+            return "redirect:/dashboard-selection";
         }
 
         return getRedirectUrlForUser(user);
     }
 
-    @GetMapping("/roleSelection")
+    @GetMapping("/dashboard-selection")
     public String selectRole(HttpServletRequest request,
-                             Model model,
-                             @ModelAttribute(name = "form", binding = false) RoleSelectionForm form) {
+                             Model model) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
@@ -92,7 +91,7 @@ public class HomeController {
     private String getRedirectUrlForUser(UserResource user) {
 
         if (user.getRoles().isEmpty()) {
-            return "";
+            throw new ForbiddenActionException("Unable to access dashboards without at least one role");
         }
 
         Role role = user.getRoles().get(0);

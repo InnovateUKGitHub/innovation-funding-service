@@ -71,7 +71,7 @@ New assessor should have the correct innovation area
 New assessor has no assements
     [Documentation]  INFUND-9007
     [Tags]  HappyPath
-    When The user navigates to the page           ${assessor_dashboard_url}
+    When The user navigates to the page           ${ASSESSOR_DASHBOARD_URL}
     And the user should see the text in the page  There are currently no assessments for you to review.
 
 CompAdmin should see Assessor's profile and Innovation Area
@@ -104,7 +104,7 @@ New assessor has one assessment to accept
     [Documentation]  INFUND-9007
     [Tags]  HappyPath
     [Setup]   Log in as a different user          &{Assessor_e2e}
-    Then The user navigates to the page           ${assessor_dashboard_url}
+    Then The user navigates to the page           ${ASSESSOR_DASHBOARD_URL}
     And the user should see the text in the page  1 applications awaiting acceptance
 
 Assessor is notified by Email
@@ -122,7 +122,7 @@ Assessor accepts the invite for the Application
 
 New assessor has one assessment
     [Documentation]  INFUND-9007
-    When The user navigates to the page    ${assessor_dashboard_url}
+    When The user navigates to the page    ${ASSESSOR_DASHBOARD_URL}
     And the user should see the text in the page    1 applications to assess
 
 *** Keywords ***

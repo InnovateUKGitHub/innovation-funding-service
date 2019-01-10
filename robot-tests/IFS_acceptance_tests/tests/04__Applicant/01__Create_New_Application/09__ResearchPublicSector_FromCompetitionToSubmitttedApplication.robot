@@ -123,7 +123,7 @@ the user removes some of the Project details questions
     the user should not see the element         jQuery = li:contains("Public description")
 
 user is not able to submit his application as he exceeds research participation
-    the user navigates to the page   ${dashboard_url}
+    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  link = ${researchLeadApp}
     the user clicks the button/link  link = Review and submit
     the user should see the element  jQuery = button:disabled:contains("Submit application")

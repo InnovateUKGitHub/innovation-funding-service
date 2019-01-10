@@ -12,7 +12,7 @@ Status changes when we assign a question
     [Documentation]    INFUND-39
     [Tags]
     [Setup]     Log in as a different user         &{lead_applicant_credentials}
-    Given the user navigates to the page           ${DASHBOARD_URL}
+    Given the user navigates to the page           ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Academic robot test application
     And the user clicks the button/link            link = Project summary
     When the Applicant edits the Project summary
@@ -23,7 +23,7 @@ Status changes when we assign a question
 Re-assign is possible from the overview page
     [Documentation]    INFUND-39
     [Tags]
-    Given the user navigates to the page                                            ${DASHBOARD_URL}
+    Given the user navigates to the page                                            ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                                             link = Academic robot test application
     When the applicant assigns the Project Summary question from the overview page  Steve Smith
     Then a blue flag should be visible for the Project Summary in overview page
@@ -41,7 +41,7 @@ the Applicant edits the Project summary
     wait for autosave
 
 the assign status should be correct for the Project Summary
-    the user navigates to the page   ${DASHBOARD_URL}
+    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  link = Academic robot test application
     the user should see the element  jQuery = li:contains("Project summary") > .assign-container button
     Element Should Contain           jQuery = li:contains("Project summary") > .assign-container button    Arsene Wenger

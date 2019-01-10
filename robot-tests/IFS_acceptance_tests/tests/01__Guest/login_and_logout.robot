@@ -26,48 +26,57 @@ Valid login with double role as Applicant
     [Tags]
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
     And The guest user clicks the log-in button
-    Then The user should see the element                      jQuery = h1:contains("Select a dashboard")
-    And The user clicks the button/link                       id = continue
-    Then the user should see a field and summary error        Please select a role.
-    And the user selects the radio button                     selectedRole    APPLICANT
-    And The user clicks the button/link                       id = continue
-    Then the user should be redirected to the correct page    ${DASHBOARD_URL}
+    Then The user should see the element                      jQuery = h1:contains("Dashboard")
+    And the user should see the element                       css = #dashboard-link-APPLICANT
+    And the user should see the element                       css = #dashboard-link-ASSESSOR
+    And the user should not see the element                   css = #dashboard-link-LIVE_PROJECTS_USER
+    And the user should not see the element                   css = #dashboard-link-STAKEHOLDER
+    And the user should not see the element                   css = #dashboard-link-INNOVATION_LEAD
+
+    When the user clicks the button/link                      css = #dashboard-link-APPLICANT
+    Then the user should be redirected to the correct page    ${APPLICANT_DASHBOARD_URL}
+    And the user should see the element                       jQuery = h1:contains("Applications")
+
+    When the user clicks the button/link                      css = #dashboard-navigation-link
+    Then the user should see the element                      jQuery = h1:contains("Dashboard")
+    And the user should see the element                       css = #dashboard-link-APPLICANT
+    And the user should see the element                       css = #dashboard-link-ASSESSOR
     [Teardown]    Logout as user
 
 Valid login with Double role as Assessor
     [Documentation]    INFUND-1479
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
-    And The guest user clicks the log-in button
-    And the user selects the radio button                     selectedRole    ASSESSOR
-    And The user clicks the button/link                       jQuery = button:contains("Continue")
-    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    When The guest user clicks the log-in button
+    And the user clicks the button/link                       css = #dashboard-link-ASSESSOR
+    Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
+    And the user should see the element                       jQuery = h1:contains("Assessments")
     [Teardown]    Logout as user
 
 Valid login with triple role Assessor
     [Documentation]  IFS-4568
     Given the guest user inserts user email and password      &{triple_user_credentials}
     And The guest user clicks the log-in button
-    And the user selects the radio button                     selectedRole    APPLICANT
-    And The user clicks the button/link                       jQuery = button:contains("Continue")
-    Then the user should be redirected to the correct page    ${DASHBOARD_URL}
+    When the user clicks the button/link                      css = #dashboard-link-APPLICANT
+    Then the user should be redirected to the correct page    ${APPLICANT_DASHBOARD_URL}
+    And the user should see the element                       jQuery = h1:contains("Applications")
     [Teardown]    Logout as user
 
 Valid login with triple role Stakeholder
     [Documentation]  IFS-4568
     Given the guest user inserts user email and password      &{triple_user_credentials}
     And The guest user clicks the log-in button
-    And the user selects the radio button                     selectedRole    STAKEHOLDER
-    And The user clicks the button/link                       jQuery = button:contains("Continue")
+    When the user clicks the button/link                      css = #dashboard-link-STAKEHOLDER
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    And the user should see the element                       jQuery = h1:contains("All competitions")
     [Teardown]    Logout as user
 
 Valid login with triple role Applicant
     [Documentation]  IFS-4568
     Given the guest user inserts user email and password      &{triple_user_credentials}
     And The guest user clicks the log-in button
-    And the user selects the radio button                     selectedRole    ASSESSOR
-    And The user clicks the button/link                       jQuery = button:contains("Continue")
-    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    And the user clicks the button/link                       css = #dashboard-link-ASSESSOR
+    Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
+    And the user should see the element                       jQuery = h1:contains("Assessments")
     [Teardown]    Logout as user
 
 Should not see the Sign in link when on the login page

@@ -88,7 +88,7 @@ The project start date is blank
 
 The user can see this new application on their dashboard
     [Arguments]     ${application_name}
-    the user navigates to the page            ${DASHBOARD_URL}
+    the user navigates to the page            ${APPLICANT_DASHBOARD_URL}
     the user should see the text in the page  ${application_name}
 
 Applicant goes to the registration form

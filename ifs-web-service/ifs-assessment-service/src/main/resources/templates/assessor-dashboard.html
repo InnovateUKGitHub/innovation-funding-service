@@ -11,7 +11,7 @@
         <th:block th:insert="fragments/layout :: phase-banner" />
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor dashboard',size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessments',size='govuk-heading-xl'" />
             <div class="message-alert govuk-!-margin-bottom-6" th:unless="${model.profileStatus.complete}">
                 <h2 class="govuk-heading-s govuk-!-margin-0">Complete your assessor account</h2>
 

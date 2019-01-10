@@ -16,7 +16,7 @@ Back button returns to assessor dashboard
     [Documentation]    INFUND-8009
     [Tags]
     Given the user clicks the button/link                   link = Assessor dashboard
-    Then the user should be redirected to the correct page  ${assessor_dashboard_url}
+    Then the user should be redirected to the correct page  ${ASSESSOR_DASHBOARD_URL}
     [Teardown]    user opens the edit details form
 
 Back button from edit returns to read only view

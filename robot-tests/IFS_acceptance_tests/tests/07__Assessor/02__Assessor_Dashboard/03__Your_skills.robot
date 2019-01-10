@@ -78,7 +78,7 @@ Return to assessor dashboard from skills page
     [Documentation]    INFUND-8009
     [Tags]
     When the user clicks the button/link    jQuery = a:contains("Return to assessor dashboard")
-    Then the user should be redirected to the correct page     ${assessor_dashboard_url}
+    Then the user should be redirected to the correct page     ${ASSESSOR_DASHBOARD_URL}
 
 *** Keywords ***
 The correct radio button should be selected

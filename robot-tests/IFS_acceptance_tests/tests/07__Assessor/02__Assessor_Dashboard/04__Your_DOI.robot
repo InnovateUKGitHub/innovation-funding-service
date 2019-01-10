@@ -29,7 +29,7 @@ Back to the dashboard link
     And The user should see the element    jQuery = h2:contains("Principal employer and role") ~ p:contains("Not answered")
     And The user should see the element    jQuery = h2:contains("Professional affiliations") ~ p:contains("Not answered")
     And the user clicks the button/link    jQuery=a:contains("Assessor dashboard")
-    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
 
 Server-side validations when No selected at yes/no
     [Documentation]    INFUND-3715  IFS-1947
@@ -91,7 +91,7 @@ Successful save for the DOI form
     And the user should see the element    jQuery = td:contains("Director")
     And the user should see the element    jQuery = p:contains("My interests")
     When the user clicks the button/link   jQuery = a:contains("Assessor dashboard")
-    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
     And the user should not see the element    jQuery = .message-alert a:contains('your declaration of interest')    #his checks the alert message on the top od the page
     And the user clicks the button/link    link = your details
     And the user clicks the button/link    link = DOI

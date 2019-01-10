@@ -2,28 +2,26 @@ package org.innovateuk.ifs.login.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
-import org.innovateuk.ifs.login.form.RoleSelectionForm;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.validation.BindingResult;
+import org.mockito.Spy;
 
 import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController> {
 
     @Mock
     private CookieUtil cookieUtil;
+
+    @Spy
+    private NavigationUtils navigationUtils;
 
     @Override
     protected HomeController supplyControllerUnderTest() {
@@ -39,13 +37,12 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
      * Test if you are redirected to the login page, when you visit the root url http://<domain>/
      */
     @Test
-    public void home() throws Exception {
+    public void homeWithNullLoggedInUser() throws Exception {
 
         setLoggedInUser(null);
 
         mockMvc.perform(get("/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -53,8 +50,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         setLoggedInUserAuthentication(null);
 
         mockMvc.perform(get("/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -64,8 +60,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         setLoggedInUserAuthentication(userAuth);
 
         mockMvc.perform(get("/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -100,8 +95,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         setLoggedInUser(new UserResource());
 
         mockMvc.perform(get("/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/dashboard"));
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -110,7 +104,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
 
         mockMvc.perform(get("/"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/roleSelection"));
+                .andExpect(view().name("redirect:/dashboard-selection"));
     }
 
     @Test
@@ -119,96 +113,44 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
 
         mockMvc.perform(get("/"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/roleSelection"));
+                .andExpect(view().name("redirect:/dashboard-selection"));
     }
 
     @Test
-    public void roleChoice() throws Exception {
+    public void homeLoggedInDualRoleInnovationLead() throws Exception {
+        setLoggedInUser(innovationLeadAndApplicant);
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/dashboard-selection"));
+    }
+
+    @Test
+    public void dashboardSelection() throws Exception {
         setLoggedInUser(stakeholderAndAssessor);
 
-        mockMvc.perform(get("/roleSelection"))
+        mockMvc.perform(get("/dashboard-selection"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login/multiple-dashboard-choice"));
     }
 
     @Test
-    public void roleChoiceNotAuthenticated() throws Exception {
+    public void dashboardSelectionNotAuthenticated() throws Exception {
         UserAuthentication userAuth = new UserAuthentication(null);
         userAuth.setAuthenticated(false);
         setLoggedInUserAuthentication(userAuth);
 
-        mockMvc.perform(get("/roleSelection"))
+        mockMvc.perform(get("/dashboard-selection"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
     }
 
     @Test
-    public void roleSelectionWithSingleRoleUser() throws Exception {
+    public void dashboardSelectionWithSingleRoleUser() throws Exception {
         setLoggedInUser(applicant);
 
-        mockMvc.perform(get("/roleSelection"))
+        mockMvc.perform(get("/dashboard-selection"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
-    }
-
-    @Test
-    public void roleSelectionAssessor() throws Exception {
-        setLoggedInUser(assessorAndApplicant);
-        Role selectedRole = Role.ASSESSOR;
-
-        mockMvc.perform(post("/roleSelection")
-                .param("selectedRole", selectedRole.name()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessment/assessor/dashboard"))
-                .andReturn();
-    }
-
-    @Test
-    public void roleSelectionApplicant() throws Exception {
-        setLoggedInUser(assessorAndApplicant);
-        Role selectedRole = Role.APPLICANT;
-
-        mockMvc.perform(post("/roleSelection")
-                .param("selectedRole", selectedRole.name()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/applicant/dashboard"))
-                .andReturn();
-    }
-
-    @Test
-    public void roleSelectionStakeholder() throws Exception {
-        setLoggedInUser(stakeholderAndApplicant);
-        Role selectedRole = Role.STAKEHOLDER;
-
-        mockMvc.perform(post("/roleSelection")
-                .param("selectedRole", selectedRole.name()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/management/dashboard"))
-                .andReturn();
-    }
-
-    @Test
-    public void roleNotSelected() throws Exception {
-        setLoggedInUser(assessorAndApplicant);
-        RoleSelectionForm expectedForm = new RoleSelectionForm();
-        expectedForm.setSelectedRole(null);
-
-        MvcResult result = mockMvc.perform(post("/roleSelection"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attributeExists("model"))
-                .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("form", "selectedRole"))
-                .andExpect(view().name("login/multiple-dashboard-choice"))
-                .andReturn();
-
-        RoleSelectionForm form = (RoleSelectionForm) result.getModelAndView().getModel().get("form");
-        assertEquals(null, form.getSelectedRole());
-
-        BindingResult bindingResult = form.getBindingResult();
-        assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(1, bindingResult.getFieldErrorCount());
-        assertTrue(bindingResult.hasFieldErrors("selectedRole"));
-        assertEquals("Please select a role.", bindingResult.getFieldError("selectedRole").getDefaultMessage());
     }
 }
