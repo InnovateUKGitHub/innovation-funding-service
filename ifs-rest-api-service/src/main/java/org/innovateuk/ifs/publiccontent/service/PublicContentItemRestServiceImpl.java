@@ -55,7 +55,7 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<PublicContentItemResource> getItemByCompetitionId(Long id) {
+    public RestResult<PublicContentItemResource> getItemByCompetitionId(long id) {
         return getWithRestResultAnonymous(PUBLIC_CONTENT_ITEM_REST_URL + "by-competition-id/" + id, PublicContentItemResource.class);
     }
 

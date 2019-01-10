@@ -5,6 +5,6 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProje
 public class FinanceChecksProjectCostsViewModel  extends YourProjectCostsViewModel {
 
     public FinanceChecksProjectCostsViewModel() {
-        super(false, false);
+        super(false, false, false);
     }
 }
