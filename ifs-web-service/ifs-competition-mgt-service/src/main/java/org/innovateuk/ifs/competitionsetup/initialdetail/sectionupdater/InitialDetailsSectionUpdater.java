@@ -7,6 +7,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -284,6 +285,9 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
             }
         } else if("autosaveInnovationAreaIds".equals(fieldName)) {
             processInnovationAreas(value, competitionResource);
+            return competitionSetupRestService.update(competitionResource).toServiceResult();
+        } else if ("fundingType".equals(fieldName)) {
+            competitionResource.setFundingType(FundingType.valueOf(value));
             return competitionSetupRestService.update(competitionResource).toServiceResult();
         }
         return super.handleIrregularAutosaveCase(competitionResource,
