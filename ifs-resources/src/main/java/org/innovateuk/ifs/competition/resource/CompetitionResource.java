@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.validation.constraints.Max;
@@ -112,6 +113,8 @@ public class CompetitionResource {
     private boolean nonFinanceType;
 
     private CompetitionCompletionStage completionStage;
+
+    private FundingType fundingType;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -732,6 +735,14 @@ public class CompetitionResource {
         this.completionStage = completionStage;
     }
 
+    public FundingType getFundingType() {
+        return fundingType;
+    }
+
+    public void setFundingType(FundingType fundingType) {
+        this.fundingType = fundingType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -802,6 +813,7 @@ public class CompetitionResource {
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
                 .append(includeProjectGrowthTable, that.includeProjectGrowthTable)
+                .append(fundingType, that.fundingType)
                 .append(createdBy, that.createdBy)
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
@@ -869,6 +881,7 @@ public class CompetitionResource {
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)
                 .append(includeProjectGrowthTable)
+                .append(fundingType)
                 .append(createdBy)
                 .append(createdOn)
                 .append(modifiedBy)

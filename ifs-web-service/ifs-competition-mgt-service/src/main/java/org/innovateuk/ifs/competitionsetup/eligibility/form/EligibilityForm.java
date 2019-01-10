@@ -17,7 +17,7 @@ import java.util.Set;
 @FieldRequiredIf(required = "researchCategoryId", argument = "researchCategoriesApplicable", predicate = true, message = "{validation.eligibilityform.researchcategoryid.required}")
 @FieldRequiredIf(required = "overrideFundingRules", argument = "researchCategoriesApplicable", predicate = true, message = "{validation.eligibilityform.overrideFundingRules.required}")
 @FieldRequiredIf(required = "fundingLevelPercentage", argument = "researchCategoriesApplicable", predicate = false, message = "{validation.eligibilityform.fundingLevel.required}")
-@FieldRequiredIf(required = "fundingLevelPercentage", argument = "overrideFundingRules", predicate = true, message = "{validation.eligibilityform.fundingLevel.required}")
+@FieldRequiredIf(required = "fundingLevelPercentageOverride", argument = "overrideFundingRules", predicate = true, message = "{validation.eligibilityform.fundingLevel.required}")
 public class EligibilityForm extends CompetitionSetupForm {
 
     @NotBlank(message = "{validation.eligibilityform.multiplestream.required}")
@@ -40,6 +40,8 @@ public class EligibilityForm extends CompetitionSetupForm {
     private Boolean overrideFundingRules;
 
     private Integer fundingLevelPercentage;
+
+    private Integer fundingLevelPercentageOverride;
 
     @NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
     private int researchParticipationAmountId = ResearchParticipationAmount.NONE.getId();
@@ -111,12 +113,27 @@ public class EligibilityForm extends CompetitionSetupForm {
         this.overrideFundingRules = overrideFundingRules;
     }
 
+    public Integer getConfiguredFundingLevelPercentage() {
+        if (Boolean.TRUE.equals(getOverrideFundingRules())) {
+            return getFundingLevelPercentageOverride();
+        }
+        return getFundingLevelPercentage();
+    }
+
     public Integer getFundingLevelPercentage() {
         return fundingLevelPercentage;
     }
 
     public void setFundingLevelPercentage(Integer fundingLevelPercentage) {
         this.fundingLevelPercentage = fundingLevelPercentage;
+    }
+
+    public Integer getFundingLevelPercentageOverride() {
+        return fundingLevelPercentageOverride;
+    }
+
+    public void setFundingLevelPercentageOverride(Integer fundingLevelPercentageOverride) {
+        this.fundingLevelPercentageOverride = fundingLevelPercentageOverride;
     }
 
     public int getResearchParticipationAmountId() {

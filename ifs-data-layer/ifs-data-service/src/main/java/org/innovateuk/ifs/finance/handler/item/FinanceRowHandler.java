@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.commons.error.ValidationUtil;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -39,8 +40,7 @@ public abstract class FinanceRowHandler<T> {
         this.costFields = financeRowMetaFields.stream().collect(Collectors.toMap(FinanceRowMetaField::getTitle, Function.<FinanceRowMetaField>identity()));
     }
 
-    public List<ApplicationFinanceRow> initializeCost() {
-        ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
-        return costs;
+    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
+        return new ArrayList<>();
     }
 }
