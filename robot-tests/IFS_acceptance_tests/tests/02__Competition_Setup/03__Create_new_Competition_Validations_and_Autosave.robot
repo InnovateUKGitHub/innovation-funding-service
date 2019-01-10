@@ -169,8 +169,7 @@ Eligibility client-side validations
     And the user selects the radio button                resubmission    no
     And the user moves focus and waits for autosave
     And the user should not see the text in the page     Please select a resubmission option
-    #TODO remove below commented line when IFS-5017 done
-    #And the user cannot see a validation error in the page
+    And the user cannot see a validation error in the page
 
 Eligibility Autosave
     [Documentation]  INFUND-4582
