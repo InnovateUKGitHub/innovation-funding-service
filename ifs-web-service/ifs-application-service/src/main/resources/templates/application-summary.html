@@ -10,7 +10,7 @@
         <th:block th:if="${model.currentApplication.isOpen() and model.applicationReadyForSubmit}" th:include="fragments/modals ::modal-confirm-submit-application
             (messageTitle='This is your final chance to make changes to the application.',
              message='You will not be able to access the application after this point. Are you sure you want to submit?',
-             submitLink='/application/'+${model.currentApplication.getId()}+'/submit',
+             submitLink='/application/'+${model.currentApplication.getId()}+'/confirm-submit',
              submitText='Yes, I want to submit my application',
              submittedText='Submitting application, please wait...',
              cancelText='Cancel')" />
