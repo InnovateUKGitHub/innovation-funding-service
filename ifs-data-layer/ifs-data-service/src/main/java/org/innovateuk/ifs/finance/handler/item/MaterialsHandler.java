@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
  * Handles the material costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@Component
 public class MaterialsHandler extends FinanceRowHandler<Materials> {
     public static final String COST_KEY = "materials";
 

@@ -5,13 +5,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.*;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -27,11 +26,50 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinanceHandler implements OrganisationFinanceHandler {
     private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
 
-    @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
-    @Autowired
-    private AutowireCapableBeanFactory beanFactory;
+    private LabourCostHandler labourCostHandler;
+
+    private CapitalUsageHandler capitalUsageHandler;
+
+    private MaterialsHandler materialsHandler;
+
+    private OtherCostHandler otherCostHandler;
+
+    private OverheadsHandler overheadsHandler;
+
+    private SubContractingCostHandler subContractingCostHandler;
+
+    private TravelCostHandler travelCostHandler;
+
+    private GrantClaimHandler grantClaimHandler;
+
+    private OtherFundingHandler otherFundingHandler;
+
+    public OrganisationFinanceDefaultHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
+                                             ProjectFinanceRowRepository projectFinanceRowRepository,
+                                             FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
+                                             QuestionService questionService,
+                                             ApplicationFinanceRepository applicationFinanceRepository,
+                                             ProjectFinanceRepository projectFinanceRepository,
+                                             LabourCostHandler labourCostHandler, CapitalUsageHandler capitalUsageHandler,
+                                             MaterialsHandler materialsHandler, OtherCostHandler otherCostHandler,
+                                             OverheadsHandler overheadsHandler,
+                                             SubContractingCostHandler subContractingCostHandler,
+                                             TravelCostHandler travelCostHandler, GrantClaimHandler grantClaimHandler,
+                                             OtherFundingHandler otherFundingHandler) {
+        super(applicationFinanceRowRepository, projectFinanceRowRepository, financeRowMetaFieldRepository, questionService, applicationFinanceRepository);
+        this.projectFinanceRepository = projectFinanceRepository;
+        this.labourCostHandler = labourCostHandler;
+        this.capitalUsageHandler = capitalUsageHandler;
+        this.materialsHandler = materialsHandler;
+        this.otherCostHandler = otherCostHandler;
+        this.overheadsHandler = overheadsHandler;
+        this.subContractingCostHandler = subContractingCostHandler;
+        this.travelCostHandler = travelCostHandler;
+        this.grantClaimHandler = grantClaimHandler;
+        this.otherFundingHandler = otherFundingHandler;
+    }
 
     @Override
     public Map<FinanceRowType, List<ChangedFinanceRowPair>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
@@ -74,35 +112,34 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
         FinanceRowHandler handler = null;
         switch (costType) {
             case LABOUR:
-                handler = new LabourCostHandler();
+                handler = labourCostHandler;
                 break;
             case CAPITAL_USAGE:
-                handler = new CapitalUsageHandler();
+                handler = capitalUsageHandler;
                 break;
             case MATERIALS:
-                handler = new MaterialsHandler();
+                handler = materialsHandler;
                 break;
             case OTHER_COSTS:
-                handler = new OtherCostHandler();
+                handler = otherCostHandler;
                 break;
             case OVERHEADS:
-                handler = new OverheadsHandler();
+                handler = overheadsHandler;
                 break;
             case SUBCONTRACTING_COSTS:
-                handler = new SubContractingCostHandler();
+                handler = subContractingCostHandler;
                 break;
             case TRAVEL:
-                handler = new TravelCostHandler();
+                handler = travelCostHandler;
                 break;
             case FINANCE:
-                handler = new GrantClaimHandler();
+                handler = grantClaimHandler;
                 break;
             case OTHER_FUNDING:
-                handler = new OtherFundingHandler();
+                handler = otherFundingHandler;
                 break;
         }
         if (handler != null) {
-            beanFactory.autowireBean(handler);
             return handler;
         }
         LOG.error("Not a valid FinanceType: " + costType);
