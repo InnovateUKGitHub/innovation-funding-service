@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 /**
  * Testing {@link ApplicationOverviewSectionViewModel}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationCompletedViewModelTest {
 
     private ApplicationCompletedViewModel viewModel;

@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for {@link AssignButtonsPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AssignButtonsPopulatorTest {
 
     @InjectMocks

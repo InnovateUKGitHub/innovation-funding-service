@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AcceptApplicationInviteServiceImplTest {
 
     @Mock

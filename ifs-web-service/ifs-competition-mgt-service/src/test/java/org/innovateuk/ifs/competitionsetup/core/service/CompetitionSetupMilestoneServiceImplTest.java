@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.ne
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class CompetitionSetupMilestoneServiceImplTest {
 
 	@InjectMocks

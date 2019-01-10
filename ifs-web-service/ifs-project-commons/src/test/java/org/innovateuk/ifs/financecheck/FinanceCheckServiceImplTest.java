@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBui
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class FinanceCheckServiceImplTest {
     @InjectMocks
     private FinanceCheckServiceImpl service;

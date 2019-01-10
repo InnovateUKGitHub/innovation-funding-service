@@ -19,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 /**
  * Tests {@link ApplicationQuestionApplicationDetailsSaver}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationQuestionApplicationDetailsSaverTest {
 
     @InjectMocks

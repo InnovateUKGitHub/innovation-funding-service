@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessorProfileDeclarationEditControllerTest extends BaseControllerMockMVCTest<AssessorProfileDeclarationEditController> {
 

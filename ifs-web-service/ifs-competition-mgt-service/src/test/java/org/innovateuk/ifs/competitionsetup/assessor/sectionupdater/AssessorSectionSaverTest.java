@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.OVERVI
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AssessorSectionSaverTest {
 
 	@InjectMocks

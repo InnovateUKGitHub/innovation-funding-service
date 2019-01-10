@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Testing {@link SummaryViewModelPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class SummaryViewModelPopulatorTest {
 
     @InjectMocks

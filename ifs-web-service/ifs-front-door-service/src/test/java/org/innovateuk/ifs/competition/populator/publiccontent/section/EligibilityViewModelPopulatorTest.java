@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Testing {@link EligibilityViewModelPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class EligibilityViewModelPopulatorTest {
 
     @InjectMocks

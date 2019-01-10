@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for {@link TextAreaViewModelPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class TextAreaViewModelPopulatorTest {
 
     @InjectMocks

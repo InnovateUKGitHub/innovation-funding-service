@@ -156,11 +156,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Mock
     private CompetitionRestService competitionRestService;
 
-    @Spy
-    @InjectMocks
-    @SuppressWarnings("unused")
-    private ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
-
+    private ThreadViewModelPopulator threadViewModelPopulator;
 
     @Before
     public void setupCommonExpectations() {

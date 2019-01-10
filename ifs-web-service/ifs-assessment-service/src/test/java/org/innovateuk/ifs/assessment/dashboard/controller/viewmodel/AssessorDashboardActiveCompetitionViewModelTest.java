@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AssessorDashboardActiveCompetitionViewModelTest {
 
     private long competitionId;

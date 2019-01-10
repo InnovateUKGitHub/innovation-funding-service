@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for public content web service.
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class PublicContentServiceImplTest {
 
     private static final Long COMPETITION_ID = 1L;

@@ -43,7 +43,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 /**
  * Tests {@link ApplicationSectionSaver}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationSectionSaverTest {
 
     @InjectMocks

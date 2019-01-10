@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class LoggedInUserMethodArgumentResolverTest {
     @Mock
     private WebDataBinderFactory webDataBinderFactory;

@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
  * Tests for {@link ApplicationSectionFinanceSaver}
  */
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationSectionFinanceSaverTest {
 
     @InjectMocks

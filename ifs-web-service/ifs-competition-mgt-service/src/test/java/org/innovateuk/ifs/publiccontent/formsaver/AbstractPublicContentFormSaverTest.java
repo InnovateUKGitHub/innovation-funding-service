@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
  * Tests for abstract form savers in public content.
  * {@link org.innovateuk.ifs.publiccontent.saver.AbstractPublicContentFormSaver} {@link org.innovateuk.ifs.publiccontent.saver.AbstractContentGroupFormSaver}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AbstractPublicContentFormSaverTest {
 
     private static final PublicContentSectionType TEST_TYPE = PublicContentSectionType.ELIGIBILITY;

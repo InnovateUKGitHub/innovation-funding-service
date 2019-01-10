@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class FinanceModelPopulatorTest {
 
     @InjectMocks

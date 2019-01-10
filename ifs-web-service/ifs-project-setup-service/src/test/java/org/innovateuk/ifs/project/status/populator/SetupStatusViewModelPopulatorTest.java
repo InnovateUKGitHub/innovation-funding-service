@@ -95,7 +95,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private static final boolean monitoringOfficerExpected = true;
 
     List<CompetitionDocumentResource> projectDocumentConfig =
-            CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+            CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
             .withTitle("Risk Register", "Plan Document")
             .build(2);
 
@@ -1432,7 +1432,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        List<CompetitionDocumentResource> competitionDocuments = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocuments = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
                 .withTitle(COLLABORATION_AGREEMENT_TITLE, "Other Document")
                 .withCompetition(competition.getId())
                 .build(2);

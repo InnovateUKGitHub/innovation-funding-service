@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AssessorCreatedInviteMapperTest {
 
     @Mock

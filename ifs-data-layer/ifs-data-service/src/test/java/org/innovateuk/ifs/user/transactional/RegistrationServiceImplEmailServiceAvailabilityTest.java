@@ -77,7 +77,6 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
 
     @Test
     @Rollback
-    @Transactional
     public void createOrganisationUserWithEmailServiceUnavailableRollbacksUserFromLdap() {
 
         regApiHelper.withMockIdpRestTemplate(mockIdpRestTemplate -> {

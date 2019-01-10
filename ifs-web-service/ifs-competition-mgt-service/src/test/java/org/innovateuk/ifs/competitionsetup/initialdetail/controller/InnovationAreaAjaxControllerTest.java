@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Class for testing public functions of {@link CompetitionSetupController}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class InnovationAreaAjaxControllerTest extends BaseControllerMockMVCTest<InnovationAreaAjaxController> {
 
     private static final String URL_PREFIX = "/competition/setup";

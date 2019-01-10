@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for FundingLevelResetHandler
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class FundingLevelResetHandlerTest {
 
     @InjectMocks

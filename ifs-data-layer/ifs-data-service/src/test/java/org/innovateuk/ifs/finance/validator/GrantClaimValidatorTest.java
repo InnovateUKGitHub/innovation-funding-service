@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class GrantClaimValidatorTest {
 	private static final Long CLAIM_ID = 1L;
 

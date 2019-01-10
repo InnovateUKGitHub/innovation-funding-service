@@ -19,7 +19,7 @@ public class ProjectStatusDocs {
             fieldWithPath("financeChecksStatus").description("Finance checks status of the project status"),
             fieldWithPath("spendProfileStatus").description("Spend profile status of the project status"),
             fieldWithPath("monitoringOfficerStatus").description("Monitoring officer status of the project status"),
-            fieldWithPath("otherDocumentsStatus").description("Other documents status of the project status"),
+            fieldWithPath("documentsStatus").description("Other documents status of the project status"),
             fieldWithPath("grantOfferLetterStatus").description("Grant offer letter status of the project status"),
             fieldWithPath("roleSpecificGrantOfferLetterState").description("Role specific grant offer letter state of the project status"),
             fieldWithPath("grantOfferLetterSent").description("Grant offer letter sent of the project status"),

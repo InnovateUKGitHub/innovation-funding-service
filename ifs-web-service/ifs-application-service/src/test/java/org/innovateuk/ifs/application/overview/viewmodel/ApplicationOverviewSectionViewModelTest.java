@@ -14,7 +14,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationOverviewSectionViewModelTest {
 
     @Test

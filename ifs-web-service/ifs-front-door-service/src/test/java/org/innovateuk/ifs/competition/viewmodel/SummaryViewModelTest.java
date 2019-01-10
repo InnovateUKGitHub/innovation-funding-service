@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Testing {@link SummaryViewModel} and the parts of {@link AbstractPublicContentGroupViewModel}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class SummaryViewModelTest {
 
     @InjectMocks

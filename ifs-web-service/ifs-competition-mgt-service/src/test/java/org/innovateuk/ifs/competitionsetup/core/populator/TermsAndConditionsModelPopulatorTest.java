@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsReso
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class TermsAndConditionsModelPopulatorTest {
 
     @InjectMocks

@@ -15,7 +15,7 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class NonIfsDetailsFormPopulatorTest {
 
     private static final String COMPETITION_NAME = "COMPETITION_NAME";

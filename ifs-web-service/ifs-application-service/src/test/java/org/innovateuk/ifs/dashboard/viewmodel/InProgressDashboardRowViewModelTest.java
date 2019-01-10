@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class InProgressDashboardRowViewModelTest {
 
     @Test

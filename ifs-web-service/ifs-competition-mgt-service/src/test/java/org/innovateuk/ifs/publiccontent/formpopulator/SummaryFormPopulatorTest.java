@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuil
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
 import static org.junit.Assert.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class SummaryFormPopulatorTest {
 
     private static final String DESCRIPTION = "SUMMARY";

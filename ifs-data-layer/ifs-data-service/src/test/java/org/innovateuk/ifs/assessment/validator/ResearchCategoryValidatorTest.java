@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ResearchCategoryValidatorTest {
 
     @InjectMocks

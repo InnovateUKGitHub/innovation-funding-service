@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by rav on 30/06/2017.
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class InternalUserRegistrationModelPopulatorTest {
 
     @InjectMocks

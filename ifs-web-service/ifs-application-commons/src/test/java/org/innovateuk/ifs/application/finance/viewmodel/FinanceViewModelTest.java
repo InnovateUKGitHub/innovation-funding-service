@@ -9,7 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class FinanceViewModelTest {
 
     @InjectMocks

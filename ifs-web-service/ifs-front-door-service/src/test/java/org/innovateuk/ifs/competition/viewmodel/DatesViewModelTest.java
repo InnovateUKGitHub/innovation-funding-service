@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Testing {@link DatesViewModel}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DatesViewModelTest {
 
     @InjectMocks

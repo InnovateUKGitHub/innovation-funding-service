@@ -4,12 +4,10 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupDocumentController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupDocumentService;
-import org.innovateuk.ifs.documentation.InnovationAreaResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -24,9 +22,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -45,7 +41,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
     @Test
     public void save() throws Exception {
 
-        CompetitionDocumentResource competitionDocumentResource = neCompetitionDocumentResource()
+        CompetitionDocumentResource competitionDocumentResource = newCompetitionDocumentResource()
                 .withId(1L)
                 .withCompetition(2L)
                 .withTitle("Title")
@@ -74,7 +70,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
     @Test
     public void saveAll() throws Exception {
 
-        List<CompetitionDocumentResource> competitionDocumentResources = neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = newCompetitionDocumentResource()
                 .withId(1L)
                 .withCompetition(12L)
                 .withTitle("Title")
@@ -96,8 +92,9 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                         requestFields(
                                 fieldWithPath("[]").description("List of Project Documents to save")
                         ),
-                        responseFields(
-                        ).andWithPrefix("[].", projectDocumentResourceFields)
+                        relaxedResponseFields(fieldWithPath("[]").description("List of Project Documents")
+                        ).andWithPrefix("[].", projectDocumentResourceFields
+                        )
                 ));
 
         verify(competitionSetupDocumentServiceMock, only()).saveAll(competitionDocumentResources);
@@ -108,7 +105,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
 
         long projectDocumentId = 1L;
 
-        CompetitionDocumentResource competitionDocumentResource = neCompetitionDocumentResource().build();
+        CompetitionDocumentResource competitionDocumentResource = newCompetitionDocumentResource().build();
 
         when(competitionSetupDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(competitionDocumentResource));
 
@@ -131,7 +128,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
 
         long competitionId = 1L;
 
-        List<CompetitionDocumentResource> competitionDocumentResources = neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = newCompetitionDocumentResource()
                 .build(2);
 
         when(competitionSetupDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionDocumentResources));

@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ManageInnovationLeadsModelPopulatorTest {
 
     @InjectMocks

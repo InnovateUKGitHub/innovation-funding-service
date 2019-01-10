@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for {@link GrantClaimCostPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class GrantClaimCostPopulatorTest {
     private static final Integer MAXIMUM_GRANT_CLAIM = 50;
     private static final Integer GRANT_CLAIM = 10;

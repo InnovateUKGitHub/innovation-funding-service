@@ -20,6 +20,7 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.AddressDocs.addressResourceFields;
 import static org.innovateuk.ifs.documentation.BankDetailsDocs.bankDetailsResourceFields;
 import static org.innovateuk.ifs.documentation.BankDetailsDocs.projectBankDetailsStatusSummaryFields;
 import static org.innovateuk.ifs.documentation.ProjectDocumentResourceDocs.projectDocumentResourceFields;
@@ -76,7 +77,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("projectId").description("Id of the project to be updated with bank details")
                         ),
                         requestFields(bankDetailsResourceFields)
-                        .andWithPrefix("organisationAddress.", OrganisationAddressDocs.organisationAddressResourceFields)
+                        .andWithPrefix("address.", addressResourceFields)
                 ))
                 .andReturn();
     }
@@ -113,7 +114,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("projectId").description("Id of the project to be updated with bank details")
                         ),
                         requestFields(bankDetailsResourceFields)
-                        .andWithPrefix("address.", OrganisationAddressDocs.organisationAddressResourceFields)
+                        .andWithPrefix("address.", addressResourceFields)
                 ))
                 .andReturn();
     }

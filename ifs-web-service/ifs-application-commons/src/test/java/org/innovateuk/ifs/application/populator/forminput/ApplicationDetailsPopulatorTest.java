@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for {@link ApplicationDetailsPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationDetailsPopulatorTest {
 
     private static final String INNOVATION_AREA_NAME = "Innovation";

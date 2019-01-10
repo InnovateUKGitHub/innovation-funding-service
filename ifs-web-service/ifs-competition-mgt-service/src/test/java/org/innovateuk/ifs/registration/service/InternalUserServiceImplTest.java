@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class InternalUserServiceImplTest extends BaseServiceUnitTest<InternalUserServiceImpl> {
 
     @Mock

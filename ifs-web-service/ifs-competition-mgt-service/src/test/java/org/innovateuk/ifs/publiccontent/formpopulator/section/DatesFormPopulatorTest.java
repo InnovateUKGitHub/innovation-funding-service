@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuild
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.assertEquals;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DatesFormPopulatorTest {
     
     @InjectMocks

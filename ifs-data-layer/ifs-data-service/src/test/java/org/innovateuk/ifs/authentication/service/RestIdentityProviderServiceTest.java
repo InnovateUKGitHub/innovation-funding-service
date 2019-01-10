@@ -16,8 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -41,7 +39,7 @@ import static org.springframework.http.HttpStatus.*;
 /**
  * Tests around the RestIdentityProviderService talking to the Shib REST API via the restTemplate
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(org.mockito.junit.MockitoJUnitRunner.Silent.class)
 public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
 
     @Mock

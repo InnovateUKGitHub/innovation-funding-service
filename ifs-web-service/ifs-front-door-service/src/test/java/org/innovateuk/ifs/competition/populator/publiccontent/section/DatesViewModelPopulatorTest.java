@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 /**
  * Testing {@link DatesViewModelPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DatesViewModelPopulatorTest {
 
     @Mock

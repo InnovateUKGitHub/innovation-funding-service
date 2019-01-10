@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.ui.ModelMap;
 
@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.neCompetitionDocumentResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.newCompetitionDocumentResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Class for testing public functions of {@link CompetitionSetupDocumentController}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMVCTest<CompetitionSetupDocumentController> {
     private static final Long COMPETITION_ID = 12L;
     private static final String URL_PREFIX = format("/competition/setup/%d/section/project-document", COMPETITION_ID);
@@ -124,7 +124,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
     @Test
     public void saveProjectDocumentLandingPageFailsWhenNoDocumentsSelected() throws Exception {
 
-        List<CompetitionDocumentResource> projectDocuments = neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> projectDocuments = newCompetitionDocumentResource()
                 .withTitle("Title")
                 .withEditable(true)
                 .withEnabled(true)
@@ -150,7 +150,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
 
     @Test
     public void viewAddProjectDocument() throws Exception {
-        List<CompetitionDocumentResource> projectDocuments = neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> projectDocuments = newCompetitionDocumentResource()
                 .withTitle("Title")
                 .withEditable(true)
                 .withEnabled(true)
@@ -280,7 +280,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
                 .build();
         long fileTypeId = 1L;
 
-        CompetitionDocumentResource competitionDocumentResource = neCompetitionDocumentResource()
+        CompetitionDocumentResource competitionDocumentResource = newCompetitionDocumentResource()
                 .withId(projectDocumentId)
                 .withTitle("Title")
                 .withGuidance("Guidance")

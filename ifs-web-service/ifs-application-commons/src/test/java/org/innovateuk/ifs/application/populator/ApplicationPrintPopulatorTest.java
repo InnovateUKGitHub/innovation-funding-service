@@ -37,7 +37,7 @@ import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationPrintPopulatorTest {
 
     @InjectMocks

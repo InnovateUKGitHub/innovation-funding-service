@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Tests for {@link DatesViewModel}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DateViewModelTest {
     private DateViewModel viewModel;
 
