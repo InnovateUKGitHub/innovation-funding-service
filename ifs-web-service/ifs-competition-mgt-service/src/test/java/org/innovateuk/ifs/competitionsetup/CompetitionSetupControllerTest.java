@@ -384,7 +384,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 bindingResult.getFieldError("competitionTypeId").getDefaultMessage()
         );
         assertEquals(
-                "Please enter a funding type.",
+                "Enter a valid funding type.",
                 bindingResult.getFieldError("fundingType").getDefaultMessage()
         );
         assertTrue(bindingResult.hasFieldErrors("stateAid"));
