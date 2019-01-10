@@ -3,12 +3,16 @@
 
     <th:block th:fragment="dashboard-block(title, description, url, linkId)">
 
-        <li class="govuk-grid-column-one-third">
-            <div class="highlight-panel highlight-panel-padded">
-                <a class="govuk-link" th:id="${linkId}" th:href="${url}" th:text="${title}">Live projects</a>
-                <small th:text="${description}">Manage your live projects.</small>
+        <div class="card govuk-grid-column-one-third">
+            <div class="card-content highlight-panel highlight-panel-padded">
+                <div>
+                    <h2><a class="govuk-link" th:id="${linkId}" th:href="${url}" th:text="${title}">Live projects</a></h2>
+                </div>
+                <div>
+                    <p class="govuk-body" th:text="${description}">Manage your live projects.</p>
+                </div>
             </div>
-        </li>
+        </div>
 
     </th:block>
 

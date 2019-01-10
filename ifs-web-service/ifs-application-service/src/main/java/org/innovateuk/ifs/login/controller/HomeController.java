@@ -74,6 +74,8 @@ public class HomeController {
     private String doViewDashboardSelection(HttpServletRequest request, Model model, UserResource user) {
 
         List<Role> dashboardRoles = simpleFilter(user.getRoles(), ROLES_WITH_DASHBOARDS_LIST::contains);
+        dashboardRoles.add(APPLICANT);
+        dashboardRoles.add(ASSESSOR);
         List<DashboardPanel> dashboardPanels = simpleMap(dashboardRoles, role -> createDashboardPanelForRole(request, role));
         List<DashboardPanel> orderedPanels = sort(dashboardPanels,
                 comparingInt(panel -> ROLES_WITH_DASHBOARDS_LIST.indexOf(panel.getRole())));

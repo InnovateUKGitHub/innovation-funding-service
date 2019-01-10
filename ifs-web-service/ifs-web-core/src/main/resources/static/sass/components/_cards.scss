@@ -1,0 +1,27 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+
+  .card {
+    margin-bottom: 20px;
+
+    .card-content {
+      border-top: 5px solid govuk-colour("blue");;
+      height: 100%;
+
+      &:hover {
+        border-color: lighten(govuk-colour("blue"), 15%);
+        background-color: govuk-colour("blue");
+        color: white;
+
+        .govuk-link {
+          color: white;
+        }
+
+        .govuk-body {
+          color: white;
+        }
+      }
+    }
+  }
+}
