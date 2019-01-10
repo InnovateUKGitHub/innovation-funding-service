@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.sil.grant.resource;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -10,16 +11,15 @@ import org.innovateuk.ifs.sil.grant.resource.json.PercentageSerializer;
 import java.math.BigDecimal;
 import java.util.Collection;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Participant {
 
     private String sourceSystem;
 
-    @JsonProperty("orgId")
-    private long id;
-
+    private long orgId;
     private String orgType;
-
     private String orgProjectRole;
+    private String orgSize;
 
     @JsonSerialize(using = ToStringSerializer.class)
     private long contactId;
@@ -28,8 +28,6 @@ public class Participant {
 
     private String contactEmail;
 
-    @JsonProperty("orgSize")
-    private String size;
 
     @JsonSerialize(using = PercentageSerializer.class)
     @JsonDeserialize(using = PercentageDeserializer.class)
@@ -46,12 +44,12 @@ public class Participant {
     @JsonProperty("forecast")
     private Collection<Forecast> forecasts;
 
-    public long getId() {
-        return id;
+    public long getOrgId() {
+        return orgId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setOrgId(long orgId) {
+        this.orgId = orgId;
     }
 
     public String getOrgProjectRole() {
@@ -94,12 +92,12 @@ public class Participant {
         this.contactEmail = contactEmail;
     }
 
-    public String getSize() {
-        return size;
+    public String getOrgSize() {
+        return orgSize;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public void setOrgSize(String size) {
+        this.orgSize = orgSize;
     }
 
     public BigDecimal getCapLimit() {
@@ -140,5 +138,51 @@ public class Participant {
 
     public void setSourceSystem(String sourceSystem) {
         this.sourceSystem = sourceSystem;
+    }
+
+    public static Participant createProjectTeamParticipant(
+            String sourceSystem,
+            long orgId,
+            String orgType,
+            String orgProjectRole,
+            long contactId,
+            String contactRole,
+            String contactEmail,
+            String orgSize,
+            BigDecimal capLimit,
+            BigDecimal awardRate,
+            BigDecimal overheadRate,
+            Collection<Forecast> forecasts) {
+
+        Participant projectTeamParticipant = new Participant();
+        projectTeamParticipant.sourceSystem = sourceSystem;
+        projectTeamParticipant.orgId = orgId;
+        projectTeamParticipant.orgType = orgType;
+        projectTeamParticipant.orgProjectRole = orgProjectRole;
+        projectTeamParticipant.contactId = contactId;
+        projectTeamParticipant.contactRole = contactRole;
+        projectTeamParticipant.contactEmail = contactEmail;
+        projectTeamParticipant.orgSize = orgSize;
+        projectTeamParticipant.capLimit = capLimit;
+        projectTeamParticipant.awardRate = awardRate;
+        projectTeamParticipant.overheadRate = overheadRate;
+        projectTeamParticipant.forecasts = forecasts;
+
+        return projectTeamParticipant;
+    }
+
+    public static Participant createSimpleContactParticipant(
+            String sourceSystem,
+            long contactId,
+            String contactRole,
+            String contactEmail) {
+
+        Participant simpleContactParticipant = new Participant();
+        simpleContactParticipant.sourceSystem = sourceSystem;
+        simpleContactParticipant.contactId = contactId;
+        simpleContactParticipant.contactRole = contactRole;
+        simpleContactParticipant.contactEmail = contactEmail;
+
+        return simpleContactParticipant;
     }
 }

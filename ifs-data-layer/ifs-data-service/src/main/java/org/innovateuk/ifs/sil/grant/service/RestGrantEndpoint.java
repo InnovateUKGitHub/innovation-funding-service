@@ -14,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_PROCESS_SEND_FAILED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -34,9 +37,13 @@ public class RestGrantEndpoint implements GrantEndpoint {
 
     @Override
     public ServiceResult<Void> send(Grant grant) {
-        final Either<ResponseEntity<Void>, ResponseEntity<Void>> response =
-                adaptor.restPostWithEntity(silRestServiceUrl + path, grant,
+
+        List<Grant> grantAsList = singletonList(grant);
+
+        Either<ResponseEntity<Void>, ResponseEntity<Void>> response =
+                adaptor.restPostWithEntity(silRestServiceUrl + path, grantAsList,
                         Void.class, Void.class, HttpStatus.OK, HttpStatus.ACCEPTED);
+
         return response.mapLeftOrRight(
                 failure -> {
                     LOG.debug("Sent grant NOK : " + grant);
