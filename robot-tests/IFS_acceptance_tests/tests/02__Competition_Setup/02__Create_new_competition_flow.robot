@@ -914,7 +914,7 @@ the user marks question as complete
 
 the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Competition title")
-    the user should see the element    jQuery = dt:contains("Funding type") ~ dd:contains("Grant")
+    the user should see the element    jQuery = dt:contains("Funding type") ~ dd:contains("Loan")
     the user should see the element    jQuery = dd:contains("Sector")
     the user should see the element    jQuery = dd:contains("Emerging and enabling")
     the user should see the element    jQuery = dd:contains("Satellite applications")
