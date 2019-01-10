@@ -685,14 +685,20 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
         return getOnlyElementOrEmpty(projectManagers);
     }
 
-    private List<NotificationTarget> getLiveProjectNotificationTarget(Project project) {
+    private List<NotificationTarget> getLiveProjectNotificationTargets(Project project) {
         List<NotificationTarget> notificationTargets = new ArrayList<>();
+
         User projectManager = getExistingProjectManager(project).get().getUser();
         NotificationTarget projectManagerTarget = createProjectManagerNotificationTarget(projectManager);
-        List<NotificationTarget> financeTargets = simpleMap(simpleFilter(project.getProjectUsers(), pu -> pu.getRole().isFinanceContact()), pu -> new UserNotificationTarget(pu.getUser().getName(), pu.getUser().getEmail()));
-        List<NotificationTarget> uniqueFinanceTargets = simpleFilterNot(financeTargets, target -> target.getEmailAddress().equals(projectManager.getEmail()));
+
+        List<ProjectUser> financeContacts = simpleFilter(project.getProjectUsers(), pu -> pu.getRole().isFinanceContact());
+        List<NotificationTarget> financeContactTargets = simpleMap(financeContacts, pu -> new UserNotificationTarget(pu.getUser().getName(), pu.getUser().getEmail()));
+
+        List<NotificationTarget> uniqueFinanceContactTargets =
+                simpleFilterNot(financeContactTargets, target -> target.getEmailAddress().equals(projectManager.getEmail()));
+
         notificationTargets.add(projectManagerTarget);
-        notificationTargets.addAll(uniqueFinanceTargets);
+        notificationTargets.addAll(uniqueFinanceContactTargets);
 
         return notificationTargets;
     }
@@ -711,7 +717,7 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
 
         Project project = projectRepository.findOne(projectId);
-        List<NotificationTarget> notificationTargets = getLiveProjectNotificationTarget(project);
+        List<NotificationTarget> notificationTargets = getLiveProjectNotificationTargets(project);
 
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationId", project.getApplication().getId());

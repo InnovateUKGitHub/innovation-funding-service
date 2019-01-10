@@ -120,10 +120,15 @@ ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3_NUMBER}       ${application_ids['${UNS
 
 ${NON_IFS_COMPETITION_NAME}     Transforming big data
 
+${DASHBOARD_SELECTION_PAGE_TITLE}  Dashboard
+
 ${APPLICANT_DASHBOARD_URL}    ${SERVER}/applicant/dashboard
+${APPLICANT_DASHBOARD_TITLE}  Applications
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+
 ${ASSESSOR_DASHBOARD_URL}    ${SERVER}/assessment/assessor/dashboard
+${ASSESSOR_DASHBOARD_TITLE}  Assessments
 
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
 

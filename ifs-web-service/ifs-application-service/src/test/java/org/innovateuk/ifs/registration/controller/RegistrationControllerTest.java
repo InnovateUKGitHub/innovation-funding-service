@@ -16,12 +16,14 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -87,6 +89,10 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
     @Mock
     private OrganisationRestService organisationRestService;
+
+    @Spy
+    @SuppressWarnings("unused")
+    private NavigationUtils navigationUtils;
 
     private Cookie inviteHashCookie;
     private Cookie usedInviteHashCookie;
@@ -496,13 +502,12 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     @Test
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
 
-
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
 
         mockMvc.perform(get("/registration/register")
                 .cookie(organisationCookie)
         ).andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/applicant/dashboard"));
+                .andExpect(view().name("redirect:http://localhost:80"));
 
     }
 
@@ -513,7 +518,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         mockMvc.perform(post("/registration/register")
                 .cookie(organisationCookie)
         ).andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/applicant/dashboard"));
+                .andExpect(view().name("redirect:http://localhost:80"));
     }
 
     @Test

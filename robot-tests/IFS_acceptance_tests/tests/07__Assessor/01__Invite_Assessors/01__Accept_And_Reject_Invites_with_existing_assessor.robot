@@ -51,7 +51,7 @@ ${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_
 Assessor dashboard contains the correct competitions
     [Documentation]    INFUND-3716  INFUND-4950  INFUND-6899
     [Tags]
-    Given the user should see the element     jQuery = h1:contains("Assessor dashboard")
+    Given the user should see the element     jQuery = h1:contains(${ASSESSOR_DASHBOARD_TITLE})
     Then The user should not see the element  jQuery = h2:contains("Competitions for assessment")
     And The user should see the element       jQuery = h2:contains("Upcoming competitions to assess") ~ ul a:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
     And The user should see the element       jQuery = h2:contains("Invitations to assess")

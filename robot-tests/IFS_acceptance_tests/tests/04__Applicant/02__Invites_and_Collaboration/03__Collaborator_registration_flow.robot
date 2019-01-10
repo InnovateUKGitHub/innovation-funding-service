@@ -108,7 +108,7 @@ User is able to accept new terms and conditions
     Given the user selects the checkbox   agree
     And the user cannot see a validation error in the page
     When the user clicks the button/link  css = .govuk-button[type="submit"]
-    Then the user should see the element  jQuery = h1:contains("Dashboard")
+    Then the user should see the element  jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 *** Keywords ***
 Custom Suite Setup

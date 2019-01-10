@@ -39,13 +39,12 @@ public class HomeController {
     private NavigationUtils navigationUtils;
 
     @GetMapping("/")
+    @SecuredBySpring(value = "HomeController.defaultDashboardOrDashboardSelection()",
+            description = "Authenticated users can gain access to the root URL")
     @PreAuthorize("isAuthenticated()")
-    public String login() {
+    public String defaultDashboardOrDashboardSelection() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (unauthenticated(authentication)) {
-            throw new ForbiddenActionException("Unable to access root url without being authenticated first");
-        }
 
         UserResource user = (UserResource) authentication.getDetails();
 
@@ -57,13 +56,16 @@ public class HomeController {
     }
 
     @GetMapping("/dashboard-selection")
-    public String selectRole(HttpServletRequest request,
-                             Model model) {
+    @SecuredBySpring(value = "HomeController.selectDashboardForMultiRoleUsers()",
+            description = "Authenticated users can gain access to the Dashboard selection page")
+    @PreAuthorize("isAuthenticated()")
+    public String selectDashboardForMultiRoleUsers(HttpServletRequest request,
+                                                   Model model) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (unauthenticated(authentication) || (!user.hasMoreThanOneRoleOf(ROLES_WITH_DASHBOARDS))){
-            return "redirect:/";
+        if (!user.hasMoreThanOneRoleOf(ROLES_WITH_DASHBOARDS)) {
+            return navigationUtils.getRedirectToLandingPageUrl(request);
         }
 
         return doViewDashboardSelection(request, model, user);

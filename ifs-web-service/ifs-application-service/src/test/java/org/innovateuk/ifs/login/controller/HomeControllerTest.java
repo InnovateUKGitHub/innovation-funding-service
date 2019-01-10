@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.login.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.NavigationUtils;
@@ -21,6 +20,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     private CookieUtil cookieUtil;
 
     @Spy
+    @SuppressWarnings("unused")
     private NavigationUtils navigationUtils;
 
     @Override
@@ -31,36 +31,6 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     @Before
     public void setUpCookies() {
         setupCookieUtil(cookieUtil);
-    }
-
-    /**
-     * Test if you are redirected to the login page, when you visit the root url http://<domain>/
-     */
-    @Test
-    public void homeWithNullLoggedInUser() throws Exception {
-
-        setLoggedInUser(null);
-
-        mockMvc.perform(get("/"))
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void homeEmptyAuth() throws Exception {
-        setLoggedInUserAuthentication(null);
-
-        mockMvc.perform(get("/"))
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void homeNotAuthenticated() throws Exception {
-        UserAuthentication userAuth = new UserAuthentication(null);
-        userAuth.setAuthenticated(false);
-        setLoggedInUserAuthentication(userAuth);
-
-        mockMvc.perform(get("/"))
-                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -135,22 +105,11 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void dashboardSelectionNotAuthenticated() throws Exception {
-        UserAuthentication userAuth = new UserAuthentication(null);
-        userAuth.setAuthenticated(false);
-        setLoggedInUserAuthentication(userAuth);
-
-        mockMvc.perform(get("/dashboard-selection"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
-    }
-
-    @Test
     public void dashboardSelectionWithSingleRoleUser() throws Exception {
         setLoggedInUser(applicant);
 
         mockMvc.perform(get("/dashboard-selection"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name("redirect:http://localhost:80"));
     }
 }
