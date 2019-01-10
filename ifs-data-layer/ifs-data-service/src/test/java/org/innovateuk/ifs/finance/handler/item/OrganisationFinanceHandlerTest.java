@@ -3,9 +3,9 @@ package org.innovateuk.ifs.finance.handler.item;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceHandler;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -16,10 +16,11 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,22 +37,40 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class OrganisationFinanceHandlerTest {
     @InjectMocks
-    OrganisationFinanceHandler handler = new OrganisationFinanceDefaultHandler();
+    private OrganisationFinanceDefaultHandler handler;
     @Mock
-    AutowireCapableBeanFactory beanFactory;
+    private ApplicationFinanceRowRepository financeRowRepositoryMock;
     @Mock
-    ApplicationFinanceRowRepository financeRowRepositoryMock;
+    private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
     @Mock
-    FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
-    @Mock
-    QuestionService questionService;
+    private QuestionService questionService;
+    @Spy
+    private LabourCostHandler labourCostHandler;
+    @Spy
+    private CapitalUsageHandler capitalUsageHandler;
+    @Spy
+    private MaterialsHandler materialsHandler;
+    @Spy
+    private OtherCostHandler otherCostHandler;
+    @Spy
+    private OverheadsHandler overheadsHandler;
+    @Spy
+    private SubContractingCostHandler subContractingCostHandler;
+    @Spy
+    private TravelCostHandler travelCostHandler;
+    @Spy
+    private GrantClaimHandler grantClaimHandler;
+    @Spy
+    private OtherFundingHandler otherFundingHandler;
     private Competition competition;
     private Application application;
     private ApplicationFinance applicationFinance;
@@ -67,10 +86,9 @@ public class OrganisationFinanceHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
         when(financeRowRepositoryMock.save(anyList())).then(returnsFirstArg());
 
-        competition = newCompetition().build();
+        competition = newCompetition().withFundingType(FundingType.GRANT).build();
         application = newApplication().withCompetition(competition).build();
         applicationFinance = newApplicationFinance().withApplication(application).build();
         costTypeQuestion = new HashMap<>();
@@ -80,7 +98,6 @@ public class OrganisationFinanceHandlerTest {
                 setUpCostTypeQuestions(competition, costType);
             }
         }
-
         List<ApplicationFinanceRow> costs = new ArrayList<>();
 
         Iterable<ApplicationFinanceRow> init;
@@ -212,7 +229,7 @@ public class OrganisationFinanceHandlerTest {
         ).forEach(pair -> {
             final FinanceRowType costType = pair.getKey();
             final Class<?> clazz = pair.getValue();
-            assertEquals("Correct handler for " + costType, clazz, handler.getCostHandler(costType).getClass());
+            assertTrue("Correct handler for " + costType, clazz.isAssignableFrom(handler.getCostHandler(costType).getClass()));
         });
     }
 
