@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.login.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.user.resource.Role;
 
 /**
@@ -21,5 +24,35 @@ public class DashboardPanel {
 
     public String getUrl() {
         return url;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DashboardPanel that = (DashboardPanel) o;
+
+        return new EqualsBuilder()
+                .append(role, that.role)
+                .append(url, that.url)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(role)
+                .append(url)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("role", role)
+                .append("url", url)
+                .toString();
     }
 }

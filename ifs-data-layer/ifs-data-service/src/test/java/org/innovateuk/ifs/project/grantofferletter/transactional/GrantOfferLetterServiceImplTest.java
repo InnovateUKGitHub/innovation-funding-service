@@ -8,9 +8,6 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionDocumentBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.competition.domain.InnovationLead;
-import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -83,7 +80,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_A
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -99,12 +95,12 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
-import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER;
-import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE;
 import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
 import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterAcademicFinanceTableBuilder.newGrantOfferLetterAcademicFinanceTable;
 import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterFinanceTotalsTableBuilder.newGrantOfferLetterFinanceTotalsTable;
 import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterIndustrialFinanceTableBuilder.newGrantOfferLetterIndustrialFinanceTable;
+import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -201,9 +197,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
     @Mock
     private GrantOfferLetterFinanceTotalsTablePopulator financeTotalsTablePopulatorMock;
-
-    @Mock
-    private InnovationLeadRepository innovationLeadRepositoryMock;
 
     @Before
     public void setUp() {
@@ -1157,14 +1150,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withApplication(application)
                 .build();
 
-        InnovationLead competitionInnovationLead = newInnovationLead().
-                withUser(newUser().build()).
-                build();
-
-        InnovationLead secondaryInnovationLead = newInnovationLead().
-                withUser(newUser().build()).
-                build();
-
         List<NotificationTarget> to = asList(
                 new UserNotificationTarget(projectManager.getUser().getName(), projectManager.getUser().getEmail()),
                 new UserNotificationTarget(financeContactOrg1.getUser().getName(), financeContactOrg1.getUser().getEmail()),
@@ -1181,8 +1166,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         when(golWorkflowHandlerMock.grantOfferLetterApproved(project, user)).thenReturn(true);
         when(projectWorkflowHandlerMock.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(true);
-        when(innovationLeadRepositoryMock.getByCompetitionIdAndRole(competition.getId(), CompetitionParticipantRole.INNOVATION_LEAD)).
-                thenReturn(asList(competitionInnovationLead, secondaryInnovationLead));
 
         Notification notification = new Notification(systemNotificationSource, to, PROJECT_LIVE, expectedNotificationArguments);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
@@ -1191,10 +1174,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
         assertTrue(result.isSuccess());
-
-        // assert that the first and only the first Innovation Lead on a Competition is granted access to Live Projects
-        assertTrue(competitionInnovationLead.getUser().hasRole(Role.LIVE_PROJECTS_USER));
-        assertFalse(secondaryInnovationLead.getUser().hasRole(Role.LIVE_PROJECTS_USER));
 
         // assert that the Project Manager and the Finance Contacts for each Partner Organisation are granted access to
         // Live Projects
@@ -1210,7 +1189,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(project, user);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
-        verify(innovationLeadRepositoryMock).getByCompetitionIdAndRole(competition.getId(), CompetitionParticipantRole.INNOVATION_LEAD);
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
     }
 
@@ -1267,9 +1245,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(projectWorkflowHandlerMock.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).
                 thenReturn(true);
 
-        when(innovationLeadRepositoryMock.getByCompetitionIdAndRole(competition.getId(), CompetitionParticipantRole.INNOVATION_LEAD)).
-                thenReturn(newInnovationLead().withUser(newUser().build()).build(1));
-
         Notification notification = new Notification(systemNotificationSource, to, PROJECT_LIVE, expectedNotificationArguments);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
@@ -1282,7 +1257,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(project, user);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
-        verify(innovationLeadRepositoryMock).getByCompetitionIdAndRole(competition.getId(), CompetitionParticipantRole.INNOVATION_LEAD);
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
 
     }

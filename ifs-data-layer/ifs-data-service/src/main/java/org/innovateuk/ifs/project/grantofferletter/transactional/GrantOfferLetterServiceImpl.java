@@ -14,8 +14,6 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -152,9 +150,6 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
 
     @Autowired
     private PartnerOrganisationService partnerOrganisationService;
-
-    @Autowired
-    private InnovationLeadRepository innovationLeadRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -588,22 +583,7 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
     }
 
     private ServiceResult<Void> addLiveProjectsRoleToUsers(Project project) {
-        return addLiveProjectsRoleToProjectTeamUsers(project).
-                andOnSuccess(() -> addLiveProjectsRoleToInternalUsers(project));
-    }
-
-    private ServiceResult<Void> addLiveProjectsRoleToInternalUsers(Project project) {
-
-        long competitionId = project.getApplication().getCompetition().getId();
-
-        InnovationLead innovationLead =
-                innovationLeadRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD).get(0);
-
-        if (!innovationLead.getUser().hasRole(LIVE_PROJECTS_USER)) {
-            innovationLead.getUser().addRole(LIVE_PROJECTS_USER);
-        }
-
-        return serviceSuccess();
+        return addLiveProjectsRoleToProjectTeamUsers(project);
     }
 
     private ServiceResult<Void> addLiveProjectsRoleToProjectTeamUsers(Project project) {
