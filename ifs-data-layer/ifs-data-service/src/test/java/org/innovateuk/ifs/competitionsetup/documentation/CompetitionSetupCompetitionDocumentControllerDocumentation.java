@@ -4,8 +4,11 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupDocumentController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupDocumentService;
+import org.innovateuk.ifs.documentation.AddressDocs;
+import org.innovateuk.ifs.documentation.InnovationAreaResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 import java.util.List;
@@ -13,6 +16,10 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.*;
+import static org.innovateuk.ifs.documentation.AffiliationDocs.affiliationResourceFields;
+import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.competitionInviteFields;
+import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.existingUserStagedInviteResourceFields;
+import static org.innovateuk.ifs.documentation.ProjectDocs.projectResourceFields;
 import static org.innovateuk.ifs.documentation.ProjectDocumentResourceDocs.projectDocumentResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.only;
@@ -87,14 +94,12 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
                 .contentType(APPLICATION_JSON)
                 .content(toJson(competitionDocumentResources)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(competitionDocumentResources)))
                 .andDo(document("competition/setup/project-document/{method-name}",
-                        requestFields(
-                                fieldWithPath("[]").description("List of Project Documents to save")
-                        ),
-                        relaxedResponseFields(fieldWithPath("[]").description("List of Project Documents")
-                        ).andWithPrefix("[].", projectDocumentResourceFields
-                        )
+                        requestFields(fieldWithPath("[]").description("List of Project Documents"))
+                                .andWithPrefix("[].", projectDocumentResourceFields),
+                        responseFields(
+                                fieldWithPath("[]").description("List of Project Documents which were just saved to the database")
+                        ).andWithPrefix("[].", projectDocumentResourceFields)
                 ));
 
         verify(competitionSetupDocumentServiceMock, only()).saveAll(competitionDocumentResources);
