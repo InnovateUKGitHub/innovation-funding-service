@@ -41,7 +41,7 @@ Initial details: server-side validations
     And The user clicks the button/link                   link = Initial details
     When the user clicks the button/link                  jQuery = button:contains("Done")
     Then the user should see a field and summary error    Please enter a title.
-    And the user should see a field and summary error     Please enter a funding type.
+    And the user should see a field and summary error     Enter a valid funding type.
     And the user should see a field and summary error     Please select a competition type.
     And the user should see a field and summary error     Please select an innovation sector.
     And the user should see a field and summary error     Please select an innovation area.
