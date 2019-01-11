@@ -101,12 +101,11 @@ the user cannot login with the invalid email
     Input Text                                id = username    ${invalid_email_addy}
     Input Password                            id = password  ${correct_password}
     Click Button                              css = button[name="_eventId_proceed"]
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    The user should see the text in the page    Please enter a valid e-mail address
-    Run Keyword If    '${status}' == 'FAIL'   The user should see the text in the page    ${enter_a_valid_email}
+
+    the user should see a field error         ${enter_a_valid_email}
     Execute Javascript                        jQuery('form').attr('novalidate','novalidate');
     Click Button                              css = button[name="_eventId_proceed"]
-    The user should see the text in the page  ${unsuccessful_login_message}
-    The user should see the text in the page  Your email/password combination doesn't seem to work.
+    the user should see the element           jQuery = .govuk-error-summary li:contains("Your email/password combination doesn't seem to work.")
 
 Applicant goes to the registration form
     the user navigates to the page                            ${frontDoor}
