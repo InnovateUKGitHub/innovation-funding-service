@@ -16,6 +16,8 @@ import java.util.Collection;
 
 public class Grant {
 
+    private String sourceSystem;
+
     @JsonProperty("ifsAppNumber")
     @JsonSerialize(using = ToStringSerializer.class)
     private long id;
@@ -126,6 +128,14 @@ public class Grant {
 
     public void setParticipants(Collection<Participant> participants) {
         this.participants = participants;
+    }
+
+    public String getSourceSystem() {
+        return sourceSystem;
+    }
+
+    public void setSourceSystem(String sourceSystem) {
+        this.sourceSystem = sourceSystem;
     }
 
     @Override

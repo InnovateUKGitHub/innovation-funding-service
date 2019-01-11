@@ -14,8 +14,6 @@ import java.util.Collection;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Participant {
 
-    private String sourceSystem;
-
     private long orgId;
     private String orgType;
     private String orgProjectRole;
@@ -132,16 +130,7 @@ public class Participant {
         this.forecasts = forecasts;
     }
 
-    public String getSourceSystem() {
-        return sourceSystem;
-    }
-
-    public void setSourceSystem(String sourceSystem) {
-        this.sourceSystem = sourceSystem;
-    }
-
     public static Participant createProjectTeamParticipant(
-            String sourceSystem,
             long orgId,
             String orgType,
             String orgProjectRole,
@@ -155,7 +144,6 @@ public class Participant {
             Collection<Forecast> forecasts) {
 
         Participant projectTeamParticipant = new Participant();
-        projectTeamParticipant.sourceSystem = sourceSystem;
         projectTeamParticipant.orgId = orgId;
         projectTeamParticipant.orgType = orgType;
         projectTeamParticipant.orgProjectRole = orgProjectRole;
@@ -172,13 +160,11 @@ public class Participant {
     }
 
     public static Participant createSimpleContactParticipant(
-            String sourceSystem,
             long contactId,
             String contactRole,
             String contactEmail) {
 
         Participant simpleContactParticipant = new Participant();
-        simpleContactParticipant.sourceSystem = sourceSystem;
         simpleContactParticipant.contactId = contactId;
         simpleContactParticipant.contactRole = contactRole;
         simpleContactParticipant.contactEmail = contactEmail;

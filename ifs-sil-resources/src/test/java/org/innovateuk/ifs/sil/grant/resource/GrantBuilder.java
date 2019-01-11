@@ -2,7 +2,6 @@ package org.innovateuk.ifs.sil.grant.resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -145,7 +144,7 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
                 .divide(BigDecimal.valueOf(participantCount), 6, BigDecimal.ROUND_UP)));
         participant.setContactRole(contactRole);
         participant.setOrgProjectRole(orgProjectRole);
-        participant.setId(i);
+        participant.setOrgId(i);
         participant.setContactId(CONTACT_ID_START + 1);
         participant.setOrgType(orgType);
         participant.setCapLimit(capLimit);

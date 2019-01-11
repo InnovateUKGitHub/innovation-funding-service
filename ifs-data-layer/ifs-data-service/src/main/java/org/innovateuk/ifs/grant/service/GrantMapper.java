@@ -74,13 +74,14 @@ class GrantMapper {
         long competitionId = project.getApplication().getCompetition().getId();
 
         Grant grant = new Grant();
+        grant.setSourceSystem("IFS");
         grant.setId(applicationId);
-
         grant.setCompetitionCode(competitionId);
         grant.setTitle(project.getName());
         grant.setGrantOfferLetterDate(project.getOfferSubmittedDate());
         grant.setStartDate(project.getTargetStartDate());
         grant.setDuration(project.getDurationInMonths());
+
         List<FormInputResponse> formInputResponses = formInputResponseRepository
                 .findByApplicationId(applicationId);
         grant.setSummary(formInputResponses.stream()
@@ -196,7 +197,6 @@ class GrantMapper {
                 null;
 
         return Participant.createProjectTeamParticipant(
-                "IFS",
                 organisation.getId(),
                 organisation.getOrganisationType().getName(),
                 partnerOrganisation.isLeadOrganisation() ? "lead" : "collaborator",
@@ -216,7 +216,6 @@ class GrantMapper {
             String userEmail) {
 
         return Participant.createSimpleContactParticipant(
-                "IFS",
                 userId,
                 role.getName(),
                 userEmail);

@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.grant.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.core.Is;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -12,9 +14,7 @@ import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -27,6 +27,7 @@ import org.innovateuk.ifs.sil.grant.resource.Forecast;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.resource.Participant;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,15 +46,22 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTablePopulator.GRANT_CLAIM_IDENTIFIER;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -84,6 +92,9 @@ public class GrantMapperTest {
     @Mock
     private FormInputResponseRepository formInputResponseRepository;
 
+    @Mock
+    private InnovationLeadRepository innovationLeadRepository;
+
     @InjectMocks
     protected GrantMapper grantMapper = new GrantMapper();
 
@@ -98,11 +109,13 @@ public class GrantMapperTest {
 
     @Test
     public void testMap() throws IOException {
+
         Project project = parameter.createProject();
+
         when(formInputResponseRepository.findByApplicationId(project.getApplication().getId()))
                 .thenReturn(parameter.formInputResponses());
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(any(), any()))
-                .thenAnswer(i -> Optional.of(parameter.createSpendProfile((long) i.getArguments()[1])));
+                .thenAnswer(i -> Optional.of(parameter.createSpendProfile()));
         ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
         when(applicationFinance.getMaximumFundingLevel()).thenReturn(50);
         when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(any(), any()))
@@ -116,6 +129,13 @@ public class GrantMapperTest {
         when(projectFinanceRow.getQuantity()).thenReturn(30);
         when(projectFinanceRowRepository.findByTargetId(any()))
                 .thenReturn(Collections.singletonList(projectFinanceRow));
+
+        List<InnovationLead> innovationLeads = newInnovationLead().
+                withUser(newUser().withEmailAddress("il1@example.com", "il2@example.com").buildArray(2, User.class)).
+                build(2);
+
+        when(innovationLeadRepository.getByCompetitionIdAndRole(project.getApplication().getCompetition().getId(),
+                CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(innovationLeads);
 
         Grant grant = grantMapper.mapToGrant(project);
 
@@ -134,31 +154,47 @@ public class GrantMapperTest {
         assertThat(grant.getSummary(), equalTo(parameter.projectSummary()));
         assertThat(grant.getStartDate(), equalTo(DEFAULT_START_DATE));
         assertThat(grant.getGrantOfferLetterDate(), equalTo(DEFAULT_GOL_DATE));
-        for (int id = 0; id < parameter.participantCount() ; id ++) {
-            int finalId = id;
-            Optional<Participant> participantOptional = grant.getParticipants().stream()
-                    .filter(it -> it.getId() == finalId).findFirst();
-            assertThat(participantOptional.isPresent(), Is.is(true));
-            Participant participant = participantOptional.get();
-            assertThat(participant.getContactEmail(), equalTo("user@test.com"));
+        assertThat(grant.getSourceSystem(), equalTo("IFS"));
+
+        // expect 1 Project Manager record, one Finance Contact record for each Organisation and 1 innovation lead record
+        int expectedNumberOfParticipantRecords = 1 + (parameter.partnerOrganisationCount) + 1;
+
+        assertThat(grant.getParticipants(), hasSize(expectedNumberOfParticipantRecords));
+
+        Participant projectManagerParticipant = getOnlyElement(simpleFilter(grant.getParticipants(),
+                participant -> Role.PROJECT_MANAGER.getName().equals(participant.getContactRole())));
+
+        List<Participant> financeContactParticipants = simpleFilter(grant.getParticipants(),
+                participant -> Role.PROJECT_FINANCE.getName().equals(participant.getContactRole()));
+
+        Participant innovationLeadParticipant = getOnlyElement(simpleFilter(grant.getParticipants(),
+                participant -> Role.INNOVATION_LEAD.getName().equals(participant.getContactRole())));
+
+        assertThat(projectManagerParticipant.getContactEmail(), equalTo("pm@example.com"));
+        assertThat(innovationLeadParticipant.getContactEmail(), equalTo("il1@example.com"));
+
+        forEachWithIndex(financeContactParticipants, (i, participant) -> {
+
             assertThat(participant.getForecasts().size(), equalTo(parameter.costCategoryCount()));
             Forecast overheads = participant.getForecasts().stream()
                     .filter(forecast -> OVERHEADS.equals(forecast.getCostCategory()))
                     .findFirst()
                     .orElseThrow(IllegalStateException::new);
+
             assertThat(overheads.getPeriods().size(), equalTo(parameter.duration()));
-            if (parameter.expectedOverheads().size() > id) {
-                assertThat(overheads.getCost(), equalTo(parameter.expectedOverheads().get(id)));
+
+            if (parameter.expectedOverheads().size() > i) {
+                assertThat(overheads.getCost(), equalTo(parameter.expectedOverheads().get(i)));
             }
-            if (parameter.expectedOverheadRates().size() > id) {
-                assertThat(participant.getOverheadRate().longValue(), equalTo(parameter.expectedOverheadRates().get(id)));
+            if (parameter.expectedOverheadRates().size() > i) {
+                assertThat(participant.getOverheadRate().longValue(), equalTo(parameter.expectedOverheadRates().get(i)));
             }
-        }
+        });
     }
 
     @Parameterized.Parameters
     public static Collection<Parameter> parameters() {
-        return Arrays.asList(
+        return asList(
                 newParameter("basic", newProject()),
                 newParameter("single", newProject()).duration(1).expectedOverheads(10L)
 
@@ -167,28 +203,6 @@ public class GrantMapperTest {
 
     private static Parameter newParameter(String name, ProjectBuilder projectBuilder) {
         return new Parameter().name(name).projectBuilder(projectBuilder);
-    }
-
-    private static Organisation createOrganisation(long id) {
-        Organisation organisation = mock(Organisation.class);
-        when(organisation.getId()).thenReturn(id);
-        OrganisationType organisationType = mock(OrganisationType.class);
-        when(organisationType.getName()).thenReturn("Business");
-        when(organisation.getOrganisationType()).thenReturn(organisationType);
-        return organisation;
-    }
-
-    private static ProjectUser createProjectUser(long id, long organisationCount) {
-        ProjectUser projectUser = mock(ProjectUser.class);
-        when(projectUser.getRole()).thenReturn(
-                id % organisationCount == 0 ? ProjectParticipantRole.PROJECT_FINANCE_CONTACT : ProjectParticipantRole.PROJECT_MANAGER);
-        Organisation organisation = mock(Organisation.class);
-        when(organisation.getId()).thenReturn(id / organisationCount);
-        when(projectUser.getOrganisation()).thenReturn(organisation);
-        User user = mock(User.class);
-        when(user.getEmail()).thenReturn("user@test.com");
-        when(projectUser.getUser()).thenReturn(user);
-        return projectUser;
     }
 
     private static class Parameter {
@@ -201,7 +215,7 @@ public class GrantMapperTest {
         private String projectSummary;
         private String publicDescription;
         private int duration = 12;
-        private int participantCount = 3;
+        private int partnerOrganisationCount = 3;
         private int costCategoryCount = 2;
         private int userCount = 3;
         private int value = 10;
@@ -245,12 +259,12 @@ public class GrantMapperTest {
         }
 
         private Parameter participantCount(int participantCount) {
-            this.participantCount = participantCount;
+            this.partnerOrganisationCount = participantCount;
             return this;
         }
 
         private int participantCount() {
-            return participantCount;
+            return partnerOrganisationCount;
         }
 
         private Parameter costCategoryCount(int costCategoryCount) {
@@ -272,7 +286,7 @@ public class GrantMapperTest {
         }
 
         private Parameter expectedOverheads(Long... expectedOverheads) {
-            this.expectedOverheads = Arrays.asList(expectedOverheads);
+            this.expectedOverheads = asList(expectedOverheads);
             return this;
         }
 
@@ -285,7 +299,7 @@ public class GrantMapperTest {
         }
 
         private Parameter expectedOverheadRates(Long... expectedOverheadRates) {
-            this.expectedOverheadRates = Arrays.asList(expectedOverheadRates);
+            this.expectedOverheadRates = asList(expectedOverheadRates);
             return this;
         }
 
@@ -318,7 +332,7 @@ public class GrantMapperTest {
             return formInputResponse;
         }
 
-        private SpendProfile createSpendProfile(long organisationId) {
+        private SpendProfile createSpendProfile() {
             List<Cost> eligibleCosts = new ArrayList<>();
             List<Cost> spendProfileFigures = new ArrayList<>();
             for (int costCategoryIndex = 0 ; costCategoryIndex < costCategoryCount ; costCategoryIndex++ ) {
@@ -333,26 +347,55 @@ public class GrantMapperTest {
         }
 
         private Project createProject() {
+
+            List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
+                    withOrganisation(newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).
+                    withLeadOrganisation(true, false).
+                    build(partnerOrganisationCount);
+
+            List<ProjectUser> leadOrganisationProjectUsers = newProjectUser().
+                    withOrganisation(partnerOrganisations.get(0).getOrganisation()).
+                    withRole(PROJECT_MANAGER, PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).
+                    withUser(combineLists(
+                            newUser().withEmailAddress("pm@example.com", "fc1@example.com").build(2),
+                            newUser().build(userCount - 2)).toArray(new User[] {}
+                    )).
+                    build(userCount);
+
+            List<ProjectUser> org2ProjectUsers = newProjectUser().
+                    withOrganisation(partnerOrganisations.get(1).getOrganisation()).
+                    withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).
+                    withUser(combineLists(
+                            newUser().withEmailAddress("fc2@example.com").build(1),
+                            newUser().build(userCount - 1)).toArray(new User[] {}
+                    )).
+                    build(userCount);
+
+            List<ProjectUser> org3ProjectUsers = newProjectUser().
+                    withOrganisation(partnerOrganisations.get(2).getOrganisation()).
+                    withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).
+                    withUser(combineLists(
+                            newUser().withEmailAddress("fc3@example.com").build(1),
+                            newUser().build(userCount - 1)).toArray(new User[] {}
+                    )).
+                    build(userCount);
+
+            List<ProjectUser> projectUsers = combineLists(leadOrganisationProjectUsers, org2ProjectUsers, org3ProjectUsers);
+
             return projectBuilder
                     .withDuration((long) duration)
                     .withId(projectId)
                     .withTargetStartDate(DEFAULT_START_DATE)
                     .withOfferSubmittedDate(DEFAULT_GOL_DATE)
-                    .withPartnerOrganisations(
-                            Stream.iterate(0, i -> i + 1).limit(participantCount)
-                                    .map(i -> new PartnerOrganisation(null, createOrganisation(i), i == 0))
-                                    .collect(Collectors.toList())
-                    ).withApplication(
-                    newApplication()
-                            .withId(applicationId)
-                            .withCompetition(
-                                    newCompetition().withId(competitionId).build())
-                            .build())
-                    .withProjectUsers(
-                            Stream.iterate(0, i -> i + 1).limit(participantCount * userCount)
-                                    .map(i -> createProjectUser(i, participantCount))
-                                    .collect(Collectors.toList())
-                    ).build();
+                    .withPartnerOrganisations(partnerOrganisations)
+                    .withApplication(
+                        newApplication()
+                                .withId(applicationId)
+                                .withCompetition(
+                                        newCompetition().withId(competitionId).build())
+                                .build())
+                    .withProjectUsers(projectUsers)
+                    .build();
         }
     }
 }

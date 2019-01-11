@@ -7,9 +7,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
 import java.util.Collection;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.sil.grant.resource.GrantBuilder.newGrant;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -34,7 +35,7 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
 
     @Test
     public void testSendProject() throws Exception {
-        String requestBody = objectMapper.writeValueAsString(parameter.grant());
+        String requestBody = objectMapper.writeValueAsString(singletonList(parameter.grant()));
         mockMvc.
                 perform(
                         post("/silstub/sendproject").
@@ -56,7 +57,7 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
          * just testing our JSON serialisation and SIL stub implementation.   This gives us test data.  When
          * SIL end point is available we could fire these tests onto the SIL stub if it proves beneficial.
          */
-        return Arrays.asList(
+        return asList(
                 newParameter(newGrant().name("basic")),
                 newParameter(newGrant().name("several").withCount(2)),
                 newParameter(newGrant().name("many").withCount(5)),

@@ -14,6 +14,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_PROCESS_SEND_FAILED;
@@ -55,7 +56,7 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
         String expectedUrl = "http://sil.com/silstub/sendproject";
         ResponseEntity<String> returnedEntity = new ResponseEntity<>(ACCEPTED);
 
-        when(mockRestTemplate.postForEntity(expectedUrl, adaptor.jsonEntity(grant), String.class))
+        when(mockRestTemplate.postForEntity(expectedUrl, adaptor.jsonEntity(singletonList(grant)), String.class))
                 .thenReturn(returnedEntity);
 
         ServiceResult<Void> sendProjectResult = service.send(grant);
@@ -69,7 +70,7 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
         String expectedUrl = "http://sil.com/silstub/sendproject";
         ResponseEntity<String> returnedEntity = new ResponseEntity<>(INTERNAL_SERVER_ERROR);
 
-        when(mockRestTemplate.postForEntity(expectedUrl, adaptor.jsonEntity(grant), String.class))
+        when(mockRestTemplate.postForEntity(expectedUrl, adaptor.jsonEntity(singletonList(grant)), String.class))
                 .thenReturn(returnedEntity);
 
         ServiceResult<Void> sendProjectResult = service.send(grant);
