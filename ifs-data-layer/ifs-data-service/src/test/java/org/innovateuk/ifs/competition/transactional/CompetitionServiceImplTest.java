@@ -121,7 +121,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void getCompetitionById() throws Exception {
+    public void getCompetitionById() {
         Competition competition = new Competition();
         CompetitionResource resource = new CompetitionResource();
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
@@ -133,7 +133,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void findInnovationLeads() throws Exception {
+    public void findInnovationLeads() {
         Long competitionId = 1L;
 
         User user = UserBuilder.newUser().build();
@@ -151,7 +151,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void addInnovationLeadWhenCompetitionNotFound() throws Exception {
+    public void addInnovationLeadWhenCompetitionNotFound() {
         Long innovationLeadUserId = 2L;
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.empty());
         ServiceResult<Void> result = service.addInnovationLead(competitionId, innovationLeadUserId);
@@ -160,7 +160,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void addInnovationLead() throws Exception {
+    public void addInnovationLead() {
         Long innovationLeadUserId = 2L;
 
         Competition competition = CompetitionBuilder.newCompetition().build();
@@ -177,7 +177,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void removeInnovationLeadWhenCompetitionParticipantNotFound() throws Exception {
+    public void removeInnovationLeadWhenCompetitionParticipantNotFound() {
         Long innovationLeadUserId = 2L;
 
         when(innovationLeadRepositoryMock.findInnovationLead(competitionId, innovationLeadUserId)).thenReturn(null);
@@ -188,7 +188,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void removeInnovationLead() throws Exception {
+    public void removeInnovationLead() {
         Long innovationLeadUserId = 2L;
 
         InnovationLead innovationLead = newInnovationLead().build();
@@ -203,7 +203,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void findAll() throws Exception {
+    public void findAll() {
         List<Competition> competitions = Lists.newArrayList(new Competition());
         List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
         when(competitionRepositoryMock.findAll()).thenReturn(competitions);
@@ -215,9 +215,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void findLiveCompetitions() throws Exception {
+    public void findLiveCompetitions() {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
-        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findLive()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findLiveCompetitions().getSuccess();
@@ -226,11 +226,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void findProjectSetupCompetitions() throws Exception {
-
+    public void findProjectSetupCompetitions() {
         List<Competition> expectedCompetitions = newCompetition().build(2);
 
-        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(expectedCompetitions.get(0).getId())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(expectedCompetitions.get(1).getId())).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findProjectSetup()).thenReturn(expectedCompetitions);
 
         List<CompetitionSearchResultItem> response = service.findProjectSetupCompetitions().getSuccess();
@@ -239,7 +239,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void findProjectSetupCompetitionsWhenLoggedInAsStakeholder() throws Exception {
+    public void findProjectSetupCompetitionsWhenLoggedInAsStakeholder() {
         UserResource stakeholderUser = newUserResource().withId(1L).withRolesGlobal(singletonList(STAKEHOLDER)).build();
         User user = newUser().withId(stakeholderUser.getId()).withRoles(singleton(STAKEHOLDER)).build();
         setLoggedInUser(stakeholderUser);
@@ -247,7 +247,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         List<Competition> expectedCompetitions = newCompetition().build(2);
 
-        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(expectedCompetitions.get(0).getId())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(expectedCompetitions.get(1).getId())).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findProjectSetupForInnovationLeadOrStakeholder(stakeholderUser.getId())).thenReturn(expectedCompetitions);
 
         List<CompetitionSearchResultItem> response = service.findProjectSetupCompetitions().getSuccess();
@@ -258,9 +259,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void findUpcomingCompetitions() throws Exception {
+    public void findUpcomingCompetitions() {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
-        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findUpcoming()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findUpcomingCompetitions().getSuccess();
@@ -269,9 +270,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void findNonIfsCompetitions() throws Exception {
+    public void findNonIfsCompetitions() {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
-        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findNonIfs()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findNonIfsCompetitions().getSuccess();
@@ -280,10 +281,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void findPreviousCompetitions() throws Exception {
+    public void findPreviousCompetitions() {
         Long competition2Id = 2L;
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId, competition2Id).build(2));
-        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(competition2Id)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
 
         MilestoneResource milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.of(2017, 11, 3, 23, 0, 0, 0, ZoneId.systemDefault())).build();
@@ -303,9 +305,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void findPreviousCompetitions_NoOpenDate() throws Exception {
+    public void findPreviousCompetitions_NoOpenDate() {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
-        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
         when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceFailure(GENERAL_UNEXPECTED_ERROR));
 
@@ -316,7 +318,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void countCompetitions() throws Exception {
+    public void countCompetitions() {
         Long countLive = 1L;
         Long countProjectSetup = 2L;
         Long countUpcoming = 3L;
@@ -366,7 +368,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void searchCompetitions() throws Exception {
+    public void searchCompetitions() {
         String searchQuery = "SearchQuery";
         String searchLike = "%" + searchQuery + "%";
         String competitionType = "Comp type";
@@ -385,7 +387,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(queryResponse.getNumberOfElements()).thenReturn(size);
         when(queryResponse.getContent()).thenReturn(singletonList(competition));
         when(competitionRepositoryMock.search(searchLike, pageRequest)).thenReturn(queryResponse);
-        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         CompetitionSearchResult response = service.searchCompetitions(searchQuery, page, size).getSuccess();
 
         assertEquals(totalElements, response.getTotalElements());
@@ -412,7 +414,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void searchCompetitionsAsLeadTechnologist() throws Exception {
+    public void searchCompetitionsAsLeadTechnologist() {
 
         long totalElements = 2L;
         int totalPages = 1;
@@ -459,7 +461,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
             when(competitionRepositoryMock.searchForSupportUser(searchLike, pageRequest)).thenReturn(queryResponse);
         }
 
-        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
     }
 
     private void searchCompetitionsAssertions(long totalElements, int totalPages, int page, int size,
@@ -489,7 +491,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void searchCompetitionsAsStakeholder() throws Exception {
+    public void searchCompetitionsAsStakeholder() {
 
         long totalElements = 2L;
         int totalPages = 1;
@@ -515,7 +517,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void searchCompetitionsAsSupportUser() throws Exception {
+    public void searchCompetitionsAsSupportUser() {
         long totalElements = 2L;
         int totalPages = 1;
         int page = 1;
@@ -552,7 +554,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void closeAssessment() throws Exception {
+    public void closeAssessment() {
         List<Milestone> milestones = newMilestone()
                 .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED).build(3);
@@ -572,7 +574,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
 
     @Test
-    public void notifyAssessors() throws Exception {
+    public void notifyAssessors() {
         List<Milestone> milestones = newMilestone()
                 .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE, SUBMISSION_DATE, ALLOCATE_ASSESSORS).build(3);
@@ -592,7 +594,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void releaseFeedback() throws Exception {
+    public void releaseFeedback() {
         List<Milestone> milestones = newMilestone()
                 .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE,
@@ -636,7 +638,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void releaseFeedback_cantRelease() throws Exception {
+    public void releaseFeedback_cantRelease() {
         List<Milestone> milestones = newMilestone()
                 .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE,
@@ -675,7 +677,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void manageInformState() throws Exception {
+    public void manageInformState() {
         List<Milestone> milestones = newMilestone()
                 .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE,
@@ -714,7 +716,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void manageInformState_noStateChange() throws Exception {
+    public void manageInformState_noStateChange() {
         List<Milestone> milestones = newMilestone()
                 .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE,
@@ -753,7 +755,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void getCompetitionOrganisationTypesById() throws Exception {
+    public void getCompetitionOrganisationTypesById() {
         List<OrganisationType> organisationTypes  = newOrganisationType().build(2);
         List<OrganisationTypeResource> organisationTypeResources = newOrganisationTypeResource().build(2);
         Competition competition = new Competition();
@@ -768,9 +770,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void testTopLevelNavigationLinkIsSetCorrectly() throws Exception {
+    public void testTopLevelNavigationLinkIsSetCorrectly() {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
-        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(newPublicContentResource().build()));
+        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(newPublicContentResource().build()));
         when(competitionRepositoryMock.findLive()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findLiveCompetitions().getSuccess();
@@ -801,7 +803,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void getCompetitionOpenQueries() throws Exception {
+    public void getCompetitionOpenQueries() {
         List<CompetitionOpenQueryResource> openQueries = singletonList(new CompetitionOpenQueryResource(1L, 1L, "org", 1L, "proj"));
         when(competitionRepositoryMock.getOpenQueryByCompetitionAndProjectStateNotIn(competitionId, singleton(ProjectState.WITHDRAWN))).thenReturn(openQueries);
 
@@ -811,7 +813,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void countCompetitionOpenQueries() throws Exception {
+    public void countCompetitionOpenQueries() {
         Long countOpenQueries = 4l;
         when(competitionRepositoryMock.countOpenQueriesByCompetitionAndProjectStateNotIn(competitionId, singleton(ProjectState.WITHDRAWN))).thenReturn(countOpenQueries);
 
@@ -821,7 +823,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void getPendingSpendProfiles() throws Exception {
+    public void getPendingSpendProfiles() {
 
         List<Object[]> pendingSpendProfiles = singletonList(new Object[]{BigInteger.valueOf(11L), BigInteger.valueOf(1L), new String("Project 1")});
 
@@ -835,7 +837,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void countPendingSpendProfiles() throws Exception {
+    public void countPendingSpendProfiles() {
 
         final BigDecimal pendingSpendProfileCount = BigDecimal.TEN;
         when(competitionRepositoryMock.countPendingSpendProfiles(competitionId)).thenReturn(pendingSpendProfileCount);
@@ -847,7 +849,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void updateTermsAndConditionsForCompetition() throws Exception {
+    public void updateTermsAndConditionsForCompetition() {
         GrantTermsAndConditions termsAndConditions = newGrantTermsAndConditions().build();
 
         Competition competition = newCompetition().build();
@@ -868,7 +870,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void updateInvalidTermsAndConditionsForCompetition() throws Exception {
+    public void updateInvalidTermsAndConditionsForCompetition() {
         Competition competition = newCompetition().build();
 
         when(grantTermsAndConditionsRepositoryMock.findById(competition.getTermsAndConditions().getId())).thenReturn(Optional.empty());

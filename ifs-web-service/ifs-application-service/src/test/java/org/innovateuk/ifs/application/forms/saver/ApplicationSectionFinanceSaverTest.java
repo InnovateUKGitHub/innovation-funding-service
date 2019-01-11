@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.application.forms.saver;
 
+import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,29 +23,13 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests for {@link ApplicationSectionFinanceSaver}
+ * Tests for {@link YourProjectCostsCompleter}
  */
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationSectionFinanceSaverTest {
 
-    @InjectMocks
-    private ApplicationSectionFinanceSaver saver;
-
-    @Mock
-    private SectionService sectionService;
-
-    private final Long competitionId = 5L;
-
-    @Before
-    public void setup() {
-        when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES))
-                .thenReturn(
-                        newSectionResource()
-                                .withCompetition(competitionId)
-                                .withType(SectionType.ORGANISATION_FINANCES)
-                                .build(1));
-    }
+    private ApplicationSectionFinanceSaver saver = new ApplicationSectionFinanceSaver();
 
     @Test
     public void handleStateAid_MarkAsComplete() {

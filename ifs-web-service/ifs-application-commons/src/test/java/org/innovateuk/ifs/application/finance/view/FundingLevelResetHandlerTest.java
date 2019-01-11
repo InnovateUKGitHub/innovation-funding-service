@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.finance.view;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -34,6 +36,7 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -58,6 +61,9 @@ public class FundingLevelResetHandlerTest {
     @Mock
     private DefaultFinanceRowRestService financeRowRestService;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     @Test
     public void testResetFundingAndMarkAsIncomplete() throws ExecutionException, InterruptedException {
 
@@ -78,6 +84,7 @@ public class FundingLevelResetHandlerTest {
         when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)).thenReturn(sectionResources);
         when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(questionResource));
         when(financeRowRestService.add(eq(applicationFinanceResource.getId()), eq(questionResource.getId()), isA(FinanceRowItem.class))).thenReturn(restSuccess(noErrors()));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(newCompetitionResource().withFundingType(FundingType.GRANT).build()));
 
         target.resetFundingAndMarkAsIncomplete(applicationFinanceResource, competitionId, userId);
 

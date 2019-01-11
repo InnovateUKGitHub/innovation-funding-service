@@ -76,7 +76,7 @@ public class EligibilitySectionSaverTest {
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setResearchCategoryId(asLinkedSet(1L, 2L, 3L));
         competitionSetupForm.setOverrideFundingRules(true);
-        competitionSetupForm.setFundingLevelPercentage(10);
+        competitionSetupForm.setFundingLevelPercentageOverride(10);
         competitionSetupForm.setMultipleStream("yes");
         competitionSetupForm.setStreamName("streamname");
         competitionSetupForm.setLeadApplicantTypes(asList(1L, 2L));
@@ -249,7 +249,7 @@ public class EligibilitySectionSaverTest {
         EligibilityForm competitionSetupForm = new EligibilityForm();
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setOverrideFundingRules(true);
-        competitionSetupForm.setFundingLevelPercentage(50);
+        competitionSetupForm.setFundingLevelPercentageOverride(50);
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
                 .build(2);
 
@@ -277,12 +277,41 @@ public class EligibilitySectionSaverTest {
     }
 
     @Test
+    public void saveSection_withoutResearchParticipationAndFundingLevels() {
+        EligibilityForm competitionSetupForm = new EligibilityForm();
+        competitionSetupForm.setResearchCategoriesApplicable(false);
+        competitionSetupForm.setOverrideFundingRules(false);
+        competitionSetupForm.setFundingLevelPercentage(50);
+        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
+                .build(2);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withApplicationFinanceType(STANDARD)
+                .withGrantClaimMaximums(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
+                .build();
+
+        QuestionResource researchCategoryQuestion = newQuestionResource().build();
+
+        when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
+        when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(0).getId())).thenReturn(restSuccess(gcms.get(0)));
+        when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(1).getId())).thenReturn(restSuccess(gcms.get(1)));
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
+                QuestionSetupType.RESEARCH_CATEGORY)).thenReturn(restSuccess(researchCategoryQuestion));
+        when(grantClaimMaximumRestService.save(any())).thenReturn(restSuccess(gcms.get(0)));
+        when(questionSetupCompetitionRestService.deleteById(researchCategoryQuestion.getId())).thenReturn(restSuccess());
+
+        service.saveSection(competition, competitionSetupForm).getSuccess();
+
+        verify(competitionSetupRestService).update(competition);
+    }
+
+    @Test
     public void saveSection_defaultsMaxResearchRatioToNoneForCompetitionsWithNoFinances() {
         EligibilityForm competitionSetupForm = new EligibilityForm();
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.HUNDRED.getId());
         competitionSetupForm.setOverrideFundingRules(true);
-        competitionSetupForm.setFundingLevelPercentage(50);
+        competitionSetupForm.setFundingLevelPercentageOverride(50);
 
         List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource().build(2);
 

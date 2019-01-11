@@ -14,7 +14,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -28,20 +27,27 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public abstract class AbstractOrganisationFinanceHandler implements OrganisationFinanceHandler {
     private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
 
-    @Autowired
     protected ApplicationFinanceRowRepository applicationFinanceRowRepository;
 
-    @Autowired
     protected ProjectFinanceRowRepository projectFinanceRowRepository;
 
-    @Autowired
     protected FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
 
-    @Autowired
     protected QuestionService questionService;
 
-    @Autowired
     protected ApplicationFinanceRepository applicationFinanceRepository;
+
+    public AbstractOrganisationFinanceHandler(ApplicationFinanceRowRepository applicationFinanceRowRepository,
+                                              ProjectFinanceRowRepository projectFinanceRowRepository,
+                                              FinanceRowMetaFieldRepository financeRowMetaFieldRepository,
+                                              QuestionService questionService,
+                                              ApplicationFinanceRepository applicationFinanceRepository) {
+        this.applicationFinanceRowRepository = applicationFinanceRowRepository;
+        this.projectFinanceRowRepository = projectFinanceRowRepository;
+        this.financeRowMetaFieldRepository = financeRowMetaFieldRepository;
+        this.questionService = questionService;
+        this.applicationFinanceRepository = applicationFinanceRepository;
+    }
 
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType) {
@@ -49,7 +55,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
             long competitionId = applicationFinance.getApplication().getCompetition().getId();
             Question question = getQuestionByCostType(competitionId, costType);
             try {
-                List<ApplicationFinanceRow> cost = getCostHandler(costType).initializeCost();
+                List<ApplicationFinanceRow> cost = getCostHandler(costType).initializeCost(applicationFinance);
                 cost.forEach(c -> {
                     c.setQuestion(question);
                     c.setTarget(applicationFinance);

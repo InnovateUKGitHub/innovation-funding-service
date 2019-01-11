@@ -10,6 +10,7 @@ import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.domain.Question;
@@ -80,7 +81,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
 
         ResearchCategory researchCategory = newResearchCategory().withId(researchCategoryId).build();
 
-        Competition competition = newCompetition().build();
+        Competition competition = newCompetition().withFundingType(FundingType.GRANT).build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).withResearchCategory(researchCategory).build();
 
         Application expectedApplication = newApplication().withId(applicationId).withResearchCategory(researchCategory).build();
@@ -104,7 +105,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         ResearchCategory researchCategory = newResearchCategory().withId(researchCategoryId).build();
         ResearchCategory origResearchCategory = newResearchCategory().withId(origResearchCategoryId).build();
 
-        Competition competition = newCompetition().build();
+        Competition competition = newCompetition().withFundingType(FundingType.GRANT).build();
         Question financeQuestion = newQuestion().build();
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build();
         Application application = newApplication()

@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.application.forms.yourprojectcosts.controller;
 
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
-import org.innovateuk.ifs.application.forms.saver.ApplicationSectionFinanceSaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.LabourRowForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.ApplicationYourProjectCostsFormPopulator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.ApplicationYourProjectCostsSaver;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsAutosaver;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
@@ -24,7 +24,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -72,7 +71,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     private YourProjectCostsFormValidator yourFundingFormValidator;
 
     @Mock
-    private ApplicationSectionFinanceSaver completeSectionAction;
+    private YourProjectCostsCompleter completeSectionAction;
 
     @Test
     public void viewYourProjectCosts() throws Exception {
@@ -121,7 +120,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
         when(saver.save(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()))).thenReturn(serviceSuccess());
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(processRole));
-        when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess(emptyList()));
+        when(completeSectionAction.markAsComplete(SECTION_ID, APPLICATION_ID, processRole)).thenReturn(new ValidationMessages());
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
@@ -130,8 +129,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
                 .andExpect(redirectedUrl(String.format("/application/%s/form/%s", APPLICATION_ID, SectionType.FINANCE)));
 
         verify(saver).save(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()));
-        verify(sectionStatusRestService).markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID);
-        verify(completeSectionAction).handleMarkProjectCostsAsComplete(processRole);
+        verify(completeSectionAction).markAsComplete(SECTION_ID, APPLICATION_ID, processRole);
     }
 
 

@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
  * Handles the labour costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@Component
 public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     public static final String COST_KEY = "labour";
     public static final Integer DEFAULT_WORKING_DAYS = 232;
@@ -68,7 +71,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     }
 
     @Override
-    public List<ApplicationFinanceRow> initializeCost() {
+    public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
         ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
         costs.add(initializeWorkingDays());
         return costs;

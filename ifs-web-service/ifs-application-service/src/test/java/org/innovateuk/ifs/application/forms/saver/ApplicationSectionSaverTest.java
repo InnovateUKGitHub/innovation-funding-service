@@ -29,7 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_SECTION_AS_COMPLETE;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_SECTION_AS_INCOMPLETE;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
