@@ -188,7 +188,7 @@ the user can see the option to upload a file on the question
     the user clicks the button/link  link = Academic robot test application
     the user clicks the button/link  ${QUESTION}
     the user checks the Appendix guidance
-    the user should see the text in the page  Upload
+    the user should see the element  jQuery = label:contains("Upload")
 
 the user checks the Appendix guidance
     [Documentation]  IFS-2564
