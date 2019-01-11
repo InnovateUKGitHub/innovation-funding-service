@@ -13,32 +13,9 @@ IFS.competitionManagement.eligibility = (function () {
     handleResearchCategoriesApplicableChange: function (el) {
       var researchCategoriesApplicable = jQuery(el)
       var status = researchCategoriesApplicable.val() === 'true'
-      IFS.competitionManagement.eligibility.handleErrorMessages(status)
       IFS.competitionManagement.eligibility.setOverrideFundingRulesVisibility()
       if (!status) {
         jQuery('#override-funding-rules').find('input[name="overrideFundingRules"]').prop('checked', false)
-      }
-    },
-    handleErrorMessages: function (status) {
-      var summaryBox = jQuery('.govuk-error-summary')
-      var list = jQuery('.govuk-error-summary__list')
-      var listError = ''
-      var fieldError = ''
-      if (status) {
-        listError = jQuery('.govuk-error-summary a[href$="#fundingLevelPercentage"]')
-        fieldError = jQuery('#funding-level .govuk-error-message')
-        jQuery('#funding-level .govuk-form-group').removeClass('govuk-form-group--error')
-      } else {
-        listError = jQuery('.govuk-error-summary a[href$="#researchCategoryId"]')
-        fieldError = jQuery('#researchCategoryId .govuk-error-message')
-        jQuery('#researchCategoryId .govuk-form-group').removeClass('govuk-form-group--error')
-      }
-      if (listError.length) {
-        listError.parent().remove()
-        if (list.length) {
-          summaryBox.remove()
-          fieldError.remove()
-        }
       }
     },
     handleOverrideFundingRulesChange: function (el) {
