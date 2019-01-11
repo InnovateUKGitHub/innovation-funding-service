@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -63,7 +64,6 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     private UserService userService;
     @Autowired
     private BaseUserService baseUserService;
-
 
     @Override
     public ServiceResult<ApplicantQuestionResource> getQuestion(Long userId, Long questionId, Long applicationId) {
@@ -196,12 +196,17 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
     private boolean isSectionExcluded(SectionResource section, OrganisationResource organisation,
                                       CompetitionResource competition) {
-        boolean isYourOrganisationSection = section.getType() == SectionType.ORGANISATION_FINANCES;
-        boolean isResearchOrganisation = organisation != null  && OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
-        boolean excludeYourOrganisationSectionForResearchOrgs =
-                Boolean.FALSE.equals(competition.getIncludeYourOrganisationSection());
+        if (section.getType() == SectionType.ORGANISATION_FINANCES) {
+            boolean isResearchOrganisation = organisation != null && OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
+            boolean excludeYourOrganisationSectionForResearchOrgs =
+                    Boolean.FALSE.equals(competition.getIncludeYourOrganisationSection());
+            return isResearchOrganisation && excludeYourOrganisationSectionForResearchOrgs;
+        } else if (section.getType() == SectionType.FUNDING_FINANCES) {
+            return competition.getFundingType() == FundingType.PROCUREMENT;
+        } else {
+            return false;
+        }
 
-        return isYourOrganisationSection && isResearchOrganisation && excludeYourOrganisationSectionForResearchOrgs;
     }
 
     private class ServiceResults {

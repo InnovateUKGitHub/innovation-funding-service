@@ -96,8 +96,6 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
             } else {
                 errors.addAll(saveErrors);
             }
-
-            financeSaver.handleMarkAcademicFinancesAsNotRequired(organisationType, selectedSection, applicationId, competitionId, processRole.getId());
         }
 
         if (isMarkSectionRequest(params)) {
@@ -109,8 +107,6 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
 
         return sortValidationMessages(errors);
     }
-
-
 
     private ValidationMessages handleMarkSectionRequest(ApplicationResource application, SectionResource selectedSection, Map<String, String[]> params,
                                                         ProcessRoleResource processRole, ValidationMessages errorsSoFar, Boolean validFinanceTerms) {
