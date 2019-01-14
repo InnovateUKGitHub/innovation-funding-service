@@ -1,3 +1,1 @@
 ext.activeProfile="local"
-
-ext.ifsMultiDashboardRoles=ext.has('ifs.web.multi.dashboard.roles') ? ext.get('ifs.web.multi.dashboard.roles') : "APPLICANT,ASSESSOR,STAKEHOLDER"
