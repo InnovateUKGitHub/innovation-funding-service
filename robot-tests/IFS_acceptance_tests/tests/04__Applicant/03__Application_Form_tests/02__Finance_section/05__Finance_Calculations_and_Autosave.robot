@@ -148,7 +148,7 @@ the Applicant fills the Materials fields
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link             jQuery = button:contains("Subcontracting costs")
-    the user should see the text in the page    Subcontractor name
+    the user should see the element             jQuery = label:contains("Subcontractor name")
     the user enters text to a text field        css = #collapsible-4 .form-row:nth-child(1) [name$=".cost"]   100
     the user enters text to a text field        css = #collapsible-4 .form-row:nth-child(1) [name$=".name"]    test1
     the user enters text to a text field        css = #collapsible-4 .form-row:nth-child(1) [name$=".country"]    test2

@@ -20,10 +20,10 @@ Academic organisations search
     Then the user should see a field error                Please enter an organisation name to search.
     When the user enters text to a text field             id = organisationSearchName    abcd
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Search")
-    Then the user should see the text in the page         No results found.
+    Then the user should see the element                  jQuery = li p:contains("No results found.")
     When the user enters text to a text field             id = organisationSearchName    !!
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Search")
-    Then the user should see the text in the page         No results found.
+    Then the user should see the element                  jQuery = li p:contains("No results found.")
 
 Accept invitation as academic
     [Documentation]    INFUND-1166, INFUND-917, INFUND-2450, INFUND-2256
@@ -46,4 +46,4 @@ Accept invitation as academic
 *** Keywords ***
 If the user goes to the previous page he should redirect to the login page
     the user goes back to the previous page
-    the user should see the text in the page  Sign in
+    the user should see the element    jQuery = h1:contains("Sign in")

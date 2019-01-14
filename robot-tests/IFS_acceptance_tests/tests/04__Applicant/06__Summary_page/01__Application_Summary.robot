@@ -35,7 +35,7 @@ Edit link navigates to the application form
     [Tags]
     Given the user clicks the button/link            jQuery = button:contains("Project summary")
     When the user clicks the button/link             jQuery = .textarea-wrapped button:contains("Return and edit")
-    Then the user should see the text in the page    Project summary
+    Then the user should see the element             jQuery = h1:contains("Project summary")
     And The user enters text to a text field         css = .textarea-wrapped .editor    Test text 123
     [Teardown]    The user clicks the button/link    jQuery = Button:contains(Save and return to application overview)
 
@@ -45,7 +45,7 @@ Application overview button
     Given The user navigates to the summary page of the Robot test application
     And the user clicks the button/link              jQuery = button:contains("Technical approach")
     When the user clicks the button/link             link = Application overview
-    Then the user should see the text in the page    Application overview
+    Then the user should see the element             jQuery = h1:contains("Application overview")
 
 *** Keywords ***
 all the sections should be visible
