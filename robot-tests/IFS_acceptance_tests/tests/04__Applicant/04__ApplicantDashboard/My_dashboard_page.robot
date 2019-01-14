@@ -24,7 +24,7 @@ Hours remaining should show the last 24hours
     [Tags]    MySQL  HappyPath
     [Setup]    Custom setup
     When the user reloads the page
-    Then the user should see the text in the page    hours left
+    Then the user should see the element    jQuery = .status-msg:contains("hours left")
     [Teardown]    Run Keywords    Connect to Database    @{database}
     ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${openCompetitionRTOCloseDate} 00:00:00' WHERE `competition_id`='${openCompetitionRTO}' and type IN ('SUBMISSION_DATE');
 

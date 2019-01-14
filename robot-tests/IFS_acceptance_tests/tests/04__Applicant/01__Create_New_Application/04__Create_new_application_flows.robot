@@ -51,11 +51,11 @@ Verify the name of the new application
     [Setup]    the user navigates to the page                     ${SERVER}
     When Logging in and Error Checking                            ${test_mailbox_one}+business@gmail.com    ${correct_password}
     And the user edits the application title
-    Then the user should see the text in the page                 ${test_title}
+    Then the user should see the element                          jQuery = h1 span:contains("${test_title}")
     And the progress indicator should show 0
     And the user clicks the button/link                           link = Application team
-    And the user should see the text in the page                  Application team
-    And the user should see the text in the page                  View and manage your contributors or collaborators in the application.
+    And the user should see the element                           jQuery = h1:contains("Application team")
+    And the user should see the element                           jQuery = p:contains("View and manage your contributors or collaborators in the application.")
     And the user can see this new application on their dashboard  ${test_title}
 
 Marketing emails information should have updated on the profile
@@ -66,13 +66,12 @@ Marketing emails information should have updated on the profile
 
 *** Keywords ***
 the new application should be visible in the dashboard page
-    the user clicks the button/link           link = Dashboard
-    the user should see the text in the page  ${test_title}
-    the user should see the text in the page  Application number:
+    the user clicks the button/link      link = Dashboard
+    the user should see the element      jQuery = h1 span:contains("${test_title}")
+    the user should see the element      jQuery = dt:contains("Application number:")
 
 the user edits the application title
     the user clicks the button/link         link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user should see the element         link = Application details
     the user clicks the button/link         link = Application details
     The project start date is blank
     The user enters text to a text field    css = [id = "application.name"]    ${test_title}
@@ -89,7 +88,7 @@ The project start date is blank
 The user can see this new application on their dashboard
     [Arguments]     ${application_name}
     the user navigates to the page            ${APPLICANT_DASHBOARD_URL}
-    the user should see the text in the page  ${application_name}
+    the user should see the element           link = ${application_name}
 
 Applicant goes to the registration form
     the user navigates to the page   ${frontDoor}
@@ -98,8 +97,8 @@ Applicant goes to the registration form
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}
-    the user should see the text in the page  Dashboard
-    the user clicks the button/link           link = ${Application_name}
+    the user should see the element      jQuery = h1:contains("Dashboard")
+    the user clicks the button/link      link = ${Application_name}
     the user is redirected to overview page if he has been there already
 
 the user is redirected to overview page if he has been there already

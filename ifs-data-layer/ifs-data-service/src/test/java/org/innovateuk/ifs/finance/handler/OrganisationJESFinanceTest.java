@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 public class OrganisationJESFinanceTest extends BaseUnitTestMocksTest {
     @InjectMocks
-    private OrganisationJESFinance organisationJESFinance = new OrganisationJESFinance();
+    private OrganisationJESFinance organisationJESFinance;
 
     @Mock
     private ApplicationFinanceRowRepository applicationFinanceRowRepository;

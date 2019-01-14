@@ -66,7 +66,7 @@ If funding is complete. application details has a warning message
     And the user clicks the button/link    link = ${applicationName}
     When the user clicks the button/link   link = Research category
     And the user clicks the button/link    jQuery = button:contains(Edit)
-    Then the user should see the text in the page    Changing the research category will reset the funding level for all business participants
+    Then the user should see the element   jQuery = .message-alert p:contains("Changing the research category will reset the funding level for all business participants.")
 
 Changing application details sets funding level to incomplete
     [Documentation]    INFUND-6895

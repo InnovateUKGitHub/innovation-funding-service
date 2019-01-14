@@ -105,7 +105,7 @@ Review and submit button
     And the user clicks the button/link   link = ${aeroApplication}
     When the user clicks the button/link  jQuery = .govuk-button:contains("Review and submit")
     Then the user should see the element  jQuery = h1:contains("Application summary")
-    And the user should see the text in the page  Please review your application before final submission
+    And the user should see the element   jQuery = p:contains("Please review your application before final submission.")
 
 Incomplete sections contain mark as complete link
     [Documentation]  IFS-751

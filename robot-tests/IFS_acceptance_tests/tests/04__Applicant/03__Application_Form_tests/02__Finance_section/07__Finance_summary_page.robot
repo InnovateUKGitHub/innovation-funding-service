@@ -136,12 +136,12 @@ Alert shows If the academic research participation is too high
     When the user enters text to a text field      css = [name$="incurredStaff"]  1000000
     And log in as a different user                 &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
-    Then the user should see the text in the page  The participation levels of this project are not within the required range
+    Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
     And the user navigates to the page             ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Academic robot test application
     And the user clicks the button/link            link = Review and submit
     And the user clicks the button/link            jQuery = button:contains("Finances summary")
-    Then the user should see the text in the page  The participation levels of this project are not within the required range
+    Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
@@ -205,7 +205,7 @@ Innovation lead can see read only summary for lead
     [Documentation]  IFS-802
     [Tags]  InnovationLead  HappyPath
     [Setup]  The user clicks the button/link          css = .finance-summary tbody tr:nth-of-type(1) th a
-    When the user should see the text in the page     Please complete your project finances.
+    When the user should see the element              jQuery = p:contains("Please complete your project finances.")
     Then the finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
 Innovation lead can see read only summary for collaborator
@@ -215,7 +215,7 @@ Innovation lead can see read only summary for collaborator
     And the user clicks the button/link             link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section                Finances summary
     When the user clicks the button/link            jQuery = .finance-summary tbody tr:contains("EGGS") th a
-    And the user should see the text in the page    Please complete your project finances.
+    And the user should see the element             jQuery = p:contains("Please complete your project finances.")
     Then the finance summary table in Your Finances has correct values for collaborator  £990  100  990  0  0
 
 Innovation lead can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
@@ -225,9 +225,9 @@ Innovation lead can see read only view of collaborator Your project costs for La
     And the user clicks the button/link             link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section                Finances summary
     When the user clicks the button/link            jQuery = .finance-summary tbody tr:contains("Ludlow") th a
-    Then the user should see the text in the page   Please complete your project finances.
+    Then the user should see the element            jQuery = p:contains("Please complete your project finances.")
     When the user clicks the button/link            jQuery = a:contains("Your project costs")
-    And the user should see the text in the page    Provide the project costs for 'Ludlow'
+    And the user should see the element             jQuery = h2:contains("Provide the project costs for 'Ludlow'")
     When User verifies labour, overhead costs and materials for innovation lead
     Then User verifies captial usage, subcontracting, travel and other costs for innovation lead
 
@@ -235,7 +235,7 @@ Innovation lead can see read only view of Your organisation
     [Documentation]  IFS-802
     [Tags]  InnovationLead
     When the user clicks the button/link           jQuery = a:contains("Your finances")
-    Then the user should see the text in the page  Please complete your project finances.
+    Then the user should see the element           jQuery = p:contains("Please complete your project finances.")
     When the user clicks the button/link           jQuery = a:contains("Your organisation")
     Then the user should see the element           jQuery = dt:contains("Size") + dd:contains("Micro")
     And the user should see the element            jQuery = dt:contains("employees") + dd:contains("4560")
@@ -244,7 +244,7 @@ Innovation lead can see read only view of Your funding
     [Documentation]  IFS-802
     [Tags]  InnovationLead
     When the user clicks the button/link           jQuery = a:contains("Your finances")
-    Then the user should see the text in the page  Please complete your project finances.
+    Then the user should see the element           jQuery = p:contains("Please complete your project finances.")
     When the user clicks the button/link           jQuery = a:contains("Your funding")
     Then the user should see the element           jQuery = dt:contains("Funding level") + dd:contains("30%")
     And the user should see the element            jQuery = th:contains("Lottery") ~ td:contains("£2,468")

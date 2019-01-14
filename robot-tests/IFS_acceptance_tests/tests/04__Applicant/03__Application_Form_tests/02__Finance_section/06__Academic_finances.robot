@@ -121,7 +121,7 @@ Mark all as complete
     And the user enters the project location
     And the user clicks the button/link            link = Your funding
     And the user marks your funding section as complete
-    Then the user should see the text in the page  Your finances
+    Then the user should see the element           jQuery = h1:contains("Your finances")
     And the user navigates to the finance overview of the academic
     And the user should see the element            css = .finance-summary tr:nth-of-type(2) img[src*="/images/ifs-images/icons/icon-tick"]
 
