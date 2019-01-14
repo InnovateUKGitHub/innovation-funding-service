@@ -22,7 +22,7 @@ public class PublicContentItemResourceBuilder extends BaseBuilder<PublicContentI
         return new PublicContentItemResourceBuilder(emptyList());
     }
 
-    public PublicContentItemResourceBuilder withContentSection(PublicContentResource... publicContentResources) {
+    public PublicContentItemResourceBuilder withPublicContentResource(PublicContentResource... publicContentResources) {
         return withArray((publicContentItem, publicContentResource) -> setField("publicContentResource", publicContentItem, publicContentResource), publicContentResources);
     }
 

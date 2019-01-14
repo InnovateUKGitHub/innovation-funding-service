@@ -56,7 +56,7 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     private CompetitionSetupService competitionSetupService;
 
     @Override
-    public ServiceResult<PublicContentResource> findByCompetitionId(Long id) {
+    public ServiceResult<PublicContentResource> findByCompetitionId(long id) {
         return find(publicContentRepository.findByCompetitionId(id), notFoundError(PublicContent.class, id))
                 .andOnSuccessReturn(publicContent -> sortGroups(publicContentMapper.mapToResource(publicContent)));
     }
@@ -71,7 +71,7 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
 
     @Override
     @Transactional
-    public ServiceResult<Void> initialiseByCompetitionId(Long competitionId) {
+    public ServiceResult<Void> initialiseByCompetitionId(long competitionId) {
         if (publicContentRepository.findByCompetitionId(competitionId) != null) {
             return serviceFailure(PUBLIC_CONTENT_ALREADY_INITIALISED);
         }
@@ -93,7 +93,7 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
 
     @Override
     @Transactional
-    public ServiceResult<Void> publishByCompetitionId(Long competitionId) {
+    public ServiceResult<Void> publishByCompetitionId(long competitionId) {
         return find(publicContentRepository.findByCompetitionId(competitionId), notFoundError(PublicContent.class, competitionId))
                 .andOnSuccess(this::publish)
                 .andOnSuccess(() -> { competitionSetupService.markSectionComplete(competitionId, CONTENT); });
@@ -190,5 +190,4 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
                 .findAny()
                 .ifPresent(section -> section.setStatus(PublicContentStatus.COMPLETE));
     }
-
 }
