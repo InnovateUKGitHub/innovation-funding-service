@@ -2,7 +2,6 @@ package org.innovateuk.ifs.grant.service;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
@@ -26,12 +25,11 @@ import org.innovateuk.ifs.sil.grant.resource.Participant;
 import org.innovateuk.ifs.sil.grant.resource.Period;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
-import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +41,7 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MA
 import static org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTablePopulator.GRANT_CLAIM_IDENTIFIER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
-@Mapper(config = GlobalMapperConfig.class)
+@Component
 class GrantMapper {
 
     private static final String NO_PROJECT_SUMMARY = "no project summary";
@@ -82,25 +80,13 @@ class GrantMapper {
         grant.setStartDate(project.getTargetStartDate());
         grant.setDuration(project.getDurationInMonths());
 
-        List<FormInputResponse> formInputResponses = formInputResponseRepository
-                .findByApplicationId(applicationId);
-        grant.setSummary(formInputResponses.stream()
-                .filter(response -> "project summary"
-                        .equalsIgnoreCase(response.getFormInput().getDescription()))
-                .findFirst()
-                .map(FormInputResponse::getValue)
-                .orElse(NO_PROJECT_SUMMARY));
-        grant.setPublicDescription(formInputResponses.stream()
-                .filter(response -> "public description"
-                        .equalsIgnoreCase(response.getFormInput().getDescription()))
-                .findFirst()
-                .map(FormInputResponse::getValue)
-                .orElse(NO_PUBLIC_DESCRIPTION));
+        FormInputResponse summaryResponse =
+                formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(applicationId, "Project summary");
+        grant.setSummary(summaryResponse != null ? summaryResponse.getValue() : NO_PROJECT_SUMMARY);
 
-        GrantMapper.Context context = new GrantMapper.Context()
-                .withProjectId(project.getId())
-                .withApplicationId(applicationId)
-                .withStartDate(project.getTargetStartDate());
+        FormInputResponse publicDescriptionResponse =
+                formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(applicationId, "Public description");
+        grant.setPublicDescription(publicDescriptionResponse != null ? publicDescriptionResponse.getValue() : NO_PUBLIC_DESCRIPTION);
 
         List<Participant> financeContactParticipants = simpleMap(project.getPartnerOrganisations(), partnerOrganisation -> {
 
@@ -108,7 +94,7 @@ class GrantMapper {
                     projectUser.getOrganisation().getId().equals(partnerOrganisation.getOrganisation().getId()) &&
                             projectUser.getRole().isFinanceContact());
 
-            return toProjectTeamParticipant(context, partnerOrganisation, financeContact);
+            return toProjectTeamParticipant(project, partnerOrganisation, financeContact);
         });
 
         PartnerOrganisation leadOrganisation =
@@ -117,7 +103,7 @@ class GrantMapper {
         ProjectUser projectManager =
                 getOnlyElement(project.getProjectUsersWithRole(PROJECT_MANAGER));
 
-        Participant projectManagerParticipant = toProjectTeamParticipant(context, leadOrganisation, projectManager);
+        Participant projectManagerParticipant = toProjectTeamParticipant(project, leadOrganisation, projectManager);
 
         InnovationLead innovationLead = innovationLeadRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD).get(0);
         User innovationLeadUser = innovationLead.getUser();
@@ -146,17 +132,17 @@ class GrantMapper {
     }
 
     private Participant toProjectTeamParticipant(
-            Context context,
+            Project project,
             PartnerOrganisation partnerOrganisation,
             ProjectUser contactUser) {
 
         Organisation organisation = partnerOrganisation.getOrganisation();
 
         Optional<SpendProfile> spendProfile = spendProfileRepository
-                .findOneByProjectIdAndOrganisationId(context.getProjectId(), organisation.getId());
+                .findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
 
         if (!spendProfile.isPresent()) {
-            throw new IllegalStateException("Project " + context.getProjectId() + " and organisation "
+            throw new IllegalStateException("Project " + project.getId() + " and organisation "
                     + organisation.getId() + " does not have a spend profile.  All organisations MUST "
                     + "have a spend profile to send grant");
         }
@@ -170,14 +156,14 @@ class GrantMapper {
          * Get cap limit
          */
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
-                context.getApplicationId(), organisation.getId()
+                project.getApplication().getId(), organisation.getId()
         );
 
         /*
          * Calculate award
          */
         ProjectFinance projectFinance = projectFinanceRepository
-                .findByProjectIdAndOrganisationId(context.getProjectId(), organisation.getId());
+                .findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
 
         String organisationSizeOrAcademic = projectFinance.getOrganisationSize() != null ?
                 projectFinance.getOrganisationSize().name() : ACADEMIC_ORGANISATION_SIZE_VALUE;
@@ -252,38 +238,5 @@ class GrantMapper {
         period.setValue(cost.getValue()
                 .setScale(0, RoundingMode.HALF_UP).longValue());
         return period;
-    }
-
-    private static class Context {
-        private long projectId;
-        private long applicationId;
-        private LocalDate startDate;
-
-        Context withProjectId(long projectId) {
-            this.projectId = projectId;
-            return this;
-        }
-
-        Context withApplicationId(long applicationId) {
-            this.applicationId = applicationId;
-            return this;
-        }
-
-        Context withStartDate(LocalDate startDate) {
-            this.startDate = startDate;
-            return this;
-        }
-
-        long getProjectId() {
-            return projectId;
-        }
-
-        long getApplicationId() {
-            return applicationId;
-        }
-
-        LocalDate getStartDate() {
-            return startDate;
-        }
     }
 }
