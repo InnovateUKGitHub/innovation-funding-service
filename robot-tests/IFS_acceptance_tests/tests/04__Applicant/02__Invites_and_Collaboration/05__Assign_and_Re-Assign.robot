@@ -72,8 +72,8 @@ Collaborator should see the terms and conditions from the overview page
     [Tags]
     Given the user clicks the button/link          link = Application overview
     When The user clicks the button/link           link = View the competition terms and conditions
-    Then the user should see the text in the page  Terms and conditions of an Innovate UK grant award
-    And the user should see the text in the page   Entire agreement
+    Then the user should see the element           jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    And the user should see the element            jQuery = h2:contains("Entire agreement")
 
 Collaborator should see the review button instead of the review and submit
     [Documentation]  INFUND-2451
@@ -83,7 +83,7 @@ Collaborator should see the review button instead of the review and submit
     And the user clicks the button/link           link = Assign test
     Then the user should not see the element      jQuery = .govuk-button:contains("Review and submit")
     And the user clicks the button/link           jQuery = .govuk-button:contains("Review")
-    And the user should see the text in the page  All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
+    And the user should see the element           jQuery = .message-alert:contains("All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application.")
     And the user should not see the element       jQuery = .govuk-button:contains("Submit application")
 
 Last update message is correctly updating
@@ -103,7 +103,7 @@ Collaborators cannot assign a question
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link = Assign test
     And the user clicks the button/link   link = Public description
-    Then The user should see the text in the page  Assign to lead for review
+    Then The user should see the element  jQuery = .button-clear:contains("Assign to lead for review")
 
 Collaborators can mark as ready for review
     [Documentation]  INFUND-877
@@ -111,7 +111,7 @@ Collaborators can mark as ready for review
     [Tags]
     When the user clicks the button/link            jQuery = button:contains("Assign to lead for review")
     Then the user should see the notification       Question assigned successfully
-    And the user should see the text in the page    You have reassigned this question to
+    And the user should see the element             jQuery = .assignee:contains("You have reassigned this question to")
 
 Collaborator cannot edit after marking ready for review
     [Documentation]  INFUND-275
@@ -151,13 +151,13 @@ Appendices are assigned along with the question
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link = Assign test
     And the user clicks the button/link   link = 6. Innovation
-    And the user should see the text in the page  Upload
+    And the user should see the element   jQuery = label:contains("Upload")
     When the applicant assigns the question to the collaborator  Dennis Bergkamp
     Then log in as a different user       ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link = Assign test
     And the user clicks the button/link   link = 6. Innovation
-    And the user should see the text in the page  Upload
+    And the user should see the element   jQuery = label:contains("Upload")
     And the user clicks the button/link   jQuery = button:contains("Assign to lead for review")
     And the user should not see the text in the page  Upload
 
@@ -239,7 +239,7 @@ Lead applicant should be able to remove the partner organisation
     And the user clicks the button/link    jQuery = .table-overflow:contains("Dennis") ~ p a
     When the user clicks the button/link   jQuery = a:contains("Delete organisation"):first
     And the user clicks the button/link    jQuery = .modal-delete-organisation button:contains("Delete organisation")
-    Then the user should see the text in the page  Application team
+    Then the user should see the element   jQuery = h1:contains("Application team")
     And the user should not see the text in the page  Dennis Bergkamp
     #The following steps check if the collaborator should not see the application in the dashboard page
     And log in as a different user  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}

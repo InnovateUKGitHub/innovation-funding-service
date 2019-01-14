@@ -73,16 +73,13 @@ Guest user can filter competitions by Innovation area
 
 Guest user can see the public information of an unopened competition
     [Documentation]    INFUND-8714
-    [Tags]  Pending
-    # TODO IFS-2986
+    [Tags]
     [Setup]    the user navigates to the page           ${frontDoor}
     Given the user clicks the button/link in the paginated list    link = ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element                jQuery = h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
-    And the user should see the element                 jQuery = strong:contains("Competition opens") + span:contains("Saturday 24 February 2018")
-    And the user should see the element                 jQuery = li:contains("Competition closes")
-    And the user should see the element                 jQuery = li:contains("Friday 16 April 2018")
-    And the user should see the text in the page        This competition has not yet opened.
-    And the user should not see the text in the page    Or sign in to continue an existing application
+    And the user should see the element                 jQuery = li:contains("Saturday 7 November 2020")
+    And the user should see the element                 jQuery = .warning-alert:contains("This competition has not yet opened.")
+    And the user should not see the element             jQuery = p:contains("Or sign in to continue an existing application.")
     And the user should see the element                 jQuery = .govuk-button:contains("Start new application")
 
 Registration is closed on Non-IFS competitition when the Registration date is in the past
@@ -103,7 +100,7 @@ Guest user can see the public information of a competition
     And the user should see the element             jQuery = strong:contains("Competition opens") + span:contains("${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE}")
     And the user should see the element             jQuery = li:contains("Competition closes")
     And the user should see the element             jQuery = li:contains("${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME_LONG}")
-    And the user should see the text in the page    Or sign in to continue an existing application.
+    And the user should see the element             jQuery = p:contains("Or sign in to continue an existing application.")
     And the user should see the element             jQuery = .govuk-button:contains("Start new application")
 
 Guest user can see the public Summary of the competition
@@ -111,7 +108,7 @@ Guest user can see the public Summary of the competition
     [Tags]
     Given the user clicks the button/link    link = Summary
     Then the user should see the element     jQuery = h3:contains("Description")
-    And the user should see the text in the page    Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.
+    And the user should see the element      jQuery = .govuk-body:contains("Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.")
     When the user should see the element     jQuery = h3:contains("Funding type")
     Then the user should see the element     jQuery = p:contains("Grant")
     When the user should see the element     jQuery = h3:contains("Project size")
@@ -122,14 +119,14 @@ Guest user can see the public Eligibility of the competition
     [Tags]
     Given the user clicks the button/link           link = Eligibility
     Then the user should see the element            jQuery = h3:contains("Lead applicant eligibility")
-    And the user should see the text in the page    one SME involved in your proposal carry out your project work, and intend to
+    And the user should see the element             jQuery = .govuk-body:contains("one SME involved in your proposal carry out your project work, and intend to")
 
 Guest user can see the public Scope of the competition
     [Documentation]    INFUND-6923
     [Tags]
     Given the user clicks the button/link           link = Scope
     Then the user should see the element            jQuery = h3:contains("Project scope")
-    And the user should see the text in the page    Projects will: harness E&E technologies across the economy develop and scale-up research and development to bring ideas,
+    And the user should see the element             jQuery = .govuk-body:contains("Projects will: harness E&E technologies across the economy develop and scale-up research and development to bring ideas,")
 
 Guest user can see the public Dates of the competition
     [Documentation]    INFUND-6923
@@ -143,16 +140,16 @@ Guest user can see the public Dates of the competition
 Guest user can see the public How to apply of the competition
     [Documentation]    INFUND-6923
     [Tags]
-    Given the user clicks the button/link            link = How to apply
-    When the user should see the element             jQuery = h3:contains("How to apply")
-    Then the user should see the text in the page    Collaborators will be sent a link,
+    Given the user clicks the button/link      link = How to apply
+    When the user should see the element       jQuery = h3:contains("How to apply")
+    Then the user should see the element       jQuery = .govuk-body:contains("Collaborators will be sent a link,")
 
 Guest user can see the public Supporting information of the competition
     [Documentation]    INFUND-6923
     [Tags]
-    Given the user clicks the button/link            link = Supporting information
-    When the user should see the element             jQuery = h3:contains("Background and further information")
-    Then the user should see the text in the page    However, we sometimes struggle to fully commercialise the opportunities.
+    Given the user clicks the button/link       link = Supporting information
+    When the user should see the element        jQuery = h3:contains("Background and further information")
+    Then the user should see the element        jQuery = .govuk-body:contains("However, we sometimes struggle to fully commercialise the opportunities.")
 
 Guest user can apply to a competition
     [Documentation]    INFUND-6923
