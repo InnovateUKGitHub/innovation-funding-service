@@ -56,7 +56,7 @@ Initial details: client-side validations
     When the user enters text to a text field                   id = title    Validations Test
     Then the user should not see the error any more             Please enter a title.
     When the user selects the radio button                      fundingType  GRANT
-    Then the user should not see the error any more             Please enter a funding type.
+    Then the user should not see the error any more             Enter a valid funding type.
     When the user selects the option from the drop-down menu    Programme    id = competitionTypeId
     Then the user should not see the error any more             Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id = innovationSectorCategoryId
