@@ -7,7 +7,7 @@ import org.innovateuk.ifs.login.viewmodel.DashboardSelectionViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,25 +18,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.Comparator.comparingInt;
-import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
- * This Controller redirects the request from http://<domain>/ to http://<domain>/login
- * So we don't have a public homepage, the login page is the homepage.
+ * This Controller redirects the request from http://<domain>/ to the relevant user dashboard based on the user's
+ * global Role, or to a dashboard selection page for users who have more than one global Roles.
  */
 @Controller
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = HomeController.class)
 @PreAuthorize("permitAll")
 public class HomeController {
 
-    private static final Role[] ROLES_WITH_DASHBOARDS = { LIVE_PROJECTS_USER, APPLICANT, INNOVATION_LEAD, ASSESSOR, STAKEHOLDER };
-    private static final List<Role> ROLES_WITH_DASHBOARDS_LIST = asList(ROLES_WITH_DASHBOARDS);
-
-    @Autowired
     private NavigationUtils navigationUtils;
+    private List<Role> rolesWithDashboards;
+
+    HomeController(
+            NavigationUtils navigationUtils,
+            @Value("#{'${ifs.multi.dashboard.roles:APPLICANT,ASSESSOR,STAKEHOLDER}'.split(',')}") List<String> roleNames) {
+        
+        this.navigationUtils = navigationUtils;
+        this.rolesWithDashboards = simpleMap(roleNames, Role::valueOf);        
+    }
 
     @GetMapping("/")
     @SecuredBySpring(value = "HomeController.defaultDashboardOrDashboardSelection()",
@@ -48,7 +51,7 @@ public class HomeController {
 
         UserResource user = (UserResource) authentication.getDetails();
 
-        if (user.hasMoreThanOneRoleOf(ROLES_WITH_DASHBOARDS)) {
+        if (user.hasMoreThanOneRoleOf(rolesWithDashboards)) {
             return "redirect:/dashboard-selection";
         }
 
@@ -64,7 +67,7 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (!user.hasMoreThanOneRoleOf(ROLES_WITH_DASHBOARDS)) {
+        if (!user.hasMoreThanOneRoleOf(rolesWithDashboards)) {
             return navigationUtils.getRedirectToLandingPageUrl(request);
         }
 
@@ -73,10 +76,10 @@ public class HomeController {
 
     private String doViewDashboardSelection(HttpServletRequest request, Model model, UserResource user) {
 
-        List<Role> dashboardRoles = simpleFilter(user.getRoles(), ROLES_WITH_DASHBOARDS_LIST::contains);
+        List<Role> dashboardRoles = simpleFilter(user.getRoles(), rolesWithDashboards::contains);
         List<DashboardPanel> dashboardPanels = simpleMap(dashboardRoles, role -> createDashboardPanelForRole(request, role));
         List<DashboardPanel> orderedPanels = sort(dashboardPanels,
-                comparingInt(panel -> ROLES_WITH_DASHBOARDS_LIST.indexOf(panel.getRole())));
+                comparingInt(panel -> rolesWithDashboards.indexOf(panel.getRole())));
 
         model.addAttribute("model", new DashboardSelectionViewModel(orderedPanels));
         return "login/multiple-dashboard-choice";
@@ -84,10 +87,6 @@ public class HomeController {
 
     private DashboardPanel createDashboardPanelForRole(HttpServletRequest request, Role role) {
         return new DashboardPanel(role, navigationUtils.getDirectDashboardUrlForRole(request, role));
-    }
-
-    private static boolean unauthenticated(Authentication authentication) {
-        return authentication == null || !authentication.isAuthenticated() || authentication.getDetails() == null;
     }
 
     private String getRedirectUrlForUser(UserResource user) {

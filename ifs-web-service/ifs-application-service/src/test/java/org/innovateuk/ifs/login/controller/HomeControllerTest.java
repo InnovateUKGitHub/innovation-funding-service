@@ -33,7 +33,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
 
     @Override
     protected HomeController supplyControllerUnderTest() {
-        return new HomeController();
+        return new HomeController(navigationUtils, asList("LIVE_PROJECTS_USER", "APPLICANT", "INNOVATION_LEAD", "ASSESSOR", "STAKEHOLDER"));
     }
 
     @Before
