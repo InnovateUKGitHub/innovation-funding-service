@@ -50,7 +50,7 @@ public class DatesViewModelPopulatorTest {
                 })
                 .withPublicContent(1L)
                 .build();
-        publicContentItemResource = newPublicContentItemResource().withContentSection(
+        publicContentItemResource = newPublicContentItemResource().withPublicContentResource(
                 newPublicContentResource()
                         .with(contentResource -> {
                             contentResource.setId(89235L);

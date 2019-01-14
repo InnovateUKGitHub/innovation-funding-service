@@ -51,7 +51,7 @@ public class SummaryViewModelPopulatorTest {
                 .withPublicContent(1L)
                 .withContentGroups(contentGroups)
                 .build();
-        publicContentItemResource = newPublicContentItemResource().withContentSection(
+        publicContentItemResource = newPublicContentItemResource().withPublicContentResource(
                 newPublicContentResource()
                         .with(contentResource -> {
                             contentResource.setId(89235L);
