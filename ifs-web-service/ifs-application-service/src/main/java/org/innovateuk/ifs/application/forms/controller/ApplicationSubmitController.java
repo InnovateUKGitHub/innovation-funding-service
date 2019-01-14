@@ -86,7 +86,7 @@ public class ApplicationSubmitController {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "APPLICANT_ASSIGN_OR_COMPLETE", description = "Applicants can assign or complete questions from the application form.")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/summary")
     public String completeOrAssign(@PathVariable("applicationId") long applicationId,
@@ -119,7 +119,7 @@ public class ApplicationSubmitController {
         return "redirect:/application/" + applicationId + "/summary";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "APPLICATION_SUBMIT", description = "Applicants can submit their applications.")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/summary", params = "submit-application")
     public String submitApplication(@PathVariable("applicationId") long applicationId,
@@ -141,7 +141,7 @@ public class ApplicationSubmitController {
         return String.format("redirect:/application/%d/confirm-submit", applicationId);
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "APPLICANT_CONFIRM_SUBMIT", description = "Applicants can confirm they wish to submit their applications")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(@PathVariable("applicationId") long applicationId,
@@ -155,7 +155,7 @@ public class ApplicationSubmitController {
         return "application-confirm-submit";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "APPLICANT_CONFIRM_SUBMIT", description = "Applicants can confirm they wish to submit their applications")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping("/{applicationId}/confirm-submit")
     public String applicationSubmit(Model model,
@@ -181,7 +181,7 @@ public class ApplicationSubmitController {
                 .failNowOrSucceedWith(failureView, () -> String.format("redirect:/application/%d/track", applicationId));
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants can track their application after submitting.")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(Model model,
