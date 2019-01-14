@@ -97,7 +97,7 @@ Applicant goes to the registration form
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}
-    the user should see the element      jQuery = h1:contains("Dashboard")
+    the user should see the element      jQuery = h1:contains("Applications")
     the user clicks the button/link      link = ${Application_name}
     the user is redirected to overview page if he has been there already
 

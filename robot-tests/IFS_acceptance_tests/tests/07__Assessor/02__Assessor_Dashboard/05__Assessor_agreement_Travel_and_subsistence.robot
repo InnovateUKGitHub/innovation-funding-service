@@ -24,7 +24,7 @@ Travel and subsistence rates
     And the user should see the element    jQuery = h2:contains("Public transport")
     And the user should see the element    jQuery = h2:contains("Mileage rates")
     And the user should see the element    jQuery = p:contains("Please make sure your travel claims, receipts and tickets are all submitted.")
-    [Teardown]   the user clicks the button/link    link = ${ASSESSOR_DASHBOARD}
+    [Teardown]   the user clicks the button/link    link = ${ASSESSOR_DASHBOARD_TITLE}
 
 Cancel returns you back to the dashboard
     [Documentation]    INFUND-8009
@@ -38,7 +38,7 @@ Cancel returns you back to the dashboard
 Back button takes you to the previous page
     [Documentation]    INFUND-8009
     [Tags]
-    Given the user clicks the button/link                     link = ${ASSESSOR_DASHBOARD}
+    Given the user clicks the button/link                     link = ${ASSESSOR_DASHBOARD_TITLE}
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
     [Teardown]    the user clicks the button/link             jQuery = a:contains("your assessor agreement")
 

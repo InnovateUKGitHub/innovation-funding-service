@@ -70,7 +70,7 @@ Save Skills should redirect to the read-only view
 Your skills does not appear in dashboard alert
     [Documentation]    INFUND-5182
     [Tags]
-    When the user clicks the button/link            link = ${ASSESSOR_DASHBOARD}
+    When the user clicks the button/link            link = ${ASSESSOR_DASHBOARD_TITLE}
     Then The user should not see the element        jQuery = .message-alert a:contains('your skills')    #this checks the alert message on the top of the page
     [Teardown]    the user clicks the button/link   link = your details
 
