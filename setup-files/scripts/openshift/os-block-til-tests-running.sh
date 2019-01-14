@@ -18,7 +18,10 @@ PODNAME=$(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep ^robot-framework | grep -v de
 
 echo "Waiting tests to be ready on $PODNAME"
 
-until oc logs $PODNAME ${SVC_ACCOUNT_CLAUSE} | grep "/robot-tests/target/.*/report.html"; do
-    echo "Tests are not done yet.."
-    sleep 60
+COMPLETE=0
+while [[ $COMPLETE -eq 0 ]];
+do
+  oc exec $PODNAME ${SVC_ACCOUNT_CLAUSE} -it -- test -f /robot-tests/testsComplete > /dev/null 2>&1 && COMPLETE=1
+  echo "Tests are not done yet.."
+  sleep 60
 done

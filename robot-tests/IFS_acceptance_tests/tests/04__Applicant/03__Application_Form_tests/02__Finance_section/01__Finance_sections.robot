@@ -93,7 +93,7 @@ Academic partner can upload file for field J-es PDF
     When The user clicks the button/link            jQuery = button:contains("Remove")
     And the user should see the element             jQuery = label.button-secondary
     And the user uploads the file                   css = .upload-section input  ${5mb_pdf}
-    And the user should see the text in the page    ${5mb_pdf}
+    And the user should see the element             link = ${5mb_pdf}
 
 Compadmin can open the jes-file in applications
     [Documentation]     IFS-102
@@ -127,7 +127,7 @@ Applicant chooses Calculate overheads option
     Then the user fills in the project costs                Calculate  185,997
     And wait until element is not visible without screenshots  css = .task-list li:nth-of-type(1) .task-status-incomplete
     When the user clicks the button/link                    link = Your project costs
-    Then the user should see the text in the page           ${excel_file}
+    Then the user should see the element                    link = ${excel_file}
     And the user clicks the button/link                     jQuery = button:contains("Edit your project costs")
     And the user clicks the button/link                     css = button[name="removeOverheadFile"]
     When the user selects the checkbox                      stateAidAgreed
