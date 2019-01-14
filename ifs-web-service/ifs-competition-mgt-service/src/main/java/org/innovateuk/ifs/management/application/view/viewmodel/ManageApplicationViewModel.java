@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.application.view.viewmodel;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class ManageApplicationViewModel {
     private final ResearchCategorySummaryViewModel researchCategorySummaryViewModel;
     private final List<AppendixResource> appendices;
     private final boolean collaborativeProject;
+    private final CompetitionResource currentCompetition;
 
     public ManageApplicationViewModel(SummaryViewModel summaryViewModel,
                                       String backUrl,
@@ -28,7 +30,8 @@ public class ManageApplicationViewModel {
                                       ApplicationOverviewIneligibilityViewModel ineligibility,
                                       ResearchCategorySummaryViewModel researchCategorySummaryViewModel,
                                       List<AppendixResource> appendices,
-                                      boolean collaborativeProject) {
+                                      boolean collaborativeProject,
+                                      CompetitionResource currentCompetition) {
         this.summaryViewModel = summaryViewModel;
         this.backUrl = backUrl;
         this.originQuery = originQuery;
@@ -39,6 +42,7 @@ public class ManageApplicationViewModel {
         this.researchCategorySummaryViewModel = researchCategorySummaryViewModel;
         this.appendices = appendices;
         this.collaborativeProject = collaborativeProject;
+        this.currentCompetition = currentCompetition;
     }
 
     public SummaryViewModel getSummaryViewModel() {
@@ -79,5 +83,9 @@ public class ManageApplicationViewModel {
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+
+    public CompetitionResource getCurrentCompetition() {
+        return currentCompetition;
     }
 }

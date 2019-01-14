@@ -24,12 +24,12 @@ Maximum funding level available for lead business
     When the user fills in the project costs                 labour costs  n/a
     And the user clicks the button/link                      link = Your funding
     And the user selects the radio button                    requestingFunding   true
-    Then the user should see the text in the page            The maximum you can enter is 45%
+    Then the user should see the element                     jQuery = span:contains("The maximum you can enter is 45%")
     And the correct funding displayed for lead applicant     Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  60%
     And the correct funding displayed for lead applicant     Industrial research  ${LARGE_ORGANISATION_SIZE}  50%
     And the correct funding displayed for lead applicant     Experimental development  ${SMALL_ORGANISATION_SIZE}  45%
     And the user selects the radio button                    requestingFunding   true
-    Then the user should see the text in the page            The maximum you can enter is 45%
+    Then the user should see the element                     jQuery = span:contains("The maximum you can enter is 45%")
     And the user selects the radio button                    otherFunding  false
     And the user clicks the button/link                      jQuery = a:contains("Your finances")
     [Teardown]  the user clicks the button/link              link = Application overview
@@ -43,7 +43,7 @@ Lead applicant invites a Charity member
     And the user fills in the project costs                                 labour costs  n/a
     And the user clicks the button/link                                     link = Your funding
     And the user selects the radio button                                   requestingFunding   true
-    And the user should see the text in the page                            Select a funding level
+    And the user should see the element                                     jQuery = label:contains("Select a funding level")
 
 Invite existing academic collaborator
     [Documentation]  IFS-338
@@ -71,7 +71,8 @@ Maximum funding level available for RTO lead
     And the user fills in the organisation information                      ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs                                 labour costs  n/a
     When the user clicks the button/link                                    link = Your funding
-    And the user should see the text in the page                            The amount you apply for must reflect other
+    And the user selects the radio button                                   requestingFunding   true
+    And the user should see the element                                     jQuery = span:contains("The amount you apply for must reflect other")
     And the correct funding displayed for lead RTO applicant                Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}
     And the correct funding displayed for lead RTO applicant                Industrial research  ${LARGE_ORGANISATION_SIZE}
     And the user marks your funding section as complete
@@ -205,13 +206,6 @@ the user edits the organisation size
     the user clicks the button/link     jQuery = button:contains("Mark as complete")
     the user clicks the button/link     link = Your funding
 
-the funding displayed is as expected
-    the user clicks the button/link             link = Your funding
-    the user should see the text in the page    Enter your funding level (maximum 100%).
-    the user clicks the button/link             jQuery = a:contains("Your finances")
-    the user edits the organisation size        ${LARGE_ORGANISATION_SIZE}
-    the user should see the text in the page    Enter your funding level (maximum 100%).
-
 the user accepts the invite to collaborate
     [Arguments]  ${competition_name}  ${user_name}  ${password}
     the user reads his email and clicks the link     ${user_name}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
@@ -240,11 +234,11 @@ the correct funding displayed for lead applicant
     the user edits the research category        ${research_cat}
     the user edits the organisation size        ${org_size}
     the user selects the radio button           requestingFunding   true
-    the user should see the text in the page    The maximum you can enter is ${funding_amount}
+    the user should see the element             jQuery = span:contains("The maximum you can enter is ${funding_amount}")
 
 the correct funding displayed for lead RTO applicant
     [Arguments]   ${research_cat}  ${org_size}
     the user edits the research category        ${research_cat}
     the user edits the organisation size        ${org_size}
     the user selects the radio button           requestingFunding   true
-    the user should see the text in the page    The amount you apply for must reflect other
+    the user should see the element             jQuery = span:contains("The amount you apply for must reflect other")
