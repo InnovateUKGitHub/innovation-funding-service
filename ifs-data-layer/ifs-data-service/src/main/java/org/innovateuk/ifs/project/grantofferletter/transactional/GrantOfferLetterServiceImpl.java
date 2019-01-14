@@ -154,7 +154,7 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
      * Feature flag to allow early release of the new multi-role dashboard without giving access to Live Projects
      * immediately.
      */
-    @Value("${ifs.data.service.allocate.live.projects.role:false}")
+    @Value("${ifs.data.service.allocate.live.projects.role}")
     private boolean allocateLiveProjectsRole;
 
     @Value("${ifs.web.baseURL}")
