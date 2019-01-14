@@ -14,7 +14,6 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -150,6 +149,13 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
 
     @Autowired
     private PartnerOrganisationService partnerOrganisationService;
+
+    /**
+     * Feature flag to allow early release of the new multi-role dashboard without giving access to Live Projects
+     * immediately.
+     */
+    @Value("${ifs.data.service.allocate.live.projects.role:false}")
+    private boolean allocateLiveProjectsRole;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -583,6 +589,11 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
     }
 
     private ServiceResult<Void> addLiveProjectsRoleToUsers(Project project) {
+
+        if (!allocateLiveProjectsRole) {
+            return serviceSuccess();
+        }
+
         return addLiveProjectsRoleToProjectTeamUsers(project);
     }
 

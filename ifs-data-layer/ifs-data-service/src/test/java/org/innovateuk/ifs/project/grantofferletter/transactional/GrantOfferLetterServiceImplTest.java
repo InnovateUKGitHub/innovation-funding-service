@@ -1085,6 +1085,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     @Test
     public void approveOrRejectSignedGrantOfferLetterApprovalSuccess() {
 
+        ReflectionTestUtils.setField(service, "allocateLiveProjectsRole", true);
+
         User user = newUser()
                 .withFirstName("A")
                 .withLastName("B")
