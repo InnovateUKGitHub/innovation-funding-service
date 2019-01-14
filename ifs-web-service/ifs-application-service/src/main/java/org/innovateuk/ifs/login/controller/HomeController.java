@@ -35,7 +35,7 @@ public class HomeController {
 
     HomeController(
             NavigationUtils navigationUtils,
-            @Value("#{'${ifs.multi.dashboard.roles:APPLICANT,ASSESSOR,STAKEHOLDER}'.split(',')}") List<String> roleNames) {
+            @Value("#{'${ifs.multi.dashboard.roles}'.split(',')}") List<String> roleNames) {
         
         this.navigationUtils = navigationUtils;
         this.rolesWithDashboards = simpleMap(roleNames, Role::valueOf);        
