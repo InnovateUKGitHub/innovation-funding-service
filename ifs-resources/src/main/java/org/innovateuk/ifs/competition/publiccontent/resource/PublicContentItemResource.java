@@ -12,6 +12,7 @@ public class PublicContentItemResource {
     private String nonIfsUrl;
     private Boolean isNonIfs;
     private Boolean setupComplete;
+    private FundingType fundingType;
 
     public PublicContentItemResource() {
     }
@@ -86,5 +87,14 @@ public class PublicContentItemResource {
 
     public void setSetupComplete(Boolean setupComplete) {
         this.setupComplete = setupComplete;
+    }
+
+    public FundingType getFundingType() {
+        return fundingType;
+    }
+
+    public PublicContentItemResource setFundingType(FundingType fundingType) {
+        this.fundingType = fundingType;
+        return this;
     }
 }
