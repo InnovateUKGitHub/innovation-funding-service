@@ -383,7 +383,7 @@ the applicant submits the application
     the user should not see the element                jQuery = .task-status-incomplete
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
     the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
-    the user should be redirected to the correct page  submit
+    the user should be redirected to the correct page  track
 
 the user applies to competition and enters organisation type
     [Arguments]  ${compId}  ${organisationType}
