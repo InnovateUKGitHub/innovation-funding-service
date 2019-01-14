@@ -25,10 +25,10 @@ the user sees the correct read only view of the question
     the user should not see the text in the page    The business opportunity is plausible
 
 the user fills in the CS Initial details
-    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${stateAid}
+    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
     the user clicks the button/link                      link = Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
-    the user selects the radio button                    fundingType  GRANT
+    the user selects the radio button                    fundingType  ${fundingType}
     the user selects the option from the drop-down menu  ${compType}  id = competitionTypeId
     the user selects the option from the drop-down menu  Emerging and enabling  id = innovationSectorCategoryId
     the user selects the option from the drop-down menu  Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
