@@ -21,6 +21,7 @@ public class PublicContentItemResourceDocs {
             fieldWithPath("registrationCloseDate").description("Registration closing date of the competition"),
             fieldWithPath("nonIfsUrl").description("The URL to apply to a competition if it is not managed via IFS"),
             fieldWithPath("nonIfs").description("Boolean that indicates if this is a non IFS competition"),
+            fieldWithPath("fundingType").description("Funding type of the competition"),
             fieldWithPath("setupComplete").description(("Boolean that indicates if this competition has completed setup"))
     };
 }

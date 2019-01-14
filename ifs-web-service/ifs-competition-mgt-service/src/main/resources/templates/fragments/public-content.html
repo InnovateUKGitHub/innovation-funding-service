@@ -150,14 +150,6 @@
         </div>
         <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-one-third">
-                <h2 class="govuk-heading-m govuk-!-margin-0">Funding type</h2>
-            </div>
-            <div class="govuk-grid-column-two-thirds">
-                <p class="govuk-body" th:text="${form.fundingType}"></p>
-            </div>
-        </div>
-        <div class="govuk-grid-row govuk-!-margin-bottom-6">
-            <div class="govuk-grid-column-one-third">
                 <h2 class="govuk-heading-m govuk-!-margin-0">Project size</h2>
             </div>
             <div class="govuk-grid-column-two-thirds">
@@ -192,33 +184,6 @@
                     </div>
                 </div>
 
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingType')} ? 'govuk-form-group--error'">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingType">
-                            <h2 class="govuk-fieldset__heading">Funding type</h2>
-                        </legend>
-                        <th:block th:if="${#fields.hasErrors('fundingType')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('fundingType')}" th:text="${err}" />
-                        </th:block>
-                        <div class="govuk-radios">
-                            <div th:each="fundingType : ${model.fundingTypes}"
-                                 class="govuk-radios__item">
-                                <input type="radio"
-                                       class="govuk-radios__input"
-                                       name="fundingType"
-                                       th:id="${'fundingType-'+fundingType.displayName}"
-                                       th:value="${fundingType.displayName}"
-                                       required="required"
-                                       th:checked="${form.fundingType == fundingType.displayName}"
-                                       th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.fundingType.required}" />
-                                <label th:for="${'fundingType-'+fundingType.displayName}"
-                                       th:text="${fundingType.displayName}"
-                                       class="govuk-label govuk-radios__label"></label>
-                            </div>
-                        </div>
-
-                    </fieldset>
-                </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectSize')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-label--s" for="projectSize">
                         Project size

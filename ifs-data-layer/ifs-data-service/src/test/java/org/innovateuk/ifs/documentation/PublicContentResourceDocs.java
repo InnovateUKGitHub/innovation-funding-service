@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
@@ -20,7 +19,6 @@ public class PublicContentResourceDocs {
             fieldWithPath("id").description("Id of the public content resource"),
             fieldWithPath("competitionId").description("Id of the competition"),
             fieldWithPath("eligibilitySummary").description("The summary of the eligibility"),
-            fieldWithPath("fundingType").description("The type of competition funding"),
             fieldWithPath("keywords[]").description("List of keywords that will match the search on"),
             fieldWithPath("inviteOnly").description("Indicates if the competition will public or only by invite"),
             fieldWithPath("projectFundingRange").description("The range of project funding"),
@@ -45,7 +43,6 @@ public class PublicContentResourceDocs {
     public static final PublicContentResourceBuilder publicContentResourceBuilder = newPublicContentResource()
             .withCompetitionId(1L)
             .withEligibilitySummary("summary")
-            .withFundingType(FundingType.GRANT)
             .withKeywords(asList("keyword1", "keyword2"))
             .withProjectFundingRange("range")
             .withProjectSize("size")

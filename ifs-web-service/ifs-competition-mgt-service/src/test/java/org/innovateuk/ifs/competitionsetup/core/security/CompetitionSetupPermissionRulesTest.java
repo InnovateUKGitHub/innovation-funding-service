@@ -32,7 +32,7 @@ public class CompetitionSetupPermissionRulesTest extends BasePermissionRulesTest
         UserResource loggedInUser = new UserResource();
 
         when(competitionRestService.getCompetitionById(competitionId.id())).thenReturn(restSuccess(competitionResource));
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId.id())).thenReturn(true);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId.id())).thenReturn(true);
         assertTrue(rules.manageInnovationLead(competitionId, loggedInUser));
     }
 
@@ -42,7 +42,7 @@ public class CompetitionSetupPermissionRulesTest extends BasePermissionRulesTest
         CompetitionCompositeId competitionId = CompetitionCompositeId.id(14L);
         UserResource loggedInUser = new UserResource();
 
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId.id())).thenReturn(Boolean.TRUE);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId.id())).thenReturn(Boolean.TRUE);
         assertTrue(rules.manageStakeholders(competitionId, loggedInUser));
     }
 

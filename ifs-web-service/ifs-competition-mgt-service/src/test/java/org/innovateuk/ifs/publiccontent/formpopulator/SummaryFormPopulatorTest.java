@@ -31,7 +31,6 @@ public class SummaryFormPopulatorTest {
     public void testPopulate() {
         PublicContentResource resource = newPublicContentResource()
                 .withSummary(DESCRIPTION)
-                .withFundingType(FUNDING_TYPE)
                 .withProjectSize(PROJECT_SIZE)
                 .withContentSections(newPublicContentSectionResource().withType(PublicContentSectionType.SUMMARY).withContentGroups(Collections.emptyList()).build(1))
                 .build();
@@ -39,7 +38,6 @@ public class SummaryFormPopulatorTest {
         SummaryForm form = target.populate(resource);
 
         assertThat(form.getDescription(), equalTo(DESCRIPTION));
-        assertThat(form.getFundingType(), equalTo(FUNDING_TYPE.getDisplayName()));
         assertThat(form.getProjectSize(), equalTo(PROJECT_SIZE));
 
     }
@@ -53,7 +51,6 @@ public class SummaryFormPopulatorTest {
         SummaryForm form = target.populate(resource);
 
         assertThat(form.getDescription(), equalTo(null));
-        assertThat(form.getFundingType(), equalTo(null));
         assertThat(form.getProjectSize(), equalTo(null));
 
     }
