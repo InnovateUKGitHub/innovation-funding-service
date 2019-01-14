@@ -16,34 +16,34 @@ public class GrantProcessApplicationFilterImpl implements GrantProcessApplicatio
     private static final Log LOG = LogFactory.getLog(GrantProcessServiceImpl.class);
 
     private final boolean filterEnabled;
-    private final List<Long> filterByCompetitionCodes;
+    private final List<Long> filterByCompetitionIds;
 
     public GrantProcessApplicationFilterImpl(
-            @Value("${ifs.grant.process.filterBy.competitionCodes}") final String filterByCompetitionCodesAsString
+            @Value("${ifs.grant.process.filterBy.competitionIds}") final String filterByCompetitionIdsAsString
     ) {
-        if (filterByCompetitionCodesAsString != null && !filterByCompetitionCodesAsString.trim().isEmpty()) {
+        if (filterByCompetitionIdsAsString != null && !filterByCompetitionIdsAsString.trim().isEmpty()) {
             filterEnabled = true;
-            filterByCompetitionCodes = Arrays
-                    .stream(filterByCompetitionCodesAsString.split(","))
+            filterByCompetitionIds = Arrays
+                    .stream(filterByCompetitionIdsAsString.split(","))
                     .map(Long::parseLong)
                     .collect(Collectors.toList());
-            LOG.info("Grant Monitoring : Only sending applications for competitions : " + filterByCompetitionCodes);
+            LOG.info("Grant Monitoring : Only sending applications for competitions : " + filterByCompetitionIds);
         } else {
             filterEnabled = false;
-            filterByCompetitionCodes = Collections.emptyList();
+            filterByCompetitionIds = Collections.emptyList();
             LOG.info("Grant Monitoring : All applications will be sent");
         }
     }
 
     @Override
     public boolean shouldSend(Grant grant) {
-        return !filterEnabled || filterByCompetitionCodes.contains(grant.getCompetitionCode());
+        return !filterEnabled || filterByCompetitionIds.contains(grant.getCompetitionCode());
     }
 
     @Override
     public String generateFilterReason(Grant grant) {
         if (!shouldSend(grant)) {
-            return "Competition code " + grant.getCompetitionCode() + " not in " + filterByCompetitionCodes;
+            return "Competition ID " + grant.getCompetitionCode() + " not in " + filterByCompetitionIds;
         }
         return null;
     }

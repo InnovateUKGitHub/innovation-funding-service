@@ -112,8 +112,10 @@ public class GrantMapperTest {
 
         Project project = parameter.createProject();
 
-        when(formInputResponseRepository.findByApplicationId(project.getApplication().getId()))
-                .thenReturn(parameter.formInputResponses());
+        when(formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(project.getApplication().getId(), "Project summary"))
+                .thenReturn(parameter.projectSummaryResponse());
+        when(formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(project.getApplication().getId(), "Public description"))
+                .thenReturn(parameter.publicDescriptionResponse());
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(any(), any()))
                 .thenAnswer(i -> Optional.of(parameter.createSpendProfile()));
         ApplicationFinance applicationFinance = mock(ApplicationFinance.class);
@@ -312,11 +314,16 @@ public class GrantMapperTest {
             return publicDescription == null ? name + " project summary" : projectSummary;
         }
 
-        private List<FormInputResponse> formInputResponses() {
-            List<FormInputResponse>  formInputResponses = new ArrayList<>();
-            formInputResponses.add(createFormInputResponse("project summary"));
-            formInputResponses.add(createFormInputResponse("public description"));
-            return formInputResponses;
+        private FormInputResponse projectSummaryResponse() {
+            FormInputResponse response = createFormInputResponse("Project summary");
+            response.setValue(projectSummary());
+            return response;
+        }
+
+        private FormInputResponse publicDescriptionResponse() {
+            FormInputResponse response = createFormInputResponse("Project summary");
+            response.setValue(publicDescription());
+            return response;
         }
 
         private FormInputResponse createFormInputResponse(String description) {
