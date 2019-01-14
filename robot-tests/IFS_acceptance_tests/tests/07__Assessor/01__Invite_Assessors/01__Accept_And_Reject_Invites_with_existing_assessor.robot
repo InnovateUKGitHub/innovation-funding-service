@@ -68,7 +68,7 @@ User can view the competition brief
     And the user should see the element         jQuery = li:contains("Competition closes")
     And the user should see the element         jQuery = .govuk-button:contains("Start new application")
     And The user closes the competition brief
-    And the user clicks the button/link         link = Assessor dashboard
+    And the user clicks the button/link         link = ${ASSESSOR_DASHBOARD}
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107  INFUND-6455
@@ -130,7 +130,7 @@ Upcoming competition should be visible
     And the assessor should see the correct date
     When The user clicks the button/link           link = ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
     And the user should see the element            jQuery = p:contains("You have agreed to be an assessor for the upcoming competition '${UPCOMING_COMPETITION_TO_ASSESS_NAME}'")
-    And The user clicks the button/link            link = Assessor dashboard
+    And The user clicks the button/link            link = ${ASSESSOR_DASHBOARD}
     Then the user should see the element           jQuery = h2:contains("Upcoming competitions to assess")
 
 The assessment period starts the comp moves to the comp for assessment

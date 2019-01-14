@@ -15,7 +15,7 @@ Cancel button returns to read only view
 Back button returns to assessor dashboard
     [Documentation]    INFUND-8009
     [Tags]
-    Given the user clicks the button/link                   link = Assessor dashboard
+    Given the user clicks the button/link                   link = ${ASSESSOR_DASHBOARD}
     Then the user should be redirected to the correct page  ${ASSESSOR_DASHBOARD_URL}
     [Teardown]    user opens the edit details form
 

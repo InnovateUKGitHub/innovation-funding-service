@@ -70,14 +70,14 @@ Save Skills should redirect to the read-only view
 Your skills does not appear in dashboard alert
     [Documentation]    INFUND-5182
     [Tags]
-    When the user clicks the button/link            link = Assessor dashboard
+    When the user clicks the button/link            link = ${ASSESSOR_DASHBOARD}
     Then The user should not see the element        jQuery = .message-alert a:contains('your skills')    #this checks the alert message on the top of the page
     [Teardown]    the user clicks the button/link   link = your details
 
 Return to assessor dashboard from skills page
     [Documentation]    INFUND-8009
     [Tags]
-    When the user clicks the button/link    jQuery = a:contains("Return to assessor dashboard")
+    When the user clicks the button/link    jQuery = a:contains("Return to assessments")
     Then the user should be redirected to the correct page     ${ASSESSOR_DASHBOARD_URL}
 
 *** Keywords ***

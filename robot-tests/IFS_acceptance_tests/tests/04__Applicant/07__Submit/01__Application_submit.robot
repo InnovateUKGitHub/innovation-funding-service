@@ -98,7 +98,6 @@ Applicant submit satisfaction survey after submitting application
     Given the user selects the radio button      satisfaction  5
     When the user enters text to a text field    name = comments  Very satisfied
     Then the user clicks the button/link         css = button[type="submit"]  #Send feedback
-    When the user clicks the button/link         jQuery = h1:contains("Dashboard")
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
