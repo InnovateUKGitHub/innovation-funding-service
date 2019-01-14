@@ -63,7 +63,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
 
     @Before
     public void setUp() {
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(true);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(true);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(false);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(false);
 
         ModelMap model = mockMvc.perform(get(URL_PREFIX + "/landing-page"))
                 .andExpect(status().is3xxRedirection())

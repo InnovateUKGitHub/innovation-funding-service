@@ -3,6 +3,7 @@ package org.innovateuk.ifs.nonifs.form;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
 
 import javax.validation.Valid;
@@ -21,6 +22,9 @@ public class NonIfsDetailsForm {
 
     @NotNull
     private Long innovationAreaCategoryId;
+
+    @NotNull(message="{validation.initialdetailsform.fundingType.required}")
+    private FundingType fundingType;
 
     @Valid
     @NotNull(message = "{validation.nonifs.detailsform.opendate.required}")
@@ -96,6 +100,15 @@ public class NonIfsDetailsForm {
         this.registrationCloseDate = registrationCloseDate;
     }
 
+    public FundingType getFundingType() {
+        return fundingType;
+    }
+
+    public NonIfsDetailsForm setFundingType(FundingType fundingType) {
+        this.fundingType = fundingType;
+        return this;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -116,6 +129,7 @@ public class NonIfsDetailsForm {
                 .append(title, that.title)
                 .append(innovationSectorCategoryId, that.innovationSectorCategoryId)
                 .append(innovationAreaCategoryId, that.innovationAreaCategoryId)
+                .append(fundingType, that.fundingType)
                 .append(openDate, that.openDate)
                 .append(closeDate, that.closeDate)
                 .append(registrationCloseDate, that.registrationCloseDate)
@@ -130,6 +144,7 @@ public class NonIfsDetailsForm {
                 .append(title)
                 .append(innovationSectorCategoryId)
                 .append(innovationAreaCategoryId)
+                .append(fundingType)
                 .append(openDate)
                 .append(closeDate)
                 .append(registrationCloseDate)

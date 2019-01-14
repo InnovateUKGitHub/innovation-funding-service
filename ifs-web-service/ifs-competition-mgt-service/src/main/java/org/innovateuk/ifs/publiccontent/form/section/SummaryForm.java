@@ -13,8 +13,6 @@ public class SummaryForm extends AbstractContentGroupForm {
 
     @NotBlank (message="{validation.publiccontent.summaryform.description.required}")
     private String description;
-    @NotBlank (message="{validation.publiccontent.summaryform.fundingType.required}")
-    private String fundingType;
     @Valid
     @NotBlank (message="{validation.publiccontent.summaryform.projectSize.required}")
     @Size(max = 255, message = "{validation.publiccontent.summaryform.projectSize.max}")
@@ -26,14 +24,6 @@ public class SummaryForm extends AbstractContentGroupForm {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getFundingType() {
-        return fundingType;
-    }
-
-    public void setFundingType(String fundingType) {
-        this.fundingType = fundingType;
     }
 
     public String getProjectSize() {

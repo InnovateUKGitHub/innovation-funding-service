@@ -1,7 +1,7 @@
 <!-- =================== Comp setup section - Eligibility (3) ============================== -->
 <th:block th:fragment="section-content">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to save section.</h2>
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
@@ -91,7 +91,8 @@
                             </div>
                         </div>
 
-                        <div class="govuk-radios__item">
+                        <div class="govuk-radios__item" data-target="funding-level"
+                             data-target-clear-validation="true" data-target-clear-form="true">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    id="comp-researchCategoriesApplicable-no"
@@ -147,7 +148,8 @@
                     <span th:if="${#fields.hasErrors('overrideFundingRules')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('overrideFundingRules')}" th:text="${err}"/>
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item">
+                        <div class="govuk-radios__item" data-target="funding-level-override"
+                             data-target-clear-validation="true" data-target-clear-form="true">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    id="comp-overrideFundingRules-yes"

@@ -85,6 +85,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-4345 As a Portfolio Manager I am able to select the Standard with VAT form for certain competitions
 ...
 ...               IFS-4186 Competition Setup - change layout to separate items not required for open
+...
+...               IFS-4982 Move Funding type selection from front door to Initial details
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -117,7 +119,7 @@ User can create a new competition
     And The user should see the element        jQuery = p:contains("When complete, this competition will open on the date set in Milestones.")
 
 Initial details - User enters valid values and marks as done
-    [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
+    [Documentation]  INFUND-2982  INFUND-3888  INFUND-2983  INFUND-6478  INFUND-6479  IFS-4982
     [Tags]  HappyPath
     Given the user clicks the button/link                       link = Initial details
     And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
@@ -153,8 +155,8 @@ Initial Details - drop down menu is populated with comp admin users
 Initial details - Comp Type and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
     [Tags]
-    And The element should be disabled        css = #competitionTypeId
-    And The element should be disabled        css = #openingDateDay
+    And the user should not see the element   id = competitionTypeId
+    And the user should not see the element   id = openingDateDay
     And the user clicks the button/link       jQuery = button:contains("Done")
 
 Initial details - should have a green check
@@ -216,7 +218,7 @@ Funding information: calculations
     [Documentation]  INFUND-2985 INFUND-4894
     [Tags]  HappyPath
     [Setup]  the user navigates to the page     ${SERVER}/management/competition/setup/${competitionId}
-    Given the user clicks the button/link         link = Funding information
+    Given the user clicks the button/link       link = Funding information
     And the user clicks the button/link         id = generate-code
     And the user enters text to a text field    id = funders[0].funder    FunderName
     And the user enters text to a text field    id = funders[0].funderBudget    20000
@@ -763,60 +765,60 @@ the total should be correct
 the user fills the milestones with valid data
     The user enters text to a text field    name = milestoneEntries[OPEN_DATE].day    10
     The user enters text to a text field    name = milestoneEntries[OPEN_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[OPEN_DATE].year    2019
+    The user enters text to a text field    name = milestoneEntries[OPEN_DATE].year    2024
     The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].day    11
     The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].month    1
-    The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].year    2019
+    The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].year    2024
     The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].day    12
     The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].year    2019
+    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].year    2024
     The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].day    13
     The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].month    1
-    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].year    2019
+    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].year    2024
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].day    14
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].year    2024
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].day    15
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].year    2024
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].day    16
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].year    2024
     The user enters text to a text field    name = milestoneEntries[LINE_DRAW].day    17
     The user enters text to a text field    name = milestoneEntries[LINE_DRAW].month    1
-    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].year    2019
+    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].year    2024
     The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].day    18
     The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].year    2024
     The user enters text to a text field    name = milestoneEntries[PANEL_DATE].day    19
     The user enters text to a text field    name = milestoneEntries[PANEL_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].year    2019
+    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].year    2024
     The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].day    20
     The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].month    1
-    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].year    2019
+    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].year    2024
     The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].day    21
     The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].month    1
-    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].year    2019
+    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].year    2024
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].day    22
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
-    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2019
+    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2024
     Set Focus To Element    jQuery = button:contains(Done)
     wait for autosave
 
 the weekdays should be correct
-    element should contain    css = tr:nth-child(1) td:nth-child(3)     Thu
-    element should contain    css = tr:nth-child(2) td:nth-child(3)     Fri
-    element should contain    css = tr:nth-child(3) td:nth-child(3)     Sat
-    element should contain    css = tr:nth-child(4) td:nth-child(3)     Sun
-    element should contain    css = tr:nth-child(5) td:nth-child(3)     Mon
-    element should contain    css = tr:nth-child(6) td:nth-child(3)     Tue
-    element should contain    css = tr:nth-child(7) td:nth-child(3)     Wed
-    element should contain    css = tr:nth-child(8) td:nth-child(3)     Thu
-    element should contain    css = tr:nth-child(9) td:nth-child(3)     Fri
-    element should contain    css = tr:nth-child(10) td:nth-child(3)    Sat
-    element should contain    css = tr:nth-child(11) td:nth-child(3)    Sun
-    element should contain    css = tr:nth-child(12) td:nth-child(3)    Mon
-    element should contain    css = tr:nth-child(13) td:nth-child(3)    Tue
+    element should contain    css = tr:nth-child(1) td:nth-child(3)     Wed
+    element should contain    css = tr:nth-child(2) td:nth-child(3)     Thu
+    element should contain    css = tr:nth-child(3) td:nth-child(3)     Fri
+    element should contain    css = tr:nth-child(4) td:nth-child(3)     Sat
+    element should contain    css = tr:nth-child(5) td:nth-child(3)     Sun
+    element should contain    css = tr:nth-child(6) td:nth-child(3)     Mon
+    element should contain    css = tr:nth-child(7) td:nth-child(3)     Tue
+    element should contain    css = tr:nth-child(8) td:nth-child(3)     Wed
+    element should contain    css = tr:nth-child(9) td:nth-child(3)     Thu
+    element should contain    css = tr:nth-child(10) td:nth-child(3)    Fri
+    element should contain    css = tr:nth-child(11) td:nth-child(3)    Sat
+    element should contain    css = tr:nth-child(12) td:nth-child(3)    Sun
+    element should contain    css = tr:nth-child(13) td:nth-child(3)    Mon
 
 the pre-field date should be correct
     Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Fri
@@ -832,6 +834,7 @@ the resubmission should not have a default selection
 
 The user enters valid data in the initial details
     Given the user enters text to a text field                 css = #title  ${competitionTitle}
+    And the user selects the radio button                      fundingType  LOAN
     When the user selects the option from the drop-down menu   Sector  id = competitionTypeId
     And the user selects the option from the drop-down menu    Infrastructure systems  id = innovationSectorCategoryId
     And the user selects the value from the drop-down menu     32   name = innovationAreaCategoryIds[0]
@@ -911,11 +914,12 @@ the user marks question as complete
 
 the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Competition title")
+    the user should see the element    jQuery = dt:contains("Funding type") ~ dd:contains("Loan")
     the user should see the element    jQuery = dd:contains("Sector")
     the user should see the element    jQuery = dd:contains("Emerging and enabling")
     the user should see the element    jQuery = dd:contains("Satellite applications")
     the user should see the element    jQuery = dd:contains("Space technology")
-    the user should see the element    jQuery = dd:contains("10/1/${nextyear}")
+    the user should see the element    jQuery = dd:contains("10 January ${nextyear}")
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
