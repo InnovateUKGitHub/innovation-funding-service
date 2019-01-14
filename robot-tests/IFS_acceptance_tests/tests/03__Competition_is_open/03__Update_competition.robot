@@ -314,37 +314,37 @@ the user moves the competition back again
 the user fills in the milestone data with valid information
     The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].day    12
     The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].year    2019
+    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].year    2024
     The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].day    13
     The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].month    1
-    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].year    2019
+    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].year    2024
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].day    14
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].year    2024
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].day    15
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].year    2024
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].day    16
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].year    2024
     The user enters text to a text field    name = milestoneEntries[LINE_DRAW].day    17
     The user enters text to a text field    name = milestoneEntries[LINE_DRAW].month    1
-    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].year    2019
+    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].year    2024
     The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].day    18
     The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].year    2019
+    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].year    2024
     The user enters text to a text field    name = milestoneEntries[PANEL_DATE].day    19
     The user enters text to a text field    name = milestoneEntries[PANEL_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].year    2019
+    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].year    2024
     The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].day    20
     The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].month    1
-    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].year    2019
+    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].year    2024
     The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].day    21
     The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].month    1
-    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].year    2019
+    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].year    2024
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].day    22
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
-    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2019
+    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2024
 
 the user resets the milestone data
     The user resets the milestone data for milestone    SUBMISSION_DATE    ${createApplicationOpenCompetitionId}
