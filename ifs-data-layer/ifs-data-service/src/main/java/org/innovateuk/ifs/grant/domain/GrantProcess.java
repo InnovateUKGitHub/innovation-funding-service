@@ -6,6 +6,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.ZonedDateTime;
 
+/**
+ * Represents a request to send information about a live project to the external live project system.
+ */
 @Entity
 public class GrantProcess {
     @Id
