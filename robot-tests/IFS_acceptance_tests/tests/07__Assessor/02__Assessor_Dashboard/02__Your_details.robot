@@ -56,8 +56,7 @@ Valid Profile Update
 Custom Suite Setup
    the assessor logs-in
    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Select a dashboard")
-   Run Keyword If   '${status}' == 'PASS'  Run keywords    the user selects the radio button    selectedRole   ASSESSOR
-   ...                              AND    the user clicks the button/link   css = .govuk-button[type="submit"]   #Continue
+   Run Keyword If   '${status}' == 'PASS'  Run keywords   the user clicks the button/link    link = Assessments
    User opens the edit details form
 
 the assessor updates profile details
