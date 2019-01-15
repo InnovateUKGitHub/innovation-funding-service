@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.interceptors;
 
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
-import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.view.RedirectView;
@@ -16,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 
 /**
  * Have the menu links globally available for each controller.
@@ -69,6 +67,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
         switch (contextPath) {
             case "/assessment": return Optional.of(ASSESSOR_PROFILE_URL);
             case "": return Optional.of(USER_PROFILE_URL);
+            case "/project-setup": return Optional.of(USER_PROFILE_URL);
             default: return Optional.empty();
         }
     }
