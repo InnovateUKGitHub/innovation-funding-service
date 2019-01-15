@@ -306,6 +306,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(new PreviousApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), previousApplications, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
+    @Override
+    public ServiceResult<CompetitionResource> getCompetitionByApplicationId(long applicationId) {
+        return find(application(applicationId)).andOnSuccessReturn(application ->
+                competitionMapper.mapToResource(application.getCompetition()));
+    }
+
     private ServiceResult<ApplicationPageResource> handleApplicationSearchResultPage(Page<Application> pagedResult) {
         List<ApplicationResource> applicationResource = simpleMap(pagedResult.getContent(), application -> applicationMapper.mapToResource(application));
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
