@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.Role;
 
 import java.time.ZonedDateTime;

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.core.io.ByteArrayResource;
