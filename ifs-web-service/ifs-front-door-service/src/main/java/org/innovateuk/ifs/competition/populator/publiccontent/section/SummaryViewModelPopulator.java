@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.populator.publiccontent.section;
 
 
 import org.innovateuk.ifs.competition.populator.publiccontent.AbstractPublicContentGroupViewModelPopulator;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -21,12 +22,12 @@ public class SummaryViewModelPopulator extends AbstractPublicContentGroupViewMod
     }
 
     @Override
-    protected void populateSection(SummaryViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource section, Boolean nonIFS) {
+    protected void populateSection(SummaryViewModel model, PublicContentItemResource publicContentItemResource, PublicContentSectionResource section, Boolean nonIFS) {
+        PublicContentResource publicContentResource = publicContentItemResource.getPublicContentResource();
         model.setDescription(publicContentResource.getSummary());
-        model.setFundingType(publicContentResource.getFundingType().getDisplayName());
+        model.setFundingType(publicContentItemResource.getFundingType().getDisplayName());
         model.setProjectSize(publicContentResource.getProjectSize());
-
-        super.populateSection(model, publicContentResource, section, nonIFS);
+        super.populateSection(model, publicContentItemResource, section, nonIFS);
     }
 
     @Override

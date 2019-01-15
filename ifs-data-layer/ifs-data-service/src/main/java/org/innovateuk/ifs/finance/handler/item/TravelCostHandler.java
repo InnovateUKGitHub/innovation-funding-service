@@ -6,11 +6,13 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.TravelCost;
+import org.springframework.stereotype.Component;
 
 /**
  * Handles the travel costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@Component
 public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
 
     public static final String COST_KEY = "travel";

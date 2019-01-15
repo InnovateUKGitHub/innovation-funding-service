@@ -6,12 +6,18 @@ import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.form.transactional.SectionService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -59,7 +65,6 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     @Autowired
     private BaseUserService baseUserService;
 
-
     @Override
     public ServiceResult<ApplicantQuestionResource> getQuestion(Long userId, Long questionId, Long applicationId) {
         ServiceResults results = new ServiceResults();
@@ -79,7 +84,6 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
         populateSection(results, applicant, sectionId, applicationId, applicant.getApplicants());
 
-
         if (results.isSuccessful()) {
             if (applicant.getSection().getParentSection() != null) {
                 ApplicantSectionResource parent = new ApplicantSectionResource();
@@ -90,12 +94,16 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
             applicant.getSection().getChildSections().forEach(subSectionId -> {
                 ApplicantSectionResource applicantSectionResource = new ApplicantSectionResource();
                 populateSection(results, applicantSectionResource, subSectionId, applicationId, applicant.getApplicants());
-                applicant.addChildSection(applicantSectionResource);
+
+                if (!isSectionExcluded(applicantSectionResource.getSection(),
+                        applicant.getCurrentApplicant() != null ? applicant.getCurrentApplicant().getOrganisation() : null,
+                        applicant.getCompetition())) {
+                    applicant.addChildSection(applicantSectionResource);
+                }
             });
         }
         return results.toSingle().andOnSuccessReturn(() -> applicant);
     }
-
 
     private void populateQuestion(ServiceResults results, ApplicantQuestionResource applicant, Long questionId, Long applicationId, List<ApplicantResource> applicants) {
         results.trackResult(() -> questionService.getQuestionById(questionId), applicant::setQuestion);
@@ -186,6 +194,20 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         return serviceSuccess(applicantResource);
     }
 
+    private boolean isSectionExcluded(SectionResource section, OrganisationResource organisation,
+                                      CompetitionResource competition) {
+        if (section.getType() == SectionType.ORGANISATION_FINANCES) {
+            boolean isResearchOrganisation = organisation != null && OrganisationTypeEnum.RESEARCH.getId() == organisation.getOrganisationType();
+            boolean excludeYourOrganisationSectionForResearchOrgs =
+                    Boolean.FALSE.equals(competition.getIncludeYourOrganisationSection());
+            return isResearchOrganisation && excludeYourOrganisationSectionForResearchOrgs;
+        } else if (section.getType() == SectionType.FUNDING_FINANCES) {
+            return competition.getFundingType() == FundingType.PROCUREMENT;
+        } else {
+            return false;
+        }
+
+    }
 
     private class ServiceResults {
         private List<ServiceResult<Void>> results = new ArrayList<>();

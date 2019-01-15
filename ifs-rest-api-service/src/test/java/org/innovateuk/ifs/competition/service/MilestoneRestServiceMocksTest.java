@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.junit.Assert;
@@ -25,12 +26,11 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
 
     @Override
     protected MilestoneRestServiceImpl registerRestServiceUnderTest() {
-        MilestoneRestServiceImpl milestoneService = new MilestoneRestServiceImpl();
-        return milestoneService;
+        return new MilestoneRestServiceImpl();
     }
 
     @Test
-    public void test_getAllPublicMilestonesByCompetitionId() {
+    public void getAllPublicMilestonesByCompetitionId() {
         List<MilestoneResource> returnedResponse = new ArrayList<>();
         returnedResponse.add(getOpenDateMilestone());
 
@@ -41,7 +41,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     @Test
-    public void test_getAllMilestonesByCompetitionId() {
+    public void getAllMilestonesByCompetitionId() {
         List<MilestoneResource> returnedResponse = new ArrayList<>();
         returnedResponse.add(getOpenDateMilestone());
 
@@ -52,7 +52,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     @Test
-    public void test_getMilestoneByTypeAndCompetitionId() {
+    public void getMilestoneByTypeAndCompetitionId() {
         MilestoneResource returnedResponse = getBriefingEventMilestone();
         MilestoneType type = MilestoneType.BRIEFING_EVENT;
 
@@ -65,7 +65,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     @Test
-    public void test_createMilestone() {
+    public void createMilestone() {
         MilestoneResource milestoneResource = new MilestoneResource();
         milestoneResource.setId(3L);
         milestoneResource.setType(MilestoneType.OPEN_DATE);
@@ -81,7 +81,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     @Test
-    public void test_updateMilestones() {
+    public void updateMilestones() {
 
         List<MilestoneResource> returnedResponse = new ArrayList<>();
         returnedResponse.add(getOpenDateMilestone());
@@ -102,7 +102,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     @Test
-    public void test_updateMilestone() {
+    public void updateMilestone() {
 
         MilestoneResource returnedResponse = getBriefingEventMilestone();
         MilestoneType type = MilestoneType.BRIEFING_EVENT;
@@ -122,7 +122,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     @Test
-    public void test_resetMilestone() {
+    public void resetMilestone() {
         MilestoneResource milestoneToReset = milestone(1L,
                 MilestoneType.NOTIFICATIONS,
                 null,
@@ -134,6 +134,21 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         assertTrue(result.isSuccess());
 
         setupPutWithRestResultVerifications(milestonesRestURL + "/", Void.class, milestoneToReset);
+    }
+
+    @Test
+    public void updateCompletionStage() {
+
+        String url = milestonesRestURL + "/competition/" + competitionId + "/completion-stage?completionStage=" +
+                CompetitionCompletionStage.PROJECT_SETUP.name();
+
+        setupPutWithRestResultExpectations(url, HttpStatus.OK);
+
+        RestResult<Void> result = service.updateCompletionStage(competitionId, CompetitionCompletionStage.PROJECT_SETUP);
+
+        assertTrue(result.isSuccess());
+
+        setupPutWithRestResultVerifications(url);
     }
 
     private MilestoneResource getOpenDateMilestone() {

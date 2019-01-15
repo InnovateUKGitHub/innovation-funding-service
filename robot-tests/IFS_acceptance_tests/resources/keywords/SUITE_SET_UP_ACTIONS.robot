@@ -27,7 +27,6 @@ new account complete all but one
 create new account for submitting
     [Arguments]  ${application_name}
     the user clicks the button/link                   link=Untitled application (start here)
-    the user clicks the button/link                   jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link                   link=Application details
     the user enters text to a text field              css=[id="application.name"]    ${application_name}
     the user clicks the button/link                   jQuery=button:contains("Save and return")
@@ -87,18 +86,13 @@ Create new application with the same user
     the user navigates to the page             ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link            jQuery=a:contains("Start new application")
     check if there is an existing application in progress for this competition
-    the user clicks the button/link            link=Apply with a different organisation.
+    the user clicks the button/link            link=Apply with a different organisation
     the user selects the radio button          organisationTypeId  ${orgType}
     the user clicks the button/link            jQuery = button:contains("Save and continue")
     the user clicks the button/link            jQuery=summary:contains("Enter details manually")
     The user enters text to a text field       name=organisationName    org2
-    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
-    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
-    the user clicks the button/link            css=#select-address-block > button
     the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
     the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
-    the user clicks the button/link            id=application-question-save
     the user clicks the button/link            link=Application details
     the user enters text to a text field       css=[id="application.name"]  ${Application_title}
     the user clicks the button/link            jQuery=button:contains("Save and return")
@@ -113,7 +107,6 @@ create new submit application
     [Arguments]  ${overview}  ${email}  ${application_name}
     And The guest user inserts user email and password  ${email}   ${correct_password}
     And the guest user clicks the log-in button
-    And the user clicks the button/link                 jQuery=button:contains("Save and return to application overview")
     And the user clicks the button/link                 link=Application details
     And the user enters text to a text field            css=[id="application.name"]    ${application_name}
     And the user clicks the button/link                 jQuery=button:contains("Save and return")
@@ -122,13 +115,13 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page                ${DASHBOARD_URL}
     And the user clicks the button/link                 link=Academic robot test application
-    the user fills in the inviting steps no edit                ${test_mailbox_one}+academictest@gmail.com
+    the user fills in the inviting steps no edit        ${test_mailbox_one}+academictest@gmail.com
     logout as user
     When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
     When the user selects the radio button              organisationType    2
     And the user clicks the button/link                 css = .govuk-button[type="submit"]
-    the research user finds org in companies house
+    the research user finds org in companies house      Live  University of Liverpool
     And the invited user fills the create account form  Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
     And the user clicks the button/link                 jQuery=.govuk-button:contains("Sign in")
@@ -155,17 +148,10 @@ the user fills in the inviting steps
 
 # The search results are specific to Research Organisation type
 the research user finds org in companies house
-    the user enters text to a text field  id=organisationSearchName  Liv
+    [Arguments]  ${search}  ${link}
+    the user enters text to a text field  id=organisationSearchName  ${search}
     the user clicks the button/link       jQuery=.govuk-button:contains("Search")
-    the user clicks the button/link       link= University of Liverpool
-    the user clicks the button/link       jQuery=button:contains("Enter address manually")
-    the user enters text to a text field  id=addressForm.selectedPostcode.addressLine1    The East Wing
-    the user enters text to a text field  id=addressForm.selectedPostcode.addressLine2    Popple Manor
-    the user enters text to a text field  id=addressForm.selectedPostcode.addressLine3    1, Popple Boulevard
-    the user enters text to a text field  id=addressForm.selectedPostcode.town    Poppleton
-    the user enters text to a text field  id=addressForm.selectedPostcode.county    Poppleshire
-    the user enters text to a text field  id=addressForm.selectedPostcode.postcode    POPPS123
-    the user clicks the button/link       jQuery=.govuk-button:contains("Save organisation and continue")
+    the user clicks the button/link       link= ${link}
     the user clicks the button/link       jQuery=.govuk-button:contains("Save and continue")
 
 The user navigates to the summary page of the Robot test application
@@ -187,6 +173,7 @@ invite a registered user
     the user follows the flow to register their organisation   ${BUSINESS_TYPE_ID}
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                            link = Application team
     the user clicks the button/link                            link=Add a collaborator organisation
     the user enters text to a text field                       css=#organisationName  New Organisation's Name
     the user enters text to a text field                       css=[id="applicants[0].name"]  Partner's name
@@ -223,8 +210,6 @@ the user follows the flow to register their organisation
     the user enters text to a text field    id=organisationSearchName    Innovate
     the user clicks the button/link         id=org-search
     the user clicks the button/link         link=INNOVATE LTD
-    the user selects the checkbox           address-same
-    the user clicks the button/link         jQuery=.govuk-button:contains("Continue")
     the user clicks the button/link         jQuery=.govuk-button:contains("Save and continue")
 
 the user enters the details and clicks the create account

@@ -72,7 +72,7 @@ function startPybot() {
     fi
 
 
-    pybot --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
+    pybot --xunit output-xunit.xml --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
     -v PROTOCOL:'https://' \
@@ -126,12 +126,18 @@ function runTests() {
       results=`find target/* -regex ".*/output\.xml"`
       rebot -d target ${results}
     fi
+
+    markAsComplete
 }
 
 function clearOldReports() {
   section "=> REMOVING OLD REPORTS"
   rm -rf target
   mkdir target
+}
+
+function markAsComplete(){
+  touch ${scriptDir}/testsComplete
 }
 
 # ====================================

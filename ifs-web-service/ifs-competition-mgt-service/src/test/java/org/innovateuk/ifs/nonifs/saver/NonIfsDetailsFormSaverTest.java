@@ -9,8 +9,8 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupMilestoneService;
-import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneOrEmptyRowForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
+import org.innovateuk.ifs.nonifs.form.MilestoneOrEmptyRowForm;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +31,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -82,6 +83,7 @@ public class NonIfsDetailsFormSaverTest {
         assertThat(competition.getNonIfsUrl(), equalTo(COMPETITION_URL));
         assertThat(competition.getInnovationAreas(), equalTo(asSet(INNOVATION_AREA)));
         assertThat(competition.getInnovationSector(), equalTo(INNOVATION_SECTOR));
+        assertThat(competition.getFundingType(), equalTo(GRANT));
 
         verify(competitionSetupMilestoneService).updateMilestonesForCompetition(eq(allMilestones), captor.capture(), eq(competition.getId()));
 
@@ -107,6 +109,7 @@ public class NonIfsDetailsFormSaverTest {
     private NonIfsDetailsForm createForm() {
         NonIfsDetailsForm form = new NonIfsDetailsForm();
         form.setTitle(COMPETITION_NAME);
+        form.setFundingType(GRANT);
         form.setUrl(COMPETITION_URL);
         form.setInnovationSectorCategoryId(INNOVATION_SECTOR);
         form.setInnovationAreaCategoryId(INNOVATION_AREA);

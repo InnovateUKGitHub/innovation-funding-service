@@ -22,7 +22,7 @@ Resource          ../../../resources/defaultResources.robot
 Navigation to the Overview page
     [Tags]
     When the user navigates to the overview page of the Robot test application
-    Then the user should see the text in the page    Please provide information about your project.
+    Then the user should see the element             jQuery = p:contains("Please provide information about your project.")
     And the user should see the element              jQuery = h1:contains("Application overview")
 
 Review and submit button
@@ -30,7 +30,7 @@ Review and submit button
     ...    INFUND-214
     [Tags]
     When the user clicks the button/link             link = Review and submit
-    Then the user should see the text in the page    You will not be able to make changes to your application or resubmit after this point.
+    Then the user should see the element             jQuery = .message-alert:contains("You will not be able to make changes to your application or resubmit after this point.")
     And the user should see the element              jQuery = h1:contains("Application summary")
 
 List with the sections
@@ -57,7 +57,7 @@ The Progress bar is visible
 
 User can print the application
     [Documentation]    INFUND-1162
-    [Tags]
+    [Tags]  HappyPath
     When the user navigates to the page without the usual headers    ${SERVER}/application/9/print?noprint    #This URL its only for testing purposes
     Then the user should see the element                             jQuery = .govuk-button:contains("Print your application")
     And The user navigates to the overview page of the Robot test application

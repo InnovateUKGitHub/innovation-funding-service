@@ -16,7 +16,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.time.LocalDate;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -106,13 +105,13 @@ public class ProjectDetailsServiceImplTest {
         Long projectId = 2L;
         AddressResource addressResource = newAddressResource().build();
 
-        when(projectDetailsRestService.updateProjectAddress(leadOrgId, projectId, REGISTERED, addressResource)).thenReturn(restSuccess());
+        when(projectDetailsRestService.updateProjectAddress(leadOrgId, projectId, addressResource)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = service.updateAddress(leadOrgId, projectId, REGISTERED, addressResource);
+        ServiceResult<Void> result = service.updateAddress(leadOrgId, projectId, addressResource);
 
         assertTrue(result.isSuccess());
 
-        verify(projectDetailsRestService).updateProjectAddress(leadOrgId, projectId, REGISTERED, addressResource);
+        verify(projectDetailsRestService).updateProjectAddress(leadOrgId, projectId, addressResource);
     }
 
     @Test

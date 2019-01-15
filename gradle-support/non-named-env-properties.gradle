@@ -56,6 +56,7 @@ ext.FILE_UPLOAD_CLAIM="file-upload-claim"
 ext.DB_NAME="ifs"
 ext.DB_USER="root"
 ext.DB_PASS="password"
+ext.DB_ANON_PASS="password"
 ext.DB_HOST="ifs-database"
 ext.DB_PORT=3306
 

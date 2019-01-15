@@ -50,6 +50,8 @@ public class FinanceFormPopulator implements CompetitionSetupSubsectionFormPopul
 
         competitionSetupForm.setApplicationFinanceType(competitionSetupFinanceResource.getApplicationFinanceType());
         competitionSetupForm.setIncludeGrowthTable(competitionSetupFinanceResource.getIncludeGrowthTable());
+        competitionSetupForm.setIncludeYourOrganisationSection(competitionSetupFinanceResource.getIncludeYourOrganisationSection());
+        competitionSetupForm.setIncludeJesForm(competitionSetupFinanceResource.getIncludeJesForm());
 
         if (competitionResource.isFinanceType()) {
             competitionSetupForm.setFundingRules(getFundingRulesWithoutHeading(competitionResource.getId()));

@@ -33,6 +33,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -121,6 +122,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(applicationRepositoryMock.exists(null)).thenReturn(false);
 
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadOnApplication1.getId(), applicationResource1.getId(), Role.LEADAPPLICANT)).thenReturn(true);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(user2.getId(), applicationResource1.getId(), Role.COLLABORATOR)).thenReturn(true);
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(leadOnApplication1.getId(), applicantProcessRoles(), applicationResource2.getId())).thenReturn(null);
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(user2.getId(), applicantProcessRoles(), applicationResource1.getId())).thenReturn(null);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(user2.getId(), applicationResource2.getId(), Role.LEADAPPLICANT)).thenReturn(true);
@@ -171,8 +173,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void onlyInnovationLeadAssignedCompetitionForApplicationCanAccessApplication() {
-        assertTrue(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadOnApplication1));
-        assertFalse(rules.innovationLeadAssginedToCompetitionCanViewApplications(applicationResource1, innovationLeadUser()));
+        assertTrue(rules.innovationLeadAssignedToCompetitionCanViewApplications(applicationResource1, innovationLeadOnApplication1));
+        assertFalse(rules.innovationLeadAssignedToCompetitionCanViewApplications(applicationResource1, innovationLeadUser()));
     }
 
     @Test
@@ -197,13 +199,32 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     user.hasRole(PROJECT_FINANCE) ||
                     user.hasRole(SUPPORT) ||
                     user.hasRole(INNOVATION_LEAD) ||
-                    user.hasRole(STAKEHOLDER) ||
                     user.hasRole(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
             } else {
                 assertFalse(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
             }
         });
+    }
+
+    @Test
+    public void stakeholdersCanSeeTheResearchParticipantPercentageInApplications() {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+        assertTrue(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user2));
+        assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user3));
+    }
+
+    @Test
+    public void stakeholdersCanSeeApplicationFinancesTotals() {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+        assertTrue(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, stakeholderUserResourceOnCompetition));
+        assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user2));
+        assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user3));
     }
 
     @Test
@@ -461,17 +482,25 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void markAsIneligibleAllowedBeforeAssessment() {
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
-            allGlobalRoleUsers.forEach(user -> {
-                Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
-                ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
-                when(competitionRepositoryMock.findOne(application.getCompetition())).thenReturn(competition);
-                if(!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus) && user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD)){
-                    assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
-                } else {
-                    assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
-                }
-            });
-        });
+        asList(CompetitionStatus.values()).forEach(competitionStatus -> allGlobalRoleUsers.forEach(user -> {
+            Competition competition = newCompetition()
+                    .withCompetitionStatus(competitionStatus)
+                    .withCompetitionType(newCompetitionType().withName("Sector").build())
+                    .build();
+            ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
+            when(competitionRepositoryMock.findOne(application.getCompetition())).thenReturn(competition);
+            if(!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) && user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD)){
+                assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
+            } else {
+                assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
+            }
+        }));
+    }
+
+    @Test
+    public void consortiumCanCheckCollaborativeFundingCriteriaIsMet() {
+        assertTrue(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, leadOnApplication1));
+        assertTrue(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, user2));
+        assertFalse(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, user3));
     }
 }

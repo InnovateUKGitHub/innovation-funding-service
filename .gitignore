@@ -59,6 +59,7 @@ bin/
 build/
 out/
 reports/
+*.out
 
 # Ignore Gradle GUI config
 gradle-app.setting

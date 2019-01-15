@@ -121,7 +121,6 @@ ${PS_EF_APPLICATION_PROJECT}    ${project_ids["${PS_EF_APPLICATION_TITLE}"]}
 ${PS_EF_APPLICATION_LEAD_ORGANISATION_ID}    ${Ntag_Id}
 ${PS_EF_APPLICATION_LEAD_ORGANISATION_NAME}  ${Ntag_Name}
 ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}      steven.hicks@ntag.example.com
-${PS_EF_APPLICATION_PM_EMAIL}                steven.hicks@ntag.example.com
 ${PS_EF_APPLICATION_PARTNER_EMAIL}           robert.perez@jetpulse.example.com
 ${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
 
@@ -191,9 +190,9 @@ partner fills in his bank details
     the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
     the user enters text to a text field             id = accountNumber  ${account_number}
     the user enters text to a text field             id = sortCode  ${sort_code}
-    the user clicks the button twice                 css = label[for = "address-use-org"]
-    the user sees that the radio button is selected  addressType  REGISTERED  # Added this check to give extra execution time
-    the user should see the element                  css = #registeredAddress
+    the user enters text to a text field             name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                  id = postcode-lookup
+    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
     wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery = .govuk-button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  id = submit-bank-details
 
@@ -220,17 +219,17 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user              &{internal_finance_credentials}
     the user navigates to the page          ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
-    the user moves focus to the element     css = label[for = "app-row-1"]
+    Set Focus To Element                    css = label[for = "app-row-1"]
     the user selects the checkbox           app-row-1
-    the user moves focus to the element     css = label[for = "app-row-2"]
+    Set Focus To Element                    css = label[for = "app-row-2"]
     the user selects the checkbox           app-row-2
     the user clicks the button/link         jQuery = button:contains("Successful")
     the user should see the element         jQuery = td:contains("Successful")
     the user clicks the button/link         jQuery = a:contains("Competition")
     the user clicks the button/link         jQuery = a:contains("Manage funding notifications")
-    the user moves focus to the element     css = label[for = "app-row-103"]
+    Set Focus To Element                    css = label[for = "app-row-103"]
     the user selects the checkbox           app-row-103
-    the user moves focus to the element     css = label[for = "app-row-104"]
+    Set Focus To Element                    css = label[for = "app-row-104"]
     the user selects the checkbox           app-row-104
     the user clicks the button/link         jQuery = .govuk-button:contains("Write and send email")
     the internal sends the descision notification email to all applicants  EmailTextBody
@@ -243,9 +242,11 @@ lead partner navigates to project and fills project details
 project lead submits project address
 #Used in 12__ATI_compCreationToSubmission
     [Arguments]  ${project_id}
-    the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-address
-    the user selects the radio button  addressType  OPERATING
-    the user clicks the button/link    css = #main-content > form > button  #Save project address
+    the user navigates to the page                ${server}/project-setup/project/${project_id}/details/project-address
+    the user enters text to a text field          id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link               id = postcode-lookup
+    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link               jQuery = button:contains("Save address")
 
 project lead submits project details
     [Arguments]  ${project_id}
@@ -303,22 +304,29 @@ the project finance user approves bank details for
     the user clicks the button/link           jQuery = .govuk-button:contains("Approve bank account details")
     the user clicks the button/link           jQuery = .govuk-button:contains("Approve account")
 
-project manager submits other documents
+project manager submits both documents
     [Arguments]  ${email}  ${password}  ${project}
-    log in as a different user       ${email}  ${password}
-    the user navigates to the page   ${server}/project-setup/project/${project}/partner/documents
-    choose file                      name = collaborationAgreement    ${upload_folder}/testing.pdf
-    choose file                      name = exploitationPlan    ${upload_folder}/testing.pdf
-    the user reloads the page
-    the user clicks the button/link  jQuery = .govuk-button:contains("Submit documents")
-    the user clicks the button/link  jQuery = .govuk-button:contains("Submit")
+    log in as a different user          ${email}  ${password}
+    the user navigates to the page      ${server}/project-setup/project/${project}/document/all
+    the user clicks the button/link     link = Collaboration agreement
+    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+    the user clicks the button/link     link = Exploitation plan
+    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
 
-project finance approves other documents
+project finance approves both documents
     [Arguments]  ${project}
-    log in as a different user       &{internal_finance_credentials}
-    the user navigates to the page   ${SERVER}/project-setup-management/project/${project}/partner/documents
-    the user clicks the button/link  jQuery = .govuk-button:contains("Accept documents")
-    the user clicks the button/link  jQuery = .modal-accept-docs .govuk-button:contains("Accept documents")
+    log in as a different user             &{internal_finance_credentials}
+    the user navigates to the page         ${SERVER}/project-setup-management/project/${project}/document/all
+    the user clicks the button/link        link = Collaboration agreement
+    internal user approve uploaded documents
+    the user clicks the button/link         link = Return to documents
+    the user clicks the button/link         link = Exploitation plan
+    internal user approve uploaded documents
 
 project finance generates the Spend Profile
     [Arguments]  ${lead}  ${partner}  ${academic_partner}  ${project}
@@ -335,7 +343,7 @@ project finance approves Viability for
     the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
     the user selects the checkbox        costs-reviewed
     the user selects the checkbox        project-viable
-    the user moves focus to the element  link = Contact us
+    Set Focus To Element                 link = Contact us
     the user selects the option from the drop-down menu  Green  id = rag-rating
     the user clicks the button/link      css = #confirm-button
     the user clicks the button/link      jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
@@ -397,3 +405,9 @@ the user changes the start date
     the user clicks the button/link         link = Target start date
     the user enters text to a text field    id = projectStartDate_year  ${year}
     the user clicks the button/link         jQuery = .govuk-button:contains("Save")
+
+internal user approve uploaded documents
+    the user selects the radio button      approved   true
+    the user clicks the button/link        id = submit-button
+    the user clicks the button/link        id = accept-document
+    the user should see the element        jQuery = p:contains("You have approved this document.")

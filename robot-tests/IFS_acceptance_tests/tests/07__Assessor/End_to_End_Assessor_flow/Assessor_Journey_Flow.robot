@@ -10,6 +10,7 @@ Resource          ../Assessor_Commons.robot
 *** Test Cases ***
 Invite a new Assessor to assess a competition
     [Documentation]    INFUND-8092
+    [Tags]  HappyPath
     [Setup]  The user logs-in in new browser      &{Comp_admin1_credentials}
     Given the user clicks the button/link         link = ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link           jQuery = a:contains("Invite assessors to assess the competition")
@@ -22,13 +23,13 @@ Invite a new Assessor to assess a competition
 
 Invited User gets an email to assess the competition
     [Documentation]    INFUND-8092
-    [Tags]
+    [Tags]  HappyPath
     Then the user reads his email and clicks the link  ${Assessor_e2e["email"]}  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'  This is custom text  1
     [Teardown]  Delete the emails from both test mailboxes
 
 Resend the invite to the assessor again
     [Documentation]    IFS-39
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  The user logs-in in new browser  &{Comp_admin1_credentials}
     Given the user clicks the button/link     link = ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link       jQuery = a:contains("Invite assessors to assess the competition")
@@ -40,12 +41,13 @@ Resend the invite to the assessor again
 
 Resent email can be read by the invited user
      [Documentation]    IFS-39
-     [Tags]
+     [Tags]  HappyPath
      [Setup]    The guest user opens the browser
      Then the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'    Assessment period:  1
 
 Invited user accepts the invitation and follows the registration flow
     [Documentation]    INFUND-8092
+    [Tags]  HappyPath
     Given the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user selects the radio button             acceptInvitation  true
     And The user clicks the button/link               jQuery = button:contains("Confirm")
@@ -57,6 +59,7 @@ Invited user accepts the invitation and follows the registration flow
 
 New assessor can login with the new account
     [Documentation]    INFUND-8092
+    [Tags]  HappyPath
     Given Invited guest user log in       &{Assessor_e2e}
     Then The user should see the element  link = ${IN_ASSESSMENT_COMPETITION_NAME}
 
@@ -67,11 +70,13 @@ New assessor should have the correct innovation area
 
 New assessor has no assements
     [Documentation]  INFUND-9007
+    [Tags]  HappyPath
     When The user navigates to the page           ${assessor_dashboard_url}
     And the user should see the text in the page  There are currently no assessments for you to review.
 
 CompAdmin should see Assessor's profile and Innovation Area
     [Documentation]    INFUND-8092
+    [Tags]  HappyPath
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
     Given the user clicks the button/link  link = ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery = a:contains("Invite assessors to assess the competition")
@@ -80,6 +85,7 @@ CompAdmin should see Assessor's profile and Innovation Area
     And the user should see the element    jQuery = h3:contains("Innovation areas") ~ .govuk-table th:contains("Emerging and enabling")
 
 CompAdmin Invites assessor to assess an application
+    [Tags]  HappyPath
     [Setup]    The user clicks the button/link  link = Dashboard
     Given The user clicks the button/link       link = ${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link         jQuery = a:contains("Manage assessments")
@@ -96,15 +102,18 @@ CompAdmin Invites assessor to assess an application
 
 New assessor has one assessment to accept
     [Documentation]  INFUND-9007
+    [Tags]  HappyPath
     [Setup]   Log in as a different user          &{Assessor_e2e}
     Then The user navigates to the page           ${assessor_dashboard_url}
     And the user should see the text in the page  1 applications awaiting acceptance
 
 Assessor is notified by Email
+    [Tags]  HappyPath
     [Setup]    The guest user opens the browser
     Given the user reads his email and clicks the link  ${Assessor_e2e["email"]}    Your applications for the competition    You have been allocated some applications
 
 Assessor accepts the invite for the Application
+    [Tags]  HappyPath
     Given Invited guest user log in                         &{Assessor_e2e}
     When The user clicks the button/link                    Link = Park living
     And the user selects the radio button                   assessmentAccept  true
@@ -153,12 +162,12 @@ click the link assessor
 
 
 The user fills and submits the registration form
-    When The user enters text to a text field  id = firstName    Tom
-    And The user enters text to a text field   id = lastName    Fister
-    And the user enters text to a text field   id = phoneNumber    1234567891011
-    And The user enters text to a text field   id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link        id = postcode-lookup
-    And the user should see the element        id = addressForm.selectedPostcodeIndex
-    And the user clicks the button/link        css =#select-address-block button
-    And The user enters text to a text field   id = password    ${correct_password}
-    And the user clicks the button/link        jQuery = button:contains("Continue")
+    the user enters text to a text field   id = firstName    Tom
+    the user enters text to a text field   id = lastName    Fister
+    the user enters text to a text field   id = phoneNumber    1234567891011
+    the user enters text to a text field   id = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link        id = postcode-lookup
+    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    the user should see the element        id = addressForm.selectedPostcodeIndex
+    the user enters text to a text field   id = password    ${correct_password}
+    the user clicks the button/link        jQuery = button:contains("Continue")

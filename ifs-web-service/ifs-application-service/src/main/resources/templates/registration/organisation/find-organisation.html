@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <!-- todo: make hasFormErrors a bit better by adding in viewmodel, IFS-2033 -->
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${(#fields.hasErrors('${organisationForm.organisationSearchName}') and organisationForm.organisationSearching) or (#fields.hasErrors('${organisationForm.addressForm.*}') and  (organisationForm.addressForm.triedToSave or organisationForm.addressForm.triedToSearch))}" />
 </head>
 <body class="govuk-template__body create-application-find-business">
@@ -15,6 +14,15 @@
     <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkUrl='/organisation/create/lead-organisation-type'" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${organisationForm.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(organisationForm)" />
+        </div>
 
         <th:block th:with="orgTitle=${organisationType.name}">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter organisation details',subTitle=${isLeadApplicant ? 'Start new application' : 'Join application'},size='govuk-heading-xl'" />
@@ -32,22 +40,24 @@
             </div>
         </th:block>
 
-        <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
+        <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" novalidate="novalidate" method="POST">
 
-        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group-error'">
+        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
             <label class="govuk-label"
                    th:for="*{organisationSearchName}"
                    th:text="${searchLabel}">
                 Find your ? organisation
             </label>
             <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
-                <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}">
-                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
+                <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
                 </th:block>
                 <input class="govuk-input govuk-!-width-one-half"
                        th:field="*{organisationSearchName}"
                        th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-input--error'"
                        type="text"
+                       th:attr="data-required-errormessage=#{validation.standard.organisationsearchname.required}"
+                       required="required"
                        value="" />
                 <button type="submit" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0">Search</button>
             </div>
@@ -83,7 +93,7 @@
                 <input type="hidden" th:field="*{manualEntry}" />
                 <h2 class="govuk-heading-m">Not on Companies House?</h2>
                 <p class="govuk-body">Enter your organisation details manually. You may need to supply additional details at a later point.</p>
-                <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.organisationName) or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress or organisationForm.addressForm.triedToSearch}">
+                <th:block th:with="isOpen=${organisationForm.triedToSave}">
                     <details class="govuk-details" th:attr="open=${isOpen} ? 'open' : null ">
                         <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"
                                  class="govuk-details__summary">
@@ -92,7 +102,6 @@
                         <div class="govuk-details__text" th:attr="aria-hidden=${isOpen} ? 'false' : null">
                             <h2 class="govuk-heading-m">Enter your organisation details</h2>
                             <th:block th:insert="fragments/addresses :: organisation-name"  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
-                            <th:block th:insert="fragments/addresses :: company-address-details"  th:with="form=${organisationForm}, addressType=${'organisation address'}"/>
                             <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
                         </div>
                     </details>

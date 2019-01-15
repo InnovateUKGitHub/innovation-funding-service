@@ -20,7 +20,7 @@ Resource          ../Applicant_Commons.robot
 *** Test Cases ***
 Non registered users non companies house route
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1920
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page           ${frontDoor}
     And the user clicks the button/link in the paginated list    link = ${createApplicationOpenCompetition}
     And the user clicks the button/link            jQuery = a:contains("Start new application")
@@ -28,9 +28,8 @@ Non registered users non companies house route
     And the user selects the radio button          organisationTypeId    radio-1
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
     When the user clicks the Not on companies house link
-    Then the user fills in the non CH address
-    And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
-    Then The user should see the element           jQuery = h1:contains("Your details")
+    Then the user clicks the button/link           jQuery = .govuk-button:contains("Save and continue")
+    And The user should see the element            jQuery = h1:contains("Your details")
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
@@ -40,40 +39,39 @@ The email address does not stay in the cookie
 
 Non registered users sign-up companies house route
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1920 INFUND-1785 INFUND-9280
-    [Tags]
+    [Tags]  HappyPath
     Given Applicant goes to the registration form
     When the user verifies email                      Phil    Smith    ${test_mailbox_one}+business@gmail.com
     Then the user directed to correct dashboard       ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    and the user reads his email and clicks the link  ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
+    And the user reads his email and clicks the link  ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
 
 Verify the name of the new application
     [Documentation]    INFUND-669 INFUND-1163
-    [Tags]
+    [Tags]  HappyPath
     [Setup]    the user navigates to the page                     ${SERVER}
     When Logging in and Error Checking                            ${test_mailbox_one}+business@gmail.com    ${correct_password}
     And the user edits the application title
-    Then the user should see the text in the page                 ${test_title}
+    Then the user should see the element                          jQuery = h1 span:contains("${test_title}")
     And the progress indicator should show 0
     And the user clicks the button/link                           link = Application team
-    And the user should see the text in the page                  Application team
-    And the user should see the text in the page                  View and manage your contributors or collaborators in the application.
+    And the user should see the element                           jQuery = h1:contains("Application team")
+    And the user should see the element                           jQuery = p:contains("View and manage your contributors or collaborators in the application.")
     And the user can see this new application on their dashboard  ${test_title}
 
 Marketing emails information should have updated on the profile
     [Documentation]    INFUND-9243
-    [Tags]
-    When the user navigates to the page                     ${edit_profile_url}
-    Then the user should see that the checkbox is selected  allowMarketingEmails
+    [Tags]  HappyPath
+    When the user navigates to the page    ${edit_profile_url}
+    Then Checkbox Should Be Selected       allowMarketingEmails
 
 *** Keywords ***
 the new application should be visible in the dashboard page
-    the user clicks the button/link           link = Dashboard
-    the user should see the text in the page  ${test_title}
-    the user should see the text in the page  Application number:
+    the user clicks the button/link      link = Dashboard
+    the user should see the element      jQuery = h1 span:contains("${test_title}")
+    the user should see the element      jQuery = dt:contains("Application number:")
 
 the user edits the application title
     the user clicks the button/link         link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user should see the element         link = Application details
     the user clicks the button/link         link = Application details
     The project start date is blank
     The user enters text to a text field    css = [id = "application.name"]    ${test_title}
@@ -90,7 +88,7 @@ The project start date is blank
 The user can see this new application on their dashboard
     [Arguments]     ${application_name}
     the user navigates to the page            ${DASHBOARD_URL}
-    the user should see the text in the page  ${application_name}
+    the user should see the element           link = ${application_name}
 
 Applicant goes to the registration form
     the user navigates to the page   ${frontDoor}
@@ -99,10 +97,8 @@ Applicant goes to the registration form
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}
-    the user should see the text in the page  Dashboard
-    the user clicks the button/link           link = ${Application_name}
-    the user should see the element           jQuery = button:contains("Save and return to application overview")
-    the user clicks the button/link           link = Application overview
+    the user should see the element      jQuery = h1:contains("Dashboard")
+    the user clicks the button/link      link = ${Application_name}
     the user is redirected to overview page if he has been there already
 
 the user is redirected to overview page if he has been there already
@@ -111,10 +107,3 @@ the user is redirected to overview page if he has been there already
     the user should see the element      jQuery = h1:contains("Application overview")
     the user clicks the button/link      link = Application team
     logout as user
-
-the user fills in the non CH address
-    And the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
-    Then the user should see the element           css = #select-address-block
-    And the user clicks the button/link            css = #select-address-block > button
-    And the user clicks the button/link            jQuery = .govuk-button:contains("Continue")

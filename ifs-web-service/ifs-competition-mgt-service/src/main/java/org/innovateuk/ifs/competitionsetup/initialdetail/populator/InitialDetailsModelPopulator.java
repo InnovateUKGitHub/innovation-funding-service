@@ -6,8 +6,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSectionModelPopulator;
+import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
-import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -24,16 +24,18 @@ import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
  */
 @Service
 public class
-InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator {
+InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<InitialDetailsViewModel> {
 
     private CompetitionRestService competitionRestService;
+    private CompetitionSetupService competitionSetupService;
     private UserRestService userRestService;
     private CategoryRestService categoryRestService;
 
     public InitialDetailsModelPopulator(CompetitionRestService competitionRestService,
-                                        UserRestService userRestService,
+                                        CompetitionSetupService competitionSetupService, UserRestService userRestService,
                                         CategoryRestService categoryRestService) {
         this.competitionRestService = competitionRestService;
+        this.competitionSetupService = competitionSetupService;
         this.userRestService = userRestService;
         this.categoryRestService = categoryRestService;
     }
@@ -44,13 +46,14 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator {
     }
 
     @Override
-    public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
+    public InitialDetailsViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
         return new InitialDetailsViewModel(generalViewModel,
                 userRestService.findByUserRole(COMP_ADMIN).getSuccess(),
                 categoryRestService.getInnovationSectors().getSuccess(),
-                addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccess()),
+                addAllInnovationAreaOption(categoryRestService.getInnovationAreasExcludingNone().getSuccess()),
                 competitionRestService.getCompetitionTypes().getSuccess(),
-                userRestService.findByUserRole(INNOVATION_LEAD).getSuccess());
+                userRestService.findByUserRole(INNOVATION_LEAD).getSuccess(),
+                competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()));
     }
 
     private List<InnovationAreaResource> addAllInnovationAreaOption(List<InnovationAreaResource> innovationAreas) {
@@ -61,8 +64,6 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator {
         innovationAreaResource.setName("All");
 
         returnList.add(0, innovationAreaResource);
-
         return returnList;
     }
-
 }

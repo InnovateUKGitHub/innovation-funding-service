@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -49,6 +50,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.resource.FundingDecision.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -349,8 +351,14 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     public void testSaveFundingDecisionDataForCompetitionInProjectSetup() {
         Long unsuccessfulApplicationId = 246L;
         Long projectSetupCompetitionId = 456L;
+
+        CompetitionType competitionType = newCompetitionType()
+                .withName("Sector")
+                .build();
+
         Competition projectSetupCompetition = newCompetition()
                 .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)
+                .withCompetitionType(competitionType)
                 .withId(projectSetupCompetitionId)
                 .build();
 

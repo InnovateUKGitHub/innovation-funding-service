@@ -5,11 +5,9 @@ import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.InvalidURLException;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
-import org.innovateuk.ifs.login.LoginController;
 import org.innovateuk.ifs.token.resource.TokenResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -23,6 +21,7 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,14 +41,8 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
     private UserService userService;
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void logOutUsers() {
         setLoggedInUser(null);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
     }
 
     @Test
@@ -94,9 +87,13 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
     @Test
     public void testResetPassword() throws Exception {
         String hash = UUID.randomUUID().toString();
+        when(userRestServiceMock.checkPasswordResetHash(hash)).thenReturn(restSuccess());
+
         mockMvc.perform(get("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash))
                 .andExpect(status().isOk())
                 .andExpect(view().name(LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD_FORM));
+
+        verify(userRestServiceMock).checkPasswordResetHash(hash);
     }
 
     @Test
@@ -116,6 +113,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
     public void testResetPasswordPost() throws Exception {
         String hash = UUID.randomUUID().toString();
         String password = "Passw0rd12";
+        when(userRestServiceMock.checkPasswordResetHash(hash)).thenReturn(restSuccess());
         when(userRestServiceMock.resetPassword(eq(hash), eq(password))).thenReturn(restSuccess());
 
         mockMvc.perform(
@@ -124,6 +122,9 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name(LoginController.LOGIN_BASE + "/" + LoginController.PASSWORD_CHANGED));
+
+        verify(userRestServiceMock).checkPasswordResetHash(hash);
+        verify(userRestServiceMock).resetPassword(hash, password);
 
     }
 
@@ -152,6 +153,8 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         String hash = UUID.randomUUID().toString();
         String password = "letm3In";
+
+        when(userRestServiceMock.checkPasswordResetHash(hash)).thenReturn(restSuccess());
         when(userRestServiceMock.resetPassword(eq(hash), eq(password))).thenReturn(restSuccess());
 
         mockMvc.perform(
@@ -160,6 +163,8 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name(LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD_FORM));
+
+        verify(userRestServiceMock).checkPasswordResetHash(hash);
 
     }
 

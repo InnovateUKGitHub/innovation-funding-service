@@ -7,8 +7,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.Arrays;
-
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
@@ -19,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 public class OrganisationJESFinanceTest extends BaseUnitTestMocksTest {
     @InjectMocks
-    private OrganisationJESFinance organisationJESFinance = new OrganisationJESFinance();
+    private OrganisationJESFinance organisationJESFinance;
 
     @Mock
     private ApplicationFinanceRowRepository applicationFinanceRowRepository;
@@ -47,23 +45,6 @@ public class OrganisationJESFinanceTest extends BaseUnitTestMocksTest {
 
         assertEquals(applicationFinanceRow,result);
         verify(applicationFinanceRowRepository, times(1)).save(any(ApplicationFinanceRow.class));
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void addCost_shouldReturnFailureWhenAFinanceRowForNameCanBeFound() throws Exception {
-        Long applicationFinanceId = 1L;
-        Long questionId = 2L;
-        String financeRowName = "unique-name";
-
-        ApplicationFinanceRow applicationFinanceRow = newApplicationFinanceRow().withName(financeRowName).build();
-
-
-        when(applicationFinanceRowRepository.findByTargetIdAndNameAndQuestionId(any(), any(), any())).thenReturn(Arrays.asList(applicationFinanceRow));
-
-        ApplicationFinanceRow result = organisationJESFinance.addCost(applicationFinanceId, questionId, applicationFinanceRow);
-
-        assertNull(result);
-        verify(applicationFinanceRowRepository, times(0)).save(any(ApplicationFinanceRow.class));
     }
 
     @Test

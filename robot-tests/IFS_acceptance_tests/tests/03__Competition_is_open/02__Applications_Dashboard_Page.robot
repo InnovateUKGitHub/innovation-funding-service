@@ -86,25 +86,18 @@ Application has team link and team details
     Then the user should see the text in the page    Application team
     And the user should see the text in the page  View contributors for both the lead and collaborating organisations.
     And the user should see the element    jQuery = h2:nth-of-type(1):contains("${EMPIRE_LTD_NAME} (Lead)")+h3:contains("Organisation type")+p:contains("Business")
-    And the user should see the element    jQuery = div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(1):contains("1")
-    And the user should see the element    jQuery = div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(2):contains("Empire Road")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("Steve Smith (Lead)")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("${lead_applicant}")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("46439359578")
     And the user should see the element    jQuery = h2:nth-of-type(2):contains("${organisationEggsName}")+h3:contains("Organisation type")+p:contains("Research")
-    And the user should see the element    jQuery = div#applicationTeamOrganisationRegisteredAddress1 span:nth-of-type(1):contains("43")
-    And the user should see the element    jQuery = div#applicationTeamOrganisationRegisteredAddress1 span:nth-of-type(2):contains("Deer Rise")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("Pete Tom")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser1 tbody tr:nth-of-type(1) td:contains("81877706440")
     And the user should see the element    jQuery = h2:nth-of-type(3):contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Business")
-    And the user should see the element    jQuery = div#applicationTeamOrganisationRegisteredAddress2 span:nth-of-type(1):contains("Electric Works, Sheffield Digital Campus")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("Ewan Cormack")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser2 tbody tr:nth-of-type(1) td:contains("36267829240")
     And the user should see the element    jQuery = h2:nth-of-type(4):contains("${organisationLudlowName}")+h3:contains("Organisation type")+p:contains("Business")
-    And the user should see the element    jQuery = div#applicationTeamOrganisationRegisteredAddress3 span:nth-of-type(1):contains("20")
-    And the user should see the element    jQuery = div#applicationTeamOrganisationRegisteredAddress3 span:nth-of-type(2):contains("Fallow Lane")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser3 tbody tr:nth-of-type(1) td:contains("Jessica Doe")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser3 tbody tr:nth-of-type(1) td:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser3 tbody tr:nth-of-type(1) td:contains("15247172589")
@@ -174,7 +167,7 @@ the finance summary calculations should be correct
     The user should see the element    jQuery = .finance-summary tr:contains("Empire") td:contains("£${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
     The user should see the element    jQuery = .finance-summary tr:contains("HIVE") td:contains("£${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
     The user should see the element    jQuery = .finance-summary tr:contains("Ludlow") td:contains("£${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}")
-    The user should see the element    jQuery = .finance-summary tr:contains("EGGS") td:contains("£${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}") ~ td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}")
+    The user should see the element    jQuery = .finance-summary tr:contains("EGGS") td:contains("£${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}") + td:contains("${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}") + td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}") ~ td:contains("${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}")
 
 the finance Project cost breakdown calculations should be correct
     The user should see the element    jQuery = .project-cost-breakdown tr:contains("Empire") td:contains("${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}")
@@ -186,10 +179,10 @@ the applicant edits the Subcontracting costs section
     the user clicks the button/link             link = Your project costs
     the user clicks the button/link             jQuery = button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
-    The user enters text to a text field        css = #collapsible-4 .form-row:nth-child(2) input[name^=subcontracting-subcontractingCost]    2000
-    The user enters text to a text field        css = .form-row:nth-child(2) [name^="subcontracting-name"]    Jackson Ltd
-    The user enters text to a text field        css = .form-row:nth-child(2) [name^="subcontracting-country-"]    Romania
-    The user enters text to a text field        css = .form-row:nth-child(2) [name^="subcontracting-role"]    Contractor
+    The user enters text to a text field        css = #collapsible-4 .form-row:nth-child(2) input[name$=".cost"]    2000
+    The user enters text to a text field        css = .form-row:nth-child(2) [name$=".name"]    Jackson Ltd
+    The user enters text to a text field        css = .form-row:nth-child(2) [name$=".country"]    Romania
+    The user enters text to a text field        css = .form-row:nth-child(2) [name$=".role"]    Contractor
     the user selects the checkbox               stateAidAgreed
     the user clicks the button/link             jQuery = button:contains("Mark as complete")
 
@@ -244,11 +237,11 @@ the table header matches correctly
     Run Keyword If    ${pagination} == 'FAIL'    check applications on one page
 
 check both pages of applications
-    ${row_count_second_page} =     get matching xpath count    //*[td]
+    ${row_count_second_page} =     Get Element Count    //*[td]
     convert to integer    ${row_count_second_page}
     log    ${row_count_second_page}
     the user navigates to the page    ${applicationsForRTOComp}
-    ${row_count_first_page} =     get matching xpath count    //*[td]
+    ${row_count_first_page} =     Get Element Count    //*[td]
     convert to integer    ${row_count_first_page}
     log    ${row_count_first_page}
     ${total_application_count} =     evaluate    ${row_count_first_page}+${row_count_second_page}
@@ -257,31 +250,31 @@ check both pages of applications
     the user should see the text in the page    ${apps_string}
 
 check applications on one page
-    ${total_row_count} =     get matching xpath count    //*[td]
+    ${total_row_count} =     Get Element Count    //*[td]
     convert to integer    ${total_row_count}
     log    ${total_row_count}
     ${apps_string} =     Catenate    ${total_application_count}    applications
     the user should see the text in the page    ${apps_string}
 
 The calculation for the submited applications should be correct
-    ${submitted_count} =     Get matching xpath count    //*[text()="submitted"]
+    ${submitted_count} =     Get Element Count    //*[text()="submitted"]
     Run keyword if    ${submitted_count} ! =  0    submitted application calculations are correct
 
 The calculation of the open applications should be correct
-    ${open_count} =     Get matching xpath count    //*[text()="open"]
+    ${open_count} =     Get Element Count    //*[text()="open"]
     Run keyword if    ${open_count} ! =  0    open application calculations are correct
 
 The totals in the Key statistics should be correct
     #Calculation of the total number of Applications
-    ${TOTAL_APPLICATIONS} =     Get matching xpath count    //table/tbody/tr
+    ${TOTAL_APPLICATIONS} =     Get Element Count    //table/tbody/tr
     ${TOTAL_COUNT} =     Get text    css = li:nth-child(1) > div > span
     Should Be Equal As Integers    ${TOTAL_APPLICATIONS}    ${TOTAL_COUNT}
     #Calculation of the Started Applications
-    ${STARTED_APPLICATIONS} =     Get matching xpath count    //*[text()="Started"]
+    ${STARTED_APPLICATIONS} =     Get Element Count    //*[text()="Started"]
     ${STARTED_COUNT} =     Get text    css = li:nth-child(2) > div > span
     Should Be Equal As Integers    ${STARTED_APPLICATIONS}    ${STARTED_COUNT}
     #Calculation of the Submitted Applications
-    ${SUBMITTED_APPLICATIONS} =     Get matching xpath count    //*[text()="Submitted"]
+    ${SUBMITTED_APPLICATIONS} =     Get Element Count    //*[text()="Submitted"]
     ${SUBMITTED_COUNT} =     Get text    css = li:nth-child(4) > div > span
     Should Be Equal As Integers    ${SUBMITTED_APPLICATIONS}    ${SUBMITTED_COUNT}
     #TODO ADD Check for the beyond 50% counts when we will have test data

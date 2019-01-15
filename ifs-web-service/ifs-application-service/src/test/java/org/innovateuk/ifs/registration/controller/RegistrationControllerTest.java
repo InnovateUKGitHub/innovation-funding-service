@@ -98,8 +98,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     }
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpCommonExpectations() {
 
         MockitoAnnotations.initMocks(this);
         setupInvites();

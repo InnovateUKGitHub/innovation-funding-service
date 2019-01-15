@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -14,6 +15,8 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -33,16 +36,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
-import static org.innovateuk.ifs.project.resource.ApprovalType.UNSET;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -93,14 +97,39 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         return projectUserRepository.findByProjectId(projectId);
     }
 
-    protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
-        if (APPROVED.equals(project.getOtherDocumentsApproved())) {
+    protected ProjectActivityStates createDocumentStatus(Project project) {
+
+        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
+
+        int expectedNumberOfDocuments = expectedNumberOfDocuments(project);
+        int actualNumberOfDocuments = projectDocuments.size();
+
+        if (actualNumberOfDocuments == expectedNumberOfDocuments && projectDocuments.stream()
+                .allMatch(projectDocumentResource -> DocumentStatus.APPROVED.equals(projectDocumentResource.getStatus()))) {
             return COMPLETE;
-        } else if (UNSET.equals(project.getOtherDocumentsApproved()) && project.getDocumentsSubmittedDate() != null) {
-            return PENDING;
-        } else {
+        }
+
+        if (actualNumberOfDocuments != expectedNumberOfDocuments || projectDocuments.stream()
+                .anyMatch(projectDocumentResource -> DocumentStatus.UPLOADED.equals(projectDocumentResource.getStatus())
+                        || DocumentStatus.REJECTED.equals(projectDocumentResource.getStatus()))) {
             return ACTION_REQUIRED;
         }
+
+        return PENDING;
+    }
+
+    private int expectedNumberOfDocuments(Project project) {
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+        List<CompetitionDocument> expectedDocuments = project.getApplication().getCompetition().getCompetitionDocuments();
+
+        int expectedNumberOfDocuments = expectedDocuments.size();
+        if (partnerOrganisations.size() == 1) {
+            List<String> documentNames = expectedDocuments.stream().map(CompetitionDocument::getTitle).collect(Collectors.toList());
+            if (documentNames.contains(COLLABORATION_AGREEMENT_TITLE)) {
+                expectedNumberOfDocuments = expectedDocuments.size() - 1;
+            }
+        }
+        return expectedNumberOfDocuments;
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
@@ -216,7 +245,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         return getCurrentlyLoggedInProjectUser(project, PROJECT_PARTNER);
     }
 
-    protected ServiceResult<ProjectUser> getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
+    private ServiceResult<ProjectUser> getCurrentlyLoggedInProjectUser(Project project, ProjectParticipantRole role) {
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 simpleFindFirst(project.getProjectUsers(), pu -> findUserAndRole(role, currentUser, pu)).

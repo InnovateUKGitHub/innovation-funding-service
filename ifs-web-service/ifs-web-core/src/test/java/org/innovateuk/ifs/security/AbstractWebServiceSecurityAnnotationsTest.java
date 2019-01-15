@@ -17,7 +17,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.util.CollectionFunctions.union;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * Base class in the web core to ensure that all controllers are secured as appropriate.
@@ -62,7 +62,7 @@ public abstract class AbstractWebServiceSecurityAnnotationsTest extends Abstract
 
     @Override
     protected final List<Class<?>> excludedClasses() {
-        return union(GLOBAL_EXCLUDED_CLASSES, additionalExcludedClasses());
+        return combineLists(GLOBAL_EXCLUDED_CLASSES, additionalExcludedClasses());
     }
 
     /**

@@ -59,7 +59,7 @@ dependencies {
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
 
-    testCompile "net.sf.opencsv:opencsv:2.3"
+    testCompile "com.opencsv:opencsv:4.3.2"
     testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: '1.7.0'
 }
 

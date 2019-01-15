@@ -58,7 +58,12 @@ public class ApplicationQuestionNonFileSaver extends AbstractApplicationSaver {
 
             requestParameterPresent(formInputKey, request).ifPresent(value -> {
                 ValidationMessages errors = formInputResponseRestService.saveQuestionResponse(
-                        userId, applicationId, formInput.getId(), value, ignoreEmpty).getSuccess();
+                        userId,
+                        applicationId,
+                        formInput.getId(),
+                        value,
+                        ignoreEmpty)
+                        .getSuccess();
                 allErrors.addAll(errors, toField(formInputKey));
             });
         };

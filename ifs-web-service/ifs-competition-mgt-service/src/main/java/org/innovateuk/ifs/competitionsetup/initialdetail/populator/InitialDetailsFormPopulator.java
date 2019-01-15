@@ -37,7 +37,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 
 	@Override
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
-        final List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccess();
+		final List<InnovationAreaResource> allInnovationAreasExcludingNone = categoryRestService.getInnovationAreasExcludingNone().getSuccess();
 	    InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
 
 		competitionSetupForm.setCompetitionTypeId(competitionResource.getCompetitionType());
@@ -45,8 +45,8 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 
 		competitionSetupForm.setInnovationSectorCategoryId(competitionResource.getInnovationSector());
 		Set<Long> innovationAreaCategoryIds = competitionResource.getInnovationAreas();
-		competitionSetupForm.setInnovationAreaCategoryIds(setInnovationAreas(innovationAreaCategoryIds, allInnovationAreas));
-		competitionSetupForm.setInnovationAreaNamesFormatted(getFormattedInnovationAreaNames(innovationAreaCategoryIds, allInnovationAreas));
+		competitionSetupForm.setInnovationAreaCategoryIds(setInnovationAreas(innovationAreaCategoryIds, allInnovationAreasExcludingNone));
+		competitionSetupForm.setInnovationAreaNamesFormatted(getFormattedInnovationAreaNames(innovationAreaCategoryIds, allInnovationAreasExcludingNone));
 		competitionSetupForm.setInnovationLeadUserId(competitionResource.getLeadTechnologist());
 
 		if (competitionResource.getStartDate() != null) {
@@ -57,6 +57,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 
 		competitionSetupForm.setTitle(competitionResource.getName());
 		competitionSetupForm.setStateAid(competitionResource.getStateAid());
+		competitionSetupForm.setFundingType(competitionResource.getFundingType());
 
 		return competitionSetupForm;
 	}

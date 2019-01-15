@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.commons.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
 import org.innovateuk.ifs.commons.exception.*;
-import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
+import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -36,7 +38,7 @@ import static org.springframework.http.HttpStatus.*;
  * Represents the result of a Rest Controller action, that will be either a failure or a success.  A failure will result in a RestFailure, and a
  * success will result in a T.  Additionally, these can be mapped to produce new RestResults that either fail or succeed.
  */
-public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
+public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure> {
 
 	private static final Log LOG = LogFactory.getLog(RestResult.class);
 
@@ -287,7 +289,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     @Override
-    protected <R> BaseEitherBackedResult<R, RestFailure> createFailure(RestFailure failure) {
+    protected <R> BaseFailingOrSucceedingResult<R, RestFailure> createFailure(RestFailure failure) {
         return restFailure(failure);
     }
 
@@ -321,6 +323,28 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
                 },
                 success -> restSuccess(getOptionalSuccessObject())
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RestResult<?> that = (RestResult<?>) o;
+
+        return new EqualsBuilder()
+                .append(result, that.result)
+                .append(successfulStatusCode, that.successfulStatusCode)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(result)
+                .append(successfulStatusCode)
+                .toHashCode();
     }
 
     public static <T1> T1 getLeftOrRight(Either<T1, T1> either) {
@@ -501,7 +525,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
      * @return
      */
     public static <T> RestResult<List<T>> aggregate(final List<RestResult<T>> input) {
-        return BaseEitherBackedResult.aggregate(
+        return BaseFailingOrSucceedingResult.aggregate(
                 input,
                 (f1, f2) -> new RestFailure(combineLists(f1.getErrors(), f2.getErrors())),
                 restSuccess(emptyList()));

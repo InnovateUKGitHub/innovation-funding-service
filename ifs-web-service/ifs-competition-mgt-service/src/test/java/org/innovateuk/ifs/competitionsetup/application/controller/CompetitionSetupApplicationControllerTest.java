@@ -42,9 +42,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder
-        .newCompetitionSetupQuestionResource;
-import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
+import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
@@ -95,20 +93,18 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Override
     protected CompetitionSetupApplicationController supplyControllerUnderTest() { return new CompetitionSetupApplicationController(); }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
         ReflectionTestUtils.setField(controller, "validator", validator);
 
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(true);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(true);
     }
 
     @Test
-    public void testGetEditCompetitionFinance() throws Exception {
+    public void getEditCompetitionFinance() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
@@ -124,7 +120,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetEditCompetitionFinanceRedirect() throws Exception {
+    public void getEditCompetitionFinanceRedirect() throws Exception {
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(UNEDITABLE_COMPETITION));
 
         mockMvc.perform(get(URL_PREFIX + "/question/finance/edit"))
@@ -135,7 +131,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testPostEditCompetitionFinance() throws Exception {
+    public void postEditCompetitionFinance() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
@@ -153,6 +149,35 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
 
         verify(competitionSetupService).saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES));
+    }
+
+    @Test
+    public void postEditCompetitionFinanceWithErrors() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        mockMvc.perform(post(URL_PREFIX + "/question/finance/edit")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("financesRequired", String.valueOf(true)))
+                .andExpect(status().isOk())
+                .andExpect(model().errorCount(5))
+                .andExpect(model().attributeExists("competitionSetupForm"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "applicationFinanceType",
+                        "NotNull"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeGrowthTable",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeYourOrganisationSection",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeJesForm",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "fundingRules",
+                        "FieldRequiredIf"));
+
+        verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(CompetitionSetupForm.class),
+                eq(competition), eq(APPLICATION_FORM), eq(FINANCES));
     }
 
     @Test

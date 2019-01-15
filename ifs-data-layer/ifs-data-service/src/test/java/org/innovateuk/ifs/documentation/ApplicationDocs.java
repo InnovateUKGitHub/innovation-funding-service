@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE_OR_COLLABORATIVE;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class ApplicationDocs {
@@ -35,7 +36,9 @@ public class ApplicationDocs {
             fieldWithPath("noInnovationAreaApplicable").description("Flag indicating no Innovation Area is applicable"),
             fieldWithPath("ineligibleOutcome").description("Outcome describing why the application has been marked as ineligible"),
             fieldWithPath("leadOrganisationId").description("the id of the lead organisation"),
-            fieldWithPath("inAssessmentReviewPanel").description("Whether the requested application has been chosen for assessment review panel")
+            fieldWithPath("inAssessmentReviewPanel").description("Whether the requested application has been chosen for assessment review panel"),
+            fieldWithPath("collaborationLevel").description("Collaboration level of the Competition (single, collaborative...)"),
+            fieldWithPath("collaborativeProject").description("Flag indicating if the project is collaborative")
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
@@ -52,5 +55,6 @@ public class ApplicationDocs {
             .withResearchCategory(new ResearchCategoryResource())
             .withInnovationArea(new InnovationAreaResource())
             .withLeadOrganisationId(1L)
-            .withNoInnovationAreaApplicable(false);
+            .withNoInnovationAreaApplicable(false)
+            .withCollaborationLevel(SINGLE_OR_COLLABORATIVE);
 }

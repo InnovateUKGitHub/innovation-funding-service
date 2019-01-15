@@ -25,9 +25,10 @@ the user sees the correct read only view of the question
     the user should not see the text in the page    The business opportunity is plausible
 
 the user fills in the CS Initial details
-    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}
+    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${stateAid}
     the user clicks the button/link                      link = Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
+    the user selects the radio button                    fundingType  GRANT
     the user selects the option from the drop-down menu  ${compType}  id = competitionTypeId
     the user selects the option from the drop-down menu  Emerging and enabling  id = innovationSectorCategoryId
     the user selects the option from the drop-down menu  Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
@@ -36,7 +37,7 @@ the user fills in the CS Initial details
     the user enters text to a text field                 css = #openingDateYear  ${nextyear}
     the user selects the option from the drop-down menu  Ian Cooper  id = innovationLeadUserId
     the user selects the option from the drop-down menu  Robert Johnson  id = executiveUserId
-    the user clicks the button twice                     css = label[for="stateAid2"]
+    the user clicks the button twice                     css = label[for="stateAid${stateAid}"]
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Competition setup
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
@@ -56,23 +57,23 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id = activityCode  133t
     the user clicks the button/link       jQuery = button:contains("Generate code")
     sleep  2s  #This sleeps is intended as the competition Code needs some time
-    textfield should contain              css = input[name="competitionCode"]  19
+    textfield should contain              css = input[name="competitionCode"]  20
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Competition setup
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Eligibility
-    [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}
+    [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user clicks the button/link    link = Eligibility
-    the user clicks the button twice   css = label[for="single-or-collaborative-collaborative"]
+    the user clicks the button twice   css = label[for="single-or-collaborative-${collaborative}"]
     the user selects the radio button  researchCategoriesApplicable    ${researchCategory}
-    Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage  #if
+    Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
     the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
     the user selects Research Participation if required  ${researchParticipation}
     the user clicks the button/link    css = label[for="comp-resubmissions-yes"]
     the user clicks the button twice   css = label[for="comp-resubmissions-yes"]
-    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]  #if
+    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
     the user clicks the button/link    jQuery = button:contains("Done")
     the user clicks the button/link    link = Competition setup
     the user should see the element    jQuery = div:contains("Eligibility") ~ .task-status-complete
@@ -81,12 +82,16 @@ the user fills in the CS Eligibility
 the user selects Research Participation if required
     [Arguments]  ${percentage}
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  id = researchParticipationAmountId
-    Run Keyword If  '${status}' == 'PASS'  the user selects the option from the drop-down menu  ${percentage}  researchParticipation
+    Run Keyword If  '${status}' == 'PASS'  the user selects the index from the drop-down menu  ${percentage}  researchParticipation
     Run Keyword If  '${status}' == 'FAIL'  the user should not see the element  id = researchParticipation
 
 the user fills in the CS Milestones
-    [Arguments]  ${month}  ${nextyear}
-    the user clicks the button/link              link = Milestones
+    [Arguments]  ${completionStage}  ${month}  ${nextyear}
+    the user clicks the button/link    link = Milestones
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  ${completionStage}
+    Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}
       \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.day input  ${i}
@@ -97,17 +102,16 @@ the user fills in the CS Milestones
     the user clicks the button/link              link = Competition setup
     the user should see the element              jQuery = div:contains("Milestones") ~ .task-status-complete
 
-# TODO IFS-4186 Uncomment when this functionality is enabled.
-#the user fills in the CS Documents in other projects
-#    the user clicks the button/link          link = Documents in project setup
-#    the user clicks the button/link          link = Add document type
-#    the user enters text to a text field     id = title    Test document type
-#    the user clicks the button/link          jQuery = span:contains("PDF")
-#    the user clicks the button/link          jQuery = span:contains("Spreadsheet")
-#    the user enters text to a text field     css = .editor    Guidance test.
-#    the user clicks the button/link          css = button[type = "submit"]
-#    the user should see the element          jQuery = span:contains("Test document type")
-#    the user clicks the button/link          link = Competition setup
+the user fills in the CS Documents in other projects
+    the user clicks the button/link          link = Documents
+    the user clicks the button/link          link = Add document type
+    the user enters text to a text field     id = title    Test document type
+    the user clicks the button/link          jQuery = span:contains("PDF")
+    the user clicks the button/link          jQuery = span:contains("Spreadsheet")
+    the user enters text to a text field     css = .editor    Guidance test.
+    the user clicks the button/link          css = button[type = "submit"]
+    the user should see the element          jQuery = span:contains("Test document type")
+    the user clicks the button/link          link = Competition setup
 
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
@@ -128,7 +132,7 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
     Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
-    Run keyword If  '${comp_type}'!= '${compType_EOI}'   the user fills in the Finances questions  ${growthTable}
+    Run keyword If  '${comp_type}'!= '${compType_EOI}'   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Competition setup
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
@@ -154,7 +158,7 @@ the user fills in the CS Application section with custom questions
 the user marks the Finance section as complete if it's present
     [Arguments]  ${growthTable}
     ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = .govuk-heading-s a:contains("Finances")
-    Run Keyword If  '${status}' == 'PASS'  the user fills in the Finances questions  ${growthTable}
+    Run Keyword If  '${status}' == 'PASS'  the user fills in the Finances questions  ${growthTable}  true  false
 
 the user opts no finances for EOI comp
     the user clicks the button/link    link = Finances
@@ -192,12 +196,16 @@ the user marks each question as complete
     the user should see the element  jQuery = li:contains("${question_link}") .task-status-complete
 
 the user fills in the Finances questions
-    [Arguments]  ${growthTable}
+    [Arguments]  ${growthTable}  ${jes}  ${organisation}
     the user clicks the button/link       link = Finances
-    the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
+    the user clicks the button twice      css = label[for = "include-growth-table-${growthTable}"]
     the user selects the radio button     applicationFinanceType  STANDARD
+    the user selects the radio button     includeYourOrganisationSection  ${organisation}
+    the user selects the radio button     includeJesForm  ${jes}
     the user enters text to a text field  css = .editor  Those are the rules that apply to Finances
     the user clicks the button/link       css = button[type="submit"]
+    the user clicks the button/link       link = Finances
+    the user clicks the button/link       link = Application
     the user should see the element       jQuery = li:contains("Finances") .task-status-complete
 
 the user fills in the CS Assessors
@@ -226,7 +234,6 @@ the user fills in the Public content and publishes
     # Fill in the Summary
     the user clicks the button/link         link = Summary
     the user enters text to a text field    css = .editor  This is a Summary description
-    the user selects the radio button       fundingType  Grant
     the user enters text to a text field    id = projectSize   10 millions
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
@@ -275,11 +282,11 @@ the internal user navigates to public content
 
 The application list is sorted by
     [Arguments]    ${sorting_factor}
-    Select From List    name = sort    ${sorting_factor}
+    Select From List By Label    name = sort    ${sorting_factor}
 
 The applications should be sorted by column
     [Arguments]    ${column_number}
-    ${row_count}=    get matching xpath count    //*[td]
+    ${row_count}=    Get Element Count    //*[td]
     @{sorted_column_contents}=    Create List
     : FOR    ${row}    IN RANGE    2    ${row_count}
     \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
@@ -369,7 +376,6 @@ moving competition to Closed
 making the application a successful project
     [Arguments]  ${compID}  ${appTitle}
     the user navigates to the page      ${server}/management/competition/${compID}
-    the user clicks the button/link  css = button[type="submit"][formaction$="notify-assessors"]
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[type="submit"][formaction$="close-assessment"]
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[type="submit"][formaction$="close-assessment"]
     Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user clicks the button/link    css = button[type="submit"][formaction$="notify-assessors"]
@@ -392,3 +398,7 @@ The project finance user is able to download the Overheads file
     [Arguments]   ${ProjectID}  ${organisationId}
     the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
     remove the file from the operating system     ${excel_file}
+
+the user moves focus and waits for autosave
+    Set Focus To Element    link=GOV.UK
+    Wait For Autosave

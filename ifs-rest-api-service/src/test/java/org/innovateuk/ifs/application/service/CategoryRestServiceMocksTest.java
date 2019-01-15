@@ -31,9 +31,8 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
 
     @Test
     public void getInnovationAreas() {
-        String expectedUrl = categoryRestURL + "/findInnovationAreas";
+        String expectedUrl = categoryRestURL + "/find-innovation-areas";
         List<InnovationAreaResource> returnedCategoryResources = newInnovationAreaResource().build(3);
-
 
         setupGetWithRestResultAnonymousExpectations(expectedUrl, innovationAreaResourceListType(), returnedCategoryResources, HttpStatus.OK);
 
@@ -44,8 +43,21 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
     }
 
     @Test
+    public void getInnovationAreasExcludingNone() {
+        String expectedUrl = categoryRestURL + "/find-innovation-areas-excluding-none";
+        List<InnovationAreaResource> returnedCategoryResources = newInnovationAreaResource().build(3);
+
+        setupGetWithRestResultAnonymousExpectations(expectedUrl, innovationAreaResourceListType(), returnedCategoryResources, HttpStatus.OK);
+
+        List<InnovationAreaResource> categoryResources = service.getInnovationAreasExcludingNone().getSuccess();
+
+        assertNotNull(categoryResources);
+        assertEquals(returnedCategoryResources, categoryResources);
+    }
+
+    @Test
     public void getInnovationSectors() {
-        String expectedUrl = categoryRestURL + "/findInnovationSectors";
+        String expectedUrl = categoryRestURL + "/find-innovation-sectors";
         List<InnovationSectorResource> returnedCategoryResources = newInnovationSectorResource().build(3);
 
         setupGetWithRestResultExpectations(expectedUrl, innovationSectorResourceListType(), returnedCategoryResources);
@@ -58,7 +70,7 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
 
     @Test
     public void getResearchCategories() {
-        String expectedUrl = categoryRestURL + "/findResearchCategories";
+        String expectedUrl = categoryRestURL + "/find-research-categories";
         List<ResearchCategoryResource> returnedCategoryResources = newResearchCategoryResource().build(3);
 
         setupGetWithRestResultExpectations(expectedUrl, researchCategoryResourceListType(), returnedCategoryResources);
@@ -71,7 +83,7 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
 
     @Test
     public void getInnovationAreasBySector() {
-        String expectedUrl = categoryRestURL + "/findByInnovationSector/1";
+        String expectedUrl = categoryRestURL + "/find-by-innovation-sector/1";
         List<InnovationAreaResource> returnedCategoryResources = newInnovationAreaResource().build(3);
         setupGetWithRestResultExpectations(expectedUrl, innovationAreaResourceListType(), returnedCategoryResources);
 

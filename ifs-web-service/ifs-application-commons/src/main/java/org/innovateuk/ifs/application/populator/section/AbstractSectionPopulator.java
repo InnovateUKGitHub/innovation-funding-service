@@ -7,12 +7,9 @@ import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,8 +17,11 @@ import java.util.Optional;
  */
 public abstract class AbstractSectionPopulator<M extends AbstractSectionViewModel> extends BaseModelPopulator {
 
-    @Autowired
-    private ApplicationNavigationPopulator navigationPopulator;
+    private final ApplicationNavigationPopulator navigationPopulator;
+
+    protected AbstractSectionPopulator(final ApplicationNavigationPopulator navigationPopulator) {
+        this.navigationPopulator = navigationPopulator;
+    }
 
     public M populate(
             ApplicantSectionResource section,
@@ -66,17 +66,8 @@ public abstract class AbstractSectionPopulator<M extends AbstractSectionViewMode
     protected NavigationViewModel getNavigationViewModel(ApplicantSectionResource applicantSection) {
         return navigationPopulator.addNavigation(
                 applicantSection.getSection(),
-                applicantSection.getApplication().getId(),
-                getSectionTypesToSkip(applicantSection)
+                applicantSection.getApplication().getId()
         );
 
-    }
-
-    private List<SectionType> getSectionTypesToSkip(ApplicantSectionResource applicantSection) {
-        if (applicantSection.getCurrentApplicant() != null) {
-            return SectionType.sectionsNotRequiredForOrganisationType(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType());
-        } else {
-            return Collections.emptyList();
-        }
     }
 }

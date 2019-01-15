@@ -1,30 +1,36 @@
-<h1 class="govuk-heading-l">Assign to</h1>
+<div class="govuk-width-container">
 
-<h2 class="govuk-heading-m">Example 1. As lead</h2>
-
-<div class="assign-container assigned-alert">
-    <span class="action-required">
-        Assigned to you.
-    </span>
-    <div class="assign-button-container">
-        <div class="assign-button">
-            <span class="action-required">
-                Assign this question to someone else
-            </span>
-        </div>
-        {{ render '@assign-list' }}
+    <div class="govuk-inset-text">
+        <p class="govuk-body">
+            This is an IFS component.
+        </p>
     </div>
-  </div>
 
-  <h2 class="govuk-heading-m">Example 2. As lead</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-top-9">Example 1. As lead</h2>
+
+    <div class="assign-container assigned-alert">
+        <span class="secondary-notification govuk-body">
+            Assigned to you.
+        </span>
+        <div class="assign-button-container">
+            <div class="assign-button">
+                <span class="secondary-notification govuk-body">
+                    Assign this question to someone else
+                </span>
+            </div>
+        {{ render '@assign-list' }}
+        </div>
+    </div>
+
+  <h2 class="govuk-heading-m govuk-!-margin-top-9">Example 2. As lead</h2>
 
   <div class="assign-container assigned-alert">
-      <span class="action-required">
+      <span class="secondary-notification govuk-body">
           Assigned to Jessica Doe.
       </span>
       <div class="assign-button-container">
           <div class="assign-button">
-              <span class="action-required">
+              <span class="secondary-notification govuk-body">
                   Assign this question to someone else
               </span>
           </div>
@@ -32,10 +38,12 @@
       </div>
     </div>
 
-    <h2 class="govuk-heading-m">Example 3. As collaborator</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-top-9">Example 3. As collaborator</h2>
 
     <div class="assign-container assigned-alert">
-        <span class="assignee">
+        <span class="govuk-body assignee">
             This question is assigned to Steve Smith
         </span>
-      </div>
+    </div>
+
+</div>

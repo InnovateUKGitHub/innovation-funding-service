@@ -3,7 +3,7 @@
 <th:block th:fragment="section-content">
 
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to save section.</h2>
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
@@ -210,7 +210,7 @@
     </form>
     <ul class="govuk-list pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='terms-and-conditions')}">
+            <a rel="prev" title="Navigate to previous part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='terms-and-conditions')}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Terms and conditions</span>
             </a>

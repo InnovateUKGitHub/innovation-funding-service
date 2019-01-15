@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.organisation.service;
 
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -10,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  * Determines if a registering user has to become part of an already existing organisation
@@ -26,42 +27,27 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
 
     public Optional<Organisation> findOrganisationMatch(OrganisationResource submittedOrganisationResource) {
         if (OrganisationTypeEnum.isResearch(submittedOrganisationResource.getOrganisationType())) {
-            return findFirstCompaniesHouseMatch(submittedOrganisationResource);
-        } else {
             return findFirstResearchMatch(submittedOrganisationResource);
+        } else {
+            return findFirstCompaniesHouseMatch(submittedOrganisationResource);
         }
     }
 
-    private Optional<Organisation> findFirstResearchMatch(OrganisationResource submittedOrganisationResource) {
+    private Optional<Organisation> findFirstCompaniesHouseMatch(OrganisationResource submittedOrganisationResource) {
+        if (isNullOrEmpty(submittedOrganisationResource.getCompaniesHouseNumber())) {
+            return Optional.empty();
+        }
         return findOrganisationByCompaniesHouseId(submittedOrganisationResource).stream()
                 .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeMatches(
                         foundOrganisation,
                         submittedOrganisationResource
                 ))
-                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(
-                        foundOrganisation,
-                        submittedOrganisationResource,
-                        OrganisationAddressType.OPERATING,
-                        false
-                ))
-                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(
-                        foundOrganisation,
-                        submittedOrganisationResource,
-                        OrganisationAddressType.REGISTERED,
-                        true
-                ))
                 .findFirst();
     }
 
-    private Optional<Organisation> findFirstCompaniesHouseMatch(OrganisationResource submittedOrganisationResource) {
+    private Optional<Organisation> findFirstResearchMatch(OrganisationResource submittedOrganisationResource) {
         return findOrganisationByName(submittedOrganisationResource).stream()
                 .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeIsResearch(foundOrganisation))
-                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(
-                        foundOrganisation,
-                        submittedOrganisationResource,
-                        OrganisationAddressType.OPERATING,
-                        true
-                ))
                 .findFirst();
     }
 
@@ -70,6 +56,6 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
     }
 
     private List<Organisation> findOrganisationByCompaniesHouseId(OrganisationResource organisationResource) {
-        return organisationRepository.findByCompanyHouseNumberOrderById(organisationResource.getCompaniesHouseNumber());
+        return organisationRepository.findByCompaniesHouseNumberOrderById(organisationResource.getCompaniesHouseNumber());
     }
 }

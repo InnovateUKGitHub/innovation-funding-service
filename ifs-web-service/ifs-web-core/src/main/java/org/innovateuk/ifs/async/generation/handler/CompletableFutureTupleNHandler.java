@@ -31,13 +31,13 @@ import java.util.concurrent.Executor;
  * {@link CompletableFutureTupleNHandler#thenAccept(ExceptionThrowingConsumer)} or
  * {@link CompletableFutureTupleNHandler#thenApply(ExceptionThrowingFunction)}
  */
-public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHandler {
+public class CompletableFutureTupleNHandler<P> extends BaseCompletableFutureTupleHandler {
 
-    public CompletableFutureTupleNHandler(String futureName, Executor threadPool, long timeoutValue, List<? extends CompletableFuture<?>> futures) {
+    public CompletableFutureTupleNHandler(String futureName, Executor threadPool, long timeoutValue, List<CompletableFuture<P>> futures) {
         super(futureName, threadPool, timeoutValue, futures.toArray(new CompletableFuture<?>[] {}));
     }
 
-    public <R> CompletableFuture<R> thenApply(ExceptionThrowingFunction<List<?>, R> handler) {
+    public <R> CompletableFuture<R> thenApply(ExceptionThrowingFunction<List<P>, R> handler) {
         return thenApplyInternal(() -> {
             try {
                 return handler.apply(getResultsAsList());
@@ -47,9 +47,9 @@ public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHa
         });
     }
 
-    public CompletableFuture<Void> thenAccept(ExceptionThrowingConsumer<List<?>> runnable) {
+    public CompletableFuture<Void> thenAccept(ExceptionThrowingConsumer<List<P>> runnable) {
 
-        ExceptionThrowingFunction<List<?>, Void> dummyFunction = futureResults -> {
+        ExceptionThrowingFunction<List<P>, Void> dummyFunction = futureResults -> {
             runnable.accept(futureResults);
             return null;
         };

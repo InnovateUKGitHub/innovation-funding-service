@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.CapitalUsage;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * Handles the capital usage costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@Component
 public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
     public static final String COST_FIELD_EXISTING = "existing";
     public static final String COST_FIELD_RESIDUAL_VALUE = "residual_value";
@@ -49,11 +51,11 @@ public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
             if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle() != null){
                 String title = costValue.getFinanceRowMetaField().getTitle();
                 if (title.equals(COST_FIELD_EXISTING)) {
-                    existing = costValue.getValue();
+                    existing = "null".equals(costValue.getValue()) ? null : costValue.getValue();
                 } else if (title.equals(COST_FIELD_RESIDUAL_VALUE)) {
-                    residualValue = new BigDecimal(costValue.getValue());
+                    residualValue = "null".equals(costValue.getValue()) ? null : new BigDecimal(costValue.getValue());
                 } else if (title.equals(COST_FIELD_UTILISATION)) {
-                    utilisation = Integer.valueOf(costValue.getValue());
+                    utilisation = "null".equals(costValue.getValue()) ? null : Integer.valueOf(costValue.getValue());
                 }
             }
         }

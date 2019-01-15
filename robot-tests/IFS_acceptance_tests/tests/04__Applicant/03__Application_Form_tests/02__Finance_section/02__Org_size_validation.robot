@@ -15,48 +15,47 @@ Resource          ../../Applicant_Commons.robot
 *** Test Cases ***
 Before org size is selected, your funding link is not available
     [Documentation]    INFUND-6394  IFS-3938
-    [Tags]
+    [Tags]  HappyPath
     Given applicant navigates to the finances of the robot application
     When the user clicks the button/link        link = Your funding
     Then the user should see the element        jQuery = li:contains("mark the"):contains("your organisation")
 
 Small org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
-    [Tags]
+    [Tags]  HappyPath
     Given applicant navigates to the finances of the robot application
     And the user clicks the button/link         link = Your organisation
     And the user marks their organisation as    ${SMALL_ORGANISATION_SIZE}
 
-
 Funding section is now available
     [Documentation]    INFUND-6394
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link             link = Your funding
-    Then the user should see the text in the page    Enter your funding level
-
+    Then The user should see the element             jQuery = legend:contains("Are you requesting funding?")
 
 Small org can't have more than 70% funding level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  80
-    Then the user should see a field error     This field should be 70% or lower.
+    Given the user selects the radio button    requestingFunding   true
+    When the user enters text to a text field  css = [name^="grantClaimPercentage"]  80
+    Then the user should see a field error     Funding level must be 70% or lower.
 
 Funding section can be completed with under 70%
     [Documentation]    INFUND-1110
-    [Tags]
+    [Tags]  HappyPath
     When the user completes the funding section with funding level    45
     Then the user should not see the element    jQuery = .govuk-error-message
 
 User sees warning that the funding section will be reset
     [Documentation]    INFUND-6894
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link             link = Your organisation
-    Then the user should see the text in the page    The organisation size is used to calculate your funding level in the application.
-    And the user should see the text in the page     Changing this selection will reset your funding level.
+    Then the user should see the element             jQuery = .message-alert p:contains("The organisation size is used to calculate your funding level in the application.")
+    And the user should see the element              jQuery = .message-alert p:contains("Changing this selection will reset your funding level.")
 
 Medium org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link        jQuery = button:contains("Edit")
     And the user marks their organisation as    ${MEDIUM_ORGANISATION_SIZE}
 
@@ -67,34 +66,33 @@ Funding section shows as incomplete
 
 Funding section has been reset
     [Documentation]    INFUND-6894
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link    link = Your funding
     Then the funding section has been reset including funding level    45
 
 Medium org can't have more than 60% level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field    css = [name^="finance-grantclaimpercentage"]  70
-    Then the user should see a field error       This field should be 60% or lower.
+    Given the user selects the radio button      requestingFunding   true
+    When the user enters text to a text field    css = [name^="grantClaimPercentage"]  70
+    Then the user should see a field error       Funding level must be 60% or lower.
 
 Funding section can be completed with under 60%
     [Documentation]    INFUND-1110
-    [Tags]
+    [Tags]  HappyPath
     When the user completes the funding section with funding level    35
     Then the user should not see the element    css = .govuk-error-message
 
-
 User still sees warning that the funding section will be reset
     [Documentation]    INFUND-6894
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link             link = Your organisation
-    Then the user should see the text in the page    The organisation size is used to calculate your funding level in the application.
-    And the user should see the text in the page     Changing this selection will reset your funding level.
-
+    Then the user should see the element             jQuery = .message-alert p:contains("The organisation size is used to calculate your funding level in the application.")
+    And the user should see the element              jQuery = .message-alert p:contains("Changing this selection will reset your funding level.")
 
 Large organisation can be selected
     [Documentation]    INFUND-1110, INFUND_6394
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link        jQuery = button:contains("Edit")
     And the user marks their organisation as    ${LARGE_ORGANISATION_SIZE}
 
@@ -103,22 +101,22 @@ Funding section shows as incomplete again
     [Tags]
     When the user should see the element    css = .task-list li:nth-of-type(4) .task-status-incomplete
 
-
 Funding section has been reset again
     [Documentation]    INFUND-6894
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link    link = Your funding
     Then the funding section has been reset including funding level    35
 
 Large org can't have more than 50% level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  60
-    Then the user should see a field error     This field should be 50% or lower.
+    Given the user selects the radio button    requestingFunding   true
+    When the user enters text to a text field  css = [name^="grantClaimPercentage"]  60
+    Then the user should see a field error     Funding level must be 50% or lower.
 
 Funding section can be completed with under 50%
     [Documentation]    INFUND-1110
-    [Tags]
+    [Tags]  HappyPath
     When the user completes the funding section with funding level    25
     Then the user should not see the element    jQuery = .govuk-error-message
     And the user marks the 'your funding' section as incomplete again
@@ -136,25 +134,27 @@ The user marks their organisation as
     the user selects the checkbox               agree-state-aid
     the user clicks the button/link             jQuery = button:contains("Mark as complete")
     the user should not see the element         css = .govuk-error-message
-    the user should see the text in the page    Please complete your project finances.
+    the user should see the element             jQuery = p:contains("Please complete your project finances.")
 
 the user completes the funding section with funding level
     [Arguments]    ${funding_level}
-    the user enters text to a text field    css = [name^="finance-grantclaimpercentage"]    ${funding_level}
-    the user selects the radio button       other_funding-otherPublicFunding-    Yes
-    the user enters text to a text field    css = [name*=other_funding-fundingSource]    Lottery funding
-    the user enters text to a text field    css = [name*=other_funding-securedDate]    12-2008
-    the user enters text to a text field    css = [name*=other_funding-fundingAmount]    20000
+    the user selects the radio button       requestingFunding   true
+    the user enters text to a text field    css = [name^="grantClaimPercentage"]    ${funding_level}
+    the user selects the radio button       otherFunding  true
+    the user enters text to a text field    css = [name*=source]           Lottery funding
+    the user enters text to a text field    css = [name*=date]             12-2008
+    the user enters text to a text field    css = [name*=fundingAmount]    20000
     the user selects the checkbox           termsAgreed
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
 
 the funding section has been reset including funding level
     [Arguments]    ${funding_level}
-    Then the user should not see the text in the element    css = [name^="finance-grantclaimpercentage"]    ${funding_level}
-    And checkbox should not be selected  termsAgreed
-    And the user should not see the text in the element    css = [name*=other_funding-fundingSource]    Lottery funding
-    And the user should not see the text in the element    css = [name*=other_funding-securedDate]    12-2008
-    And the user should not see the text in the element    css = [name*=other_funding-fundingAmount]    20000
+    the user selects the radio button                  requestingFunding   true
+    the user should not see the text in the element    css = [name^="grantClaimPercentage"]    ${funding_level}
+    the user should not see the text in the element    css = [name*=source]    Lottery funding
+    the user should not see the text in the element    css = [name*=date]    12-2008
+    the user should not see the text in the element    css = [name*=fundingAmount]    20000
+    Selenium2Library.Checkbox Should Not Be Selected   termsAgreed
 
 the user marks the 'your funding' section as incomplete again
     the user clicks the button/link    link = Your funding

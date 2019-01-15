@@ -97,6 +97,15 @@ tr {
   }
 }
 
+.govuk-form-group--error {
+  td {
+    &.govuk-form-group{
+      padding: 10px 20px 10px 0;
+      border-bottom: 1px solid $govuk-border-colour;
+    }
+  }
+}
+
 .govuk-input--error,
 .govuk-select--error,
 .govuk-textara--error{
@@ -514,9 +523,11 @@ td {
 
     &.disabled,
     &[disabled] {
-      text-decoration: none;
-      color: $govuk-secondary-text-colour;
-      background: transparent;
+      &, &:hover, &:focus {
+        text-decoration: none;
+        color: $govuk-secondary-text-colour;
+        background: transparent;
+      }
     }
 
     &:hover {

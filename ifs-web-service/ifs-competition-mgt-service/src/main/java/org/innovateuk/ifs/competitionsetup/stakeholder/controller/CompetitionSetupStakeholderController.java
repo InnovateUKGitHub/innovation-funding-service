@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestSer
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.stakeholder.form.InviteStakeholderForm;
 import org.innovateuk.ifs.competitionsetup.stakeholder.populator.ManageStakeholderModelPopulator;
+import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -16,20 +17,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.STAKEHOLDER_INVITE_INVALID_EMAIL;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
 /**
  * Controller for managing stakeholders
@@ -72,7 +65,7 @@ public class CompetitionSetupStakeholderController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -90,33 +83,14 @@ public class CompetitionSetupStakeholderController {
                                     @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
         Supplier<String> failureView = () -> doViewManageStakeholders(competitionId, model, form, tab);
-
         form.setVisible(true);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
             InviteUserResource inviteUserResource = constructInviteUserResource(form);
-
             RestResult<Void> saveResult = competitionSetupStakeholderRestService.inviteStakeholder(inviteUserResource, competitionId);
-
-            return handleInviteStakeholderErrors(saveResult, validationHandler).
+            return handleInviteStakeholderErrors(saveResult, validationHandler, form).
                     failNowOrSucceedWith(failureView, () -> "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + tab);
-
         });
-    }
-
-    private ValidationHandler handleInviteStakeholderErrors(RestResult<Void> saveResult, ValidationHandler validationHandler) {
-        return validationHandler.addAnyErrors(saveResult, mappingErrorKeyToField(STAKEHOLDER_INVITE_INVALID_EMAIL, "emailAddress"), fieldErrorsToFieldErrors(), asGlobalErrors());
-    }
-
-    private InviteUserResource constructInviteUserResource(InviteStakeholderForm form) {
-
-        UserResource invitedUser = new UserResource();
-        invitedUser.setFirstName(form.getFirstName());
-        invitedUser.setLastName(form.getLastName());
-        invitedUser.setEmail(form.getEmailAddress());
-
-        return new InviteUserResource(invitedUser);
     }
 
     @PostMapping(value = "/{competitionId}/manage-stakeholders", params = {"addStakeholder"})
@@ -135,5 +109,22 @@ public class CompetitionSetupStakeholderController {
 
         competitionSetupStakeholderRestService.removeStakeholder(competitionId, stakeholderUserId);
         return "redirect:/competition/setup/" + competitionId + "/manage-stakeholders?tab=" + ADDED_TAB;
+    }
+
+    private ValidationHandler handleInviteStakeholderErrors(RestResult<Void> saveResult, ValidationHandler validationHandler, InviteStakeholderForm form) {
+        if (saveResult.getErrors().size() > 0) {
+            ErrorToObjectErrorConverter error = mappingErrorKeyToField(saveResult.getErrors().get(0).getErrorKey(), "emailAddress");
+            return validationHandler.addAnyErrors(saveResult, error, fieldErrorsToFieldErrors(), asGlobalErrors());
+        } else {
+            return validationHandler;
+        }
+    }
+
+    private InviteUserResource constructInviteUserResource(InviteStakeholderForm form) {
+        UserResource invitedUser = new UserResource();
+        invitedUser.setFirstName(form.getFirstName());
+        invitedUser.setLastName(form.getLastName());
+        invitedUser.setEmail(form.getEmailAddress());
+        return new InviteUserResource(invitedUser);
     }
 }

@@ -49,7 +49,7 @@ Application details: Innovation area section is visible
     And the user should see the element        jQuery = label:contains("My innovation area is not listed")
     And the user should see the element        jQuery = a:contains("Cancel")
     When the user clicks the button/link       jQuery = button:contains("Save")
-    Then the user should see an error          This field cannot be left blank
+    Then the user should see a field error     ${empty_field_warning_message}
     When the user clicks the button/link       jQuery = label:contains("Digital manufacturing")
     And the user clicks the button/link        jQuery = button:contains("Save")
     Then the user should see the element       jQuery = button:contains("Change your innovation area")
@@ -105,7 +105,7 @@ Review and submit button
     And the user clicks the button/link   link = ${aeroApplication}
     When the user clicks the button/link  jQuery = .govuk-button:contains("Review and submit")
     Then the user should see the element  jQuery = h1:contains("Application summary")
-    And the user should see the text in the page  Please review your application before final submission
+    And the user should see the element   jQuery = p:contains("Please review your application before final submission.")
 
 Incomplete sections contain mark as complete link
     [Documentation]  IFS-751
@@ -127,7 +127,7 @@ Research category validation
     [Documentation]  IFS-2123
     Given The user clicks the button/link                 link = Research category
     When The user clicks the button/link                  id = application-question-complete
-    Then The user should see a field and summary error    This field cannot be left blank.
+    Then The user should see a field and summary error    ${empty_field_warning_message}
     [Teardown]  the user clicks the button/link           link = Application overview
 
 Mark research section as complete
@@ -190,7 +190,7 @@ the text box should be editable
 the question should not be marked as complete on the application overview page
     The user clicks the button/link        link = Application overview
     the user should see the element        css = li:nth-child(2) .task-status-incomplete
-    the user should not see the element    jQuery = li:nth-child(2) span:contains("Complete")
+    the user should not see the element    jQuery = li:contains("Application details") span:contains("Complete")
 
 Log in and create a new application for the Aerospace competition
     The user logs-in in new browser  &{lead_applicant_credentials}
@@ -205,7 +205,6 @@ Log in and create a new application for the Aerospace competition
             Run Keyword If    '${status}' == 'PASS'    the user selects the radio button     selectedOrganisationId  21
     the user clicks the button/link    css = .govuk-button[type="submit"]   #Save and continue
 
-    The user clicks the button/link       jQuery = button:contains("Save and return to application overview")
     The user clicks the button/link       link = Application details
     The user enters text to a text field  id = application.name  ${aeroApplication}
     The user clicks the button/link       id = application-question-save

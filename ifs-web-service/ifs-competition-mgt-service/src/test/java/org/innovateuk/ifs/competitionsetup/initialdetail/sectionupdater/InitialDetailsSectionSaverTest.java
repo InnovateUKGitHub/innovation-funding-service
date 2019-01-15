@@ -4,6 +4,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -72,7 +73,7 @@ public class InitialDetailsSectionSaverTest {
 
     @Before
     public void setup(){
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(false);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(false);
     }
 
     @Test
@@ -95,6 +96,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setCompetitionTypeId(competitionTypeId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
         competitionSetupForm.setStateAid(Boolean.TRUE);
+        competitionSetupForm.setFundingType(FundingType.GRANT);
 
         InnovationAreaResource innovationArea = newInnovationAreaResource().withId(innovationAreaId).build();
         competitionSetupForm.setInnovationAreaCategoryIds(asList(innovationAreaId));
@@ -111,7 +113,7 @@ public class InitialDetailsSectionSaverTest {
         competition.setSetupComplete(false);
 
         when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(milestones));
-        when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(asList(innovationArea)));
+        when(categoryRestService.getInnovationAreasExcludingNone()).thenReturn(restSuccess(asList(innovationArea)));
         when(categoryRestService.getInnovationAreasBySector(innovationSectorId)).thenReturn(restSuccess(singletonList(innovationArea)));
         when(competitionSetupRestService.initApplicationForm(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(restSuccess());
         when(competitionSetupRestService.updateCompetitionInitialDetails(competition)).thenReturn(restSuccess());
@@ -135,6 +137,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(innovationSectorId, competition.getInnovationSector());
         assertEquals(Boolean.TRUE, competition.getStateAid());
+        assertEquals(FundingType.GRANT, competition.getFundingType());
 
         verify(competitionSetupRestService).updateCompetitionInitialDetails(competition);
         verify(competitionSetupRestService).initApplicationForm(competition.getId(), competitionSetupForm.getCompetitionTypeId());
@@ -360,7 +363,7 @@ public class InitialDetailsSectionSaverTest {
                 .build();
 
         when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(getMilestoneList()));
-        when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(asList(innovationArea)));
+        when(categoryRestService.getInnovationAreasExcludingNone()).thenReturn(restSuccess(asList(innovationArea)));
         when(categoryRestService.getInnovationAreasBySector(innovationSectorId)).thenReturn(restSuccess(singletonList(innovationArea)));
         when(competitionSetupRestService.updateCompetitionInitialDetails(competition)).thenReturn(restFailure(new Error("Some Error", HttpStatus.BAD_REQUEST)));
         when(competitionSetupMilestoneService.createMilestonesForIFSCompetition(anyLong())).thenReturn(serviceSuccess(getMilestoneList()));

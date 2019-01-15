@@ -3,9 +3,9 @@ EXPOSE 9443
 
 ENV DEBIAN_FRONTEND=noninteractive \
   JAVAVER=8 \
-  JAVAUPD=181 \
-  JAVABLD=13 \
-  JAVASIG=96a7b8442fe848ef90c96a2fad6ed6d1 \
+  JAVAUPD=191 \
+  JAVABLD=12 \
+  JAVASIG=2787e4a523244c269598db4e85c51e0c \
   IDPVER="3.3.1"
 
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
@@ -78,6 +78,7 @@ ENV HTTP_PORT=9080 \
   LDAP_VALIDATEPERIOD="PT20S" \
 
   GOOGLEANALYTICS_TRACKINGID="" \
+  BUILD_TIMESTAMP="@build_timestamp@" \
   IDP_PROXY_KEY="@auth_idp_proxy_key@" \
   IDP_PROXY_CERTIFICATE="@auth_idp_proxy_certificate@" \
   IDP_PROXY_CACERTIFICATE="@auth_idp_proxy_cacertificate@" \

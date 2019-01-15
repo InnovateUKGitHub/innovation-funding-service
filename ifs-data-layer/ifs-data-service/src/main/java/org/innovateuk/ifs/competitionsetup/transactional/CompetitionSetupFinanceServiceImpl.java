@@ -29,18 +29,16 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
     public ServiceResult<Void> save(CompetitionSetupFinanceResource compSetupFinanceRes) {
         return getCompetition(compSetupFinanceRes.getCompetitionId()).andOnSuccess(competition -> {
             competition.setApplicationFinanceType(compSetupFinanceRes.getApplicationFinanceType());
+            competition.setIncludeJesForm(compSetupFinanceRes.getIncludeJesForm());
+            competition.setIncludeProjectGrowthTable(compSetupFinanceRes.getIncludeGrowthTable());
+            competition.setIncludeYourOrganisationSection(compSetupFinanceRes.getIncludeYourOrganisationSection());
             return isNoFinances(competition) ? serviceSuccess() : activateFormInputs(compSetupFinanceRes);
         });
     }
 
     @Override
     public ServiceResult<CompetitionSetupFinanceResource> getForCompetition(long competitionId) {
-        return getCompetition(competitionId).andOnSuccessReturn(competition -> {
-            Boolean includeGrowthTable = isNoFinances(competition) ? false : competitionSetupTransactionalService
-                    .isIncludeGrowthTable(competitionId).getSuccess();
-
-            return buildCompetitionSetupFinanceResource(competition, includeGrowthTable);
-        });
+        return getCompetition(competitionId).andOnSuccessReturn(this::buildCompetitionSetupFinanceResource);
     }
 
 
@@ -70,12 +68,13 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
         return competition.getApplicationFinanceType() == null || competition.getApplicationFinanceType() == NO_FINANCES;
     }
 
-    private CompetitionSetupFinanceResource buildCompetitionSetupFinanceResource(Competition competition,
-                                                                                 Boolean includeGrowthTable) {
+    private CompetitionSetupFinanceResource buildCompetitionSetupFinanceResource(Competition competition) {
         CompetitionSetupFinanceResource competitionSetupFinanceResource = new CompetitionSetupFinanceResource();
         competitionSetupFinanceResource.setCompetitionId(competition.getId());
         competitionSetupFinanceResource.setApplicationFinanceType(competition.getApplicationFinanceType());
-        competitionSetupFinanceResource.setIncludeGrowthTable(includeGrowthTable);
+        competitionSetupFinanceResource.setIncludeJesForm(competition.getIncludeJesForm());
+        competitionSetupFinanceResource.setIncludeGrowthTable(competition.getIncludeProjectGrowthTable());
+        competitionSetupFinanceResource.setIncludeYourOrganisationSection(competition.getIncludeYourOrganisationSection());
         return competitionSetupFinanceResource;
     }
 }

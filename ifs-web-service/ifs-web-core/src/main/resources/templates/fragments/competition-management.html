@@ -5,33 +5,36 @@
 <!--/* competition status with blue block */-->
 <th:block th:fragment="competition-status(competition)">
     <th:block th:unless="${competition == 'setup'}">
-      <h2 th:switch="${competition.competitionStatus.name()}" class="govuk-heading-s govuk-!-margin-0 blue-block">
-          <th:block th:case="'NOT_STARTED'">Competition not yet started</th:block>
-          <th:block th:case="'OPEN'">Competition open</th:block>
-          <th:block th:case="'IN_ASSESSMENT'">In assessment</th:block>
-          <th:block th:case="'FUNDERS_PANEL'">Funders Panel</th:block>
-          <th:block th:case="'ASSESSOR_FEEDBACK'">Assessor Feedback</th:block>
-          <th:block th:case="'PROJECT_SETUP'">Project setup</th:block>
-          <th:block th:case="*">test2</th:block>
-      </h2>
+        <h2 th:switch="${competition.competitionStatus.name()}" class="govuk-heading-s govuk-!-margin-0 blue-block">
+            <th:block th:case="'NOT_STARTED'">Competition not yet started</th:block>
+            <th:block th:case="'OPEN'">Competition open</th:block>
+            <th:block th:case="'IN_ASSESSMENT'">In assessment</th:block>
+            <th:block th:case="'FUNDERS_PANEL'">Funders Panel</th:block>
+            <th:block th:case="'ASSESSOR_FEEDBACK'">Assessor Feedback</th:block>
+            <th:block th:case="'PROJECT_SETUP'">Project setup</th:block>
+        </h2>
     </th:block>
     <h2 th:if="${competition == 'setup'}" class="govuk-heading-s govuk-!-margin-0 blue-block">Competition Setup</h2>
 </th:block>
 
 <!-- Applications pagination -->
 <th:block th:fragment="applications-pagination(results)">
-	<div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
-      <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Prev</button>
-      <div class="status">
-        Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>
-      </div>
-      <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 2}">Next</button>
+    <div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
+        <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">
+            Previous
+        </button>
+        <div class="status">
+            Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>
+        </div>
+        <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 1}">
+            Next
+        </button>
     </div>
 </th:block>
 
 <!-- Applications sort -->
 <th:block th:fragment="applications-sort(activeTab, activeSortField)">
-	<label for="sort-by">Sort by</label>
+    <label for="sort-by">Sort by</label>
     <select id="sort-by"
             name="sort"
             class="js-auto-submit govuk-select"
@@ -39,9 +42,11 @@
         <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
         <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
         <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
-        <option value="numberOfPartners" th:selected="${(activeSortField == 'numberOfPartners')}">Number of partners</option>
+        <option value="numberOfPartners" th:selected="${(activeSortField == 'numberOfPartners')}">Number of partners
+        </option>
         <option value="grantRequested" th:selected="${(activeSortField == 'grantRequested')}">Grant requested</option>
-        <option value="totalProjectCost" th:selected="${(activeSortField == 'totalProjectCost')}">Total project cost</option>
+        <option value="totalProjectCost" th:selected="${(activeSortField == 'totalProjectCost')}">Total project cost
+        </option>
         <option value="duration" th:selected="${(activeSortField == 'duration')}">Duration</option>
 
     </select>
@@ -52,7 +57,9 @@
         <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
         <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
         <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
-        <option value="percentageComplete" th:selected="${(activeSortField == 'percentageComplete')}">Percentage complete</option>
+        <option value="percentageComplete" th:selected="${(activeSortField == 'percentageComplete')}">Percentage
+            complete
+        </option>
     </select>
     <button type="submit" class="button-secondary govuk-!-margin-0">Sort</button>
 </th:block>

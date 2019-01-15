@@ -100,7 +100,6 @@ the user fills in the project costs
     the user fills in Travel and subsistence
     the user fills in Other costs
     the user clicks the button/link  css = label[for="stateAidAgreed"]
-    the user selects the checkbox    termsAgreed
     the user clicks the button/link  jQuery = button:contains("Mark as complete")
     the user clicks the button/link  link = Your project costs
     the user has read only view once section is marked complete
@@ -112,12 +111,12 @@ the user has read only view once section is marked complete
 
 the user fills in Labour
     the user clicks the button/link            jQuery = button:contains("Labour")
-    the user should see the element            css = .labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    the user enters text to a text field       css = input[name^="labour-labourDaysYearly"]    230
-    the user should see the element            jQuery = input.govuk-input[name^=labour-role]:text[value = ""]:first
-    the user enters text to a text field       jQuery = input.govuk-input[name^=labour-role]:text[value = ""]:first    anotherrole
-    the user enters text to a text field       jQuery = input.govuk-input[name^=labour-gross][value = ""]:first    120000
-    the user enters text to a text field       jQuery = input.govuk-input[name^=labour-labour][value = ""]:first    100
+    the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input
+    the user enters text to a text field       id = working-days-per-year   230
+    the user should see the element            jQuery = input[id$="role"]:text[value = ""]:first
+    the user enters text to a text field       jQuery = input[id$="role"]:text[value = ""]:first    anotherrole
+    the user enters text to a text field       jQuery = input[id$="gross"][value = ""]:first    120000
+    the user enters text to a text field       jQuery = input[id$="days"][value = ""]:first    100
     the user clicks the button/link            jQuery = button:contains("Labour")
 
 the user fills in Overhead costs
@@ -132,10 +131,8 @@ the user chooses Calculate overheads option
     the user expands the section  Overhead costs
     the user clicks the button/link                         jQuery = label:contains("Calculate overheads")
     the user should see the element                         jQuery = h3:contains("Calculate overheads")
-    the user uploads the file                               css = #overheadfile   ${excel_file}
-    wait for autosave
-    the user enters text to a text field                    css = input[name^="overheads-total"][id^="cost-overheads"]   40
-    wait for autosave
+    the user enters text to a text field                    css = input[name^="overhead.total"][id^="overhead.total"]   40
+    the user uploads the file                               css = .inputfile   ${excel_file}
     the total overhead costs should reflect rate entered    css = #total-cost  £${totalCosts}
 
 the total overhead costs should reflect rate entered
@@ -151,7 +148,7 @@ the user chooses 20% overheads option
 
 the user fills in Material
     the user clicks the button/link       jQuery = button:contains("Materials")
-    the user should see the element       css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    the user should see the element       css = table[id=material-costs-table] tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
     the user enters text to a text field  css = #material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
@@ -159,22 +156,21 @@ the user fills in Material
 
 the user fills in Capital usage
     the user clicks the button/link       jQuery = button:contains("Capital usage")
-    the user enters text to a text field  css = textarea.govuk-textarea[name^=capital_usage-description]  some description
+    the user enters text to a text field  css = textarea.govuk-textarea[name^=capitalUsageRows]  some description
     Click Element                         jQuery = label:contains("New")
     the user enters text to a text field  css = .form-finances-capital-usage-depreciation  10
     the user enters text to a text field  css = .form-finances-capital-usage-npv  5000
     the user enters text to a text field  css = .form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css = .form-finances-capital-usage-utilisation   100
-    focus                                 css = .section-total-summary > [data-mirror^="#section-total"]
-    textfield should contain              css = #capital_usage .form-row:nth-of-type(1) [readonly]  £4,975
+    textfield should contain              css = #capital-usage .form-row:nth-of-type(1) [readonly="readonly"]  £4,975
     the user clicks the button/link       jQuery = button:contains("Capital usage")
 
 the user fills in Subcontracting costs
     the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
     the user enters text to a text field  css = .form-finances-subcontracting-company  SomeName
-    the user enters text to a text field  css = input.govuk-input[name^=subcontracting-country]  Netherlands
-    the user enters text to a text field  css = textarea.govuk-textarea[name^=subcontracting-role]  Quality Assurance
-    the user enters text to a text field  css = input.govuk-input[name^=subcontracting-subcontractingCost]  1000
+    the user enters text to a text field  css = input.govuk-input[name$=country]  Netherlands
+    the user enters text to a text field  css = textarea.govuk-textarea[name$=role]  Quality Assurance
+    the user enters text to a text field  css = input.govuk-input[name^=subcontracting][name$=cost]  1000
     the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
 
 the user fills in Travel and subsistence
@@ -187,8 +183,8 @@ the user fills in Travel and subsistence
 the user fills in Other costs
     the user clicks the button/link       jQuery = button:contains("Other costs")
     the user removes prev costs if there are any
-    the user enters text to a text field  css = textarea.govuk-textarea[name^=other_costs-description]  some other costs
-    the user enters text to a text field  css = input.govuk-input[name^=other_costs-otherCost]  50
+    the user enters text to a text field  css = textarea.govuk-textarea[name$=description]  some other costs
+    the user enters text to a text field  css = input.govuk-input[name$=estimate]  50
     the user clicks the button/link       jQuery = button:contains("Other costs")
 
 the user removes prev costs if there are any
@@ -202,16 +198,16 @@ the academic user fills in his finances
     the academic fills in the project costs
 
 the academic fills in the project costs
-    The user enters text to a text field  css = [name$="incurred_staff"]  4242
-    The user enters text to a text field  css = [name$="incurred_travel_subsistence"]  4243
-    The user enters text to a text field  css = [name$="incurred_other_costs"]  4244
-    The user enters text to a text field  css = [name$="allocated_investigators"]  42
-    The user enters text to a text field  css = [name$="allocated_estates_costs"]  3000
-    The user enters text to a text field  css = [name$="allocated_other_costs"]  5
-    The user enters text to a text field  css = [name$="indirect_costs"]  8909
-    The user enters text to a text field  css = [name$="exceptions_staff"]  123
-    The user enters text to a text field  css = [name$="exceptions_other_costs"]  7890
-    The user enters text to a text field  css = input[name$="tsb_reference"]  L33t
+    The user enters text to a text field  css = [name$="incurredStaff"]  4242
+    The user enters text to a text field  css = [name$="incurredTravel"]  4243
+    The user enters text to a text field  css = [name$="incurredOtherCosts"]  4244
+    The user enters text to a text field  css = [name$="allocatedInvestigators"]  42
+    The user enters text to a text field  css = [name$="allocatedEstateCosts"]  3000
+    The user enters text to a text field  css = [name$="allocatedOtherCosts"]  5
+    The user enters text to a text field  css = [name$="indirectCosts"]  8909
+    The user enters text to a text field  css = [name$="exceptionsStaff"]  123
+    The user enters text to a text field  css = [name$="exceptionsOtherCosts"]  7890
+    The user enters text to a text field  css = input[name$="tsbReference"]  L33t
     Textfield Value Should Be             id = total  £23,789
     the user uploads the file             css = .inputfile  ${5mb_pdf}
     the user should see the element       link = ${5mb_pdf}
@@ -220,7 +216,7 @@ the academic fills in the project costs
 
 the user enters the project location
     the user clicks the button/link         link = Your project location
-    the user enters text to a text field    projectLocation   BS1 4NT
+    the user enters text to a text field    postcode   BS1 4NT
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
 
 the user fills the organisation details with Project growth table
@@ -228,7 +224,7 @@ the user fills the organisation details with Project growth table
     the user navigates to Your-finances page                ${Application}
     the user clicks the button/link                         link = Your organisation
     the user enters text to a text field                    css = input[name$="month"]    12
-    and the user enters text to a text field                css = input[name$="year"]    2016
+    the user enters text to a text field                    css = input[name$="year"]    2016
     the user selects the radio button                       financePosition-organisationSize  ${org_size}
     the user enters text to a text field                    jQuery = td:contains("Annual turnover") + td input   5600
     the user enters text to a text field                    jQuery = td:contains("Annual profit") + td input    3000
@@ -269,8 +265,9 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
     the user clicks the button/link       link = Your funding
-    the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  45
-    click element                         jQuery = label:contains("No")
+    the user selects the radio button     requestingFunding   true
+    the user enters text to a text field  css = [name^="grantClaimPercentage"]  45
+    the user selects the radio button     otherFunding   false
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
     the user clicks the button/link       link = Your funding
@@ -320,14 +317,14 @@ the user completes the new account creation
     the user selects his organisation in Companies House  innovate  INNOVATE LTD
     the user should be redirected to the correct page    ${SERVER}/registration/register
     the invited user fills the create account form       liam  smithson
-    the user should see the text in the page     Please verify your email address
+    the user should see the element                      jQuery = h1:contains("Please verify your email address")
     the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link             link = Sign in
     Logging in and Error Checking               ${email}  ${correct_password}
 
 the applicant adds some content and marks this section as complete
-    Focus    css = .textarea-wrapped .editor
+    Set Focus To Element      css = .textarea-wrapped .editor
     Input Text    css = .textarea-wrapped .editor    This is some random text
     the user clicks the button/link    name = mark_as_complete
     the user should see the element    name = mark_as_incomplete
@@ -338,16 +335,8 @@ the applicant edits the "economic benefit" question
 
 logged in user applies to competition
     [Arguments]  ${competition}  ${applicationType}
-    the user navigates to the page      ${frontDoor}
-    navigate to next page if not found  ${competition}
-    the user clicks the button/link     link = ${competition}
-    the user clicks the button/link     jQuery = a:contains("Start new application")
-    the user clicks the button/link     link = Apply with a different organisation.
-    the user selects the radio button   organisationTypeId  ${applicationType}
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user clicks the Not on companies house link
-    the user fills in the address details
-    the user clicks the button/link            id = application-question-save
+    the user select the competition and starts application    ${competition}
+    the user clicks the button/link                           jQuery = button:contains("Save and continue")
 
 navigate to next page if not found
     [Arguments]  ${competition}
@@ -366,28 +355,23 @@ the user search for organisation name on Companies house
     the user enters text to a text field       id = organisationSearchName    ${org}
     the user clicks the button/link            id = org-search
     the user clicks the button/link            link = ${orgName}
-    the user clicks the button/link            jQuery = button:contains("Enter address manually")
+    the user clicks the button/link            jQuery = button:contains("Save and continue")
 
 logged in user applies to competition research
     [Arguments]  ${competition}  ${applicationType}
     the user select the competition and starts application   ${competition}
-    the user clicks the button/link     link = Apply with a different organisation.
+    the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    Bath  Bath Spa University
-    the user fills in the research address details
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user clicks the button/link     jQuery = button:contains("Save and return to application overview")
 
 logged in user applies to competition public
     [Arguments]  ${competition}  ${applicationType}
     the user select the competition and starts application   ${competition}
-    the user clicks the button/link     link = Apply with a different organisation.
+    the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    Innovate  INNOVATE LTD
-    the user fills in the public address details
-    the user clicks the button/link     jQuery = button:contains("Save and return to application overview")
 
 the user navigates to the eligibility of the competition
     [Arguments]  ${competition}
@@ -399,7 +383,7 @@ the applicant submits the application
     the user should not see the element                jQuery = .task-status-incomplete
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
     the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
-    the user should be redirected to the correct page  submit
+    the user should be redirected to the correct page  track
 
 the user applies to competition and enters organisation type
     [Arguments]  ${compId}  ${organisationType}
@@ -414,16 +398,14 @@ the user applies to competition and enters organisation type link
     the user selects the radio button   organisationTypeId  ${organisationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the Not on companies house link
-    the user fills in the address details
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
 
 the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}
     the user enters text to a text field  id = organisationSearchName  ${search}
     the user clicks the button/link       id = org-search
     the user clicks the button/link       link = ${link}
-    the user selects the checkbox         address-same
-    the user clicks the button/link       css = button[name = "save-organisation-details"]
-    the user clicks the button/link       css = button[name = "save-organisation"]
+    the user clicks the button/link       jQuery = button:contains("Save and continue")
 
 the applicant completes Application Team
     the user clicks the button/link  link = Application team
@@ -443,22 +425,13 @@ the user fills in the address info
    the user selects the radio button      organisationTypeId  ${organisationType}
    the user clicks the button/link        jQuery = button:contains("Save and continue")
 
-the user fills in the address details
-    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = button:contains("Find UK address")
-    the user clicks the button/link            css = #select-address-block > button
-    the user clicks the button/link            jQuery = button:contains("Continue")
-    the user clicks the button/link            jQuery = button:contains("Save and continue")
+the user marks your funding section as complete
+    the user selects the radio button     requestingFunding   true
+    the user enters text to a text field  css = [name^="grantClaimPercentage"]  30
+    the user selects the radio button     otherFunding  false
+    the user selects the checkbox         agree-terms-page
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
 
-the user fills in the research address details
-    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
-    the user clicks the button/link            css = #select-address-block > button
-    the user clicks the button/link            jQuery = button:contains("Save organisation and continue")
-
-the user fills in the public address details
-    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .govuk-button:contains("Find UK address")
-    the user clicks the button/link            css = #select-address-block > button
-    the user clicks the button/link            jQuery = .govuk-button:contains("Continue")
-    the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
+the user selects medium organisation size
+    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}

@@ -189,7 +189,6 @@ function runTests() {
     do
         wait $job
     done
-
 }
 
 function deleteEmails() {

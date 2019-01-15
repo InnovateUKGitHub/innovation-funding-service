@@ -13,15 +13,15 @@ import java.util.List;
  */
 public class ApplicationSearchDashboardViewModel {
 
-    private List<ApplicationResource> applications;
+    private final List<ApplicationResource> applications;
 
-    private long applicationCount;
+    private final long applicationCount;
 
-    private Pagination applicationPagination;
+    private final Pagination applicationPagination;
 
-    private String searchString;
+    private final String searchString;
 
-    private boolean isSupport;
+    private final boolean isSupport;
 
     public ApplicationSearchDashboardViewModel(List<ApplicationResource> applications, long applicationCount, Pagination applicationPagination, String searchString, boolean isSupport) {
         this.applications = applications;
@@ -35,33 +35,18 @@ public class ApplicationSearchDashboardViewModel {
         return applications;
     }
 
-    public void setApplications(List<ApplicationResource> applications) {
-        this.applications = applications;
-    }
-
     public long getApplicationCount() {
         return applicationCount;
-    }
-
-    public void setApplicationCount(long applicationCount) {
-        this.applicationCount = applicationCount;
     }
 
     public Pagination getApplicationPagination() {
         return applicationPagination;
     }
 
-    public void setApplicationPagination(Pagination applicationPagination) {
-        this.applicationPagination = applicationPagination;
-    }
-
     public String getSearchString() {
         return searchString;
     }
 
-    public void setSearchString(String searchString) {
-        this.searchString = searchString;
-    }
 
     public boolean isSearchStringPresent() {
         return StringUtils.isNotBlank(searchString);

@@ -32,6 +32,7 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_PASS=password
     export DB_HOST=ifs-database
     export DB_PORT=3306
+    export DB_ANON_PASS=password
 fi
 
 useContainerRegistry

@@ -16,6 +16,8 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               INFUND-7490 Create Competition > How to apply tab for external "Front Door" view of competition eligibility
 ...
 ...               IFS-1969 As a comp exec I am able to set a Funding type of Loan in Public content > Summary
+...
+...               IFS-4982 Move Funding type selection from front door to Initial details
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  MySQL
@@ -99,14 +101,13 @@ Competition information and search: ReadOnly
     And the user clicks the button/link     link = Return to public content
 
 Summary: server side validation and autosave
-    [Documentation]    INFUND-6916  INFUND-7486
+    [Documentation]    INFUND-6916  INFUND-7486  IFS-4982
     [Tags]
     # Using Loan as a funding Type in order to check the ticket IFS-1969
     Given the user clicks the button/link         link = Summary
     And the user should see the text in the page  Text entered into this section will appear in the summary tab
     When the user clicks the button/link          jQuery = .govuk-button:contains("Save and review")
-    Then the user should see a summary error      Please enter a funding type.
-    And the user should see a summary error       Please enter a project size.
+    Then the user should see a summary error      Please enter a project size.
     And the user should see a summary error       Please enter a competition description.
     When the user enters valid data in the summary details
     And the user should see the element           jQuery = .button-clear:contains("+ add new section")
@@ -135,8 +136,6 @@ Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916, INFUND-7486, IFS-1969
     [Tags]
     When the user clicks the button/link      link = Summary
-    Then the user should see the element      jQuery = h2:contains("Funding type")
-    And the user should see the element       jQuery = div:contains("Loan")
     Then the user should see the element      jQuery = h2:contains("Project size")
     And the user should see the element       jQuery = div:contains("10 millions")
     And the user should see the element       jQuery = h2:contains("A nice new Heading")
@@ -269,7 +268,7 @@ How to apply: Contains the correct values when viewed, Edit sections
     And the user should see the element       link = Return to public content
     When the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
     And the user enters text to a text field  css = .contentGroup:nth-of-type(1) .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
-    And the user moves focus to the element   css = #contentGroup-row-1 >div.govuk-form-group.textarea-wrapped >div.editor
+    And Set Focus To Element                  css = #contentGroup-row-1 >div.govuk-form-group.textarea-wrapped >div.editor
     And The user enters text to a text field  css = .contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
     Then the user clicks the button/link      jQuery = button:contains("+ add new section")
     And The user enters text to a text field  css = .contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="heading"]    Application Rules -- Competition Procedures
@@ -314,7 +313,6 @@ Publish public content: Publish once all sections are complete
     Then the user should not see the element            jQuery = button:contains("Save and review")
     And the user should see the element                 jQuery = button:contains("Publish and review")
     Then the user clicks the button/link                jQuery = a:contains("Public content")
-
 
 User can view the competition url for invite only competitions
     [Documentation]    IFS-262
@@ -384,7 +382,6 @@ Guest user can see the updated Summary information
     Given the user clicks the button/link                  link = Public content competition
     And the user clicks the button/link                    link = Summary
     Then the user should see the element                   jQuery = .govuk-grid-column-one-third:contains("Description") ~ .govuk-grid-column-two-thirds:contains("This is a Summary description")
-    And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Funding type") ~ .govuk-grid-column-two-thirds:contains("Loan")
     And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("Project size") ~ .govuk-grid-column-two-thirds:contains("10 millions")
     And the user should see the element                    jQuery = .govuk-grid-column-one-third:contains("A nice new Heading") ~ .govuk-grid-column-two-thirds:contains("Ut enim ad minim veniam,")
     Then guest user downloads the file                     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
@@ -461,13 +458,12 @@ User creates a new competition
     [Arguments]    ${competition_name}
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery = .govuk-button:contains("Create competition")
-    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}
+    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}  2
     And the user selects the Terms and Conditions
-    And the user fills in the CS Milestones  ${month}  ${nextyear}
+    And the user fills in the CS Milestones     project-setup-completion-stage   ${month}   ${nextyear}
 
 the user enters valid data in the summary details
     The user enters text to a text field    css = .editor  This is a Summary description
-    the user selects the radio button       fundingType  Loan
     the user enters text to a text field    id = projectSize   10 millions
 
 the user enters valid data in the eligibility details
@@ -523,7 +519,7 @@ the user can add and remove multiple content groups for summary
 the user can add and remove multiple event groups
     When the user clicks the button/link       jQuery = button:contains("+ add new event")
     And the user clicks the button/link        jQuery = button:contains("Save and review")
-    Then The user should see a summary error   Please enter a valid date.
+    Then The user should see a summary error   ${enter_a_valid_date}
     #TODO add keywork to check field error check when IFS-3126 done
     And The user should see a field and summary error    Please enter valid content.
     And the user enters text to a text field   id = dates[0].day      60

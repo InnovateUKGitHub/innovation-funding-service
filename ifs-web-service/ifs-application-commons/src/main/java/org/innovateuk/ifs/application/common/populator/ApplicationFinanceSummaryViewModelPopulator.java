@@ -23,12 +23,10 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -110,8 +108,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                     return isApplicationVisibleToUser(application, user) && financesExist;
                 });
 
-        boolean yourFinancesCompleteForAllOrganisations = getYourFinancesCompleteForAllOrganisations(
-                completedSectionsByOrganisation, financeSectionId);
+        boolean yourFinancesCompleteForAllOrganisations = getFinancesOverviewCompleteForAllOrganisations(
+                completedSectionsByOrganisation, application.getCompetition());
 
         return new ApplicationFinanceSummaryViewModel(
                 application,
@@ -147,14 +145,17 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         );
     }
 
-    private boolean getYourFinancesCompleteForAllOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
-                                                               Long financeSectionId) {
-        if (financeSectionId == null) {
-            return false;
-        }
-        return completedSectionsByOrganisation.keySet()
-                .stream()
-                .noneMatch(id -> !completedSectionsByOrganisation.get(id).contains(financeSectionId));
+    private boolean getFinancesOverviewCompleteForAllOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                                                   Long competitionId) {
+        Optional<Long> optionalFinanceOverviewSectionId =
+                getOnlyElementOrEmpty(sectionService.getSectionsForCompetitionByType(competitionId,
+                        OVERVIEW_FINANCES)).map(SectionResource::getId);
+
+        return optionalFinanceOverviewSectionId
+                .map(financeOverviewSectionId -> completedSectionsByOrganisation.values()
+                        .stream()
+                        .allMatch(completedSections -> completedSections.contains(financeOverviewSectionId)))
+                .orElse(false);
     }
 
     private Long getEachCollaboratorFinanceSectionId(List<SectionResource> eachOrganisationFinanceSections) {
@@ -180,7 +181,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private OrganisationResource getUserOrganisation(UserResource user, Long applicationId) {
         OrganisationResource userOrganisation = null;
 
-        if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR)) {
+        if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR, Role.STAKEHOLDER)) {
             ProcessRoleResource userProcessRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
             userOrganisation = organisationRestService.getOrganisationById(userProcessRole.getOrganisationId()).getSuccess();
         }

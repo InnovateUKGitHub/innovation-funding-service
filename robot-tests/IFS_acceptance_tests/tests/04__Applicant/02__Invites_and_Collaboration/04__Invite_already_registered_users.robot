@@ -12,7 +12,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 The invited user should not follow the registration flow again
     [Documentation]    INFUND-1458
-    [Tags]
+    [Tags]  HappyPath
     Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Anderson  ${test_mailbox_one}+invitedregistered@gmail.com  ${RTO_TYPE_ID}
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
@@ -21,22 +21,18 @@ The invited user should not follow the registration flow again
 
 The user clicks the login link
     [Documentation]    INFUND-1458
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link                link = Continue
     And The guest user inserts user email and password  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the element                jQuery = h1:contains("Your organisation")
     And the user should see the element                 jQuery = dt:contains("INNOVATE LTD")
-
-The continue button should redirect to the overview page
-    [Documentation]    INFUND-1458
-    [Tags]
-    When the user clicks the button/link           css = .govuk-button[type="submit"]    #Save and continue
-    Then the user should see the text in the page  Application overview
+    When the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
+    Then the user should see the element                jQuery = h1:contains("Application overview")
 
 The user edits the name this should be changed in the View team page
     [Documentation]    INFUND-2716
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page  ${DASHBOARD_URL}
     When the user clicks the button/link  link = Profile
     And the user clicks the button/link   link = Edit your details
@@ -47,13 +43,13 @@ Invite a user with the same organisation under the same organisation
     [Documentation]    INFUND-3759
     [Setup]    Log in as a different user                               ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
-    Then the invited user should get a message to contact the helpdesk  ${test_mailbox_one}+invite2@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
+    Then the invited user should get a message to contact the helpdesk  ${test_mailbox_one}+invite2@gmail.com  Invitation to contribute in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 *** Keywords ***
 the user enters profile details
     The user enters text to a text field  id = firstName    Dennis
     The user enters text to a text field  id = lastName    Bergkamp
-    focus                                 css = [name="create-account"]
+    Set Focus To Element                                   css = [name="create-account"]
     The user clicks the button/link       css = [name="create-account"]
 
 the user should see the change in the view team members page
@@ -70,6 +66,7 @@ Existing user creates a new application and invites a user from the same organis
     the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
     the user clicks the button/link       jQuery = .govuk-button:contains("Continue")
     the user clicks the button/link       css = .govuk-button[type="submit"]    #Save and continue
+    the user clicks the button/link       link = Application team
     the user clicks the button/link       link = Update and add contributors from INNOVATE LTD
     The user clicks the button/link       jQuery = button:contains("Add another contributor")
     The user enters text to a text field  name = stagedInvite.name    Olivier Giroud

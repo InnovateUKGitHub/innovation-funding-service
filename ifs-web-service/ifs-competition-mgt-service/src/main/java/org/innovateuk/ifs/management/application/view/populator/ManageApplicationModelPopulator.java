@@ -58,6 +58,8 @@ public class ManageApplicationModelPopulator {
                 user.hasRole(STAKEHOLDER),
                 ineligibilityViewModel,
                 researchCategorySummaryViewModel,
-                appendices);
+                appendices,
+                application.isCollaborativeProject(),
+                competition);
     }
 }

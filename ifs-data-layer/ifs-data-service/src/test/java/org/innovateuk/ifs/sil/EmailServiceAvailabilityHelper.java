@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 
+import static org.innovateuk.ifs.AvailabliltyHelperUtils.SERVICE_AVAILABLE_RESPONSE_FROM_REST_TEMPLATE;
 import static org.innovateuk.ifs.AvailabliltyHelperUtils.SERVICE_UNAVAILABLE_RESPONSE_FROM_REST_TEMPLATE;
 import static org.innovateuk.ifs.AvailabliltyHelperUtils.temporarilySwapOutRestTemplateAdaptor;
 import static org.mockito.Matchers.any;
@@ -24,6 +25,11 @@ public class EmailServiceAvailabilityHelper {
     void setupServiceUnavailableResponseExpectationsFromSendEmailCall(AbstractRestTemplateAdaptor mockEmailSilRestTemplate) {
         when(mockEmailSilRestTemplate.restPostWithEntity(any(), any(), any(), any(), eq(HttpStatus.ACCEPTED))).thenReturn(
                 SERVICE_UNAVAILABLE_RESPONSE_FROM_REST_TEMPLATE);
+    }
+
+    void setupServiceAvailableResponseExpectationsFromSendEmailCall(AbstractRestTemplateAdaptor mockEmailSilRestTemplate) {
+        when(mockEmailSilRestTemplate.restPostWithEntity(any(), any(), any(), any(), eq(HttpStatus.ACCEPTED))).thenReturn(
+                SERVICE_AVAILABLE_RESPONSE_FROM_REST_TEMPLATE);
     }
 
     void verifyServiceUnavailableResponseExpectationsFromSendEmailCall(AbstractRestTemplateAdaptor mockEmailSilRestTemplate) {

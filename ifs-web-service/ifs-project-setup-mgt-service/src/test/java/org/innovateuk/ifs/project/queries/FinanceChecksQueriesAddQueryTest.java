@@ -98,9 +98,10 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     ArgumentCaptor<QueryResource> saveQueryArgumentCaptor;
 
     @Before
-    public void setup() {
-        super.setUp();
+    public void setupCommonExpectations() {
+
         setupCookieUtil(cookieUtil);
+
         when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(restSuccess(partnerOrg));
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
