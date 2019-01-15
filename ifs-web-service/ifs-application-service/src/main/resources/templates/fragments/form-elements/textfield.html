@@ -22,6 +22,8 @@ Available parameters:
     * min - the minimum numerical value, if this is an input of type="number"
     * max - the maximum numerical value, if this is an input of type="number"
     * readOnly - whether this field is displayed as a definition list or not
+    * required - whether this field is required - defaults to false
+    * requiredMessage - a custom message to display if this textfield is required and is not filled in
 */-->
 <th:block th:fragment="textfield(id, value)">
 
@@ -58,7 +60,8 @@ Available parameters:
                         data-prevent-input-regex=${preventInputRegex ?: null},
                         min=${min ?: null},
                         max=${max ?: null},
-                        required=${#bools.isTrue(required) ? 'required' : null}
+                        required=${#bools.isTrue(required) ? 'required' : null},
+                        data-required-errormessage=${requiredMessage ?: null}
                    " />
 
         </th:block>
@@ -91,10 +94,6 @@ Includes the following attribute values:
 
 Other mandatory and optional values can be seen on the "textfield" fragment.
 
-Optional extras:
-
-    * readOnlyPrefix
-
 */-->
 <th:block th:fragment="textfield-integer(label, id, value)"
           th:include="::
@@ -105,6 +104,7 @@ Optional extras:
             readOnly=${readOnly},
             disabled=${disabled},
             required=${required},
+            requiredMessage=${requiredMessage},
             hint=${hint},
             type='number',
             pattern='[0-9]',

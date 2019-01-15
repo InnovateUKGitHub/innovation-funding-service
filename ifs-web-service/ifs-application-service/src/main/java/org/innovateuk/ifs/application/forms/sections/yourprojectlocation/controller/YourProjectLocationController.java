@@ -135,7 +135,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
         Supplier<String> failureHandler = () -> {
             CommonYourFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
-            model.addAttribute("model", viewModel);
+            model.addAttribute("commonFinancesModel", viewModel);
             model.addAttribute("form", form);
             return VIEW_PAGE;
         };
