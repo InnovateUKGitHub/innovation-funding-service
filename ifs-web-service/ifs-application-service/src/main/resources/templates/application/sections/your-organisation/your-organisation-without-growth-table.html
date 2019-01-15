@@ -63,7 +63,7 @@
                     label='Turnover (£)',
                     hint='Your turnover from the last financial year.',
                     id='turnover',
-                    value=${commonFinancesModel.readOnly ? ('£' + (form.turnover != null ? #numbers.formatInteger(form.turnover, 0, 'DEFAULT') : '')) : form.turnover},
+                    value=${commonFinancesModel.readOnly ? ('£' + (form.turnover != null ? #numbers.formatInteger(form.turnover, 0, 'DEFAULT') : '0')) : form.turnover},
                     required=true,
                     readOnly=${commonFinancesModel.readOnly},
                     )" />
