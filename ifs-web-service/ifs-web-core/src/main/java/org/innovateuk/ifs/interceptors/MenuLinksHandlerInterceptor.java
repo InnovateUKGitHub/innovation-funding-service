@@ -2,7 +2,6 @@ package org.innovateuk.ifs.interceptors;
 
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,9 +33,6 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
 
     @Value("${logout.url}")
     private String logoutUrl;
-
-    @Autowired
-    private CookieUtil cookieUtil;
 
     @Autowired
     private NavigationUtils navigationUtils;
