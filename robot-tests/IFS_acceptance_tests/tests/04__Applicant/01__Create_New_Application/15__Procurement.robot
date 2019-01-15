@@ -30,12 +30,14 @@ Applicant submits his application
     And the applicant completes Application Team
     Then the lead applicant fills all the questions and marks as complete(Programme)
     When the user navigates to Your-finances page       ${appl_name}
-    And the user does not see state aid information
-    And the user marks the finances as complete         ${appl_name}   Calculate  52,214  yes
-    And the user checks the override value is applied
+    And the user marks the procurement finances as complete         ${appl_name}   Calculate  52,214  yes
     And the user selects research category              Feasibility studies
-    And the finance overview is marked as incomplete
     And the applicant submits the application
+
+Assessor view of application
+
+
+
 
 *** Keywords ***
 The competition admin creates procurement competition
@@ -45,9 +47,9 @@ The competition admin creates procurement competition
     the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  Programme  2  PROCUREMENT
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility        ${orgType}  1  false  single-or-collaborative  # 1 means 30%
+    the user fills in the CS Eligibility        ${orgType}  2  true  single-or-collaborative  # 1 means 30%
     the user fills in the CS Milestones         project-setup-completion-stage   ${month}   ${nextyear}
-    the user marks the application as done      yes  ${compType_Programme}
+    the user marks the application as done      no  ${compType_Programme}
     the user fills in the CS Assessors
     the user fills in the CS Documents in other projects
     the user clicks the button/link             link = Public content
@@ -61,3 +63,26 @@ The competition admin creates procurement competition
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+
+the user marks the procurement finances as complete
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
+    the user fills in the project costs  ${overheadsCost}  ${totalCosts}
+    the user enters the project location
+    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    the user should see all procurement finance subsections complete
+    the user clicks the button/link  link = Application overview
+    the user should see the element  jQuery = li:contains("Your finances") > .task-status-complete
+
+the user should see all procurement finance subsections complete
+    the user should see the element  css = li:nth-of-type(1) .task-status-complete
+    the user should see the element  css = li:nth-of-type(2) .task-status-complete
+    the user should see the element  css = li:nth-of-type(3) .task-status-complete
+
+the applicant submits the application
+    the user clicks the button/link                    link = Review and submit
+    the user should not see the element                jQuery = .task-status-incomplete
+    the user should see that the element is disabled   jQuery = .govuk-button:contains("Submit application")
+    the user selects the checkbox                      agreeTerms
+    the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
+    the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
+    the user should be redirected to the correct page  track
