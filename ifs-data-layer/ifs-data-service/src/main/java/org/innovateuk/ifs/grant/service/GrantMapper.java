@@ -11,6 +11,7 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
+import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -32,6 +33,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,6 +42,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTablePopulator.GRANT_CLAIM_IDENTIFIER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 @Component
 class GrantMapper {
@@ -47,6 +50,12 @@ class GrantMapper {
     private static final String NO_PROJECT_SUMMARY = "no project summary";
     private static final String NO_PUBLIC_DESCRIPTION = "no public description";
     private static final String ACADEMIC_ORGANISATION_SIZE_VALUE = "ACADEMIC";
+
+    private static final Map<Role, String> IFS_ROLES_TO_LIVE_ROLE_NAMES = asMap(
+            ProjectParticipantRole.PROJECT_FINANCE_CONTACT.name(), "Finance contact",
+            ProjectParticipantRole.PROJECT_MANAGER.name(), "Project manager",
+            Role.INNOVATION_LEAD.name(), "Innovation lead"
+    );
 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
@@ -187,7 +196,7 @@ class GrantMapper {
                 organisation.getOrganisationType().getName(),
                 partnerOrganisation.isLeadOrganisation() ? "lead" : "collaborator",
                 contactUser.getUser().getId(),
-                contactUser.getRole().getName(),
+                lookupLiveProjectsRoleName(contactUser.getRole().name()),
                 contactUser.getUser().getEmail(),
                 organisationSizeOrAcademic,
                 BigDecimal.valueOf(applicationFinance.getMaximumFundingLevel()),
@@ -203,8 +212,12 @@ class GrantMapper {
 
         return Participant.createSimpleContactParticipant(
                 userId,
-                role.getName(),
+                lookupLiveProjectsRoleName(role.name()),
                 userEmail);
+    }
+
+    private String lookupLiveProjectsRoleName(String role) {
+        return IFS_ROLES_TO_LIVE_ROLE_NAMES.getOrDefault(role, role);
     }
 
     private String getFullCostCategoryName(Cost cost) {

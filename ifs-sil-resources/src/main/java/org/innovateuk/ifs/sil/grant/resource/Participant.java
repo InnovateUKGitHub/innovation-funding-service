@@ -14,7 +14,7 @@ import java.util.Collection;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Participant {
 
-    private long orgId;
+    private Long orgId;
     private String orgType;
     private String orgProjectRole;
     private String orgSize;
@@ -42,11 +42,11 @@ public class Participant {
     @JsonProperty("forecast")
     private Collection<Forecast> forecasts;
 
-    public long getOrgId() {
+    public Long getOrgId() {
         return orgId;
     }
 
-    public void setOrgId(long orgId) {
+    public void setOrgId(Long orgId) {
         this.orgId = orgId;
     }
 
