@@ -19,7 +19,7 @@ items:
         containers:
         - env:
           - name: LDAP_PORT
-            value: "8389"
+            value: "389"
           image: innovateuk/ldap-service:${ldapVersion}
           name: ldap
           livenessProbe:
@@ -27,7 +27,7 @@ items:
               command:
               - ldapsearch
               - -H
-              - ldaps://localhost:8389
+              - ldaps://localhost:389
               - -b
               - dc=nodomain
               - -x
@@ -43,7 +43,7 @@ items:
               command:
               - ldapsearch
               - -H
-              - ldaps://localhost:8389
+              - ldaps://localhost:389
               - -b
               - dc=nodomain
               - -x
@@ -56,7 +56,7 @@ items:
             failureThreshold: 3
           imagePullPolicy: Always
           ports:
-          - containerPort: 8389
+          - containerPort: 389
           - containerPort: 8636
           resources:
             limits:
@@ -75,7 +75,7 @@ items:
     ports:
     - name: 389-tcp
       port: 389
-      targetPort: 8389
+      targetPort: 389
     selector:
       deploymentconfig: ldap
   status:
