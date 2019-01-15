@@ -16,11 +16,12 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=${project.name},size='govuk-heading-xl'" />
         <p class="govuk-body">This is the financial overview of all partners in this collaboration, each partner will be going through finance checks. The overview provides the progress of all partners through this section, as well as a view of their finances during review.</p>
 
-        <h3 class="govuk-heading-m">Finances summary</h3>
-        <p class="govuk-body">This is the level of cost detail that the assessors will see during the assessment process.</p>
+        <th:block th:unless="${model.summaries.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+            <h3 class="govuk-heading-m">Finances summary</h3>
+            <p class="govuk-body">This is the level of cost detail that the assessors will see during the assessment process.</p>
 
-        <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})" />
-
+            <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})" />
+        </th:block>
         <h3 class="govuk-heading-m">Project cost breakdown</h3>
 
         <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})" />

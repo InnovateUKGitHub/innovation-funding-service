@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
@@ -46,13 +48,16 @@ public class ProjectFinanceChecksOverviewController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
     public String viewOverview(Model model, @P("projectId")@PathVariable("projectId") final Long projectId, UserResource loggedInUser) {
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
         Long applicationId = project.getApplication();
-        FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(projectId, applicationId);
+        FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(project, applicationId);
         model.addAttribute("model", financeCheckOverviewViewModel);
         model.addAttribute("organisation", organisationId);
         model.addAttribute("project", project);
@@ -60,16 +65,17 @@ public class ProjectFinanceChecksOverviewController {
         return "project/finance-checks-overview";
     }
 
-    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final Long projectId, final Long applicationId) {
-        List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
-        return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(projectId, partnerOrgs),
-                getProjectFinanceCostBreakdown(projectId, partnerOrgs), applicationId );
+    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final ProjectResource project, final Long applicationId) {
+        List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
+        return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(project, partnerOrgs),
+                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs), applicationId );
     }
 
-    private FinanceCheckSummariesViewModel getProjectFinanceSummaries(Long projectId, List<PartnerOrganisationResource> partnerOrgs) {
+    private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs) {
         List<FinanceCheckEligibilityResource> summaries = mapWithIndex(partnerOrgs, (i, org) ->
-                financeCheckService.getFinanceCheckEligibilityDetails(projectId, org.getOrganisation()));
-        return new FinanceCheckSummariesViewModel(summaries, partnerOrgs);
+                financeCheckService.getFinanceCheckEligibilityDetails(project.getId(), org.getOrganisation()));
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        return new FinanceCheckSummariesViewModel(summaries, partnerOrgs, competition.getFundingType());
     }
 
     private ProjectFinanceCostBreakdownViewModel getProjectFinanceCostBreakdown(Long projectId, List<PartnerOrganisationResource> partnerOrgs) {
