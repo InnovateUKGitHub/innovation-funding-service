@@ -50,9 +50,7 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSI
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
 /**
- * This RestController exposes CRUD operations to both the
- * {org.innovateuk.ifs.finance.service.ApplicationFinanceRestServiceImpl} and other REST-API users
- * to manage {@link ApplicationFinance} related data.
+ * A Controller to support the "Your organisation" section of Application Form finances.
  */
 @RestController
 @RequestMapping("/application/{applicationId}/organisation/{organisationId}/finance")
