@@ -76,6 +76,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     @SecuredBySpring(value = "VIEW_YOUR_ORGANISATION", description = "Applicants and internal users can view the Your organisation page")
     public String viewPage(
             @PathVariable("applicationId") long applicationId,
+            @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
@@ -85,7 +86,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
                 getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
-                getViewModel(applicationId, organisationId));
+                getViewModel(applicationId, competitionId, organisationId));
 
         Future<YourOrganisationWithGrowthTableForm> formRequest = async(() ->
                 withGrowthTableFormPopulator.populate(applicationId, organisationId));
@@ -126,6 +127,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     @SecuredBySpring(value = "MARK_YOUR_ORGANISATION_AS_COMPLETE", description = "Applicants can mark their organisation funding details as complete")
     public String markAsCompleteWithGrowthTable(
             @PathVariable("applicationId") long applicationId,
+            @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
@@ -136,7 +138,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
 
         Supplier<String> failureHandler = () -> {
             CommonYourFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, false);
-            YourOrganisationViewModel viewModel = getViewModel(applicationId, organisationId);
+            YourOrganisationViewModel viewModel = getViewModel(applicationId, competitionId, organisationId);
             model.addAttribute("commonFinancesModel", commonViewModel);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
@@ -189,8 +191,8 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
         yourOrganisationRestService.updateOrganisationFinancesWithGrowthTable(applicationId, organisationId, finances);
     }
 
-    private YourOrganisationViewModel getViewModel(long applicationId, long organisationId) {
-        return viewModelPopulator.populate(applicationId, organisationId);
+    private YourOrganisationViewModel getViewModel(long applicationId, long competitionId, long organisationId) {
+        return viewModelPopulator.populate(applicationId, competitionId,  organisationId);
     }
 
     private CommonYourFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {

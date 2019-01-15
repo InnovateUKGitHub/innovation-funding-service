@@ -37,6 +37,12 @@
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
 
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.showOrganisationSizeAlert}">
+                <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
+                <p class="govuk-body">The organisation size is used to calculate your funding level in the application.</p>
+                <p class="govuk-body">Changing this selection will reset your funding level.</p>
+            </div>
+
             <th:block th:insert="fragments/form-elements/radiofield ::
                 radiofield(
                     legend='Size',
@@ -130,7 +136,7 @@
                     readOnly=${commonFinancesModel.readOnly},
                 )" />
 
-            <th:block th:if="${model.showStateAidAgreement}">
+            <th:block th:if="${!commonFinancesModel.readOnly && model.showStateAidAgreement}">
 
                 <div class="agree-to-terms-container">
 

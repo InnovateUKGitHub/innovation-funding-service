@@ -13,9 +13,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class YourOrganisationViewModel {
 
     private boolean showStateAidAgreement;
+    private boolean fundingSectionComplete;
 
-    public YourOrganisationViewModel(boolean showStateAidAgreement) {
+    public YourOrganisationViewModel(boolean showStateAidAgreement, boolean fundingSectionComplete) {
         this.showStateAidAgreement = showStateAidAgreement;
+        this.fundingSectionComplete = fundingSectionComplete;
     }
 
     public List<FormOption> getOrganisationSizeOptions() {
@@ -24,5 +26,9 @@ public class YourOrganisationViewModel {
 
     public boolean isShowStateAidAgreement() {
         return showStateAidAgreement;
+    }
+
+    public boolean isShowOrganisationSizeAlert() {
+        return fundingSectionComplete;
     }
 }

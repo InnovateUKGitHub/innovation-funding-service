@@ -6,8 +6,11 @@ import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
+import org.innovateuk.ifs.application.transactional.SectionStatusService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -16,19 +19,26 @@ import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTabl
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.form.transactional.SectionService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -36,6 +46,7 @@ import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputType.ORGANISATION_TURNOVER;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
 /**
@@ -63,6 +74,11 @@ public class OrganisationFinanceController {
     private FinanceRowCostsService financeRowCostsService;
     private OrganisationService organisationService;
     private AuthenticationHelper authenticationHelper;
+    private GrantClaimMaximumService grantClaimMaximumService;
+    private SectionService sectionService;
+    private UsersRolesService usersRolesService;
+    private SectionStatusService sectionStatusService;
+
 
     OrganisationFinanceController(
             CompetitionService competitionService,
@@ -73,7 +89,11 @@ public class OrganisationFinanceController {
             FinanceService financeService,
             FinanceRowCostsService financeRowCostsService,
             OrganisationService organisationService,
-            AuthenticationHelper authenticationHelper) {
+            AuthenticationHelper authenticationHelper,
+            GrantClaimMaximumService grantClaimMaximumService,
+            SectionService sectionService,
+            UsersRolesService usersRolesService,
+            SectionStatusService sectionStatusService) {
 
         this.competitionService = competitionService;
         this.questionService = questionService;
@@ -84,6 +104,10 @@ public class OrganisationFinanceController {
         this.financeRowCostsService = financeRowCostsService;
         this.organisationService = organisationService;
         this.authenticationHelper = authenticationHelper;
+        this.grantClaimMaximumService = grantClaimMaximumService;
+        this.sectionService = sectionService;
+        this.usersRolesService = usersRolesService;
+        this.sectionStatusService = sectionStatusService;
     }
 
     @GetMapping("/with-growth-table")
@@ -156,7 +180,7 @@ public class OrganisationFinanceController {
 
         boolean stateAidIncluded = isShowStateAidAgreement(applicationId, organisationId).getSuccess();
 
-        updateOrganisationSize(applicationId, organisationId, finances.getOrganisationSize()).getSuccess();
+        updateOrganisationSize(applicationId, competitionId, organisationId, finances.getOrganisationSize()).getSuccess();
         updateFinancialYearEnd(applicationId, competitionId, userId, finances.getFinancialYearEnd()).getSuccess();
         updateAnnualTurnoverAtEndOfFinancialYear(applicationId, competitionId, userId, finances.getAnnualTurnoverAtLastFinancialYear()).getSuccess();
         updateAnnualProfitsAtEndOfFinancialYear(applicationId, competitionId, userId, finances.getAnnualProfitsAtLastFinancialYear()).getSuccess();
@@ -181,7 +205,7 @@ public class OrganisationFinanceController {
         long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
         boolean stateAidIncluded = isShowStateAidAgreement(applicationId, organisationId).getSuccess();
 
-        updateOrganisationSize(applicationId, organisationId, finances.getOrganisationSize()).getSuccess();
+        updateOrganisationSize(applicationId, competitionId, organisationId, finances.getOrganisationSize()).getSuccess();
         updateHeadCount(applicationId, competitionId, userId, finances.getHeadCount()).getSuccess();
         updateTurnover(applicationId, competitionId, userId, finances.getTurnover()).getSuccess();
 
@@ -250,13 +274,66 @@ public class OrganisationFinanceController {
                 andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<Void> updateOrganisationSize(long applicationId, long organisationId, OrganisationSize organisationSize) {
+    private ServiceResult<Void> updateOrganisationSize(long applicationId, long competitionId, long organisationId, OrganisationSize organisationSize) {
         return financeService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).
                 andOnSuccess(finance -> {
-                    finance.setOrganisationSize(organisationSize);
-                    return financeRowCostsService.updateApplicationFinance(finance.getId(), finance);
+                    if (!Objects.equals(finance.getOrganisationSize(), organisationSize)) {
+
+                        finance.setOrganisationSize(organisationSize);
+                        ServiceResult<ApplicationFinanceResource> updateSizeResult = financeRowCostsService.updateApplicationFinance(finance.getId(), finance);
+
+                        long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
+                        handleOrganisationSizeChange(finance, competitionId, userId);
+
+                        return updateSizeResult;
+                    } else {
+                        return serviceSuccess(finance);
+                    }
+
                 }).
                 andOnSuccessReturnVoid();
+    }
+
+    private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance,
+                                              long competitionId,
+                                              long userId) {
+
+        OrganisationResource organisation = organisationService.findById(applicationFinance.getOrganisation()).getSuccess();
+        boolean maximumFundingLevelOverridden = grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId).getSuccess();
+
+        if (organisation.getOrganisationType().equals(BUSINESS.getId()) && !maximumFundingLevelOverridden) {
+            resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
+        }
+    }
+
+    public void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
+        CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
+        if (competition.getFundingType() != FundingType.PROCUREMENT) {
+
+            final ProcessRoleResource processRole =
+                    usersRolesService.getAssignableProcessRolesByApplicationId(applicationFinance.getApplication()).getSuccess().stream()
+                        .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
+                        .findFirst().get();
+
+            sectionService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FUNDING_FINANCES).getSuccess()
+                    .forEach(fundingSection ->
+                            sectionStatusService.markSectionAsInComplete(
+                                    fundingSection.getId(),
+                                    applicationFinance.getApplication(),
+                                    processRole.getId()
+                    ));
+
+            Question financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccess();
+
+            resetFundingLevel(applicationFinance, financeQuestion.getId());
+        }
+    }
+
+    private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
+        if (applicationFinance.getGrantClaim() != null) {
+            applicationFinance.getGrantClaim().setGrantClaimPercentage(null);
+            financeRowCostsService.addCost(applicationFinance.getId(), financeQuestionId, applicationFinance.getGrantClaim()).getSuccess();
+        }
     }
 
     private ServiceResult<Void> updateFinancialYearEnd(long applicationId, long competitionId, long userId, YearMonth financialYearEnd) {
