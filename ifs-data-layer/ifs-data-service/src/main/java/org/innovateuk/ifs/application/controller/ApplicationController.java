@@ -181,9 +181,4 @@ public class ApplicationController {
     public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
         return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
     }
-
-    @GetMapping("/{applicationId}/competition")
-    public RestResult<CompetitionResource> getCompetitionByApplicationId(@PathVariable("applicationId") long applicationId) {
-        return applicationService.getCompetitionByApplicationId(applicationId).toGetResponse();
-    }
 }

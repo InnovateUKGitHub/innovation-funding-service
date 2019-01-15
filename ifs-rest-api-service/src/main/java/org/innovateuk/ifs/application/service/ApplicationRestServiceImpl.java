@@ -136,9 +136,4 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         String uriWithParams = buildPaginationUri(applicationRestURL +  "/" + competitionId + "/previous-applications", pageNumber, pageSize, sortField, params);
         return getWithRestResult(uriWithParams, PreviousApplicationPageResource.class);
     }
-
-    @Override
-    public RestResult<CompetitionResource> getCompetitionByApplicationId(long applicationId) {
-        return getWithRestResult(applicationRestURL + "/" + applicationId + "/competition", CompetitionResource.class);
-    }
 }

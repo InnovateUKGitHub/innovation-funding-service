@@ -30,5 +30,4 @@ public interface ApplicationRestService {
     RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId);
     RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId);
     RestResult<PreviousApplicationPageResource> findPreviousApplications(Long competitionId, int pageNumber, int pageSize, String sortField, String filter);
-    RestResult<CompetitionResource> getCompetitionByApplicationId(long applicationId);
 }
