@@ -9,6 +9,7 @@ import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 
 public class CapitalUsageRowForm extends AbstractCostRowForm<CapitalUsage> {
@@ -47,7 +48,7 @@ public class CapitalUsageRowForm extends AbstractCostRowForm<CapitalUsage> {
     public CapitalUsageRowForm(CapitalUsage cost) {
         super(cost);
         this.item = cost.getDescription();
-        this.newItem = cost.getExisting().equals("New");
+        this.newItem = ofNullable(cost.getExisting()).map(existing -> existing.equals("New")).orElse(true);
         this.deprecation = cost.getDeprecation();
         this.netValue = cost.getNpv();
         this.residualValue = cost.getResidualValue();
