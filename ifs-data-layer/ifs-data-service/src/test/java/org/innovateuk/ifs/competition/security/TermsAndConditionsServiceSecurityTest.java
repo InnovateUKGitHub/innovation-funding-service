@@ -42,7 +42,7 @@ public class TermsAndConditionsServiceSecurityTest extends BaseServiceSecurityTe
 
     @Test(expected = AccessDeniedException.class)
     public void getLatestVersionsForAllTermsAndConditions_wrongUser() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
         classUnderTest.getLatestVersionsForAllTermsAndConditions();
     }
 
@@ -60,7 +60,7 @@ public class TermsAndConditionsServiceSecurityTest extends BaseServiceSecurityTe
 
     @Test(expected = AccessDeniedException.class)
     public void getById_wrongUser() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
         classUnderTest.getById(1L);
     }
 }

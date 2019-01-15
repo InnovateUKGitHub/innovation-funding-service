@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.publiccontent.domain;
 
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -32,9 +30,6 @@ public class PublicContent {
 
     @Column(length=5000)
     private String summary;
-
-    @Enumerated(EnumType.STRING)
-    private FundingType fundingType;
 
     @OneToMany(mappedBy="publicContent", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ContentSection> contentSections;
@@ -107,14 +102,6 @@ public class PublicContent {
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
-
-    public FundingType getFundingType() {
-        return fundingType;
-    }
-
-    public void setFundingType(FundingType fundingType) {
-        this.fundingType = fundingType;
     }
 
     public List<ContentSection> getContentSections() {

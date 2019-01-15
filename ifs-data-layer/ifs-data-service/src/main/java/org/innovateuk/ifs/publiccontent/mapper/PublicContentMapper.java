@@ -19,6 +19,7 @@ public abstract class PublicContentMapper extends BaseMapper<PublicContent, Publ
     @Override
     public abstract PublicContentResource mapToResource(PublicContent domain);
 
+    @Override
     public abstract PublicContent mapToDomain(PublicContentResource domain);
 
     public Long mapPublicContentToId(PublicContent object) {

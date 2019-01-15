@@ -470,6 +470,7 @@ the user fills in the Open-All Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}
     the user clicks the button/link                      link = Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
+    the user selects the radio button                    fundingType  GRANT
     the user selects the option from the drop-down menu  Sector  id = competitionTypeId
     the user selects the option from the drop-down menu  Open  id = innovationSectorCategoryId
     the user selects the value from the drop-down menu   -1  id = innovationAreaCategoryIds

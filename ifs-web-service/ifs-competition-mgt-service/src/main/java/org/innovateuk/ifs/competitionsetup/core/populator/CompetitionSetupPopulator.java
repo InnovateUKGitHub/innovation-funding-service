@@ -35,7 +35,7 @@ public class CompetitionSetupPopulator {
         boolean editable = isSectionEditable(statusesAndValues, section, competitionResource);
 
         GeneralSetupViewModel viewModel = new GeneralSetupViewModel(editable, competitionResource, section, CompetitionSetupSection.values(),
-                competitionSetupService.isInitialDetailsCompleteOrTouched(competitionResource.getId()));
+                competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()));
 
         if (section.hasDisplayableSetupFragment()) {
             viewModel.setCurrentSectionFragment("section-" + section.getPath());

@@ -124,7 +124,7 @@ public class CompetitionSetupController {
             return DASHBOARD_REDIRECT;
         }
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -146,7 +146,7 @@ public class CompetitionSetupController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -167,8 +167,6 @@ public class CompetitionSetupController {
 
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, section));
-
-        checkRestrictionOfInitialDetails(section, competition, model);
 
         return "competition/setup";
     }
@@ -253,8 +251,6 @@ public class CompetitionSetupController {
                                                  long competitionId,
                                                  Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        checkRestrictionOfInitialDetails(CompetitionSetupSection.INITIAL_DETAILS, competition, model);
-
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.INITIAL_DETAILS, model);
     }
 
@@ -404,7 +400,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -420,7 +416,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -437,7 +433,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -458,7 +454,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -494,7 +490,7 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competition.getId();
         }
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -526,14 +522,5 @@ public class CompetitionSetupController {
         node.put("success", success ? "true" : "false");
 
         return node;
-    }
-
-    private void checkRestrictionOfInitialDetails(CompetitionSetupSection section,
-                                                  CompetitionResource competitionResource,
-                                                  Model model) {
-        if (section == CompetitionSetupSection.INITIAL_DETAILS &&
-                competitionSetupService.isInitialDetailsCompleteOrTouched(competitionResource.getId())) {
-            model.addAttribute(RESTRICT_INITIAL_DETAILS_EDIT, Boolean.TRUE);
-        }
     }
 }
