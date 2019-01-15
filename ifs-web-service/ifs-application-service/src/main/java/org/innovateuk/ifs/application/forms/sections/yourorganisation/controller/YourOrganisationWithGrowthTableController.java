@@ -102,12 +102,10 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation funding details")
     public String updateWithGrowthTable(
             @PathVariable("applicationId") long applicationId,
-            @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
-            UserResource loggedInUser,
             @ModelAttribute YourOrganisationWithGrowthTableForm form) {
 
-        updateYourOrganisationWithGrowthTable(applicationId, competitionId, organisationId, loggedInUser.getId(), form);
+        updateYourOrganisationWithGrowthTable(applicationId, organisationId, form);
         return redirectToYourFinances(applicationId);
     }
 
@@ -116,12 +114,10 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation funding details")
     public @ResponseBody JsonNode autosaveWithGrowthTable(
             @PathVariable("applicationId") long applicationId,
-            @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
-            UserResource loggedInUser,
             @ModelAttribute YourOrganisationWithGrowthTableForm form) {
 
-        updateWithGrowthTable(applicationId, competitionId, organisationId, loggedInUser, form);
+        updateWithGrowthTable(applicationId, organisationId, form);
         return new ObjectMapper().createObjectNode();
     }
 
@@ -131,7 +127,6 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     public String markAsCompleteWithGrowthTable(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
-            @PathVariable("competitionId") long competitionId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
             @Valid @ModelAttribute("form") YourOrganisationWithGrowthTableForm form,
@@ -150,7 +145,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
 
         Supplier<String> successHandler = () -> {
 
-            updateYourOrganisationWithGrowthTable(applicationId, competitionId, organisationId, loggedInUser.getId(), form);
+            updateYourOrganisationWithGrowthTable(applicationId, organisationId, form);
 
             ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
             List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
@@ -178,9 +173,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
     }
 
     private void updateYourOrganisationWithGrowthTable(long applicationId,
-                                                       long competitionId,
                                                        long organisationId,
-                                                       long userId,
                                                        YourOrganisationWithGrowthTableForm form) {
 
         OrganisationFinancesWithGrowthTableResource finances = new OrganisationFinancesWithGrowthTableResource(

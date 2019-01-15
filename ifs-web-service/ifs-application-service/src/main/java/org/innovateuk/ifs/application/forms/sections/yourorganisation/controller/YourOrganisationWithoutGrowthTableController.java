@@ -15,6 +15,7 @@ import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -101,12 +102,10 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
     @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation funding details")
     public String updateWithoutGrowthTable(
             @PathVariable("applicationId") long applicationId,
-            @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
-            UserResource loggedInUser,
             @ModelAttribute YourOrganisationWithoutGrowthTableForm form) {
 
-        updateYourOrganisationWithoutGrowthTable(applicationId, competitionId, organisationId, loggedInUser.getId(), form);
+        updateYourOrganisationWithoutGrowthTable(applicationId, organisationId, form);
         return redirectToYourFinances(applicationId);
     }
 
@@ -115,12 +114,10 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
     @SecuredBySpring(value = "UPDATE_YOUR_ORGANISATION", description = "Applicants can update their organisation funding details")
     public @ResponseBody JsonNode autosaveWithoutGrowthTable(
             @PathVariable("applicationId") long applicationId,
-            @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
-            UserResource loggedInUser,
             @ModelAttribute YourOrganisationWithoutGrowthTableForm form) {
 
-        updateWithoutGrowthTable(applicationId, competitionId, organisationId, loggedInUser, form);
+        updateWithoutGrowthTable(applicationId, organisationId, form);
         return new ObjectMapper().createObjectNode();
     }
 
@@ -130,7 +127,6 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
     public String markAsCompleteWithoutGrowthTable(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
-            @PathVariable("competitionId") long competitionId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
             @Valid @ModelAttribute("form") YourOrganisationWithoutGrowthTableForm form,
@@ -149,7 +145,7 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
 
         Supplier<String> successHandler = () -> {
 
-            updateYourOrganisationWithoutGrowthTable(applicationId, competitionId, organisationId, loggedInUser.getId(), form);
+            updateYourOrganisationWithoutGrowthTable(applicationId, organisationId, form);
 
             ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
             List<ValidationMessages> validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
@@ -178,12 +174,16 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
 
     private void updateYourOrganisationWithoutGrowthTable(
             long applicationId,
-            long competitionId,
             long organisationId,
-            long userId,
             YourOrganisationWithoutGrowthTableForm form) {
 
-        yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(applicationId, organisationId);
+        OrganisationFinancesWithoutGrowthTableResource finances = new OrganisationFinancesWithoutGrowthTableResource(
+                form.getOrganisationSize(),
+                form.getTurnover(),
+                form.getHeadCount(),
+                form.getStateAidAgreed());
+
+        yourOrganisationRestService.updateOrganisationFinancesWithoutGrowthTable(applicationId, organisationId, finances);
     }
 
     private YourOrganisationViewModel getViewModel(long applicationId, long organisationId) {

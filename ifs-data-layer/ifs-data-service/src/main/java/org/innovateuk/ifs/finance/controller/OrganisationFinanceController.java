@@ -23,7 +23,6 @@ import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,7 +72,8 @@ public class OrganisationFinanceController {
             ApplicationService applicationService,
             FinanceService financeService,
             FinanceRowCostsService financeRowCostsService,
-            OrganisationService organisationService) {
+            OrganisationService organisationService,
+            AuthenticationHelper authenticationHelper) {
 
         this.competitionService = competitionService;
         this.questionService = questionService;
@@ -83,6 +83,7 @@ public class OrganisationFinanceController {
         this.financeService = financeService;
         this.financeRowCostsService = financeRowCostsService;
         this.organisationService = organisationService;
+        this.authenticationHelper = authenticationHelper;
     }
 
     @GetMapping("/with-growth-table")
@@ -148,11 +149,10 @@ public class OrganisationFinanceController {
     public RestResult<Void> updateOrganisationWithGrowthTable(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
-            @RequestBody OrganisationFinancesWithGrowthTableResource finances,
-            UserResource loggedInUser) {
+            @RequestBody OrganisationFinancesWithGrowthTableResource finances) {
 
         long competitionId = getCompetitionId(applicationId);
-        long userId = loggedInUser.getId();
+        long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
 
         boolean stateAidIncluded = isShowStateAidAgreement(applicationId, organisationId).getSuccess();
 
@@ -175,11 +175,10 @@ public class OrganisationFinanceController {
     public RestResult<Void> updateOrganisationWithoutGrowthTable(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
-            @RequestBody OrganisationFinancesWithoutGrowthTableResource finances,
-            UserResource loggedInUser) {
+            @RequestBody OrganisationFinancesWithoutGrowthTableResource finances) {
 
         long competitionId = getCompetitionId(applicationId);
-        long userId = loggedInUser.getId();
+        long userId = authenticationHelper.getCurrentlyLoggedInUser().getSuccess().getId();
         boolean stateAidIncluded = isShowStateAidAgreement(applicationId, organisationId).getSuccess();
 
         updateOrganisationSize(applicationId, organisationId, finances.getOrganisationSize()).getSuccess();

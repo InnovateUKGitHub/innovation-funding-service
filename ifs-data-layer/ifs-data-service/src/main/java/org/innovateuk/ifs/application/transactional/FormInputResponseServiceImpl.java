@@ -105,7 +105,7 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
     }
 
     private FormInputResponse updateAndSaveResponse(FormInputResponse response, String htmlUnescapedValue, ProcessRole userAppRole, Application application) {
-        if (!response.getValue().equals(htmlUnescapedValue)) {
+        if (response.getValue() == null || !response.getValue().equals(htmlUnescapedValue)) {
             response.setUpdateDate(ZonedDateTime.now());
             response.setUpdatedBy(userAppRole);
         }
