@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.project.financecheck.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckOverviewViewModel;
@@ -23,7 +26,9 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckOverviewResourceBuilder.newFinanceCheckOverviewResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.junit.Assert.assertEquals;
@@ -32,7 +37,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 
 public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<FinanceOverviewController> {
 
@@ -48,10 +52,14 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
     @Mock
     private ProjectService projectService;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     @Test
     public void testView() throws Exception {
         Long projectId = 123L;
         Long organisationId = 456L;
+        CompetitionResource competition = newCompetitionResource().withFundingType(FundingType.GRANT).build();
 
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource()
                 .withOrganisationName("EGGS", "Ludlow", "Empire").withLeadOrganisation(false, false, true).withProject(projectId).build(3);
@@ -60,8 +68,9 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
         when(financeCheckServiceMock.getFinanceCheckOverview(projectId)).thenReturn(serviceSuccess(mockFinanceOverview()));
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(projectId, organisationId)).thenReturn(financeCheckEligibilityResource);
         when(projectFinanceService.getProjectFinances(projectId)).thenReturn(Collections.emptyList());
-        ProjectResource projectResource = newProjectResource().build();
+        ProjectResource projectResource = newProjectResource().withCompetition(competition.getId()).build();
         when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competition));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check-overview")).
                 andExpect(view().name("project/financecheck/overview")).
