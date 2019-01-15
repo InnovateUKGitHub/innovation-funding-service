@@ -178,19 +178,6 @@ public class OpenSectionViewModelTest {
     }
 
     @Test
-    public void testGetFormInputsOrganisationSize() {
-        Long questionId = 8284L;
-
-        viewModel.setQuestionFormInputs(asMap(questionId, newFormInputResource().withQuestion(questionId).withType(FormInputType.APPLICATION_DETAILS).build(1)));
-        assertEquals(Collections.emptyList(), viewModel.getFormInputsOrganisationSize(questionId));
-
-        List<FormInputResource> expected = newFormInputResource().withQuestion(questionId).withType(FormInputType.ORGANISATION_SIZE).build(1);
-        viewModel.setQuestionFormInputs(asMap(questionId, expected));
-
-        assertEquals(expected, viewModel.getFormInputsOrganisationSize(questionId));
-    }
-
-    @Test
     public void testGetFormInputsFinancialOverview() {
         Long questionId = 8284L;
 
@@ -201,31 +188,5 @@ public class OpenSectionViewModelTest {
         viewModel.setQuestionFormInputs(asMap(questionId, expected));
 
         assertEquals(expected, viewModel.getFormInputsFinancialOverview(questionId));
-    }
-
-    @Test
-    public void testGetFormInputsFinancialEndYear() {
-        Long questionId = 8284L;
-
-        viewModel.setQuestionFormInputs(asMap(questionId, newFormInputResource().withQuestion(questionId).withType(FormInputType.APPLICATION_DETAILS).build(1)));
-        assertEquals(Collections.emptyList(), viewModel.getFormInputsFinancialEndYear(questionId));
-
-        List<FormInputResource> expected = newFormInputResource().withQuestion(questionId).withType(FormInputType.FINANCIAL_YEAR_END).build(1);
-        viewModel.setQuestionFormInputs(asMap(questionId, expected));
-
-        assertEquals(expected, viewModel.getFormInputsFinancialEndYear(questionId));
-    }
-
-    @Test
-    public void testGetFormInputsFinancialStaffCount() {
-        Long questionId = 8284L;
-
-        viewModel.setQuestionFormInputs(asMap(questionId, newFormInputResource().withQuestion(questionId).withType(FormInputType.APPLICATION_DETAILS).build(1)));
-        assertEquals(Collections.emptyList(), viewModel.getFormInputsFinancialStaffCount(questionId));
-
-        List<FormInputResource> expected = newFormInputResource().withQuestion(questionId).withType(FormInputType.FINANCIAL_STAFF_COUNT).build(1);
-        viewModel.setQuestionFormInputs(asMap(questionId, expected));
-
-        assertEquals(expected, viewModel.getFormInputsFinancialStaffCount(questionId));
     }
 }

@@ -46,7 +46,6 @@ import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
 /**
@@ -167,7 +166,6 @@ public class ApplicationSectionController {
                                                                 @RequestParam MultiValueMap<String, String> queryParams) {
 
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
-
         SectionResource section = sectionService.getById(sectionId);
 
         switch (section.getType()) {
@@ -187,6 +185,16 @@ public class ApplicationSectionController {
             case PROJECT_LOCATION: {
                 return String.format("redirect:/application/%d/form/your-project-location/organisation/%d/section/%d",
                         applicationId, applicantOrganisationId, sectionId);
+            }
+            case ORGANISATION_FINANCES: {
+
+                ApplicantSectionResource applicantSection = getApplicantSectionForInternalUser(applicationId, sectionId, applicantOrganisationId);
+
+                long organisationId = applicantSection.getCurrentApplicant().getOrganisation().getId();
+                long competitionId = applicantSection.getCompetition().getId();
+
+                return String.format("redirect:/application/%d/form/your-organisation/competition/%d/organisation/%d/section/%d",
+                        applicationId, competitionId, organisationId, sectionId);
             }
             default:
 
@@ -226,27 +234,20 @@ public class ApplicationSectionController {
 
         Map<String, String[]> params = request.getParameterMap();
 
-        boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(
-                form, bindingResult,
-                applicantSection,
-                params);
-
         ValidationMessages saveApplicationErrors = applicationSaver.saveApplicationForm(
                 applicantSection.getApplication(),
-                applicantSection.getCompetition().getId(),
                 form,
                 sectionId,
                 user.getId(),
                 request,
-                response,
-                validFinanceTerms);
+                response);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             questionService.assignQuestion(applicationId, user, request);
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        if (!isSaveAndReturnRequest(params) && (saveApplicationErrors.hasErrors() || !validFinanceTerms)) {
+        if (!isSaveAndReturnRequest(params) && saveApplicationErrors.hasErrors()) {
             validationHandler.addAnyErrors(saveApplicationErrors);
             populateGenericApplicationFormSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false, Optional.empty(), false);
             return APPLICATION_FORM;
@@ -273,39 +274,6 @@ public class ApplicationSectionController {
     private void logSaveApplicationBindingErrors(ValidationHandler validationHandler) {
         if (LOG.isDebugEnabled())
             validationHandler.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
-    }
-
-    private boolean validFinanceTermsForMarkAsComplete(
-            ApplicationForm form,
-            BindingResult bindingResult,
-            ApplicantSectionResource section,
-            Map<String, String[]> params
-    ) {
-
-        if (!isMarkSectionAsCompleteRequest(params)) {
-            return true;
-        }
-
-        switch (section.getSection().getType()) {
-            case ORGANISATION_FINANCES:
-                return validateOrganisationSizeSelected(section, params, bindingResult);
-
-            default:
-                return true;
-        }
-    }
-
-    private boolean validateOrganisationSizeSelected(
-            ApplicantSectionResource applicantSection,
-            Map<String, String[]> params,
-            BindingResult bindingResult
-    ) {
-        List<String> financePositionKeys = simpleFilter(params.keySet(), k -> k.contains("financePosition-"));
-        if (!financePositionKeys.isEmpty() || applicantSection.getCurrentApplicant().isResearch()) {
-            return true;
-        }
-        bindingResult.rejectValue(ORGANISATION_SIZE_KEY, "APPLICATION_ORGANISATION_SIZE_REQUIRED");
-        return false;
     }
 
     private String populateGenericApplicationFormSectionForInternalUser(

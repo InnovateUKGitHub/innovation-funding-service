@@ -251,26 +251,6 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
     }
 
     @Test
-    public void testSaveFormElementFinancePosition() throws Exception {
-        String value = "222";
-        String questionId = "financePosition-organisationSize";
-        String fieldName = "financePosition.organisationSize";
-
-        MvcResult result = mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", questionId)
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        Assert.assertEquals(jsonExpectedContent, content);
-    }
-
-    @Test
     public void testSaveFormElementApplicationValidStartDateDDMMYYYY() throws Exception {
         String value = "25-10-2025";
         String questionId = "application_details-startdate";
