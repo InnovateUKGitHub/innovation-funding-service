@@ -5,6 +5,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
@@ -146,6 +147,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     @Enumerated(EnumType.STRING)
     private CompetitionCompletionStage completionStage;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "funding_type")
+    private FundingType fundingType;
+
     public Competition() {
         setupComplete = false;
     }
@@ -188,7 +193,8 @@ public class Competition extends AuditableEntity implements ProcessActivity {
                 return CompetitionStatus.FUNDERS_PANEL;
             } else if (!isMilestoneReached(MilestoneType.FEEDBACK_RELEASED)) {
                 return ASSESSOR_FEEDBACK;
-            } else if (isMilestoneReached(MilestoneType.FEEDBACK_RELEASED) && getCompetitionType().isEOI()) {
+            } else if (isMilestoneReached(MilestoneType.FEEDBACK_RELEASED) &&
+                    CompetitionCompletionStage.RELEASE_FEEDBACK.equals(getCompletionStage())) {
                 return PREVIOUS;
             } else {
                 return PROJECT_SETUP;
@@ -793,5 +799,12 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     public void setCompletionStage(CompetitionCompletionStage completionStage) {
         this.completionStage = completionStage;
     }
-}
 
+    public FundingType getFundingType() {
+        return this.fundingType;
+    }
+
+    public void setFundingType(FundingType fundingType) {
+        this.fundingType = fundingType;
+    }
+}

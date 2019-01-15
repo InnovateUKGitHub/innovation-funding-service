@@ -58,7 +58,7 @@ public class CompetitionOverviewPopulator {
         Arrays.stream(PublicContentSectionType.values()).forEach(sectionType -> {
             if (!excludeSectionTypes.contains(sectionType)) {
                 AbstractPublicSectionContentViewModel sectionViewModel = getPopulator(sectionType)
-                        .populate(publicContentItemResource.getPublicContentResource(), publicContentItemResource.getNonIfs(), sectionType, MAIN_SECTIONTYPE);
+                        .populate(publicContentItemResource, publicContentItemResource.getNonIfs(), sectionType, MAIN_SECTIONTYPE);
                 sectionViewModels.add(sectionViewModel);
             }
         });

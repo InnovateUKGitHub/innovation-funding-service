@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 
@@ -21,7 +22,7 @@ public class PublicContentItemResourceBuilder extends BaseBuilder<PublicContentI
         return new PublicContentItemResourceBuilder(emptyList());
     }
 
-    public PublicContentItemResourceBuilder withContentSection(PublicContentResource... publicContentResources) {
+    public PublicContentItemResourceBuilder withPublicContentResource(PublicContentResource... publicContentResources) {
         return withArray((publicContentItem, publicContentResource) -> setField("publicContentResource", publicContentItem, publicContentResource), publicContentResources);
     }
 
@@ -51,6 +52,10 @@ public class PublicContentItemResourceBuilder extends BaseBuilder<PublicContentI
 
     public PublicContentItemResourceBuilder withSetupComplete(Boolean setupComplete) {
         return with(publicContentItem -> setField("setupComplete", setupComplete, publicContentItem));
+    }
+
+    public PublicContentItemResourceBuilder withFundingType(FundingType fundingType) {
+        return with(publicContent -> setField("fundingType", fundingType, publicContent));
     }
 
     @Override

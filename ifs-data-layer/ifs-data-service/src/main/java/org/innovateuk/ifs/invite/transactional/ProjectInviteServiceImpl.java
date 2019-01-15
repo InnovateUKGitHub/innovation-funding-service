@@ -38,16 +38,11 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_EXISTS_ON_PROJECT;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -100,21 +95,21 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     public ServiceResult<Void> saveProjectInvite(ProjectInviteResource projectInviteResource) {
 
         return validateProjectInviteResource(projectInviteResource).andOnSuccess(() ->
-               validateUserNotAlreadyInvited(projectInviteResource).andOnSuccess(() ->
-               validateTargetUserIsValid(projectInviteResource).andOnSuccess(() -> {
+                validateUserNotAlreadyInvited(projectInviteResource).andOnSuccess(() ->
+                        validateTargetUserIsValid(projectInviteResource).andOnSuccess(() -> {
 
-            ProjectInvite projectInvite = inviteMapper.mapToDomain(projectInviteResource);
-            Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
-            validator.validate(projectInvite, errors);
-            if (errors.hasErrors()) {
-                errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
-                return serviceFailure(badRequestError(errors.toString()));
-            } else {
-                projectInvite.setHash(generateInviteHash());
-                projectInviteRepository.save(projectInvite);
-                return serviceSuccess();
-            }
-        })));
+                            ProjectInvite projectInvite = inviteMapper.mapToDomain(projectInviteResource);
+                            Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
+                            validator.validate(projectInvite, errors);
+                            if (errors.hasErrors()) {
+                                errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
+                                return serviceFailure(badRequestError(errors.toString()));
+                            } else {
+                                projectInvite.setHash(generateInviteHash());
+                                projectInviteRepository.save(projectInvite);
+                                return serviceSuccess();
+                            }
+                        })));
     }
 
     private ProjectInviteResource mapInviteToInviteResource(ProjectInvite invite) {
@@ -133,7 +128,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
 
     @Override
     public ServiceResult<List<ProjectInviteResource>> getInvitesByProject(Long projectId) {
-        if(projectId == null) {
+        if (projectId == null) {
             return serviceFailure(new Error(PROJECT_INVITE_INVALID_PROJECT_ID, NOT_FOUND));
         }
         List<ProjectInvite> invites = projectInviteRepository.findByProjectId(projectId);
@@ -145,7 +140,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     @Transactional
     public ServiceResult<Void> acceptProjectInvite(String inviteHash, Long userId) {
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
-            if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
+            if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
                 ProjectInvite projectInvite = projectInviteRepository.save(invite.open());
                 return projectService.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId()).andOnSuccess(pu -> {
                     pu.setInvite(projectInvite);
@@ -174,7 +169,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     private ServiceResult<Void> validateProjectInviteResource(ProjectInviteResource projectInviteResource) {
 
         if (StringUtils.isEmpty(projectInviteResource.getEmail()) || StringUtils.isEmpty(projectInviteResource.getName())
-                || projectInviteResource.getProject() == null ||projectInviteResource.getOrganisation() == null ){
+                || projectInviteResource.getProject() == null || projectInviteResource.getOrganisation() == null) {
             return serviceFailure(PROJECT_INVITE_INVALID);
         }
         return serviceSuccess();
@@ -193,31 +188,15 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
         Optional<User> existingUser = userRepository.findByEmail(targetEmail);
 
         return existingUser.map(user ->
-               validateUserIsInSameOrganisation(invite, user).andOnSuccess(() ->
-               validateUserIsNotAlreadyPartnerInOrganisation(invite, user))).
-               orElse(serviceSuccess());
+                validateUserIsNotAlreadyOnProject(invite, user)).
+                orElse(serviceSuccess());
     }
 
-    private ServiceResult<Void> validateUserIsInSameOrganisation(ProjectInviteResource invite, User user) {
+    private ServiceResult<Void> validateUserIsNotAlreadyOnProject(ProjectInviteResource invite, User user) {
 
-        List<Long> usersOrganisations = simpleMap(organisationRepository.findDistinctByUsers(user), Organisation::getId);
+        List<ProjectUser> existingUserEntryForProject = projectUserRepository.findByProjectIdAndUserIdAndRole(invite.getProject(), user.getId(), PROJECT_PARTNER);
 
-        if(usersOrganisations.size() > 0) {
-            return serviceSuccess();
-        }
-
-        if (!usersOrganisations.contains(invite.getOrganisation())) {
-            return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION);
-        }
-
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> validateUserIsNotAlreadyPartnerInOrganisation(ProjectInviteResource invite, User user) {
-
-        ProjectUser existingUserEntryForOrganisation = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(invite.getProject(), invite.getOrganisation(), user.getId(), PROJECT_PARTNER);
-
-        return existingUserEntryForOrganisation == null ? serviceSuccess() :
+        return existingUserEntryForProject.isEmpty() ? serviceSuccess() :
                 serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_EXISTS_ON_PROJECT);
     }
 }

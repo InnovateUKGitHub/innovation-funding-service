@@ -131,7 +131,7 @@ public class ApplicationAjaxController {
         if (e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)) {
             errors.add(lookupErrorMessageResourceBundleEntry(messageSource, e.getMessage(), args));
         } else {
-            LOG.error("Got an exception on autosave : " + e.getMessage());
+            LOG.debug("Got an exception on autosave : " + e.getMessage());
             errors.add(ex.getErrorMessage());
         }
     }

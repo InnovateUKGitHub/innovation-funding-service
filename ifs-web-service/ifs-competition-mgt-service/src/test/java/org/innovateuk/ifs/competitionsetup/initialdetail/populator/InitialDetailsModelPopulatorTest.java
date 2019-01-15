@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -49,6 +50,9 @@ public class InitialDetailsModelPopulatorTest {
     @Mock
     private UserRestService userRestService;
 
+    @Mock
+    private CompetitionSetupService competitionSetupService;
+
     @Test
     public void testSectionToPopulateModel() {
         CompetitionSetupSection result = populator.sectionToPopulateModel();
@@ -79,6 +83,7 @@ public class InitialDetailsModelPopulatorTest {
         when(categoryRestService.getInnovationAreasExcludingNone()).thenReturn(restSuccess(innovationAreas));
         when(competitionRestService.getCompetitionTypes()).thenReturn(restSuccess(competitionTypes));
         when(userRestService.findByUserRole(INNOVATION_LEAD)).thenReturn(restSuccess(leadTechs));
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
 
         InitialDetailsViewModel viewModel =  populator.populateModel(getBasicGeneralSetupView(competition), competition);
 
@@ -88,13 +93,15 @@ public class InitialDetailsModelPopulatorTest {
         assertEquals(competitionTypes, viewModel.getCompetitionTypes());
         assertEquals(leadTechs, viewModel.getInnovationLeadTechUsers());
         assertEquals(CompetitionSetupSection.INITIAL_DETAILS, viewModel.getGeneral().getCurrentSection());
+        assertEquals(viewModel.getRestricted(), true);
 
-        InOrder inOrder = inOrder(userRestService, categoryRestService, competitionRestService, userRestService);
+        InOrder inOrder = inOrder(userRestService, categoryRestService, competitionRestService, userRestService, competitionSetupService);
         inOrder.verify(userRestService).findByUserRole(COMP_ADMIN);
         inOrder.verify(categoryRestService).getInnovationSectors();
         inOrder.verify(categoryRestService).getInnovationAreasExcludingNone();
         inOrder.verify(competitionRestService).getCompetitionTypes();
         inOrder.verify(userRestService).findByUserRole(INNOVATION_LEAD);
+        inOrder.verify(competitionSetupService).hasInitialDetailsBeenPreviouslySubmitted(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 

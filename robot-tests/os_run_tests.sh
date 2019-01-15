@@ -126,12 +126,18 @@ function runTests() {
       results=`find target/* -regex ".*/output\.xml"`
       rebot -d target ${results}
     fi
+
+    markAsComplete
 }
 
 function clearOldReports() {
   section "=> REMOVING OLD REPORTS"
   rm -rf target
   mkdir target
+}
+
+function markAsComplete(){
+  touch ${scriptDir}/testsComplete
 }
 
 # ====================================

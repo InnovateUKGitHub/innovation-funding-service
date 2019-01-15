@@ -24,6 +24,8 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...               IFS-380 As a comp executive I am able to confirm if an assessment panel is required in competition setup
 ...
 ...               IFS-631 As a comp executive I am able to confirm if an interview stage is required in competition setup
+...
+...               IFS-4982 Move Funding type selection from front door to Initial details
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -32,13 +34,14 @@ Resource          CompAdmin_Commons.robot
 
 *** Test Cases ***
 Initial details: server-side validations
-    [Documentation]  INFUND-2982 IFUND-3888
+    [Documentation]  INFUND-2982 IFUND-3888  IFS-4982
     [Tags]
     Given the user navigates to the page                  ${CA_UpcomingComp}
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Create competition")
     And The user clicks the button/link                   link = Initial details
     When the user clicks the button/link                  jQuery = button:contains("Done")
     Then the user should see a field and summary error    Please enter a title.
+    And the user should see a field and summary error     Enter a valid funding type.
     And the user should see a field and summary error     Please select a competition type.
     And the user should see a field and summary error     Please select an innovation sector.
     And the user should see a field and summary error     Please select an innovation area.
@@ -48,10 +51,12 @@ Initial details: server-side validations
     And the user should see a field and summary error     Please select a state aid option.
 
 Initial details: client-side validations
-    [Documentation]  INFUND-2982  INFUND-3888
+    [Documentation]  INFUND-2982  INFUND-3888  IFS-4982
     [Tags]
     When the user enters text to a text field                   id = title    Validations Test
     Then the user should not see the error any more             Please enter a title.
+    When the user selects the radio button                      fundingType  GRANT
+    Then the user should not see the error any more             Enter a valid funding type.
     When the user selects the option from the drop-down menu    Programme    id = competitionTypeId
     Then the user should not see the error any more             Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id = innovationSectorCategoryId
@@ -59,11 +64,9 @@ Initial details: client-side validations
     When the user selects the option from the drop-down menu    Advanced therapies    name = innovationAreaCategoryIds[0]
     Then the user should not see the error any more             Please select an innovation area.
     When the user enters text to a text field                   id = openingDateDay    01
-    #Then the user should not see the error any more    Please enter an opening day.
-    When the user enters text to a text field                   id = openingDateMonth    12
-    #Then the user should not see the error any more    Please enter an opening month.
-    When the user enters text to a text field                   id = openingDateYear  ${nextYear}
-    #Then the user should not see the error any more    Please enter an opening year.
+    And the user enters text to a text field                    id = openingDateMonth    12
+    And the user enters text to a text field                    id = openingDateYear  ${nextYear}
+    Then the user should not see the error any more             ${enter_a_valid_date}
     When the user clicks the button twice                       css = label[for="stateAid2"]
     Then the user should not see the error any more             Please select a state aid option.
     When the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
@@ -87,10 +90,9 @@ Initial details: should not allow dates in the past
     And the user moves focus and waits for autosave
     When the user clicks the button/link          jQuery = button:contains("Done")
     Then The user should not see the element      jQuery = .govuk-button:contains("Edit")
-    [Teardown]    #the user enters text to a text field    id=openingDateYear    2017
 
 Initial details: mark as done
-    [Documentation]  INFUND-2982 INFUND-2983 INFUND-3888
+    [Documentation]  INFUND-2982 INFUND-2983 INFUND-3888  IFS-4982
     [Tags]
     Given The user enters valid data in the initial details
     And the user moves focus and waits for autosave
@@ -169,8 +171,7 @@ Eligibility client-side validations
     And the user selects the radio button                resubmission    no
     And the user moves focus and waits for autosave
     And the user should not see the text in the page     Please select a resubmission option
-    # TODO remove below commented line when IFS-4430 Done
-    #And the user cannot see a validation error in the page
+    And the user cannot see a validation error in the page
 
 Eligibility Autosave
     [Documentation]  INFUND-4582
@@ -365,52 +366,9 @@ Validation summary should be visible
     the user should see a summary error  12. Notifications: Please enter a future date that is after the previous milestone.
     the user should see a summary error  13. Release feedback: Please enter a future date that is after the previous milestone.
 
-the user fills the milestones with valid data
-    The user enters text to a text field    name = milestoneEntries[OPEN_DATE].day    10
-    The user enters text to a text field    name = milestoneEntries[OPEN_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[OPEN_DATE].year    2019
-    The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].day    11
-    The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].month    1
-    The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].year    2019
-    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].day    12
-    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].year    2019
-    The user selects the index from the drop-down menu    1    id = milestoneEntries[SUBMISSION_DATE].time
-    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].day    13
-    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].month    1
-    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].year    2019
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].day    14
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].year    2019
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].day    15
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].year    2019
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].day    16
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].year    2019
-    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].day    17
-    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].month    1
-    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].year    2019
-    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].day    18
-    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].year    2019
-    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].day    19
-    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].year    2019
-    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].day    20
-    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].month    1
-    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].year    2019
-    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].day    21
-    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].month    1
-    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].year    2019
-    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].day    22
-    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
-    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2019
-    Set Focus To Element    jQuery = button:contains(Done)
-    wait for autosave
-
 the user should see the correct values in the initial details form
     the user should see the element    css = #title[value="Validations Test"]
+    the user sees that the radio button is selected   fundingType  GRANT
     the user should see the element    jQuery = #competitionTypeId option[selected]:contains("Programme")
     the user should see the element    jQuery = #innovationSectorCategoryId option[selected]:contains("life sciences")
     the user should see the element    jQuery = [name^="innovationAreaCategoryIds"]:contains("Advanced therapies")
@@ -471,6 +429,7 @@ the user should see the correct inputs in the Applications questions form
 
 The user enters valid data in the initial details
     Given the user enters text to a text field                 id = title    Validations Test
+    And the user selects the radio button                      fundingType  GRANT
     And the user selects the option from the drop-down menu    Programme    id = competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id = innovationSectorCategoryId
     And the user selects the option from the drop-down menu    Advanced therapies    name = innovationAreaCategoryIds[0]

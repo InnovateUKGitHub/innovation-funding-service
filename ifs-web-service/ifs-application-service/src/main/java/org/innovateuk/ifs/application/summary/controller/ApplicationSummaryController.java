@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.application.summary.controller;
 
+import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
@@ -19,10 +19,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import static org.innovateuk.ifs.application.forms.controller.ApplicationSubmitController.APPLICATION_SUBMIT_FROM_ATTR_NAME;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
@@ -62,14 +62,15 @@ public class ApplicationSummaryController {
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form,
-                                     BindingResult bindingResult,
-                                     ValidationHandler validationHandler,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      @RequestParam(value = "origin", defaultValue = "APPLICATION") String origin,
                                      @RequestParam MultiValueMap<String, String> queryParams) {
 
+        if(!model.containsAttribute(APPLICATION_SUBMIT_FROM_ATTR_NAME)){
+            model.addAttribute(APPLICATION_SUBMIT_FROM_ATTR_NAME, new ApplicationSubmitForm());
+        }
 
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
 

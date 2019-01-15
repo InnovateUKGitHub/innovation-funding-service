@@ -2,21 +2,24 @@ package org.innovateuk.ifs.authentication.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.authentication.resource.CreateUserResource;
-import org.innovateuk.ifs.authentication.resource.CreateUserResponse;
-import org.innovateuk.ifs.authentication.resource.IdentityProviderError;
-import org.innovateuk.ifs.authentication.resource.UpdateUserResource;
+import org.innovateuk.ifs.authentication.resource.*;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.events.UserCreationEvent;
 import org.innovateuk.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -35,7 +38,7 @@ import static org.springframework.http.HttpStatus.OK;
  * RESTful implementation of the service that talks to the Identity Provider (in this case, via some API)
  */
 @Service
-public class RestIdentityProviderService implements IdentityProviderService {
+public class RestIdentityProviderService implements IdentityProviderService, ApplicationEventPublisherAware {
 
     private static final Log LOG = LogFactory.getLog(RestIdentityProviderService.class);
 
@@ -55,6 +58,8 @@ public class RestIdentityProviderService implements IdentityProviderService {
     @Autowired
     @Qualifier("shibboleth_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
+
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public enum ServiceFailures {
         UNABLE_TO_CREATE_USER,
@@ -77,9 +82,18 @@ public class RestIdentityProviderService implements IdentityProviderService {
             Either<ResponseEntity<IdentityProviderError[]>, CreateUserResponse> response = restPost(idpBaseURL + idpUserPath, createUserRequest, CreateUserResponse.class, IdentityProviderError[].class, CREATED);
             return response.mapLeftOrRight(
                     failure -> serviceFailure(errors(failure.getStatusCode(), failure.getBody())),
-                    success -> serviceSuccess(success.getUuid())
+                    success -> {
+                        applicationEventPublisher.publishEvent(new UserCreationEvent(this, success.getUuid(), emailAddress));
+                        return serviceSuccess(success.getUuid());
+                    }
             );
         });
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
+    protected void rollbackUser(UserCreationEvent userCreationEvent) {
+        LOG.info("Rolling back user in ldap: " + userCreationEvent.getEmailAddress());
+        adaptor.restDelete(idpBaseURL + idpUserPath + userCreationEvent.getUuid());
     }
 
     private static List<Error> errors(HttpStatus code, IdentityProviderError... errors) {
@@ -155,5 +169,11 @@ public class RestIdentityProviderService implements IdentityProviderService {
                 failure -> left(failure),
                 success -> right(success.getBody())
         );
+    }
+
+    @Override
+    @NotSecured(value = "Does not need securing", mustBeSecuredByOtherServices = false)
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }

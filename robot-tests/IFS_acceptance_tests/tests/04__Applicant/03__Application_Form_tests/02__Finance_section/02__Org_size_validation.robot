@@ -50,8 +50,8 @@ User sees warning that the funding section will be reset
     [Documentation]    INFUND-6894
     [Tags]  HappyPath
     When the user clicks the button/link             link = Your organisation
-    Then the user should see the text in the page    The organisation size is used to calculate your funding level in the application.
-    And the user should see the text in the page     Changing this selection will reset your funding level.
+    Then the user should see the element             jQuery = .message-alert p:contains("The organisation size is used to calculate your funding level in the application.")
+    And the user should see the element              jQuery = .message-alert p:contains("Changing this selection will reset your funding level.")
 
 Medium org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
@@ -87,8 +87,8 @@ User still sees warning that the funding section will be reset
     [Documentation]    INFUND-6894
     [Tags]  HappyPath
     When the user clicks the button/link             link = Your organisation
-    Then the user should see the text in the page    The organisation size is used to calculate your funding level in the application.
-    And the user should see the text in the page     Changing this selection will reset your funding level.
+    Then the user should see the element             jQuery = .message-alert p:contains("The organisation size is used to calculate your funding level in the application.")
+    And the user should see the element              jQuery = .message-alert p:contains("Changing this selection will reset your funding level.")
 
 Large organisation can be selected
     [Documentation]    INFUND-1110, INFUND_6394
@@ -134,7 +134,7 @@ The user marks their organisation as
     the user selects the checkbox               stateAidAgreed
     the user clicks the button/link             jQuery = button:contains("Mark as complete")
     the user should not see the element         css = .govuk-error-message
-    the user should see the text in the page    Please complete your project finances.
+    the user should see the element             jQuery = p:contains("Please complete your project finances.")
 
 the user completes the funding section with funding level
     [Arguments]    ${funding_level}
