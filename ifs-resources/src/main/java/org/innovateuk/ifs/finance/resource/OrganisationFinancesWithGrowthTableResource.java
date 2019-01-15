@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.resource;
 import java.time.YearMonth;
 
 /**
- * Form used to capture "Your organisation" information including a growth table
+ * A class used to capture "Your organisation" information including a growth table
  */
 public class OrganisationFinancesWithGrowthTableResource {
 
