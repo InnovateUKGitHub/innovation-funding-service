@@ -10,7 +10,8 @@ import java.time.temporal.ChronoField;
 import java.util.Map;
 
 /**
- * TODO DW - document
+ * A property editor that captures 2 individual form attributes (one for month, one for year) and combines them into a
+ * single YearMonth value that is then bound to a field on the form.
  */
 public class YearMonthPropertyEditor extends PropertyEditorSupport {
 

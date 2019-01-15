@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 /**
- * The Controller for the "Your organisation" page in the Application Form process.
+ * The Controller for the "Your organisation" page in the Application Form process when a growth table is required.
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-organisation/competition/{competitionId}/organisation/{organisationId}/section/{sectionId}/with-growth-table")
@@ -188,7 +188,8 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
                 form.getAnnualExportAtLastFinancialYear(),
                 form.getResearchAndDevelopmentSpendAtLastFinancialYear());
 
-        yourOrganisationRestService.updateOrganisationFinancesWithGrowthTable(applicationId, organisationId, finances);
+        yourOrganisationRestService.updateOrganisationFinancesWithGrowthTable(applicationId, organisationId, finances).
+                getSuccess();
     }
 
     private YourOrganisationViewModel getViewModel(long applicationId, long competitionId, long organisationId) {

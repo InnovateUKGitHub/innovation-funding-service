@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 /**
- * The Controller for the "Your organisation" page in the Application Form process.
+ * The Controller for the "Your organisation" page in the Application Form process.  Hands off to either
+ * {@link YourOrganisationWithGrowthTableController} or {@link YourOrganisationWithoutGrowthTableController}.
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-organisation/competition/{competitionId}/organisation/{organisationId}/section/{sectionId}")

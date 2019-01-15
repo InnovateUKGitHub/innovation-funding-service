@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * A populator to build a YourOrganisationViewModel
+ * A populator to build a YourOrganisationViewModel for the "Your organisation" pages.
  */
 @Component
 public class YourOrganisationViewModelPopulator {

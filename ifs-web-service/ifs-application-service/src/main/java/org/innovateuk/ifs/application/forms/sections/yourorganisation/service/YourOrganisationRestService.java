@@ -11,7 +11,7 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 
 /**
- * TODO DW - document this class
+ * A rest service to support the Your organisation pages.
  */
 @Service
 public class YourOrganisationRestService extends BaseRestService {

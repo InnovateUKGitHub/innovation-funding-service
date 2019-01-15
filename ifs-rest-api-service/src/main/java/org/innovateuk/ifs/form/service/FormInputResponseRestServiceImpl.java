@@ -112,16 +112,4 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
         return getWithRestResult(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionId",
                 applicationId, questionId), formInputResponseListType());
     }
-
-    @Override
-    public RestResult<FormInputResponseResource> getByApplicationIdQuestionIdOrganisationIdAndFormInputType(long applicationId, long questionId, long organisationId, FormInputType formInputType) {
-        return getWithRestResult(format("%s/application/%s/question/%s/organisation/%s/form-input-type/%s", formInputResponseRestURL,
-                applicationId, questionId, organisationId, formInputType.name()), FormInputResponseResource.class);
-    }
-
-    @Override
-    public RestResult<FormInputResponseResource> getByApplicationIdQuestionIdOrganisationIdFormInputTypeAndDescription(long applicationId, long questionId, long organisationId, FormInputType formInputType, String description) {
-        return getWithRestResult(format("%s/application/%s/question/%s/organisation/%s/form-input-type/%s?description=%s", formInputResponseRestURL,
-                applicationId, questionId, organisationId, formInputType.name(), description), FormInputResponseResource.class);
-    }
 }

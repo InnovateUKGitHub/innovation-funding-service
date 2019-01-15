@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.resource;
 
 /**
- * Form used to capture "Your organisation" information
+ * Form used to capture "Your organisation" information without a growth table
  */
 public class OrganisationFinancesWithoutGrowthTableResource {
 

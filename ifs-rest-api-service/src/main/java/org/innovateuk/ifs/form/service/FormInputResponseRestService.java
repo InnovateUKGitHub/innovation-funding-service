@@ -32,8 +32,4 @@ public interface FormInputResponseRestService {
     RestResult<FormInputResponseResource> getByApplicationIdAndQuestionSetupType(long applicationId, QuestionSetupType questionSetupType);
 
     RestResult<List<FormInputResponseResource>> getByApplicationIdAndQuestionId(long applicationId, long questionId);
-
-    RestResult<FormInputResponseResource> getByApplicationIdQuestionIdOrganisationIdAndFormInputType(long applicationId, long questionId, long organisationId, FormInputType formInputType);
-
-    RestResult<FormInputResponseResource> getByApplicationIdQuestionIdOrganisationIdFormInputTypeAndDescription(long applicationId, long questionId, long organisationId, FormInputType formInputType, String description);
 }

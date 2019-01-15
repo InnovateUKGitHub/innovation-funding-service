@@ -5,7 +5,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import javax.validation.constraints.NotNull;
 
 /**
- * Form used to capture "Your organisation" information
+ * Form used to capture "Your organisation" information when a growth table is required.
  */
 public class YourOrganisationWithoutGrowthTableForm {
 

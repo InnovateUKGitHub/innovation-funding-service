@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.time.YearMonth;
 
 /**
- * Form used to capture "Your organisation" information
+ * Form used to capture "Your organisation" information when a growth table is required.
  */
 public class YourOrganisationWithGrowthTableForm {
 

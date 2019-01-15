@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
 /**
- * TODO DW - document this class
+ * Represents a row in the Growth Table.
  */
 public class GrowthTableRow {
 

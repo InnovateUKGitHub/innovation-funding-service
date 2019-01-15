@@ -8,7 +8,7 @@ import java.util.List;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * View model to support "Your organisation" page
+ * View model to support "Your organisation" pages
  */
 public class YourOrganisationViewModel {
 

@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 /**
- * The Controller for the "Your organisation" page in the Application Form process.
+ * The Controller for the "Your organisation" page in the Application Form process when a growth table is not required.
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-organisation/competition/{competitionId}/organisation/{organisationId}/section/{sectionId}/without-growth-table")
@@ -188,7 +188,8 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
                 form.getHeadCount(),
                 form.getStateAidAgreed());
 
-        yourOrganisationRestService.updateOrganisationFinancesWithoutGrowthTable(applicationId, organisationId, finances);
+        yourOrganisationRestService.updateOrganisationFinancesWithoutGrowthTable(applicationId, organisationId, finances).
+                getSuccess();
     }
 
     private YourOrganisationViewModel getViewModel(

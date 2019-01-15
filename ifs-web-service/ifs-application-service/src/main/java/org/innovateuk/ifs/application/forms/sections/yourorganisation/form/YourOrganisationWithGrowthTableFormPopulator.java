@@ -5,7 +5,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableRe
 import org.springframework.stereotype.Component;
 
 /**
- * A populator to build a YourOrganisationForm
+ * A populator to build a YourOrganisationWithGrowthTableForm when a growth table is required.
  */
 @Component
 public class YourOrganisationWithGrowthTableFormPopulator {
