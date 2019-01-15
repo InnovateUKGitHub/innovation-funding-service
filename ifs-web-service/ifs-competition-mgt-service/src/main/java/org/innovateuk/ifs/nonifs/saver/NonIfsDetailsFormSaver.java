@@ -69,6 +69,7 @@ public class NonIfsDetailsFormSaver {
         competitionResource.setName(form.getTitle());
         competitionResource.setInnovationSector(form.getInnovationSectorCategoryId());
         competitionResource.setInnovationAreas(CollectionHelper.asSet(form.getInnovationAreaCategoryId()));
+        competitionResource.setFundingType(form.getFundingType());
     }
 
     private Map<String, GenericMilestoneRowForm> createMilestoneMap(NonIfsDetailsForm form) {

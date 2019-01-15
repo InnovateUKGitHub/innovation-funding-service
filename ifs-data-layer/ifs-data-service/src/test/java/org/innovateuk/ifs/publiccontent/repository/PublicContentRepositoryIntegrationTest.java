@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.junit.Test;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -28,23 +28,26 @@ public class PublicContentRepositoryIntegrationTest extends BaseRepositoryIntegr
     private CompetitionRepository competitionRepository;
 
     @Test
-    public void testDbUpdateTrigger() {
+    public void testDbUpdateTrigger() throws InterruptedException {
         loginIfsAdmin();
         Competition competition = newCompetition().with(id(null)).build();
-        competitionRepository.save(competition);
+        competition = competitionRepository.save(competition);
         flushAndClearSession();
 
         PublicContent publicContent = newPublicContent()
                 .with(id(null))
                 .withCompetitionId(competition.getId())
-                .withFundingType(PROCUREMENT)
                 .build();
         repository.save(publicContent);
         flushAndClearSession();
 
+        em.createNativeQuery(String.format("UPDATE public_content SET funding_type='GRANT' where competition_id=%d;", competition.getId()))
+                .executeUpdate();
+        flushAndClearSession();
+
         Competition actual = competitionRepository.findById(competition.getId()).get();
 
-        assertEquals(publicContent.getFundingType(), actual.getFundingType());
+        assertEquals(FundingType.GRANT, actual.getFundingType());
     }
 
     @Test
@@ -57,7 +60,6 @@ public class PublicContentRepositoryIntegrationTest extends BaseRepositoryIntegr
         PublicContent publicContent = newPublicContent()
                 .with(id(null))
                 .withCompetitionId(competition.getId())
-                .withFundingType(null)
                 .build();
         repository.save(publicContent);
         flushAndClearSession();

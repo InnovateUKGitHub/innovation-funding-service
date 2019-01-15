@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
@@ -11,6 +12,8 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.InviteService;
@@ -25,7 +28,9 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,13 +43,17 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuil
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QUESTION_PARAM;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_AS_COMPLETE;
+import static org.innovateuk.ifs.application.forms.controller.ApplicationSubmitController.APPLICATION_SUBMIT_FROM_ATTR_NAME;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -161,20 +170,17 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
 
     @Test
     public void applicationConfirmSubmit() throws Exception {
-        ApplicationResource app = applications.get(0);
+        long applicationId = 2L;
 
-        when(applicationService.getById(app.getId())).thenReturn(app);
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
-        mockMvc.perform(get("/application/" + app.getId() + "/confirm-submit"))
+        mockMvc.perform(get("/application/" + applicationId + "/confirm-submit")
+                .flashAttr("termsAgreed", true))
                 .andExpect(view().name("application-confirm-submit"))
-                .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
+                .andExpect(model().attribute("applicationId", applicationId));
 
     }
 
     @Test
-    public void applicationSubmitAgreeingToTerms() throws Exception {
+    public void applicationSubmit() throws Exception {
         ApplicationResource app = newApplicationResource()
                 .withId(1L)
                 .withCompetitionStatus(OPEN)
@@ -187,12 +193,38 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         when(applicationRestService.updateApplicationState(app.getId(), SUBMITTED)).thenReturn(restSuccess());
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        mockMvc.perform(post("/application/" + app.getId() + "/submit")
-                .param("agreeTerms", "yes"))
-                .andExpect(view().name("application-submitted"))
-                .andExpect(model().attribute("currentApplication", app));
+        mockMvc.perform(post("/application/" + app.getId() + "/confirm-submit"))
+                .andExpect(redirectedUrl("/application/" + app.getId() + "/track"));
 
         verify(applicationRestService).updateApplicationState(app.getId(), SUBMITTED);
+    }
+
+    @Test
+    public void applicationSummaryProcurementSubmitAgreeToTerms() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.PROCUREMENT)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+
+
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        MvcResult result = mockMvc.perform(post("/application/" + application.getId() + "/summary")
+                .param("agreeTerms", "false")
+                .param("submit-application", ""))
+                .andExpect(redirectedUrl("/application/" + application.getId() + "/summary"))
+                .andReturn();
+
+        BindingResult bindingResult = (BindingResult) result.getFlashMap().get(BindingResult.class.getCanonicalName() + "." + APPLICATION_SUBMIT_FROM_ATTR_NAME);
+        ApplicationSubmitForm submitForm = (ApplicationSubmitForm) result.getFlashMap().get(APPLICATION_SUBMIT_FROM_ATTR_NAME);
+
+        assertFalse(submitForm.isAgreeTerms());
+        assertEquals("validation.application.procurement.terms.required", bindingResult.getFieldError("agreeTerms").getCode());
+
     }
 
     @Test
@@ -205,7 +237,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
 
-        mockMvc.perform(post("/application/" + app.getId() + "/submit")
+        mockMvc.perform(post("/application/" + app.getId() + "/confirm-submit")
                 .param("agreeTerms", "yes"))
                 .andExpect(redirectedUrl("/application/1/confirm-submit"));
 

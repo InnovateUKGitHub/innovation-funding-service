@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.nonifs.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -61,7 +62,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withNonIfs(true).build();
 
         NonIfsDetailsForm nonIfsDetailsForm = new NonIfsDetailsForm();
-        NonIfsDetailsViewModel nonIfsDetailsViewModel = new NonIfsDetailsViewModel();
+        NonIfsDetailsViewModel nonIfsDetailsViewModel = mock(NonIfsDetailsViewModel.class);
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(nonIfsDetailsFormPopulator.populate(competitionResource)).thenReturn(nonIfsDetailsForm);
@@ -98,6 +99,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
 
         mockMvc.perform(post("/non-ifs-competition/setup/"+competitionId)
                 .param("title", "Competition Title")
+                .param("fundingType", FundingType.GRANT.name())
                 .param("innovationSectorCategoryId", "12")
                 .param("innovationAreaCategoryId", "13")
                 .param("openDate.year", "2017")
@@ -150,6 +152,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
 
         assertTrue(bindingResult.getFieldError("url").getDefaultMessage().equals("Please enter a competition URL."));
         assertTrue(bindingResult.getFieldError("title").getDefaultMessage().equals("Please enter a title."));
+        assertTrue(bindingResult.getFieldError("fundingType").getDefaultMessage().equals("Enter a valid funding type."));
         assertTrue(bindingResult.getFieldError("openDate").getDefaultMessage().equals("Please enter a valid date."));
         assertTrue(bindingResult.getFieldError("registrationCloseDate").getDefaultMessage().equals("Please enter a valid date."));
         assertTrue(bindingResult.getFieldError("closeDate").getDefaultMessage().equals("Please enter a valid date."));

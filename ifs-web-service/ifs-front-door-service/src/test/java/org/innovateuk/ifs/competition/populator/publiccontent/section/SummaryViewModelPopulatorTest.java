@@ -14,6 +14,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
 import static org.junit.Assert.assertEquals;
@@ -29,7 +30,7 @@ public class SummaryViewModelPopulatorTest {
     private SummaryViewModelPopulator populator;
 
     private SummaryViewModel viewModel;
-    private PublicContentResource publicContentResource;
+    private PublicContentItemResource publicContentItemResource;
     private PublicContentSectionResource publicContentSectionResource;
     private List<ContentGroupResource> contentGroups;
 
@@ -50,20 +51,22 @@ public class SummaryViewModelPopulatorTest {
                 .withPublicContent(1L)
                 .withContentGroups(contentGroups)
                 .build();
-        publicContentResource = newPublicContentResource()
-                .with(contentResource ->  {
-                    contentResource.setId(89235L);
-                })
-                .withSummary("Summary")
+        publicContentItemResource = newPublicContentItemResource().withPublicContentResource(
+                newPublicContentResource()
+                        .with(contentResource -> {
+                            contentResource.setId(89235L);
+                        })
+                        .withSummary("Summary")
+                        .withProjectSize("5M")
+                        .withContentSections(asList(publicContentSectionResource))
+                        .build())
                 .withFundingType(FundingType.GRANT)
-                .withProjectSize("5M")
-                .withContentSections(asList(publicContentSectionResource))
                 .build();
     }
 
     @Test
     public void populateSection() {
-        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
+        populator.populateSection(viewModel, publicContentItemResource, publicContentSectionResource, Boolean.FALSE);
 
         assertEquals("Summary", viewModel.getDescription());
         assertEquals(FundingType.GRANT.getDisplayName(), viewModel.getFundingType());

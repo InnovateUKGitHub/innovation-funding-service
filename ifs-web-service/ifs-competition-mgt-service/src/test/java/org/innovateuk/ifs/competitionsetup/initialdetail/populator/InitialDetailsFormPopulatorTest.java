@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.initialdetail.populator;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
@@ -63,6 +64,7 @@ public class InitialDetailsFormPopulatorTest {
 				.withName("name")
 				.withBudgetCode("budgetcode")
                 .withStateAid(Boolean.TRUE)
+				.withFundingType(FundingType.GRANT)
 				.withId(8L).build();
 
 		List<InnovationAreaResource> innovationAreaCategories = new ArrayList<>();
@@ -84,6 +86,7 @@ public class InitialDetailsFormPopulatorTest {
 		assertEquals(Integer.valueOf(2000), form.getOpeningDateYear());
 		assertEquals("name", form.getTitle());
 		assertEquals(Boolean.TRUE, form.getStateAid());
+		assertEquals(FundingType.GRANT, form.getFundingType());
 	}
 
 	@Test

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.populator.publiccontent.section;
 
 
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -46,7 +45,6 @@ public class SupportingInformationViewModelPopulatorTest {
                 })
                 .withCompetitionId(5372L)
                 .withSummary("Summary")
-                .withFundingType(FundingType.GRANT)
                 .withProjectSize("5M")
                 .withContentSections(asList(publicContentSectionResource))
                 .build();
