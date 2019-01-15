@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYour
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationService;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModelPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -46,7 +46,7 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
     private YourOrganisationWithoutGrowthTableFormPopulator withoutGrowthTableFormPopulator;
     private SectionService sectionService;
     private UserRestService userRestService;
-    private YourOrganisationService yourOrganisationService;
+    private YourOrganisationRestService yourOrganisationRestService;
 
     @Autowired
     YourOrganisationWithoutGrowthTableController(
@@ -54,14 +54,15 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
             YourOrganisationViewModelPopulator viewModelPopulator,
             YourOrganisationWithoutGrowthTableFormPopulator withoutGrowthTableFormPopulator,
             SectionService sectionService,
-            UserRestService userRestService, YourOrganisationService yourOrganisationService) {
+            UserRestService userRestService,
+            YourOrganisationRestService yourOrganisationRestService) {
 
         this.commonFinancesViewModelPopulator = commonFinancesViewModelPopulator;
         this.viewModelPopulator = viewModelPopulator;
         this.withoutGrowthTableFormPopulator = withoutGrowthTableFormPopulator;
         this.sectionService = sectionService;
         this.userRestService = userRestService;
-        this.yourOrganisationService = yourOrganisationService;
+        this.yourOrganisationRestService = yourOrganisationRestService;
     }
 
     // for ByteBuddy
@@ -74,7 +75,6 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
     @SecuredBySpring(value = "VIEW_YOUR_ORGANISATION", description = "Applicants and internal users can view the Your organisation page")
     public String viewPage(
             @PathVariable("applicationId") long applicationId,
-            @PathVariable("competitionId") long competitionId,
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
@@ -84,10 +84,10 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
                 getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
-                getViewModel(applicationId, competitionId, organisationId));
+                getViewModel(applicationId, organisationId));
 
         Future<YourOrganisationWithoutGrowthTableForm> formRequest = async(() ->
-                withoutGrowthTableFormPopulator.populate(applicationId, competitionId, organisationId));
+                withoutGrowthTableFormPopulator.populate(applicationId, organisationId));
 
         model.addAttribute("commonFinancesModel", commonViewModelRequest);
         model.addAttribute("model", viewModelRequest);
@@ -140,7 +140,7 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
 
         Supplier<String> failureHandler = () -> {
             CommonYourFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, false);
-            YourOrganisationViewModel viewModel = getViewModel(applicationId, competitionId, organisationId);
+            YourOrganisationViewModel viewModel = getViewModel(applicationId, organisationId);
             model.addAttribute("commonFinancesModel", commonViewModel);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
@@ -183,19 +183,11 @@ public class YourOrganisationWithoutGrowthTableController extends AsyncAdaptor {
             long userId,
             YourOrganisationWithoutGrowthTableForm form) {
 
-        boolean stateAidIncluded = yourOrganisationService.isShowStateAidAgreement(applicationId, organisationId).getSuccess();
-
-        yourOrganisationService.updateOrganisationSize(applicationId, organisationId, form.getOrganisationSize()).getSuccess();
-        yourOrganisationService.updateHeadCount(applicationId, competitionId, userId, form.getHeadCount()).getSuccess();
-        yourOrganisationService.updateTurnover(applicationId, competitionId, userId, form.getTurnover()).getSuccess();
-
-        if (stateAidIncluded) {
-            yourOrganisationService.updateStateAidAgreed(applicationId, form.getStateAidAgreed()).getSuccess();
-        }
+        yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(applicationId, organisationId);
     }
 
-    private YourOrganisationViewModel getViewModel(long applicationId, long competitionId, long organisationId) {
-        return viewModelPopulator.populate(applicationId, competitionId, organisationId);
+    private YourOrganisationViewModel getViewModel(long applicationId, long organisationId) {
+        return viewModelPopulator.populate(applicationId, organisationId);
     }
 
     private CommonYourFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {

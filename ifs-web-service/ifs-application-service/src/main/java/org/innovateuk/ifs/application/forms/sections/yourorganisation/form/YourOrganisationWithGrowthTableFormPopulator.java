@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationService;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.springframework.stereotype.Component;
-
-import java.time.YearMonth;
 
 /**
  * A populator to build a YourOrganisationForm
@@ -12,47 +10,27 @@ import java.time.YearMonth;
 @Component
 public class YourOrganisationWithGrowthTableFormPopulator {
 
-    private YourOrganisationService yourOrganisationService;
+    private YourOrganisationRestService yourOrganisationRestService;
 
-    public YourOrganisationWithGrowthTableFormPopulator(YourOrganisationService yourOrganisationService) {
-        this.yourOrganisationService = yourOrganisationService;
+    public YourOrganisationWithGrowthTableFormPopulator(YourOrganisationRestService yourOrganisationRestService) {
+        this.yourOrganisationRestService = yourOrganisationRestService;
     }
 
-    public YourOrganisationWithGrowthTableForm populate(long applicationId, long competitionId, long organisationId) {
+    public YourOrganisationWithGrowthTableForm populate(long applicationId, long organisationId) {
 
-        Boolean stateAidAgreed =
-                yourOrganisationService.getStateAidAgreed(applicationId).getSuccess();
-
-        OrganisationSize organisationSize =
-                yourOrganisationService.getOrganisationSize(applicationId, organisationId).getSuccess();
-
-        YearMonth financialYearEnd =
-                yourOrganisationService.getFinancialYearEnd(applicationId, competitionId, organisationId).getSuccess();
-
-        Long annualTurnoverAtEndOfFinancialYear =
-                yourOrganisationService.getAnnualTurnoverAtEndOfFinancialYear(applicationId, competitionId, organisationId).getSuccess();
-
-        Long annualProfitsAtEndOfFinancialYear =
-                yourOrganisationService.getAnnualProfitsAtEndOfFinancialYear(applicationId, competitionId, organisationId).getSuccess();
-
-        Long annualExportAtEndOfFinancialYear =
-                yourOrganisationService.getAnnualExportAtEndOfFinancialYear(applicationId, competitionId, organisationId).getSuccess();
-
-        Long researchAndDevelopmentSpendAtEndOfFinancialYear =
-                yourOrganisationService.getResearchAndDevelopmentSpendAtEndOfFinancialYear(applicationId, competitionId, organisationId).getSuccess();
-
-        Long headCountAtLastFinancialYear =
-                yourOrganisationService.getHeadCountAtLastFinancialYear(applicationId, competitionId, organisationId).getSuccess();
+        OrganisationFinancesWithGrowthTableResource finances =
+                yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(applicationId, organisationId).
+                        getSuccess();
 
         return new YourOrganisationWithGrowthTableForm(
-                organisationSize,
-                stateAidAgreed,
-                financialYearEnd,
-                headCountAtLastFinancialYear,
-                annualTurnoverAtEndOfFinancialYear,
-                annualProfitsAtEndOfFinancialYear,
-                annualExportAtEndOfFinancialYear,
-                researchAndDevelopmentSpendAtEndOfFinancialYear);
+                finances.getOrganisationSize(),
+                finances.getStateAidAgreed(),
+                finances.getFinancialYearEnd(),
+                finances.getHeadCountAtLastFinancialYear(),
+                finances.getAnnualTurnoverAtLastFinancialYear(),
+                finances.getAnnualProfitsAtLastFinancialYear(),
+                finances.getAnnualExportAtLastFinancialYear(),
+                finances.getResearchAndDevelopmentSpendAtLastFinancialYear());
 
         // TODO DW - readOnlyAllApplicantApplicationFinances
 

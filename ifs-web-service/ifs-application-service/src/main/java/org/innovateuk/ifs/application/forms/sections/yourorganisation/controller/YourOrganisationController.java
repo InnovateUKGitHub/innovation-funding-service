@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.controller;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationService;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,11 +18,11 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-organisation/competition/{competitionId}/organisation/{organisationId}/section/{sectionId}")
 public class YourOrganisationController {
 
-    private YourOrganisationService yourOrganisationService;
+    private YourOrganisationRestService yourOrganisationRestService;
 
     @Autowired
-    YourOrganisationController(YourOrganisationService yourOrganisationService) {
-        this.yourOrganisationService = yourOrganisationService;
+    YourOrganisationController(YourOrganisationRestService yourOrganisationRestService) {
+        this.yourOrganisationRestService = yourOrganisationRestService;
     }
 
     // for ByteBuddy
@@ -38,7 +38,7 @@ public class YourOrganisationController {
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId) {
 
-        boolean includeGrowthTable = yourOrganisationService.isIncludingGrowthTable(competitionId).getSuccess();
+        boolean includeGrowthTable = yourOrganisationRestService.isIncludingGrowthTable(competitionId).getSuccess();
 
         return redirectToViewPage(applicationId, competitionId, organisationId, sectionId, includeGrowthTable);
     }

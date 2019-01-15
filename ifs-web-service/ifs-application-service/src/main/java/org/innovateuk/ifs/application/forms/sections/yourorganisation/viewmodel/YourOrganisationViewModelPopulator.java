@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationService;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,18 +9,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class YourOrganisationViewModelPopulator {
 
-    private YourOrganisationService yourOrganisationService;
+    private YourOrganisationRestService yourOrganisationRestService;
 
-    public YourOrganisationViewModelPopulator(YourOrganisationService yourOrganisationService) {
-        this.yourOrganisationService = yourOrganisationService;
+    public YourOrganisationViewModelPopulator(YourOrganisationRestService yourOrganisationRestService) {
+        this.yourOrganisationRestService = yourOrganisationRestService;
     }
 
-    public YourOrganisationViewModel populate(long applicationId, long competitionId, long organisationId) {
+    public YourOrganisationViewModel populate(long applicationId, long organisationId) {
 
-        boolean showStateAidAgreement = yourOrganisationService.isShowStateAidAgreement(applicationId, organisationId).getSuccess();
+        boolean showStateAidAgreement =
+                yourOrganisationRestService.isShowStateAidAgreement(applicationId, organisationId).getSuccess();
 
-        boolean includesGrowthTable = yourOrganisationService.isIncludingGrowthTable(competitionId).getSuccess();
-
-        return new YourOrganisationViewModel(showStateAidAgreement, includesGrowthTable);
+        return new YourOrganisationViewModel(showStateAidAgreement);
     }
 }

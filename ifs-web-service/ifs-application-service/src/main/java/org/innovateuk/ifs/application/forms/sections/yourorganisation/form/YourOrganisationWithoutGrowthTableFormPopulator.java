@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationService;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,20 +10,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class YourOrganisationWithoutGrowthTableFormPopulator {
 
-    private YourOrganisationService yourOrganisationService;
+    private YourOrganisationRestService yourOrganisationRestService;
 
-    public YourOrganisationWithoutGrowthTableFormPopulator(YourOrganisationService yourOrganisationService) {
-        this.yourOrganisationService = yourOrganisationService;
+    public YourOrganisationWithoutGrowthTableFormPopulator(YourOrganisationRestService yourOrganisationRestService) {
+        this.yourOrganisationRestService = yourOrganisationRestService;
     }
 
-    public YourOrganisationWithoutGrowthTableForm populate(long applicationId, long competitionId, long organisationId) {
+    public YourOrganisationWithoutGrowthTableForm populate(long applicationId, long organisationId) {
 
-        Boolean stateAidAgreed = yourOrganisationService.getStateAidAgreed(applicationId).getSuccess();
-        OrganisationSize organisationSize = yourOrganisationService.getOrganisationSize(applicationId, organisationId).getSuccess();
+        OrganisationFinancesWithoutGrowthTableResource finances =
+                yourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(applicationId, organisationId).
+                getSuccess();
 
-        Long turnover = yourOrganisationService.getTurnover(applicationId, competitionId, organisationId).getSuccess();
-        Long headCount = yourOrganisationService.getHeadCount(applicationId, competitionId, organisationId).getSuccess();
-        return new YourOrganisationWithoutGrowthTableForm(organisationSize, turnover, headCount, stateAidAgreed);
+        return new YourOrganisationWithoutGrowthTableForm(
+                finances.getOrganisationSize(),
+                finances.getTurnover(),
+                finances.getHeadCount(),
+                finances.getStateAidAgreed());
 
         // TODO DW - readOnlyAllApplicantApplicationFinances
 
