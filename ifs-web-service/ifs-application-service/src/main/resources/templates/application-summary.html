@@ -10,7 +10,7 @@
         <th:block th:if="${model.currentApplication.isOpen() and model.applicationReadyForSubmit}" th:include="fragments/modals ::modal-confirm-submit-application
             (messageTitle='This is your final chance to make changes to the application.',
              message='You will not be able to access the application after this point. Are you sure you want to submit?',
-             submitLink='/application/'+${model.currentApplication.getId()}+'/submit',
+             submitLink='/application/'+${model.currentApplication.getId()}+'/confirm-submit',
              submitText='Yes, I want to submit my application',
              submittedText='Submitting application, please wait...',
              cancelText='Cancel')" />
@@ -28,6 +28,15 @@
             </th:block>
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
+
+                <div th:if="${#fields.hasErrors('${applicationSubmitForm.*}')}" class="govuk-error-summary"
+                     aria-labelledby="error-summary-title"
+                     role="alert"
+                     tabindex="-1"
+                     data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(applicationSubmitForm)" />
+                </div>
 
                 <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.currentCompetition})" />
 
@@ -55,9 +64,43 @@
                         <div class="message-alert">
                             <p class="govuk-body">You will not be able to make changes to your application or resubmit after this point.</p>
                         </div>
-                        <a th:if="${model.applicationReadyForSubmit}" id="submit-application-button" class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-submit-application"
-                           th:href="@{/application/{id}/confirm-submit(id=${model.currentApplication.getId()})}">Submit application</a>
-                        <button disabled="disabled" class="govuk-button govuk-!-margin-top-6" th:unless="${model.applicationReadyForSubmit}">Submit application</button>
+
+
+                        <form class="govuk-!-margin-top-6" th:object="${applicationSubmitForm}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
+
+                            <th:block th:if="${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT and model.applicationReadyForSubmit}">
+                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('agreeTerms')} ? 'govuk-form-group--error'">
+                                    <fieldset class="govuk-fieldset">
+                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                                            <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
+                                        </legend>
+                                        <th:block th:if="${#fields.hasErrors('agreeTerms')}">
+                                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('agreeTerms')}" th:text="${err}" />
+                                        </th:block>
+                                        <div class="govuk-checkboxes">
+                                            <div class="govuk-checkboxes__item">
+                                                <input id="agreeTerms"
+                                                       class="govuk-checkboxes__input"
+                                                       th:field="*{agreeTerms}"
+                                                       type="checkbox"
+                                                       value="true"
+                                                       data-switches-button-status="#submit-application-button"
+                                                       data-autosave-disabled />
+                                                <label for="agreeTerms"
+                                                       class="govuk-label govuk-checkboxes__label">
+                                                    I agree to the standard terms set out in the <a href="/files/draft-procurement-contract.pdf" target="_blank">draft contract</a> (opens in a new window). I understand that I will receive the final contract, which will include the full terms and conditions, if my application is successful.
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </th:block>
+                            <button id="submit-application-button"
+                                    th:disabled="${!model.applicationReadyForSubmit}"
+                                    class="govuk-button"
+                                    name="submit-application"
+                                    data-js-modal="modal-confirm-submit-application">Submit application</button>
+                        </form>
                     </th:block>
 
                     <th:block th:unless="${model.userIsLeadApplicant}">
