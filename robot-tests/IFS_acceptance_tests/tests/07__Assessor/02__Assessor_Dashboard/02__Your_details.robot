@@ -55,7 +55,7 @@ Valid Profile Update
 *** Keywords ***
 Custom Suite Setup
    the assessor logs-in
-   ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Select a dashboard")
+   ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Dashboard")
    Run Keyword If   '${status}' == 'PASS'  Run keywords   the user clicks the button/link    link = Assessments
    User opens the edit details form
 
