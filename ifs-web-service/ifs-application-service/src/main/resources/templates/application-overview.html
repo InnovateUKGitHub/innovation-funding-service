@@ -54,8 +54,8 @@
                       th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
                 <section th:id="'section-'+${section.id}">
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${section.name}" />
-                    <p th:unless="${procurementCompetition}" class="govuk-body" th:text="${section.description}"></p>
-                    <p th:if="${procurementCompetition}" class="govuk-body">
+                    <p th:unless="${procurementCompetition and section.name == 'Finances'}" class="govuk-body" th:text="${section.description}"></p>
+                    <p th:if="${procurementCompetition and section.name == 'Finances'}" class="govuk-body">
                         Submit your organisation's project finances.
                     </p>
 
