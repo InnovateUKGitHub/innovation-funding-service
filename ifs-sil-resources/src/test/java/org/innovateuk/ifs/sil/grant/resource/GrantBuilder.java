@@ -27,6 +27,7 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
     private String orgType = "Business";
     private String orgProjectRole = "lead";
     private String contactRole = "finance_contact";
+    private String orgSize = "MEDIUM";
     private int participantCount = 1;
     private int costCategoryCount = 2;
     private int durationInMonths = 12;
@@ -150,6 +151,7 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
         participant.setCapLimit(capLimit);
         participant.setOverheadRate(overheadRate);
         participant.setAwardRate(awardRate);
+        participant.setOrgSize(orgSize);
         return participant;
     }
 

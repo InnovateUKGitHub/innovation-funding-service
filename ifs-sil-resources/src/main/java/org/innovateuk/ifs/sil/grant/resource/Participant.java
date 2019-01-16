@@ -94,7 +94,7 @@ public class Participant {
         return orgSize;
     }
 
-    public void setOrgSize(String size) {
+    public void setOrgSize(String orgSize) {
         this.orgSize = orgSize;
     }
 
