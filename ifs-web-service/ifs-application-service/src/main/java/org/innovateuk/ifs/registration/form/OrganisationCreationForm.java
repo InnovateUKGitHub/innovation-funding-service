@@ -3,7 +3,7 @@ package org.innovateuk.ifs.registration.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
@@ -15,20 +15,19 @@ import java.util.List;
 /**
  * Object to store the data that is used for the companies house form, while creating a new application.
  */
+
+@FieldRequiredIf(required = "organisationSearchName", argument = "organisationSearching", predicate = true, message = "{validation.standard.organisationsearchname.required}")
+@FieldRequiredIf(required = "organisationName", argument = "manualEntry", predicate = true, message = "{validation.standard.organisationname.required}")
 public class OrganisationCreationForm implements Serializable {
     private boolean triedToSave = false;
 
     @NotNull(message = "{validation.standard.organisationtype.required}")
     private Long organisationTypeId;
-
-    @NotBlank(message = "{validation.standard.organisationsearchname.required}")
-    // on empty value don't check pattern since then there already is a validation message.
     private String organisationSearchName;
     private String searchOrganisationId;
     private boolean organisationSearching;
     private boolean manualEntry = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
-    @NotBlank(message = "{validation.standard.organisationname.required}")
     private String organisationName;
 
     public OrganisationCreationForm() {
