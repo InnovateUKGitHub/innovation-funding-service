@@ -44,10 +44,15 @@
                             view contributors and collaborators
                         </a>
                     </li>
-                    <li>
-                        <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}" class="govuk-link">
-                            view the competition terms and conditions
-                        </a>
+                    <li th:with="procurementCompetition=${competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">>
+                        <th:block th:if="${procurementCompetition}">
+                            <a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link">view the draft contract</a>
+                        </th:block>
+                        <th:block th:unless="${procurementCompetition}">
+                            <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}" class="govuk-link">
+                                view the competition terms and conditions
+                            </a>
+                        </th:block>
                     </li>
                 </ul>
             </th:block>
