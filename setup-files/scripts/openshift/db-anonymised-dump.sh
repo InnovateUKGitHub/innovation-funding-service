@@ -21,8 +21,7 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 function takeMysqlDump() {
     echo "Taking anonymised data dump"
     mkdir -p /tmp/anonymised
-    RESULT=$(oc rsh ${SVC_ACCOUNT_CLAUSE} db-anonymised-data /dump/make-mysqldump.sh > /dev/null);
-    echo "$RESULT"
+    oc rsh ${SVC_ACCOUNT_CLAUSE} db-anonymised-data /dump/make-mysqldump.sh > /dev/null;
     oc rsync ${SVC_ACCOUNT_CLAUSE} db-anonymised-data:/dump/anonymised-dump.sql.gpg /tmp/anonymised/ > /dev/null;
     echo "Anonymised data dump taken"
 }
