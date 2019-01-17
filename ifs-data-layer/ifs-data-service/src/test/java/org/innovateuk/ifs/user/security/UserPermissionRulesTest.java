@@ -721,9 +721,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void internalUsersCanUpdateUserEmailAddress(){
+    public void internalUsersCanUpdateExternalUsersEmailAddress(){
 
-        UserResource userResource = UserResourceBuilder.newUserResource().build();
+        UserResource userResource = UserResourceBuilder.newUserResource().withRolesGlobal(asList(APPLICANT)).build();
 
         allGlobalRoleUsers.forEach(user -> {
             if (isInternal(user)) {
