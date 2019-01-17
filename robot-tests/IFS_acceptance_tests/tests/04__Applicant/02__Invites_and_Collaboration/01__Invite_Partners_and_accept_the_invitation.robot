@@ -50,8 +50,8 @@ Application team page
     [Setup]    The user navigates to the page      ${DASHBOARD_URL}
     Given the user clicks the button/link          link = Invite robot test application
     When the user clicks the button/link           link = Application team
-    Then the user should see the text in the page  Application team
-    And the user should see the text in the page   View and manage your contributors or collaborators in the application.
+    Then the user should see the element           jQuery = h1:contains("Application team")
+    And the user should see the element            jQuery = p:contains("View and manage your contributors or collaborators in the application.")
     And the lead applicant should have the correct org status
     And the user should see the element            link = Application overview
 
@@ -115,8 +115,8 @@ Lead Adds/Removes partner organisation
     And the user clicks the button/link                jQuery = a:contains("Update and add contributors from Fannie May")
     Then The user clicks the button/link               jQuery = a:contains('Delete organisation')
     And The user clicks the button/link                jQuery = .modal-delete-organisation button:contains('Delete organisation')
-    Then The user should not see the text in the page  Fannie May
-    And the user should see the text in the page       Application team
+    Then The user should not see the element           jQuery = td:contains("Fannie May")
+    And the user should see the element                jQuery = h1:contains("Application team")
     [Teardown]  the user clicks the button/link        jQuery = a:contains('Add a collaborator organisation')
 
 Partner organisation Server-side validations
@@ -167,7 +167,7 @@ Pending users visible in the assign list but not clickable
     And the user clicks the button/link           link = Invite robot test application
     And the user clicks the button/link           link = Project summary
     Then the applicant cannot assign to pending invitees
-    And the user should see the text in the page  Adrian Booth (pending)
+    And the user should see the element           jQuery = li:contains("Adrian Booth (pending)")
     [Teardown]  logout as user
 
 Business organisation (partner accepts invitation)
@@ -188,7 +188,7 @@ Partner requests new verification email via password reset
     When the user clicks the forgot psw link
     And the user enters text to a text field       id = email    ${invite_email}
     And the user clicks the button/link            jQuery = #forgotten-password-cta
-    Then the user should see the text in the page  If your email address is recognised and valid, you’ll receive a notification
+    Then the user should see the element           jQuery = p:contains("If your email address is recognised and valid, you’ll receive a notification")
 
 Complete account verification
     [Documentation]    INFUND-1005  INFUND-2286  INFUND-1779  INFUND-2336
@@ -245,7 +245,7 @@ Lead applicant invites a non registered user in the same organisation
     And the user clicks the button/link            link = Invite robot test application
     When the user clicks the button/link           link = Application team
     When the user clicks the button/link           jQuery = a:contains("Update and add contributors from ${organisation}")
-    Then the user should see the text in the page  Update ${organisation}
+    Then the user should see the element           jQuery = h1:contains("Update ${organisation}")
     And the user clicks the button/link            jQuery = button:contains("Add another contributor")
     When The user enters text to a text field      name = stagedInvite.name    Roger Axe
     And The user enters text to a text field       name = stagedInvite.email    ${test_mailbox_one}+inviteorg2@gmail.com
@@ -257,9 +257,9 @@ Registered partner should not create new org but should follow the create accoun
     [Documentation]    INFUND-1463
     [Tags]
     When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to contribute in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
-    And the user should see the text in the page           Join an application
+    And the user should see the element                    jQuery = h1:contains("Invitation to contribute")
     And the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, accept invitation")
-    And the user should see the text in the page           Confirm your organisation
+    And the user should see the element                    jQuery = h1:contains("Confirm your organisation")
     And the user should see the element                    link = email the lead applicant
     And the user clicks the button/link                    jQuery = .govuk-button:contains("Confirm and continue")
     And the invited user fills the create account form     Roger  Axe

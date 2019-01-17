@@ -23,6 +23,7 @@ public class NonIfsDetailsFormPopulator {
         form.setRegistrationCloseDate(new MilestoneRowForm(MilestoneType.REGISTRATION_DATE, competitionResource.getRegistrationDate()));
         form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, competitionResource.getStartDate()));
         form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, competitionResource.getEndDate()));
+        form.setFundingType(competitionResource.getFundingType());
         return form;
     }
 }

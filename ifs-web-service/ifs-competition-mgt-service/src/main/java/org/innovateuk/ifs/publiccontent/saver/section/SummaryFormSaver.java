@@ -2,7 +2,6 @@ package org.innovateuk.ifs.publiccontent.saver.section;
 
 
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.form.section.SummaryForm;
@@ -21,7 +20,6 @@ public class SummaryFormSaver extends AbstractContentGroupFormSaver<SummaryForm>
     @Override
     protected List<Error> populateResource(SummaryForm form, PublicContentResource publicContentResource) {
         publicContentResource.setSummary(form.getDescription());
-        publicContentResource.setFundingType(FundingType.fromDisplayName(form.getFundingType()));
         publicContentResource.setProjectSize(form.getProjectSize());
         return super.populateResource(form, publicContentResource);
     }

@@ -28,7 +28,7 @@ The user clicks the login link
     Then the user should see the element                jQuery = h1:contains("Your organisation")
     And the user should see the element                 jQuery = dt:contains("INNOVATE LTD")
     When the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
-    Then the user should see the text in the page       Application overview
+    Then the user should see the element                jQuery = h1:contains("Application overview")
 
 The user edits the name this should be changed in the View team page
     [Documentation]    INFUND-2716

@@ -5,11 +5,13 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.OtherCost;
+import org.springframework.stereotype.Component;
 
 /**
  * Handles the other costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@Component
 public class OtherCostHandler extends FinanceRowHandler<OtherCost> {
     public static final String COST_KEY = "other-cost";
 

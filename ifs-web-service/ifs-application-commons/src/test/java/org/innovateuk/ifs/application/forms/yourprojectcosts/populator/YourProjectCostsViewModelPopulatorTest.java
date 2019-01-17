@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProje
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -19,7 +20,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<YourProjectCostsViewModelPopulator> {
@@ -49,18 +50,17 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
     public void populate() {
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
+                .withFundingType(FundingType.PROCUREMENT)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .build();
-
         ApplicationResource application = newApplicationResource()
                 .withId(APPLICATION_ID)
                 .withCompetition(competition.getId())
                 .withName("Name")
                 .build();
-
 
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
@@ -72,15 +72,41 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertEquals((long) viewModel.getApplicationId(), APPLICATION_ID);
         assertEquals((long) viewModel.getSectionId(), SECTION_ID);
         assertEquals((long) viewModel.getCompetitionId(), (long) competition.getId());
-        assertEquals(viewModel.getApplicationName(), "Name");
+        assertEquals(viewModel.getApplicationName(), application.getName());
         assertEquals(viewModel.getCompetitionId(), competition.getId());
-        assertEquals(viewModel.getOrganisationName(), "orgname");
-        assertEquals(viewModel.isIncludeVat(), true);
-        assertEquals(viewModel.isComplete(), true);
-        assertEquals(viewModel.isOpen(), false);
+        assertEquals(viewModel.getOrganisationName(), organisation.getName());
+        assertTrue(viewModel.isIncludeVat());
+        assertTrue(viewModel.isComplete());
+        assertFalse(viewModel.isOpen());
         assertEquals(viewModel.getFinancesUrl(), String.format("/application/%d/form/FINANCE", APPLICATION_ID));
-        assertEquals(viewModel.isInternal(), false);
+        assertFalse(viewModel.isInternal());
+        assertTrue(viewModel.isReadOnly());
+        assertTrue(viewModel.isProcurementCompetition());
+    }
 
-        assertEquals(viewModel.isReadOnly(), true);
+    @Test
+    public void populate_nonProcurement() {
+        CompetitionResource competition = newCompetitionResource()
+                .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
+                .withFundingType(FundingType.GRANT)
+                .build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withName("orgname")
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withCompetition(competition.getId())
+                .withName("Name")
+                .build();
+
+        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
+        when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
+        when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
+
+        YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, false, "");
+
+        assertFalse(viewModel.isProcurementCompetition());
     }
 }

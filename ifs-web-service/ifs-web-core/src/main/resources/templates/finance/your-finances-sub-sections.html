@@ -17,12 +17,16 @@
         </ul>
     </div>
 
-    <h2 class="govuk-heading-m">Finance summary</h2>
-    <p class="govuk-body">This is a breakdown of your project costs and sources of funding for this project.</p>
+    <th:block th:unless="${model.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+        <h2 class="govuk-heading-m">Finance summary</h2>
+        <p class="govuk-body">This is a breakdown of your project costs and sources of funding for this project.</p>
 
-    <th:block th:insert="finance/your-finances-sub-sections :: your_finance_summary (${model})" />
+        <th:block th:insert="finance/your-finances-sub-sections :: your_finance_summary (${model})" />
+
+    </th:block>
 
     <a th:href="${backURL}" class="button-secondary">Return to application overview</a>
+
 </th:block>
 
 

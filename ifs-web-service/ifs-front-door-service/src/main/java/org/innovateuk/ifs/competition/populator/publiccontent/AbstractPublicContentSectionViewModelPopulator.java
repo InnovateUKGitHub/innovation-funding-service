@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.populator.publiccontent;
 
 
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -12,7 +13,8 @@ import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSect
  */
 public abstract class AbstractPublicContentSectionViewModelPopulator<M extends AbstractPublicSectionContentViewModel>{
 
-    public M populate(PublicContentResource publicContentResource, Boolean nonIFS, PublicContentSectionType sectionType, PublicContentSectionType currentSectionType) {
+    public M populate(PublicContentItemResource publicContentItemResource, Boolean nonIFS, PublicContentSectionType sectionType, PublicContentSectionType currentSectionType) {
+        PublicContentResource publicContentResource = publicContentItemResource.getPublicContentResource();
         M model = createInitial();
         model.setSectionType(getType());
         model.setActive(currentSectionType.equals(sectionType));
@@ -24,7 +26,7 @@ public abstract class AbstractPublicContentSectionViewModelPopulator<M extends A
                 .filter(section -> getType().equals(section.getType()))
                 .findAny()
                 .ifPresent(publicContentSectionResource ->
-                    populateSection(model, publicContentResource, publicContentSectionResource, nonIFS)
+                    populateSection(model, publicContentItemResource, publicContentSectionResource, nonIFS)
                 );
 
 
@@ -32,6 +34,6 @@ public abstract class AbstractPublicContentSectionViewModelPopulator<M extends A
     }
 
     protected abstract M createInitial();
-    protected abstract void populateSection(M model, PublicContentResource publicContentResource, PublicContentSectionResource section, Boolean nonIFS);
+    protected abstract void populateSection(M model, PublicContentItemResource publicContentItemResource, PublicContentSectionResource section, Boolean nonIFS);
     public abstract PublicContentSectionType getType();
 }

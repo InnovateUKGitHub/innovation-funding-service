@@ -29,6 +29,6 @@ public class CompetitionSetupPermissionRules {
     }
 
     private boolean competitionInitialDetailsSet(CompetitionCompositeId competitionCompositeId) {
-        return competitionSetupService.isInitialDetailsCompleteOrTouched(competitionCompositeId.id());
+        return competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionCompositeId.id());
     }
 }

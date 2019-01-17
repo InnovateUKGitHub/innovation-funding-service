@@ -1,7 +1,7 @@
 <!-- =================== Comp setup section - Eligibility (3) ============================== -->
 <th:block th:fragment="section-content">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to save section.</h2>
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
@@ -91,7 +91,8 @@
                             </div>
                         </div>
 
-                        <div class="govuk-radios__item">
+                        <div class="govuk-radios__item" data-target="funding-level"
+                             data-target-clear-validation="true" data-target-clear-form="true">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    id="comp-researchCategoriesApplicable-no"
@@ -105,18 +106,18 @@
                             </label>
                         </div>
 
-                        <div id="funding-level-rc" class="panel">
+                        <div id="funding-level" class="panel">
                             <div class="govuk-form-group"
                                  th:classappend="${#fields.hasErrors('fundingLevelPercentage')} ? 'govuk-form-group--error'">
                                 <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingLevels-rc">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingLevels">
                                         <h2 class="govuk-fieldset__heading">Set the maximum funding level that applicants can apply for.</h2>
                                     </legend>
                                     <span th:if="${#fields.hasErrors('fundingLevelPercentage')}" class="govuk-error-message"
                                           th:each="err : ${#fields.errors('fundingLevelPercentage')}" th:text="${err}"/>
                                     <select class="govuk-select govuk-!-width-one-quarter"
                                             name="fundingLevelPercentage"
-                                            id="fundingLevelPercentage-rc"
+                                            id="fundingLevelPercentage"
                                             required="required"
                                             th:attr="data-required-errormessage=#{validation.eligibilityform.fundingLevel.required}">
                                         <option value=""
@@ -147,7 +148,8 @@
                     <span th:if="${#fields.hasErrors('overrideFundingRules')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('overrideFundingRules')}" th:text="${err}"/>
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item">
+                        <div class="govuk-radios__item" data-target="funding-level-override"
+                             data-target-clear-validation="true" data-target-clear-form="true">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    id="comp-overrideFundingRules-yes"
@@ -161,27 +163,27 @@
                             </label>
                         </div>
 
-                        <div id="funding-level" class="panel">
+                        <div id="funding-level-override" class="panel">
                             <div class="govuk-form-group"
-                                 th:classappend="${#fields.hasErrors('fundingLevelPercentage')} ? 'govuk-form-group--error'">
+                                 th:classappend="${#fields.hasErrors('fundingLevelPercentageOverride')} ? 'govuk-form-group--error'">
                                 <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingLevels">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingLevelsOverride">
                                         <h2 class="govuk-fieldset__heading">Set the maximum funding level that applicants can apply for.</h2>
                                     </legend>
-                                    <span th:if="${#fields.hasErrors('fundingLevelPercentage')}" class="govuk-error-message"
-                                          th:each="err : ${#fields.errors('fundingLevelPercentage')}" th:text="${err}"/>
+                                    <span th:if="${#fields.hasErrors('fundingLevelPercentageOverride')}" class="govuk-error-message"
+                                          th:each="err : ${#fields.errors('fundingLevelPercentageOverride')}" th:text="${err}"/>
                                     <select class="govuk-select govuk-!-width-one-quarter"
-                                            name="fundingLevelPercentage"
-                                            id="fundingLevelPercentage"
+                                            name="fundingLevelPercentageOverride"
+                                            id="fundingLevelPercentageOverride"
                                             required="required"
                                             th:attr="data-required-errormessage=#{validation.eligibilityform.fundingLevel.required}">
                                         <option value=""
                                                 disabled="disabled"
-                                                th:selected="${competitionSetupForm.fundingLevelPercentage == null}">Please select &hellip;</option>
+                                                th:selected="${competitionSetupForm.fundingLevelPercentageOverride == null}">Please select &hellip;</option>
                                         <option th:each="fundingLevel : ${model.fundingLevels}"
                                                 th:text="${fundingLevel.textValue}"
                                                 th:value="${fundingLevel.percentage}"
-                                                th:selected="${competitionSetupForm.fundingLevelPercentage == fundingLevel.percentage}">
+                                                th:selected="${competitionSetupForm.fundingLevelPercentageOverride == fundingLevel.percentage}">
                                             Funding level
                                         </option>
                                     </select>
@@ -320,9 +322,9 @@
                     <dd th:text="${#bools.isTrue(competitionSetupForm.overrideFundingRules) ? 'Yes' : 'No'}"></dd>
                 </th:block>
 
-                <th:block th:if="${competitionSetupForm.fundingLevelPercentage}">
+                <th:block th:if="${competitionSetupForm.fundingLevelPercentageOverride}">
                     <dt>Funding level</dt>
-                    <dd th:text="${competitionSetupForm.fundingLevelPercentage + '%'}"></dd>
+                    <dd th:text="${competitionSetupForm.fundingLevelPercentageOverride + '%'}"></dd>
                 </th:block>
 
                 <th:block th:if="${!#arrays.isEmpty(model.researchParticipationAmounts)}">

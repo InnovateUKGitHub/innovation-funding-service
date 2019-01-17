@@ -14,12 +14,12 @@ import java.util.List;
  */
 public interface TermsAndConditionsService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @SecuredBySpring(value = "READ", securedType = GrantTermsAndConditionsResource.class,
             description = "Get all the latest terms and condition")
     ServiceResult<List<GrantTermsAndConditionsResource>> getLatestVersionsForAllTermsAndConditions();
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @SecuredBySpring(value = "READ", securedType = GrantTermsAndConditionsResource.class,
             description = "Get terms and condition by id")
     ServiceResult<GrantTermsAndConditionsResource> getById(Long id);
