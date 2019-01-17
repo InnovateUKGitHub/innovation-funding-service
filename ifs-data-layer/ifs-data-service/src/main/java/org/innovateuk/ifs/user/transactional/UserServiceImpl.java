@@ -280,8 +280,8 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<Void> updateEmail(long id, String email) {
-        return find(userRepository.findOne(id), notFoundError(User.class, id))
+    public ServiceResult<Void> updateEmail(long userId, String email) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess( user -> updateUserEmail(user, email));
     }
 

@@ -11,6 +11,8 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 
 public final class SecurityRuleUtil {
 
+    public static final String INTERNAL_ROLES = "'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance'";
+
     private SecurityRuleUtil() {}
 
     public static boolean isProjectFinanceUser(User user) {

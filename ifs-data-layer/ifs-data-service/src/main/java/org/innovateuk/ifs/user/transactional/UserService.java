@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.resource.*;
@@ -11,6 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Set;
+
+import static org.innovateuk.ifs.security.SecurityRuleUtil.INTERNAL_ROLES;
 
 /**
  * A Service that covers basic operations concerning Users
@@ -53,6 +56,7 @@ public interface UserService {
     @PreAuthorize("hasPermission(#grantRoleCommand, 'GRANT_ROLE')")
     ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand);
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE_USER_EMAIL')")
-    ServiceResult<Void> updateEmail(long id, String email);
+    @SecuredBySpring(value = "UPDATE_USER_EMAIL", description = "Only those with either comp admin or project finance roles can mark sections complete")
+    @PreAuthorize("hasAnyAuthority(" + INTERNAL_ROLES + ")")
+    ServiceResult<Void> updateEmail(long userId, String email);
 }
