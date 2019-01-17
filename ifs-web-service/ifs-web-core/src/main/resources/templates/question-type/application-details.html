@@ -46,7 +46,7 @@
                     </li>
                     <li th:with="procurementCompetition=${competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
                         <th:block th:if="${procurementCompetition}">
-                            <a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link">view the draft contract (Opens in new window).</a>
+                            <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link">view the draft contract</a> (opens in new window).</p>
                         </th:block>
                         <th:block th:unless="${procurementCompetition}">
                             <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}" class="govuk-link">
