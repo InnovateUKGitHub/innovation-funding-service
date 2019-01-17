@@ -56,7 +56,7 @@ public interface UserService {
     @PreAuthorize("hasPermission(#grantRoleCommand, 'GRANT_ROLE')")
     ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand);
 
-    @SecuredBySpring(value = "UPDATE_USER_EMAIL", description = "Only those with either comp admin or project finance roles can mark sections complete")
+    @SecuredBySpring(value = "UPDATE_USER_EMAIL", description = "Internal users can update a users email address")
     @PreAuthorize("hasAnyAuthority(" + INTERNAL_ROLES + ")")
     ServiceResult<Void> updateEmail(long userId, String email);
 }
