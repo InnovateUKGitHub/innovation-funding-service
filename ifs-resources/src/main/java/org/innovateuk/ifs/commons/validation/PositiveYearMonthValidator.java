@@ -13,7 +13,6 @@ public class PositiveYearMonthValidator implements ConstraintValidator<PositiveY
 
     @Override
     public void initialize(PositiveYearMonth constraintAnnotation) {
-        // does nothing
     }
 
     @Override

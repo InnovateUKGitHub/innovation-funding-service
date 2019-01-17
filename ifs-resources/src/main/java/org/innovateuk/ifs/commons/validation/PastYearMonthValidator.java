@@ -13,7 +13,6 @@ public class PastYearMonthValidator implements ConstraintValidator<PastYearMonth
 
     @Override
     public void initialize(PastYearMonth constraintAnnotation) {
-        // does nothing
     }
 
     @Override
