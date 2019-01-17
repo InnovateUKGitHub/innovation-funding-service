@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financecheck.controller;
+package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -10,7 +10,6 @@ import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckOverviewViewModel;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
-import org.innovateuk.ifs.project.financechecks.controller.FinanceOverviewController;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
@@ -56,9 +55,9 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
     private CompetitionRestService competitionRestService;
 
     @Test
-    public void testView() throws Exception {
-        Long projectId = 123L;
-        Long organisationId = 456L;
+    public void views() throws Exception {
+        long projectId = 123L;
+        long organisationId = 456L;
         CompetitionResource competition = newCompetitionResource().withFundingType(FundingType.GRANT).build();
 
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource()

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financechecks;
+package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -10,7 +10,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksOverviewController;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
@@ -52,7 +51,7 @@ public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMo
     private CompetitionRestService competitionRestService;
 
     @Test
-    public void testOverviewPageWorks() throws Exception {
+    public void viewOverview() throws Exception {
         CompetitionResource competition = newCompetitionResource().withFundingType(GRANT).build();
         ApplicationResource application = newApplicationResource().withId(123L).withCompetition(competition.getId()).build();
         ProjectResource project = newProjectResource().withId(1L).withName("Project1").withApplication(application).withCompetition(competition.getId()).build();

@@ -36,20 +36,26 @@ public class ProjectFinanceChecksOverviewController {
 
     public static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-checks/overview";
 
-    @Autowired
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
-    @Autowired
     private FinanceCheckService financeCheckService;
 
-    @Autowired
     private ProjectFinanceService financeService;
 
-    @Autowired
     private ProjectService projectService;
 
-    @Autowired
     private CompetitionRestService competitionRestService;
+
+    ProjectFinanceChecksOverviewController() {}
+
+    @Autowired
+    public ProjectFinanceChecksOverviewController(PartnerOrganisationRestService partnerOrganisationRestService, FinanceCheckService financeCheckService, ProjectFinanceService financeService, ProjectService projectService, CompetitionRestService competitionRestService) {
+        this.partnerOrganisationRestService = partnerOrganisationRestService;
+        this.financeCheckService = financeCheckService;
+        this.financeService = financeService;
+        this.projectService = projectService;
+        this.competitionRestService = competitionRestService;
+    }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
@@ -57,7 +63,7 @@ public class ProjectFinanceChecksOverviewController {
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
         Long applicationId = project.getApplication();
-        FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(project, applicationId);
+        FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(project);
         model.addAttribute("model", financeCheckOverviewViewModel);
         model.addAttribute("organisation", organisationId);
         model.addAttribute("project", project);
@@ -65,10 +71,10 @@ public class ProjectFinanceChecksOverviewController {
         return "project/finance-checks-overview";
     }
 
-    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final ProjectResource project, final Long applicationId) {
+    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final ProjectResource project) {
         List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
         return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(project, partnerOrgs),
-                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs), applicationId );
+                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs), project.getApplication());
     }
 
     private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs) {

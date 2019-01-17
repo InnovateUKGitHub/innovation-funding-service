@@ -3,16 +3,16 @@ package org.innovateuk.ifs.project.financechecks.controller;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckOverviewViewModel;
 import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckSummariesViewModel;
 import org.innovateuk.ifs.financecheck.viewmodel.ProjectFinanceCostBreakdownViewModel;
 import org.innovateuk.ifs.financecheck.viewmodel.ProjectFinanceOverviewViewModel;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
-import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
@@ -37,20 +37,26 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 @RequestMapping("/project/{projectId}/finance-check-overview")
 public class FinanceOverviewController {
 
-    @Autowired
     private ProjectService projectService;
 
-    @Autowired
     private FinanceCheckService financeCheckService;
 
-    @Autowired
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
-    @Autowired
     private ProjectFinanceService financeService;
 
-    @Autowired
     private CompetitionRestService competitionRestService;
+
+    FinanceOverviewController() {}
+
+    @Autowired
+    public FinanceOverviewController(ProjectService projectService, FinanceCheckService financeCheckService, PartnerOrganisationRestService partnerOrganisationRestService, ProjectFinanceService financeService, CompetitionRestService competitionRestService) {
+        this.projectService = projectService;
+        this.financeCheckService = financeCheckService;
+        this.partnerOrganisationRestService = partnerOrganisationRestService;
+        this.financeService = financeService;
+        this.competitionRestService = competitionRestService;
+    }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping()
@@ -67,7 +73,7 @@ public class FinanceOverviewController {
         final List<PartnerOrganisationResource> sortedOrganisations
                 = new PrioritySorting<>(partnerOrgs, lead, PartnerOrganisationResource::getOrganisationName).unwrap();
         ProjectResource project = projectService.getById(projectId);
-        Long applicationId = project.getApplication();
+        long applicationId = project.getApplication();
         return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(project, sortedOrganisations),
                 getProjectFinanceCostBreakdown(projectId, sortedOrganisations), applicationId);
     }
