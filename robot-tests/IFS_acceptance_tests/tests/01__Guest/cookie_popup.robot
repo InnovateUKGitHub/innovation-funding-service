@@ -12,7 +12,7 @@ The cookie warning appears for a new user
     [Documentation]  INFUND-1943, INFUND-6260
     [Tags]
     Then the user should see the element            id = global-cookie-message
-    And the user should see the text in the page    GOV.UK uses cookies to make the site simpler
+    And the user should see the element             jQuery = p:contains("GOV.UK uses cookies to make the site simpler")
     And the user should see the element             link = Find out more about cookies
     And the user should see the element             css=a[href*='info/cookies']
 

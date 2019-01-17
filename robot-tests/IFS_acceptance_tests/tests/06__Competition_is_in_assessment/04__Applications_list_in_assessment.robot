@@ -52,9 +52,9 @@ Submitted applications View completed applications
     [Documentation]    INFUND-7351
     [Tags]
     Given the user clicks the button/link          link = ${Park_living}
-    And the user should see the text in the page   Application overview
+    And the user should see the element            jQuery = h1:contains("Application overview")
     When the user clicks the button/link           link = Back
-    Then the user should see the text in the page  Submitted applications
+    Then the user should see the element           jQuery = h1:contains("Submitted applications")
 
 Sort by Lead
     [Documentation]    INFUND-8012
@@ -71,8 +71,8 @@ Sort by Application number
 Finances are showing in the list
     [Documentation]    INFUND-7371
     [Tags]
-    Then the user should see the text in the page  ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
-    And the user should see the text in the page   ${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}
+    Then the user should see the element           jQuery = td:contains("${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}")
+    And the user should see the element            jQuery = td:contains("${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}")
 
 Only applications from this competition should be visible
     [Documentation]    INFUND-2311
