@@ -77,6 +77,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
@@ -382,6 +383,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
         CompetitionResource competitionResource = newCompetitionResource()
                 .withAssessorAcceptsDate(now.minusDays(2))
                 .withAssessorDeadlineDate(now.plusDays(4))
+                .withFundingType(GRANT)
                 .build();
 
         ApplicationResource applicationResource = applications.get(0);
@@ -415,7 +417,8 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 "Application name",
                 3,
                 50,
-                true);
+                true,
+                GRANT);
 
         mockMvc.perform(get("/{assessmentId}/finances", assessmentResource.getId()))
                 .andExpect(status().isOk())
