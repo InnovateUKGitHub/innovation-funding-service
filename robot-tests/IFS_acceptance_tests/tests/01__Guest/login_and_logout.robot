@@ -26,21 +26,8 @@ Valid login with double role as Applicant
     [Tags]
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
     And The guest user clicks the log-in button
-    Then The user should see the element                      jQuery = h1:contains("Dashboard")
-    And the user should see the element                       css = #dashboard-link-APPLICANT
-    And the user should see the element                       css = #dashboard-link-ASSESSOR
-    And the user should not see the element                   css = #dashboard-link-LIVE_PROJECTS_USER
-    And the user should not see the element                   css = #dashboard-link-STAKEHOLDER
-    And the user should not see the element                   css = #dashboard-link-INNOVATION_LEAD
-
-    When the user clicks the button/link                      css = #dashboard-link-APPLICANT
-    Then the user should be redirected to the correct page    ${APPLICANT_DASHBOARD_URL}
-    And the user should see the element                       jQuery = h1:contains("Applications")
-
-    When the user clicks the button/link                      css = #dashboard-navigation-link
-    Then the user should see the element                      jQuery = h1:contains("Dashboard")
-    And the user should see the element                       css = #dashboard-link-APPLICANT
-    And the user should see the element                       css = #dashboard-link-ASSESSOR
+    Then the user should see multiple role dashboard view
+    And the user goes to applicant dashboard
     [Teardown]    Logout as user
 
 Valid login with Double role as Assessor
@@ -121,3 +108,20 @@ Clear the login fields
     the user enters text to a text field       id = password    ${EMPTY}
     Mouse Out                                  id = password
     wait for autosave
+
+the user goes to applicant dashboard
+    the user clicks the button/link                      css = #dashboard-link-APPLICANT
+    the user should be redirected to the correct page    ${APPLICANT_DASHBOARD_URL}
+    the user should see the element                      jQuery = h1:contains("Applications")
+    the user clicks the button/link                      css = #dashboard-navigation-link
+    the user should see the element                      jQuery = h1:contains("Dashboard")
+    the user should see the element                       css = #dashboard-link-APPLICANT
+    the user should see the element                       css = #dashboard-link-ASSESSOR
+
+the user should see multiple role dashboard view
+    The user should see the element                      jQuery = h1:contains("Dashboard")
+    the user should see the element                       css = #dashboard-link-APPLICANT
+    the user should see the element                       css = #dashboard-link-ASSESSOR
+    the user should not see the element                   css = #dashboard-link-LIVE_PROJECTS_USER
+    the user should not see the element                   css = #dashboard-link-STAKEHOLDER
+    the user should not see the element                   css = #dashboard-link-INNOVATION_LEAD
