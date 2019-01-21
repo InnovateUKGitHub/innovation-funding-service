@@ -8,8 +8,8 @@ spec:
   accessModes:
   - ReadWriteMany
   resources:
-    requests:
-      storage: 100M
+     requests:
+       storage: 100M
   selector:
     matchLabels:
       dev: dev

@@ -379,12 +379,9 @@ function createProject() {
 }
 
 function getClusterAddress() {
-#    echo "prod.ifs-test-clusters.com"
      echo "org-env-0.org.innovateuk.ukri.org"
 }
 
 function getRemoteRegistryUrl() {
-#        echo "172.30.80.28:5000"
-#        echo "172.30.114.178:5000"
         echo "docker-registry.default.svc:5000"
 }
