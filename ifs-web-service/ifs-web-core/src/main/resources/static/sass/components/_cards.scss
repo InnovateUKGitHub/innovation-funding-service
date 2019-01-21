@@ -1,9 +1,12 @@
+
 .card-container {
   display: flex;
   flex-wrap: wrap;
 
   .card {
     margin-bottom: 20px;
+    min-height: 155px;
+
 
     .card-content {
       border-top: 5px solid govuk-colour("blue");;
