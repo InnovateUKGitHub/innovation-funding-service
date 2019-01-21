@@ -38,7 +38,7 @@ ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
 ext.NEW_RELIC_LICENCE_KEY=""
 
 
-ext.CLUSTER_ADDRESS="dev-nige-0.dev.ifs-test-clusters.com"
+ext.CLUSTER_ADDRESS="org-env-0.org.innovateuk.ukri.org"
 
 ext.SHIB_IDP_ADDRESS="auth-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 ext.SHIB_ADDRESS=project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
@@ -76,6 +76,6 @@ ext.FINANCE_DB_PORT=3306
 
 ext.DATA_SERVICE_HOST="data-service"
 
-ext.GLUSTER_IP_1="10.100.5.10"
-ext.GLUSTER_IP_2="10.100.6.11"
-ext.GLUSTER_IP_3="10.100.7.12"
+ext.GLUSTER_IP_1="10.150.10.10"
+ext.GLUSTER_IP_2="10.150.11.11"
+ext.GLUSTER_IP_3="10.150.12.12"

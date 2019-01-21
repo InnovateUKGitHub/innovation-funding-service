@@ -380,7 +380,7 @@ function createProject() {
 
 function getClusterAddress() {
 #    echo "prod.ifs-test-clusters.com"
-     echo "dev-nige-0.dev.ifs-test-clusters.com"
+     echo "org-env-0.org.innovateuk.ukri.org"
 }
 
 function getRemoteRegistryUrl() {
