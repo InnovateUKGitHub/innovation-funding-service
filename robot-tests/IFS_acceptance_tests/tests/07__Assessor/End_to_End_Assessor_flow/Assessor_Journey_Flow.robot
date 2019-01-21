@@ -48,11 +48,11 @@ Resent email can be read by the invited user
 Invited user accepts the invitation and follows the registration flow
     [Documentation]    INFUND-8092
     [Tags]  HappyPath
-    Given the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
+    Given the user should see the element             jQuery = h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
     And the user selects the radio button             acceptInvitation  true
     And The user clicks the button/link               jQuery = button:contains("Confirm")
     When the user clicks the button/link              jQuery = .govuk-button:contains("Create account")
-    And the user should see the text in the page      ${Assessor_e2e["email"]}
+    And the user should see the element               jQuery = p strong:contains("${Assessor_e2e["email"]}")
     And The user fills and submits the registration form
     And the user clicks the button/link                     jQuery = a:contains("Sign into your account")
     Then the user should be redirected to the correct page  ${LOGGED_OUT_URL_FRAGMENT}
@@ -66,13 +66,13 @@ New assessor can login with the new account
 New assessor should have the correct innovation area
     [Documentation]    INFUND-8092
     When The user clicks the button/link          link = your skills
-    And The user should see the text in the page  Emerging technology
+    And The user should see the element           jQuery = ul li:contains("Emerging technology")
 
 New assessor has no assements
     [Documentation]  INFUND-9007
     [Tags]  HappyPath
     When The user navigates to the page           ${assessor_dashboard_url}
-    And the user should see the text in the page  There are currently no assessments for you to review.
+    And the user should see the element           jQuery = h3:contains("${IN_ASSESSMENT_COMPETITION_NAME}") ~ div:contains("There are currently no assessments for you to review.")
 
 CompAdmin should see Assessor's profile and Innovation Area
     [Documentation]    INFUND-8092
@@ -105,7 +105,7 @@ New assessor has one assessment to accept
     [Tags]  HappyPath
     [Setup]   Log in as a different user          &{Assessor_e2e}
     Then The user navigates to the page           ${assessor_dashboard_url}
-    And the user should see the text in the page  1 applications awaiting acceptance
+    And the user should see the element           jQuery = .action-required:contains("1 applications awaiting acceptance")
 
 Assessor is notified by Email
     [Tags]  HappyPath
@@ -123,7 +123,7 @@ Assessor accepts the invite for the Application
 New assessor has one assessment
     [Documentation]  INFUND-9007
     When The user navigates to the page    ${assessor_dashboard_url}
-    And the user should see the text in the page    1 applications to assess
+    And the user should see the element    jQuery = .action-required:contains("1 applications to assess")
 
 *** Keywords ***
 User reads the email and clicks the link to accept the assessment
