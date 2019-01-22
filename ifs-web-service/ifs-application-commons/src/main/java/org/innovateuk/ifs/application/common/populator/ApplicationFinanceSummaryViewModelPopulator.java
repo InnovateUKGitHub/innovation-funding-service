@@ -73,10 +73,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
         SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
         final boolean hasFinanceSection = financeSection != null;
-        Long financeSectionId = null;
-        if (hasFinanceSection) {
-            financeSectionId = financeSection.getId();
-        }
+        final Long financeSectionId = hasFinanceSection ? financeSection.getId() : null;
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
 

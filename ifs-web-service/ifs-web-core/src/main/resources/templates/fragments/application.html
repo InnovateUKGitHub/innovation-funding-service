@@ -153,7 +153,7 @@
 
                     <h2 class="govuk-heading-s" th:unless="${procurementCompetition}">Funding breakdown</h2>
                     <th:block ifs:global="${applicationFundingBreakdownViewModel}"
-                              th:insert="finance/finance-summary :: financial_summary_table"/>
+                              th:insert="finance/finance-summary :: financial_summary_table (isApplicant = ${isApplicant || isApplicant == null}, supportUserAndSummaryPage=${supportUserAndSummaryPage})"/>
                 </div>
             </div>
         </div>
