@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.resource.*;
@@ -53,6 +54,7 @@ public interface UserService {
     @PreAuthorize("hasPermission(#grantRoleCommand, 'GRANT_ROLE')")
     ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand);
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE_USER_EMAIL')")
+    @SecuredBySpring(value = "UPDATE_USER_EMAIL", description = "Internal users can update a non internal user's email address")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'ifs_administrator')")
     ServiceResult<Void> updateEmail(long userId, String email);
 }
