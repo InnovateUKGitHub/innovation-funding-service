@@ -9,11 +9,13 @@ import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -714,6 +716,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 assertTrue(rules.internalUsersCanViewUserOrganisation(userOrganisationResource, user));
             } else {
                 assertFalse(rules.internalUsersCanViewUserOrganisation(userOrganisationResource, user));
+            }
+        });
+    }
+
+    @Test
+    public void internalUsersCanUpdateExternalUsersEmailAddress(){
+
+        UserResource userResource = UserResourceBuilder.newUserResource().withRolesGlobal(asList(APPLICANT)).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isInternal(user)) {
+                assertTrue(rules.internalUsersCanUpdateUserEmailAddress(userResource, user));
+            } else {
+                assertFalse(rules.internalUsersCanUpdateUserEmailAddress(userResource, user));
             }
         });
     }
