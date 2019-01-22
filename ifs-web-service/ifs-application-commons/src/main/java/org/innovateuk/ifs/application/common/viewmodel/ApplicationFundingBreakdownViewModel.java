@@ -27,9 +27,7 @@ public class ApplicationFundingBreakdownViewModel {
     private final OrganisationResource leadOrganisation;
     private final Map<Long, BaseFinanceResource> organisationFinances;
     private final List<String> pendingOrganisationNames;
-
     private final ApplicationResource currentApplication;
-//    private final CompetitionResource currentCompetition; might not need this now
     private final OrganisationResource userOrganisation;
     private final Map<Long, Boolean> showDetailedFinanceLink;
 
