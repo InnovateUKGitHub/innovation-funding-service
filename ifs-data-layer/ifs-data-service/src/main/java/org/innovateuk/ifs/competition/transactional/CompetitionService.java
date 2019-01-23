@@ -89,7 +89,7 @@ public interface CompetitionService {
     @SecuredBySpring(value = "COUNT_PENDING_SPEND_PROFILES", description = "Project finance users can count projects for which Spend Profile generation is pending, for a given competition")
     ServiceResult<Long> countPendingSpendProfiles(Long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @SecuredBySpring(value = "UPDATE_TERMS_AND_CONDITIONS", securedType = CompetitionResource.class,
             description = "Only Comp Admins are able to update grant terms and conditions for the given competitions")
     ServiceResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);

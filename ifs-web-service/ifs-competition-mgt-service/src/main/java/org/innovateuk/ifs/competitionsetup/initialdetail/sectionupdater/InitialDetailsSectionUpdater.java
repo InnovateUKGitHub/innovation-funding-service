@@ -7,6 +7,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -102,7 +103,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
     }
 
     private boolean applicationFormHasNotBeenInitialised(CompetitionResource competition) {
-        return !competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId());
+        return !competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId());
     }
 
     private List<Error> doSetupComplete(final CompetitionResource competition, final InitialDetailsForm initialDetailsForm) {
@@ -112,6 +113,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
         competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
         competition.setStateAid(initialDetailsForm.getStateAid());
+        competition.setFundingType(initialDetailsForm.getFundingType());
 
         errors.addAll(attemptOpeningMilestoneSave(initialDetailsForm, competition));
         errors.addAll(attemptAddingInnovationAreasToCompetition(initialDetailsForm, competition));
@@ -283,6 +285,9 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
             }
         } else if("autosaveInnovationAreaIds".equals(fieldName)) {
             processInnovationAreas(value, competitionResource);
+            return competitionSetupRestService.update(competitionResource).toServiceResult();
+        } else if ("fundingType".equals(fieldName)) {
+            competitionResource.setFundingType(FundingType.valueOf(value));
             return competitionSetupRestService.update(competitionResource).toServiceResult();
         }
         return super.handleIrregularAutosaveCase(competitionResource,

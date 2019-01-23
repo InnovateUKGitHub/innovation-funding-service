@@ -57,22 +57,22 @@ public class CompetitionOverviewPopulatorTest {
     @Before
     public void setup() {
         when(datesViewModelPopulator.getType()).thenReturn(PublicContentSectionType.DATES);
-        when(datesViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new DatesViewModel());
+        when(datesViewModelPopulator.populate(any(PublicContentItemResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new DatesViewModel());
 
         when(eligibilityViewModelPopulator.getType()).thenReturn(PublicContentSectionType.ELIGIBILITY);
-        when(eligibilityViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new EligibilityViewModel());
+        when(eligibilityViewModelPopulator.populate(any(PublicContentItemResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new EligibilityViewModel());
 
         when(howToApplyViewModelPopulator.getType()).thenReturn(PublicContentSectionType.HOW_TO_APPLY);
-        when(howToApplyViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new HowToApplyViewModel());
+        when(howToApplyViewModelPopulator.populate(any(PublicContentItemResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new HowToApplyViewModel());
 
         when(summaryViewModelPopulator.getType()).thenReturn(PublicContentSectionType.SUMMARY);
-        when(summaryViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new SummaryViewModel());
+        when(summaryViewModelPopulator.populate(any(PublicContentItemResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new SummaryViewModel());
 
         when(scopeViewModelPopulator.getType()).thenReturn(PublicContentSectionType.SCOPE);
-        when(scopeViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new ScopeViewModel());
+        when(scopeViewModelPopulator.populate(any(PublicContentItemResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new ScopeViewModel());
 
         when(supportingInformationViewModelPopulator.getType()).thenReturn(PublicContentSectionType.SUPPORTING_INFORMATION);
-        when(supportingInformationViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new SupportingInformationViewModel());
+        when(supportingInformationViewModelPopulator.populate(any(PublicContentItemResource.class), anyBoolean(), any(PublicContentSectionType.class), any(PublicContentSectionType.class))).thenReturn(new SupportingInformationViewModel());
 
         populator.setSectionPopulator(asList(datesViewModelPopulator, eligibilityViewModelPopulator,
                 howToApplyViewModelPopulator, summaryViewModelPopulator,

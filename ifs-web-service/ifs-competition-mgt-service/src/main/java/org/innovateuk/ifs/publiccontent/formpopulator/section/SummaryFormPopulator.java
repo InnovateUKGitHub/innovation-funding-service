@@ -8,8 +8,6 @@ import org.innovateuk.ifs.publiccontent.formpopulator.AbstractContentGroupFormPo
 import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
 import org.springframework.stereotype.Service;
 
-import static java.util.Optional.ofNullable;
-
 /**
  * Populates the form for the public content Summary screen.
  */
@@ -25,11 +23,6 @@ public class SummaryFormPopulator extends AbstractContentGroupFormPopulator<Summ
     @Override
     protected void populateSection(SummaryForm form, PublicContentResource publicContentResource) {
         form.setDescription(publicContentResource.getSummary());
-
-        ofNullable(publicContentResource.getFundingType())
-                .ifPresent(type ->
-                        form.setFundingType(type.getDisplayName()));
-
         form.setProjectSize(publicContentResource.getProjectSize());
         super.populateSection(form, publicContentResource);
     }

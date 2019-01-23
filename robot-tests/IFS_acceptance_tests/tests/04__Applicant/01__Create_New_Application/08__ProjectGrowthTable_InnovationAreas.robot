@@ -112,9 +112,9 @@ Turnover and Staff count fields
     [Tags]  HappyPath
     Given the user clicks the button/link         link = Your finances
     Then the user clicks the button/link          link = Your organisation
-    And the user should see the text in the page  Turnover (£)
-    And the user should see the text in the page  Full time employees
-    And the user should see the text in the page  Number of full time employees at your organisation.
+    And the user should see the element           jQuery = div label:contains("Turnover (£)")
+    And the user should see the element           jQuery = div label:contains("Full time employees")
+    And the user should see the element           jQuery = div span:contains("Number of full time employees at your organisation.")
 
 Once the project growth table is selected
     [Documentation]    INFUND-6393 IFS-40
@@ -148,9 +148,9 @@ As next step the Applicant cannot see the turnover field
     And logged in user applies to competition                    ${compWithGrowth}  1
     When the user clicks the button/link                         link = Your finances
     And the user clicks the button/link                          link = Your organisation
-    Then the user should not see the text in the page            Turnover (£)
-    And the user should see the text in the page                 Full time employees
-    And the user should see the text in the page                 How many full-time employees did you have on the project at the close of your last financial year?
+    Then the user should not see the element                     jQuery = div label:contains("Turnover (£)")
+    And the user should see the element                          jQuery = div label:contains("Full time employees")
+    And the user should see the element                          jQuery = span:contains("How many full-time employees did you have on the project at the close of your last financial year?")
 
 Organisation server side validation when no
     [Documentation]    INFUND-6393
@@ -365,14 +365,14 @@ RTOs are not allowed to apply on Competition where only Businesses are allowed t
     [Tags]  HappyPath
     Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}  3
     When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
-    Then the user should see the text in the page  ${ineligibleMessage}
+    Then the user should see the element           jQuery = p:contains("${ineligibleMessage}")
 
 Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
     [Documentation]  IFS-1015
     [Tags]  HappyPath
     Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${openCompetitionRTO_name}  1
     When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
-    Then the user should see the text in the page  ${ineligibleMessage}
+    Then the user should see the element           jQuery = p:contains("${ineligibleMessage}")
 
 *** Keywords ***
 
@@ -470,6 +470,7 @@ the user fills in the Open-All Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}
     the user clicks the button/link                      link = Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
+    the user selects the radio button                    fundingType  GRANT
     the user selects the option from the drop-down menu  Sector  id = competitionTypeId
     the user selects the option from the drop-down menu  Open  id = innovationSectorCategoryId
     the user selects the value from the drop-down menu   -1  id = innovationAreaCategoryIds

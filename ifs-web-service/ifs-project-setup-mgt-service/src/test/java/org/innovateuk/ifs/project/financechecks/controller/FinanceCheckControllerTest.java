@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financecheck.controller;
+package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.finance.service.FinanceService;

@@ -78,8 +78,8 @@ Submit flow business lead (complete application)
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     And the applicant clicks the submit and then clicks the "close button" in the modal
     And the applicant clicks Yes in the submit modal
-    Then the user should be redirected to the correct page  submit
-    And the user should see the text in the page            Application submitted
+    Then the user should be redirected to the correct page  track
+    And the user should see the element                     jQuery = h2:contains("Application submitted")
     # TODO add check here once IFS-270 done
 
 Satisfaction survey:validations
@@ -149,8 +149,8 @@ Submit flow rto lead (complete application)
     When the user clicks the button/link                    link = Review and submit
     Then the user should be redirected to the correct page  summary
     And the applicant clicks Yes in the submit modal
-    Then the user should be redirected to the correct page  submit
-    And the user should see the text in the page            Application submitted
+    Then the user should be redirected to the correct page  track
+    And the user should see the element                     jQuery = h2:contains("Application submitted")
     And The user should see the element                     link = Finished
 
 Applications are on Dashboard when Competition is Closed

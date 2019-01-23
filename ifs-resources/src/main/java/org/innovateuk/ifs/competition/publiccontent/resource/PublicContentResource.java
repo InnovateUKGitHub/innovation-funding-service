@@ -30,8 +30,6 @@ public class PublicContentResource {
 
     private Boolean inviteOnly;
 
-    private FundingType fundingType;
-
     private List<PublicContentSectionResource> contentSections;
 
     private List<ContentEventResource> contentEvents;
@@ -102,14 +100,6 @@ public class PublicContentResource {
         this.summary = summary;
     }
 
-    public FundingType getFundingType() {
-        return fundingType;
-    }
-
-    public void setFundingType(FundingType fundingType) {
-        this.fundingType = fundingType;
-    }
-
     public List<PublicContentSectionResource> getContentSections() {
         return contentSections;
     }
@@ -159,7 +149,6 @@ public class PublicContentResource {
                 .append(eligibilitySummary, resource.eligibilitySummary)
                 .append(projectSize, resource.projectSize)
                 .append(summary, resource.summary)
-                .append(fundingType, resource.fundingType)
                 .append(contentSections, resource.contentSections)
                 .append(contentEvents, resource.contentEvents)
                 .append(keywords, resource.keywords)
@@ -177,7 +166,6 @@ public class PublicContentResource {
                 .append(eligibilitySummary)
                 .append(projectSize)
                 .append(summary)
-                .append(fundingType)
                 .append(contentSections)
                 .append(keywords)
                 .toHashCode();

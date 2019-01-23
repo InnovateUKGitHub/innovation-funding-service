@@ -317,7 +317,7 @@ the user completes the new account creation
     the user selects his organisation in Companies House  innovate  INNOVATE LTD
     the user should be redirected to the correct page    ${SERVER}/registration/register
     the invited user fills the create account form       liam  smithson
-    the user should see the text in the page     Please verify your email address
+    the user should see the element                      jQuery = h1:contains("Please verify your email address")
     the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link             link = Sign in
@@ -383,7 +383,7 @@ the applicant submits the application
     the user should not see the element                jQuery = .task-status-incomplete
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
     the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
-    the user should be redirected to the correct page  submit
+    the user should be redirected to the correct page  track
 
 the user applies to competition and enters organisation type
     [Arguments]  ${compId}  ${organisationType}

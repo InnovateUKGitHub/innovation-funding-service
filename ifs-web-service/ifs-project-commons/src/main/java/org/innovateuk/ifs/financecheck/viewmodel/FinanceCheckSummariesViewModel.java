@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.financecheck.viewmodel;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 
@@ -12,12 +13,18 @@ import java.util.List;
 public class FinanceCheckSummariesViewModel {
     private List<FinanceCheckEligibilityResource> financeCheckSummariesResources;
     private List<PartnerOrganisationResource> organisationResources;
+    private FundingType fundingType;
 
     public FinanceCheckSummariesViewModel() {}
 
-    public FinanceCheckSummariesViewModel(List<FinanceCheckEligibilityResource> financeCheckSummariesResources, List<PartnerOrganisationResource> partnerOrganisationResources) {
+    public FinanceCheckSummariesViewModel(List<FinanceCheckEligibilityResource> financeCheckSummariesResources, List<PartnerOrganisationResource> organisationResources, FundingType fundingType) {
         this.financeCheckSummariesResources = financeCheckSummariesResources;
-        this.organisationResources = partnerOrganisationResources;
+        this.organisationResources = organisationResources;
+        this.fundingType = fundingType;
+    }
+
+    public FundingType getFundingType() {
+        return fundingType;
     }
 
     public List<FinanceCheckEligibilityResource> getFinanceCheckSummariesResources() {

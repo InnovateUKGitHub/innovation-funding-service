@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.publiccontent.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
@@ -55,10 +54,6 @@ public class PublicContentBuilder extends BaseBuilder<PublicContent, PublicConte
 
     public PublicContentBuilder withSummary(String summary) {
         return with(publicContent -> setField("summary", summary, publicContent));
-    }
-
-    public PublicContentBuilder withFundingType(FundingType fundingType) {
-        return with(publicContent -> setField("fundingType", fundingType, publicContent));
     }
 
     public PublicContentBuilder withContentSections(List<ContentSection> contentSections) {

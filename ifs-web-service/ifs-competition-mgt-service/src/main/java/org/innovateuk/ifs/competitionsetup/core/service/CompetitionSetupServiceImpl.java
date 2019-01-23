@@ -253,21 +253,21 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     }
 
     private void checkCompetitionInitialDetailsComplete(CompetitionResource competitionResource, CompetitionSetupSection section) {
-        if (!isInitialDetailsCompleteOrTouched(competitionResource.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             throw new IllegalStateException("'Initial Details' section must be completed first");
         }
     }
 
     private void checkIfInitialDetailsFieldIsRestricted(CompetitionResource competitionResource, CompetitionSetupSection competitionSetupSection, String fieldName) {
-        if (isInitialDetailsCompleteOrTouched(competitionResource.getId()) &&
+        if (hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()) &&
                 competitionSetupSection == CompetitionSetupSection.INITIAL_DETAILS &&
-                ("competitionTypeId".equals(fieldName) || "openingDate".equals(fieldName))) {
+                ("competitionTypeId".equals(fieldName) || "openingDate".equals(fieldName) || "fundingType".equals(fieldName))) {
             throw new IllegalStateException("Cannot update an initial details field that is disabled");
         }
     }
 
     @Override
-    public boolean isInitialDetailsCompleteOrTouched(Long competitionId) {
+    public boolean hasInitialDetailsBeenPreviouslySubmitted(Long competitionId) {
         Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionId).getSuccess();
         return statuses.get(CompetitionSetupSection.INITIAL_DETAILS).isPresent();
     }
