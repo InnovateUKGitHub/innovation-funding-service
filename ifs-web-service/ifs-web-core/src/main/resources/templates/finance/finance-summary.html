@@ -73,12 +73,11 @@
                                 </th:block>
 
                                 <th:block th:unless="${(form == null || !form.isAdminMode()) and applicationOrganisation.equals(userOrganisation)}">
-                                    <th:block th:if="${originQuery != null}">
-                                        <a th:if="${(supportUserAndSummaryPage != null && supportUserAndSummaryPage) || (showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id))}"
-                                           th:href="@{/application/{applicationId}/form/section/{sectionId}/{organisation}(applicationId=${currentApplication.id}, sectionId=${financeSection.id}, organisationId=${applicationOrganisation.id})} + (${originQuery}?:'')"
-                                           class="govuk-link govuk-!-font-weight-regular">
-                                        </a>
-                                    </th:block>
+                                    <a th:if="${(supportUserAndSummaryPage != null && supportUserAndSummaryPage) || (showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id))}"
+                                       th:href="@{/application/{applicationId}/form/section/{sectionId}/{organisation}(applicationId=${currentApplication.id}, sectionId=${financeSection.id}, organisationId=${applicationOrganisation.id})} + (${originQuery}?:'')"
+                                       class="govuk-link govuk-!-font-weight-regular">
+                                        View finances
+                                    </a>
                                 </th:block>
                             </th>
                             <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
