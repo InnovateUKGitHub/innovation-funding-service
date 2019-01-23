@@ -155,6 +155,8 @@ task osDeploySysint(type: Exec, dependsOn: prepareDeployment) {
 }
 
 task osUpgradeSysint(type: Exec, dependsOn: prepareDeployment) {
+    print "====="
+    print ext.LDAP_URL
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
