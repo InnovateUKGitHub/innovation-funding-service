@@ -22,7 +22,7 @@ public class ScheduleStatusServiceImpl implements ScheduleStatusService {
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void startScheduledJob(String jobName) {
+    public void startJob(String jobName) {
         Optional<ScheduleStatus> scheduleStatus = scheduleStatusRepository.findByJobName(jobName);
         scheduleStatus
                 .filter(status -> !status.isActive())
@@ -32,7 +32,7 @@ public class ScheduleStatusServiceImpl implements ScheduleStatusService {
 
     @Override
     @Transactional
-    public void endScheduledJob(String jobName) {
+    public void endJob(String jobName) {
         Optional<ScheduleStatus> scheduleStatus = scheduleStatusRepository.findByJobName(jobName);
         scheduleStatus
                 .orElseThrow(() -> new RuntimeException(String.format("Job not found for name %s", jobName)))

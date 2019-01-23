@@ -27,7 +27,6 @@ import org.innovateuk.ifs.sil.grant.resource.Forecast;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.resource.Participant;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -164,13 +163,13 @@ public class GrantMapperTest {
         assertThat(grant.getParticipants(), hasSize(expectedNumberOfParticipantRecords));
 
         Participant projectManagerParticipant = getOnlyElement(simpleFilter(grant.getParticipants(),
-                participant -> Role.PROJECT_MANAGER.getName().equals(participant.getContactRole())));
+                participant -> "Project manager".equals(participant.getContactRole())));
 
         List<Participant> financeContactParticipants = simpleFilter(grant.getParticipants(),
-                participant -> Role.PROJECT_FINANCE.getName().equals(participant.getContactRole()));
+                participant -> "Finance contact".equals(participant.getContactRole()));
 
         Participant innovationLeadParticipant = getOnlyElement(simpleFilter(grant.getParticipants(),
-                participant -> Role.INNOVATION_LEAD.getName().equals(participant.getContactRole())));
+                participant -> "Innovation lead".equals(participant.getContactRole())));
 
         assertThat(projectManagerParticipant.getContactEmail(), equalTo("pm@example.com"));
         assertThat(innovationLeadParticipant.getContactEmail(), equalTo("il1@example.com"));

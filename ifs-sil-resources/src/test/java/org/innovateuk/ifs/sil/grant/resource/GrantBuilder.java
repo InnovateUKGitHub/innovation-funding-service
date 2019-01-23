@@ -145,7 +145,7 @@ public class GrantBuilder extends BaseBuilder<Grant, GrantBuilder> {
                 .divide(BigDecimal.valueOf(participantCount), 6, BigDecimal.ROUND_UP)));
         participant.setContactRole(contactRole);
         participant.setOrgProjectRole(orgProjectRole);
-        participant.setOrgId(i);
+        participant.setOrgId((long) i);
         participant.setContactId(CONTACT_ID_START + 1);
         participant.setOrgType(orgType);
         participant.setCapLimit(capLimit);
