@@ -18,13 +18,9 @@ if (!isNamedEnv()) {
     apply from: rootProject.file("gradle-support/non-named-env-properties.gradle")
 } else {
     apply from: rootProject.file("gradle-support/named-env-properties.gradle")
-    print "=========================================="
-    print ext.LDAP_URL
     if(file(openshiftEnv + "-named-env-properties.gradle").exists()) {
         apply from: openshiftEnv + "-named-env-properties.gradle"
     }
-    print ext.LDAP_URL
-    print "=========================================="
 }
 
 task prepareDeployment(type: Copy) {
