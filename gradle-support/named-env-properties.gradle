@@ -20,8 +20,8 @@ ext.SHIBBOLETH_IDP_MEMORY_REQUEST="1024M"
 ext.SHIBBOLETH_IDP_MEMORY_LIMIT="1500M"
 
 ext.LDAP_USESSL="false"
-ext.LDAP_URL="ldaps://ldap:389"
-ext.LDAP_PASSWORD="default"
+ext.LDAP_URL="ldap://oldap.sysint.org.iuk.local:389"
+ext.LDAP_PASSWORD="BYu9HumCRlDo"
 
 ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
 
