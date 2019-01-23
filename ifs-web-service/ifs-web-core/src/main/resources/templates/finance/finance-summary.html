@@ -60,12 +60,12 @@
                                    class="govuk-link govuk-!-font-weight-regular">
                                     View finances
                                 </a>
-                                <th:block th:if="${(form == null || !form.isAdminMode()) and applicationOrganisation.equals(userOrganisation) and (supportUserAndSummaryPage or currentApplication.submitted)}">
+                                <th:block th:if="${(form == null || !form.isAdminMode()) and applicationOrganisation.equals(userOrganisation)}">
                                     <a th:if="${supportUserAndSummaryPage}" th:href="@{/application/{applicationId}/form/section/{sectionId}/{organisationId}(applicationId=${currentApplication.id}, sectionId=${financeSection.id}, organisationId=${applicationOrganisation.id})} + (${originQuery}?:'')"
                                        class="govuk-link govuk-!-font-weight-regular">
                                         View finances
                                     </a>
-                                    <a th:unless="${supportUserAndSummaryPage}"
+                                    <a th:unless="${!currentApplication.submitted or supportUserAndSummaryPage}"
                                        th:href="@{/application/{applicationId}/form/section/{sectionId}(applicationId=${currentApplication.id}, sectionId=${financeSection.id})} + (${originQuery}?:'')"
                                        class="govuk-link govuk-!-font-weight-regular">
                                         View finances
