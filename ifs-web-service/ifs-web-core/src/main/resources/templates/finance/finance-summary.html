@@ -74,7 +74,7 @@
 
                                 <th:block th:unless="${(form == null || !form.isAdminMode()) and applicationOrganisation.equals(userOrganisation)}">
                                     <a th:if="${(supportUserAndSummaryPage != null && supportUserAndSummaryPage) || (showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id))}"
-                                       th:href="@{/application/{applicationId}/form/section/{sectionId}/{organisation}(applicationId=${currentApplication.id}, sectionId=${financeSection.id}, organisationId=${applicationOrganisation.id})} + (${originQuery}?:'')"
+                                       th:href="@{~/application/{applicationId}/form/section/{sectionId}/{organisationId}(applicationId=${currentApplication.id}, sectionId=${financeSection.id}, organisationId=${applicationOrganisation.id})} + (${originQuery}?:'')"
                                        class="govuk-link govuk-!-font-weight-regular">
                                         View finances
                                     </a>
