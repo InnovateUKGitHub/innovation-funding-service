@@ -6,18 +6,23 @@
   .card {
     margin-bottom: 20px;
     min-height: 155px;
-
+    text-decoration: none;
 
     .card-content {
       border-top: 5px solid govuk-colour("blue");;
       height: 100%;
+      padding-top: 20px;
+
+      .govuk-heading-m {
+        text-decoration: underline;
+        color: govuk-colour("blue");
+      }
 
       &:hover {
         border-color: lighten(govuk-colour("blue"), 15%);
         background-color: govuk-colour("blue");
-        color: white;
 
-        .govuk-link {
+        .govuk-heading-m {
           color: white;
         }
 
