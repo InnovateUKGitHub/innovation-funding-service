@@ -25,7 +25,7 @@ Comp Admin creates an ATI competition
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
     And the user navigates to the page             ${CA_UpcomingComp}
     When the user clicks the button/link           link = Create competition
-    Then the user fills in the CS Initial details  ${ATIcompetitionTitle}  ${month}  ${nextyear}  Aerospace Technology Institute  2
+    Then the user fills in the CS Initial details  ${ATIcompetitionTitle}  ${month}  ${nextyear}  Aerospace Technology Institute  2  GRANT
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${business_type_id}  1  true  collaborative  # 1 means 30%

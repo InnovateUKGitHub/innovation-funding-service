@@ -47,7 +47,7 @@ The competition admin creates The Prince's Trust Comp
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page              ${CA_UpcomingComp}
     the user clicks the button/link             jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${comp_type}  2
+    the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${comp_type}  2  GRANT
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility        ${orgType}  1  false  single-or-collaborative  # 1 means 30%
