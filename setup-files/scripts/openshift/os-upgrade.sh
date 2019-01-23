@@ -21,62 +21,62 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 function upgradeServices {
     # Deploying finance-data-service before data-service as latter submits updates to former.
     # rolloutStatus checks ensure that service has been deployed successfully before proceeding further.
-#    oc apply -f $(getBuildLocation)/ifs-services/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
-#    rolloutStatus "finance-data-service"
+    oc apply -f $(getBuildLocation)/ifs-services/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus "finance-data-service"
 
     # data-service
-#    oc apply -f $(getBuildLocation)/ifs-services/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
-#
-#    rolloutStatus "data-service"
+    oc apply -f $(getBuildLocation)/ifs-services/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus "data-service"
 
     # services
-#    oc apply -f $(getBuildLocation)/ifs-services/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
-#    oc apply -f $(getBuildLocation)/ifs-services/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
-#    oc apply -f $(getBuildLocation)/ifs-services/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
 
-#    rolloutStatus application-svc
-#    rolloutStatus competition-mgt-svc
-#    rolloutStatus project-setup-mgt-svc
+    rolloutStatus application-svc
+    rolloutStatus competition-mgt-svc
+    rolloutStatus project-setup-mgt-svc
 
-#    oc apply -f $(getBuildLocation)/ifs-services/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
-#    oc apply -f $(getBuildLocation)/ifs-services/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
-#
-#    rolloutStatus front-door-svc
-#    rolloutStatus assessment-svc
-#
-#    oc apply -f $(getBuildLocation)/ifs-services/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/ifs-services/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus front-door-svc
+    rolloutStatus assessment-svc
+
+    oc apply -f $(getBuildLocation)/ifs-services/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/ifs-services/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
 
-#    rolloutStatus project-setup-svc
+    rolloutStatus project-setup-svc
     rolloutStatus registration-svc
 
-#    oc apply -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
-#    oc apply -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
-#
-#    rolloutStatus shib
-#    rolloutStatus idp
-#
+    oc apply -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus shib
+    rolloutStatus idp
+
     # The SIL stub is required in all environments, in one form or another, except for production
-#    if ! $(isProductionEnvironment ${TARGET}); then
-#        oc apply -f $(getBuildLocation)/sil-stub/80-sil-stub.yml ${SVC_ACCOUNT_CLAUSE}
-#    fi
-#
-#    # conditionally deploy prototypes service
-#    if $(isSysIntEnvironment ${TARGET}); then
-#        oc apply -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
-#    fi
-#
-#    # conditionally deploy zipkin
-#    if $(isPerfEnvironment ${TARGET}); then
-#        oc apply -f $(getBuildLocation)/zipkin/70-zipkin.yml ${SVC_ACCOUNT_CLAUSE}
-#        oc apply -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
-#    fi
-#
-#    watchSilStubAndPrototypesStatus
-#
-#    upgradeSurvey
-#
-#    upgradeEuGrantRegistration
+    if ! $(isProductionEnvironment ${TARGET}); then
+        oc apply -f $(getBuildLocation)/sil-stub/80-sil-stub.yml ${SVC_ACCOUNT_CLAUSE}
+    fi
+
+    # conditionally deploy prototypes service
+    if $(isSysIntEnvironment ${TARGET}); then
+        oc apply -f $(getBuildLocation)/prototypes/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
+    fi
+
+    # conditionally deploy zipkin
+    if $(isPerfEnvironment ${TARGET}); then
+        oc apply -f $(getBuildLocation)/zipkin/70-zipkin.yml ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
+    fi
+
+    watchSilStubAndPrototypesStatus
+
+    upgradeSurvey
+
+    upgradeEuGrantRegistration
 
 }
 
