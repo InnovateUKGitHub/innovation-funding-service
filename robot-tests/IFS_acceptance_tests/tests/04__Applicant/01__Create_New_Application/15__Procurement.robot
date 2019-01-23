@@ -33,7 +33,7 @@ Applicant submits his application
     When the user navigates to Your-finances page       ${appl_name}
     And the user marks the procurement finances as complete         ${appl_name}   Calculate  52,214  yes
     And the user selects research category              Feasibility studies
-    And the applicant submits the application
+    And the applicant submits the procurement application
     [Teardown]  Competition is closed
 
 Invite a registered assessor
