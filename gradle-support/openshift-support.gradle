@@ -23,7 +23,7 @@ if (!isNamedEnv()) {
     if(file(openshiftEnv + "-named-env-properties.gradle").exists()) {
         apply from: openshiftEnv + "-named-env-properties.gradle"
     }
-    println ext.LDAP_URL
+    println ext.LDAP_PASSWORD
     print "==================="
 }
 
