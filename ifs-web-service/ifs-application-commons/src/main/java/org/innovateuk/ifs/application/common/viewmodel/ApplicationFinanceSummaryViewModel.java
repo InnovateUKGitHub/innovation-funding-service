@@ -32,7 +32,6 @@ public class ApplicationFinanceSummaryViewModel {
     private final BigDecimal financeTotal;
     private final Map<Long, Set<Long>> completedSectionsByOrganisation;
     private final Long eachCollaboratorFinanceSectionId;
-//    private final Map<Long, Boolean> showDetailedFinanceLink; // remove?
     private final boolean yourFinancesCompleteForAllOrganisations;
 
     public ApplicationFinanceSummaryViewModel(ApplicationResource currentApplication,
