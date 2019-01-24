@@ -35,6 +35,8 @@ task prepareDeployment(type: Copy) {
     }
     filesMatching("**/**.*") {
         expand project.properties
+        print project.hasProperty('LDAP_URL')
+        print project.property('LDAP_URL')
     }
 }
 
