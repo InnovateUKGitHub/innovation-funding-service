@@ -24,12 +24,12 @@ function upgradeServices {
 #    oc apply -f $(getBuildLocation)/ifs-services/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
 #    rolloutStatus "finance-data-service"
 #
-     data-service
+#     data-service
 #    oc apply -f $(getBuildLocation)/ifs-services/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
 #
 #    rolloutStatus "data-service"
 #
-     services
+#     services
 #    oc apply -f $(getBuildLocation)/ifs-services/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
 #    oc apply -f $(getBuildLocation)/ifs-services/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
 #    oc apply -f $(getBuildLocation)/ifs-services/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
