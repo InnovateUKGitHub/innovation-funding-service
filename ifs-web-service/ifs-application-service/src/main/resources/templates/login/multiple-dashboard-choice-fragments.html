@@ -2,18 +2,10 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 
     <th:block th:fragment="dashboard-block(title, description, url, linkId)">
-
-        <a th:id="${linkId}" th:href="${url}" class="card govuk-grid-column-one-third">
-            <div class="card-content highlight-panel highlight-panel-padded">
-                <div>
-                    <h2 class="govuk-heading-m" th:text="${title}"></h2>
-                </div>
-                <div>
-                    <p class="govuk-body" th:text="${description}">Manage your live projects.</p>
-                </div>
-            </div>
+        <a th:id="${linkId}" th:href="${url}" class="card">
+            <h2 class="govuk-heading-m" th:text="${title}"></h2>
+            <p class="govuk-body" th:text="${description}">Manage your live projects.</p>
         </a>
-
     </th:block>
 
 </html>
