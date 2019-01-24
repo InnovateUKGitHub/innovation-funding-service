@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
@@ -99,9 +98,9 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "Internal users can update a non internal user's email address")
-    public boolean internalUsersCanUpdateUserEmailAddress(UserResource userToUpdate, UserResource user) {
-        return isInternal(user) && !isInternal(userToUpdate);
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "The System Registration user can update any user's email address")
+    public boolean systemRegistrationUserCanUpdateUsersEmailAddress(UserResource userToUpdate, UserResource user) {
+        return isSystemRegistrationUser(user);
     }
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
