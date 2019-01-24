@@ -74,7 +74,8 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
                 assessment.getApplicationName(),
                 competition.getAssessmentDaysLeft(),
                 competition.getAssessmentDaysLeftPercentage(),
-                assessment.isCollaborativeProject()
+                assessment.isCollaborativeProject(),
+                competition.getFundingType()
         );
     }
 
