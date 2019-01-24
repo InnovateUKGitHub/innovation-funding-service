@@ -20,7 +20,7 @@ ext.SHIBBOLETH_IDP_MEMORY_REQUEST="1024M"
 ext.SHIBBOLETH_IDP_MEMORY_LIMIT="1500M"
 
 ext.LDAP_USESSL="false"
-ext.LDAP_URL= project.property('LDAP_URL')
+ext.LDAP_URL= project.properties('LDAP_URL')
 ext.LDAP_PASSWORD="default"
 
 ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
