@@ -19,6 +19,8 @@ SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 function upgradeServices {
+
+    echo "running new script"
     oc apply -f $(getBuildLocation)/ifs-services/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
 
     rolloutStatus registration-svc
