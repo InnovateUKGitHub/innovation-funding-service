@@ -4,16 +4,10 @@ import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupSubsec
 
 public class FinanceViewModel implements CompetitionSetupSubsectionViewModel {
 
-    private boolean sectorCompetition;
     private boolean noFinancesCompetition;
 
-    public FinanceViewModel(boolean sectorCompetition, boolean noFinancesCompetition) {
-        this.sectorCompetition = sectorCompetition;
+    public FinanceViewModel(boolean noFinancesCompetition) {
         this.noFinancesCompetition = noFinancesCompetition;
-    }
-
-    public boolean isSectorCompetition() {
-        return sectorCompetition;
     }
 
     public boolean isNoFinancesCompetition() {
