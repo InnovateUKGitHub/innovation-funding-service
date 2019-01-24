@@ -18,13 +18,9 @@ if (!isNamedEnv()) {
     apply from: rootProject.file("gradle-support/non-named-env-properties.gradle")
 } else {
     apply from: rootProject.file("gradle-support/named-env-properties.gradle")
-    print "==================="
-    println ext.LDAP_URL
     if(file(openshiftEnv + "-named-env-properties.gradle").exists()) {
         apply from: openshiftEnv + "-named-env-properties.gradle"
     }
-    println ext.LDAP_PASSWORD
-    print "==================="
 }
 
 task prepareDeployment(type: Copy) {
@@ -35,8 +31,6 @@ task prepareDeployment(type: Copy) {
     }
     filesMatching("**/**.*") {
         expand project.properties
-        print project.hasProperty('LDAP_URL')
-        print project.property('LDAP_URL')
     }
 }
 
@@ -161,9 +155,6 @@ task osDeploySysint(type: Exec, dependsOn: prepareDeployment) {
 }
 
 task osUpgradeSysint(type: Exec, dependsOn: prepareDeployment) {
-    print "====="
-    print project.property('LDAP_URL')
-
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
