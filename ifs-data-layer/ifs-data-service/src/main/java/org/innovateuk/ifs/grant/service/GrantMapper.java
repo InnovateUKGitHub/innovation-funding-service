@@ -122,6 +122,7 @@ class GrantMapper {
                 Role.INNOVATION_LEAD,
                 innovationLeadUser.getEmail());
 
+//        TODO IFS-5093 implement MO.
 //        User monitoringOfficer = null;
 //        Participant monitoringOfficerParticipant = toSimpleContactParticipant(
 //                monitoringOfficer.getId(),

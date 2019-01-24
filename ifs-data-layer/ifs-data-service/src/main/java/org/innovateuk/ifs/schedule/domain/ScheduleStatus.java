@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 public class ScheduleStatus {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String jobName;

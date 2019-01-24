@@ -34,7 +34,7 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
     }
 
     @Test
-    public void testSendProject() throws Exception {
+    public void sendProject() throws Exception {
         String requestBody = objectMapper.writeValueAsString(singletonList(parameter.grant()));
         mockMvc.
                 perform(

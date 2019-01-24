@@ -21,7 +21,7 @@ public class GrantProcessor {
 
     private static final String JOB_NAME = "GRANT_SEND";
 
-    @Scheduled(fixedDelayString = "${ifs.data.service.file.grant.send.delay.millis:10000}")
+    @Scheduled(fixedDelayString = "${ifs.data.service.file.grant.send.delay.millis:60000}")
     public void send() {
         try {
             scheduleStatusService.startJob(JOB_NAME);

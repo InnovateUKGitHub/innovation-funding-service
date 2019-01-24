@@ -23,9 +23,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
-/**
- *
- */
 public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
 
     @Mock
@@ -51,7 +48,7 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testSend() {
+    public void send() {
         Grant grant = new Grant();
         String expectedUrl = "http://sil.com/silstub/sendproject";
         ResponseEntity<String> returnedEntity = new ResponseEntity<>(ACCEPTED);
@@ -65,7 +62,7 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testFailure() {
+    public void send_failure() {
         Grant grant = new Grant();
         String expectedUrl = "http://sil.com/silstub/sendproject";
         ResponseEntity<String> returnedEntity = new ResponseEntity<>(INTERNAL_SERVER_ERROR);

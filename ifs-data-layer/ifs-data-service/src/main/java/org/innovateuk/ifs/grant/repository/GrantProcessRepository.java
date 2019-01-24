@@ -9,5 +9,5 @@ public interface GrantProcessRepository extends PagingAndSortingRepository<Grant
 
     List<GrantProcess> findByPendingIsTrue();
 
-    GrantProcess findOneByApplicationId(final Long applicationId);
+    GrantProcess findOneByApplicationId(long applicationId);
 }
