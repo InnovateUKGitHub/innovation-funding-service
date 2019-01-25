@@ -72,11 +72,11 @@ Invite a collaborator and check the application can the be submitted
 Moving ATI Competition to Project Setup
     [Documentation]  IFS-2332
     [Tags]
-    [Setup]  Requesting the ID of this Competition
+    [Setup]  Get competitions id and set it as suite variable  ${ATIcompetitionTitle}
     When Log in as a different user    &{internal_finance_credentials}
-    Then moving competition to Closed                  ${atiCompId}
-    And making the application a successful project    ${atiCompId}  ${ATIapplicationTitle}
-    And moving competition to Project Setup            ${atiCompId}
+    Then moving competition to Closed                  ${competitionId}
+    And making the application a successful project    ${competitionId}  ${ATIapplicationTitle}
+    And moving competition to Project Setup            ${competitionId}
 
 Applicant completes Project Details
     [Documentation]  IFS-2332
@@ -100,10 +100,6 @@ Project Finance is able to see the Overheads costs file
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
-
-Requesting the ID of this Competition
-    ${atiCompId} =  get comp id from comp title  ${ATIcompetitionTitle}
-    Set suite variable   ${atiCompId}
 
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${ATIapplicationTitle}
