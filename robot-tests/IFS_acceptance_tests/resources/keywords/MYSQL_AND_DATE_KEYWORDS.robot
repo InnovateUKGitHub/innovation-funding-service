@@ -98,6 +98,12 @@ Return the competition's milestones to their initial values
     Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
     Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
 
+the competition moves to Open state
+    [Arguments]  ${competitionId}
+    ${yesterday} =  get yesterday
+    Connect to Database  @{database}
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `date` = '${yesterday}' WHERE `competition_id` = '${competitionId}' AND `type` = 'OPEN_DATE';
+
 The competitions date changes so it is now Open
     [Arguments]  ${competition}
     Connect to Database  @{database}

@@ -33,17 +33,10 @@ Comp Admin Creates Competitions where Research can lead
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
     Then The competition admin creates a competition for  ${ACADEMIC_TYPE_ID}  ${compResearch}  Research
 
-Requesting the id of this Competition
-    [Documentation]  IFS-182
-    ...   retrieving the id of the competition so that we can use it in urls
-    [Tags]  MySQL  HappyPath
-    ${reseachCompId} =  get comp id from comp title  ${compResearch}
-    Set suite variable  ${reseachCompId}
-
 The Applicant is able to apply to the competition once is Open and see the correct Questions
     [Documentation]  IFS-182 IFS-2832  IFS-4046
     [Tags]  MySQL  HappyPath
-    [Setup]  the competition moves to Open state  ${reseachCompId}
+    [Setup]  The competitions date changes so it is now Open  ${compResearch}
     Given log in as a different user              &{collaborator2_credentials}
     And logged in user applies to competition research     ${compResearch}  2
     Then the user should see the element          jQuery = li:contains("${customQuestion}")

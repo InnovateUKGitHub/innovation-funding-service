@@ -355,18 +355,6 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery = dt:contains("Max word count") + dd:contains("120")
     the user clicks the button/link  link = Return to application questions
 
-the competition moves to Open state
-    [Arguments]  ${competitionId}
-    ${yesterday} =  get yesterday
-    Connect to Database  @{database}
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `date` = '${yesterday}' WHERE `competition_id` = '${competitionId}' AND `type` = 'OPEN_DATE';
-
-# Note here we are passing the comp title not the comp ID to update the correct comp milestone
-the competition is open
-    [Arguments]  ${compTitle}
-    Connect to Database  @{database}
-    change the open date of the competition in the database to one day before  ${compTitle}
-
 moving competition to Closed
     [Arguments]  ${compID}
     ${yesterday} =  get yesterday

@@ -24,14 +24,7 @@ CompAdmin creates a new Generic competition
     [Tags]  HappyPath
     [Setup]  log in as a different user                &{Comp_admin1_credentials}
     The competition admin creates a competition for    4  ${competitionName}  Generic
-
-Requesting the id of this Competition and moving to Open
-    [Documentation]  IFS-3261
-    ...   retrieving the id of the competition so that we can use it in urls
-    [Tags]  MySQL  HappyPath
-    ${competitionId} =  get comp id from comp title  ${competitionName}
-    Set suite variable  ${competitionId}
-    The competition moves to Open state  ${competitionId}
+    [Teardown]  The competitions date changes so it is now Open   ${competitionName}
 
 Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Documentation]  IFS-1012  IFS-2879

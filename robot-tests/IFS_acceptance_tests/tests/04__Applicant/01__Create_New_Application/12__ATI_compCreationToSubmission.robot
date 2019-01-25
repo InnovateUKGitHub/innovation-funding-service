@@ -44,7 +44,7 @@ Comp Admin creates an ATI competition
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
     [Tags]  MySQL
-    When the competition is open                                 ${ATIcompetitionTitle}
+    When the competitions date changes so it is now Open                                 ${ATIcompetitionTitle}
     And Log in as a different user            &{lead_applicant_credentials}
     Then logged in user applies to competition                  ${ATIcompetitionTitle}  1
 
