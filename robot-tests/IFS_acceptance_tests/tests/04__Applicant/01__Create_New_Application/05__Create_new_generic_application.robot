@@ -23,7 +23,7 @@ CompAdmin creates a new Generic competition
     [Documentation]  IFS-3261
     [Tags]  HappyPath
     [Setup]  log in as a different user                &{Comp_admin1_credentials}
-    The competition admin creates a competition for    4  ${competitionName}  Generic
+    The competition admin creates competition      4  ${competitionName}  Generic  Generic  2  GRANT  project-setup-completion-stage  no  1  true  collaborative
 
 Requesting the id of this Competition and moving to Open
     [Documentation]  IFS-3261
@@ -47,23 +47,3 @@ Applicant Applies to Generic competition and is able to see the Ts&Cs
 Custom suite setup
     Set predefined date variables
     The user logs-in in new browser  &{lead_applicant_credentials}
-
-The competition admin creates a competition for
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
-    the user navigates to the page              ${CA_UpcomingComp}
-    the user clicks the button/link             jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${compType_Generic}  2  GRANT
-    the user selects the Terms and Conditions
-    the user fills in the CS Funding Information
-    the user fills in the CS Eligibility        ${orgType}  1  true  collaborative     # 1 means 30%
-    the user fills in the CS Milestones         project-setup-completion-stage   ${month}   ${nextyear}
-    the user fills in the CS Application section with custom questions  no  Generic
-    the user fills in the CS Assessors
-    the user fills in the CS Documents in other projects
-    the user clicks the button/link             link = Public content
-    the user fills in the Public content and publishes  ${extraKeyword}
-    the user clicks the button/link             link = Return to setup overview
-    the user clicks the button/link             jQuery = a:contains("Complete")
-    the user clicks the button/link             css = button[type="submit"]
-    the user navigates to the page              ${CA_UpcomingComp}
-    the user should see the element             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")

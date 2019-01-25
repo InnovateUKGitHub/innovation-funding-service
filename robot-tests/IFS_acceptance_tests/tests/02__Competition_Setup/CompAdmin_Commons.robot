@@ -137,7 +137,9 @@ the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link                               link = Application
     the user marks the Application details section as complete    ${comp_type}
-    the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}
+    Log  ${jes}
+    Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}  ${jes}
+    ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}
 
 The user removes the Project details questions and marks the Application section as done
     [Arguments]  ${growthTable}  ${comp_type}
@@ -151,15 +153,14 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
-    Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
-    Run keyword If  '${comp_type}'!= '${compType_EOI}'   the user fills in the Finances questions  ${growthTable}  false  true
+    Run Keyword If  '${comp_type}' == '${compType_EOI}' or '${comp_type}' == 'The Prince's Trust'  the user opts no finances for EOI comp
+    ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Competition setup
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
 
 the user fills in the CS Application section with custom questions
     [Arguments]  ${growthTable}  ${competitionType}
-    the user clicks the button/link    link = Application
     # Removing questions from the Assessed questions
     Remove previous rows               jQuery = .govuk-heading-s:contains("Assessed questions") ~ ul li:last-of-type button[type="submit"]:contains("Remove")
     the user clicks the button/link    jQuery = li:contains("1.") a  # Click the last question left - which now will be first
@@ -169,7 +170,6 @@ the user fills in the CS Application section with custom questions
     the user clicks the button/link    css = button[name="createQuestion"]
     the user is able to configure the new question  Your technical approach.
     the user marks the Finance section as complete if it's present    ${growthTable}
-    the user marks the Application details section as complete        ${competitionType}
     the user should see the element    jQuery = h1:contains("Application process")  # to check i am on the right page
     the user clicks the button/link    jQuery = button:contains("Done")
     the user clicks the button/link    link = Competition setup
