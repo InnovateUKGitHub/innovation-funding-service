@@ -137,8 +137,7 @@ the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link                               link = Application
     the user marks the Application details section as complete    ${comp_type}
-    Log  ${jes}
-    Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}  ${jes}
+    Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
     ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}
 
 The user removes the Project details questions and marks the Application section as done
@@ -153,7 +152,7 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
-    Run Keyword If  '${comp_type}' == '${compType_EOI}' or '${comp_type}' == 'The Prince's Trust'  the user opts no finances for EOI comp
+    Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
     ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Competition setup
