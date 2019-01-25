@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.application.security;
 
+import org.codehaus.groovy.runtime.InvokerHelper;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -21,12 +25,15 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -45,6 +52,9 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
 
     @Mock
     private ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    private StakeholderRepository stakeholderRepositoryMock;
 
     private static final long formInputId = 123L;
     private static final long applicationId = 456L;
@@ -107,5 +117,29 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
 
         assertTrue(fileUploadRules.internalUserCanDownloadFilesInResponses(fileEntry, compAdmin));
         assertTrue(fileUploadRules.internalUserCanDownloadFilesInResponses(fileEntry, projectFinance));
+    }
+
+    @Test
+    public void stakeholdersCanDownloadFilesInResponse() {
+        Application application = newApplication().withApplicationState(ApplicationState.OPEN).build();
+
+        Competition competition = newCompetition().build();
+        application.setCompetition(competition);
+        UserResource stakeholderUserResource = newUserResource()
+                .withRoleGlobal(STAKEHOLDER)
+                .build();
+        User stakeholderUser = newUser()
+                .withId(stakeholderUserResource.getId())
+                .build();
+        Stakeholder stakeholder = newStakeholder()
+                .withUser(stakeholderUser)
+                .build();
+
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(application);
+        when(stakeholderRepositoryMock.findStakeholders(competition.getId())).thenReturn(InvokerHelper.asList(stakeholder));
+
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
+
+        assertTrue(fileUploadRules.stakeholdersCanDownloadFilesInResponse(fileEntry, stakeholderUserResource));
     }
 }
