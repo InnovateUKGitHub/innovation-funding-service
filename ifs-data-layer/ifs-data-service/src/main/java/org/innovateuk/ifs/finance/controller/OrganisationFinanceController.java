@@ -57,10 +57,10 @@ public class OrganisationFinanceController {
 
     private static final DateTimeFormatter MONTH_YEAR_FORMAT = DateTimeFormatter.ofPattern("MM-uuuu");
 
-    private static final String ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION = "Annual turnover";
-    private static final String ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION = "Annual profits";
-    private static final String ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION = "Annual export";
-    private static final String RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION = "Research and development spend";
+    static final String ANNUAL_TURNOVER_FORM_INPUT_DESCRIPTION = "Annual turnover";
+    static final String ANNUAL_PROFITS_FORM_INPUT_DESCRIPTION = "Annual profits";
+    static final String ANNUAL_EXPORT_FORM_INPUT_DESCRIPTION = "Annual export";
+    static final String RESEARCH_AND_DEVELOPMENT_FORM_INPUT_DESCRIPTION = "Research and development spend";
 
     private CompetitionService competitionService;
     private QuestionService questionService;
@@ -447,7 +447,7 @@ public class OrganisationFinanceController {
 
         return getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType).
                 andOnSuccess(question -> formInputService.findByQuestionId(question.getId())).
-                andOnSuccessReturn(formInputs -> simpleFindFirstMandatory(formInputs, correctFormInputTest::test)).
+                andOnSuccessReturn(formInputs -> simpleFindFirstMandatory(formInputs, correctFormInputTest)).
                 andOnSuccessReturn(formInput -> formInputResponseService.saveQuestionResponse(
                         new FormInputResponseCommand(formInput.getId(), applicationId, userId, stringValue))).
                 andOnSuccessReturnVoid();
