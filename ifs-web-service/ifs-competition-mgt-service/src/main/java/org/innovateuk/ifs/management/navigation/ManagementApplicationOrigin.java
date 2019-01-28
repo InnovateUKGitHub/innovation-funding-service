@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.navigation;
 
 import org.innovateuk.ifs.origin.BackLinkOrigin;
 
-public enum NavigationOrigin implements BackLinkOrigin {
+public enum ManagementApplicationOrigin implements BackLinkOrigin {
 
     ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
     SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
@@ -28,7 +28,7 @@ public enum NavigationOrigin implements BackLinkOrigin {
 
     private String originUrl;
 
-    NavigationOrigin(String originUrl) {
+    ManagementApplicationOrigin(String originUrl) {
         this.originUrl = originUrl;
     }
 
