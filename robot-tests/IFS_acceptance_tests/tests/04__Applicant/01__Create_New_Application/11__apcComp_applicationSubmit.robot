@@ -21,23 +21,8 @@ ${apcApplicationTitle}  Advanced Propulsion Centre Application
 Comp Admin creates an APC competition
     [Documentation]  IFS-2284, IFS-2286
     [Tags]
-    Given The user logs-in in new browser          &{Comp_admin1_credentials}
-    And the user navigates to the page             ${CA_UpcomingComp}
-    When the user clicks the button/link           link = Create competition
-    Then the user fills in the CS Initial details  ${apcCompetitionTitle}  ${month}  ${nextyear}  Advanced Propulsion Centre  1
-    And the user selects the Terms and Conditions
-    And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${business_type_id}  1  true  single   # 1 means 30%
-    And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
-    And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
-    And the user fills in the CS Assessors
-    And the user fills in the CS Documents in other projects
-    When the user clicks the button/link           link = Public content
-    Then the user fills in the Public content and publishes  APC
-    When the user clicks the button/link           link = Return to setup overview
-    Then the user should see the element           jQuery = div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link           jQuery = a:contains("Complete")
-    Then the user clicks the button/link           css = button[type = "submit"]
+    Given The user logs-in in new browser           &{Comp_admin1_credentials}
+    Then the competition admin creates competition  ${business_type_id}  ${apcCompetitionTitle}  APC  ${compType_APC}  1  GRANT  project-setup-completion-stage  yes  1  true  single
 
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286  IFS-4221  IFS-4222
