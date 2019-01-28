@@ -111,9 +111,11 @@ the user marks the procurement finances as complete
     the user fills in the project costs  ${overheadsCost}  ${totalCosts}
     the user enters the project location
     the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    the user should not see the element             css = table
     the user should see all procurement finance subsections complete
     the user clicks the button/link  link = Application overview
     the user should see the element  jQuery = li:contains("Your finances") > .task-status-complete
+    the user should not see the element   link = Finances overview
 
 the user should see all procurement finance subsections complete
     the user should see the element  css = li:nth-of-type(1) .task-status-complete
@@ -130,8 +132,7 @@ the applicant submits the procurement application
     the user should be redirected to the correct page  track
 
 Competition is closed
-    ${competitionId} =  get comp id from comp title  ${comp_name}
-    Set suite variable  ${competitionId}
+    Get competitions id and set it as suite variable    ${comp_name}
     the submission date changes in the db in the past   ${competitionId}
 
 the assessor submits the assessment
