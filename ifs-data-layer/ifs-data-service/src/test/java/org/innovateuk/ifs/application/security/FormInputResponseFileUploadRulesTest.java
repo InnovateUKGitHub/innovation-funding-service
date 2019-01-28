@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
@@ -139,6 +140,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         when(stakeholderRepositoryMock.findStakeholders(competition.getId())).thenReturn(InvokerHelper.asList(stakeholder));
 
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
+        fileEntry.setCompoundId(new FormInputResponseFileEntryId(1L, application.getId(), 2L));
 
         assertTrue(fileUploadRules.stakeholdersCanDownloadFilesInResponse(fileEntry, stakeholderUserResource));
     }
