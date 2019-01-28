@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
 
 @Component
-@Configuration
 @ConfigurationProperties(prefix = LdapProperties.PREFIX)
 public class LdapProperties {
 
