@@ -7,33 +7,27 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
 
 @Component
-@ConfigurationProperties()
+@ConfigurationProperties(prefix = LdapProperties.PREFIX)
 public class LdapProperties {
 
     public static final String PREFIX = "shibboleth.ldap";
 
     @NotNull
-    @Value("${shibboleth.ldap.port}")
     private Integer port;
 
     @NotNull
-    @Value("${shibboleth.ldap.url}")
     private String url;
 
     @NotNull
-    @Value("${shibboleth.ldap.user}")
     private String user;
 
     @NotNull
-    @Value("${shibboleth.ldap.password}")
     private String password;
 
     @NotNull
-    @Value("${shibboleth.ldap.baseDn}")
     private String baseDn;
 
     @NotNull
-    @Value("${shibboleth.ldap.ppolicyAttrib}")
     private String ppolicyAttrib;
 
     // default to true - if the app can't read and parse the password lockout duration, it won't start.
