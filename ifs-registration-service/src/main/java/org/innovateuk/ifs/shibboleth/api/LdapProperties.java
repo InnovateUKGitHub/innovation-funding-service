@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
 
 @Component
-//@ConfigurationProperties(prefix = LdapProperties.PREFIX)
+@ConfigurationProperties()
 public class LdapProperties {
 
     public static final String PREFIX = "shibboleth.ldap";
