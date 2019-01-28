@@ -98,9 +98,14 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "The System Registration user can update any user's email address")
-    public boolean systemRegistrationUserCanUpdateUsersEmailAddress(UserResource userToUpdate, UserResource user) {
-        return isSystemRegistrationUser(user);
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "The System Maintenance user can update any external user's email address")
+    public boolean systemMaintenanceUserCanUpdateUsersEmailAddress(UserResource userToUpdate, UserResource user) {
+        return isSystemMaintenanceUser(user) && usersCannotUpdateInternalUsersEmailAddress(userToUpdate, user);
+    }
+
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "A User cannot update an internal user's email addresses")
+    public boolean usersCannotUpdateInternalUsersEmailAddress(UserResource userToUpdate, UserResource user) {
+        return !isInternal(userToUpdate);
     }
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
@@ -283,5 +288,4 @@ public class UserPermissionRules {
     private List<ProcessRole> getAllProcessRolesForApplications(List<Application> applicationsWhereThisUserIsInConsortium) {
         return flattenLists(simpleMap(applicationsWhereThisUserIsInConsortium, Application::getProcessRoles));
     }
-
 }

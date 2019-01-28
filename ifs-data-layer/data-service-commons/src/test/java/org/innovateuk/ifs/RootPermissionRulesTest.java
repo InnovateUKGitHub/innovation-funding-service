@@ -64,6 +64,10 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(SYSTEM_REGISTRATION_USER);
     }
 
+    protected UserResource systemMaintenanceUser() {
+        return getUserWithRole(SYSTEM_MAINTAINER);
+    }
+
     protected UserResource anonymousUser() {
         return (UserResource) ReflectionTestUtils.getField(new DefaultPermissionMethodHandler(new PermissionedObjectClassToPermissionsToPermissionsMethods()), "ANONYMOUS_USER");
     }
@@ -109,7 +113,5 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         user.setRoles(projectFinanceUser);
     }
 
-
     protected abstract T supplyPermissionRulesUnderTest();
-
 }
