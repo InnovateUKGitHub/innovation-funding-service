@@ -19,7 +19,7 @@ Comp Admin creates The Prince's Trust type competition
     [Documentation]  IFS-2688
     [Tags]
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then The competition admin creates The Prince's Trust Comp   ${rto_type_id}  ${comp_name}  Prince
+    Then the competition admin creates The Prince's Trust Comp   ${rto_type_id}  ${comp_name}  Prince
 
 Applicant applies to newly created The Prince's Trust competition
     [Documentation]  IFS-2688

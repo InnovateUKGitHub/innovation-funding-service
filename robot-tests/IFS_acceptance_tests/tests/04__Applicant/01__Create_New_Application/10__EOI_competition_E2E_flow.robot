@@ -28,7 +28,7 @@ Comp Admin Creates EOI type competition
     [Documentation]  IFS-2192
     [Tags]
     Given Logging in and Error Checking               &{Comp_admin1_credentials}
-    The competition admin creates competition         ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  2  GRANT  release-feedback-completion-stage  no  1  true  collaborative
+    Then the competition admin creates competition    ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  2  GRANT  release-feedback-completion-stage  no  1  true  collaborative
 
 Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080

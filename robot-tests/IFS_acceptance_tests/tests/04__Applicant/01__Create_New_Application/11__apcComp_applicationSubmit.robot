@@ -21,8 +21,8 @@ ${apcApplicationTitle}  Advanced Propulsion Centre Application
 Comp Admin creates an APC competition
     [Documentation]  IFS-2284, IFS-2286
     [Tags]
-    Given The user logs-in in new browser          &{Comp_admin1_credentials}
-    The competition admin creates competition      ${business_type_id}  ${apcCompetitionTitle}  APC  ${compType_APC}  1  GRANT  project-setup-completion-stage  yes  1  true  single
+    Given The user logs-in in new browser           &{Comp_admin1_credentials}
+    Then the competition admin creates competition  ${business_type_id}  ${apcCompetitionTitle}  APC  ${compType_APC}  1  GRANT  project-setup-completion-stage  yes  1  true  single
 
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286  IFS-4221  IFS-4222

@@ -23,7 +23,7 @@ CompAdmin creates a new Generic competition
     [Documentation]  IFS-3261
     [Tags]  HappyPath
     [Setup]  log in as a different user                &{Comp_admin1_credentials}
-    The competition admin creates competition      4  ${competitionName}  Generic  Generic  2  GRANT  project-setup-completion-stage  no  1  true  collaborative
+    Given the competition admin creates competition      4  ${competitionName}  Generic  Generic  2  GRANT  project-setup-completion-stage  no  1  true  collaborative
 
 Requesting the id of this Competition and moving to Open
     [Documentation]  IFS-3261

@@ -14,7 +14,7 @@ Comp Admin creates procurement competition
     [Documentation]
     [Tags]
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then The competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  release-feedback-completion-stage  no  2  true  single-or-collaborative
+    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  release-feedback-completion-stage  no  2  true  single-or-collaborative
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
