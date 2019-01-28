@@ -4,17 +4,14 @@ import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummary
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -25,10 +22,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
-import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 
 @Component
 public class ApplicationFinanceSummaryViewModelPopulator {
@@ -73,10 +68,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
         SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
         final boolean hasFinanceSection = financeSection != null;
-        Long financeSectionId = null;
-        if (hasFinanceSection) {
-            financeSectionId = financeSection.getId();
-        }
+        final Long financeSectionId = hasFinanceSection ? financeSection.getId() : null;
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
 
@@ -88,25 +80,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
         Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
 
-        Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
         final List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
-        final List<OrganisationResource> academicOrganisations = getAcademicOrganisations(applicationOrganisations);
-        final List<Long> academicOrganisationIds = simpleMap(academicOrganisations, OrganisationResource::getId);
-        Map<Long, Boolean> applicantOrganisationsAreAcademic = simpleToMap
-                (applicationOrganisations, OrganisationResource::getId, o -> academicOrganisationIds.contains(o.getId
-                        ()));
-
-        Map<Long, Boolean> showDetailedFinanceLink = simpleToMap(applicationOrganisations, OrganisationResource::getId,
-                organisation -> {
-                    boolean orgFinancesExist = ofNullable(organisationFinances)
-                            .map(finances -> organisationFinances.get(organisation.getId()))
-                            .map(BaseFinanceResource::getOrganisationSize)
-                            .isPresent();
-                    boolean academicFinancesExist = applicantOrganisationsAreAcademic.get(organisation.getId());
-                    boolean financesExist = orgFinancesExist || academicFinancesExist;
-
-                    return isApplicationVisibleToUser(application, user) && financesExist;
-                });
 
         boolean yourFinancesCompleteForAllOrganisations = getFinancesOverviewCompleteForAllOrganisations(
                 completedSectionsByOrganisation, application.getCompetition());
@@ -128,7 +102,6 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 organisationFinanceOverview.getTotal(),
                 completedSectionsByOrganisation,
                 eachCollaboratorFinanceSectionId,
-                showDetailedFinanceLink,
                 yourFinancesCompleteForAllOrganisations
         );
     }
@@ -166,18 +139,6 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         return null;
     }
 
-    private boolean isApplicationVisibleToUser(ApplicationResource application, UserResource user) {
-        boolean canSeeUnsubmitted = user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT);
-        boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER);
-        boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN && application.getApplicationState() != ApplicationState.CREATED;
-
-        return canSeeUnsubmitted || (canSeeSubmitted && isSubmitted);
-    }
-
-    private List<OrganisationResource> getAcademicOrganisations(final List<OrganisationResource> organisations) {
-        return simpleFilter(organisations, o -> OrganisationTypeEnum.RESEARCH.getId() == o.getOrganisationType());
-    }
-
     private OrganisationResource getUserOrganisation(UserResource user, Long applicationId) {
         OrganisationResource userOrganisation = null;
 
@@ -188,5 +149,4 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
         return userOrganisation;
     }
-
 }
