@@ -29,10 +29,5 @@ Hours remaining should show the last 24hours
     ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${openCompetitionRTOCloseDate} 00:00:00' WHERE `competition_id`='${openCompetitionRTO}' and type IN ('SUBMISSION_DATE');
 
 *** Keywords ***
-Custom setup
-    ${TIME}=    Get Current Date    UTC    + 3 hours    exclude_millis=true    # This line gets the current date/time and adds 3 hours
-    Connect to Database    @{database}
-    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${TIME}' WHERE `competition_id`='${openCompetitionRTO}' and type IN ('SUBMISSION_DATE');
-
 the user should see the date for submission of application
     the user should see the element  jQuery=li:contains("Robot test application") .status:contains("days left"):contains("% complete")
