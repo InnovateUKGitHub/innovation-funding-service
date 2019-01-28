@@ -721,10 +721,10 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void systemMaintenanceUserCanUpdateExternalUserEmailAddress(){
 
-        UserResource userResource = UserResourceBuilder.newUserResource().withRoleGlobal(APPLICANT).build();
+        UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(systemRegistrationUser())){
+            if (user.equals(systemMaintenanceUser())){
                 assertTrue(rules.systemMaintenanceUserCanUpdateUsersEmailAddress(userResource, user));
             } else {
                 assertFalse(rules.systemMaintenanceUserCanUpdateUsersEmailAddress(userResource, user));
