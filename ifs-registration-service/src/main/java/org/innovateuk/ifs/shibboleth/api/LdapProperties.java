@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.shibboleth.api;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
@@ -8,6 +11,14 @@ import javax.validation.constraints.NotNull;
 @Component
 @ConfigurationProperties(prefix = LdapProperties.PREFIX)
 public class LdapProperties {
+
+    @Bean
+    PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
+        PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
+        propertyPlaceholderConfigurer.setLocation(new ClassPathResource("application.properties"));
+        propertyPlaceholderConfigurer.setIgnoreUnresolvablePlaceholders(true);
+        return propertyPlaceholderConfigurer;
+    }
 
     public static final String PREFIX = "shibboleth.ldap";
 
