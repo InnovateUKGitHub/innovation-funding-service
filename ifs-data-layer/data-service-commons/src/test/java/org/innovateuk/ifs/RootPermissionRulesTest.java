@@ -113,7 +113,5 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         user.setRoles(projectFinanceUser);
     }
 
-
     protected abstract T supplyPermissionRulesUnderTest();
-
 }

@@ -46,7 +46,7 @@ public class AlertPermissionRulesTest extends RootPermissionRulesTest<AlertPermi
         assertFalse(rules.systemMaintenanceUserCanDeleteAlerts(alertResource, anonymousUser()));
     }
 
-    private UserResource systemMaintenanceUser() {
+    protected UserResource systemMaintenanceUser() {
         return getUserWithRole(SYSTEM_MAINTAINER);
     }
 }
