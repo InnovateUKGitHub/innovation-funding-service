@@ -20,8 +20,8 @@ ext.SHIBBOLETH_IDP_MEMORY_REQUEST="1024M"
 ext.SHIBBOLETH_IDP_MEMORY_LIMIT="1500M"
 
 ext.LDAP_USESSL="false"
-ext.LDAP_URL="ldaps://ldap:666"
-ext.LDAP_PASSWORD="default"
+//ext.LDAP_URL="ldaps://ldap:666"
+//ext.LDAP_PASSWORD="default"
 
 ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
 
