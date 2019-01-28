@@ -108,14 +108,14 @@ Custom Suite Setup
 
 the user marks the procurement finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
-    the user fills in the project costs  ${overheadsCost}  ${totalCosts}
+    the user fills in the project costs             ${overheadsCost}  ${totalCosts}
     the user enters the project location
     the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user should not see the element             css = table
     the user should see all procurement finance subsections complete
-    the user clicks the button/link  link = Application overview
-    the user should see the element  jQuery = li:contains("Your finances") > .task-status-complete
-    the user should not see the element   link = Finances overview
+    the user clicks the button/link                 link = Application overview
+    the user should see the element                 jQuery = li:contains("Your finances") > .task-status-complete
+    the user should not see the element             link = Finances overview
 
 the user should see all procurement finance subsections complete
     the user should see the element  css = li:nth-of-type(1) .task-status-complete
