@@ -9,11 +9,17 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
 
 @Component
-@ConfigurationProperties(prefix = LdapProperties.PREFIX, ignoreInvalidFields = true)
+@ConfigurationProperties(prefix = LdapProperties.PREFIX)
 public class LdapProperties {
 
     public static final String PREFIX = "shibboleth.ldap";
 
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
+        PropertySourcesPlaceholderConfigurer c = new PropertySourcesPlaceholderConfigurer();
+        c.setIgnoreUnresolvablePlaceholders(true);
+        return c;
+    }
 
     @NotNull
     private Integer port;
