@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.grant.domain.GrantProcess;
-import org.innovateuk.ifs.grant.repository.GrantProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.service.GrantEndpoint;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.groupingBy;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -39,7 +37,15 @@ public class GrantServiceImpl implements GrantService {
 
     @Override
     @Transactional
-    public ServiceResult<Void> sendProject(Long applicationId) {
+    public ServiceResult<Void> sendReadyProjects() {
+        List<GrantProcess> readyToSend = grantProcessService.findReadyToSend();
+        LOG.info("Sending " + readyToSend.size() + " projects");
+        readyToSend.forEach(this::sendProject);
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> sendProject(GrantProcess grantProcess) {
+        long applicationId = grantProcess.getApplicationId();
         LOG.info("Sending project : " + applicationId);
 
         Grant grant = grantMapper.mapToGrant(
@@ -53,15 +59,6 @@ public class GrantServiceImpl implements GrantService {
         } else {
             grantProcessService.sendIgnored(applicationId, grantProcessApplicationFilter.generateFilterReason(grant));
         }
-        return serviceSuccess();
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> sendReadyProjects() {
-        List<GrantProcess> readyToSend = grantProcessService.findReadyToSend();
-        LOG.info("Sending " + readyToSend.size() + " projects");
-        readyToSend.forEach(it -> sendProject(it.getApplicationId()));
         return serviceSuccess();
     }
 }

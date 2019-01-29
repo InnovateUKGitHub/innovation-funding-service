@@ -1,3 +1,4 @@
+
 package org.innovateuk.ifs.grant.service;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
@@ -75,7 +76,7 @@ class GrantMapper {
     @Autowired
     private InnovationLeadRepository innovationLeadRepository;
 
-    Grant mapToGrant(Project project) {
+    public Grant mapToGrant(Project project) {
 
         long applicationId = project.getApplication().getId();
         long competitionId = project.getApplication().getCompetition().getId();

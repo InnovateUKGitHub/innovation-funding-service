@@ -566,7 +566,8 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
                 if (golWorkflowHandler.isReadyToApprove(project)) {
                     if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
                         return approveGOL(project)
-                                .andOnSuccess(() -> moveProjectToLiveState(project));
+                                .andOnSuccess(() -> moveProjectToLiveState(project))
+                                .andOnSuccess(() -> createGrantProcess(project));
                     } else if (ApprovalType.REJECTED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
                         return rejectGOL(project, grantOfferLetterApprovalResource.getRejectionReason());
                     }
@@ -593,9 +594,12 @@ GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOff
             LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
         }
-        grantProcessService.sendRequested(project.getApplication().getId());
-
         return notifyProjectIsLive(project.getId());
+    }
+
+    private ServiceResult<Void> createGrantProcess(Project project) {
+        grantProcessService.sendRequested(project.getApplication().getId());
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> approveGOL(Project project) {
