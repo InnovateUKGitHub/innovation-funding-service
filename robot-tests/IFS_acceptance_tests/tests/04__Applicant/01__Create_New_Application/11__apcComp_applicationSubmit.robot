@@ -27,9 +27,9 @@ Comp Admin creates an APC competition
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286  IFS-4221  IFS-4222
     [Tags]  MySQL
-    When Change the open date of the Competition in the database to one day before                  ${apcCompetitionTitle}
-    And Log in as a different user                &{lead_applicant_credentials}
-    Then logged in user applies to competition    ${apccompetitionTitle}  1
+    When Change the open date of the Competition in the database to one day before  ${apcCompetitionTitle}
+    And Log in as a different user                                                  &{lead_applicant_credentials}
+    Then logged in user applies to competition                                      ${apccompetitionTitle}  1
     And the applicant cannot add a collaborator to a single comp
     And the applicant sees single comp finance summary
     And the applicant sees state aid information
