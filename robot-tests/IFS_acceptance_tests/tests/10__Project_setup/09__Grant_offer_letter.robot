@@ -42,6 +42,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-2511 Resend Signed Grant Offer Letter
 ...
 ...               IFS-2533 Reason for rejecting GOL
+...
+...               IFS-4959 Navigating between IFS and ACC
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup    Upload
@@ -438,6 +440,13 @@ Project manager's status should be updated
     Given the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the element     jQuery = .success-alert:contains("The project is live, you can review progress at")
     And the user should see the element      link = _connect
+
+PM should see project tab on dashboard once GOL is approved
+    [Documentation]  IFS-4959
+    [Tags]
+    When the user clicks the button/link     link = Dashboard
+    Then the user should see the element     css = #dashboard-link-LIVE_PROJECTS_USER
+    And the user should see the element      jQuery = h2:contains("Projects")
 
 Non lead's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377
