@@ -39,7 +39,7 @@ public class GrantServiceImpl implements GrantService {
     @Transactional
     public ServiceResult<Void> sendReadyProjects() {
         List<GrantProcess> readyToSend = grantProcessService.findReadyToSend();
-        LOG.info("Sending " + readyToSend.size() + " projects");
+        LOG.debug("Sending " + readyToSend.size() + " projects");
         readyToSend.forEach(this::sendProject);
         return serviceSuccess();
     }
