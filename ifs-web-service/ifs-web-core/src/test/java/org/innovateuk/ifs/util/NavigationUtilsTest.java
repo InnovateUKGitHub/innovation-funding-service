@@ -1,100 +1,88 @@
 package org.innovateuk.ifs.util;
 
-import org.innovateuk.ifs.user.resource.Role;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class NavigationUtilsTest {
+
+    private static final String landingPageUrl = "https://site/live-projects-landing-page";
+
+    @Mock
+    private HttpServletRequest request;
+
+    @InjectMocks
+    private NavigationUtils navigationUtils;
+
+    @Before
+    public void setup() {
+
+        ReflectionTestUtils.setField(navigationUtils, "liveProjectsLandingPageUrl", landingPageUrl);
+
+        when(request.getScheme()).thenReturn("https");
+        when(request.getServerName()).thenReturn("site");
+        when(request.getServerPort()).thenReturn(8080);
+    }
 
     @Test
     public void getRedirectToDashboardUrlForLiveProjectUser() throws Exception {
 
-        String landingPageUrl = "https://site/live-projects-landing-page";
-
-        NavigationUtils navigationUtils = new NavigationUtils();
-        ReflectionTestUtils.setField(navigationUtils, "liveProjectsLandingPageUrl", landingPageUrl);
-
         assertEquals("redirect:https://site/live-projects-landing-page",
-                navigationUtils.getRedirectToDashboardUrlForRole(Role.LIVE_PROJECTS_USER));
+                navigationUtils.getRedirectToDashboardUrlForRole(LIVE_PROJECTS_USER));
     }
 
     @Test
     public void getRedirectToDashboardUrlForApplicantRole() throws Exception {
 
-        assertEquals("redirect:/applicant/dashboard",
-                new NavigationUtils().getRedirectToDashboardUrlForRole(Role.APPLICANT));
+        assertEquals("redirect:/applicant/dashboard", navigationUtils.getRedirectToDashboardUrlForRole(APPLICANT));
     }
 
     @Test
     public void getRedirectToDashboardUrlForAssessorRole() throws Exception {
 
-        assertEquals("redirect:/assessment/assessor/dashboard",
-                new NavigationUtils().getRedirectToDashboardUrlForRole(Role.ASSESSOR));
+        assertEquals("redirect:/assessment/assessor/dashboard", navigationUtils.getRedirectToDashboardUrlForRole(ASSESSOR));
     }
 
     @Test
     public void getRedirectToDashboardUrlForStakeholderRole() throws Exception {
 
-        assertEquals("redirect:/management/dashboard",
-                new NavigationUtils().getRedirectToDashboardUrlForRole(Role.STAKEHOLDER));
+        assertEquals("redirect:/management/dashboard", navigationUtils.getRedirectToDashboardUrlForRole(STAKEHOLDER));
     }
 
     @Test
-    public void getDirectDashboardUrlForRole() throws Exception {
+    public void getDirectDashboardUrlForApplicantRole() throws Exception {
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
-
-        when(request.getScheme()).thenReturn("https");
-        when(request.getServerName()).thenReturn("site");
-        when(request.getServerPort()).thenReturn(8080);
-
-        assertEquals("https://site:8080/applicant/dashboard",
-                new NavigationUtils().getDirectDashboardUrlForRole(request, Role.APPLICANT));
+        assertEquals("https://site:8080/applicant/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, APPLICANT));
     }
 
     @Test
     public void getRedirectToLandingPageUrl() throws Exception {
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
-
-        when(request.getScheme()).thenReturn("https");
-        when(request.getServerName()).thenReturn("site");
-        when(request.getServerPort()).thenReturn(8080);
-
-        //String.format("redirect:%s://%s:%s"
-        assertEquals("redirect:https://site:8080", new NavigationUtils().getRedirectToLandingPageUrl(request));
+        assertEquals("redirect:https://site:8080", navigationUtils.getRedirectToLandingPageUrl(request));
     }
 
     @Test
     public void getDirectLandingPageUrl() throws Exception {
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
-
-        when(request.getScheme()).thenReturn("https");
-        when(request.getServerName()).thenReturn("site");
-        when(request.getServerPort()).thenReturn(8080);
-
-        assertEquals("https://site:8080", new NavigationUtils().getDirectLandingPageUrl(request));
+        assertEquals("https://site:8080", navigationUtils.getDirectLandingPageUrl(request));
     }
 
     @Test
     public void getRedirectToSameDomainUrl() throws Exception {
+        String url = "management/dashboard";
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
-
-        when(request.getScheme()).thenReturn("https");
-        when(request.getServerName()).thenReturn("site");
-        when(request.getServerPort()).thenReturn(8080);
-
-        //String.format("redirect:%s://%s:%s/%s"
-        assertEquals("redirect:https://site:8080/management/dashboard",
-                new NavigationUtils().getRedirectToSameDomainUrl(request, "management/dashboard"));
+        assertEquals("redirect:https://site:8080/" + url, navigationUtils.getRedirectToSameDomainUrl(request, url));
     }
 
 }

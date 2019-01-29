@@ -34,7 +34,7 @@ public class NavigationUtils {
     @Value("${ifs.live.projects.landing.page.url}")
     private String liveProjectsLandingPageUrl;
 
-    NavigationUtils() {}
+    private NavigationUtils() {}
 
     public String getRedirectToDashboardUrlForRole(Role role) {
 
