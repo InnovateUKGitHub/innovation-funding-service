@@ -169,4 +169,4 @@ flywayMigrate.dependsOn processResources
 ext.ifsDataServiceRestBaseURL="http://data-service:8080"
 ext.serverPort=8080
 
-ext.ifsAllocateLiveProjectsRole=ext.has('ifs.allocate.live.projects.role') ? ext.get('ifs.allocate.live.projects.role') : false
+ext.ifsAllocateLiveProjectsRole=ext.has('ifs.allocate.live.projects.role') ? ext.get('ifs.allocate.live.projects.role') : true
