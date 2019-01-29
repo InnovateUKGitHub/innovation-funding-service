@@ -33,9 +33,9 @@ Comp Admin Creates EOI type competition
 Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080
     [Tags]  MySQL
-    When Change the open date of the Competition in the database to one day before                 ${comp_name}
-    And Log in as a different user               &{assessor_bob_credentials}
-    Then logged in user applies to competition   ${comp_name}  1
+    When Change the open date of the Competition in the database to one day before  ${comp_name}
+    And Log in as a different user                                                  &{assessor_bob_credentials}
+    Then logged in user applies to competition                                      ${comp_name}  1
 
 Applicant submits his application
     [Documentation]  IFS-2196  IFS-2941  IFS-4046

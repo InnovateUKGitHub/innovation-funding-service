@@ -725,7 +725,7 @@ User cannot delete competition with assessors
 The Applicant is able to apply to the competition once is Open
     [Documentation]  IFS-182
     [Tags]  MySQL
-    [Setup]  Change the open date of the Competition in the database to one day before  ${competitionTitle}
+    [Setup]  the competition moves to Open state    ${competitionId}
     Given log in as a different user                &{lead_applicant_credentials}
     And logged in user applies to competition       ${competitionTitle}  1
 
