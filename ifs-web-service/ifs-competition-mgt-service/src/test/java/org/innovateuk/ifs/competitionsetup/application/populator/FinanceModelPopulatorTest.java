@@ -42,7 +42,6 @@ public class FinanceModelPopulatorTest {
         FinanceViewModel viewModel = (FinanceViewModel) populator.populateModel(competition, Optional.empty());
 
         assertEquals(FinanceViewModel.class, viewModel.getClass());
-        assertFalse(viewModel.isSectorCompetition());
         assertTrue(viewModel.isNoFinancesCompetition());
     }
 }

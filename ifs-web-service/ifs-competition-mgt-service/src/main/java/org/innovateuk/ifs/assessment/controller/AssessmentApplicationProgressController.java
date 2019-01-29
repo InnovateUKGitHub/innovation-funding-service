@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 import org.innovateuk.ifs.management.assessment.populator.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.ApplicationAssessmentProgressRemoveViewModel;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.navigation.NavigationOrigin;
+import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -81,7 +81,7 @@ public class AssessmentApplicationProgressController {
 
         String assessorProfileOrigin = buildOriginQueryString(AssessorProfileOrigin.APPLICATION_PROGRESS, queryParams);
         model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, filterInnovationArea, page, assessorProfileOrigin));
-        model.addAttribute("applicationOriginQuery", buildOriginQueryString(NavigationOrigin.APPLICATION_PROGRESS, queryParams));
+        model.addAttribute("applicationOriginQuery", buildOriginQueryString(ManagementApplicationOrigin.APPLICATION_PROGRESS, queryParams));
         model.addAttribute("assessorProfileOriginQuery", assessorProfileOrigin);
 
         return "competition/application-progress";

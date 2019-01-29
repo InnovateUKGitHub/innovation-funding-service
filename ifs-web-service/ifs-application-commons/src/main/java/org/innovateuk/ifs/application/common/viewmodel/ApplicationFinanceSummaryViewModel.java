@@ -32,7 +32,6 @@ public class ApplicationFinanceSummaryViewModel {
     private final BigDecimal financeTotal;
     private final Map<Long, Set<Long>> completedSectionsByOrganisation;
     private final Long eachCollaboratorFinanceSectionId;
-    private final Map<Long, Boolean> showDetailedFinanceLink;
     private final boolean yourFinancesCompleteForAllOrganisations;
 
     public ApplicationFinanceSummaryViewModel(ApplicationResource currentApplication,
@@ -51,7 +50,6 @@ public class ApplicationFinanceSummaryViewModel {
                                               BigDecimal financeTotal,
                                               Map<Long, Set<Long>> completedSectionsByOrganisation,
                                               Long eachCollaboratorFinanceSectionId,
-                                              Map<Long, Boolean> showDetailedFinanceLink,
                                               boolean yourFinancesCompleteForAllOrganisations) {
         this.currentApplication = currentApplication;
         this.hasFinanceSection = hasFinanceSection;
@@ -69,7 +67,6 @@ public class ApplicationFinanceSummaryViewModel {
         this.financeTotal = financeTotal;
         this.completedSectionsByOrganisation = completedSectionsByOrganisation;
         this.eachCollaboratorFinanceSectionId = eachCollaboratorFinanceSectionId;
-        this.showDetailedFinanceLink = showDetailedFinanceLink;
         this.yourFinancesCompleteForAllOrganisations = yourFinancesCompleteForAllOrganisations;
     }
 
@@ -139,10 +136,6 @@ public class ApplicationFinanceSummaryViewModel {
 
     public Long getEachCollaboratorFinanceSectionId() {
         return eachCollaboratorFinanceSectionId;
-    }
-
-    public Map<Long, Boolean> getShowDetailedFinanceLink() {
-        return showDetailedFinanceLink;
     }
 
     public boolean getYourFinancesCompleteForAllOrganisations() {
