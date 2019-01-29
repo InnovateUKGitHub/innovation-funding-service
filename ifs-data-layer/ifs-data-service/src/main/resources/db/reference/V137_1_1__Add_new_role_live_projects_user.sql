@@ -5,4 +5,3 @@ INSERT INTO role
 (id, name)
 VALUES
 (21, 'live_projects_user');
-
