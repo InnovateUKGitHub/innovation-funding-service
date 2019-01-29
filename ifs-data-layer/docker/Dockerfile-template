@@ -6,12 +6,11 @@ EXPOSE 8000
 EXPOSE 12345
 ENV JAVA_OPTS -Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
-ENV USER_PASSWORD PcdO6g4gV662A
 
 VOLUME /tmp
 
-RUN groupadd -g 993 gluster
-RUN useradd -p $USER_PASSWORD -u 997 -g 993 gluster
+RUN groupadd -g @glusterGID@ gluster
+RUN useradd -p @glusterUserPassword@ -u @glusterUID@ -g @glusterGID@ gluster
 
 ADD newrelic.jar /
 ADD newrelic.yml /
