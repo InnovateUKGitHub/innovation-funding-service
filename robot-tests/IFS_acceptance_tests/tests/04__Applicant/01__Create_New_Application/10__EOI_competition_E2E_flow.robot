@@ -28,7 +28,7 @@ Comp Admin Creates EOI type competition
     [Documentation]  IFS-2192
     [Tags]
     Given Logging in and Error Checking               &{Comp_admin1_credentials}
-    Then The competition admin creates a EOI Comp     ${business_type_id}  ${comp_name}  EOI
+    Then the competition admin creates competition    ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  2  GRANT  release-feedback-completion-stage  no  1  true  collaborative
 
 Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080
@@ -117,26 +117,6 @@ the EOI comp moves to Previous tab
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
-
-The competition admin creates a EOI Comp
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
-    the user navigates to the page                          ${CA_UpcomingComp}
-    the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_EOI}  2
-    the user selects the Terms and Conditions
-    the user fills in the CS Funding Information
-    the user fills in the CS Eligibility                    ${orgType}  1  true  collaborative     # 1 means 30%
-    the user fills in the CS Milestones                     release-feedback-completion-stage   ${month}   ${nextyear}
-    the user marks the Application as done  no              ${compType_EOI}
-    the user fills in the CS Assessors
-    the user fills in the CS Documents in other projects
-    the user clicks the button/link                         link = Public content
-    the user fills in the Public content and publishes      ${extraKeyword}
-    the user clicks the button/link                         link = Return to setup overview
-    the user clicks the button/link                         jQuery = a:contains("Complete")
-    the user clicks the button/link                         css = button[type = "submit"]
-    the user navigates to the page                          ${CA_UpcomingComp}
-    the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the lead applicant fills all the questions and marks as complete(EOI comp type)
     the lead applicant marks every question as complete   Project summary

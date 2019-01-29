@@ -26,8 +26,10 @@
 
         <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
 
-        <h3 class="govuk-heading-m">Finances summary</h3>
-        <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
+        <th:block th:unless="${model.summaries.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+            <h3 class="govuk-heading-m">Finances summary</h3>
+            <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
+        </th:block>
 
         <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>
 
