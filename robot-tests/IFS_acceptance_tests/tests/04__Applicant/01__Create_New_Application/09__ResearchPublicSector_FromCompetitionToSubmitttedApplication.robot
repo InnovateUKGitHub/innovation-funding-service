@@ -36,7 +36,7 @@ Comp Admin Creates Competitions where Research can lead
 The Applicant is able to apply to the competition once is Open and see the correct Questions
     [Documentation]  IFS-182 IFS-2832  IFS-4046
     [Tags]  MySQL  HappyPath
-    [Setup]  The competitions date changes so it is now Open  ${compResearch}
+    [Setup]  Change the open date of the Competition in the database to one day before  ${compResearch}
     Given log in as a different user              &{collaborator2_credentials}
     And logged in user applies to competition research     ${compResearch}  2
     Then the user should see the element          jQuery = li:contains("${customQuestion}")

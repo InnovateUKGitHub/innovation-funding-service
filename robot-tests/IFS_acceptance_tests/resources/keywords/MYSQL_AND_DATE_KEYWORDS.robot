@@ -104,18 +104,10 @@ the competition moves to Open state
     Connect to Database  @{database}
     execute sql string  UPDATE `${database_name}`.`milestone` SET `date` = '${yesterday}' WHERE `competition_id` = '${competitionId}' AND `type` = 'OPEN_DATE';
 
-The competitions date changes so it is now Open
-    [Arguments]  ${competition}
-    Connect to Database  @{database}
-    Change the open date of the Competition in the database to one day before  ${competition}
-    the user navigates to the page   ${CA_Live}
-    the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competition}")
-
 Change the open date of the Competition in the database to one day before
     [Arguments]  ${competitionName}
-    ${yesterday} =  get yesterday
     ${competitionId} =  get comp id from comp title  ${competitionName}
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type` = 'OPEN_DATE';
+    the competition moves to Open state  ${competitionId}
 
 Change the close date of the Competition in the database to tomorrow
     [Arguments]  ${competition}
