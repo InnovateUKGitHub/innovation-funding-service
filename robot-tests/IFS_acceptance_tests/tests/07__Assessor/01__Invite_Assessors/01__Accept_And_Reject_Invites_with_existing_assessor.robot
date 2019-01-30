@@ -28,8 +28,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite s0...
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
-Suite Setup       The user logs-in in new browser  &{existing_assessor1_credentials}
-Suite Teardown    The user closes the browser
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Assessor_Commons.robot
@@ -239,17 +239,22 @@ The user closes the competition brief
 *** Keywords ***
 Reset competition's milestone
     # That is to reset competition's milestone back to its original value, that was NUll before pressing the button "Close assessment"
-    Connect to Database  @{database}
     Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `type`='ASSESSMENT_CLOSED' AND `competition_id`='${competition_ids["${IN_ASSESSMENT_COMPETITION_NAME}"]}';
 
 Retrieve original milestones
-    Connect to Database  @{database}
     ${openDate}  ${submissionDate} =  Save competition's current dates  ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Set suite variable  ${openDate}
     Set suite variable  ${submissionDate}
 
 Reset milestones back to the original values
-    Connect to Database  @{database}
     execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `type`='OPEN_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
     execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
     execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `type`='ASSESSORS_NOTIFIED' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+
+Custom suite setup
+    The user logs-in in new browser  &{existing_assessor1_credentials}
+    Connect to Database  @{database}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

@@ -1,5 +1,6 @@
 *** Settings ***
 Suite Setup     Custom suite setup
+Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -105,6 +106,7 @@ the procurement comp moves to Previous tab
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+    Connect to database  @{database}
 
 the user marks the procurement finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
@@ -145,3 +147,7 @@ the assessor submits the assessment
     the user clicks the button/link               jQuery = .govuk-button:contains("Submit assessments")
     the user clicks the button/link               jQuery = button:contains("Yes I want to submit the assessments")
     the user should see the element               jQuery = li:contains("${appl_name}") strong:contains("Recommended")   #
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

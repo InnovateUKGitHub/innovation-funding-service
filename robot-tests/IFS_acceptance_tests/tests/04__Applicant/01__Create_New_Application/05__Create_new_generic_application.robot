@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     IFS-747 As a comp exec I am able to select a Competition type of Generic in Competition setup
 Suite Setup       Custom suite setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -40,3 +40,8 @@ Applicant Applies to Generic competition and is able to see the Ts&Cs
 Custom suite setup
     Set predefined date variables
     The user logs-in in new browser  &{lead_applicant_credentials}
+    Connect to database  @{database}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

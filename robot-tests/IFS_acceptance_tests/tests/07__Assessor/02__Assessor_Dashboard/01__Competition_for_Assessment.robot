@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation    INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
-Suite Setup      The user logs-in in new browser  &{assessor_credentials}
+Suite Setup      Custom suite setup
+Suite Teardown   Custom suite teardown
 Force Tags       Assessor
 Resource         ../../../resources/defaultResources.robot
 Resource         ../../07__Assessor/Assessor_Commons.robot
@@ -19,7 +20,6 @@ Assessment should not be visible when the deadline has passed
 *** Keywords ***
 Save competition's current assessor deadline
     [Arguments]  ${competitionId}
-    Connect to Database  @{database}
     ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='ASSESSOR_DEADLINE';
     ${result} =  get from list  ${result}  0
     ${assessorDeadline} =  get from list  ${result}  0
@@ -28,3 +28,11 @@ Save competition's current assessor deadline
 Reset competition's milestone
     [Arguments]  ${date}
     Execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and `type`='ASSESSOR_DEADLINE';
+
+Custom suite setup
+    The user logs-in in new browser  &{assessor_credentials}
+    Connect To Database   @{database}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

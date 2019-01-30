@@ -157,7 +157,6 @@ The user closes the competition brief
     Select Window
 
 request the date from the database
-    Connect to Database  @{database}
     log  ${IN_ASSESSMENT_COMPETITION}
     ${result} =  Query  SELECT DATE_FORMAT(`date`, '%e %M %Y') FROM `${database_name}`.`milestone` WHERE `competition_id` = '${IN_ASSESSMENT_COMPETITION}' AND type = 'ASSESSOR_DEADLINE';
     log  ${result}
