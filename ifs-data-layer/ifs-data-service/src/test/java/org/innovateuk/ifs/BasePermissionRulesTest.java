@@ -1,6 +1,5 @@
 package org.innovateuk.ifs;
 
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -21,11 +20,12 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.MONITORING_OFFICER;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerRole.MONITORING_OFFICER;
+import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.mockito.Mockito.when;
@@ -56,7 +56,7 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
 
         List<ProjectUser> projectManagerUser = newProjectUser().build(1);
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), ProjectParticipantRole.PROJECT_MANAGER ))
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), PROJECT_MANAGER ))
                 .thenReturn(projectManagerUser);
     }
 
@@ -124,9 +124,9 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     private void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
         List<ProjectUser> monitoringOfficerForProject = newProjectUser().build(1);
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), MONITORING_OFFICER))
-                .thenReturn(userIsMonitoringOfficer ? monitoringOfficerForProject : emptyList());
-    }
+    when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), MONITORING_OFFICER))
+            .thenReturn(userIsMonitoringOfficer ? monitoringOfficerForProject : emptyList());
+}
 
     protected void setupUserAsLeadPartner(ProjectResource project, UserResource user) {
         setupLeadPartnerExpectations(project, user, true);

@@ -23,7 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerRole.MONITORING_OFFICER;
+import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.*;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses

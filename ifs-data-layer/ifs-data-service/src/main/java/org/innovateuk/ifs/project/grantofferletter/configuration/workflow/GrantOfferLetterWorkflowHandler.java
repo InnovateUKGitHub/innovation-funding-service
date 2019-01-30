@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.configuration.workflow;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
 
+import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.*;
 
 /**
@@ -84,7 +84,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
     public boolean removeSignedGrantOfferLetter(Project project, User user) {
 
         ProjectUser projectManager = projectUserRepository.findByProjectIdAndRoleAndUserId(project.getId(),
-                ProjectParticipantRole.PROJECT_MANAGER, user.getId());
+                PROJECT_MANAGER, user.getId());
 
         if (projectManager == null) {
             return false;
