@@ -445,7 +445,7 @@ PM should see project tab on dashboard once GOL is approved
     [Documentation]  IFS-4959
     [Tags]
     When the user clicks the button/link     link = Dashboard
-    Then the user should see the element     css = #dashboard-link-LIVE_PROJECTS_USER
+    Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
     And the user should see the element      jQuery = h2:contains("Projects")
 
 Non lead's status should be updated
