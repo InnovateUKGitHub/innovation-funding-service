@@ -44,7 +44,7 @@ Summary:All the sections are present
 Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]
-    Then The user should see the text in the page    days left to submit
+    Then The user should see the element    jQuery = .deadline:contains("days left to submit")
     # And the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
     # TODO IFS-3176
 
@@ -76,8 +76,8 @@ Summary:Questions should show as complete
 Summary:Questions should show the scores
     [Documentation]    INFUND-550
     [Tags]  HappyPath
-    Then The user should see the text in the page        Total: 100/100
-    And The user should see the text in the page         100%
+    Then The user should see the element        jQuery = p strong:contains("Total: 100/100")
+    And The user should see the element         jQuery = p strong:contains("100%")
     :FOR  ${ELEMENT}    IN   @{programme_questions}
      \    the user should see the text in the element    jQuery = button:contains("${ELEMENT}")    Score 10/10
 
@@ -85,34 +85,33 @@ Summary:Feedback should show in each section
     [Documentation]    INFUND-550
     [Tags]  HappyPath
     When the user clicks the button/link              jQuery = button:contains("Scope")
-    Then the user should see the text in the page     Testing feedback text
+    Then the user should see the element              jQuery = p:contains("Testing scope feedback text")
     :FOR  ${ELEMENT}    IN   @{programme_questions}
      \    the user clicks the button/link             jQuery = button:contains("${ELEMENT}")
-     \    the user should see the text in the page    Testing feedback text
+     \    the user should see the element             jQuery = p:contains("Testing feedback text")
 
 Summary:Assessor can return to each question
     [Documentation]    INFUND-4648
     :FOR  ${INDEX}  IN RANGE  0  11    # 11 is the number of assessed questions to iterate through
      \    the user should see the element            jQuery = #collapsible-${INDEX} a:contains("Return to this question in the application")
     When the user clicks the button/link             jQuery = #collapsible-1 a:contains("Return to this question in the application")
-    Then the user should see the text in the page    What is the business opportunity that your project addresses?
+    Then the user should see the element             jQuery = h2:contains("What is the business opportunity that your project addresses?")
     And the user goes back to the previous page
     When the user clicks the button/link             jQuery = #collapsible-10 a:contains("Return to this question in the application")
-    Then the user should see the text in the page    How does financial support from Innovate UK and its funding partners add value?
+    Then the user should see the element             jQuery = h2:contains("How does financial support from Innovate UK and its funding partners add value?")
     And the user goes back to the previous page
 
 Summary:Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
     [Tags]  HappyPath
     When The user clicks the button/link                        jQuery = #collapsible-1 a:contains("Return to this question")
-    And The user should see the text in the page                What is the business opportunity that your project addresses?
+    And The user should see the element                         jQuery = h2:contains("What is the business opportunity that your project addresses?")
     When the user selects the option from the drop-down menu    8    css = .assessor-question-score
     And the user enters text to a text field                    css = .editor    This is a new feedback entry.
     And the user clicks the button/link                         jQuery = a:contains("Back to your assessment overview")
     And the user clicks the button/link                         jQuery = a:contains("Review and complete your assessment")
-    When The user clicks the button/link                        jQuery = button:contains("1. Business opportunity")
-    Then the user should see the text in the page               This is a new feedback entry.
-    And the user should see the text in the page                8
+    Then the user should see the element                        jQuery = p:contains("This is a new feedback entry.")
+    And the user should see the element                         jQuery = span:contains("1. Business opportunity") ~ .section-score:contains("8")
 
 Summary:Funding Decision Validations
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5228
@@ -157,7 +156,7 @@ User Saves the Assessment as Recommended
     And the user selects the radio button                    fundingConfirmation    true
     When The user clicks the button/link                     jQuery = .govuk-button:contains("Save assessment")
     Then The user should not see the text in the page        Please enter your feedback
-    And The user should see the text in the page             Assessed
+    And The user should see the element                      jQuery = .status-msg:contains("Assessed")
     And the user should see the element                      css = li:nth-child(7) .positive
     And the user should see the element                      css = li:nth-child(7) input[type = "checkbox"] ~ label
     And the application should have the correct status       css = .progress-list li:nth-child(7)    Assessed
@@ -192,8 +191,8 @@ Submit Assessments
     And The user clicks the button/link            jQuery = button:contains("Yes I want to submit the assessments")
     Then the application should have the correct status    css = div.submitted    Submitted assessment
     And the user should see the element             css = li:nth-child(6) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
-    And The user should see the text in the page    Intelligent Building
-    And The user should see the text in the page    98
+    And The user should see the element             jQuery = h4:contains("Intelligent Building")
+    And The user should see the element             jQuery = strong:contains("98")
     And The user should not see the element         link = Intelligent Building
 
 Progress of the applications in Dashboard
@@ -205,17 +204,17 @@ Progress of the applications in Dashboard
     ${EXPECTED_TOTAL_PENDING} =     Get Length     ${PENDING_LIST}
     When The user navigates to the page            ${ASSESSOR_DASHBOARD_URL}
     Then the progress of the applications should be correct    ${EXPECTED_TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_PENDING}
-    And the user should see the text in the page    ${EXPECTED_TOTAL_PENDING} applications awaiting acceptance | ${EXPECTED_TOTAL_ACCEPTED} applications to assess
+    And the user should see the element             jQuery = h3:contains("Sustainable living models for the future") ~ div:contains("${EXPECTED_TOTAL_PENDING} applications awaiting acceptance | ${EXPECTED_TOTAL_ACCEPTED} applications to assess")
 
 *** Keywords ***
 the word count should be correct
     [Arguments]    ${wordCount}
-    the user should see the text in the page    ${wordCount}
+    the user should see the element     jQuery = span:contains("${wordCount}")
 
 The user accepts the juggling is word that sound funny application
     The user clicks the button/link             link = ${IN_ASSESSMENT_COMPETITION_NAME}
     The user clicks the button/link             jQuery = a:contains("Accept or reject")
-    The user should see the text in the page    Accept application
+    The user should see the element             jQUery = h1:contains("Accept application")
     And the user selects the radio button       assessmentAccept  true
     And The user clicks the button/link         jQuery = button:contains("Confirm")
     The user should be redirected to the correct page    ${Assessor_application_dashboard}

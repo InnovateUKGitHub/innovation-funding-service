@@ -214,8 +214,8 @@ the assessor shouldn't be able to reject the accepted competition
     the assessor is unable to see the invitation
 
 The assessor is unable to see the invitation
-    The user should see the text in the page  This invitation is now closed
-    The user should see the text in the page  You have already accepted or rejected this invitation.
+    The user should see the element           jQuery = h1:contains("This invitation is now closed")
+    The user should see the element           jQuery = p:contains("You have already accepted or rejected this invitation.")
 
 the assessor should see the correct date
     ${Assessment_period_start} =    Get Text    css = .upcoming-to-assess .standard-definition-list dd:nth-child(2)

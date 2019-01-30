@@ -40,29 +40,25 @@ Project Finance can see the company name with score
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
     And the user clicks the button/link           link = ${Ntag_Name}
     Then the user should be redirected to the correct page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
-    And the user should see the text in the page  ${Ntag_Name}
-    And the user should see the element           jQuery = tr:nth-child(1) td:nth-child(3):contains("3 / 9")
+    And the user should see the element           jQuery = td:contains("${Ntag_Name}") ~ td:contains("3 / 9")
 
 Project Finance can see the company number with status
     [Documentation]    INFUND-3763
     [Tags]  HappyPath
-    Then the user should see the text in the page    Company Number
-    And the user should see the text in the page     ${Ntag_No}
+    Then the user should see the element             jQuery = td:contains("Company Number") ~ td:contains("${Ntag_No}")
     And the user should see the element              jQuery = tr:nth-child(2) td:nth-child(3):contains("No Match")
 
 Project Finance can see the account number with status
     [Documentation]    INFUND-3763
     [Tags]  HappyPath
-    Then the user should see the text in the page    Bank account number / Sort code
-    And the user should see the text in the page    ${account_one} / ${sortCode_one}
-    And the user should see the element             jQuery = tr:nth-child(3) td:nth-child(3):contains("No Match")
+    Then the user should see the element      jQuery = td:contains("Bank account number / Sort code") ~ td:contains("${account_one} / ${sortCode_one}")
+    And the user should see the element       jQuery = tr:nth-child(3) td:nth-child(3):contains("No Match")
 
 Project Finance can see the address with score
     [Documentation]    INFUND-3763
     [Tags]
-    Then the user should see the text in the page    Address
-    And the user should see the element              jQuery = td:contains("Address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
-    And the user should see the element              jQuery = tr:nth-child(4) td:nth-child(3):contains("7 / 9")
+    Then the user should see the element         jQuery = td:contains("Address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
+    And the user should see the element          jQuery = tr:nth-child(4) td:nth-child(3):contains("7 / 9")
 
 Project Finance has the options to edit the details and to approve the bank details
     [Documentation]    INFUND-3763
@@ -86,8 +82,8 @@ Bank account number and sort code validations client side
     When the user enters text to a text field        id = accountNumber    1234567
     And the user enters text to a text field         id = sortCode    12345
     And Set Focus To Element                         link = Cancel bank account changes
-    Then the user should see the text in the page    Please enter a valid account number
-    And the user should see the text in the page     Please enter a valid sort code
+    Then the user should see a field error           Please enter a valid account number
+    And the user should see a field error            Please enter a valid sort code
     When the user enters text to a text field        id = accountNumber    123456789
     And the user enters text to a text field         id = sortCode    1234567
     And Set Focus To Element                         link = Cancel bank account changes
@@ -102,8 +98,8 @@ BanProject Finance can see the progress of partners bank detailsk account number
      And the user enters text to a text field       id = sortCode  123
      And the user clicks the button/link            id = modal-change-bank-details
      And the user clicks the button/link            id = submit-change-bank-details
-     Then the user should see the text in the page  Please enter a valid account number
-     And the user should see the text in the page   Please enter a valid sort code
+     Then the user should see a field and summary error  Please enter a valid account number
+     And the user should see a field and summary error   Please enter a valid sort code
 
 Project Finance cancels bank details changes
     [Documentation]    INFUND-4054,  INFUND-5899
@@ -118,7 +114,7 @@ Project Finance cancels bank details changes
     And the user clicks the button/link                       jQuery = .button-clear:contains("Cancel")
     Then the text box should be editable                      id = organisationName
     When the user clicks the button/link                      link = Review bank details
-    Then the user should see the text in the page             These details are now undergoing an internal review.
+    Then the user should see the element                      jQuery = p:contains("These details are now undergoing an internal review. ")
     [Teardown]    the user goes back to the previous page
 
 Project Finance updates bank account details
@@ -127,7 +123,7 @@ Project Finance updates bank account details
     When the user enters text to a text field      css = [id = "addressForm.manualAddress.addressLine1"]    Montrose House 2
     And the user clicks the button/link            id = modal-change-bank-details
     And the user clicks the button/link            id = submit-change-bank-details
-    Then the user should see the text in the page  ${Ntag_Name} - Account details
+    Then the user should see the element           jQuery = h2:contains("${Ntag_Name} - Account details")
     When the user clicks the button/link           link = Change bank account details
     Then the user sees the text in the text field  css = [id = "addressForm.manualAddress.addressLine1"]    Montrose House 2
     When the user clicks the button/link           id = modal-change-bank-details
@@ -137,32 +133,32 @@ Project Finance approves the bank details
     [Documentation]    INFUND-4054, INFUND-6714, INFUND-7161
     [Tags]  HappyPath
     Given the user navigates to the page            ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
-    And the user should see the text in the page    ${Ntag_Name} - Account details
+    And the user should see the element             jQuery = h2:contains("${Ntag_Name} - Account details")
     When the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
     And the user clicks the button/link             jQuery = .button-clear:contains("Cancel")
     Then the user should see the element            jQuery = .govuk-button:contains("Approve bank account details")    #Checking here that the option is still available
     When the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
     And the user clicks the button/link             jQuery = .govuk-button:contains("Approve account")
     Then the user should not see the element        jQuery = .govuk-button:contains("Approve bank account details")
-    And the user should see the text in the page    The bank details provided have been approved.
+    And the user should see the element             jQuery = .success-alert:contains("The bank details provided have been approved.")
     And the user should not see the text in the page    We are unable to save your bank account details
     When the user goes back to the previous page
     And the user goes back to the previous page
     When the user enters text to a text field       css = [id = "addressForm.manualAddress.addressLine1"]    Montrose House 3
     And the user clicks the button/link             id = modal-change-bank-details
     And the user clicks the button/link             id = submit-change-bank-details
-    Then the user should see the text in the page   Bank details have already been approved and cannot be changed
+    Then the user should see a summary error        Bank details have already been approved and cannot be changed
 
 Project Finance cannot approve the bank details again
     [Documentation]    INFUND-9061
     [Tags]  HappyPath
     Given the user navigates to the page            ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Jetpulse_Id}/review-bank-details
-    And the user should see the text in the page    ${Jetpulse_Name} - Account details
+    And the user should see the element             jQuery = h2:contains("${Jetpulse_Name} - Account details")
     When the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
     And the user clicks the button/link             jQuery = .govuk-button:contains("Approve account")
     And the user goes back to the previous page
     Then the user should not see the element        jQuery = .govuk-button:contains("Approve account")
-    And the user should see the text in the page    The bank details provided have been approved.
+    And the user should see the element             jQuery = .success-alert:contains("The bank details provided have been approved.")
 
 Lead partner can see that bank details has been approved
     [Documentation]    INFUND-7109
@@ -171,7 +167,7 @@ Lead partner can see that bank details has been approved
     When the user clicks the button/link           link = ${PS_EF_APPLICATION_TITLE}
     Then the user should see the element           css = ul li.complete:nth-child(4)
     When the user clicks the button/link           link = View the status of partners
-    And the user should see the text in the page   Project team status
+    And the user should see the element            jQuery = h1:contains("Project team status")
     And the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
 
 Other internal users cannot access this page

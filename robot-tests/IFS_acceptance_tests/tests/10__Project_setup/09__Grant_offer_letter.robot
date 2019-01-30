@@ -121,7 +121,7 @@ Lead should not be able to see GOL until it is sent by IUK
     Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     And the user should see the element              css = li.waiting:nth-child(7)
     When the user clicks the button/link             link = View the status of partners
-    Then the user should see the text in the page    Project team status
+    Then the user should see the element             jQuery = h1:contains("Project team status")
     And the user should see the element              css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
     When the user clicks the button/link             link = Set up your project
     Then the user should not see the element         link = Grant offer letter
@@ -141,7 +141,7 @@ Non lead should not be able to see GOL until it is sent by IUK
     Then the user should not see the element         css = li.complete:nth-child(7)
     And the user should not see the element          css = li.require-action:nth-child(7)
     When the user clicks the button/link             link = View the status of partners
-    Then the user should see the text in the page    Project team status
+    Then the user should see the element             jQuery = h1:contains("Project team status")
     And the user should see the element              css = #table-project-status tr:nth-of-type(2) td.status.na:nth-of-type(7)
     When the user clicks the button/link             link = Set up your project
     Then the user should not see the element         link = Grant offer letter
@@ -160,10 +160,10 @@ Comp Admin cannot upload big or non-pdf grant offer letter
     [Setup]  log in as a different user              &{Comp_admin1_credentials}
     Given the user navigates to the page             ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     When the user uploads a file                     grantOfferLetter  ${too_large_pdf}
-    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    Then the user should see the element             jQuery = h1:contains("${too_large_pdf_validation_error}")
     When the user navigates to the page              ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user uploads a file                      grantOfferLetter  ${text_file}
-    Then the user should see the text in the page    ${wrong_filetype_validation_error}
+    Then the user should see a field error           ${wrong_filetype_validation_error}
 
 Comp Admin user uploads new grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
@@ -187,11 +187,11 @@ PM can view the grant offer letter page
     Given the user clicks the button/link            link = ${PS_GOL_APPLICATION_HEADER}
     Then the user should see the element             css = li.require-action:last-of-type
     When the user clicks the button/link             link = Grant offer letter
-    Then the user should see the text in the page    The grant offer letter has been provided by Innovate UK.
+    Then the user should see the element             jQuery = p:contains("The grant offer letter has been provided by Innovate UK.")
     And the user should see the element              jQuery = label:contains(+ Upload)
     And the user goes back to the previous page
     When the user clicks the button/link             link = View the status of partners
-    Then the user should see the text in the page    Project team status
+    Then the user should see the element             jQuery = h1:contains("Project team status")
     And the user should see the element              css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)  # GOL
 
 Partners should not be able to send the Grant Offer
@@ -221,7 +221,7 @@ PM should not be able to upload big Grant Offer files
     Given the user clicks the button/link            link = ${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link              link = Grant offer letter
     When the user uploads a file                     signedGrantOfferLetter    ${too_large_pdf}
-    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    Then the user should see the element             jQuery = h1:contains("${too_large_pdf_validation_error}")
     And the user goes back to the previous page
 
 PM should be able upload a file and then access the Send button
@@ -231,13 +231,13 @@ PM should be able upload a file and then access the Send button
     Given the user clicks the button/link            link = ${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link              link = Grant offer letter
     When the user uploads a file                     signedGrantOfferLetter   ${valid_pdf}
-    Then the user should see the text in the page    ${valid_pdf}
+    Then the user should see the element             link = ${valid_pdf}
     When the user reloads the page
     Then the user should see the element             css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     And the user clicks the button/link              link = Set up your project
     And the user should see the element              css = li.require-action:nth-child(7)
     When the user clicks the button/link             link = View the status of partners
-    Then the user should see the text in the page    Project team status
+    Then the user should see the element             jQuery = h1:contains("Project team status")
     And the user should see the element              css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
 
 Project finance cannot access the GOL before it is sent by PM
@@ -245,7 +245,7 @@ Project finance cannot access the GOL before it is sent by PM
     [Tags]
     [Setup]  log in as a different user              &{internal_finance_credentials}
     Given the user navigates to the page             ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
-    Then the user should see the text in the page    Awaiting upload by the Project Manager
+    Then the user should see the element             jQuery = .upload-section p:contains("Awaiting upload by the Project Manager")
 
 PM can view the generated Grant Offer Letter
     [Documentation]    INFUND-6059, INFUND-4849
@@ -353,7 +353,7 @@ PM can download the signed grant offer letter
     [Documentation]    INFUND-7170
     [Tags]   Download
     Given the user navigates to the page                       ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
-    Then the user should see the text in the page              Signed grant offer letter
+    Then the user should see the element                       jQuery = h2:contains("Signed grant offer letter")
     And the user downloads the file                            ${PS_GOL_APPLICATION_PM_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/signedGOL.pdf
     [Teardown]    remove the file from the operating system    signedGOL.pdf
 
@@ -367,7 +367,7 @@ PM's status should be updated
     [Tags]
     Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     And the user clicks the button/link              link = View the status of partners
-    Then the user should see the text in the page    Project team status
+    Then the user should see the element             jQuery = h1:contains("Project team status")
     And the user should see the element              css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
 
 Internal Dashboard should be updated
