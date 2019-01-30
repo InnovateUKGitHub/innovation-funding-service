@@ -53,7 +53,7 @@ the user invites collaborator by email address
 
 the user changes the application name
     [Arguments]    ${application_name}
-    the user navigates to the page          ${DASHBOARD_URL}
+    the user navigates to the page          ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link         link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link         jQuery=a:contains("Application details")
     the user enters text to a text field    css=[id="application.name"]  ${application_name}
@@ -61,7 +61,7 @@ the user changes the application name
 
 the user sees the application he was invited for on his dashboard
     [Arguments]  ${application}
-    the user navigates to the page   ${dashboard_url}
+    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user should see the element  jQuery=.in-progress li:contains("${application}")
 
 the user verifies account and starts his application
@@ -76,7 +76,7 @@ the user verifies account and starts his application
 
 the user navigates to the Application Team Page
     [Arguments]  ${email}
-    the user navigates to the page   ${dashboard_url}
+    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  link=${email}'s Application
     the user clicks the button/link  link=Application team
 
