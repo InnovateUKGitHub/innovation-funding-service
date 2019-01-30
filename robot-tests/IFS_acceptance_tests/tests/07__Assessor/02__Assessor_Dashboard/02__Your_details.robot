@@ -56,7 +56,7 @@ Valid Profile Update
 Custom Suite Setup
    the assessor logs-in
    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Dashboard")
-   Run Keyword If   '${status}' == 'PASS'  Run keyword   the user clicks the button/link  link = Assessments
+   Run Keyword If   '${status}' == 'PASS'  Run keyword   the user clicks the button/link  id = dashboard-link-ASSESSOR
    User opens the edit details form
 
 the assessor updates profile details
