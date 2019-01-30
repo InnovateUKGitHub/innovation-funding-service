@@ -15,7 +15,7 @@ import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsFin
 import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
-import org.innovateuk.ifs.management.navigation.NavigationOrigin;
+import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.management.navigation.NavigationOrigin.INTERVIEW_PANEL_INVITE;
+import static org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin.INTERVIEW_PANEL_INVITE;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -83,7 +83,7 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
                        HttpServletRequest request,
                        HttpServletResponse response) {
 
-        String originQuery = buildOriginQueryString(NavigationOrigin.INTERVIEW_PANEL_FIND, queryParams);
+        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.INTERVIEW_PANEL_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm);
 
         InterviewAssignmentApplicationsFindViewModel interviewPanelApplicationsFindModel =
