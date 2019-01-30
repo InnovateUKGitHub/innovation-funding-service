@@ -206,7 +206,7 @@ Existing Monitoring Officer can sign in
     [Documentation]    IFS-3977
     [Tags]  HappyPath
     When log in as a different user                     &{monitoring_officer_one_credentials}
-    Then the user should see the text in the element    css = .govuk-heading-l       Dashboard
+    Then the user should see the element                jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 Monitoring Officer can see projects that they are assigned to
     [Documentation]    IFS-3978

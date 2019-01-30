@@ -17,7 +17,7 @@ Guest user can click on the footer links
     And the user tries the footer links      ${LOGIN_URL}
     And the user navigates to the page       ${LOGIN_URL}
     When Logging in and Error Checking       &{lead_applicant_credentials}
-    Then the user tries the footer links     ${DASHBOARD_URL}
+    Then the user tries the footer links     ${APPLICANT_DASHBOARD_URL}
 
 *** Keywords ***
 the user tries the footer links
