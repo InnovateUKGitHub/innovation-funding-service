@@ -47,7 +47,7 @@ Application team page
     ...
     ...    INFUND-7973
     [Tags]
-    [Setup]    The user navigates to the page      ${DASHBOARD_URL}
+    [Setup]    The user navigates to the page      ${APPLICANT_DASHBOARD_URL}
     Given the user clicks the button/link          link = Invite robot test application
     When the user clicks the button/link           link = Application team
     Then the user should see the element           jQuery = h1:contains("Application team")
@@ -58,7 +58,7 @@ Application team page
 Lead Adds/Removes rows
     [Documentation]    INFUND-901  INFUND-7974  INFUND-8590
     [Tags]  HappyPath
-    [Setup]    The user navigates to the page     ${DASHBOARD_URL}
+    [Setup]    The user navigates to the page     ${APPLICANT_DASHBOARD_URL}
     Given the user clicks the button/link          link = Invite robot test application
     When the user clicks the button/link           link = Application team
     And The user clicks the button/link       jquery = a:contains("Update and add contributors from ${organisation}")
@@ -163,7 +163,7 @@ The Lead's inputs should not be visible in other application invites
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928  INFUND-1962
     [Tags]  HappyPath
-    Given the user navigates to the page          ${DASHBOARD_URL}
+    Given the user navigates to the page          ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link           link = Invite robot test application
     And the user clicks the button/link           link = Project summary
     Then the applicant cannot assign to pending invitees
@@ -203,10 +203,10 @@ Partner should be able to log-in and see the new company name
     [Tags]  HappyPath
     Given the user clicks the button/link                   link = Sign in
     When the user logs-in in new browser                    ${invite_email}    ${correct_password}
-    Then the user should be redirected to the correct page  ${DASHBOARD_URL}
+    Then the user should be redirected to the correct page  ${APPLICANT_DASHBOARD_URL}
     And the user can see the updated company name throughout the application
     And the user reads his email and clicks the link        ${invite_email}    Innovate UK applicant questionnaire    diversity survey
-    [Teardown]    the user navigates to the page            ${DASHBOARD_URL}
+    [Teardown]    the user navigates to the page            ${APPLICANT_DASHBOARD_URL}
 
 Parner can see the Application team
     [Documentation]    INFUND-7976
@@ -232,7 +232,7 @@ Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
     [Tags]
     [Setup]    Log in as a different user  &{lead_applicant_credentials}
-    Given the user navigates to the page   ${DASHBOARD_URL}
+    Given the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link    link = Invite robot test application
     And the user clicks the button/link    link = Project summary
     When the user clicks the button/link   css = .assign-button > button
@@ -241,7 +241,7 @@ Lead should see the accepted partner in the assign list
 Lead applicant invites a non registered user in the same organisation
     [Documentation]    INFUND-928  INFUND-1463  INFUND-7979
     [Tags]
-    Given the user navigates to the page           ${DASHBOARD_URL}
+    Given the user navigates to the page           ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Invite robot test application
     When the user clicks the button/link           link = Application team
     When the user clicks the button/link           jQuery = a:contains("Update and add contributors from ${organisation}")
@@ -316,13 +316,13 @@ the status of the people should be correct in the Manage contributors page
     the user should see the element  jQuery = .table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")
 
 the user can see the updated company name throughout the application
-    Given the user navigates to the page  ${DASHBOARD_URL}
+    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${application_name}
     And the user clicks the button/link   link = Your finances
     And the user should see the element   link = Your project costs
     And the user should see the element   link = Your organisation
     And the user should see the element   jQuery = h3:contains("Your funding")
-    Given the user navigates to the page  ${DASHBOARD_URL}
+    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${application_name}
     When the user clicks the button/link  link = Application team
     Then the user should see the element  jQuery = h2:contains("NOMENSA LTD")+h3:contains("Organisation type")+p:contains("Business")

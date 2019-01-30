@@ -22,7 +22,7 @@
 
             <th:block th:if="${model.support}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='All Applications',linkUrl=@{/management/competition/{competitionId}/applications/all(competitionId=${model.currentCompetition.id})}"/>
             <th:block th:unless="${model.support}">
-                <th:block th:unless="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{/applicant/dashboard}"/>
+                <th:block th:unless="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/applicant/dashboard}"/>
 
                 <th:block th:if="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${model.currentApplication},linkTitle='Application overview',linkUrl=@{/application/{id}(id=${model.currentApplication.id})}"/>
             </th:block>

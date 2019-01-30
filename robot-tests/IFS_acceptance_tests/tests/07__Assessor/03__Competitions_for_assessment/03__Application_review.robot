@@ -219,7 +219,7 @@ Finance overview
 Status of the application should be In Progress
     [Documentation]    INFUND-6358
     [Tags]
-    [Setup]    The user navigates to the page      ${assessor_dashboard_url}
+    [Setup]    The user navigates to the page      ${ASSESSOR_DASHBOARD_URL}
     When The user clicks the button/link           link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element           jQuery = .progress-list li:nth-child(6) strong:contains("In progress")
 

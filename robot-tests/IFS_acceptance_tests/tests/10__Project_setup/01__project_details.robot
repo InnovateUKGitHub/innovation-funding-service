@@ -593,7 +593,7 @@ User is able to accept new site terms and conditions
     Log in as a different user             ${PS_SP_APPLICATION_PM_EMAIL}   ${short_password}
     When the user selects the checkbox     agree
     And the user clicks the button/link    css = button[type = "submit"]
-    Then the user should see the element   jQuery = h1:contains("Dashboard")
+    Then the user should see the element   jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 *** Keywords ***
 the user should see a validation error
