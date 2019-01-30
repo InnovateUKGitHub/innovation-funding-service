@@ -16,7 +16,7 @@ task prepareDockerBaseInput {
     def executableJarFile = "${jar.baseName}-${project.properties['version']}-executable.jar"
     def jarFile = "${jar.baseName}-${project.properties['version']}.jar"
     String gid = System.env.bamboo_gluster_GID ?: "993"
-    String uid = System.env.bamboo_gluster_UID ?: "997"
+    String uid = System.env.bamboo_gluster_UID ?: "996"
     String userPassword = System.env.bamboo_gluster_user_password ?: "default"
 
     inputs.file("$project.buildDir/libs/$executableJarFile")
