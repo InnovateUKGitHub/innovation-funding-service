@@ -144,9 +144,6 @@ public class ApplicationNotificationServiceImplTest {
                 new UserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
         );
 
-        List<EmailContent> emailContents = newEmailContentResource()
-                .build(3);
-
         List<Notification> notifications = asList(
                 new Notification(
                         systemNotificationSourceMock,
@@ -156,7 +153,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "applicationName", applications.get(0).getName(),
                                 "applicationId", applications.get(0).getId(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -166,7 +163,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "applicationName", applications.get(1).getName(),
                                 "applicationId", applications.get(1).getId(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -176,7 +173,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "applicationName", applications.get(2).getName(),
                                 "applicationId", applications.get(2).getId(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL)
                 )
         );
 
@@ -263,7 +260,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "applicationName", applications.get(0).getName(),
                                 "applicationId", applications.get(0).getId(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -273,7 +270,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "applicationName", applications.get(1).getName(),
                                 "applicationId", applications.get(1).getId(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -283,7 +280,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "applicationName", applications.get(2).getName(),
                                 "applicationId", applications.get(2).getId(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL)
                 )
         );
 
@@ -372,7 +369,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "applicationName", applications.get(0).getName(),
                                 "applicationId", applications.get(0).getId(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -382,7 +379,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "applicationName", applications.get(1).getName(),
                                 "applicationId", applications.get(1).getId(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -392,7 +389,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "applicationName", applications.get(2).getName(),
                                 "applicationId", applications.get(2).getId(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL)
                 )
         );
 

@@ -22,11 +22,11 @@ Competition dashboard
     ...
     ...    INFUND-7362
     When The user clicks the button/link            link = ${CLOSED_COMPETITION_NAME}
-    Then The user should see the text in the page   Machine learning for transport infrastructure
-    And The user should see the text in the page    Closed
-    And The user should see the text in the page    Programme
-    And The user should see the text in the page    Infrastructure systems
-    And The user should see the text in the page    Smart infrastructure
+    Then The user should see the element            jQuery = .govuk-caption-l:contains("Machine learning for transport infrastructure")
+    And The user should see the element             jQuery = h1:contains("Closed")
+    And The user should see the element             jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
+    And The user should see the element             jQuery = dt:contains("Innovation sector") ~ dd:contains("Infrastructure systems")
+    And The user should see the element             jQuery = dt:contains("Innovation area") ~ dd:contains("Smart infrastructure")
     And the user should see the element             link = View and update competition setup
     #The following checks test if the correct buttons are disabled
     And the user should see the element             jQuery = .disabled[aria-disabled = "true"]:contains("Input and review funding decision")
@@ -57,7 +57,7 @@ Notify Assessors
     [Documentation]  INFUND-6458 INFUND-7362
     [Tags]
     When The user clicks the button/link             jQuery = .govuk-button:contains("Notify assessors")
-    Then the user should see the text in the page    In assessment
+    Then the user should see the element             jQuery = h1:contains("In assessment")
     [Teardown]  Reset competition's milestone
 
 *** Keywords ***

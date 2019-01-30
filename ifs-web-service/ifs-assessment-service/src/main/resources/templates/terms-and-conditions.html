@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkUrl=@{/assessor/dashboard}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessments',linkUrl=@{/assessor/dashboard}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions',size='govuk-heading-xl'" />
@@ -157,7 +157,7 @@
         <p class="govuk-body">See the <a href="https://www.gov.uk/government/organisations/innovate-uk/about/personal-information-charter" class="govuk-link">Information Management Policy</a> here.</p>
 
         <div>
-            <a th:href="@{/assessor/dashboard}" class="govuk-button">Return to assessor dashboard</a>
+            <a th:href="@{/assessor/dashboard}" class="govuk-button">Return to assessments</a>
         </div>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

@@ -89,9 +89,9 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
 
                 UserResource registrationInfo = newUserResource().
                         withTitle(Title.Dr).
-                        withFirstName("Kieran").
-                        withLastName("Worth").
-                        withEmail("rollback@worth.com").
+                        withFirstName("Bob").
+                        withLastName("Spiggot").
+                        withEmail("thebspig@example.com").
                         withPassword("thebspig").
                         build();
 
@@ -99,11 +99,17 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
                         registrationService.createUser(registrationInfo));
             });
         });
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void createOrganisationUserWithEmailServiceAvailablePublishesUserEvent() {
 
         applicationEventPublisher = Mockito.mock(ApplicationEventPublisher.class);
         idpService.setApplicationEventPublisher(applicationEventPublisher);
 
-       regApiHelper.withMockIdpRestTemplate(mockIdpRestTemplate -> {
+        regApiHelper.withMockIdpRestTemplate(mockIdpRestTemplate -> {
 
             withServiceAvailableFromEmailService(() -> {
 

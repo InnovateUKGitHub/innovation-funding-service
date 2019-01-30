@@ -46,7 +46,7 @@ Applicant shouldn't see the Mark as complete-Edit-Save buttons
 Already submitted application should not show error when the competition is closed
     [Documentation]    INFUND-3175
     [Tags]  HappyPath
-    When the user navigates to the page                  ${dashboard_url}
+    When the user navigates to the page                  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                  link = ${OPEN_COMPETITION_APPLICATION_3_NAME}
     Then the user should not see the text in the page    Application not submitted
 

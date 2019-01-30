@@ -13,7 +13,7 @@ the user should see all the Your-Finances Sections
 
 the user navigates to Your-finances page
     [Arguments]  ${Application}
-    the user navigates to the page  ${DASHBOARD_URL}
+    the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  jQuery = .in-progress a:contains("${Application}")
     the user clicks the button/link  link = Your finances
 
@@ -32,7 +32,7 @@ Mark application details as incomplete and the user closes the browser
 
 Mark application details as incomplete
     [Arguments]  ${applicationTitle}
-    the user navigates to the page   ${DASHBOARD_URL}
+    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  link = ${applicationTitle}
     the user clicks the button/link  link = Application details
     the user clicks the button/link  jQuery = button:contains("Edit")
@@ -372,11 +372,6 @@ logged in user applies to competition public
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    Innovate  INNOVATE LTD
-
-the user navigates to the eligibility of the competition
-    [Arguments]  ${competition}
-    ${competitionId} =  get comp id from comp title    ${competition}
-    the user navigates to the page   ${server}/application/create/start-application/${competitionId}
 
 the applicant submits the application
     the user clicks the button/link                    link = Review and submit

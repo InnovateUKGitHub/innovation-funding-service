@@ -17,6 +17,7 @@ public interface FormInputResponseRepository extends PagingAndSortingRepository<
     List<FormInputResponse> findByApplicationIdAndFormInputId(@Param("applicationId") Long applicationId, @Param("formInputId") Long formInputId);
     FormInputResponse findOneByApplicationIdAndFormInputQuestionName(long applicationId, String formInputQuestionName);
     FormInputResponse findOneByApplicationIdAndFormInputQuestionQuestionSetupType(long applicationId, QuestionSetupType questionSetupType);
+    FormInputResponse findOneByApplicationIdAndFormInputDescription(long applicationId, String formInputDescription);
     List<FormInputResponse> findByApplicationIdAndFormInputQuestionId(long applicationId, long questionId);
     List<FormInputResponse> findByApplicationId(@Param("applicationId") Long applicationId);
     FormInputResponse findByApplicationIdAndUpdatedByIdAndFormInputId(@Param("applicationId") Long applicationId, @Param("updatedById") Long updatedById, @Param("formInputId") Long formInputId);

@@ -182,6 +182,10 @@ public class UserResource {
         return CollectionUtils.retainAll(roles, Arrays.asList(acceptedRoles)).size() > 1;
     }
 
+    public boolean hasMoreThanOneRoleOf(Collection<Role> acceptedRoles){
+        return CollectionUtils.retainAll(roles, acceptedRoles).size() > 1;
+    }
+
     public Long getProfileId() {
         return profileId;
     }
