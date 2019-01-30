@@ -235,7 +235,6 @@ The user closes the competition brief
     Close Window
     Select Window
 
-
 *** Keywords ***
 Reset competition's milestone
     # That is to reset competition's milestone back to its original value, that was NUll before pressing the button "Close assessment"

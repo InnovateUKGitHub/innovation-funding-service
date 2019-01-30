@@ -156,7 +156,7 @@ Applications are on Dashboard when Competition is Closed
     [Documentation]  IFS-1149
     [Tags]
     [Setup]  Get the original values of the competition's milestones
-    Given the competition is closed
+    Given the submission date changes in the db in the past               ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Then the user should be able to see his application on his dashboard  ${submit_bus_email}  ${application_bus_name}
     And the user should be able to see his application on his dashboard   ${submit_rto_email}  ${application_rto_name}
 
@@ -206,11 +206,6 @@ the user puts zero project costs
     the user clicks the button/link  jQuery = button:contains("Mark as complete")
     the user clicks the button/link  link = Your project costs
     the user has read only view once section is marked complete
-
-the competition is closed
-    Connect to Database    @{database}
-    ${yesterday} =  get yesterday
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
 
 the user should be able to see his application on his dashboard
     [Arguments]  ${user}  ${application}
