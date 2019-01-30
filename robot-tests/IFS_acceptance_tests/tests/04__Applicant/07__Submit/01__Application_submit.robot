@@ -22,13 +22,13 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...               IFS-3603 - IFS-3746 GDS - Satisfaction survey
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
-                  #TODO IFS-3416 This ticket is in the testing backlog and covers the ${openDate} not found issue
 Force Tags        Applicant  MySQL
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
+
 Submit button disabled when application is incomplete
     [Documentation]    INFUND-927, IFS-942, IFS-753
     [Tags]  HappyPath
@@ -186,15 +186,6 @@ The user can check that the sections are read only
 the submit button should be disabled
     Element Should Be Disabled    jQuery = button:contains("Submit application")
 
-the applicant accepts the terms and conditions
-    the user selects the checkbox    agree-terms-page
-    the user selects the checkbox    stateAidAgreed
-
-the applicant marks the first section as complete
-    the user navigates to the page    ${DASHBOARD_URL}
-    the user clicks the button/link    link = ${application_name}
-    the applicant completes the application details  ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
-
 the applicant clicks the submit and then clicks the "close button" in the modal
     Wait Until Element Is Enabled Without Screenshots    jQuery = .govuk-button:contains("Submit application")
     the user clicks the button/link    jQuery = .govuk-button:contains("Submit application")
@@ -227,3 +218,27 @@ Custom Suite Setup
     Set predefined date variables
     new account complete all but one
     Get the original values of the competition's milestones
+
+new account complete all but one
+    the guest user opens the browser
+    we create a new user                              ${openCompetitionBusinessRTO}  sam  business  ${submit_bus_email}  radio-1
+    create new account for submitting                 ${application_bus_name}
+    Logout as user
+    we create a new user                              ${openCompetitionBusinessRTO}  liam  rto  ${submit_rto_email}  radio-3
+    create new account for submitting                 ${application_rto_name}
+
+create new account for submitting
+    [Arguments]  ${application_name}
+    the user clicks the button/link                   link=Untitled application (start here)
+    the user clicks the button/link                   link=Application details
+    the user enters text to a text field              css=[id="application.name"]    ${application_name}
+    the user clicks the button/link                   jQuery=button:contains("Save and return")
+    the user marks every section but one as complete  ${application_name}  Experimental development
+
+the user marks every section but one as complete
+    [Arguments]  ${application_name}  ${rescat}
+    the user navigates to the page    ${server}
+    the user clicks the button/link    link=${application_name}
+    the applicant completes Application Team
+    the user selects Research category  ${rescat}
+    the lead applicant fills all the questions and marks as complete(programme)
