@@ -80,12 +80,12 @@ Internal user can see the Non-IFS comp and its brief information
 Guest user can apply to a Non-IFS competition at the FrontDoor
     [Documentation]    INFUND-7965
     [Tags]
-    Given the user navigates to the page         ${frontDoor}
-    When the user enters text to a text field    id = keywords    search
-    And the user clicks the button/link          jQuery = button:contains("Update results")
-    Given the competition is open                Test non-IFS competition
-    When the user clicks the button/link         link = Test non-IFS competition
-    Then The user should see the element         link = Register and apply online
+    Given the user navigates to the page                                           ${frontDoor}
+    When the user enters text to a text field                                      id = keywords    search
+    And the user clicks the button/link                                            jQuery = button:contains("Update results")
+    And change the open date of the Competition in the database to one day before  Test non-IFS competition
+    When the user clicks the button/link                                           link = Test non-IFS competition
+    Then The user should see the element                                           link = Register and apply online
 
 Guest can see the Dates tab
     [Documentation]  INFUND-8554  IFS-1117

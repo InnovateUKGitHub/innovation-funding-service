@@ -87,6 +87,11 @@ IFS.core.editor = (function () {
         jQuery(source).trigger('keyup')
       })
 
+      // Hallo doesn't trigger a modified event for spell check replacements.
+      jQuery(document).on('input', '[role="textbox"][data-editor="md"]', function (event) {
+        jQuery(this).trigger('change')
+      })
+
       jQuery(document).on('hallomodified', '[role="textbox"][data-editor="html"]', function (event, data) {
         var textarea = jQuery(this).parent().find('textarea')
         var html = jQuery.htmlClean(data.content, s.editorOptions.plugins.hallocleanhtml)

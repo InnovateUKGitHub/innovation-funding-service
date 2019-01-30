@@ -205,14 +205,9 @@ Internal user can navigate to Public Content without having any issues
 
 New application shows in Preparation section
     [Documentation]    INFUND-2980
+    [Setup]  Get competitions id and set it as suite variable  ${competitionTitle}
     Given the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery = section:contains("In preparation") li:contains("${competitionTitle}")
-
-Requesting the id of this Competition
-    [Documentation]  retrieving the id of the competition so that we can use it in urls
-    [Tags]   MySQL  HappyPath
-    ${competitionId} =  get comp id from comp title  ${competitionTitle}
-    Set suite variable  ${competitionId}
 
 Funding information: calculations
     [Documentation]  INFUND-2985 INFUND-4894
