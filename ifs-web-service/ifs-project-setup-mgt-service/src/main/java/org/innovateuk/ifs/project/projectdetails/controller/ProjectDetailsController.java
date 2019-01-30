@@ -133,6 +133,17 @@ public class ProjectDetailsController {
                 "management/competition/" + competitionId + "/applications/previous");
     }
 
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "HANDLE_PROJECT_OFFLINE", description = "Only the IFS administrator users are able to handle projects offline")
+    @PostMapping("/{projectId}/handle-offline")
+    public String handleProjectOffline(@PathVariable("competitionId") final long competitionId,
+                                  @PathVariable("projectId") final long projectId,
+                                  HttpServletRequest request) {
+
+        projectRestService.handleProjectOffline(projectId).getSuccess();
+        return String.format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
+    }
+
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
         return  projectRoles.stream()
                 .filter(uar -> uar.getRole() == PARTNER.getId())

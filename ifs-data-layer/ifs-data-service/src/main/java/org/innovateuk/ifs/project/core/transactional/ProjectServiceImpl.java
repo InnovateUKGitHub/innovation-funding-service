@@ -186,6 +186,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         );
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> handleProjectOffline(long projectId) {
+
+        return getProject(projectId).andOnSuccess(
+                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.handleProjectOffline(existingProject, user) ?
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_HANDLED_OFFLINE)));
+    }
+
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
 
         return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(

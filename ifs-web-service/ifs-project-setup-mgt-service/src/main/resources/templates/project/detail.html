@@ -128,8 +128,18 @@
             </table>
         </th:block>
             <th:block th:if="${model.showWithdrawLink}">
-                <a data-js-modal="modal-withdraw-project" class="button-clear govuk-!-margin-top-6">Withdraw project</a>
-                    <th:block th:insert="fragments/modals :: modal-withdraw-project" />
+                <div>
+                    <a data-js-modal="modal-withdraw-project" class="button-clear govuk-!-margin-top-6">Withdraw project</a>
+                        <th:block th:insert="fragments/modals :: modal-withdraw-project" />
+                </div>
+            </th:block>
+
+
+            <th:block th:if="${model.showHandleOfflineLink}">
+                <div>
+                    <a data-js-modal="modal-handle-project-offline" class="button-clear govuk-!-margin-top-6">Handle offline</a>
+                    <th:block th:insert="fragments/modals :: modal-handle-project-offline" />
+                </div>
             </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

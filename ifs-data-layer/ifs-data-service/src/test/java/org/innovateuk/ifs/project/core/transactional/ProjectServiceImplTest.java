@@ -380,6 +380,31 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
+    public void handleProjectOffline() {
+        Long projectId = 123L;
+        Long userId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectWorkflowHandlerMock.handleProjectOffline(eq(project), any())).thenReturn(true);
+
+        ServiceResult<Void> result = service.handleProjectOffline(projectId);
+        assertTrue(result.isSuccess());
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(userRepositoryMock).findOne(userId);
+        verify(projectWorkflowHandlerMock).handleProjectOffline(eq(project), any());
+    }
+
+    @Test
     public void findByUserIdReturnsOnlyDistinctProjects() {
 
         Project project = newProject().withId(123L).build();

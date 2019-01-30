@@ -52,4 +52,8 @@ public interface ProjectService {
     @PreAuthorize("hasAuthority('ifs_administrator')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to withdraw projects")
     ServiceResult<Void> withdrawProject(long projectId);
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to handle projects offline")
+    ServiceResult<Void> handleProjectOffline(long projectId);
 }

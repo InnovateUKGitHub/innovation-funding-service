@@ -39,7 +39,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testProjectCreated() {
+    public void projectCreated() {
 
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
@@ -61,7 +61,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterApproved() {
+    public void grantOfferLetterApproved() {
 
         callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> projectWorkflowHandler.grantOfferLetterApproved(project, projectUser)),
 
@@ -70,7 +70,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testProjectWithdrawn() {
+    public void projectWithdrawn() {
 
         callWorkflowAndCheckTransitionAndEventFiredWithInternalUserParticipant(
                 ((project, internalUser) -> projectWorkflowHandler.projectWithdrawn(project, internalUser)),
@@ -79,6 +79,15 @@ public class ProjectWorkflowHandlerIntegrationTest extends
                 ProjectState.SETUP, ProjectState.WITHDRAWN, ProjectEvent.PROJECT_WITHDRAWN);
     }
 
+    @Test
+    public void handleProjectOffline() {
+
+        callWorkflowAndCheckTransitionAndEventFiredWithInternalUserParticipant(
+                ((project, internalUser) -> projectWorkflowHandler.handleProjectOffline(project, internalUser)),
+
+                // current State, destination State and expected Event to be fired
+                ProjectState.SETUP, ProjectState.HANDLED_OFFLINE, ProjectEvent.HANDLE_OFFLINE);
+    }
 
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, ProjectState currentProjectState, ProjectState destinationProjectState, ProjectEvent expectedEventToBeFired) {
 

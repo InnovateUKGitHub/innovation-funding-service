@@ -122,7 +122,17 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isNotFound());
 
         verify(projectServiceMock).withdrawProject(projectId);
+    }
 
+    @Test
+    public void handleProjectOffline() throws Exception {
+        Long projectId = 456L;
+        when(projectServiceMock.handleProjectOffline(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/handle-offline", projectId))
+                .andExpect(status().isOk());
+
+        verify(projectServiceMock).handleProjectOffline(projectId);
     }
 }
 

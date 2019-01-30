@@ -68,4 +68,9 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     public RestResult<Void> withdrawProject(long projectId) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/withdraw");
     }
+
+    @Override
+    public RestResult<Void> handleProjectOffline(long projectId) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/handle-offline");
+    }
 }

@@ -185,6 +185,14 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
                 Role.IFS_ADMINISTRATOR);
     }
 
+
+    @Test
+    public void handleProjectOffline() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.handleProjectOffline(123L),
+                Role.IFS_ADMINISTRATOR);
+    }
+
     @Override
     protected Class<? extends ProjectService> getClassUnderTest() {
         return ProjectServiceImpl.class;

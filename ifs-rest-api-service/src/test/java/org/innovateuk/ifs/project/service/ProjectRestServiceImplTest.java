@@ -123,4 +123,13 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/withdraw", Void.class);
         assertTrue(result.isSuccess());
     }
+
+    @Test
+    public void handleProjectOffline() {
+        long projectId = 123L;
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/handle-offline", null, OK );
+        RestResult<Void> result = service.handleProjectOffline(projectId);
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/handle-offline", Void.class);
+        assertTrue(result.isSuccess());
+    }
 }
