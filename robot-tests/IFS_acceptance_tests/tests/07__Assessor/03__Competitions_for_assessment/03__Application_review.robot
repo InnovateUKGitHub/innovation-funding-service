@@ -221,7 +221,7 @@ Status of the application should be In Progress
     [Tags]
     [Setup]    The user navigates to the page      ${assessor_dashboard_url}
     When The user clicks the button/link           link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    Then The user should see the element           jQuery = .progress-list li:nth-child(5) strong:contains("In progress")
+    Then The user should see the element           jQuery = .progress-list li:nth-child(6) strong:contains("In progress")
 
 *** Keywords ***
 I enter feedback of words
