@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <th:block th:fragment="dashboard-block(title, description, url, linkId)">
+        <a th:id="${linkId}" th:href="${url}" class="card">
+            <h2 class="govuk-heading-m" th:text="${title}"></h2>
+            <p class="govuk-body" th:text="${description}">Manage your live projects.</p>
+        </a>
+    </th:block>
+
+</html>

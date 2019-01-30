@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -73,7 +74,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("nonFinanceType").description("Does the competition have finance questions"),
             fieldWithPath("includeJesForm").description("Does the competition include the Je-S form for academics"),
             fieldWithPath("includeProjectGrowthTable").description("Indicate if the competition has a project growth table"),
-            fieldWithPath("includeYourOrganisationSection").description("Indicate if the competition has a your organisation section"),
+            fieldWithPath("includeYourOrganisationSection").description("Indicates if the competition has a your organisation section"),
+            fieldWithPath("fundingType").description("The FundingType of the competition"),
             fieldWithPath("createdBy").description("user who created this competition"),
             fieldWithPath("createdOn").description("when the competition was created"),
             fieldWithPath("modifiedBy").description("user who modified this competition"),
@@ -115,5 +117,6 @@ public class CompetitionResourceDocs {
             .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
             .withTermsAndConditions(new GrantTermsAndConditionsResource("T&C", "terms-and-conditions-template", 1))
             .withStateAid(true)
-            .withIncludeJesForm(true);
+            .withIncludeJesForm(true)
+            .withFundingType(FundingType.PROCUREMENT);
 }

@@ -214,7 +214,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         "CCCC", "16014", 1, BigDecimal.valueOf(100L),
                         false, false, AssessorFinanceView.OVERVIEW,false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
-                        50, false, "").
+                        50, false, "", FundingType.GRANT).
                 withApplicationFormFromTemplate().
                 withNewMilestones().
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).
@@ -234,7 +234,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                 withReleaseFeedbackDate(addDays(14)).
                 withFeedbackReleasedDate(addDays(15)).
                 withPublicContent(true, "blah", "blah", "blah",
-                        "blah", FundingType.GRANT, "blah", singletonList("blah"), false).
+                        "blah", "blah", singletonList("blah"), false).
                 withSetupComplete().
                 build();
 

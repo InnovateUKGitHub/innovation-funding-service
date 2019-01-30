@@ -59,6 +59,7 @@ public class ManageApplicationModelPopulator {
                 ineligibilityViewModel,
                 researchCategorySummaryViewModel,
                 appendices,
-                application.isCollaborativeProject());
+                application.isCollaborativeProject(),
+                competition);
     }
 }

@@ -35,11 +35,14 @@ Validation errors on non-IFS competition details
     When the user clicks the button/link                   jQuery = button:contains("Save and continue")
     Then the user should see a field and summary error     Please enter a title.
     And the user should see a field and summary error      Please enter a competition URL.
+    And the user should see a field and summary error      Enter a valid funding type.
     And the user should see a field and summary error      ${enter_a_valid_date}
     And the user should see a summary error                ${enter_a_valid_date}
     When the user fills out the competition title and url
+    And the user selects the radio button                  fundingType  GRANT
     Then the user should not see the element               jQuery = .govuk-error-message:contains("Please enter a competition URL.")
     And the user should not see the element                jQuery = .govuk-error-message:contains("Please enter a title.")
+    And the user should not see the element                jQuery = .govuk-error-message:contains("Enter a valid funding type.")
     When the user fills out the non-IFS details
     Then the user should not see the element               jQuery = .govuk-error-message   #Valid dates in milestones
     And the user clicks the button/link                    jQuery = button:contains("Save and continue")
@@ -51,6 +54,7 @@ Submit non-IFS competition details
     Given the user navigates to the Non IFS competitions tab
     And the user clicks the button/link     link = Test non-IFS competition
     When the user fills out the competition title and url
+    And the user selects the radio button   fundingType  GRANT
     Then the user fills out the non-IFS details
     When the user clicks the button/link    jQuery = button:contains("Save and continue")
     Then the user should see the element    jQuery = h1:contains("Public content")
@@ -76,12 +80,12 @@ Internal user can see the Non-IFS comp and its brief information
 Guest user can apply to a Non-IFS competition at the FrontDoor
     [Documentation]    INFUND-7965
     [Tags]
-    Given the user navigates to the page         ${frontDoor}
-    When the user enters text to a text field    id = keywords    search
-    And the user clicks the button/link          jQuery = button:contains("Update results")
-    Given the competition is open                Test non-IFS competition
-    When the user clicks the button/link         link = Test non-IFS competition
-    Then The user should see the element         link = Register and apply online
+    Given the user navigates to the page                                           ${frontDoor}
+    When the user enters text to a text field                                      id = keywords    search
+    And the user clicks the button/link                                            jQuery = button:contains("Update results")
+    And change the open date of the Competition in the database to one day before  Test non-IFS competition
+    When the user clicks the button/link                                           link = Test non-IFS competition
+    Then The user should see the element                                           link = Register and apply online
 
 Guest can see the Dates tab
     [Documentation]  INFUND-8554  IFS-1117

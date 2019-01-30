@@ -11,7 +11,7 @@ Resource          ../../../resources/defaultResources.robot
 Milestone date for application in progress is visible
     [Documentation]  INFUND-37 INFUND-5485
     [Tags]  HappyPath
-    When The user navigates to the page  ${DASHBOARD_URL}
+    When The user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     Then the user should see the date for submission of application
 
 Number of days remaining until submission should be correct
@@ -24,7 +24,7 @@ Hours remaining should show the last 24hours
     [Tags]    MySQL  HappyPath
     [Setup]    Custom setup
     When the user reloads the page
-    Then the user should see the text in the page    hours left
+    Then the user should see the element    jQuery = .status-msg:contains("hours left")
     [Teardown]    Run Keywords    Connect to Database    @{database}
     ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${openCompetitionRTOCloseDate} 00:00:00' WHERE `competition_id`='${openCompetitionRTO}' and type IN ('SUBMISSION_DATE');
 

@@ -8,4 +8,16 @@ apply plugin: 'idea'
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile "com.fasterxml.jackson.core:jackson-databind:2.8.11.1"
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+}
+configurations {
+    testArtifacts
+}
+task testJar(type: Jar) {
+    baseName = "${project.name}-test"
+    from sourceSets.test.output
+}
+artifacts {
+    testArtifacts testJar
 }

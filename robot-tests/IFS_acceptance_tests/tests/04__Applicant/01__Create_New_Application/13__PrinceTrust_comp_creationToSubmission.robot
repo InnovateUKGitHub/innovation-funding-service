@@ -19,14 +19,14 @@ Comp Admin creates The Prince's Trust type competition
     [Documentation]  IFS-2688
     [Tags]
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then The competition admin creates The Prince's Trust Comp   ${rto_type_id}  ${comp_name}  Prince
+    Then the competition admin creates The Prince's Trust Comp   ${rto_type_id}  ${comp_name}  Prince
 
 Applicant applies to newly created The Prince's Trust competition
     [Documentation]  IFS-2688
     [Tags]    MySQL
-    When the competition is open                      ${comp_name}
-        And Log in as a different user                &{RTO_lead_applicant_credentials}
-        Then logged in user applies to competition    ${comp_name}  3
+    When Change the open date of the Competition in the database to one day before  ${comp_name}
+    And Log in as a different user                                                  &{RTO_lead_applicant_credentials}
+    Then logged in user applies to competition                                            ${comp_name}  3
 
 Applicant submits his application
     [Documentation]  IFS-2688 IFS-3287
@@ -47,7 +47,7 @@ The competition admin creates The Prince's Trust Comp
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page              ${CA_UpcomingComp}
     the user clicks the button/link             jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${comp_type}  2
+    the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${comp_type}  2  GRANT
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility        ${orgType}  1  false  single-or-collaborative  # 1 means 30%

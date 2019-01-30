@@ -10,7 +10,7 @@
 
     <div class="govuk-width-container">
         <th:block th:insert="fragments/layout :: phase-banner" />
-        <th:block th:if="${!model.compAdminUser}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkUrl=@{/assessor/dashboard}" />
+        <th:block th:if="${!model.compAdminUser}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessments',linkUrl=@{/assessor/dashboard}" />
         <th:block th:unless="${!model.compAdminUser}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{${backUrl}}" />
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -168,7 +168,7 @@
                     </div>
 
                     <div class="govuk-!-margin-top-6" th:if="${!model.compAdminUser}">
-                        <a href="/assessment/assessor/dashboard" class="button-secondary">Return to assessor dashboard</a>
+                        <a href="/assessment/assessor/dashboard" class="button-secondary">Return to assessments</a>
                     </div>
                 </section>
             </div>

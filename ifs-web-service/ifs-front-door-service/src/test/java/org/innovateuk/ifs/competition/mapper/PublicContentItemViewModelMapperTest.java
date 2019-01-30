@@ -31,7 +31,7 @@ public class PublicContentItemViewModelMapperTest {
                 .withCompetitionOpenDate(openDate)
                 .withCompetitionCloseDate(closedDate)
                 .withCompetitionTitle(competitionTitle)
-                .withContentSection(publicContentResource).build();
+                .withPublicContentResource(publicContentResource).build();
 
         PublicContentItemViewModelMapper contentItemViewModelMapper = new PublicContentItemViewModelMapper();
         PublicContentItemViewModel result = contentItemViewModelMapper.mapToViewModel(publicContentItemResource);

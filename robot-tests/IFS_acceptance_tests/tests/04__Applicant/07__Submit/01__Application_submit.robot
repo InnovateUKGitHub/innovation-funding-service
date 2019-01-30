@@ -33,7 +33,7 @@ Submit button disabled when application is incomplete
     [Documentation]    INFUND-927, IFS-942, IFS-753
     [Tags]  HappyPath
     [Setup]  Log in as a different user                ${submit_bus_email}  ${correct_password}
-    Given the user navigates to the page               ${DASHBOARD_URL}
+    Given the user navigates to the page               ${APPLICANT_DASHBOARD_URL}
     When the user clicks the button/link               link = ${application_bus_name}
     And the user should not see the element            jQuery = .message-alert:contains("Now your application is complete, you need to review and then submit.")
     And the user clicks the button/link                link = Your finances
@@ -50,7 +50,7 @@ Submit button disabled when application is incomplete
 Applicant has read only view on review and submit page
     [Documentation]    INFUND-7405, INFUND-8599
     [Tags]  HappyPath
-    Given the user navigates to the page                  ${DASHBOARD_URL}
+    Given the user navigates to the page                  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                   link = ${application_bus_name}
     When the applicant completes the application details  ${application_bus_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the user clicks the button/link                   link = Your finances
@@ -78,8 +78,8 @@ Submit flow business lead (complete application)
     And the applicant clicks the submit button and the clicks cancel in the submit modal
     And the applicant clicks the submit and then clicks the "close button" in the modal
     And the applicant clicks Yes in the submit modal
-    Then the user should be redirected to the correct page  submit
-    And the user should see the text in the page            Application submitted
+    Then the user should be redirected to the correct page  track
+    And the user should see the element                     jQuery = h2:contains("Application submitted")
     # TODO add check here once IFS-270 done
 
 Satisfaction survey:validations
@@ -98,7 +98,6 @@ Applicant submit satisfaction survey after submitting application
     Given the user selects the radio button      satisfaction  5
     When the user enters text to a text field    name = comments  Very satisfied
     Then the user clicks the button/link         css = button[type="submit"]  #Send feedback
-    When the user clicks the button/link         jQuery = h1:contains("Dashboard")
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
@@ -108,7 +107,7 @@ The applicant should get a confirmation email
 Submitted application is read only
     [Documentation]    INFUND-1938, INFUND-9058
     [Tags]
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link     link = ${application_bus_name}
     When the user clicks the button/link    link = View application
     And The user should be redirected to the correct page    summary
@@ -117,7 +116,7 @@ Submitted application is read only
 Status of the submitted application
     [Documentation]    INFUND-1137
     [Tags]
-    When the user navigates to the page   ${DASHBOARD_URL}
+    When the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     Then the user should see the element  jQuery = .in-progress li:contains("${application_bus_name}") .msg-progress:contains("Application submitted")
     And the user clicks the button/link   link = ${application_bus_name}
     And the user should see the element   link = View application
@@ -127,7 +126,7 @@ RTO lead has read only view after submission
     [Documentation]    INFUND-7405, INFUND-8599
     [Tags]
     [Setup]  log in as a different user  ${submit_rto_email}  ${correct_password}
-    Given the user navigates to the page                   ${DASHBOARD_URL}
+    Given the user navigates to the page                   ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                    link = ${application_rto_name}
     When the applicant completes the application details   ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the user fills in the organisation information     ${application_rto_name}  ${SMALL_ORGANISATION_SIZE}
@@ -143,21 +142,21 @@ RTO lead has read only view after submission
 Submit flow rto lead (complete application)
     [Documentation]  IFS-1051
     [Tags]
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                     link = ${application_rto_name}
     And the user should see the text in the element         css = .message-alert  Now your application is complete, you need to review and then submit.
     When the user clicks the button/link                    link = Review and submit
     Then the user should be redirected to the correct page  summary
     And the applicant clicks Yes in the submit modal
-    Then the user should be redirected to the correct page  submit
-    And the user should see the text in the page            Application submitted
+    Then the user should be redirected to the correct page  track
+    And the user should see the element                     jQuery = h2:contains("Application submitted")
     And The user should see the element                     link = Finished
 
 Applications are on Dashboard when Competition is Closed
     [Documentation]  IFS-1149
     [Tags]
     [Setup]  Get the original values of the competition's milestones
-    Given the competition is closed
+    Given the submission date changes in the db in the past               ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Then the user should be able to see his application on his dashboard  ${submit_bus_email}  ${application_bus_name}
     And the user should be able to see his application on his dashboard   ${submit_rto_email}  ${application_rto_name}
 
@@ -173,7 +172,7 @@ the applicant clicks the submit button and the clicks cancel in the submit modal
 
 The user can check that the sections are read only
     [Arguments]  ${application_name}
-    the user navigates to the page         ${dashboard_url}
+    the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link        link = ${application_name}
     the user clicks the button/link        link = View application
     the user clicks the button/link        css = .section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
@@ -191,7 +190,7 @@ the applicant accepts the terms and conditions
     the user selects the checkbox    stateAidAgreed
 
 the applicant marks the first section as complete
-    the user navigates to the page    ${DASHBOARD_URL}
+    the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link    link = ${application_name}
     the applicant completes the application details  ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
 
@@ -207,11 +206,6 @@ the user puts zero project costs
     the user clicks the button/link  jQuery = button:contains("Mark as complete")
     the user clicks the button/link  link = Your project costs
     the user has read only view once section is marked complete
-
-the competition is closed
-    Connect to Database    @{database}
-    ${yesterday} =  get yesterday
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
 
 the user should be able to see his application on his dashboard
     [Arguments]  ${user}  ${application}

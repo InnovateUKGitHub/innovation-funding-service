@@ -113,7 +113,7 @@ create new submit application
 
 Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    Given the user navigates to the page                ${DASHBOARD_URL}
+    Given the user navigates to the page                ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                 link=Academic robot test application
     the user fills in the inviting steps no edit        ${test_mailbox_one}+academictest@gmail.com
     logout as user
@@ -163,7 +163,7 @@ The user navigates to the overview page of the Robot test application
     the user navigates to the page       ${server}/application/${id}
 
 The user navigates to the finance overview of the academic
-    When the user navigates to the page    ${DASHBOARD_URL}
+    When the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Finances overview
 

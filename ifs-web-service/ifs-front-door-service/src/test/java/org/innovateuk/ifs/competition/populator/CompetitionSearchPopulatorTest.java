@@ -68,7 +68,7 @@ public class CompetitionSearchPopulatorTest {
         publicContentItemResources = newPublicContentItemResource()
                 .withCompetitionCloseDate(tomorrow)
                 .withCompetitionOpenDate(yesterday)
-                .withContentSection(publicContentResource)
+                .withPublicContentResource(publicContentResource)
                 .build(2);
 
         publicContentItemPageResourceList = newPublicContentItemPageResource()

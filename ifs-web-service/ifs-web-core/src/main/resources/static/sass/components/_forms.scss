@@ -523,7 +523,9 @@ td {
 
     &.disabled,
     &[disabled] {
-      &, &:hover, &:focus {
+      &,
+      &:hover,
+      &:focus {
         text-decoration: none;
         color: $govuk-secondary-text-colour;
         background: transparent;
