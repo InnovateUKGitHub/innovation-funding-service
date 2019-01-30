@@ -7,6 +7,7 @@ import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
+import org.innovateuk.ifs.invite.repository.UserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.token.domain.Token;
@@ -29,6 +30,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -96,6 +98,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private UserOrganisationMapper userOrganisationMapper;
+
+    @Autowired
+    private UserInviteRepository userInviteRepository;
 
     private Supplier<String> randomHashSupplier = () -> UUID.randomUUID().toString();
 
@@ -181,6 +186,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     private ServiceResult<Void> updateUserEmail(User existingUser, String emailToUpdate) {
         existingUser.setEmail(emailToUpdate);
         userRepository.save(existingUser);
+        userInviteRepository.findByEmail(existingUser.getEmail()).forEach(invite -> invite.setEmail(emailToUpdate));
         return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
                 .andOnSuccessReturnVoid();
     }
@@ -280,6 +286,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateEmail(long userId, String email) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess( user -> updateUserEmail(user, email));
