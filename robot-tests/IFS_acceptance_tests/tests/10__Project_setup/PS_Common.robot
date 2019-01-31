@@ -154,6 +154,11 @@ ${project_address_page}                 ${project_in_setup_details_page}/project
 ${internal_competition_status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${notified_application_competition_status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
 
+#Project: Grade crossing manufacture and supply
+&{lead_applicant_credentials_bd}  email=${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  password=${short_password}
+&{collaborator1_credentials_bd}   email=${PS_BD_APPLICATION_PARTNER_EMAIL}  password=${short_password}
+&{collaborator2_credentials_bd}   email=${PS_BD_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
+
 #Bank details
 ${account_one}   51406795
 ${sortCode_one}  404745

@@ -37,11 +37,6 @@ Resource          PS_Common.robot
 # Note that the Bank details scenario where the Partner is not eligible for funding
 # is tested in the File 01__project_details.robot
 
-*** Variables ***
-&{lead_applicant_credentials_bd}  email=${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  password=${short_password}
-&{collaborator1_credentials_bd}   email=${PS_BD_APPLICATION_PARTNER_EMAIL}  password=${short_password}
-&{collaborator2_credentials_bd}   email=${PS_BD_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
-
 *** Test Cases ***
 Links to other sections in Project setup dependent on project details for partners
     [Documentation]    INFUND-4428
@@ -166,7 +161,7 @@ Bank details submission
     And the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(4)
     When log in as a different user                   &{internal_finance_credentials}
     And the user navigates to the page                ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
-    Then the user should see the element              css = #table-project-status tr:nth-of-type(4) td:nth-of-type(3).status.action
+    Then the user should see the element              css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2).status.waiting
 
 Submission of bank details for academic user
     [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018, INFUND-8688
@@ -205,7 +200,7 @@ Status updates correctly for internal user's table
     Given the user navigates to the page   ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     When the user should see the element   css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1).status.ok       # Project details
     Then the user should see the element   css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2).status.waiting  # Docs
-    And the user should see the element    css = #table-project-status tr:nth-of-type(4) td:nth-of-type(3).status.action   # MO
+    And the user should see the element    css = #table-project-status tr:nth-of-type(4) td:nth-of-type(3)                 # MO
     And the user should see the element    css = #table-project-status tr:nth-of-type(4) td:nth-of-type(4).status.action   # Bank details
     And the user should see the element    css = #table-project-status tr:nth-of-type(4) td:nth-of-type(5).status.action   # Finance checks Spend Profile
     And the user should see the element    css = #table-project-status tr:nth-of-type(4) td:nth-of-type(6)                 #Spend profile

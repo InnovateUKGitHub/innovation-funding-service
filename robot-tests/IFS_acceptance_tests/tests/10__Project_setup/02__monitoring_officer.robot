@@ -18,35 +18,35 @@ Force Tags        Project Setup
 Resource          PS_Common.robot
 
 *** Variables ***
-${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer
+${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/monitoring-officer
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
     [Documentation]    INFUND-2634, INFUND-2621, INFUND-6706
     [Tags]  HappyPath
-    [Setup]    Log in as a different user               &{lead_applicant_credentials}
-    Given the user navigates to the page                ${project_in_setup_page}
+    [Setup]    The user logs-in in new browser          &{lead_applicant_credentials_bd}
+    Given the user navigates to the page                ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element                 jQuery = h2:contains("Monitoring Officer") ~ p:contains("We will assign the project a Monitoring Officer.")
     And the user should not see the element             css = ul li.complete:nth-child(3)
     And the user should see the element                 css = ul li.waiting:nth-child(3)
     When the user clicks the button/link                link = Monitoring Officer
     Then the user should see the element                jQuery = p:contains("Your project has not yet been assigned a Monitoring Officer.")
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
-    When the user navigates to the page                 ${project_in_setup_team_status_page}
+    When the user navigates to the page                 ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
     [Tags]
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
-    When the user navigates to the page    ${internal_competition_status}
-    Then the user should see the element   css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok                     # Project details
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)                       # Documents
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4)                       # Monitoring Officer
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)                       # Bank details
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action    # Finance checks
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)                       # Spend Profile
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(8)                       # GOL
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
+    Then the user should see the element   css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1)                               # Project details
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(3)                       # Documents
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(4)                       # Monitoring Officer
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(5)                       # Bank details
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td.govuk-table__cell.status.action    # Finance checks
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(7)                       # Spend Profile
+    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(8)                       # GOL
 
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-2630
@@ -55,14 +55,14 @@ Comp admin can view the Supporting information details on MO page
     When the user navigates to the page                ${Successful_Monitoring_Officer_Page}
     Then the user should see the element               jQuery = h1:contains("Monitoring Officer")
     And the user should see the element                jQuery = h2:contains("Supporting information")
-    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
+    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${PS_BD_APPLICATION_TITLE}")
     And the user should see the element                jQuery = h3:contains("Area") ~ p:contains("Digital manufacturing")
     And the user should see the correct address
-    And the user should see the text in the element    jQuery = p:nth-child(11)    1 Jan ${nextyear}
-    And the user should see the element                jQuery = h3:contains("Project Manager") ~ p:contains("Elmo Chenault")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${organisationEggsName}")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${organisationLudlowName}")
+    And the user should see the text in the element    jQuery = p:nth-child(11)    1 Mar ${nextyear}
+    And the user should see the element                jQuery = h3:contains("Project Manager") ~ p:contains("Diane Scott")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${Vitruvius_Name}")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${A_B_Cad_Services_Name}")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${Armstrong_Butler_Name}")
 
 Project finance user can view MO page, and go on to assign MO
     [Documentation]    INFUND-5666, INFUND-5507
@@ -71,14 +71,14 @@ Project finance user can view MO page, and go on to assign MO
     When the user navigates to the page                ${Successful_Monitoring_Officer_Page}
     Then the user should see the element               jQuery = h1:contains("Monitoring Officer")
     And the user should see the element                jQuery = h2:contains("Supporting information")
-    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
+    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${PS_BD_APPLICATION_TITLE}")
     And the user should see the element                jQuery = h3:contains("Area") ~ p:contains("Digital manufacturing")
     And the user should see the correct address
-    And the user should see the text in the element    jQuery = p:nth-child(11)    1 Jan ${nextyear}
-    And the user should see the element                jQuery = h3:contains("Project Manager") ~ p:contains("Elmo Chenault")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${organisationEggsName}")
-    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${organisationLudlowName}")
+    And the user should see the text in the element    jQuery = p:nth-child(11)    1 Mar ${nextyear}
+    And the user should see the element                jQuery = h3:contains("Project Manager") ~ p:contains("Diane Scott")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${Vitruvius_Name}")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${A_B_Cad_Services_Name}")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${Armstrong_Butler_Name}")
     [Teardown]  the user clicks the button/link        link = Projects in setup
 
 MO server-side validation
@@ -122,8 +122,8 @@ MO details can be added
     And the user clicks the button/link                  jQuery = .modal-assign-mo button:contains("Assign Monitoring Officer")
     Then The user should see the element                 css = .success-alert
     And the user should see the element                  jQuery = .success-alert:contains("A Monitoring Officer has been assigned.")
-    Then Log in as a different user                      &{lead_applicant_credentials}
-    And the user navigates to the page                   ${project_in_setup_page}
+    Then Log in as a different user                      &{lead_applicant_credentials_bd}
+    And the user navigates to the page                   ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element                  css = ul li.complete:nth-child(3)
     And the user should see the text in the element      css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
     And the user clicks the button/link                  link = View the status of partners
@@ -134,7 +134,7 @@ MO details(email step)
     [Tags]  HappyPath
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${PROJECT_SETUP_COMPETITION_NAME}: Your Monitoring Officer for project ${PROJECT_SETUP_APPLICATION_1}    has now been assigned a Monitoring Officer
+    And the user reads his email from the default mailbox    ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}    ${PS_BD_Competition_Name}: Your Monitoring Officer for project ${PS_BD_APPLICATION_NUMBER}    has now been assigned a Monitoring Officer
 
 MO details can be edited and viewed in the Set up your project page
     [Documentation]    INFUND-2630, INFUND-2621, INFUND-2634
@@ -144,8 +144,8 @@ MO details can be edited and viewed in the Set up your project page
     When the user clicks the button/link               link = Change Monitoring Officer
     And the user edits the MO details
     And the user can see the changed MO details
-    When Log in as a different user                    &{lead_applicant_credentials}
-    Then the user navigates to the page                ${project_in_setup_page}
+    When Log in as a different user                    &{lead_applicant_credentials_bd}
+    Then the user navigates to the page                ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element                css = ul li.complete:nth-child(3)
     And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link                link = Monitoring Officer
@@ -153,7 +153,7 @@ MO details can be edited and viewed in the Set up your project page
     And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
     And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
     And the user should see the element                jQuery = .govuk-body:contains("08549731414")
-    When the user navigates to the page                ${project_in_setup_team_status_page}
+    When the user navigates to the page                ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 MO details edit(email step)
@@ -161,13 +161,13 @@ MO details edit(email step)
     [Tags]
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email from the second mailbox    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${PROJECT_SETUP_COMPETITION_NAME}: Your Monitoring Officer for project ${PROJECT_SETUP_APPLICATION_1}    has now been assigned a Monitoring Officer
+    And the user reads his email from the default mailbox    ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}    ${PS_BD_Competition_Name}: Your Monitoring Officer for project ${PS_BD_APPLICATION_NUMBER}    has now been assigned a Monitoring Officer
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621
     [Tags]  HappyPath
-    Given Log in as a different user                   &{collaborator1_credentials}
-    When the user navigates to the page                ${project_in_setup_page}
+    Given Log in as a different user                   &{collaborator1_credentials_bd}
+    When the user navigates to the page                ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     Then the user should see the element               css = ul li.complete:nth-child(3)
     And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link                link = Monitoring Officer
@@ -175,10 +175,10 @@ MO details accessible/seen by all partners
     And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
     And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
     And the user should see the element                jQuery = .govuk-body:contains("08549731414")
-    When the user navigates to the page                ${project_in_setup_team_status_page}
+    When the user navigates to the page                ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
-    When Log in as a different user                    &{lead_applicant_credentials}
-    And the user navigates to the page                 ${project_in_setup_page}
+    When Log in as a different user                    &{lead_applicant_credentials_bd}
+    And the user navigates to the page                 ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     Then the user should see the element               css = ul li.complete:nth-child(3)
     And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link                link = Monitoring Officer
@@ -186,16 +186,16 @@ MO details accessible/seen by all partners
     And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
     And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
     And the user should see the element                jQuery = .govuk-body:contains("08549731414")
-    When the user navigates to the page                ${project_in_setup_team_status_page}
+    When the user navigates to the page                ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]
-    [Setup]    Log in as a different user      &{collaborator1_credentials}
-    When the user navigates to the page        ${project_in_setup_page}
+    [Setup]    Log in as a different user      &{collaborator1_credentials_bd}
+    When the user navigates to the page        ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     Then the user should see the element       link = Monitoring Officer
-    And the user should see the element        link = Finance checks
+    #And the user should see the element        link = Finance checks
     And the user should not see the element    link = Spend profile
     And the user should not see the element    link = Grant offer letter
 
@@ -258,72 +258,9 @@ the user can see the changed MO details
 Custom suite setup
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
-    the lead partner fills in project details if they are not already filled in
-
-the lead partner fills in project details if they are not already filled in
-    The user logs-in in new browser   &{lead_applicant_credentials}
-    the user navigates to the page    ${project_in_setup_page}
-    the user clicks the button/link   link = Project details
-    ${project_details_not_completed}  ${value} =   Run keyword and ignore error without screenshots  the user should not see the element  css = #project-address-status.yes
-    run keyword if  '${project_details_not_completed}' == 'PASS'  the users fill in project details
-
-the users fill in project details
-    the lead partner fills in project details
-    the academic partner fills in their finance contact
-    the industrial partner fills in their finance contact
-    internal user can see that MO can be assigned
-
-the lead partner fills in project details
-    the user clicks the button/link           link = Target start date
-    the user enters text to a text field      id = projectStartDate_month    1
-    the user enters text to a text field      id = projectStartDate_year    ${nextyear}
-    the user clicks the button/link           css = button[type = "submit"]
-    the user clicks the button/link           link = Correspondence address
-    the user enters text to a text field      id = addressForm.postcodeInput  BS1 4NT
-    the user clicks the button/link           id = postcode-lookup
-    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link           jQuery = .govuk-button:contains("Save address")
-    the user clicks the button/link           link = Project Manager
-    the user selects the radio button         projectManager  projectManager2
-    the user clicks the button/link           id = save
-    the user clicks the button/link           jQuery = td:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
-    the user selects the radio button         financeContact  financeContact2
-    the user clicks the button/link           id = save  #Save finance contact button
-    And the user clicks the button/link       jQuery = #project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
-    And the user enters text to a text field  css = #postcode  ${postcode}
-    And the user clicks the button/link       css = button[type = "submit"]  #Save project location button
-
-internal user can see that MO can be assigned
-    log in as a different user   &{internal_finance_credentials}
-    the user navigates to the page   ${Successful_Monitoring_Officer_Page}
-    the user should not see an error in the page
-
-the academic partner fills in their finance contact
-    log in as a different user            &{collaborator2_credentials}
-    the user navigates to the page        ${project_in_setup_page}
-    the user clicks the button/link       link = Project details
-    the user clicks the button/link       jQuery = td:contains("${organisationEggsName}") ~ td a:contains("Select finance contact")
-    the user selects the radio button     financeContact  financeContact2
-    the user clicks the button/link       id = save  #Save finance contact button
-    the user clicks the button/link       jQuery = #project-details-finance td:contains("EGGS") ~ td a:contains("Select project location")
-    the user enters text to a text field  css = #postcode  ${postcode}
-    the user clicks the button/link       css = button[type = "submit"]  #Save project location button
-
-the industrial partner fills in their finance contact
-    log in as a different user            &{collaborator1_credentials}
-    the user navigates to the page        ${project_in_setup_page}
-    the user clicks the button/link       link = Project details
-    the user clicks the button/link       jQuery = td:contains("${organisationLudlowName}") ~ td a:contains("Select finance contact")
-    the user selects the radio button     financeContact  financeContact1
-    the user clicks the button/link       id = save  #Save finance contact button
-    the user clicks the button/link       jQuery = #project-details-finance td:contains("Ludlow") ~ td a:contains("Select project location")
-    the user enters text to a text field  css = #postcode  ${postcode}
-    the user clicks the button/link       css = button[type = "submit"]  #Save project location button
 
 the user should see the correct address
-    the user should see the element       jQuery = p:contains("Montrose House 1")
-    the user should see the element       jQuery = p:contains("Clayhill Park")
-    the user should see the element       jQuery = p:contains("Cheshire West and Chester")
-    the user should see the element       jQuery = p:contains("Neston")
-    the user should see the element       jQuery = p:contains("Cheshire")
-    the user should see the element       jQuery = p:contains("CH64 3RU")
+    the user should see the element       jQuery = p:contains("3722 Corben Point")
+    the user should see the element       jQuery = p:contains("London")
+    the user should see the element       jQuery = p:contains("London")
+    the user should see the element       jQuery = p:contains("E17 5LR")
