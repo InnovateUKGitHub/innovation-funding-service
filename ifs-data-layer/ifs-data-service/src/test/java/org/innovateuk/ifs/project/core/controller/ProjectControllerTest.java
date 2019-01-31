@@ -134,5 +134,16 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         verify(projectServiceMock).handleProjectOffline(projectId);
     }
+
+    @Test
+    public void completeProjectOffline() throws Exception {
+        Long projectId = 456L;
+        when(projectServiceMock.completeProjectOffline(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/complete-offline", projectId))
+                .andExpect(status().isOk());
+
+        verify(projectServiceMock).completeProjectOffline(projectId);
+    }
 }
 

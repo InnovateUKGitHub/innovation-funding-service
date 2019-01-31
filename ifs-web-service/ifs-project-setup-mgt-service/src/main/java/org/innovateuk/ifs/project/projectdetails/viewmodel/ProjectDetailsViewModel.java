@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import java.util.List;
 import java.util.Map;
 
+import static org.innovateuk.ifs.project.resource.ProjectState.HANDLED_OFFLINE;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 
 /**
@@ -52,12 +53,20 @@ public class ProjectDetailsViewModel {
         return SETUP.equals(project.getProjectState());
     }
 
+    public boolean isHandleOffline() {
+        return HANDLED_OFFLINE.equals(project.getProjectState());
+    }
+
     public boolean isShowWithdrawLink() {
         return ifsAdministrator && isSetup();
     }
 
     public boolean isShowHandleOfflineLink() {
         return ifsAdministrator && isSetup();
+    }
+
+    public boolean isShowCompleteOfflineLink() {
+        return ifsAdministrator && isHandleOffline();
     }
 
     public Long getCompetitionId() {

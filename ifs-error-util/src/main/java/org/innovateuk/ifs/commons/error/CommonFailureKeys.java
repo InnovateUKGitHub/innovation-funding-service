@@ -300,6 +300,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * Handling projects offline
      */
     PROJECT_CANNOT_BE_HANDLED_OFFLINE(BAD_REQUEST),
+    PROJECT_CANNOT_BE_COMPLETED_OFFLINE(BAD_REQUEST),
 
     /**
      * SIL CRM

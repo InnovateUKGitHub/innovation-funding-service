@@ -10,7 +10,8 @@ public enum ProjectEvent implements ProcessEvent {
     PROJECT_CREATED("project-created"),
     GOL_APPROVED("signed-gol-approved"),
     PROJECT_WITHDRAWN("withdraw-project"),
-    HANDLE_OFFLINE("handled-offline");
+    HANDLE_OFFLINE("handled-offline"),
+    COMPLETE_OFFLINE("completed-offline");
 
     String event;
 

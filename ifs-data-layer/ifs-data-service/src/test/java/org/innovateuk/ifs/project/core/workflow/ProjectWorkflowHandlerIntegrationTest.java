@@ -89,6 +89,16 @@ public class ProjectWorkflowHandlerIntegrationTest extends
                 ProjectState.SETUP, ProjectState.HANDLED_OFFLINE, ProjectEvent.HANDLE_OFFLINE);
     }
 
+    @Test
+    public void completeProjectOffline() {
+
+        callWorkflowAndCheckTransitionAndEventFiredWithInternalUserParticipant(
+                ((project, internalUser) -> projectWorkflowHandler.completeProjectOffline(project, internalUser)),
+
+                // current State, destination State and expected Event to be fired
+                ProjectState.HANDLED_OFFLINE, ProjectState.COMPLETED_OFFLINE, ProjectEvent.COMPLETE_OFFLINE);
+    }
+
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, ProjectState currentProjectState, ProjectState destinationProjectState, ProjectEvent expectedEventToBeFired) {
 
         Project project = newProject().build();
