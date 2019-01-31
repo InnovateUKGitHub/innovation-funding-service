@@ -51,6 +51,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder.newSiteTermsAndConditionsResource;
@@ -713,6 +714,20 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertTrue(result.isSuccess());
         assertTrue(user.getEmail().equals("new@gmail.com"));
+    }
+
+    @Test
+    public void updateEmailAndDisplayErrorIfDuplicateEmailHasBeenFound() {
+
+        User user = newUser().withEmailAddress("new@gmail.com").build();
+        String updateEmail = "new@gmail.com";
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(USERS_DUPLICATE_EMAIL_ADDRESS));
+
+        ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
+
+        assertTrue(result.isFailure());
     }
 
     private User createUserExpectations(Long userId, Set<Long> termsAndConditionsIds) {
