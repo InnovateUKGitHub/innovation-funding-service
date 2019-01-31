@@ -184,9 +184,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     private ServiceResult<Void> updateUserEmail(User existingUser, String emailToUpdate) {
+        userInviteRepository.findByEmail(existingUser.getEmail()).forEach(invite -> invite.setEmail(emailToUpdate));
         existingUser.setEmail(emailToUpdate);
         userRepository.save(existingUser);
-        userInviteRepository.findByEmail(existingUser.getEmail()).forEach(invite -> invite.setEmail(emailToUpdate));
         return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
                 .andOnSuccessReturnVoid();
     }
