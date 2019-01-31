@@ -1,6 +1,4 @@
-package org.innovateuk.ifs.invite.domain;
-
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
+package org.innovateuk.ifs.project.core.domain;
 
 import java.util.Map;
 
@@ -11,19 +9,18 @@ import static java.util.stream.Collectors.toMap;
 /**
  * The role of {@link ProjectUser}.
  */
-public enum ProjectParticipantRole implements ParticipantRole {
+public enum ProjectUserRole implements ProjectParticipantRole {
     PROJECT_PARTNER(10, "partner"),
     PROJECT_MANAGER(11, "project_manager"),
-    PROJECT_FINANCE_CONTACT(9, "finance_contact"),
-    MONITORING_OFFICER(19, "monitoring_officer");
+    PROJECT_FINANCE_CONTACT(9, "finance_contact");
 
     private final long id;
     private final String name;
 
-    private static final Map<Long, ProjectParticipantRole> idMap =
-            stream(values()).collect(toMap(ProjectParticipantRole::getId, identity()));
+    private static final Map<Long, ProjectUserRole> idMap =
+            stream(values()).collect(toMap(ProjectUserRole::getId, identity()));
 
-    ProjectParticipantRole(final long id, final String name) {
+    ProjectUserRole(final long id, final String name) {
         this.name = name;
         this.id = id;
     }
@@ -49,10 +46,10 @@ public enum ProjectParticipantRole implements ParticipantRole {
     }
 
     public boolean isMonitoringOfficer() {
-        return this == MONITORING_OFFICER;
+        return false;
     }
 
-    public static ProjectParticipantRole getById(Long id) {
+    public static ProjectUserRole getById(Long id) {
         return idMap.get(id);
     }
 }

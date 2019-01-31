@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.*;
 import static org.junit.Assert.*;
 
 public class ProjectTest {
