@@ -292,17 +292,18 @@ Assessor cannot see competition on dashboard after funders panel date expiry
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
+    Connect to database  @{database}
     ${today} =  get today short month
     set suite variable  ${today}
     get the initial milestone value
 
 Custom Tear Down
     return back to original milestone  FUNDERS_PANEL  ${assessmentPanelDate}  ${CLOSED_COMPETITION}
+    Disconnect from database
     the user closes the browser
 
 Get the proper milestone value from the db
     [Arguments]  ${type}
-    Connect to Database    @{database}
     ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${CLOSED_COMPETITION}' AND type='${type}';
     ${result} =  get from list  ${result}  0
     ${milestone} =  get from list  ${result}  0
@@ -310,7 +311,6 @@ Get the proper milestone value from the db
 
 return back to original milestone
     [Arguments]  ${type}  ${date}  ${competitionId}
-    Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `type`='${type}' AND `competition_id`='${competitionId}'
 
 we are moving the milestone to yesterday
@@ -325,7 +325,6 @@ we are moving the milestone to tomorrow
 
 update the database
     [Arguments]  ${date}  ${type}  ${competitionId}
-    Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `type`='${type}' AND `competition_id`='${competitionId}'
 
 get the initial milestone value
