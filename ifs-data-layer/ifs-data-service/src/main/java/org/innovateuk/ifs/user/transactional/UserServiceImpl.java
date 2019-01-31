@@ -189,12 +189,15 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     private ServiceResult<Void> updateUserEmail(User existingUser, String emailToUpdate) {
-        LOG.info("Updated email from  " + existingUser + " to " + emailToUpdate);
         userInviteRepository.findByEmail(existingUser.getEmail()).forEach(invite -> invite.setEmail(emailToUpdate));
         existingUser.setEmail(emailToUpdate);
         userRepository.save(existingUser);
         return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
-                .andOnSuccessReturnVoid();
+                .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate));
+    }
+
+    private void logEmailChange(String oldEmail, String newEmail){
+        LOG.info("Updated email from  " + oldEmail + " to " + newEmail);
     }
 
     private String getRandomHash() {
