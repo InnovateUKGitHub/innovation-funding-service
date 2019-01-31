@@ -29,6 +29,7 @@ Status is updated after editing a section
     And the user navigates to the summary page of the Robot test application
     Then the user should not see the element    jQuery = button:contains("Economic benefit") *:contains("Complete")
 
+*** Keywords ***
 Custom suite setup
     log in and create new application if there is not one already  Robot test application
     Connect to database  @{database}
