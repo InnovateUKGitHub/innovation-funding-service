@@ -337,6 +337,28 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         verify(projectRestService).handleProjectOffline(project.getId());
     }
 
+    @Test
+    public void completeProjectOffline() throws Exception {
+        long competitionId = 1L;
+        long applicationId = 3L;
+        ProjectResource project = newProjectResource()
+                .withApplication(applicationId)
+                .build();
+
+        setLoggedInUser(newUserResource()
+                .withRolesGlobal(singletonList(IFS_ADMINISTRATOR))
+                .build());
+
+        when(projectRestService.completeProjectOffline(project.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + project.getId() + "/complete-offline"))
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/details", competitionId, project.getId())))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+
+        verify(projectRestService).completeProjectOffline(project.getId());
+    }
+
     private  List<ProjectUserResource> buildProjectUsers(OrganisationResource leadOrganisation, OrganisationResource partnerOrganisation) {
 
         ProjectUserResource leadPartnerProjectUser = newProjectUserResource().
