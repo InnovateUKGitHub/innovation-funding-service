@@ -46,8 +46,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -712,7 +711,24 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
 
         assertTrue(result.isSuccess());
-        assertTrue(user.getEmail().equals("new@gmail.com"));
+        assertEquals("new@gmail.com", user.getEmail());
+    }
+
+    @Test
+    public void updateEmailForNoInviteUsers() {
+
+        User user = newUser().build();
+        String updateEmail = "new@gmail.com";
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(emptyList());
+        user.setEmail(updateEmail);
+        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceSuccess("uid"));
+
+        ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
+
+        assertTrue(result.isSuccess());
+        assertEquals("new@gmail.com", user.getEmail());
     }
 
     private User createUserExpectations(Long userId, Set<Long> termsAndConditionsIds) {
