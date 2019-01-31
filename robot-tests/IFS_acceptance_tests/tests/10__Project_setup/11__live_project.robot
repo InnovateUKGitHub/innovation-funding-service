@@ -10,10 +10,10 @@ Project dashboard shows message that the project is live
     [Tags]  HappyPath
     Given log in as a different user                 ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     When the user navigates to the page              ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    Then the user should see the text in the page    The project is live, you can review progress at
+    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
     When log in as a different user                  ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     And the user navigates to the page               ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    Then the user should see the text in the page    The project is live, you can review progress at
+    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
 
 Status indicators should not show
     [Documentation]    INFUND-6376
@@ -79,10 +79,10 @@ Project dashboard shows message that the project is live for industrial partner
     [Tags]  HappyPath
     Given log in as a different user                 ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     When the user navigates to the page              ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    Then the user should see the text in the page    The project is live, you can review progress at
+    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
     When log in as a different user                  ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     And the user navigates to the page               ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    Then the user should see the text in the page    The project is live, you can review progress at
+    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
 
 Status indicators should not show for industrial partner
     [Documentation]    INFUND-6376
@@ -148,10 +148,10 @@ Project dashboard shows message that the project is live for academic partner
     [Tags]  HappyPath
     Given log in as a different user                 ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
     When the user navigates to the page              ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    Then the user should see the text in the page    The project is live, you can review progress at
+    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
     When log in as a different user                  ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     And the user navigates to the page               ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    Then the user should see the text in the page    The project is live, you can review progress at
+    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
 
 Status indicators should not show for academic partner
     [Documentation]    INFUND-6376

@@ -182,7 +182,7 @@ Administrator can navigate to edit page to edit the internal user details
     [Tags]
     [Setup]  the user navigates to the View internal user details  New Administrator  active
     Given the user clicks the button/link         link = Edit
-    And the user should see the text in the page  Edit internal user details
+    And the user should see the element           jQuery = h1:contains("Edit internal user details")
     And the user should see the element           css = #firstName[value = "New"]
     And the user should see the element           css = #lastName[value = "Administrator"]
     And the user should see the element           jQuery = dt:contains("Email address") ~ dd:contains("ifs.innovationLead")
@@ -231,7 +231,7 @@ The internal user can login with his new role and sees no competitions assigned
     [Documentation]  IFS-1305  IFS-1308
     [Tags]  InnovationLead
     Given the invited user logs in
-    Then the user should see the text in the page  There are no competitions assigned to you.
+    Then the user should see the element           jQuery = p:contains("There are no competitions assigned to you.")
     And the user clicks the button/link            css = #section-4 a  #Project setup tab
 
 Administrator is able to disable internal users

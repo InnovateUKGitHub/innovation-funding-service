@@ -153,7 +153,7 @@ Project Finance user can view academic Jes form
     # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
     Given the user navigates to the page             ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link             css = a.eligibility-1
-    Then the user should see the text in the page    Download Je-S form
+    Then the user should see the element             jQuery = h3:contains("Download Je-S form:")
     When the user opens the link in new window       jes-form104.pdf
     Then the user should not see an error in the page
     And the user closes the last opened tab
@@ -167,7 +167,7 @@ Project finance can see the within limit research participation level
     And the user should see the text in the element    css = .list-eligibility dd:nth-of-type(1)    100 %
     And the user should see the text in the element    css = .list-eligibility dt:nth-of-type(2)    Current research participation
     And the user should see the text in the element    css = .list-eligibility dd:nth-of-type(2)    0.25 %
-    And the user should see the text in the page       The research participation levels of this project are within the required range.
+    And the user should see the element                jQuery = .success-alert:contains("The research participation levels of this project are within the required range.")
     When the user clicks the button/link               link = Finance checks
     And the user should not see the text in the page   The research participation levels of this project are within the required range.
 
@@ -179,13 +179,13 @@ Proj finance can see the maximum research participation level
     #TODO IFS-1134:    And the user should see the text in the element    css = .list-eligibility dd:nth-of-type(1)    50 %
     #TODO IFS-1134:    And the user should see the text in the element    css = .list-eligibility dt:nth-of-type(2)    Current research participation
     #TODO IFS-1134:    And the user should see the text in the element    css = .list-eligibility dd:nth-of-type(2)    57.34 %
-    #TODO IFS-1134:    And the user should see the text in the page       Maximum research participation exceeded
+    #TODO IFS-1134:    And the user should see the element                jQuery = .success-alert:contains("Maximum research participation exceeded")
     When the user clicks the button/link    link = View finances
     #TODO IFS-1134:    Then the user should see the text in the element   css = .list-eligibility dt:nth-of-type(1)   Maximum research participation
     #TODO IFS-1134:    And the user should see the text in the element    css = .list-eligibility dd:nth-of-type(1)    50 %
     #TODO IFS-1134:    And the user should see the text in the element    css = .list-eligibility dt:nth-of-type(2)    Current research participation
     #TODO IFS-1134:    And the user should see the text in the element    css = .list-eligibility dd:nth-of-type(2)    57.34 %
-    #TODO IFS-1134:    And the user should see the text in the page       Maximum research participation exceeded
+    #TODO IFS-1134:    And the user should see the element                jQuery = .success-alert:contains("Maximum research participation exceeded")
     #TODO IFS-1134:    And the user should see the text in the page       Please seek confirmation that the project is still eligible for funding.
     When the user clicks the button/link    link = Finance checks
     #TODO IFS-1134:    And the user should see the text in the page        Maximum research participation exceeded
@@ -339,8 +339,8 @@ IFS Admin user can see the viability check page for the lead partner
     [Setup]  log in as a different user     &{internal_finance_credentials}
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
-    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    And the user should see the text in the page     ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
+    Then the user should see the element    jQuery = dt:contains("Company name") ~ dd:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    And the user should see the element     jQuery = dt:contains("Company registration number") ~ dd:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}")
     And the user should see the text in the element  css = .standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}   #turnover
     And the user should see the text in the element  css = .standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}    #headcount
 
@@ -397,7 +397,7 @@ Confirming viability should show credit report info on a readonly page
     Then the user should see the element            jQuery = .button-secondary:contains("Return to finance checks")
     And the user should not see the element         id = rag-rating
     And the user should not see the checkbox        confirmViabilityChecked
-    And the user should see the text in the page    A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
+    And the user should see the element             jQuery = label:contains("A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.")
     And the user should see that the checkbox is disabled    creditReportConfirmed
 
 Confirming viability should update on the finance checks page
@@ -410,8 +410,8 @@ Project finance user can see the viability checks for the industrial partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-7578
     [Tags]
     When the user clicks the button/link               jQuery = table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
-    Then the user should see the text in the page      ${organisationLudlowName}
-    And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}
+    Then the user should see the element               jQuery = dt:contains("Company name") ~ dd:contains("${organisationLudlowName}")
+    And the user should see the element                jQuery = dt:contains("Company registration number") ~ dd:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}")
     And the user should see the text in the element    css = .standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}
     And the user should see the text in the element    css = .standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}
 
@@ -456,10 +456,10 @@ Confirming viability should show credit report info on a readonly page for partn
     When the user clicks the button/link            jQuery = .govuk-button:contains("Confirm viability")
     And the user clicks the button/link             name = confirm-viability    # Clicking the confirm button on the modal
     Then the user should see the element            jQuery = .button-secondary:contains("Return to finance checks")
-    And the user should see the text in the page    The partner's finance viability has been approved by Lee Bowman, ${today}
+    And the user should see the element             jQuery = .success-alert:contains("The partner's finance viability has been approved by Lee Bowman, ${today}")
     And the user should not see the element         id = rag-rating
     And the user should not see the checkbox        confirmViabilityChecked
-    And the user should see the text in the page    A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
+    And the user should see the element             jQuery = label:contains("A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.")
     And the user should see that the checkbox is disabled    creditReportConfirmed
 
 Confirming viability should update on the finance checks page for partner
@@ -482,7 +482,7 @@ Project finance user can see the Eligibility check page for the lead partner
     [Documentation]    INFUND-4823
     [Tags]
     When the user clicks the button/link    jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # clicking the review button for the lead partner
-    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    Then the user should see the element    jQuery = h1:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
 
 Project finance user can see the lead partner's information about eligibility
     [Documentation]    INFUND-4832
@@ -621,7 +621,7 @@ Confirming eligibility should show info on a readonly page
     When the user clicks the button/link            jQuery = .govuk-button:contains("Approve eligible costs")
     And the user clicks the button/link             name = confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element            jQuery = .button-secondary:contains("Return to finance checks")
-    And the user should see the text in the page    The partner's finance eligibility has been approved by Lee Bowman, ${today}
+    And the user should see the element             jQuery = .success-alert:contains("The partner's finance eligibility has been approved by Lee Bowman, ${today}")
     And the user should not see the element         id = rag-rating
     And the user should not see the checkbox        project-eligible
 
@@ -656,7 +656,7 @@ Project finance user can see the Eligibility check page for the partner
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery = table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
-    Then the user should see the text in the page  ${organisationLudlowName}
+    Then the user should see the element    jQuery = h1:contains("${organisationLudlowName}")
 
 # The below test deviates to a different project to check 0% funding for a partner
 Project finance user can see the partner's zero funding request
@@ -738,7 +738,7 @@ Project finance user can see the eligibility checks for the industrial partner
     [Tags]
     When the user clicks the button/link   link = Finance checks
     And the user clicks the button/link    jQuery = table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
-    Then the user should see the text in the page  ${organisationLudlowName}
+    Then the user should see the element   jQuery = h1:contains("${organisationLudlowName}")
 
 Checking the approve eligibility checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4839
@@ -772,7 +772,7 @@ Confirming eligibility should show info on a readonly page for partner
     When the user clicks the button/link          jQuery = .govuk-button:contains("Approve eligible costs")
     And the user clicks the button/link           name = confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element          jQuery = .button-secondary:contains("Return to finance checks")
-    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
+    And the user should see the element           jQuery = .success-alert:contains("The partner's finance eligibility has been approved by Lee Bowman, ${today}")
     And the user should not see the element       id = rag-rating
     And the user should not see the checkbox      project-eligible
 
@@ -815,12 +815,12 @@ Project finance can approve academic eligibility
     [Documentation]    INFUND-4428
     [Tags]
     When the user clicks the button/link            jQuery = table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
-    Then the user should see the text in the page   Je-S Form overview
+    Then the user should see the element            jQuery = h2:contains("Je-S Form overview")
     When the user selects the checkbox              project-eligible
     And the user selects the option from the drop-down menu    Green    id = rag-rating
     And the user clicks the button/link             jQuery = .govuk-button:contains("Approve eligible costs")
     And the user clicks the button/link             name = confirm-eligibility    # Clicking the confirm button on the modal
-    Then the user should see the text in the page   The partner's finance eligibility has been approved by Lee Bowman, ${today}
+    Then the user should see the element            jQuery = .success-alert:contains("The partner's finance eligibility has been approved by Lee Bowman, ${today}")
     And the user should not see the element         id = rag-rating
     And the user should not see the checkbox        project-eligible
     And the user clicks the button/link             link = Finance checks
