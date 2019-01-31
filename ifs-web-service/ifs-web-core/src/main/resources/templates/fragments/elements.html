@@ -35,7 +35,8 @@
                 <li th:unless="${hideDashboardLink}"
                     class="govuk-header__navigation-item"
                     th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, userDashboardLink)} ? 'govuk-header__navigation-item--active'">
-                    <a th:href="${userDashboardLink}"
+                    <a id="dashboard-navigation-link"
+                       th:href="${userDashboardLink}"
                        class="govuk-header__link">Dashboard</a>
                 </li>
                 <li th:unless="${hideDashboardLink} or ${#strings.isEmpty(userProfileLink)}"

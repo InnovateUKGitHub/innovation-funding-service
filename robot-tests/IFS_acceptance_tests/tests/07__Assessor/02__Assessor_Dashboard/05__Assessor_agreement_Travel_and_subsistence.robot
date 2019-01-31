@@ -24,7 +24,7 @@ Travel and subsistence rates
     And the user should see the element    jQuery = h2:contains("Public transport")
     And the user should see the element    jQuery = h2:contains("Mileage rates")
     And the user should see the element    jQuery = p:contains("Please make sure your travel claims, receipts and tickets are all submitted.")
-    [Teardown]   the user clicks the button/link    link = Assessor dashboard
+    [Teardown]   the user clicks the button/link    link = ${ASSESSOR_DASHBOARD_TITLE}
 
 Cancel returns you back to the dashboard
     [Documentation]    INFUND-8009
@@ -32,14 +32,14 @@ Cancel returns you back to the dashboard
     Given The user should see the element                     link = your assessor agreement    #his checks the alert message on the top of the page
     And the user clicks the button/link                       jQuery = a:contains("your assessor agreement")
     When the user clicks the button/link                      jQuery = a:contains("Cancel")
-    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
     [Teardown]    the user clicks the button/link             jQuery = a:contains("your assessor agreement")
 
 Back button takes you to the previous page
     [Documentation]    INFUND-8009
     [Tags]
-    Given the user clicks the button/link                     link = Assessor dashboard
-    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    Given the user clicks the button/link                     link = ${ASSESSOR_DASHBOARD_TITLE}
+    Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
     [Teardown]    the user clicks the button/link             jQuery = a:contains("your assessor agreement")
 
 Assessor agreement
@@ -58,8 +58,8 @@ Client-side validations and Submit
     Given the user navigates to the page                      ${Server}/assessment/profile/agreement
     When the user selects the checkbox                        agreesToTerms1
     And the user should not see an error in the page
-    And the user clicks the button/link                       jQuery = button:contains("Save and return to assessor dashboard")
-    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    And the user clicks the button/link                       jQuery = button:contains("Save and return to assessments")
+    Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
     And The user should not see the element                   jQuery = .message-alert a:contains('your assessor agreement')    #his checks the alert message on the top od the page
 
 Agreement Confirmation

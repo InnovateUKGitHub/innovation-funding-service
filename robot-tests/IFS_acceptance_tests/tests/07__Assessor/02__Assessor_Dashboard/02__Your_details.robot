@@ -15,8 +15,8 @@ Cancel button returns to read only view
 Back button returns to assessor dashboard
     [Documentation]    INFUND-8009
     [Tags]
-    Given the user clicks the button/link                   link = Assessor dashboard
-    Then the user should be redirected to the correct page  ${assessor_dashboard_url}
+    Given the user clicks the button/link                   link = ${ASSESSOR_DASHBOARD_TITLE}
+    Then the user should be redirected to the correct page  ${ASSESSOR_DASHBOARD_URL}
     [Teardown]    user opens the edit details form
 
 Back button from edit returns to read only view
@@ -55,9 +55,8 @@ Valid Profile Update
 *** Keywords ***
 Custom Suite Setup
    the assessor logs-in
-   ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Select a dashboard")
-   Run Keyword If   '${status}' == 'PASS'  Run keywords    the user selects the radio button    selectedRole   ASSESSOR
-   ...                              AND    the user clicks the button/link   css = .govuk-button[type="submit"]   #Continue
+   ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Dashboard")
+   Run Keyword If   '${status}' == 'PASS'  Run keyword   the user clicks the button/link  id = dashboard-link-ASSESSOR
    User opens the edit details form
 
 the assessor updates profile details

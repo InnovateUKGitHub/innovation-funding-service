@@ -1,0 +1,47 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+
+  .card {
+    display: flex;
+    flex-direction: column;
+
+    margin: 0 20px 20px 0;
+    padding: 20px;
+    min-height: 140px;
+    width: 100%;
+
+    text-decoration: none;
+    border-top: 5px solid govuk-colour("blue");
+    background: govuk-colour("grey-4");
+
+    h2 {
+      text-decoration: underline;
+      color: govuk-colour("blue");
+    }
+
+    &:hover,
+    &:focus {
+      border-color: lighten(govuk-colour("blue"), 15%);
+      background-color: govuk-colour("blue");
+
+      h2 {
+        color: white;
+      }
+
+      .govuk-body {
+        color: white;
+      }
+    }
+
+    &:focus {
+      outline: 3px solid #ffbf47;
+      outline-offset: 0;
+    }
+  }
+  @media (min-width: 40.0625em) {
+    .card {
+      width: 25%
+    }
+  }
+}
