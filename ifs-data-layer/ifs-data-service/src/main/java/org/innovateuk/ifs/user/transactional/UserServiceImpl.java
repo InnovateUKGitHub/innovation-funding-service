@@ -24,6 +24,8 @@ import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
 import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -53,6 +55,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class UserServiceImpl extends UserTransactionalService implements UserService {
+
+    private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
+
     private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     public enum Notifications {
@@ -188,7 +193,11 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUser.setEmail(emailToUpdate);
         userRepository.save(existingUser);
         return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
-                .andOnSuccessReturnVoid();
+                .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate));
+    }
+
+    private void logEmailChange(String oldEmail, String newEmail){
+        LOG.info("Updated email from  " + oldEmail + " to " + newEmail);
     }
 
     private String getRandomHash() {
