@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{/applicant/dashboard}, currentCompetition=${model.currentCompetition}"></th:block>
+    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/applicant/dashboard}, currentCompetition=${model.currentCompetition}"></th:block>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.currentCompetition})" />
@@ -40,8 +40,13 @@
                 <div th:include="fragments/elements :: progress-indicator"
                      th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="govuk-!-margin-top-6"/>
             </div>
-            <div class="govuk-grid-column-one-half">
-                <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the competition terms and conditions</a>
+            <div class="govuk-grid-column-one-half" th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+                <th:block th:if="${procurementCompetition}">
+                    <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link govuk-!-font-size-19">View the draft contract</a> (opens in new window).</p>
+                </th:block>
+                <th:block th:unless="${procurementCompetition}">
+                    <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the competition terms and conditions</a>
+                </th:block>
             </div>
         </div>
         <div class="govuk-!-margin-bottom-6">

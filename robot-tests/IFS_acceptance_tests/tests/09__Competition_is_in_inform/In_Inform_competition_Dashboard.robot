@@ -159,7 +159,7 @@ Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
     [Tags]
     Given the user clicks the button/link    jQuery = .govuk-back-link:contains("Dashboard")
-    Then the user should see the element     jQuery = h1:contains("Dashboard")
+    Then the user should see the element     jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 *** Keywords ***
 Custom Suite Setup

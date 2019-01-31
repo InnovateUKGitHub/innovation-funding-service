@@ -39,7 +39,7 @@ Comp Admin starts a new Competition
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page           ${CA_UpcomingComp}
     When the user clicks the button/link           jQuery = .govuk-button:contains("Create competition")
-    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2
+    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
@@ -74,7 +74,7 @@ Comp admin completes ths competition setup
 Competition is Open to Applications
     [Documentation]    INFUND-6393
     [Tags]  MySQL  HappyPath
-    The competitions date changes so it is now Open  ${compWithoutGrowth}
+    Change the open date of the Competition in the database to one day before  ${compWithoutGrowth}
 
 Create new Application for this Competition
     [Tags]  HappyPath
@@ -139,7 +139,7 @@ Once the project growth table is selected
     Then the user clicks the button/link                 css = button[type="submit"]
     And the user navigates to the page                   ${CA_UpcomingComp}
     Then the user should see the element                 jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
-    [Teardown]  The competitions date changes so it is now Open  ${compWithGrowth}
+    [Teardown]  Change the open date of the Competition in the database to one day before  ${compWithGrowth}
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
@@ -205,7 +205,7 @@ The Lead applicant is able to edit and re-submit when no
 Funding subsection opens when Appl details and organisation info are provided
     [Documentation]    INFUND-6895
     [Tags]
-    Given the user navigates to the page    ${dashboard_url}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link     link = ${applicationWithoutGrowth}
     When the user should see the element    jQuery = li:contains("Application details") > .task-status-complete
     And the user clicks the button/link     link = Your finances
@@ -271,7 +271,7 @@ The Lead Applicant is able to edit and re-submit when yes
 Lead applicant can see all innovation areas
     [Documentation]  IFS-40
     [Tags]
-    Given the user navigates to the page         ${DASHBOARD_URL}
+    Given the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link          jQuery = a:contains('Untitled application'):last
     And the user clicks the button/link          link = Application details
     #The fact that the link is present means that the innovation area is not pre-defined
@@ -440,12 +440,12 @@ the user can edit resubmit and read only of the organisation
 the lead applicant invites an existing user
     [Arguments]    ${comp_title}    ${EMAIL_INVITED}
     log in as a different user            &{lead_applicant_credentials}
-    the user navigates to the page        ${dashboard_url}
+    the user navigates to the page        ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link       jquery = .in-progress a:contains("${applicationWithGrowth}")
     the user fills in the inviting steps no edit  ${EMAIL_INVITED}
 
 the user navigates to the growth table finances
-    the user navigates to the page   ${DASHBOARD_URL}
+    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  jQuery = .in-progress a:contains("Untitled application"):last
     the user clicks the button/link  link = Your finances
 

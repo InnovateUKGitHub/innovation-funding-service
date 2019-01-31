@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.error.ErrorHolder;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -48,6 +49,11 @@ public class ServiceFailure implements ErrorHolder {
 
     public Throwable getCause() {
         return cause;
+    }
+
+    public String toDisplayString() {
+        return (getCause() == null ? "" : getCause().getMessage() + " ") +
+                getErrors().stream().map(Error::getDisplayString).collect(Collectors.joining(","));
     }
 
     @Override

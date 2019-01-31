@@ -131,7 +131,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                         "applicationName", application.getName(),
                         "applicationId", application.getId(),
                         "competitionName", application.getCompetition().getName(),
-                        "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
+                        "dashboardUrl", webBaseUrl));
 
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }

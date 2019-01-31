@@ -209,7 +209,7 @@ public class ApplicationSectionController {
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
 
         ProcessRoleResource arbitraryProcessRole = simpleFindFirstMandatory(processRoles, pr ->
-                pr.getOrganisationId().equals(applicantOrganisationId) && APPLICANT_AND_COLLABORATOR_ROLES.contains(pr.getRole()));
+                APPLICANT_AND_COLLABORATOR_ROLES.contains(pr.getRole()) && pr.getOrganisationId().equals(applicantOrganisationId));
 
         return applicantRestService.getSection(arbitraryProcessRole.getUser(), applicationId, sectionId);
     }

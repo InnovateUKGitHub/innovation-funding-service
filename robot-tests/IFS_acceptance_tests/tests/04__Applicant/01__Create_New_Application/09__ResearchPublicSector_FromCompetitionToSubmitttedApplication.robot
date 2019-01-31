@@ -33,17 +33,10 @@ Comp Admin Creates Competitions where Research can lead
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
     Then The competition admin creates a competition for  ${ACADEMIC_TYPE_ID}  ${compResearch}  Research
 
-Requesting the id of this Competition
-    [Documentation]  IFS-182
-    ...   retrieving the id of the competition so that we can use it in urls
-    [Tags]  MySQL  HappyPath
-    ${reseachCompId} =  get comp id from comp title  ${compResearch}
-    Set suite variable  ${reseachCompId}
-
 The Applicant is able to apply to the competition once is Open and see the correct Questions
     [Documentation]  IFS-182 IFS-2832  IFS-4046
     [Tags]  MySQL  HappyPath
-    [Setup]  the competition moves to Open state  ${reseachCompId}
+    [Setup]  Change the open date of the Competition in the database to one day before  ${compResearch}
     Given log in as a different user              &{collaborator2_credentials}
     And logged in user applies to competition research     ${compResearch}  2
     Then the user should see the element          jQuery = li:contains("${customQuestion}")
@@ -95,7 +88,7 @@ The competition admin creates a competition for
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}  2
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}  2  GRANT
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility                    ${orgType}  1  true  collaborative     # 1 means 30%
@@ -123,7 +116,7 @@ the user removes some of the Project details questions
     the user should not see the element         jQuery = li:contains("Public description")
 
 user is not able to submit his application as he exceeds research participation
-    the user navigates to the page   ${dashboard_url}
+    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  link = ${researchLeadApp}
     the user clicks the button/link  link = Review and submit
     the user should see the element  jQuery = button:disabled:contains("Submit application")

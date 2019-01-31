@@ -9,7 +9,7 @@ Resource          ../../../../resources/defaultResources.robot
 Mark as complete is impossible for empty questions
     [Documentation]    INFUND-406
     [Tags]
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link     link = Robot test application
     And the user clicks the button/link     link = Public description
     When the "Project Summary" question is empty

@@ -23,28 +23,13 @@ Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
     [Tags]
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
-    And the user navigates to the page             ${CA_UpcomingComp}
-    When the user clicks the button/link           link = Create competition
-    Then the user fills in the CS Initial details  ${ATIcompetitionTitle}  ${month}  ${nextyear}  Aerospace Technology Institute  2
-    And the user selects the Terms and Conditions
-    And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${business_type_id}  1  true  collaborative  # 1 means 30%
+    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  2  GRANT  project-setup-completion-stage  yes  1  true  collaborative
     And user fills in funding overide
-    And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
-    And the user marks the application as done     yes  ${compType_Programme}
-    And the user fills in the CS Assessors
-    And the user fills in the CS Documents in other projects
-    When the user clicks the button/link           link = Public content
-    Then the user fills in the Public content and publishes  ATI
-    When the user clicks the button/link           link = Return to setup overview
-    Then the user should see the element           jQuery = div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link           jQuery = a:contains("Complete")
-    Then the user clicks the button/link           css = button[type = "submit"]
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
     [Tags]  MySQL
-    When the competition is open                                 ${ATIcompetitionTitle}
+    When Change the open date of the Competition in the database to one day before                                 ${ATIcompetitionTitle}
     And Log in as a different user            &{lead_applicant_credentials}
     Then logged in user applies to competition                  ${ATIcompetitionTitle}  1
 
@@ -72,11 +57,11 @@ Invite a collaborator and check the application can the be submitted
 Moving ATI Competition to Project Setup
     [Documentation]  IFS-2332
     [Tags]
-    [Setup]  Requesting the ID of this Competition
+    [Setup]  Get competitions id and set it as suite variable  ${ATIcompetitionTitle}
     When Log in as a different user    &{internal_finance_credentials}
-    Then moving competition to Closed                  ${atiCompId}
-    And making the application a successful project    ${atiCompId}  ${ATIapplicationTitle}
-    And moving competition to Project Setup            ${atiCompId}
+    Then moving competition to Closed                  ${competitionId}
+    And making the application a successful project    ${competitionId}  ${ATIapplicationTitle}
+    And moving competition to Project Setup            ${competitionId}
 
 Applicant completes Project Details
     [Documentation]  IFS-2332
@@ -101,15 +86,13 @@ Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
 
-Requesting the ID of this Competition
-    ${atiCompId} =  get comp id from comp title  ${ATIcompetitionTitle}
-    Set suite variable   ${atiCompId}
-
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${ATIapplicationTitle}
     Set suite variable    ${ProjectID}
 
 User fills in funding overide
+    the user clicks the button/link   link = ${ATIcompetitionTitle}
+    the user clicks the button/link   link = View and update competition setup
     the user clicks the button/link   link = Eligibility
     the user clicks the button/link   css = .govuk-button[type=submit]
     the user clicks the button twice  css = label[for="comp-overrideFundingRules-yes"]
@@ -117,6 +100,8 @@ User fills in funding overide
     the user clicks the button/link   jQuery = button:contains("Done")
     the user should see the element   jQuery = dt:contains("Funding level") ~ dd:contains("100%")
     the user clicks the button/link   link = Competition setup
+    the user clicks the button/link   jQuery = a:contains("Complete")
+    the user clicks the button/link   css = button[type="submit"]
 
 the user checks the override value is applied
     the user clicks the button/link     link = Your finances
