@@ -98,14 +98,9 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "The System Maintenance user can update any user's email address")
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "The System Maintenance user can update any external user's email address")
     public boolean systemMaintenanceUserCanUpdateUsersEmailAddress(UserResource userToUpdate, UserResource user) {
-        return isSystemMaintenanceUser(user);
-    }
-
-    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "Users cannot update any internal user's email address")
-    public boolean usersCannotUpdateInternalUsersEmailAddress(UserResource userToUpdate, UserResource user) {
-        return !isInternal(userToUpdate);
+        return isSystemMaintenanceUser(user) && !isInternal(userToUpdate);
     }
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
