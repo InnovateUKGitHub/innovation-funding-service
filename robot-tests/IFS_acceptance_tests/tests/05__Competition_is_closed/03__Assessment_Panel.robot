@@ -176,7 +176,7 @@ Assessor tries to accept expired invitation
     [Setup]  get the initial milestone value
     Given we are moving the milestone to yesterday         ASSESSMENT_PANEL  ${CLOSED_COMPETITION}
     When the user reads his email and clicks the link      ${assessor_riley_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
-    Then the user should see the text in the page          This invitation is now closed
+    Then the user should see the element                   jQuery = h1:contains("This invitation is now closed")
     [Teardown]  we are moving the milestone to tomorrow    ASSESSMENT_PANEL  ${CLOSED_COMPETITION}
 
 Assign application link decativated if competition is in close state

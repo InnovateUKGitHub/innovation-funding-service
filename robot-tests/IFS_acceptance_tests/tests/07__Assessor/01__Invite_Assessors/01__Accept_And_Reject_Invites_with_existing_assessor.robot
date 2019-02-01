@@ -38,7 +38,6 @@ Resource          ../Assessor_Commons.robot
 ${Invitation_existing_assessor1}           ${server}/assessment/invite/competition/dcc0d48a-ceae-40e8-be2a-6fd1708bd9b7
 ${Invitation_for_upcoming_comp_assessor1}  ${server}/assessment/invite/competition/1ec7d388-3639-44a9-ae62-16ad991dc92c
 ${Invitation_nonexisting_assessor2}        ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0
-${ASSESSOR_DASHBOARD}                      ${server}/assessment/assessor/dashboard
 ${Correct_date_start}                      ${createApplicationOpenCompetitionAssessorAcceptsDayMonth}
 ${Correct_date_end}                        ${createApplicationOpenCompetitionAssessorDeadlineDayMonth}
 ${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_PRETTY_DATE} to ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}: Assessment period
@@ -51,7 +50,7 @@ ${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_
 Assessor dashboard contains the correct competitions
     [Documentation]    INFUND-3716  INFUND-4950  INFUND-6899
     [Tags]
-    Given the user should see the element     jQuery = h1:contains("Assessor dashboard")
+    Given the user should see the element     jQuery = h1:contains(${ASSESSOR_DASHBOARD_TITLE})
     Then The user should not see the element  jQuery = h2:contains("Competitions for assessment")
     And The user should see the element       jQuery = h2:contains("Upcoming competitions to assess") ~ ul a:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
     And The user should see the element       jQuery = h2:contains("Invitations to assess")
@@ -68,7 +67,7 @@ User can view the competition brief
     And the user should see the element         jQuery = li:contains("Competition closes")
     And the user should see the element         jQuery = .govuk-button:contains("Start new application")
     And The user closes the competition brief
-    And the user clicks the button/link         link = Assessor dashboard
+    And the user clicks the button/link         link = ${ASSESSOR_DASHBOARD_TITLE}
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107  INFUND-6455
@@ -126,11 +125,11 @@ Upcoming competition should be visible
     ...
     ...    INFUND-5001
     [Tags]
-    Given the user navigates to the page           ${ASSESSOR_DASHBOARD}
+    Given the user navigates to the page           ${ASSESSOR_DASHBOARD_URL}
     And the assessor should see the correct date
     When The user clicks the button/link           link = ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
     And the user should see the element            jQuery = p:contains("You have agreed to be an assessor for the upcoming competition '${UPCOMING_COMPETITION_TO_ASSESS_NAME}'")
-    And The user clicks the button/link            link = Assessor dashboard
+    And The user clicks the button/link            link = ${ASSESSOR_DASHBOARD_TITLE}
     Then the user should see the element           jQuery = h2:contains("Upcoming competitions to assess")
 
 The assessment period starts the comp moves to the comp for assessment
@@ -215,8 +214,8 @@ the assessor shouldn't be able to reject the accepted competition
     the assessor is unable to see the invitation
 
 The assessor is unable to see the invitation
-    The user should see the text in the page  This invitation is now closed
-    The user should see the text in the page  You have already accepted or rejected this invitation.
+    The user should see the element           jQuery = h1:contains("This invitation is now closed")
+    The user should see the element           jQuery = p:contains("You have already accepted or rejected this invitation.")
 
 the assessor should see the correct date
     ${Assessment_period_start} =    Get Text    css = .upcoming-to-assess .standard-definition-list dd:nth-child(2)

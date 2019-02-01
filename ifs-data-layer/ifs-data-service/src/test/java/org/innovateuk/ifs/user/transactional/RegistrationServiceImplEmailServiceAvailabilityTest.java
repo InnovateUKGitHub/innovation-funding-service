@@ -89,9 +89,9 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
 
                 UserResource registrationInfo = newUserResource().
                         withTitle(Title.Dr).
-                        withFirstName("Kieran").
-                        withLastName("Worth").
-                        withEmail("rollback@worth.com").
+                        withFirstName("Bob").
+                        withLastName("Spiggot").
+                        withEmail("thebspig@example.com").
                         withPassword("thebspig").
                         build();
 
