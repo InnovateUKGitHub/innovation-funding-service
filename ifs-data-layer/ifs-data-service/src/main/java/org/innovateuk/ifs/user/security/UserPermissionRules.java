@@ -229,6 +229,11 @@ public class UserPermissionRules {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
+    @PermissionRule(value = "DEACTIVATE", description = "System Maintenance can deactivate Users")
+    public boolean systemMaintenanceUserCanDeactivateUsers(UserResource userToCreate, UserResource user) {
+        return isSystemMaintenanceUser(user);
+    }
+
     @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
     public boolean ifsAdminCanReactivateUsers(UserResource userToCreate, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
