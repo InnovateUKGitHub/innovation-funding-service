@@ -10,7 +10,9 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
@@ -82,6 +84,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     @Autowired
     private PartnerOrganisationService partnerOrganisationService;
 
+    @Autowired
+    private ProjectProcessRepository projectProcessRepository;
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId, String applicationSearchString) {
         Competition competition = competitionRepository.findOne(competitionId);
@@ -123,6 +127,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
 
         ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
+        ProjectProcess process = projectProcessRepository.findOneByTargetId(project.getId());
 
         return new ProjectStatusResource(
                 project.getName(),
@@ -140,7 +145,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 getDocumentsStatus(project),
                 getGrantOfferLetterStatus(project),
                 getRoleSpecificGrantOfferLetterState(project),
-                golWorkflowHandler.isSent(project));
+                golWorkflowHandler.isSent(project),
+                process.getProcessState());
     }
 
     private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired) {
