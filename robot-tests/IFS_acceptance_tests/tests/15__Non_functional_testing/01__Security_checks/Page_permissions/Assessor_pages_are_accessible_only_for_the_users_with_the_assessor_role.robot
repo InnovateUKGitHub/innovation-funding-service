@@ -9,7 +9,7 @@ Force Tags        Assessor
 Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***
-${ASSESSOR_DASHBOARD}    ${SERVER}/assessment/assessor/dashboard
+${ASSESSOR_DASHBOARD_TITLE}    ${SERVER}/assessment/assessor/dashboard
 ${ASSESSOR_OVERVIEW}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
 ${ASSESSOR_ASSESSMENT_QUESTIONS}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/43
 ${ASSESSOR_ASSESSMENT_QUESTIONS_11}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}/question/43
@@ -27,7 +27,7 @@ Applicant can't access the assessment overview page
 Applicant can't access the assessor's dashboard page
     [Documentation]    INFUND-1683
     [Tags]
-    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    ${403_error_message}
+    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD_TITLE}    ${403_error_message}
 
 Applicant can't access the assessor's review application page
     [Documentation]    INFUND-1683
@@ -71,7 +71,7 @@ Second assessor shouldn't be able to access first assessor's application questio
 Guest user can't access the assessor dashboard
     [Documentation]    INFUND-1683
     [Tags]
-    When the user navigates to the page    ${ASSESSOR_DASHBOARD}
+    When the user navigates to the page    ${ASSESSOR_DASHBOARD_TITLE}
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Guest user can't access the assessment's overview page

@@ -11,7 +11,7 @@ Resource          ../../../resources/defaultResources.robot
 Milestone date for application in progress is visible
     [Documentation]  INFUND-37 INFUND-5485
     [Tags]  HappyPath
-    When The user navigates to the page  ${DASHBOARD_URL}
+    When The user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     Then the user should see the date for submission of application
 
 Number of days remaining until submission should be correct

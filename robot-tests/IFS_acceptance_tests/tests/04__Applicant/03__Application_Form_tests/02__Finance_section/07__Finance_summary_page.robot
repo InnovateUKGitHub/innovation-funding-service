@@ -86,7 +86,7 @@ Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
     [Tags]
     [Setup]  log in as a different user           &{lead_applicant_credentials}
-    When the user navigates to the page           ${DASHBOARD_URL}
+    When the user navigates to the page           ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link           link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
     And the user clicks the button/link           link = Finances overview
     Then the red warning should be visible
@@ -94,7 +94,7 @@ Red warning should show when the finances are incomplete
 Green check should show when the finances are complete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
     [Tags]
-    When the user navigates to the page   ${DASHBOARD_URL}
+    When the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
     When the user clicks the button/link  link = Finances overview
     Then Green check should be visible
@@ -137,7 +137,7 @@ Alert shows If the academic research participation is too high
     And log in as a different user                 &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
     Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
-    And the user navigates to the page             ${DASHBOARD_URL}
+    And the user navigates to the page             ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Academic robot test application
     And the user clicks the button/link            link = Review and submit
     And the user clicks the button/link            jQuery = button:contains("Finances summary")
@@ -149,7 +149,7 @@ Alert should not show If research participation is below the maximum level
     When lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
     Then the user should not see the element       jQuery = .warning-alert:contains("The participation levels of this project are not within the required range")
-    And the user navigates to the page             ${DASHBOARD_URL}
+    And the user navigates to the page             ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Academic robot test application
     And the user clicks the button/link            link = Review and submit
     And the user clicks the button/link            jquery = button:contains("Finances summary")

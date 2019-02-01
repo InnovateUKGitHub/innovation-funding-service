@@ -89,7 +89,7 @@ Research and technology organisations (RTO) search (accept invitation flow with 
     And the user should be redirected to the correct page                        ${REGISTRATION_VERIFIED}
     When the user clicks the button/link                                         jQuery = .govuk-button:contains("Sign in")
     And Logging in and Error Checking                                            ${test_mailbox_one}+invite1@gmail.com    ${correct_password}
-    Then the user should be redirected to the correct page                       ${DASHBOARD_URL}
+    Then the user should be redirected to the correct page                       ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                                          link = Climate science the history of Greenland's ice
     And the user clicks the button/link                                          link = Your finances
     And the user should see the element                                          jQuery = h1:contains("Your finances")
@@ -108,7 +108,7 @@ User is able to accept new terms and conditions
     Given the user selects the checkbox   agree
     And the user cannot see a validation error in the page
     When the user clicks the button/link  css = .govuk-button[type="submit"]
-    Then the user should see the element  jQuery = h1:contains("Dashboard")
+    Then the user should see the element  jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 *** Keywords ***
 Custom Suite Setup

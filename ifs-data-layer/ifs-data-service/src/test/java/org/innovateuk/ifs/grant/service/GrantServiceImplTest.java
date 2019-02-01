@@ -3,6 +3,7 @@ package org.innovateuk.ifs.grant.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
@@ -13,6 +14,7 @@ import org.mockito.Spy;
 
 import java.util.function.Predicate;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -51,7 +53,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
     }
 
     @Test
-    public void testSend() {
+    public void sendReadyProjects() {
         Project project = newProject()
                 .withId(1L)
                 .withDuration(12L)
@@ -65,7 +67,10 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         when(projectRepository.findOneByApplicationId(applicationId)).thenReturn(project);
         when(grantMapper.mapToGrant(any())).thenReturn(new Grant().id(APPLICATION_ID));
         when(grantEndpoint.send(any())).thenReturn(serviceSuccess());
-        ServiceResult<Void> result = service.sendProject(applicationId);
+        GrantProcess process = new GrantProcess();
+        process.setApplicationId(APPLICATION_ID);
+        when(grantProcessService.findReadyToSend()).thenReturn(asList(process));
+        ServiceResult<Void> result = service.sendReadyProjects();
         assertThat(result.isSuccess(), equalTo(true));
         verify(grantEndpoint).send(LambdaMatcher.createLambdaMatcher(matchGrant(project)));
     }

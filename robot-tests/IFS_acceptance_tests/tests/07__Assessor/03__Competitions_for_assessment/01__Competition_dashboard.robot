@@ -28,7 +28,7 @@ User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
     [Tags]
     When the user navigates to the page              ${server}/assessment/${WITHDRAWN_ASSESSMENT}/assignment
-    Then the user should see the text in the page    Invitation withdrawn
+    Then the user should see the element             jQuery = h1:contains("Invitation withdrawn")
     [Teardown]    the user clicks the button/link    jQuery = #navigation a:contains(Dashboard)
 
 Competition link should navigate to the applications
@@ -56,7 +56,7 @@ User can view the competition brief
     When The user opens the link in new window           View competition brief
     Then the user should get a competition brief window
     And the user should not see an error in the page
-    And the user should see the text in the page         ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user should see the element                  jQuery = h1:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element                  jQuery = .govuk-list li:contains("Competition opens")
     And the user should see the element                  jQuery = .govuk-list li:contains("Competition closes")
     And the user should see the element                  jQuery = .govuk-button:contains("Start new application")

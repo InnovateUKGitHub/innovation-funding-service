@@ -35,7 +35,7 @@ Large pdf uploads not allowed
     [Documentation]    INFUND-832
     [Tags]  HappyPath
     [Setup]    log in as a different user   &{lead_applicant_credentials}
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link     link = Academic robot test application
     And the user clicks the button/link     link = 5. Technical approach
     When the user uploads the file          css = .inputfile    ${too_large_pdf}
@@ -44,7 +44,7 @@ Large pdf uploads not allowed
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
     [Tags]  HappyPath
-    Given the user navigates to the page                  ${DASHBOARD_URL}
+    Given the user navigates to the page                  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                   link = Academic robot test application
     And the user clicks the button/link                   link = 5. Technical approach
     When the user uploads the file                        css = .inputfile    ${text_file}
@@ -54,7 +54,7 @@ Lead applicant can upload a pdf file
     [Documentation]    INFUND-832  IFS-2327
     [Tags]  HappyPath
     [Setup]
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link     link = Academic robot test application
     And the user clicks the button/link     link = 5. Technical approach
     Then the user uploads the file          css = .inputfile    ${5mb_pdf}
@@ -87,7 +87,7 @@ Collaborators can view a file
     [Documentation]    INFUND-2306
     [Tags]  HappyPath
     [Setup]    Log in as a different user         ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
-    Given the user navigates to the page          ${DASHBOARD_URL}
+    Given the user navigates to the page          ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link           link = Academic robot test application
     And the user clicks the button/link           link = 5. Technical approach
     And the user should see the element           link = ${5mb_pdf}
@@ -111,7 +111,7 @@ Questions can be assigned with appendices
     [Documentation]    INFUND-832  INFUND-409
     [Tags]  HappyPath
     [Setup]    Log in as a different user                   &{lead_applicant_credentials}
-    Given the user navigates to the page                    ${DASHBOARD_URL}
+    Given the user navigates to the page                    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                     link = Academic robot test application
     And the user clicks the button/link                     link = 5. Technical approach
     And the user should see the element                     link = ${5mb_pdf}
@@ -125,7 +125,7 @@ Collaborators can view a file when the question is assigned
     [Documentation]    INFUND_2720
     [Tags]
     [Setup]    Log in as a different user       ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
-    Given the user navigates to the page        ${DASHBOARD_URL}
+    Given the user navigates to the page        ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link         link = Academic robot test application
     And the user clicks the button/link         link = 5. Technical approach
     And the user should see the element         link = ${5mb_pdf}
@@ -136,7 +136,7 @@ Collaborators can view a file when the question is assigned
 Collaborator can remove a file when the question is assigned
     [Documentation]    INFUND-2720
     [Tags]
-    Given the user navigates to the page          ${DASHBOARD_URL}
+    Given the user navigates to the page          ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link           link = Academic robot test application
     And the user clicks the button/link           link = 5. Technical approach
     And the user should see the element           link = ${5mb_pdf}
@@ -146,7 +146,7 @@ Collaborator can remove a file when the question is assigned
 Collaborators can upload a file when the question is assigned
     [Documentation]    INFUND_3007
     [Tags]
-    Given the user navigates to the page           ${DASHBOARD_URL}
+    Given the user navigates to the page           ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Academic robot test application
     And the user clicks the button/link            link = 6. Innovation
     When the user should see the element           jQuery = label:contains("+ Upload")
@@ -178,14 +178,14 @@ the user can re-assign the question back to the lead applicant
 
 the user cannot see the option to upload a file on the question
     [Arguments]    ${QUESTION}
-    the user navigates to the page   ${DASHBOARD_URL}
+    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  link = Academic robot test application
     the user clicks the button/link  ${QUESTION}
     the user should not see the text in the page  Upload
 
 the user can see the option to upload a file on the question
     [Arguments]    ${QUESTION}
-    the user navigates to the page   ${DASHBOARD_URL}
+    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  link = Academic robot test application
     the user clicks the button/link  ${QUESTION}
     the user checks the Appendix guidance

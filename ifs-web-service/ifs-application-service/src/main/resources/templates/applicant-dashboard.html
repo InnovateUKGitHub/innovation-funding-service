@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Applications'" />
 </head>
 
 <body class="govuk-template__body app-dashboard">
@@ -20,7 +20,7 @@
         </div>
 
         <div class="my-applications">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='govuk-heading-l'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Applications',size='govuk-heading-l'" />
             <section th:unless="${model.projects.empty}" class="projects-in-setup">
                 <div class="progress-list">
                     <h2 class="govuk-heading-m" th:text="${model.projectSetupContainerText}"/>

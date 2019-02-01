@@ -62,7 +62,7 @@ If funding is complete. application details has a warning message
     ...
     ...    INFUND-6823
     [Tags]  HappyPath
-    Given the user navigates to the page   ${DASHBOARD_URL}
+    Given the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link    link = ${applicationName}
     When the user clicks the button/link   link = Research category
     And the user clicks the button/link    jQuery = button:contains(Edit)
@@ -138,7 +138,7 @@ the user provides invalid value as percentage then he should see the error
 
 Complete the org size section
     [Arguments]  ${applicationName}
-    the user navigates to the page                      ${DASHBOARD_URL}
+    the user navigates to the page                      ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link                     link = ${applicationName}
     the user clicks the button/link                     link = Your finances
     the user clicks the button/link                     link = Your organisation
