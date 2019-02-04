@@ -54,7 +54,7 @@ public class FormInputResponseFileUploadRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Stakeholders can can download a file for an answer for applications theyre assigned to")
     public boolean stakeholdersCanDownloadFilesInResponse(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId());
+        Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).get();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
