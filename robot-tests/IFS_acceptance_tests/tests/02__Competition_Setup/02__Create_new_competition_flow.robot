@@ -249,7 +249,7 @@ Funding information: can be edited
     And the user enters text to a text field         id = funders[0].funder    testFunder
     And the user moves focus and waits for autosave
     When the user clicks the button/link             jQuery = button:contains("Done")
-    Then the user should see the text in the page    testFunder
+    Then the user should see the element             jQUery = td:contains("testFunder")
 
 Funding information: should have a green check
     [Documentation]    INFUND-3002
@@ -262,7 +262,7 @@ Eligibility: Contain the correct options
     [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225  IFS-3287
     [Tags]  HappyPath
     Given the user clicks the button/link  link = Eligibility
-    And the user should see the text in the page    Please choose the project type.
+    And the user should see the element    jQuery = h2:contains("Please choose the project type.")
     Then the user should see the element   jQuery = label:contains("Single or Collaborative")
     When the user should see the element   jQuery = label:contains("Collaborative")
     And the user should see the element    jQuery = h2:contains("Are research categories applicable?")
@@ -321,21 +321,21 @@ Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
     [Tags]
     When the user clicks the button/link            link = Milestones
-    Then the user should see the text in the page   Select the stage at which the competition is complete for Innovate UK.
-    When The user should see the text in the page   1. Open date
-    And the user should see the text in the page    2. Briefing event
-    And the user should see the text in the page    3. Submission date
-    And the user should see the text in the page    4. Allocate assessors
-    And the user should see the text in the page    5. Assessor briefing
-    And the user should see the text in the page    6. Assessor accepts
-    And the user should see the text in the page    7. Assessor deadline
-    And the user should see the text in the page    8. Line draw
-    And the user should see the text in the page    9. Assessment panel
-    And the user should see the text in the page    10. Panel date
-    And the user should see the text in the page    11. Funders panel
-    And the user should see the text in the page    12. Notifications
-    And the user should see the text in the page    13. Release feedback
-    And the user should see the text in the page    14. Project setup
+    Then the user should see the element            jQuery = p:contains("Select the stage at which the competition is complete for Innovate UK.")
+    When the user should see the element            jQuery = li span:contains("1. Open date")
+    And the user should see the element             jQuery = li span:contains("2. Briefing event")
+    And the user should see the element             jQuery = li span:contains("3. Submission date")
+    And the user should see the element             jQuery = li span:contains("4. Allocate assessors")
+    And the user should see the element             jQuery = li span:contains("5. Assessor briefing")
+    And the user should see the element             jQuery = li span:contains("6. Assessor accepts")
+    And the user should see the element             jQuery = li span:contains("7. Assessor deadline")
+    And the user should see the element             jQuery = li span:contains("8. Line draw")
+    And the user should see the element             jQuery = li span:contains("9. Assessment panel")
+    And the user should see the element             jQuery = li span:contains("10. Panel date")
+    And the user should see the element             jQuery = li span:contains("11. Funders panel")
+    And the user should see the element             jQuery = li span:contains("12. Notifications")
+    And the user should see the element             jQuery = li span:contains("13. Release feedback")
+    And the user should see the element             jQuery = li span:contains("14. Project setup")
     And the user selects the radio button           selectedCompletionStage  project-setup-completion-stage
     And the user clicks the button/link             jQuery = button:contains("Done")
     And the pre-field date should be correct
