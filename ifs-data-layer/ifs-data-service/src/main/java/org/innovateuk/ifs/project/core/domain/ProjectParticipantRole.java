@@ -49,7 +49,7 @@ public enum ProjectParticipantRole implements ParticipantRole {
     }
 
     public boolean isMonitoringOfficer() {
-        return false;
+        return this == MONITORING_OFFICER;
     }
 
     public static ProjectParticipantRole getById(Long id) {
