@@ -713,4 +713,4 @@ the competition admin should see that their Project details aren't completed
 
 Custom suite teardown
     Close browser and delete emails
-    Discconnect from database
+    Disconnect from database
