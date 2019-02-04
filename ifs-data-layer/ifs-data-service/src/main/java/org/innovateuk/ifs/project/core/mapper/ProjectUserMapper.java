@@ -6,7 +6,6 @@ import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.domain.ProjectUserRole;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
@@ -44,7 +43,7 @@ public abstract class ProjectUserMapper extends BaseMapper<ProjectUser, ProjectU
         return object.getId();
     }
 
-    public Long map(ProjectUserRole role) {
+    public Long map(ProjectParticipantRole role) {
         if (role == null) {
             return null;
         } else {
@@ -56,7 +55,7 @@ public abstract class ProjectUserMapper extends BaseMapper<ProjectUser, ProjectU
         if (id == null) {
             return null;
         } else {
-            return ProjectUserRole.getById(id);
+            return ProjectParticipantRole.getById(id);
         }
     }
 }

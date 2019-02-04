@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
 
-import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.*;
 
 /**

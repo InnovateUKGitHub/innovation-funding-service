@@ -17,16 +17,13 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
  */
 @Entity
 @Table(name = "project_user")
-public class ProjectUser extends ProjectParticipant<ProjectUserInvite, ProjectUserRole> {
+public class ProjectUser extends ProjectParticipant<ProjectUserInvite> {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "project_role")
-    private ProjectUserRole role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invite_id", referencedColumnName = "id")
@@ -40,15 +37,9 @@ public class ProjectUser extends ProjectParticipant<ProjectUserInvite, ProjectUs
         return invite;
     }
 
-    @Override
-    public ProjectUserRole getRole() {
-        return role;
-    }
-
-    public ProjectUser(User user, Project project, ProjectUserRole role, Organisation organisation) {
-        super(user, project);
+    public ProjectUser(User user, Project project, ProjectParticipantRole role, Organisation organisation) {
+        super(user, project, role);
         this.organisation = organisation;
-        this.role = role;
     }
 
     public ProjectUser accept() {
@@ -107,7 +98,6 @@ public class ProjectUser extends ProjectParticipant<ProjectUserInvite, ProjectUs
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(organisation, that.organisation)
-                .append(role, that.role)
                 .append(invite, that.invite)
                 .isEquals();
     }
@@ -117,7 +107,6 @@ public class ProjectUser extends ProjectParticipant<ProjectUserInvite, ProjectUs
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
                 .append(organisation)
-                .append(role)
                 .append(invite)
                 .toHashCode();
     }
