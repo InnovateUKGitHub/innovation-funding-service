@@ -51,7 +51,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...
 ...               IFS-2920 Project details: Project location per partner
 Suite Setup       Custom suite setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Force Tags        Project Setup  Applicant
 Resource          PS_Common.robot
 
@@ -645,6 +645,7 @@ the user can see all finance contacts completed
 Custom suite setup
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
+    Connect to database  @{database}
 
 the invitee is able to assign himself as Finance Contact
     [Arguments]  ${email}  ${title}  ${pattern}  ${name}  ${famName}
@@ -709,3 +710,7 @@ the competition admin should see that their Project details aren't completed
     the user should see the element    jQuery = #project-details-finance tr:nth-child(1) td:nth-child(2):contains("Not yet completed")
     the user should see the element    jQuery = #project-details-finance tr:nth-child(2) td:nth-child(2):contains("Not yet completed")
     the user should see the element    jQuery = #project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
+
+Custom suite teardown
+    Close browser and delete emails
+    Discconnect from database
