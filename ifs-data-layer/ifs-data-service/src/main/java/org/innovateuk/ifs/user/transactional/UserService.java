@@ -52,4 +52,7 @@ public interface UserService {
 
     @PreAuthorize("hasPermission(#grantRoleCommand, 'GRANT_ROLE')")
     ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand);
+
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE_USER_EMAIL')")
+    ServiceResult<Void> updateEmail(long userId, String email);
 }

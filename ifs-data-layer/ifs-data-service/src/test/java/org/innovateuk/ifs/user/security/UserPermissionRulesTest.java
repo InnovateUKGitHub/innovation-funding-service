@@ -9,13 +9,11 @@ import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -111,7 +109,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         assertTrue(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, stakeholderResource));
 
         allInternalUsers.forEach(internalUser -> {
-                    assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser));
+            assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser));
         });
     }
 
@@ -595,7 +593,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void allUsersWithProjectRolesExceptMonitoringOfficersCanAccessProcessRolesWithinConsortium(){
+    public void allUsersWithProjectRolesExceptMonitoringOfficersCanAccessProcessRolesWithinConsortium() {
         final Long userId = 11L;
         final Long applicationId = 1L;
 
@@ -620,7 +618,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void allUsersWithProjectRolesCanNotAccessProcessRolesWhenNotInConsortium(){
+    public void allUsersWithProjectRolesCanNotAccessProcessRolesWhenNotInConsortium() {
         final Long userId = 11L;
         final Long applicationId = 1L;
 
@@ -654,7 +652,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void ifsAdminCanViewAnyUsersProfile(){
+    public void ifsAdminCanViewAnyUsersProfile() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(ifsAdminUser())) {
                 assertTrue(rules.ifsAdminCanViewAnyUsersProfile(newUserProfileResource().build(), user));
@@ -665,7 +663,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void ifsAdminCanEditInternalUser(){
+    public void ifsAdminCanEditInternalUser() {
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
@@ -679,7 +677,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void ifsAdminCanDeactivateUser(){
+    public void ifsAdminCanDeactivateUser() {
 
         UserResource userToDeactivate = UserResourceBuilder.newUserResource().build();
 
@@ -693,7 +691,21 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void ifsAdminCanReactivateUser(){
+    public void systemMaintenanceUserCanDeactivateUser() {
+
+        UserResource userToDeactivate = UserResourceBuilder.newUserResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(systemMaintenanceUser())) {
+                assertTrue(rules.systemMaintenanceUserCanDeactivateUsers(userToDeactivate, user));
+            } else {
+                assertFalse(rules.systemMaintenanceUserCanDeactivateUsers(userToDeactivate, user));
+            }
+        });
+    }
+
+    @Test
+    public void ifsAdminCanReactivateUser() {
 
         UserResource userToReactivate = UserResourceBuilder.newUserResource().build();
 
@@ -707,7 +719,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void internalUsersCanAccessAllUserOrganisations(){
+    public void internalUsersCanAccessAllUserOrganisations() {
 
         UserOrganisationResource userOrganisationResource = UserOrganisationResourceBuilder.newUserOrganisationResource().build();
 
@@ -716,6 +728,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 assertTrue(rules.internalUsersCanViewUserOrganisation(userOrganisationResource, user));
             } else {
                 assertFalse(rules.internalUsersCanViewUserOrganisation(userOrganisationResource, user));
+            }
+        });
+    }
+
+    @Test
+    public void systemMaintenanceUserCanUpdateExternalUserEmailAddress() {
+
+        UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(systemMaintenanceUser())) {
+                assertTrue(rules.systemMaintenanceUserCanUpdateUsersEmailAddress(userResource, user));
+            } else {
+                assertFalse(rules.systemMaintenanceUserCanUpdateUsersEmailAddress(userResource, user));
             }
         });
     }
@@ -744,6 +770,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         assertTrue(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
 
     }
+
     @Override
     protected UserPermissionRules supplyPermissionRulesUnderTest() {
         return new UserPermissionRules();
