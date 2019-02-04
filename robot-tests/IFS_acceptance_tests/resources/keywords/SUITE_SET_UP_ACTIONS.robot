@@ -180,7 +180,7 @@ invite a registered user
     the user enters text to a text field                       css=[id="applicants[0].email"]  ${EMAIL_INVITED}
     the user clicks the button/link                            jQuery=button:contains("Add organisation and invite applicants")
     the user clicks the button/link                            jQuery=button:contains("Save and return to application overview")
-    the user should see the text in the page                   Application overview
+    the user should see the element                            jQUery = h1:contains("Application overview")
     the user closes the browser
     the guest user opens the browser
 

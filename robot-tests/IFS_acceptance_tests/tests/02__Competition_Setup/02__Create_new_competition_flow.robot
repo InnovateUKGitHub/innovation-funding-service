@@ -334,8 +334,8 @@ Milestones: Page should contain the correct fields
     And the user should see the element             jQuery = li span:contains("10. Panel date")
     And the user should see the element             jQuery = li span:contains("11. Funders panel")
     And the user should see the element             jQuery = li span:contains("12. Notifications")
-    And the user should see the element             jQuery = li span:contains("13. Release feedback")
-    And the user should see the element             jQuery = li span:contains("14. Project setup")
+    And the user should see the element             jQuery = label:contains("13. Release feedback")
+    And the user should see the element             jQuery = label:contains("14. Project setup")
     And the user selects the radio button           selectedCompletionStage  project-setup-completion-stage
     And the user clicks the button/link             jQuery = button:contains("Done")
     And the pre-field date should be correct
@@ -431,7 +431,7 @@ Application: Scope
     [Tags]  HappyPath
     Given the user clicks the button/link         link = Scope
     Then the user should see the element          jQuery = h1:contains("Scope")
-    And the user should see the text in the page  You can edit this question for the applicant as well as the guidance for assessors.
+    And the user should see the element           jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
     When The user fills the empty question fields
     And The user enters text to a text field      id = question.shortTitle  Test heading
     And The user clicks the button/link           css = button[type="submit"]
@@ -461,11 +461,11 @@ Application: Project Summary
     [Tags]  HappyPath
     Given the user clicks the button/link            link = Project summary
     And the user should see the element              jQuery = h1:contains("Project summary")
-    And the user should see the text in the page     You can edit this question for the applicant as well as the guidance for assessors.
+    And the user should see the element             jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
     When The user fills the empty question fields
     And The user clicks the button/link              css = button[type="submit"]
     And the user clicks the button/link              link = Project summary
-    Then The user should see the text in the page    Project summary
+    Then the user should see the element             jQuery = h1:contains("Project summary")
     And the user checks the question fields
     [Teardown]  The user clicks the button/link      link = Application
 
@@ -647,11 +647,11 @@ Assessor: Contain the correct options
     [Setup]  the user clicks the button/link        link = ${competitionTitle}
     Given The user clicks the button/link           link = View and update competition setup
     And the user clicks the button/link             link = Assessors
-    And the user should see the text in the page    How many assessors are required for each application?
+    And the user should see the element             jQuery = h2:contains("How many assessors are required for each application?")
     Then the user should see the element            jQuery = label:contains(1)
     When the user should see the element            jQuery = label:contains(3)
     And the user should see the element             jQuery = label:contains(5)
-    And the user should see the text in the page    How much do assessors receive per application
+    And the user should see the element             jQuery = label:contains("How much do assessors receive per application?")
     And the user should see the element             id = assessorPay
 
 Assessor: Mark as Done then Edit again
@@ -856,13 +856,12 @@ the user fills the scope assessment questions
     The user clicks the button/link         id = remove-guidance-row-1
 
 the user checks the scope assessment questions
-    The user should see the text in the page        New subject
-    The user should see the text in the page        This is a justification
+    The user should see the element                 jQuery = dt:contains("New subject") ~ dd:contains("This is a justification")
     The user should not see the text in the page    One or more of the above requirements have not been satisfied.
-    The user should see the text in the page        Written feedback
-    The user should see the text in the page        Guidance for assessing scope section
-    The user should see the text in the page        Scope 'Y/N' question
-    The user should see the text in the page        Research category question
+    The user should see the element                 jQuery = dt:contains("Written feedback")
+    The user should see the element                 jQuery = p:contains("Guidance for assessing scope section")
+    The user should see the element                 jQuery = dt:contains("Scope 'Y/N' question")
+    The user should see the element                 jQuery = dt:contains("Research category question")
 
 the user should not be able to edit the scope feedback
     the user should not see the element    id = question.assessmentGuidanceTitle

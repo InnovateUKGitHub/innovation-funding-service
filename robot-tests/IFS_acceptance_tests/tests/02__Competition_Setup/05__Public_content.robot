@@ -105,7 +105,7 @@ Summary: server side validation and autosave
     [Tags]
     # Using Loan as a funding Type in order to check the ticket IFS-1969
     Given the user clicks the button/link         link = Summary
-    And the user should see the text in the page  Text entered into this section will appear in the summary tab
+    And the user should see the element           jQuery = p:contains("Text entered into this section will appear in the summary tab")
     When the user clicks the button/link          jQuery = .govuk-button:contains("Save and review")
     Then the user should see a summary error      Please enter a project size.
     And the user should see a summary error       Please enter a competition description.
@@ -151,7 +151,7 @@ Eligibility: server side validation and autosave
     [Documentation]    INFUND-6916, INFUND-7487
     [Tags]
     When the user clicks the button/link            link = Eligibility
-    And the user should see the text in the page    Text entered into this section will appear within the eligibility tab.
+    And the user should see the element             jQuery = p:contains("Text entered into this section will appear within the eligibility tab.")
     And the user clicks the button/link             jQuery = button:contains("Save and review")
     Then the user should see a summary error        Please enter content.
     And the user should see a summary error         Please enter a heading.
@@ -221,10 +221,10 @@ Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
     [Tags]
     When the user clicks the button/link           link = Dates
-    Then the user should see the text in the page  ${tomorrowMonthWord} ${nextyear}
-    And the user should see the text in the page   Competition opens
-    And the user should see the text in the page   Submission deadline, competition closed.
-    And the user should see the text in the page   Applicants notified
+    Then the user should see the element           jQuery = h2:contains("${tomorrowMonthWord} ${nextyear}")
+    And the user should see the element            jQuery = .govuk-body:contains("Competition opens")
+    And the user should see the element            jQuery = .govuk-body:contains("Submission deadline, competition closed.")
+    And the user should see the element            jQuery = .govuk-body:contains("Applicants notified")
     And the user can add and remove multiple event groups
     And the user should see the element            css = li:nth-child(5) .task-status-complete
 
@@ -233,7 +233,7 @@ How to apply: server side validation and autosave
     [Tags]
     When the user clicks the button/link          link = How to apply
     Then the user should see the element          jQuery = h1:contains("How to apply")
-    And the user should see the text in the page  Text entered into this section will appear within the how to apply tab.
+    And the user should see the element           jQuery = p:contains("Text entered into this section will appear within the how to apply tab.")
     When the user clicks the button/link          jQuery = button:contains("Save and review")
     Then the user should see a summary error      Please enter content.
     And the user should see a summary error       Please enter a heading.
@@ -319,15 +319,15 @@ User can view the competition url for invite only competitions
     [Tags]
     Given the user should not see the text in the page  This information will be publicly viewable by prospective applicants.
     When the user clicks the button/link                jQuery = a:contains("${server}/competition/${competitionId}/overview")
-    Then the user should see the text in the page       Public content competition
-    And the user should see the text in the page        This is a Summary description
+    Then the user should see the element                jQuery = h1:contains("Public content competition")
+    And the user should see the element                 jQUery = .govuk-body:contains("This is a Summary description")
     Then the internal user navigates to public content  ${public_content_competition_name}
     When the user clicks the button/link                link = Competition information and search
     And the user clicks the button/link                 link = Edit
     Then the user selects the radio button              publishSetting  public
     And the user clicks the button/link                 jQuery = button:contains("Publish and review")
     And the user clicks the button/link                 link = Return to public content
-    Then the user should see the text in the page       This information will be publicly viewable by prospective applicants.
+    Then the user should see the element                jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
     And the user should not see the element             jQuery = p:contains("Competition URL:")
     Then the user clicks the button/link                link = Competition information and search
     And the user clicks the button/link                 link = Edit
