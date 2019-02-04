@@ -7,8 +7,8 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.domain.ProjectUserRole;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
@@ -99,7 +99,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 .build(2);
         List<ProjectUser> projectUsers = newProjectUser()
                 .withProject(project)
-                .withRole(ProjectUserRole.PROJECT_MANAGER)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
                 .build(2);
 
         when(processRoleRepositoryMock.findByUserId(userResource.getId())).thenReturn(processRoles);
@@ -598,7 +598,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         final Long applicationId = 1L;
 
 
-        Arrays.stream(ProjectUserRole.values())
+        Arrays.stream(ProjectParticipantRole.values())
                 .forEach(roleType -> {
 
                     UserResource userResource = newUserResource().withId(userId).build();
@@ -622,7 +622,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         final Long userId = 11L;
         final Long applicationId = 1L;
 
-        Arrays.stream(ProjectUserRole.values())
+        Arrays.stream(ProjectParticipantRole.values())
                 .forEach(roleType -> {
 
                     UserResource userResource = newUserResource().withId(userId).build();

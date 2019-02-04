@@ -8,16 +8,14 @@ import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER;
+
 /**
  * A monitoring officer on a project.
  */
 @Entity
 @Table(name = "project_user")
-public class MonitoringOfficer extends ProjectParticipant<MonitoringOfficerInvite, MonitoringOfficerRole> {
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "project_role")
-    private MonitoringOfficerRole role = MonitoringOfficerRole.MONITORING_OFFICER;
+public class MonitoringOfficer extends ProjectParticipant<MonitoringOfficerInvite> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invite_id", referencedColumnName = "id")
@@ -27,17 +25,12 @@ public class MonitoringOfficer extends ProjectParticipant<MonitoringOfficerInvit
     }
 
     public MonitoringOfficer(User user, Project project) {
-        super(user, project);
+        super(user, project, MONITORING_OFFICER);
     }
 
     @Override
     public MonitoringOfficerInvite getInvite() {
         return invite;
-    }
-
-    @Override
-    public MonitoringOfficerRole getRole() {
-        return role;
     }
 
     @Override
@@ -50,7 +43,6 @@ public class MonitoringOfficer extends ProjectParticipant<MonitoringOfficerInvit
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(role, that.role)
                 .append(invite, that.invite)
                 .isEquals();
     }
@@ -59,7 +51,6 @@ public class MonitoringOfficer extends ProjectParticipant<MonitoringOfficerInvit
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(role)
                 .append(invite)
                 .toHashCode();
     }

@@ -26,8 +26,8 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;

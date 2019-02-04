@@ -26,7 +26,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;

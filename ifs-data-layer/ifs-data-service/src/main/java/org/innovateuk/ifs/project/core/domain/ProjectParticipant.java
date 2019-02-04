@@ -12,7 +12,7 @@ import javax.persistence.*;
  * ProjectUser defines a User's role on a Project and in relation to a particular Organisation.
  */
 @MappedSuperclass
-public abstract class ProjectParticipant<I extends Invite<Project, I>,  R extends ProjectParticipantRole> extends Participant<Project, I, R> {
+public abstract class ProjectParticipant<I extends Invite<Project, I>> extends Participant<Project, I, ProjectParticipantRole> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -25,13 +25,17 @@ public abstract class ProjectParticipant<I extends Invite<Project, I>,  R extend
     @JoinColumn(name = "projectId", referencedColumnName = "id")
     private Project project;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "project_role")
+    private ProjectParticipantRole role;
 
     public ProjectParticipant() {
     }
 
-    public ProjectParticipant(User user, Project project) {
+    public ProjectParticipant(User user, Project project, ProjectParticipantRole role) {
         this.user = user;
         this.project = project;
+        this.role = role;
     }
 
     public User getUser() {
@@ -64,16 +68,23 @@ public abstract class ProjectParticipant<I extends Invite<Project, I>,  R extend
     }
 
     @Override
+    public ProjectParticipantRole getRole() {
+        return role;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectParticipant<?, ?> that = (ProjectParticipant<?, ?>) o;
+        ProjectParticipant<?> that = (ProjectParticipant<?>) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(user, that.user)
+                .append(project, that.project)
+                .append(role, that.role)
                 .isEquals();
     }
 
@@ -83,6 +94,7 @@ public abstract class ProjectParticipant<I extends Invite<Project, I>,  R extend
                 .append(id)
                 .append(user)
                 .append(project)
+                .append(role)
                 .toHashCode();
     }
 }

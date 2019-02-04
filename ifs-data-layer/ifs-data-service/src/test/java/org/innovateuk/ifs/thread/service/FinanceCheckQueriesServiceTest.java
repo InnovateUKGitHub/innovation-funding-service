@@ -58,7 +58,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.*;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;

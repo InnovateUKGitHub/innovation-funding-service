@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_U
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;

@@ -30,8 +30,9 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.core.domain.ProjectUserRole;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
@@ -78,7 +79,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
 import static org.innovateuk.ifs.user.resource.Role.LIVE_PROJECTS_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -102,10 +103,10 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     private static final String GOL_TEMPLATES_PATH = "common" + separator + "grantoffer" + separator + "grant_offer_letter.html";
 
-    private static final List<ProjectUserRole> LIVE_PROJECT_ACCESS_ROLES =
+    private static final List<ProjectParticipantRole> LIVE_PROJECT_ACCESS_ROLES =
             asList(
-                    ProjectUserRole.PROJECT_MANAGER,
-                    ProjectUserRole.PROJECT_FINANCE_CONTACT
+                    ProjectParticipantRole.PROJECT_MANAGER,
+                    ProjectParticipantRole.PROJECT_FINANCE_CONTACT
             );
 
     @Autowired

@@ -11,8 +11,8 @@ import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.ne
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 
 public class ProjectFinanceThreadsTestData {

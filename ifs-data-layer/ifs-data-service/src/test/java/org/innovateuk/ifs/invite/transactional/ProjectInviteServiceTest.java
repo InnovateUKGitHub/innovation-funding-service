@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

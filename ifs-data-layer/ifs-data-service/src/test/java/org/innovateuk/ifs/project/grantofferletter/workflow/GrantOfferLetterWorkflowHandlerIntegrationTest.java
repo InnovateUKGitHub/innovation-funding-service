@@ -23,7 +23,7 @@ import java.util.function.Function;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectUserRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
