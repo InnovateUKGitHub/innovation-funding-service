@@ -100,6 +100,11 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "UPDATE_USER_EMAIL", description = "The System Maintenance user can update any external user's email address")
+    public boolean systemMaintenanceUserCanUpdateUsersEmailAddress(UserResource userToUpdate, UserResource user) {
+        return isSystemMaintenanceUser(user) && !isInternal(userToUpdate);
+    }
+
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
     public boolean internalUsersCanViewEveryone(UserPageResource userToView, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
@@ -221,6 +226,11 @@ public class UserPermissionRules {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
     }
 
+    @PermissionRule(value = "DEACTIVATE", description = "System Maintenance can deactivate Users")
+    public boolean systemMaintenanceUserCanDeactivateUsers(UserResource userToCreate, UserResource user) {
+        return isSystemMaintenanceUser(user);
+    }
+
     @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
     public boolean ifsAdminCanReactivateUsers(UserResource userToCreate, UserResource user) {
         return user.hasRole(Role.IFS_ADMINISTRATOR);
@@ -280,5 +290,4 @@ public class UserPermissionRules {
     private List<ProcessRole> getAllProcessRolesForApplications(List<Application> applicationsWhereThisUserIsInConsortium) {
         return flattenLists(simpleMap(applicationsWhereThisUserIsInConsortium, Application::getProcessRoles));
     }
-
 }

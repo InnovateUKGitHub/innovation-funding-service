@@ -29,6 +29,16 @@ public interface IdentityProviderService {
     ServiceResult<String> updateUserPassword(String uid, String password);
 
     /**
+     * Updates the User's email in the Identity Provider's database and returns the User's unique id
+     *
+     * @param uid
+     * @param email
+     * @return
+     */
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
+    ServiceResult<String> updateUserEmail(String uid, String email);
+
+    /**
      * Activate a user in the Identity Provider
      *
      * @param uid

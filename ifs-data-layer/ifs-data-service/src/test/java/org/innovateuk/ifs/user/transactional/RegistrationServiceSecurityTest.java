@@ -29,7 +29,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     @Test
-    public void testCreateUser() {
+    public void createUser() {
         UserRegistrationResource userToCreate = newUserRegistrationResource().build();
 
         assertAccessDenied(() -> classUnderTest.createUser(userToCreate), () -> {
@@ -39,7 +39,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     @Test
-    public void testCreateOrganisationUser() {
+    public void createOrganisationUser() {
 
         UserResource userToCreate = newUserResource().build();
 
@@ -50,7 +50,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     @Test
-    public void testActivateUser() {
+    public void activateUser() {
 
         UserResource userToActivate = newUserResource().build();
 
@@ -64,7 +64,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     @Test
-    public void testReactivateUser() {
+    public void reactivateUser() {
 
         UserResource userToActivate = newUserResource().build();
 
@@ -79,7 +79,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
 
     @Test
-    public void testDeactivateUser() {
+    public void deactivateUser() {
 
         UserResource userToActivate = newUserResource().build();
 
@@ -87,12 +87,13 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
         assertAccessDenied(() -> classUnderTest.deactivateUser(123L), () -> {
             verify(rules).ifsAdminCanDeactivateUsers(userToActivate, getLoggedInUser());
+            verify(rules).systemMaintenanceUserCanDeactivateUsers(userToActivate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
 
     @Test
-    public void testResendUserVerificationEmail() {
+    public void resendUserVerificationEmail() {
         final UserResource userToSendVerificationEmail = newUserResource().build();
 
         assertAccessDenied(
@@ -105,7 +106,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     }
 
     @Test
-    public void testEditInternalUser() {
+    public void editInternalUser() {
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
         assertAccessDenied(
