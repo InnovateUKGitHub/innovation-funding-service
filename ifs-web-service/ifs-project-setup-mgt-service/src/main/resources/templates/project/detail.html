@@ -18,6 +18,10 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.project.application}: ${model.project.name}|,size='govuk-heading-xl'" />
 
+        <div class="warning-alert" th:if="${model.handleOffline}">
+            <p class="govuk-body">Project setup is being processed offline.</p>
+        </div>
+
         <h2 class="govuk-heading-m">Project details</h2>
         <p class="govuk-body">These project details were supplied by the lead partner on behalf of the project.</p>
 
