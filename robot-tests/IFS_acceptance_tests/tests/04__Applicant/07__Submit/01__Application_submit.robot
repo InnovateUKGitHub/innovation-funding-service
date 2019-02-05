@@ -31,7 +31,6 @@ Resource          ../../10__Project_setup/PS_Common.robot
 Submit button disabled when application is incomplete
     [Documentation]    INFUND-927, IFS-942, IFS-753
     [Tags]  HappyPath
-    [Setup]
     Given the user navigates to the page               ${APPLICANT_DASHBOARD_URL}
     When the user clicks the button/link               link = ${application_rto_name}
     And the user should not see the element            jQuery = .message-alert:contains("Now your application is complete, you need to review and then submit.")
@@ -168,9 +167,16 @@ the user should be able to see his application on his dashboard
 
 Custom Suite Teardown
     The user closes the browser
+    Disconnect from database
+
+Get the original values of the competition's milestones
+    ${openDate}  ${submissionDate} =  Save competition's current dates  ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    Set suite variable  ${openDate}
+    Set suite variable  ${submissionDate}
 
 Custom Suite Setup
     Set predefined date variables
+    Connect to database  @{database}
     the user logs-in in new browser   &{rto_lead_applicant_credentials}
     logged in user applies to competition   ${openCompetitionRTO_name}  1
     create new application for submitting  ${application_rto_name}

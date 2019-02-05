@@ -6,7 +6,8 @@ Documentation    INFUND-6923 Create new public Competition listings page for App
 ...              IFS-247 As an applicant I am able to see the competitions in 'Competition listings' in reverse chronological order
 ...
 ...              IFS-1117 As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
-Suite Setup      The guest user opens the browser
+Suite Setup      Custom suite setup
+Suite Teardown   Custom suite teardown
 Force Tags       Applicant
 Resource         ../../../resources/defaultResources.robot
 Resource         ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -16,22 +17,32 @@ Guest user navigates to Front Door
     [Documentation]    INFUND-6923 INFUND-7946 IFS-247
     [Tags]  HappyPath
     [Setup]  the user navigates to the page    ${FRONTDOOR}
-    Given the user sees the front door information
-    Then the competitions are ordered correctly
+    When the user should see the element       jQuery = a:contains("Innovate UK")
+    Then the user should see the element       jQuery = h1:contains("Innovation competitions")
+    And the user should see the element        css = #keywords
+    Then the user should see the element       css = #innovation-area
+    # Guest user can see competitions sorted in reverse chronological order by opening date
+    When verify first date is greater than or equal to second  css = li:nth-child(1) .date-definition-list dd:nth-of-type(1)  css = li:nth-child(2) .date-definition-list dd:nth-of-type(1)
+    Then verify first date is greater than or equal to second  css = li:nth-child(2) .date-definition-list dd:nth-of-type(1)  css = li:nth-child(3) .date-definition-list dd:nth-of-type(1)
+    When the user clicks the button/link       link = Contact us
+    Then the user should see the element       jQuery = h1:contains("Contact us")
+    And the user should not see an error in the page
+    And the user should see the element        jQuery = a:contains("feedback")
 
 Guest user can see Competitions and their information
     [Documentation]    INFUND-6923
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user should see the element in the paginated list     link = ${createApplicationOpenCompetition}
-    Then the user should see the element         jQuery = h3:contains("Eligibility") ~ div:contains("UK based business of any size. Must involve at least one SME")
+    Then the user should see the element         jQuery = h3:contains("Eligibility")
+    And the user should see the element          jQuery = div:contains("UK based business of any size. Must involve at least one SME")
     Then the user should see the element         jQuery = dt:contains("Opened") + dd:contains("${createApplicationOpenCompetitionOpenDate}")
     And the user should see the element          jQuery = dt:contains("Closes") + dd:contains("${createApplicationOpenCompetitionCloseDate}")
+    #Guest user can filter competitions by Keywords, this is tested in file 05__Public_content.robot
 
 Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
     [Tags]    MySQL  HappyPath
-    [Setup]  Connect to Database  @{database}
     Get competitions id and set it as suite variable  ${READY_TO_OPEN_COMPETITION_NAME}
     ${openDate}  ${submissionDate} =  Save competition's current dates  ${competitionId}
 
@@ -74,7 +85,6 @@ Guest user can see the public information of an unopened competition
 Registration is closed on Non-IFS competitition when the Registration date is in the past
     [Documentation]  IFS-38 IFS-1117
     [Tags]    MySQL
-    [Setup]  Connect to Database    @{database}
     Given Change the close date of the Competition in the database to tomorrow  ${NON_IFS_COMPETITION_NAME}
     And the registration date of the non-ifs competition belongs to the past    ${competition_ids['${NON_IFS_COMPETITION_NAME}']}
     When the user navigates to the page     ${server}/competition/${competition_ids['${NON_IFS_COMPETITION_NAME}']}/overview
@@ -150,11 +160,9 @@ Guest user can apply to a competition
     And the user should see the element          jQuery = .govuk-button:contains("Continue and create an account")
 
 *** Keywords ***
-the user sees the front door information
-    the user should see the element       jQuery = a:contains("Innovate UK")
-    the user should see the element       jQuery = h1:contains("Innovation competitions")
-    the user should see the element       id = keywords
-    the user should see the element       id = innovation-area
+Close survey window
+    Close Window
+    Select Window
 
 the user can see the correct date status of the competition
     [Arguments]    ${competition_name}    ${date_status}    ${open_text}
@@ -165,6 +173,10 @@ the registration date of the non-ifs competition belongs to the past
     ${yesterday} =  get yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='REGISTRATION_DATE';
 
-the competitions are ordered correctly
-    verify first date is greater than or equal to second  css = li:nth-child(1) .date-definition-list dd:nth-of-type(1)  css = li:nth-child(2) .date-definition-list dd:nth-of-type(1)
-    verify first date is greater than or equal to second  css = li:nth-child(2) .date-definition-list dd:nth-of-type(1)  css = li:nth-child(3) .date-definition-list dd:nth-of-type(1)
+Custom suite setup
+    The guest user opens the browser
+    Connect To Database   @{database}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

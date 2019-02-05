@@ -8,7 +8,7 @@ Documentation     IFS-2396  ATI Competition type template
 ...               IFS-3421  As a Lead applicant I am unable submit an ineligible application to a Collaborative competition
 ...
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -85,6 +85,7 @@ Project Finance is able to see the Overheads costs file
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+    Connect to database  @{database}
 
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${ATIapplicationTitle}
@@ -140,3 +141,7 @@ the user does not see state aid information
     the user clicks the button/link      link = Your organisation
     the user should not see the element  link = eligible for state aid
     the user clicks the button/link      link = Your finances
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

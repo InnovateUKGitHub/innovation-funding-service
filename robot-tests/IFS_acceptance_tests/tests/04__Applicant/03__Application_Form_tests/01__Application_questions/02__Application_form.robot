@@ -15,7 +15,7 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...
 ...               INFUND-9154 Update 'Application details' > 'Innovation area' options to those set in 'Initial details' > 'Innovation area'
 Suite Setup       Custom Suite Setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -162,6 +162,7 @@ Collaborator: read only view of research
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
+    Connect to database  @{database}
     Log in and create a new application for the Aerospace competition
     ${appId} =  get application id by name  ${aeroApplication}
     Set suite variable  ${appId}
@@ -213,3 +214,7 @@ the user should no longer see the Mark-as-complete-link
     [Arguments]  ${Section}
     the user navigates to the page       ${server}/application/${appId}/summary
     the user should see the element      jQuery = .collapsible:contains("${Section}") button:contains("Return and edit")
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database
