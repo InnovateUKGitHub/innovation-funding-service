@@ -377,7 +377,6 @@ the user should be able to see the read only view of question correctly
 moving competition to Closed
     [Arguments]  ${compID}
     ${yesterday} =  get yesterday
-    Connect to Database  @{database}
     execute sql string   UPDATE `${database_name}`.`milestone` SET `date` = '${yesterday}' WHERE `type` = 'SUBMISSION_DATE' AND `competition_id` = '${compID}';
 
 making the application a successful project
