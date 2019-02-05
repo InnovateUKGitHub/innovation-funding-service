@@ -8,8 +8,8 @@ Documentation     IFS-188 Stakeholder views – Support team
 ...               IFS-2904 CSS Search by application number
 ...
 ...               IFS-3072 Search by either application number or competition name across each Competition management tab
-Suite Setup       The user logs-in in new browser  &{support_user_credentials}
-Suite Teardown    the user closes the browser
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Force Tags        Support  CompAdmin  HappyPath
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
@@ -120,3 +120,12 @@ the user enters the competition name into the search field
     the user enters text to a text field              id = searchQuery  ${competitionName}
     the user clicks the button/link                   id = searchsubmit
     the user should see the element                   jQuery = a div:contains("${competitionName}")
+
+Custom suite teardown
+    Disconnect from database
+    The user closes the browser
+
+Custom suite setup
+    Connect to database  @{database}
+    The user logs-in in new browser  &{support_user_credentials}
+

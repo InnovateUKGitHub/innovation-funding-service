@@ -216,6 +216,7 @@ Custom Suite Teardown
     The user closes the browser
     # Is required to return the competition back to its initial status for the following suites to run
     Return the competition's milestones to their initial values  ${UPCOMING_COMPETITION_TO_ASSESS_ID}  ${openDate}  ${submissionDate}
+    Disconnect from database
 
 Get the original values of the competition's milestones
     ${openDate}  ${submissionDate} =  Save competition's current dates  ${UPCOMING_COMPETITION_TO_ASSESS_ID}
@@ -224,5 +225,6 @@ Get the original values of the competition's milestones
 
 Custom Suite Setup
     Set predefined date variables
+    Connect to database  @{database}
     new account complete all but one
     Get the original values of the competition's milestones

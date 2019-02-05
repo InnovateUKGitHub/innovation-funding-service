@@ -14,8 +14,8 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...               IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
 ...
 ...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
-Suite Setup       Set predefined date variables
-Suite Teardown    Close browser and delete emails
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant  CompAdmin
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -493,3 +493,11 @@ the logged in user should not be able to apply in a competition he has not right
     the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
+
+Custom suite setup
+    Set predefined date variables
+    Connect to database  @{database}
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database
