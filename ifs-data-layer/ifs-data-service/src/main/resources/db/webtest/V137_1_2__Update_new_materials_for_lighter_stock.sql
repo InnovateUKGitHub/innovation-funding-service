@@ -23,7 +23,7 @@ INSERT INTO project_document (project_id, document_config_id, file_entry_id, sta
 -- bank details
 INSERT INTO address (address_line1, address_line2, address_line3, town, postcode, county) VALUES ('Bag End', 'Bagshot Row', '', 'Hobbiton', 'E17 5LR', 'The Shire');
 INSERT INTO organisation_address (address_id, organisation_id, address_type_id) VALUES (LAST_INSERT_ID(), '41', '4');
-INSERT INTO bank_details (sort_code, account_number, project_id, organisation_address_id, organisation_id, company_name_score, registration_number_matched, address_score, manual_approval, verified) VALUES ('404745', '51406795', '9', LAST_INSERT_ID(), '41', '10', 0, '10', 0, 1);
+INSERT INTO bank_details (sort_code, account_number, project_id, organisation_address_id, organisation_id, company_name_score, registration_number_matched, address_score, manual_approval, verified) VALUES ('404745', '51406795', '9', LAST_INSERT_ID(), '41', '10', 0, '10', 1, 1);
 
 INSERT INTO address (address_line1, address_line2, address_line3, town, postcode, county) VALUES ('Bag End', 'Bagshot Row', '', 'Hobbiton', 'E17 5LR', 'The Shire');
 INSERT INTO organisation_address (address_id, organisation_id, address_type_id) VALUES (LAST_INSERT_ID(), '42', '4');
