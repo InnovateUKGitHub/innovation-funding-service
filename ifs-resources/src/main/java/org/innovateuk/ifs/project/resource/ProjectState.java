@@ -49,4 +49,8 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
     public long getId() {
         return id;
     }
+
+    public boolean isOffline() {
+        return this == COMPLETED_OFFLINE || this == HANDLED_OFFLINE;
+    }
 }

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.viewmodel;
 
 import org.innovateuk.ifs.sections.SectionStatus;
 
+import static org.innovateuk.ifs.sections.SectionStatus.EMPTY;
 import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 
 /**
@@ -63,5 +64,9 @@ public class SectionStatusList {
                 && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
                 && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
                 && grantOfferLetterStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus());
+    }
+
+    public static SectionStatusList offline() {
+        return new SectionStatusList(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
     }
 }
