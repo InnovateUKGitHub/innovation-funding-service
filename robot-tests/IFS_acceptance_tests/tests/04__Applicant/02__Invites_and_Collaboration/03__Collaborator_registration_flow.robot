@@ -23,7 +23,7 @@ User cannot continue if an organisation type is not selected
     [Tags]
     Given browser validations have been disabled
     When the user clicks the button/link           jQuery = .govuk-button:contains("Save and continue")
-    Then the user should see the text in the page  Please select an organisation type.
+    Then the user should see a field error         Please select an organisation type.
     Given the user selects the radio button        organisationType    3
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
 
@@ -40,28 +40,28 @@ The type of organisation navigates to the correct page
     When the user should see the element           jQuery = .govuk-hint:contains("UK based business.")
     And the user selects the radio button          organisationType    1
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
-    Then the user should see the text in the page  Enter your organisation name or registration number.
+    Then the user should see the element           jQuery = div label:contains("Enter your organisation name or registration number.")
     When the user goes back to the previous page
     And the user should see the element            jQuery = .govuk-hint:contains("Higher education and organisations registered with Je-S.")
     Given the user selects the radio button        organisationType    2
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
-    Then the user should see the text in the page  This is the organisation that you work for, this will search all organisations available on Je-S.
+    Then the user should see the element           jQuery = span:contains("This is the organisation that you work for, this will search all organisations available on Je-S.")
     And the user enters text to a text field       id = organisationSearchName    zoo
     And the user clicks the button/link            jQuery = button:contains("Search")
     Then the user should see the element           jQuery = p:contains("Choose your organisation:")
     When the user clicks the button/link           jQuery = a:contains("Zoological Soc London Inst of Zoology")
     When the user goes back to the previous page
-    Then the user should see the text in the page  This is the organisation that you work for, this will search all organisations available on Je-S.
+    Then the user should see the element           jQuery = span:contains("This is the organisation that you work for, this will search all organisations available on Je-S.")
     Given the user clicks the button/link          jQuery = a:contains("Back to choose your organisation type")
     Then the user should see the element           jQuery = .govuk-hint:contains("Organisations which solely promote and conduct collaborative research and innovation.")
     Given the user selects the radio button        organisationType    3
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
-    And the user should see the text in the page   Enter your organisation name or registration number.
+    And the user should see the element            jQuery = div label:contains("Enter your organisation name or registration number.")
     When the user goes back to the previous page
     And the user should see the element            jQuery = .govuk-hint:contains("A not-for-profit public sector body or charity working on innovation.")
     Given the user selects the radio button        organisationType    4
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
-    And the user should see the text in the page   Enter your organisation name or registration number.
+    And the user should see the element            jQuery = div label:contains("Enter your organisation name or registration number.")
     And the user goes back to the previous page
 
 Research and technology organisations (RTO) search (empty, invalid & valid inputs)
@@ -89,7 +89,7 @@ Research and technology organisations (RTO) search (accept invitation flow with 
     And the user should be redirected to the correct page                        ${REGISTRATION_VERIFIED}
     When the user clicks the button/link                                         jQuery = .govuk-button:contains("Sign in")
     And Logging in and Error Checking                                            ${test_mailbox_one}+invite1@gmail.com    ${correct_password}
-    Then the user should be redirected to the correct page                       ${DASHBOARD_URL}
+    Then the user should be redirected to the correct page                       ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                                          link = Climate science the history of Greenland's ice
     And the user clicks the button/link                                          link = Your finances
     And the user should see the element                                          jQuery = h1:contains("Your finances")
@@ -108,7 +108,7 @@ User is able to accept new terms and conditions
     Given the user selects the checkbox   agree
     And the user cannot see a validation error in the page
     When the user clicks the button/link  css = .govuk-button[type="submit"]
-    Then the user should see the element  jQuery = h1:contains("Dashboard")
+    Then the user should see the element  jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 *** Keywords ***
 Custom Suite Setup

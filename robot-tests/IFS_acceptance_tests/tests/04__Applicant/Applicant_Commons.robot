@@ -13,7 +13,7 @@ the user should see all the Your-Finances Sections
 
 the user navigates to Your-finances page
     [Arguments]  ${Application}
-    the user navigates to the page  ${DASHBOARD_URL}
+    the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  jQuery = .in-progress a:contains("${Application}")
     the user clicks the button/link  link = Your finances
 
@@ -32,7 +32,7 @@ Mark application details as incomplete and the user closes the browser
 
 Mark application details as incomplete
     [Arguments]  ${applicationTitle}
-    the user navigates to the page   ${DASHBOARD_URL}
+    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  link = ${applicationTitle}
     the user clicks the button/link  link = Application details
     the user clicks the button/link  jQuery = button:contains("Edit")
@@ -317,7 +317,7 @@ the user completes the new account creation
     the user selects his organisation in Companies House  innovate  INNOVATE LTD
     the user should be redirected to the correct page    ${SERVER}/registration/register
     the invited user fills the create account form       liam  smithson
-    the user should see the text in the page     Please verify your email address
+    the user should see the element                      jQuery = h1:contains("Please verify your email address")
     the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link             link = Sign in
@@ -373,17 +373,12 @@ logged in user applies to competition public
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    Innovate  INNOVATE LTD
 
-the user navigates to the eligibility of the competition
-    [Arguments]  ${competition}
-    ${competitionId} =  get comp id from comp title    ${competition}
-    the user navigates to the page   ${server}/application/create/start-application/${competitionId}
-
 the applicant submits the application
     the user clicks the button/link                    link = Review and submit
     the user should not see the element                jQuery = .task-status-incomplete
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
     the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
-    the user should be redirected to the correct page  submit
+    the user should be redirected to the correct page  track
 
 the user applies to competition and enters organisation type
     [Arguments]  ${compId}  ${organisationType}

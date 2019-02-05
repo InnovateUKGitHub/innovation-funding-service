@@ -33,7 +33,9 @@ IFS.core.autoSave = (function () {
       })
       // events for other javascripts
       jQuery('body').on('ifsAutosave', function (e) {
-        IFS.core.autoSave.fieldChanged(e.target)
+        if (jQuery(e.target).parents('[data-autosave]').size()) {
+          IFS.core.autoSave.fieldChanged(e.target)
+        }
       })
     },
     fieldChanged: function (element) {

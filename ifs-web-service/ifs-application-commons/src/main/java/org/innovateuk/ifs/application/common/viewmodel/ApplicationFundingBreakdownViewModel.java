@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.common.viewmodel;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -26,19 +27,24 @@ public class ApplicationFundingBreakdownViewModel {
     private final OrganisationResource leadOrganisation;
     private final Map<Long, BaseFinanceResource> organisationFinances;
     private final List<String> pendingOrganisationNames;
+    private final ApplicationResource currentApplication;
+    private final OrganisationResource userOrganisation;
+    private final Map<Long, Boolean> showDetailedFinanceLink;
 
     public ApplicationFundingBreakdownViewModel(
-                                              Map<FinanceRowType, BigDecimal> financeTotalPerType,
-                                              BigDecimal financeTotal,
-                                              List<OrganisationResource> applicationOrganisations,
-                                              SectionResource financeSection,
-                                              List<SectionResource> financeSectionChildren,
-                                              Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap,
-                                              Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs,
-                                              OrganisationResource leadOrganisation,
-                                              Map<Long, BaseFinanceResource> organisationFinances,
-                                              List<String> pendingOrganisationNames
-    ) {
+            Map<FinanceRowType, BigDecimal> financeTotalPerType,
+            BigDecimal financeTotal,
+            List<OrganisationResource> applicationOrganisations,
+            SectionResource financeSection,
+            List<SectionResource> financeSectionChildren,
+            Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap,
+            Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs,
+            OrganisationResource leadOrganisation,
+            Map<Long, BaseFinanceResource> organisationFinances,
+            List<String> pendingOrganisationNames,
+            ApplicationResource currentApplication,
+            OrganisationResource userOrganisation,
+            Map<Long, Boolean> showDetailedFinanceLink) {
         this.financeTotalPerType = financeTotalPerType;
         this.financeTotal = financeTotal;
         this.applicationOrganisations = applicationOrganisations;
@@ -49,6 +55,9 @@ public class ApplicationFundingBreakdownViewModel {
         this.leadOrganisation = leadOrganisation;
         this.organisationFinances = organisationFinances;
         this.pendingOrganisationNames = pendingOrganisationNames;
+        this.currentApplication = currentApplication;
+        this.userOrganisation = userOrganisation;
+        this.showDetailedFinanceLink = showDetailedFinanceLink;
     }
 
     //For EOI Competitions
@@ -57,13 +66,19 @@ public class ApplicationFundingBreakdownViewModel {
                                                 SectionResource financeSection,
                                                 OrganisationResource leadOrganisation,
                                                 Map<Long, BaseFinanceResource> organisationFinances,
-                                                List<String> pendingOrganisationNames) {
+                                                List<String> pendingOrganisationNames,
+                                                ApplicationResource currentApplication,
+                                                OrganisationResource userOrganisation,
+                                                Map<Long, Boolean> showDetailedFinanceLink) {
         this.financeTotalPerType = financeTotalPerType;
         this.applicationOrganisations = applicationOrganisations;
         this.financeSection = financeSection;
         this.leadOrganisation = leadOrganisation;
         this.organisationFinances = organisationFinances;
         this.pendingOrganisationNames = pendingOrganisationNames;
+        this.currentApplication = currentApplication;
+        this.userOrganisation = userOrganisation;
+        this.showDetailedFinanceLink = showDetailedFinanceLink;
     }
 
     public Map<FinanceRowType, BigDecimal> getFinanceTotalPerType() {
@@ -104,5 +119,17 @@ public class ApplicationFundingBreakdownViewModel {
 
     public Map<Long, BaseFinanceResource> getOrganisationFinances() {
         return organisationFinances;
+    }
+
+    public ApplicationResource getCurrentApplication() {
+        return currentApplication;
+    }
+
+    public OrganisationResource getUserOrganisation() {
+        return userOrganisation;
+    }
+
+    public Map<Long, Boolean> getShowDetailedFinanceLink() {
+        return showDetailedFinanceLink;
     }
 }

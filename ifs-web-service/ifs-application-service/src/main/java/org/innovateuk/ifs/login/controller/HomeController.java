@@ -1,110 +1,101 @@
 package org.innovateuk.ifs.login.controller;
 
-import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.login.form.RoleSelectionForm;
-import org.innovateuk.ifs.login.viewmodel.RoleSelectionViewModel;
+import org.innovateuk.ifs.login.viewmodel.DashboardPanel;
+import org.innovateuk.ifs.login.viewmodel.DashboardSelectionViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.CookieUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.util.NavigationUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.function.Supplier;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
-import static java.lang.String.format;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.springframework.util.StringUtils.hasText;
+import static java.util.Comparator.comparingInt;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
- * This Controller redirects the request from http://<domain>/ to http://<domain>/login
- * So we don't have a public homepage, the login page is the homepage.
+ * This Controller redirects the request from http://<domain>/ to the relevant user dashboard based on the user's
+ * global Role, or to a dashboard selection page for users who have more than one global Roles.
  */
 @Controller
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = HomeController.class)
 @PreAuthorize("permitAll")
 public class HomeController {
 
-    @Autowired
-    private CookieUtil cookieUtil;
+    private NavigationUtils navigationUtils;
+    private List<Role> rolesWithDashboards;
 
-    public static String getRedirectUrlForUser(UserResource user) {
-
-        String roleUrl = !user.getRoles().isEmpty() ? user.getRoles().get(0).getUrl() : "";
-
-        return format("redirect:/%s", hasText(roleUrl) ? roleUrl : "dashboard");
+    HomeController(
+            NavigationUtils navigationUtils,
+            @Value("#{'${ifs.web.service.multi.dashboard.roles}'.split(',')}") List<String> roleNames) {
+        
+        this.navigationUtils = navigationUtils;
+        this.rolesWithDashboards = simpleMap(roleNames, Role::valueOf);        
     }
 
     @GetMapping("/")
-    public String login(Model model) {
+    @SecuredBySpring(value = "HomeController.defaultDashboardOrDashboardSelection()",
+            description = "Authenticated users can gain access to the root URL")
+    @PreAuthorize("isAuthenticated()")
+    public String defaultDashboardOrDashboardSelection() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (unauthenticated(authentication)) {
-            return "redirect:/";
-        }
 
         UserResource user = (UserResource) authentication.getDetails();
-        if (user.hasMoreThanOneRoleOf(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER)) {
-            return "redirect:/roleSelection";
+
+        if (user.hasMoreThanOneRoleOf(rolesWithDashboards)) {
+            return "redirect:/dashboard-selection";
         }
 
         return getRedirectUrlForUser(user);
     }
 
-    @GetMapping("/roleSelection")
-    public String selectRole(Model model,
-                             @ModelAttribute(name = "form", binding = false) RoleSelectionForm form) {
+    @GetMapping("/dashboard-selection")
+    @SecuredBySpring(value = "HomeController.selectDashboardForMultiRoleUsers()",
+            description = "Authenticated users can gain access to the Dashboard selection page")
+    @PreAuthorize("isAuthenticated()")
+    public String selectDashboardForMultiRoleUsers(HttpServletRequest request,
+                                                   Model model) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (unauthenticated(authentication) || (!user.hasMoreThanOneRoleOf(Role.ASSESSOR, Role.APPLICANT, Role.STAKEHOLDER))){
-            return "redirect:/";
+        if (!user.hasMoreThanOneRoleOf(rolesWithDashboards)) {
+            return navigationUtils.getRedirectToLandingPageUrl(request);
         }
 
-        return doViewRoleSelection(model, user);
+        return doViewDashboardSelection(request, model, user);
     }
 
-    @PostMapping("/roleSelection")
-    public String processRole(Model model,
-                              UserResource user,
-                              @Valid @ModelAttribute("form") RoleSelectionForm form,
-                              BindingResult bindingResult,
-                              ValidationHandler validationHandler,
-                              HttpServletResponse response) {
+    private String doViewDashboardSelection(HttpServletRequest request, Model model, UserResource user) {
 
-        Supplier<String> failureView = () -> doViewRoleSelection(model, user);
+        List<Role> dashboardRoles = simpleFilter(user.getRoles(), rolesWithDashboards::contains);
+        List<DashboardPanel> dashboardPanels = simpleMap(dashboardRoles, role -> createDashboardPanelForRole(request, role));
+        List<DashboardPanel> orderedPanels = sort(dashboardPanels,
+                comparingInt(panel -> rolesWithDashboards.indexOf(panel.getRole())));
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ValidationMessages validationMessages = new ValidationMessages(bindingResult);
-            cookieUtil.saveToCookie(response, "role", form.getSelectedRole().getName());
-            return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> redirectToChosenDashboard(user, form.getSelectedRole().getName()));
-        });
+        model.addAttribute("model", new DashboardSelectionViewModel(orderedPanels));
+        return "login/multiple-dashboard-choice";
     }
 
-    private String doViewRoleSelection(Model model, UserResource user) {
-        model.addAttribute("model", new RoleSelectionViewModel(user));
-        return "login/multiple-user-choice";
+    private DashboardPanel createDashboardPanelForRole(HttpServletRequest request, Role role) {
+        return new DashboardPanel(role, navigationUtils.getDirectDashboardUrlForRole(request, role));
     }
 
-    private String redirectToChosenDashboard(UserResource user, String role) {
-        String url = user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
-        return format("redirect:/%s", url);
-    }
+    private String getRedirectUrlForUser(UserResource user) {
 
-    private static boolean unauthenticated(Authentication authentication) {
-        return authentication == null || !authentication.isAuthenticated() || authentication.getDetails() == null;
+        if (user.getRoles().isEmpty()) {
+            throw new ForbiddenActionException("Unable to access dashboards without at least one role");
+        }
+
+        Role role = user.getRoles().get(0);
+        return navigationUtils.getRedirectToDashboardUrlForRole(role);
     }
 }

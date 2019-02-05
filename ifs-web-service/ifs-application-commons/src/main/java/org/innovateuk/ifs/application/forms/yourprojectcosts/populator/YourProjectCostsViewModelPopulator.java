@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.forms.yourprojectcosts.viewmodel.YourProje
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -18,20 +19,26 @@ import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STA
 @Component
 public class YourProjectCostsViewModelPopulator {
 
-    @Autowired
     private CompetitionRestService competitionRestService;
-
-    @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
     private ApplicationRestService applicationRestService;
-
-    @Autowired
     private SectionService sectionService;
 
-    public YourProjectCostsViewModel populate(long applicationId, long sectionId, long organisationId, boolean internalUser, String originQuery) {
+    YourProjectCostsViewModelPopulator() {
+    }
 
+    @Autowired
+    public YourProjectCostsViewModelPopulator(CompetitionRestService competitionRestService,
+                                              OrganisationRestService organisationRestService,
+                                              ApplicationRestService applicationRestService,
+                                              SectionService sectionService) {
+        this.competitionRestService = competitionRestService;
+        this.organisationRestService = organisationRestService;
+        this.applicationRestService = applicationRestService;
+        this.sectionService = sectionService;
+    }
+
+    public YourProjectCostsViewModel populate(long applicationId, long sectionId, long organisationId, boolean internalUser, String originQuery) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
@@ -44,6 +51,8 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
+        boolean procurementCompetition = FundingType.PROCUREMENT == competition.getFundingType();
+
         return new YourProjectCostsViewModel(applicationId,
                 sectionId,
                 competition.getId(),
@@ -53,7 +62,8 @@ public class YourProjectCostsViewModelPopulator {
                 includeVat,
                 application.getName(),
                 organisation.getName(),
-                getYourFinancesUrl(applicationId, organisationId, internalUser, originQuery));
+                getYourFinancesUrl(applicationId, organisationId, internalUser, originQuery),
+                procurementCompetition);
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser, String originQuery) {
@@ -62,5 +72,4 @@ public class YourProjectCostsViewModelPopulator {
                 String.format("/application/%d/form/FINANCE/%d%s", applicationId, organisationId, originQuery) :
                 String.format("/application/%d/form/FINANCE", applicationId);
     }
-
 }

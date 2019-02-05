@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkUrl=@{/applicant/dashboard}, currentCompetition=${model.currentCompetition}"></th:block>
+    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/applicant/dashboard}, currentCompetition=${model.currentCompetition}"></th:block>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.currentCompetition})" />
@@ -40,8 +40,13 @@
                 <div th:include="fragments/elements :: progress-indicator"
                      th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="govuk-!-margin-top-6"/>
             </div>
-            <div class="govuk-grid-column-one-half">
-                <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the competition terms and conditions</a>
+            <div class="govuk-grid-column-one-half" th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+                <th:block th:if="${procurementCompetition}">
+                    <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link govuk-!-font-size-19">View the draft contract</a> (opens in new window).</p>
+                </th:block>
+                <th:block th:unless="${procurementCompetition}">
+                    <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the competition terms and conditions</a>
+                </th:block>
             </div>
         </div>
         <div class="govuk-!-margin-bottom-6">
@@ -50,17 +55,23 @@
             </div>
         </div>
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post" class="application-overview">
-            <th:block th:each="section,iteration : ${model.section.sections}">
+            <th:block th:each="section,iteration : ${model.section.sections}"
+                      th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
                 <section th:id="'section-'+${section.id}">
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${section.name}" />
-                    <p class="govuk-body" th:text="${section.description}"></p>
+                    <p th:unless="${procurementCompetition and section.name == 'Finances'}" class="govuk-body" th:text="${section.description}"></p>
+                    <p th:if="${procurementCompetition and section.name == 'Finances'}" class="govuk-body">
+                        Submit your organisation's project finances.
+                    </p>
+
                     <ul th:with="currentUser=${#authentication.getDetails()}" class="task-list">
                         <th:block th:unless="${model.section.hasSubSection(section.id)}">
                             <div th:replace="application/single-section-details :: sectionDetails (questionAssignees=${model.assignable.questionAssignees},
                             userIsLeadApplicant=${model.user.userIsLeadApplicant}, section=${section}, applicationId=${model.applicationId}, currentUser=${currentUser})"></div>
                         </th:block>
                         <th:block th:if="${model.section.hasSubSection(section.id)}">
-                            <li th:each="childSection : ${model.section.subSections.get(section.id)}">
+                            <li th:each="childSection : ${model.section.subSections.get(section.id)}"
+                                th:unless="${procurementCompetition and childSection.type == T(org.innovateuk.ifs.form.resource.SectionType).OVERVIEW_FINANCES}">
                                 <div class="task">
                                     <h3 class="govuk-heading-s">
                                         <a th:href="@{/application/{applicationId}/form/section/{sectionId}(applicationId=${model.applicationId},sectionId=${childSection.id})}"

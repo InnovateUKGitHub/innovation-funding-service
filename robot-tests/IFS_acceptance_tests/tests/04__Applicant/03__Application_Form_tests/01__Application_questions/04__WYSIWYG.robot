@@ -9,7 +9,7 @@ Resource          ../../../../resources/defaultResources.robot
 Bold text format
     [Documentation]    INFUND-187
     [Tags]  HappyPath
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link    link = Robot test application
     And the user clicks the button/link    link = 1. Business opportunity
     When the Applicant clicks on the Bold button in the "business opportunity" field

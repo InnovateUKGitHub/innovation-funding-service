@@ -37,7 +37,7 @@ Companies House: Invalid company name
     [Tags]
     When the user enters text to a text field        id = organisationSearchName    innoavte
     And the user clicks the button/link              id = org-search
-    Then the user should see the text in the page    No results found.
+    Then the user should see the element             jQuery = li p:contains("No results found.")
 
 Companies House: Valid registration number
     [Documentation]    INFUND-887

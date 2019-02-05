@@ -7,6 +7,7 @@ import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
+import org.innovateuk.ifs.invite.repository.UserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.token.domain.Token;
@@ -23,12 +24,15 @@ import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
 import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -51,6 +55,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class UserServiceImpl extends UserTransactionalService implements UserService {
+
+    private final static Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
+
     private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     public enum Notifications {
@@ -96,6 +103,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private UserOrganisationMapper userOrganisationMapper;
+
+    @Autowired
+    private UserInviteRepository userInviteRepository;
 
     private Supplier<String> randomHashSupplier = () -> UUID.randomUUID().toString();
 
@@ -176,6 +186,18 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                 );
             })
         );
+    }
+
+    private ServiceResult<Void> updateUserEmail(User existingUser, String emailToUpdate) {
+        userInviteRepository.findByEmail(existingUser.getEmail()).forEach(invite -> invite.setEmail(emailToUpdate));
+        existingUser.setEmail(emailToUpdate);
+        userRepository.save(existingUser);
+        return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
+                .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate));
+    }
+
+    private void logEmailChange(String oldEmail, String newEmail){
+        LOG.info("Updated email from  " + oldEmail + " to " + newEmail);
     }
 
     private String getRandomHash() {
@@ -270,6 +292,13 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     public ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand) {
         return getUser(grantRoleCommand.getUserId())
                 .andOnSuccessReturnVoid(user -> user.getRoles().add(grantRoleCommand.getTargetRole()));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateEmail(long userId, String email) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess( user -> updateUserEmail(user, email));
     }
 
     private ServiceResult<Void> validateSearchString(String searchString) {

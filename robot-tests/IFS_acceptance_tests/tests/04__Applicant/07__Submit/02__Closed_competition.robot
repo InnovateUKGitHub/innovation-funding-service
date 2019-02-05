@@ -23,13 +23,13 @@ Application shows as not submitted on the overview
     [Documentation]    INFUND-2742
     [Tags]  HappyPath
     When the user navigates to the page              ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1_NUMBER}
-    Then the user should see the text in the page    ${application_not_submitted_message}
+    Then the user should see the element            jQuery = .warning-alert:contains("${application_not_submitted_message}")
 
 Submit button should be disabled
     [Documentation]    INFUND-2742, INFUND-2312, INFUND-3175
     [Tags]  HappyPath
     When the user navigates to the page              ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1_NUMBER}/summary
-    Then the user should see the text in the page    Registration is now closed, you are no longer able to submit your application.
+    Then the user should see the element             jQuery = .warning-alert:contains("Registration is now closed, you are no longer able to submit your application.")
     And the user should not see the element          jQuery = .govuk-button:contains("Submit application")
     And the user should not see the element          jQuery = .govuk-button:contains("Review and submit")
 
@@ -46,7 +46,7 @@ Applicant shouldn't see the Mark as complete-Edit-Save buttons
 Already submitted application should not show error when the competition is closed
     [Documentation]    INFUND-3175
     [Tags]  HappyPath
-    When the user navigates to the page                  ${dashboard_url}
+    When the user navigates to the page                  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                  link = ${OPEN_COMPETITION_APPLICATION_3_NAME}
     Then the user should not see the text in the page    Application not submitted
 

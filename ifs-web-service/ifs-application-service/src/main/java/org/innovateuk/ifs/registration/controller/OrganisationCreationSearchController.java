@@ -49,9 +49,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private MessageSource messageSource;
 
     private static final String SEARCH_ORGANISATION = "search-organisation";
-    private static final String NOT_IN_COMPANIES_HOUSE = "not-in-companies-house";
 
-    @GetMapping(value = {"/" + FIND_ORGANISATION,"/" + FIND_ORGANISATION + "/**"})
+    @GetMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"})
     public String createOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                      Model model,
                                      HttpServletRequest request,
@@ -65,8 +64,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute(ORGANISATION_FORM, organisationForm);
 
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
-        model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
-        model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
+        model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
+        model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
@@ -81,17 +80,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
 
-    }
-
-    @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANIES_HOUSE)
-    public String manualOrganisationEntry(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                          HttpServletRequest request, HttpServletResponse response) {
-        addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
-        organisationForm.setOrganisationSearching(false);
-        boolean currentManualEntryValue = organisationForm.isManualEntry();
-        organisationForm.setManualEntry(!currentManualEntryValue);
-        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-        return "redirect:/organisation/create/" + FIND_ORGANISATION;
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")
@@ -116,15 +104,16 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SAVE_ORGANISATION_DETAILS)
-    public String saveOrganisation(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                   BindingResult bindingResult,
-                                   Model model,
-                                   HttpServletRequest request, HttpServletResponse response,
-                                   @RequestHeader(value = REFERER, required = false) final String referer) {
+    public String manualOrganisationSave(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                         BindingResult bindingResult,
+                                         Model model,
+                                         HttpServletRequest request, HttpServletResponse response,
+                                         @RequestHeader(value = REFERER, required = false) final String referer) {
         OrganisationCreationForm organisationCreationForm = registrationCookieService.getOrganisationCreationCookieValue(request).get();
         organisationCreationForm.setOrganisationName(organisationForm.getOrganisationName());
         organisationCreationForm.setSearchOrganisationId(organisationForm.getSearchOrganisationId());
         organisationCreationForm.setTriedToSave(true);
+        organisationCreationForm.setManualEntry(true);
         organisationForm.setTriedToSave(true);
 
         addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));

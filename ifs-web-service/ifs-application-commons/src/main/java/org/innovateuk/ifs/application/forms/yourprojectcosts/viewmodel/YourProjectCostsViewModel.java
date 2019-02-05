@@ -25,6 +25,8 @@ public class YourProjectCostsViewModel {
 
     private final boolean includeVat;
 
+    private final boolean procurementCompetition;
+
     public YourProjectCostsViewModel(long applicationId,
                                      long sectionId,
                                      long competitionId,
@@ -34,7 +36,8 @@ public class YourProjectCostsViewModel {
                                      boolean includeVat,
                                      String applicationName,
                                      String organisationName,
-                                     String financesUrl) {
+                                     String financesUrl,
+                                     boolean procurementCompetition) {
         this.internal = false;
 
         this.organisationId = organisationId;
@@ -47,12 +50,14 @@ public class YourProjectCostsViewModel {
         this.organisationName = organisationName;
         this.financesUrl = financesUrl;
         this.includeVat = includeVat;
+        this.procurementCompetition = procurementCompetition;
     }
 
-    public YourProjectCostsViewModel(boolean open, boolean internal) {
+    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition) {
         this.open = open;
         this.complete = false;
         this.internal = internal;
+        this.procurementCompetition = procurementCompetition;
 
         this.applicationName = null;
         this.organisationName = null;
@@ -115,5 +120,9 @@ public class YourProjectCostsViewModel {
 
     public boolean isReadOnly(FinanceRowType type) {
         return isReadOnly();
+    }
+
+    public boolean isProcurementCompetition() {
+        return procurementCompetition;
     }
 }

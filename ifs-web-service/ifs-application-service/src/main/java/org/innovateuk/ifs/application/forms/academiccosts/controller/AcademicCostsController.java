@@ -7,10 +7,9 @@ import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.saver.AcademicCostSaver;
-import org.innovateuk.ifs.application.forms.saver.ApplicationSectionFinanceSaver;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -61,7 +60,7 @@ public class AcademicCostsController {
     private UserRestService userRestService;
 
     @Autowired
-    private ApplicationSectionFinanceSaver completeSectionAction;
+    private YourProjectCostsCompleter completeSectionAction;
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
@@ -107,7 +106,9 @@ public class AcademicCostsController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                validationHandler.addAnyErrors(markAsComplete(sectionId, applicationId, user), mappingErrorKeyToField("validation.application.jes.upload.required", "jesFile"), defaultConverters());
+                validationHandler.addAnyErrors(
+                        completeSectionAction.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId())),
+                        mappingErrorKeyToField("validation.application.jes.upload.required", "jesFile"), defaultConverters());
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });
@@ -188,15 +189,4 @@ public class AcademicCostsController {
     private ProcessRoleResource getProcessRole(long applicationId, long userId) {
         return userRestService.findProcessRole(userId, applicationId).getSuccess();
     }
-
-    private ValidationMessages markAsComplete(long sectionId, long applicationId, UserResource user) {
-        ValidationMessages messages = new ValidationMessages();
-        ProcessRoleResource role = getProcessRole(applicationId, user.getId());
-        sectionStatusRestService.markAsComplete(sectionId, applicationId, role.getId()).getSuccess().forEach(messages::addAll);
-        if (!messages.hasErrors()) {
-            completeSectionAction.handleMarkProjectCostsAsComplete(role);
-        }
-        return messages;
-    }
-
 }

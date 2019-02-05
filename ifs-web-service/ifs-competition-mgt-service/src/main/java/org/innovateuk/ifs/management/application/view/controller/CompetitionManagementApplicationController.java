@@ -45,6 +45,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
@@ -164,11 +165,11 @@ public class CompetitionManagementApplicationController {
             @PathVariable(value = "fileName", required = false) final String fileName,
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
-        if (isInternalUser(user)) {
+        if (hasProcessRole(user)) {
+            processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        } else {
             long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccess().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
-        } else {
-            processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         }
 
         final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();
@@ -216,8 +217,8 @@ public class CompetitionManagementApplicationController {
         return "application/reinstate-ineligible-application-confirm";
     }
 
-    private boolean isInternalUser(UserResource user) {
-        return user.hasRole(IFS_ADMINISTRATOR) || isInternal(user);
+    private boolean hasProcessRole(UserResource user) {
+        return !(user.hasRole(IFS_ADMINISTRATOR) || isInternal(user) || user.hasRole(STAKEHOLDER));
     }
 
     private void validateIfTryingToMarkAsIneligible(String ineligibleReason,

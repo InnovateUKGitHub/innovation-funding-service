@@ -26,7 +26,7 @@ ${aeroApplication}  Aerospace test application
 *** Test Cases ***
 Application details: Previous submission
     [Documentation]    INFUND-4694
-    Given the user navigates to the page                ${DASHBOARD_URL}
+    Given the user navigates to the page                ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                 link = ${aeroApplication}
     And the user clicks the button/link                 link = Application details
     When the user clicks the button/link                id = application-question-complete
@@ -57,7 +57,7 @@ Application details: Innovation area section is visible
 Autosave in the form questions
     [Documentation]    INFUND-189
     [Tags]
-    Given the user navigates to the page  ${DASHBOARD_URL}
+    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${aeroApplication}
     When the user clicks the button/link  link = Application details
     Then the application details need to be autosaved
@@ -101,11 +101,11 @@ Mark a question as incomplete
 Review and submit button
     [Documentation]  IFS-751
     [Tags]
-    Given the user navigates to the page  ${DASHBOARD_URL}
+    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${aeroApplication}
     When the user clicks the button/link  jQuery = .govuk-button:contains("Review and submit")
     Then the user should see the element  jQuery = h1:contains("Application summary")
-    And the user should see the text in the page  Please review your application before final submission
+    And the user should see the element   jQuery = p:contains("Please review your application before final submission.")
 
 Incomplete sections contain mark as complete link
     [Documentation]  IFS-751
@@ -146,7 +146,7 @@ Collaborator: read only view of Application details
     [Documentation]    INFUND-8251 , INFUND-8260
     [Tags]
     [Setup]    Log in as a different user           &{collaborator1_credentials}
-    Given the user navigates to the page            ${DASHBOARD_URL}
+    Given the user navigates to the page            ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link             link = ${Competition_E2E}
     When the user clicks the button/link            link = Application details
     Then the user should not see the element        css = input

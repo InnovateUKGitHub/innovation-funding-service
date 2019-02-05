@@ -7,6 +7,26 @@ ${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
 ${CA_Live}           ${server}/management/dashboard/live
 
 *** Keywords ***
+The competition admin creates competition
+    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${stateAid}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    the user navigates to the page              ${CA_UpcomingComp}
+    the user clicks the button/link             jQuery = .govuk-button:contains("Create competition")
+    the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
+    the user selects the Terms and Conditions
+    the user fills in the CS Funding Information
+    the user fills in the CS Eligibility        ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Milestones         ${completionStage}   ${month}   ${nextyear}
+    the user marks the application as done      ${projectGrowth}  ${compType}
+    the user fills in the CS Assessors
+    the user fills in the CS Documents in other projects
+    the user clicks the button/link             link = Public content
+    the user fills in the Public content and publishes  ${extraKeyword}
+    the user clicks the button/link             link = Return to setup overview
+    the user clicks the button/link             jQuery = a:contains("Complete")
+    the user clicks the button/link             css = button[type="submit"]
+    the user navigates to the page              ${CA_UpcomingComp}
+    the user should see the element             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
+
 the user edits the assessed question information
     the user enters text to a text field    id = question.maxWords    100
     the user enters text to a text field    id = question.scoreTotal  10
@@ -25,9 +45,10 @@ the user sees the correct read only view of the question
     the user should not see the text in the page    The business opportunity is plausible
 
 the user fills in the CS Initial details
-    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${stateAid}
+    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
     the user clicks the button/link                      link = Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
+    the user selects the radio button                    fundingType  ${fundingType}
     the user selects the option from the drop-down menu  ${compType}  id = competitionTypeId
     the user selects the option from the drop-down menu  Emerging and enabling  id = innovationSectorCategoryId
     the user selects the option from the drop-down menu  Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
@@ -56,7 +77,7 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id = activityCode  133t
     the user clicks the button/link       jQuery = button:contains("Generate code")
     sleep  2s  #This sleeps is intended as the competition Code needs some time
-    textfield should contain              css = input[name="competitionCode"]  19
+    textfield should contain              css = input[name="competitionCode"]  20
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Competition setup
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
@@ -116,7 +137,8 @@ the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link                               link = Application
     the user marks the Application details section as complete    ${comp_type}
-    the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}
+    Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
+    ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}
 
 The user removes the Project details questions and marks the Application section as done
     [Arguments]  ${growthTable}  ${comp_type}
@@ -131,14 +153,13 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
     Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
-    Run keyword If  '${comp_type}'!= '${compType_EOI}'   the user fills in the Finances questions  ${growthTable}  false  true
+    ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Competition setup
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
 
 the user fills in the CS Application section with custom questions
     [Arguments]  ${growthTable}  ${competitionType}
-    the user clicks the button/link    link = Application
     # Removing questions from the Assessed questions
     Remove previous rows               jQuery = .govuk-heading-s:contains("Assessed questions") ~ ul li:last-of-type button[type="submit"]:contains("Remove")
     the user clicks the button/link    jQuery = li:contains("1.") a  # Click the last question left - which now will be first
@@ -148,7 +169,6 @@ the user fills in the CS Application section with custom questions
     the user clicks the button/link    css = button[name="createQuestion"]
     the user is able to configure the new question  Your technical approach.
     the user marks the Finance section as complete if it's present    ${growthTable}
-    the user marks the Application details section as complete        ${competitionType}
     the user should see the element    jQuery = h1:contains("Application process")  # to check i am on the right page
     the user clicks the button/link    jQuery = button:contains("Done")
     the user clicks the button/link    link = Competition setup
@@ -233,7 +253,6 @@ the user fills in the Public content and publishes
     # Fill in the Summary
     the user clicks the button/link         link = Summary
     the user enters text to a text field    css = .editor  This is a Summary description
-    the user selects the radio button       fundingType  Grant
     the user enters text to a text field    id = projectSize   10 millions
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
@@ -354,18 +373,6 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery = dt:contains("1-2") + dd:contains("This the 1-2 Justification")
     the user should see the element  jQuery = dt:contains("Max word count") + dd:contains("120")
     the user clicks the button/link  link = Return to application questions
-
-the competition moves to Open state
-    [Arguments]  ${competitionId}
-    ${yesterday} =  get yesterday
-    Connect to Database  @{database}
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `date` = '${yesterday}' WHERE `competition_id` = '${competitionId}' AND `type` = 'OPEN_DATE';
-
-# Note here we are passing the comp title not the comp ID to update the correct comp milestone
-the competition is open
-    [Arguments]  ${compTitle}
-    Connect to Database  @{database}
-    change the open date of the competition in the database to one day before  ${compTitle}
 
 moving competition to Closed
     [Arguments]  ${compID}

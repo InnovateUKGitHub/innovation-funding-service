@@ -83,11 +83,11 @@ Large pdfs not allowed for either document
     Given the user navigates to the page                ${project_in_setup_page}/document/all
     And the user clicks the button/link                 link = Collaboration agreement
     When the user uploads to the collaboration agreement/exploitation plan    ${too_large_pdf}
-    Then the user should see the text in the page       ${too_large_pdf_validation_error}
+    Then the user should see the element                jQuery = h1:contains("${too_large_pdf_validation_error}")
     And the user goes back to the previous page
     And the user goes to documents page                 Back to document overview  Exploitation plan
     When the user uploads to the collaboration agreement/exploitation plan    ${too_large_pdf}
-    Then the user should see the text in the page        ${too_large_pdf_validation_error}
+    Then the user should see the element                jQuery = h1:contains("${too_large_pdf_validation_error}")
     And the user should not see the text in the page     ${too_large_pdf}
     And the user goes back to the previous page
     [Teardown]  the user clicks the button/link          link = Back to document overview
@@ -185,7 +185,7 @@ Non-lead partner can still view the Collaboration agreement
     [Setup]    log in as a different user            &{collaborator1_credentials}
     When the user navigates to the page              ${project_in_setup_page}
     And the user goes to documents page              Documents  Collaboration agreement
-    Then the user should see the text in the page    ${valid_pdf}
+    Then the user should see the element             link = ${valid_pdf}
 
 PM can remove the first document
     [Documentation]    INFUND-3011

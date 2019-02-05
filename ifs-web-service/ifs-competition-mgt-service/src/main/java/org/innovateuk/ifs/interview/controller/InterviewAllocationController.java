@@ -18,7 +18,7 @@ import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.interview.AllocateInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
-import org.innovateuk.ifs.management.navigation.NavigationOrigin;
+import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -37,8 +37,8 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
-import static org.innovateuk.ifs.management.navigation.NavigationOrigin.INTERVIEW_APPLICATION_ALLOCATION;
-import static org.innovateuk.ifs.management.navigation.NavigationOrigin.INTERVIEW_PANEL_ALLOCATED;
+import static org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin.INTERVIEW_APPLICATION_ALLOCATION;
+import static org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin.INTERVIEW_PANEL_ALLOCATED;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -166,7 +166,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
             CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
             form.setSubject(format("Applications for interview panel for '%s'", competition.getName()));
             queryParams.put("assessorId", singletonList(String.valueOf(userId)));
-            String originQuery = buildOriginQueryString(NavigationOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);
+            String originQuery = buildOriginQueryString(ManagementApplicationOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);
             model.addAttribute("originQuery", originQuery);
 
             return "assessors/interview/allocate-applications";

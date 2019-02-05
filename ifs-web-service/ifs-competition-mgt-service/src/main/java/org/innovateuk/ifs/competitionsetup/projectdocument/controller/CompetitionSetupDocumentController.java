@@ -87,7 +87,7 @@ public class CompetitionSetupDocumentController {
             return redirect;
         }
 
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             redirect.redirect = true;
             redirect.url = "redirect:/competition/setup/" + competitionResource.getId();
             return redirect;

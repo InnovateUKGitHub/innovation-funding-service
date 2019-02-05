@@ -28,12 +28,12 @@ The user clicks the login link
     Then the user should see the element                jQuery = h1:contains("Your organisation")
     And the user should see the element                 jQuery = dt:contains("INNOVATE LTD")
     When the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
-    Then the user should see the text in the page       Application overview
+    Then the user should see the element                jQuery = h1:contains("Application overview")
 
 The user edits the name this should be changed in the View team page
     [Documentation]    INFUND-2716
     [Tags]  HappyPath
-    Given the user navigates to the page  ${DASHBOARD_URL}
+    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     When the user clicks the button/link  link = Profile
     And the user clicks the button/link   link = Edit your details
     And the user enters profile details

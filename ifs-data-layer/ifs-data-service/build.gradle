@@ -56,6 +56,7 @@ ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companiesHouseKey = ext.get('ifs.companies-house.key')
 
 ext.companiesHouseLookupEnabled = ext.has('ifs.companies-house.enabled') ? ext.get('ifs.companies-house.enabled') : true
+ext.grantProcessFilterByCompetitionIds = ext.has('ifs.grant.process.filterBy.competitionIds') ? ext.get('ifs.grant.process.filterBy.competitionIds') : ""
 
 bootRun {
     addResources = false
@@ -124,6 +125,7 @@ dependencies {
     testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-data-layer:data-service-file", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-sil-resources", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "com.openpojo:openpojo:0.8.4"
@@ -168,3 +170,5 @@ flywayMigrate.dependsOn processResources
 
 ext.ifsDataServiceRestBaseURL="http://data-service:8080"
 ext.serverPort=8080
+
+ext.ifsAllocateLiveProjectsRole=ext.has('ifs.allocate.live.projects.role') ? ext.get('ifs.allocate.live.projects.role') : true

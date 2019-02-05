@@ -17,7 +17,7 @@ Resource          ../../../resources/defaultResources.robot
 View and edit profile link is visible in the Dashboard page
     [Documentation]    INFUND-1042
     [Tags]
-    When the user navigates to the page   ${DASHBOARD_URL}
+    When the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     Then the user should see the element  link = Profile
 
 View and edit profile link redirects to the Your profile page
@@ -30,13 +30,12 @@ View and edit profile link redirects to the Your profile page
 Edit the profile and verify if the changes are saved
     [Documentation]    INFUND-1042, INFUND-6387, INFUND-9245, IFS-41
     [Tags]  HappyPath
-    Given the user navigates to the page                   ${DASHBOARD_URL}
+    Given the user navigates to the page                   ${APPLICANT_DASHBOARD_URL}
     When the user clicks the button/link                   link = Profile
     And the user clicks the button/link                    link = Edit your details
     And the user enters profile details
-    Then the user should see the text in the page          Chris
-    And the user should see the text in the page           Brown
-    And the user should see the text in the page           0123456789
+    Then the user should see the element                   jQuery = p:contains("Chris Brown")
+    And the user should see the element                    jQuery = p:contains("0123456789")
     When the user clicks the button/link                   link = Edit your details
     And Checkbox Should Be Selected                        allowMarketingEmails
     When the user can change their details back again
@@ -45,14 +44,14 @@ Edit the profile and verify if the changes are saved
 Verify that the applicant's name has been changed on other parts of the site
     [Documentation]    INFUND-1042
     [Tags]  HappyPath
-    Given the user navigates to the page           ${DASHBOARD_URL}
+    Given the user navigates to the page           ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Profile
     And the user clicks the button/link            link = Edit your details
     When the user enters profile details
     And The user clicks the button/link            link = Dashboard
     And The user clicks the button/link            link = ${OPEN_COMPETITION_APPLICATION_NAME}
     And The user clicks the button/link            link = Application team
-    Then the user should see the text in the page  Chris Brown
+    Then the user should see the element           jQuery = td:contains("Chris Brown")
     And other contributors should see the applicant's updated name for the assignation options
     And the user navigates to the page             ${EDIT_PROFILE_URL}
     And the user can change their details back again
@@ -142,5 +141,5 @@ the user can change their details back again
 other contributors should see the applicant's updated name for the assignation options
     Log in as a different user                &{collaborator1_credentials}
     go to    ${APPLICATION_OVERVIEW_URL}
-    The user should see the text in the page  Chris Brown
+    The user should see the element           jQuery = li:nth-child(2) span:contains("Chris Brown")
     log in as a different user                &{lead_applicant_credentials}

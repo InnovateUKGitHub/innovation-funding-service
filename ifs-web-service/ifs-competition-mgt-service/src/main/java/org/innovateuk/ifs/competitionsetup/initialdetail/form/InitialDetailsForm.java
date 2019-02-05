@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -40,6 +41,9 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotBlank(message = "{validation.standard.title.required}")
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String title;
+
+    @NotNull(message="{validation.initialdetailsform.fundingType.required}", groups = Unrestricted.class)
+    private FundingType fundingType;
 
     @NotNull(message = "{validation.initialdetailsform.innovationsectorcategoryid.required}")
     private Long innovationSectorCategoryId;
@@ -159,5 +163,14 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     public void setInnovationAreaNamesFormatted(String formattedNames) {
         this.innovationAreaNamesFormatted = formattedNames;
+    }
+
+    public FundingType getFundingType() {
+        return fundingType;
+    }
+
+    public InitialDetailsForm setFundingType(FundingType fundingType) {
+        this.fundingType = fundingType;
+        return this;
     }
 }
