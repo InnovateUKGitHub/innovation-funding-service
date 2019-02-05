@@ -32,8 +32,8 @@ User can view the public content
     [Documentation]    INFUND-6914
     [Tags]
     Given the internal user navigates to public content  ${public_content_competition_name}
-    Then the user should not see the text in the page   This information will be publicly viewable by prospective applicants.
-    And the user should not see the text in the page    Competition URL
+    Then the user should not see the element            jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
+    And the user should not see the element             jQuery = .message-alert:contains("Competition URL")
     And the user should see the element                 link = Competition information and search
     And the user should see the element                 link = Summary
     And the user should see the element                 link = Eligibility
@@ -304,7 +304,7 @@ Supporting information: Add, remove sections and submit
 Publish public content: Publish once all sections are complete
     [Documentation]    INFUND-6914
     [Tags]
-    Given the user should not see the text in the page  Last published
+    Given the user should not see the element           jQuery = small:contains("Last published")
     When the user clicks the button/link                jQuery = button:contains("Publish content")
     Then the user should see the element                jQuery = small:contains("Last published")
     And the user should not see the element             jQuery = button:contains("Publish content")
@@ -317,7 +317,7 @@ Publish public content: Publish once all sections are complete
 User can view the competition url for invite only competitions
     [Documentation]    IFS-262
     [Tags]
-    Given the user should not see the text in the page  This information will be publicly viewable by prospective applicants.
+    Given the user should not see the element           jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
     When the user clicks the button/link                jQuery = a:contains("${server}/competition/${competitionId}/overview")
     Then the user should see the element                jQuery = h1:contains("Public content competition")
     And the user should see the element                 jQUery = .govuk-body:contains("This is a Summary description")

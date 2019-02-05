@@ -72,7 +72,7 @@ Initial details: client-side validations
     When the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
     Then the user should not see the error any more             Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    John Doe     id = executiveUserId
-    Then The user should not see the text in the page           Please select a Portfolio manager.    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
+    Then The user should not see the element                    jQuery = .govuk-error-message:contains("Please select a Portfolio manager.")
     [Teardown]  wait for autosave
 
 Initial details: Autosave
@@ -163,14 +163,13 @@ Eligibility client-side validations
     And the user moves focus and waits for autosave
     And the user clicks the button twice                 css = label[for="comp-overrideFundingRules-no"]
     And the user moves focus and waits for autosave
-    Then the user should not see the text in the page    Please select a collaboration level
-    And the user should not see the text in the page     Please select a lead applicant type
-    And the user should not see the text in the page     Please select at least one research category
+    Then the user should not see the element             jQuery = .govuk-error-message:contains("Please select a collaboration level")
+    And the user should not see the element              jQuery = .govuk-error-message:contains("Please select a lead applicant type")
+    And the user should not see the element              jQuery = .govuk-error-message:contains("Please select at least one research category")
     And the user moves focus and waits for autosave
-    And the user should not see the text in the page     A stream name is required
     And the user selects the radio button                resubmission    no
     And the user moves focus and waits for autosave
-    And the user should not see the text in the page     Please select a resubmission option
+    And the user should not see the element             jQuery = .govuk-error-message:contains("Please select a resubmission option")
     And the user cannot see a validation error in the page
 
 Eligibility Autosave
@@ -260,7 +259,7 @@ Assessor: Client-side validation
     Then the user should see a field error       This field can only accept whole numbers
     When The user enters text to a text field    id = assessorPay  120
     And the user selects the radio button        assessorCount   5
-    Then The user should not see the text in the page  This field can only accept whole numbers
+    Then The user should not see the element     jQuery = .govuk-error-message:contains("This field can only accept whole numbers")
     And the user clicks the button/link          link = Competition setup
 
 Documents in project setup: The competition admin is required to enter a title and guidance message

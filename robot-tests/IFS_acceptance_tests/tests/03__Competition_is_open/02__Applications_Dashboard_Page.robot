@@ -67,7 +67,7 @@ Filter on application number
     Given the user enters text to a text field          id = filterSearch    ${application_ids["Safeguarding pollinators and their values to human well-being"]}
     When the user clicks the button/link                jQuery = button:contains("Filter")
     Then the user should see the element                jQuery = td:contains("Safeguarding pollinators and their values to human well-being")
-    And the user should not see the text in the page    Climate science the history of Greenland's ice
+    And the user should not see the element             jQuery = td:contains("Climate science the history of Greenland's ice")
     And the user clicks the button/link                 jQuery = a:contains("Clear all filters")
     And the user should see the element                 jQuery = td:contains("Climate science the history of Greenland's ice")
 

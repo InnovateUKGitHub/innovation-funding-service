@@ -857,7 +857,7 @@ the user fills the scope assessment questions
 
 the user checks the scope assessment questions
     The user should see the element                 jQuery = dt:contains("New subject") ~ dd:contains("This is a justification")
-    The user should not see the text in the page    One or more of the above requirements have not been satisfied.
+    The user should not see the element             jQuery = dt:contains("NO") ~ dd:contains("One or more of the above requirements have not been satisfied.")
     The user should see the element                 jQuery = dt:contains("Written feedback")
     The user should see the element                 jQuery = p:contains("Guidance for assessing scope section")
     The user should see the element                 jQuery = dt:contains("Scope 'Y/N' question")
@@ -871,9 +871,9 @@ the user should not be able to edit the scope feedback
     the user should not see the element    jQuery = Button:contains("+Add guidance row")
 
 the user should not see the scope feedback
-    the user should not see the text in the page    Guidance for assessing scope
-    the user should not see the text in the page    Your answer should be based upon the following:
-    the user should not see the text in the page    One or more of the above requirements have not been satisfied
+    the user should not see the element            jQuery = dt:contains("Guidance title") ~ dd:contains("Guidance for assessing scope")
+    the user should not see the element            jQuery = p:contains("Your answer should be based upon the following:")
+    the user should not see the element            jQuery = dt:contains("NO") ~ dd:contains("One or more of the above requirements have not been satisfied.")
 
 the user should not be able to edit the assessed question feedback
     the user should not see the element    id = question.assessmentGuidanceTitle

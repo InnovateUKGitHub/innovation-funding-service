@@ -42,7 +42,7 @@ the user sees the correct read only view of the question
     the user should see the element    jQuery = dd p:contains("Business opportunity guidance")
     the user should see the element    jQuery = dt:contains("0-1") + dd:contains("This is a justification")
     the user should see the element    jQuery = dt:contains("Max word count") + dd:contains("10")
-    the user should not see the text in the page    The business opportunity is plausible
+    the user should not see the element      jQuery = dt:contains("5-6") ~ dd:contains("The business opportunity is plausible")
 
 the user fills in the CS Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}

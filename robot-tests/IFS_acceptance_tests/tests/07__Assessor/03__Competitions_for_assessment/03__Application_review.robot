@@ -232,10 +232,6 @@ I should see word count underneath feedback form
     [Arguments]    ${wordCount}
     the user should see the element    jQuery = span:contains("${wordCount}")
 
-I should not see validation message above the feedback form text field
-    [Arguments]    ${error_message}
-    the user should not see the text in the page  ${error_message}
-
 I open one of the application questions
     [Arguments]    ${application_question}
     the user clicks the button/link  ${application_question}
