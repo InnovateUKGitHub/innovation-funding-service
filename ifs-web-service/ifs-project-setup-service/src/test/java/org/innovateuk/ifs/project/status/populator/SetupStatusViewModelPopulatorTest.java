@@ -21,6 +21,7 @@ import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -46,6 +47,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.newCompetitionDocumentResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -95,7 +97,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private static final boolean monitoringOfficerExpected = true;
 
     List<CompetitionDocumentResource> projectDocumentConfig =
-            CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+            newCompetitionDocumentResource()
             .withTitle("Risk Register", "Plan Document")
             .build(2);
 
@@ -157,6 +159,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(COMPLETE)
                         .withFinanceChecksStatus(NOT_STARTED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -185,6 +188,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -221,6 +225,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -246,8 +251,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
-                        .build(1)).
-                        build();
+                        .build(1))
+                .withProjectState(ProjectState.SETUP)
+                .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
@@ -274,8 +280,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
-                        .build(1)).
-                        build();
+                        .build(1))
+                .withProjectState(ProjectState.SETUP)
+                .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
@@ -304,8 +311,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
-                        .build(1)).
-                        build();
+                        .build(1))
+                .withProjectState(ProjectState.SETUP)
+                .build();
 
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(project.getId())).thenReturn(project);
@@ -366,6 +374,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(NOT_STARTED)
                         .withPartnerProjectLocationStatus(ACTION_REQUIRED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -398,6 +407,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withPartnerProjectLocationStatus(ACTION_REQUIRED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -431,6 +441,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withPartnerProjectLocationStatus(COMPLETE)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -464,6 +475,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withPartnerProjectLocationStatus(COMPLETE)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -498,6 +510,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -531,6 +544,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -565,6 +579,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -599,6 +614,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -634,6 +650,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -662,6 +679,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -694,6 +712,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceContactStatus(NOT_STARTED)
                         .withPartnerProjectLocationStatus(ACTION_REQUIRED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -716,8 +735,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(PENDING).
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
-                        build()).
-                build();
+                        build())
+                .withProjectState(ProjectState.SETUP)
+                .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
@@ -743,6 +763,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withOrganisationId(organisationResource.getId()).
                         withIsLeadPartner(true).
                         build()).
+                withProjectState(ProjectState.SETUP).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -772,8 +793,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(NOT_REQUIRED).
-                        build(1)).
-                build();
+                        build(1))
+                .withProjectState(ProjectState.SETUP)
+                .build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
@@ -803,6 +825,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(NOT_REQUIRED).
                         build(1)).
+                withProjectState(ProjectState.SETUP).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
@@ -834,7 +857,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
                         .build(1)).
-                        build();
+                withProjectState(ProjectState.SETUP)
+                .build();
 
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(project.getId())).thenReturn(project);
@@ -884,6 +908,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         build(1)).
+                withProjectState(ProjectState.SETUP).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
@@ -915,6 +940,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         withSpendProfileStatus(ACTION_REQUIRED).
                         build(1)).
+                withProjectState(ProjectState.SETUP).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
@@ -947,6 +973,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         build(1)).
+                withProjectState(ProjectState.SETUP).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
@@ -979,6 +1006,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         build(1)).
+                withProjectState(ProjectState.SETUP).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
@@ -1011,6 +1039,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withBankDetailsStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         build(1)).
+                withProjectState(ProjectState.SETUP).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
@@ -1045,6 +1074,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         withProjectDetailsStatus(COMPLETE).
                         build(1)).
+                withProjectState(ProjectState.SETUP).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
@@ -1080,6 +1110,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         withProjectDetailsStatus(COMPLETE).
                         build(1)).
+                withProjectState(ProjectState.SETUP).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
@@ -1115,6 +1146,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         withProjectDetailsStatus(COMPLETE).
                         build(1)).
+                withProjectState(ProjectState.SETUP).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
@@ -1150,6 +1182,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         withProjectDetailsStatus(COMPLETE).
                         build(1)).
+                withProjectState(ProjectState.SETUP).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
@@ -1184,6 +1217,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
@@ -1211,6 +1245,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
@@ -1252,6 +1287,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
@@ -1279,6 +1315,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
@@ -1306,6 +1343,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         project = newProjectResource().withApplication(application).build();
@@ -1392,6 +1430,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
         List<ProjectDocumentResource> projectDocumentResources = ProjectDocumentResourceBuilder.newProjectResource()
@@ -1430,9 +1469,10 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
                         .build(1))
+                .withProjectState(ProjectState.SETUP)
                 .build();
 
-        List<CompetitionDocumentResource> competitionDocuments = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocuments = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
                 .withTitle(COLLABORATION_AGREEMENT_TITLE, "Other Document")
                 .withCompetition(competition.getId())
                 .build(2);

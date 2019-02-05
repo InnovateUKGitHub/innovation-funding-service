@@ -40,8 +40,7 @@ public enum Role implements Identifiable {
     MONITORING_OFFICER          (19, "monitoring_officer",       "Monitoring Officer",        "applicant/dashboard"),
     STAKEHOLDER                 (20, "stakeholder",               "Stakeholder",              "management/dashboard");
 
-    final long id;
-    final String name;
+    final long id;,
     final String displayName;
     final String dashboardUrl;
 

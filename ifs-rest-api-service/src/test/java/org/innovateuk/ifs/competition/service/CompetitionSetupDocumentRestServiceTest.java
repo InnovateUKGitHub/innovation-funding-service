@@ -25,8 +25,8 @@ public class CompetitionSetupDocumentRestServiceTest extends BaseRestServiceUnit
 
     @Test
     public void save() {
-        CompetitionDocumentResource requestBody = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource().build();
-        CompetitionDocumentResource responseBody = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource().build();
+        CompetitionDocumentResource requestBody = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource().build();
+        CompetitionDocumentResource responseBody = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource().build();
 
         setupPostWithRestResultExpectations(String.format("%s/save", competitionSetupProjectDocumentRestURL), CompetitionDocumentResource.class, requestBody, responseBody, HttpStatus.OK);
 
@@ -39,8 +39,8 @@ public class CompetitionSetupDocumentRestServiceTest extends BaseRestServiceUnit
 
     @Test
     public void saveAll() {
-        List<CompetitionDocumentResource> requestBody = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource().build(2);
-        List<CompetitionDocumentResource> responseBody = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource().build(2);
+        List<CompetitionDocumentResource> requestBody = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource().build(2);
+        List<CompetitionDocumentResource> responseBody = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource().build(2);
 
         setupPostWithRestResultExpectations(String.format("%s/save-all", competitionSetupProjectDocumentRestURL), competitionDocumentResourceListType(), requestBody, responseBody, HttpStatus.OK);
 
@@ -56,7 +56,7 @@ public class CompetitionSetupDocumentRestServiceTest extends BaseRestServiceUnit
 
         long projectDocumentId = 1L;
 
-        CompetitionDocumentResource responseBody = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource().build();
+        CompetitionDocumentResource responseBody = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource().build();
 
         setupGetWithRestResultExpectations(String.format("%s/%s", competitionSetupProjectDocumentRestURL, projectDocumentId), CompetitionDocumentResource.class, responseBody);
 
@@ -72,7 +72,7 @@ public class CompetitionSetupDocumentRestServiceTest extends BaseRestServiceUnit
 
         long competitionId = 1L;
 
-        List<CompetitionDocumentResource> responseBody = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource().build(2);
+        List<CompetitionDocumentResource> responseBody = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource().build(2);
 
         setupGetWithRestResultExpectations(String.format("%s/find-by-competition-id/%s", competitionSetupProjectDocumentRestURL, competitionId), competitionDocumentResourceListType(), responseBody);
 
