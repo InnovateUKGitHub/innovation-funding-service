@@ -31,7 +31,6 @@ ${manageExternalUsers}  ${server}/management/admin/external/users
 ${openCompetitionRTO_name}       Predicting market trends programme
 ${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
 ${openCompetitionRTOCloseDate}   ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
-${openCompetitionRTOOpenDate}    ${getSimpleMilestoneDate(${openCompetitionRTO}, "OPEN_DATE")}
 
 ${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
 ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
