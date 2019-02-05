@@ -14,7 +14,7 @@ import javax.persistence.*;
 @MappedSuperclass
 public abstract class ProjectParticipant<I extends Invite<Project, I>> extends Participant<Project, I, ProjectParticipantRole> {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
