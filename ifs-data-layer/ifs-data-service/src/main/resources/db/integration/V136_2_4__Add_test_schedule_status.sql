@@ -1,0 +1,1 @@
+insert into schedule_status (job_name, version) VALUES ('INTEGRATION_TEST', now());

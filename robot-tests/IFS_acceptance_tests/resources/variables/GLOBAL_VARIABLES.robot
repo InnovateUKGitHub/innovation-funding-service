@@ -30,7 +30,7 @@ ${manageExternalUsers}  ${server}/management/admin/external/users
 # Competitions and Applications Variables
 ${openCompetitionRTO_name}       Predicting market trends programme
 ${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
-${openCompetitionRTOCloseDate}       ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
+${openCompetitionRTOCloseDate}   ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
 
 ${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
 ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
@@ -123,10 +123,15 @@ ${MARKOFFLINE_APPLICATION_1_NUMBER}  ${application_ids['${MARKOFFLINE_APPLICATIO
 
 ${NON_IFS_COMPETITION_NAME}     Transforming big data
 
-${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
+${DASHBOARD_SELECTION_PAGE_TITLE}  Dashboard
+
+${APPLICANT_DASHBOARD_URL}    ${SERVER}/applicant/dashboard
+${APPLICANT_DASHBOARD_TITLE}  Applications
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
-${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
+
+${ASSESSOR_DASHBOARD_URL}    ${SERVER}/assessment/assessor/dashboard
+${ASSESSOR_DASHBOARD_TITLE}  Assessments
 
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
 

@@ -26,11 +26,11 @@ Before Monitoring Officer is assigned
     [Tags]  HappyPath
     [Setup]    Log in as a different user               &{lead_applicant_credentials}
     Given the user navigates to the page                ${project_in_setup_page}
-    And the user should see the text in the page        We will assign the project a Monitoring Officer.
+    And the user should see the element                 jQuery = h2:contains("Monitoring Officer") ~ p:contains("We will assign the project a Monitoring Officer.")
     And the user should not see the element             css = ul li.complete:nth-child(3)
     And the user should see the element                 css = ul li.waiting:nth-child(3)
     When the user clicks the button/link                link = Monitoring Officer
-    Then the user should see the text in the page       Your project has not yet been assigned a Monitoring Officer.
+    Then the user should see the element                jQuery = p:contains("Your project has not yet been assigned a Monitoring Officer.")
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
     When the user navigates to the page                 ${project_in_setup_team_status_page}
     And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
@@ -53,32 +53,32 @@ Comp admin can view the Supporting information details on MO page
     [Tags]  HappyPath
     [Setup]    Log in as a different user              &{Comp_admin1_credentials}
     When the user navigates to the page                ${Successful_Monitoring_Officer_Page}
-    Then the user should see the text in the page      Monitoring Officer
-    And the user should see the text in the page       Supporting information
-    And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user should see the text in the page       Digital manufacturing
+    Then the user should see the element               jQuery = h1:contains("Monitoring Officer")
+    And the user should see the element                jQuery = h2:contains("Supporting information")
+    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
+    And the user should see the element                jQuery = h3:contains("Area") ~ p:contains("Digital manufacturing")
     And the user should see the correct address
     And the user should see the text in the element    jQuery = p:nth-child(11)    1 Jan ${nextyear}
-    And the user should see the text in the page       Elmo Chenault
-    And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    And the user should see the text in the page       ${organisationEggsName}
-    And the user should see the text in the page       ${organisationLudlowName}
+    And the user should see the element                jQuery = h3:contains("Project Manager") ~ p:contains("Elmo Chenault")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${organisationEggsName}")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${organisationLudlowName}")
 
 Project finance user can view MO page, and go on to assign MO
     [Documentation]    INFUND-5666, INFUND-5507
     [Tags]  HappyPath
     Given log in as a different user                   &{internal_finance_credentials}
     When the user navigates to the page                ${Successful_Monitoring_Officer_Page}
-    Then the user should see the text in the page      Monitoring Officer
-    And the user should see the text in the page       Supporting information
-    And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user should see the text in the page       Digital manufacturing
+    Then the user should see the element               jQuery = h1:contains("Monitoring Officer")
+    And the user should see the element                jQuery = h2:contains("Supporting information")
+    And the user should see the element                jQUery = h3:contains("Project title") ~ p:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
+    And the user should see the element                jQuery = h3:contains("Area") ~ p:contains("Digital manufacturing")
     And the user should see the correct address
     And the user should see the text in the element    jQuery = p:nth-child(11)    1 Jan ${nextyear}
-    And the user should see the text in the page       Elmo Chenault
-    And the user should see the text in the page       ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    And the user should see the text in the page       ${organisationEggsName}
-    And the user should see the text in the page       ${organisationLudlowName}
+    And the user should see the element                jQuery = h3:contains("Project Manager") ~ p:contains("Elmo Chenault")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${organisationEggsName}")
+    And the user should see the element                jQuery = h3:contains("Project partners") ~ ul li:contains("${organisationLudlowName}")
     [Teardown]  the user clicks the button/link        link = Projects in setup
 
 MO server-side validation
@@ -121,7 +121,7 @@ MO details can be added
     And the user clicks the button/link                  jQuery = .govuk-button:contains("Assign Monitoring Officer")
     And the user clicks the button/link                  jQuery = .modal-assign-mo button:contains("Assign Monitoring Officer")
     Then The user should see the element                 css = .success-alert
-    And the user should see the text in the page         A Monitoring Officer has been assigned.
+    And the user should see the element                  jQuery = .success-alert:contains("A Monitoring Officer has been assigned.")
     Then Log in as a different user                      &{lead_applicant_credentials}
     And the user navigates to the page                   ${project_in_setup_page}
     And the user should see the element                  css = ul li.complete:nth-child(3)
@@ -149,10 +149,10 @@ MO details can be edited and viewed in the Set up your project page
     And the user should see the element                css = ul li.complete:nth-child(3)
     And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link                link = Monitoring Officer
-    Then the user should see the text in the page      We have assigned a Monitoring Officer to your project.
-    And the user should see the text in the page       Grace Harper
-    And the user should see the text in the page       ${test_mailbox_two}+monitoringofficer@gmail.com
-    And the user should see the text in the page       08549731414
+    Then the user should see the element               jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
+    And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
+    And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
+    And the user should see the element                jQuery = .govuk-body:contains("08549731414")
     When the user navigates to the page                ${project_in_setup_team_status_page}
     Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
@@ -171,10 +171,10 @@ MO details accessible/seen by all partners
     Then the user should see the element               css = ul li.complete:nth-child(3)
     And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link                link = Monitoring Officer
-    Then the user should see the text in the page      We have assigned a Monitoring Officer to your project.
-    And the user should see the text in the page       Grace Harper
-    And the user should see the text in the page       ${test_mailbox_two}+monitoringofficer@gmail.com
-    And the user should see the text in the page       08549731414
+    Then the user should see the element               jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
+    And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
+    And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
+    And the user should see the element                jQuery = .govuk-body:contains("08549731414")
     When the user navigates to the page                ${project_in_setup_team_status_page}
     Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
     When Log in as a different user                    &{lead_applicant_credentials}
@@ -182,10 +182,10 @@ MO details accessible/seen by all partners
     Then the user should see the element               css = ul li.complete:nth-child(3)
     And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link                link = Monitoring Officer
-    Then the user should see the text in the page      We have assigned a Monitoring Officer to your project.
-    And the user should see the text in the page       Grace Harper
-    And the user should see the text in the page       ${test_mailbox_two}+monitoringofficer@gmail.com
-    And the user should see the text in the page       08549731414
+    Then the user should see the element               jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
+    And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
+    And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
+    And the user should see the element                jQuery = .govuk-body:contains("08549731414")
     When the user navigates to the page                ${project_in_setup_team_status_page}
     Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
@@ -206,7 +206,7 @@ Existing Monitoring Officer can sign in
     [Documentation]    IFS-3977
     [Tags]  HappyPath
     When log in as a different user                     &{monitoring_officer_one_credentials}
-    Then the user should see the text in the element    css = .govuk-heading-l       Dashboard
+    Then the user should see the element                jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 Monitoring Officer can see projects that they are assigned to
     [Documentation]    IFS-3978
@@ -251,7 +251,7 @@ the user edits the MO details
 
 the user can see the changed MO details
     The user should see the element             css = .success-alert
-    the user should see the text in the page    A Monitoring Officer has been assigned.
+    the user should see the element             jQuery = .success-alert:contains("A Monitoring Officer has been assigned.")
     Textfield Should Contain                    id = firstName    Grace
     Textfield Should Contain                    id = lastName    Harper
 

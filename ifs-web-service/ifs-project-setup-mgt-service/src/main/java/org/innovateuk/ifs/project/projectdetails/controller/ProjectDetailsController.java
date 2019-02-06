@@ -21,6 +21,7 @@ import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,6 @@ import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.RedirectUtils.buildRedirect;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -75,6 +75,9 @@ public class ProjectDetailsController {
 
     @Autowired
     private ApplicationRestService applicationRestService;
+
+    @Autowired
+    private NavigationUtils navigationUtils;
 
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
@@ -129,8 +132,7 @@ public class ProjectDetailsController {
                                 )
                         );
 
-        return buildRedirect(request,
-                "management/competition/" + competitionId + "/applications/previous");
+        return navigationUtils.getRedirectToSameDomainUrl(request, "management/competition/" + competitionId + "/applications/previous");
     }
 
     @PreAuthorize("hasAuthority('ifs_administrator')")

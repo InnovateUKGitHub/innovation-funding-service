@@ -5,7 +5,7 @@ Documentation     INFUND-844: As an applicant I want to receive a validation err
 ...
 ...               IFS-4569: As an applicant I am able to input a non-UK postcode for Project location
 Suite Setup       Custom Suite Setup
-Suite Teardown    Mark application details as incomplete and the user closes the browser  ${OPEN_COMPETITION_APPLICATION_5_NAME}
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -257,6 +257,7 @@ Funding level server side
 
 *** Keywords ***
 Custom Suite Setup
+    Connect to database  @{database}
     Set predefined date variables
     the user logs-in in new browser       &{lead_applicant_credentials}
     log in and create new application if there is not one already with complete application details  ${OPEN_COMPETITION_APPLICATION_5_NAME}  ${tomorrowday}  ${month}  ${nextyear}
@@ -276,3 +277,7 @@ Remove row
     wait for autosave
     the user clicks the button/link    ${close button}
     the user clicks the button/link    ${section}
+
+Custom suite teardown
+    Mark application details as incomplete and the user closes the browser  ${OPEN_COMPETITION_APPLICATION_5_NAME}
+    Disconnect from database

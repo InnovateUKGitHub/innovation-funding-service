@@ -223,7 +223,6 @@ Initial details editable before notify date (Open)
 Assessors editable before Notifications Date (Open)
     [Documentation]  INFUND-6695 IFS-380
     [Tags]    MySQL
-    [Setup]    Connect to Database    @{database}
     Given the user clicks the button/link     link = Assessors
     Then the user should see the element      jQuery = .govuk-button:contains("Edit")
     And the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("1")
@@ -291,15 +290,7 @@ Custom suite setup
     ${today}=    get time
     ${tomorrow} =    Add time To Date    ${today}    1 day
     Set suite variable    ${tomorrow}
-
-The user moves the open date to the past
-    Connect to Database    @{database}
-    Change the open date of the Competition in the database to one day before  ${openCompetitionBusinessRTO_name}
-
-there is a future Notifications date
-    [Documentation]    There are no testing data for `milestone`.`type`="NOTIFICATIONS". So i am using MySQL to create a future date
-    ...    I am updating Competition=1. Because is the Competition that remains in Open State.
-    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${tomorrow}' WHERE `id`='6';
+    Connect to Database  @{database}
 
 return the database to its previous status
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `id`='6';
@@ -377,4 +368,5 @@ the user resets the milestone data for milestone
 
 Custom suite teardown
     the user moves the competition back again
+    Disconnect from database
     the user closes the browser

@@ -82,7 +82,7 @@ Create assessor account: Postcode lookup and save
     And the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
     And The user enters text to a text field                id = password    ${correct_password}
     And the user clicks the button/link                     jQuery = button:contains("Continue")
-    Then the user should see the text in the page           Your account has been created
+    Then the user should see the element                    jQuery = h1:contains("Your account has been created")
     And the user clicks the button/link                     jQuery = a:contains("Sign into your account")
     Then the user should be redirected to the correct page  ${LOGGED_OUT_URL_FRAGMENT}
 
@@ -111,7 +111,7 @@ Non-registered assessor: Reject invitation
     [Documentation]    INFUND-4631  INFUND-4636  INFUND-5165
     [Tags]
     When the user navigates to the page                    ${Invitation_nonregistered_assessor2}
-    Then the user should see the text in the page          Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
+    Then the user should see the element                   jQuery = h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
     And the user selects the radio button                  acceptInvitation  false
     And The user clicks the button/link                    jQuery = button:contains("Confirm")
     Then the user should see a field and summary error     The reason cannot be blank.

@@ -19,7 +19,7 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       Custom Suite Setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
@@ -28,7 +28,7 @@ User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
     [Tags]
     When the user navigates to the page              ${server}/assessment/${WITHDRAWN_ASSESSMENT}/assignment
-    Then the user should see the text in the page    Invitation withdrawn
+    Then the user should see the element             jQuery = h1:contains("Invitation withdrawn")
     [Teardown]    the user clicks the button/link    jQuery = #navigation a:contains(Dashboard)
 
 Competition link should navigate to the applications
@@ -56,7 +56,7 @@ User can view the competition brief
     When The user opens the link in new window           View competition brief
     Then the user should get a competition brief window
     And the user should not see an error in the page
-    And the user should see the text in the page         ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user should see the element                  jQuery = h1:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element                  jQuery = .govuk-list li:contains("Competition opens")
     And the user should see the element                  jQuery = .govuk-list li:contains("Competition closes")
     And the user should see the element                  jQuery = .govuk-button:contains("Start new application")
@@ -126,6 +126,7 @@ Comp admin can see the application is rejected on manage assessment page
 
 *** Keywords ***
 Custom Suite Setup
+   Connect to database  @{database}
    The user logs-in in new browser  &{assessor2_credentials}
    ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Select a dashboard")
    Run Keyword If  '${status}' == 'PASS'  Run keywords   the user selects the checkbox   selectedRole1
@@ -157,10 +158,13 @@ The user closes the competition brief
     Select Window
 
 request the date from the database
-    Connect to Database  @{database}
     log  ${IN_ASSESSMENT_COMPETITION}
     ${result} =  Query  SELECT DATE_FORMAT(`date`, '%e %M %Y') FROM `${database_name}`.`milestone` WHERE `competition_id` = '${IN_ASSESSMENT_COMPETITION}' AND type = 'ASSESSOR_DEADLINE';
     log  ${result}
     ${result} =  get from list  ${result}  0
     ${assessorDeadline} =  get from list  ${result}  0
     [Return]  ${assessorDeadline}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

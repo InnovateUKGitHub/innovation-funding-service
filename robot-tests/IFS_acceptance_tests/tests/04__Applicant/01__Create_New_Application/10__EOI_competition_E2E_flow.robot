@@ -11,7 +11,7 @@ Documentation     Suite description
 ...
 ...               IFS-4080 As an applicant I am able to confirm the Research category eligible for the competition
 Suite Setup       custom suite setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -117,6 +117,7 @@ the EOI comp moves to Previous tab
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+    Connect to database  @{database}
 
 the lead applicant fills all the questions and marks as complete(EOI comp type)
     the lead applicant marks every question as complete   Project summary
@@ -150,3 +151,7 @@ logged in user applies to competition
     the user clicks the button/link      jQuery = button:contains("Save and continue")
     the user selects the checkbox        agree
     the user clicks the button/link      css = .govuk-button[type="submit"]    #Continue
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

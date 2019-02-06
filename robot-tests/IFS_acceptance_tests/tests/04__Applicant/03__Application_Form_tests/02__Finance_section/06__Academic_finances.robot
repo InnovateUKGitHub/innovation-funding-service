@@ -9,7 +9,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...
 ...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -152,6 +152,7 @@ Academic finance overview
 Custom Suite Setup
     Set predefined date variables
     the guest user opens the browser
+    Connect to database  @{database}
     Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the subtotals should be correctly updated
@@ -217,3 +218,7 @@ The user marks the academic application finances as incomplete
     Set Focus To Element      jQuery = button:contains("Edit")
     the user clicks the button/link    jQuery = button:contains("Edit")
     wait for autosave
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

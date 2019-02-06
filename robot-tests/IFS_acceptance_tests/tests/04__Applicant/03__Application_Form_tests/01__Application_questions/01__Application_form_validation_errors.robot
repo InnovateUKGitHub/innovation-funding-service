@@ -144,7 +144,7 @@ the applicant clears the text area of the "Project Summary"
     wait for autosave
 
 Applicant goes to the application details page of the Robot application
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     When the user clicks the button/link    link = ${applicationTitle}
     And the user clicks the button/link     link = Application details
 

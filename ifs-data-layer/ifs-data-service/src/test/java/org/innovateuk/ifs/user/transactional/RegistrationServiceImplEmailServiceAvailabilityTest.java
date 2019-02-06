@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
@@ -88,9 +89,9 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
 
                 UserResource registrationInfo = newUserResource().
                         withTitle(Title.Dr).
-                        withFirstName("Kieran").
-                        withLastName("Worth").
-                        withEmail("rollback@worth.com").
+                        withFirstName("Bob").
+                        withLastName("Spiggot").
+                        withEmail("thebspig@example.com").
                         withPassword("thebspig").
                         build();
 
@@ -98,11 +99,17 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
                         registrationService.createUser(registrationInfo));
             });
         });
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void createOrganisationUserWithEmailServiceAvailablePublishesUserEvent() {
 
         applicationEventPublisher = Mockito.mock(ApplicationEventPublisher.class);
         idpService.setApplicationEventPublisher(applicationEventPublisher);
 
-       regApiHelper.withMockIdpRestTemplate(mockIdpRestTemplate -> {
+        regApiHelper.withMockIdpRestTemplate(mockIdpRestTemplate -> {
 
             withServiceAvailableFromEmailService(() -> {
 

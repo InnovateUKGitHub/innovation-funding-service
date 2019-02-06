@@ -14,8 +14,8 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...               IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
 ...
 ...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
-Suite Setup       Set predefined date variables
-Suite Teardown    Close browser and delete emails
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant  CompAdmin
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -205,7 +205,7 @@ The Lead applicant is able to edit and re-submit when no
 Funding subsection opens when Appl details and organisation info are provided
     [Documentation]    INFUND-6895
     [Tags]
-    Given the user navigates to the page    ${dashboard_url}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link     link = ${applicationWithoutGrowth}
     When the user should see the element    jQuery = li:contains("Application details") > .task-status-complete
     And the user clicks the button/link     link = Your finances
@@ -276,7 +276,7 @@ The Lead Applicant is able to edit and re-submit when yes
 Lead applicant can see all innovation areas
     [Documentation]  IFS-40
     [Tags]
-    Given the user navigates to the page         ${DASHBOARD_URL}
+    Given the user navigates to the page         ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link          jQuery = a:contains('Untitled application'):last
     And the user clicks the button/link          link = Application details
     #The fact that the link is present means that the innovation area is not pre-defined
@@ -444,12 +444,12 @@ the user can edit resubmit and read only of the organisation
 the lead applicant invites an existing user
     [Arguments]    ${comp_title}    ${EMAIL_INVITED}
     log in as a different user            &{lead_applicant_credentials}
-    the user navigates to the page        ${dashboard_url}
+    the user navigates to the page        ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link       jquery = .in-progress a:contains("${applicationWithGrowth}")
     the user fills in the inviting steps no edit  ${EMAIL_INVITED}
 
 the user navigates to the growth table finances
-    the user navigates to the page   ${DASHBOARD_URL}
+    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  jQuery = .in-progress a:contains("Untitled application"):last
     the user clicks the button/link  link = Your finances
 
@@ -493,3 +493,11 @@ the logged in user should not be able to apply in a competition he has not right
     the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
+
+Custom suite setup
+    Set predefined date variables
+    Connect to database  @{database}
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database
