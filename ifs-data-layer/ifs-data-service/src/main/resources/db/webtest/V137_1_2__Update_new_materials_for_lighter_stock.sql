@@ -9,7 +9,7 @@ INSERT INTO project_user (project_id, organisation_id, user_id, project_role, pa
 UPDATE process SET event='project-manager-added', last_modified=now(), activity_state_id='8' WHERE id='326';
 
 INSERT INTO address (address_line1, address_line2, address_line3, town, postcode, county) VALUES ('Bag End', 'Bagshot Row', '', 'Hobbiton', 'E17 5LR', 'The Shire');
-UPDATE project SET address=LAST_INSERT_ID() WHERE `id`='9';
+UPDATE project SET address=LAST_INSERT_ID() WHERE id='9';
 
 -- add monitoring officer
 INSERT INTO monitoring_officer (first_name, last_name, email, phone_number, project_id) VALUES ('Paul', 'Hollywood', 'p.hollywood@bake.example.com', '01675 342514', '9');
