@@ -19,7 +19,7 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...
 ...               IFS-4982 Move Funding type selection from front door to Initial details
 Suite Setup       Custom suite setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  MySQL
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
@@ -436,6 +436,7 @@ Guest user can see the updated How-to-apply information
 *** Keywords ***
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
+    Connect to database  @{database}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
     ${today} =  get today
@@ -565,3 +566,7 @@ the user visits
 the user should see all sections completed
     :FOR  ${i}  IN RANGE  1  8
     \    the user should see the element  css = li:nth-child(${i}) .task-status-complete
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

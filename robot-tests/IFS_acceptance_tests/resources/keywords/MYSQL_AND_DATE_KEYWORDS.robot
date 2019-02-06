@@ -83,7 +83,6 @@ Get competitions id and set it as suite variable
 
 Save competition's current dates
     [Arguments]  ${competitionId}
-    Connect to Database  @{database}
     ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='OPEN_DATE';
     ${result} =  get from list  ${result}  0
     ${openDate} =  get from list  ${result}  0
@@ -94,14 +93,12 @@ Save competition's current dates
 
 Return the competition's milestones to their initial values
     [Arguments]  ${competitionId}  ${openDate}  ${submissionDate}
-    Connect to Database  @{database}
     Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
     Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
 
 the competition moves to Open state
     [Arguments]  ${competitionId}
     ${yesterday} =  get yesterday
-    Connect to Database  @{database}
     execute sql string  UPDATE `${database_name}`.`milestone` SET `date` = '${yesterday}' WHERE `competition_id` = '${competitionId}' AND `type` = 'OPEN_DATE';
 
 Change the open date of the Competition in the database to one day before
@@ -127,7 +124,6 @@ Change the close date of the Competition in the database to thirteen days
 Change the open date of the Competition in the database to tomorrow
     [Arguments]  ${competition}
     ${tomorrow} =  get tomorrow
-    Connect to Database    @{database}
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
 
 get yesterday
@@ -211,7 +207,6 @@ get organisation id by name
 
 get table id by name
     [Arguments]  ${table}  ${name}
-    Connect to Database  @{database}
     ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `name`="${name}";
     # the result of this query looks like ((13,),) so you need get the value array[0][0]
     ${result} =  get from list  ${result}  0
@@ -246,5 +241,4 @@ Set global date variables
 
 Delete user from terms and conditions database
     [Arguments]    ${user_id}
-    Connect to Database  @{database}
     execute sql string  DELETE FROM `${database_name}`.`user_terms_and_conditions` WHERE `user_id`='${user_id}';

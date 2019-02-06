@@ -36,5 +36,6 @@ Custom Suite Teardown
     # That is to reset competition's milestone back to its original value, that was NUll before pressing the button "Close assessment"
     Connect to Database  @{database}
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']};
+    Disconnect from database
     #Changed the status of the competition to "In Assessment" for the rest of the tests
     the user closes the browser

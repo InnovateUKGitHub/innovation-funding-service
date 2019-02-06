@@ -362,3 +362,4 @@ the bank details have been verified by the Experian
     [Arguments]  ${organisationId}
     Connect to Database  @{database}
     execute sql string  UPDATE `${database_name}`.`bank_details` SET `company_name_score` = 7, `registration_number_matched` = 1, `address_score` = 8, `manual_approval` = 1 WHERE `organisation_id` = '${organisationId}';
+    Disconnect from database

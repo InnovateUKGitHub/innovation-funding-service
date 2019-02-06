@@ -7,7 +7,7 @@ Documentation     INFUND-832 Acceptance test: Verify that only users with the ri
 ...
 ...               IFS-2564 As an Applicant I am able to see the Appendix guidance, file type and size
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Force Tags        Upload    Applicant
 Resource          ../../../../resources/defaultResources.robot
 # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files
@@ -169,6 +169,7 @@ Quarantined files are not returned to the user and the user is informed
 Custom Suite Setup
     the guest user opens the browser
     Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
+    Connect to database  @{database}
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page
@@ -207,3 +208,7 @@ User verifies if uploaded document can be viewed
      The user opens the link in new window     ${5mb_pdf}
      the user should not see an error in the page
      the user closes the last opened tab
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database
