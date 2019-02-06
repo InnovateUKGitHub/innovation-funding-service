@@ -33,10 +33,11 @@ INSERT INTO cost_group (description) VALUES ('Spend Profile figures for Partner 
 
 INSERT INTO cost_category_type (name, cost_category_group_id) VALUES ('Cost Category Type for Categories Labour, Overheads, Materials, Capital usage, Subcontracting, Travel and subsistence, Other costs', '9');
 INSERT INTO cost_category_type (name, cost_category_group_id) VALUES ('Cost Category Type for Categories Labour, Overheads, Materials, Capital usage, Subcontracting, Travel and subsistence, Other costs', '10');
+INSERT INTO cost_category_type (name, cost_category_group_id) VALUES ('Cost Category Type for Categories Labour, Overheads, Materials, Capital usage, Subcontracting, Travel and subsistence, Other costs', '10');
 
 INSERT INTO spend_profile (cost_category_type_id, eligible_costs_cost_group_id, organisation_id, project_id, spend_profile_figures_cost_group_id, marked_as_complete, generated_date, generated_by_id) VALUES ('9', '40', '50', '12', '41', 1, now(), '17');
 INSERT INTO spend_profile (cost_category_type_id, eligible_costs_cost_group_id, organisation_id, project_id, spend_profile_figures_cost_group_id, marked_as_complete, generated_date, generated_by_id) VALUES ('10', '42', '51', '12', '43', 1, now(), '17');
-INSERT INTO spend_profile (cost_category_type_id, eligible_costs_cost_group_id, organisation_id, project_id, spend_profile_figures_cost_group_id, marked_as_complete, generated_date, generated_by_id) VALUES( '4', '44', '52', '12', '45', 1, now(), '17');
+INSERT INTO spend_profile (cost_category_type_id, eligible_costs_cost_group_id, organisation_id, project_id, spend_profile_figures_cost_group_id, marked_as_complete, generated_date, generated_by_id) VALUES( '11', '44', '52', '12', '45', 1, now(), '17');
 
 UPDATE project SET spend_profile_submitted_date=now() WHERE id='12';
 
