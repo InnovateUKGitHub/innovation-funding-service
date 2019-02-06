@@ -34,7 +34,7 @@ public abstract class Invite<T, I extends Invite<T,I>> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotBlank
-    private  String name;
+    private String name;
     @NotBlank
     @Email
     private String email; // invitee
