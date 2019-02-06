@@ -21,7 +21,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               IFS-3609 Extend internal view of application finances to other internal roles
 Suite Setup       Custom suite setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
@@ -267,6 +267,7 @@ A user other than an CSS or IFS Admin cannot view the finances of an application
 Custom suite setup
     Set predefined date variables
     The user logs-in in new browser  &{lead_applicant_credentials}
+    Connect to database  @{database}
 
 the finance summary calculations should be correct
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("£328,571")
@@ -427,3 +428,7 @@ the academic user marks finances as complete
     the user enters the project location
     the user clicks the button/link            link = Your funding
     the user marks your funding section as complete
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

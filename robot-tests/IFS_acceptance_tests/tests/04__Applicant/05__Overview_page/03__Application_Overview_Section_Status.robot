@@ -3,7 +3,7 @@ Documentation     INFUND-539 - As an applicant I want the ‘Application details
 ...
 ...               INFUND-1733 As an applicant I want to see if the 'Your Finance' section is marked as complete in the overview page
 Suite Setup       Custom Suite Setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Default Tags
 Resource          ../../../resources/defaultResources.robot
@@ -42,4 +42,9 @@ Green check shows when finances are marked as complete
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
+    Connect to database  @{database}
     log in and create new application if there is not one already  Robot test application
+
+Custom suite teardown
+    Disconnect from database
+    The user closes the browser

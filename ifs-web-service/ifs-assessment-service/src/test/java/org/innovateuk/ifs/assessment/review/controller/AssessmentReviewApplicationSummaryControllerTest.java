@@ -152,7 +152,7 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
     }
 
     @Test
-    public void testApplicationSummary() throws Exception {
+    public void applicationSummary() throws Exception {
         long reviewId = 1L;
         ApplicationResource app = applications.get(0);
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -171,12 +171,12 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
         AssessmentReviewApplicationSummaryViewModel resultModel = (AssessmentReviewApplicationSummaryViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(resultModel.getSummaryViewModel().getCurrentApplication(), app);
-        assertEquals(resultModel.getCompetition(), competitionResource);
+        assertEquals(resultModel.getCurrentCompetition(), competitionResource);
         assertEquals(resultModel.getSummaryViewModel().getFeedbackSummary(), emptyList());
     }
 
     @Test
-    public void testAssessorCanViewOwnFeedbackOnApplicationWhenInPanel() throws Exception {
+    public void assessorCanViewOwnFeedbackOnApplicationWhenInPanel() throws Exception {
         long reviewId = 1L;
         long questionId = 2L;
 

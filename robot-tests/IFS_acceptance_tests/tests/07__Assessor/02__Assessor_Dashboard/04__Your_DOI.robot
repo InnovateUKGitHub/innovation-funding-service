@@ -8,8 +8,8 @@ Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts o
 ...               IFS-3941 Introduce date to DOI
 ...
 ...               IFS-3942 Assessor profile view - Assessor
-Suite Setup       The user logs-in in new browser    &{existing_assessor1_credentials}
-Suite Teardown    The user closes the browser
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
@@ -146,7 +146,6 @@ the user should see the proper validation messages triggered
     the user should see a field and summary error    You must agree that your account is accurate.
 
 Save DOI current modified date
-    Connect to Database  @{database}
     ${result} =  Query  SELECT DATE_FORMAT(`modified_on`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`affiliation` WHERE `user_id`='${assessor_id}';
     ${result} =  get from list  ${result}  0
     ${modified_on} =  get from list  ${result}  0
@@ -154,9 +153,15 @@ Save DOI current modified date
 
 Return the DOI modified_on date to initial value
     [Arguments]  ${modified_date}
-    Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`affiliation` SET `modified_on` = '${modified_date}' WHERE `user_id` = '${assessor_id}';
 
 the user updates the DOI modified date
-    Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`affiliation` SET `modified_on` = '2018-04-05 00:00:00' WHERE `user_id` = '${assessor_id}';
+
+Custom suite setup
+    The user logs-in in new browser  &{existing_assessor1_credentials}
+    Connect To Database   @{database}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database
