@@ -15,22 +15,13 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONI
  */
 @Entity
 @Table(name = "project_user")
-public class MonitoringOfficer extends ProjectParticipant<MonitoringOfficerInvite> {
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "invite_id", referencedColumnName = "id")
-    private MonitoringOfficerInvite invite;
+public class MonitoringOfficer extends ProjectParticipant {
 
     public MonitoringOfficer() {
     }
 
     public MonitoringOfficer(User user, Project project) {
         super(user, project, MONITORING_OFFICER);
-    }
-
-    @Override
-    public MonitoringOfficerInvite getInvite() {
-        return invite;
     }
 
     @Override
@@ -43,7 +34,6 @@ public class MonitoringOfficer extends ProjectParticipant<MonitoringOfficerInvit
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(invite, that.invite)
                 .isEquals();
     }
 
@@ -51,7 +41,6 @@ public class MonitoringOfficer extends ProjectParticipant<MonitoringOfficerInvit
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(invite)
                 .toHashCode();
     }
 }

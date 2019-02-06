@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.Participant;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -12,9 +11,10 @@ import javax.persistence.*;
  * ProjectUser defines a User's role on a Project and in relation to a particular Organisation.
  */
 @MappedSuperclass
-public abstract class ProjectParticipant<I extends Invite<Project, I>> extends Participant<Project, I, ProjectParticipantRole> {
+public abstract class ProjectParticipant extends Participant<Project, ProjectParticipantRole> {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -78,7 +78,7 @@ public abstract class ProjectParticipant<I extends Invite<Project, I>> extends P
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectParticipant<?> that = (ProjectParticipant<?>) o;
+        ProjectParticipant that = (ProjectParticipant) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)

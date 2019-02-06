@@ -63,7 +63,7 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
     private FormInputRestService formInputRestService;
 
     @Test
-    public void testPopulateModel() {
+    public void populateModel() {
 
         UserResource userResource = newUserResource()
                 .withId(1L)
@@ -112,7 +112,7 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
 
         assertEquals(viewModel.getFeedbackViewModel().getFeedback(), emptyList());
         assertEquals(viewModel.getFeedbackViewModel().getScore(), emptyList());
-        assertEquals(viewModel.getCompetition(), competitionResource);
+        assertEquals(viewModel.getCurrentCompetition(), competitionResource);
         assertEquals(viewModel.getSummaryViewModel(), summary);
     }
 }

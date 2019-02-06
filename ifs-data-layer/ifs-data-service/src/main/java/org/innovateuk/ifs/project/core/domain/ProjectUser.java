@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.invite.domain.InvitedParticipant;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
@@ -17,8 +18,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
  */
 @Entity
 @Table(name = "project_user")
-public class ProjectUser extends ProjectParticipant<ProjectUserInvite> {
-
+public class ProjectUser extends ProjectParticipant implements InvitedParticipant<Project, ProjectUserInvite, ProjectParticipantRole> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
@@ -81,7 +81,6 @@ public class ProjectUser extends ProjectParticipant<ProjectUserInvite> {
     public boolean isProjectManager() {
         return getRole().isProjectManager();
     }
-
 
     public void setInvite(ProjectUserInvite invite) {
         this.invite = invite;

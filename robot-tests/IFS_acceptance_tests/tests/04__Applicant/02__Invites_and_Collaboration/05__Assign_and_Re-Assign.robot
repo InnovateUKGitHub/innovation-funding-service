@@ -18,8 +18,8 @@ Documentation     This suite depends on the Previous one!
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary Research area for my project
 ...
 ...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
-Suite Setup       Set predefined date variables
-Suite Teardown    The user closes the browser
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Test Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -269,3 +269,11 @@ Steve smith assigns a question to the collaborator
     the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
     the user clicks the button/link   jQuery = a:contains("Public description")
     When the applicant assigns the question to the collaborator  Jessica Doe
+
+Custom suite setup
+      Set predefined date variables
+      Connect to database  @{database}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

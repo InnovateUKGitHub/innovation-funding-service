@@ -3,10 +3,7 @@ package org.innovateuk.ifs.competition.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.Participant;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -18,7 +15,8 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
  * A {@link Participant} in a {@link Competition}.
  */
 @MappedSuperclass
-public abstract class CompetitionParticipant<I extends Invite<Competition,I>> extends Participant<Competition, I, CompetitionParticipantRole> {
+public abstract class CompetitionParticipant<I extends Invite<Competition, I>> extends Participant<Competition, CompetitionParticipantRole>
+        implements InvitedParticipant<Competition, I, CompetitionParticipantRole> {
 
     @Id
     @GeneratedValue
