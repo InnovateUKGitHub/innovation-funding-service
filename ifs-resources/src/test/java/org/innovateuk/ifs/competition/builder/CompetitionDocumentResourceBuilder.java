@@ -16,7 +16,7 @@ public class CompetitionDocumentResourceBuilder extends BaseBuilder<CompetitionD
         super(multiActions);
     }
 
-    public static CompetitionDocumentResourceBuilder neCompetitionDocumentResource() {
+    public static CompetitionDocumentResourceBuilder newCompetitionDocumentResource() {
         return new CompetitionDocumentResourceBuilder(emptyList()).with(uniqueIds());
     }
 

@@ -43,7 +43,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
     @Test
     public void save() throws Exception {
 
-        CompetitionDocumentResource competitionDocumentResource = neCompetitionDocumentResource()
+        CompetitionDocumentResource competitionDocumentResource = newCompetitionDocumentResource()
                 .withId(1L)
                 .withCompetition(2L)
                 .withTitle("Title")
@@ -72,7 +72,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
     @Test
     public void saveAll() throws Exception {
 
-        List<CompetitionDocumentResource> competitionDocumentResources = neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = newCompetitionDocumentResource()
                 .withId(1L)
                 .withCompetition(12L)
                 .withTitle("Title")
@@ -107,7 +107,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
 
         long projectDocumentId = 1L;
 
-        CompetitionDocumentResource competitionDocumentResource = neCompetitionDocumentResource().build();
+        CompetitionDocumentResource competitionDocumentResource = newCompetitionDocumentResource().build();
 
         when(competitionSetupDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(competitionDocumentResource));
 
@@ -130,7 +130,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
 
         long competitionId = 1L;
 
-        List<CompetitionDocumentResource> competitionDocumentResources = neCompetitionDocumentResource().build(2);
+        List<CompetitionDocumentResource> competitionDocumentResources = newCompetitionDocumentResource().build(2);
 
         when(competitionSetupDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionDocumentResources));
 

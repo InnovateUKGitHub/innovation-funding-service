@@ -147,7 +147,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
                     " and a.competition = c.id " +
                     " and p.application_id = a.id " +
                     " and pp.target_id = p.id and pp.process_type = 'ProjectProcess' " +
-                    " and pp.activity_state_id not in (select id from activity_state where activity_type = 'PROJECT_SETUP' and state = 'WITHDRAWN') " +
+                    " and pp.activity_state_id not in (select id from activity_state where activity_type = 'PROJECT_SETUP' and state in ('WITHDRAWN', 'HANDLED_OFFLINE', 'COMPLETED_OFFLINE')) " +
 
                     // where all Viability is either Approved or Not Required
                     " and not exists (select v.id from process v " +
