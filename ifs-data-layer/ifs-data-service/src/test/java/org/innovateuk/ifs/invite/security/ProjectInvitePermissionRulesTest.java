@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.security;
 
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
@@ -16,12 +16,12 @@ import org.mockito.Mock;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
@@ -38,8 +38,8 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
     private UserResource userNotOnProject;
     private ProjectUser projectUserForUserOnOgranisationOne;
     private ProjectUser projectUserForUserOnOgranisationTwo;
-    private ProjectInviteResource projectInviteResourceForOrganisationOne;
-    private ProjectInviteResource projectInviteResourceForOrganisationTwo;
+    private ProjectUserInviteResource projectUserInviteResourceForOrganisationOne;
+    private ProjectUserInviteResource projectUserInviteResourceForOrganisationTwo;
     private ProjectProcess projectProcess;
 
     @Mock
@@ -69,11 +69,11 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
                 .withProject(project)
                 .withUser(newUser().withId(userOnProjectForOrganisationTwo.getId()).build())
                 .build();
-        projectInviteResourceForOrganisationOne = newProjectInviteResource()
+        projectUserInviteResourceForOrganisationOne = newProjectUserInviteResource()
                 .withProject(project.getId())
                 .withOrganisation(organisationOne.getId())
                 .build();
-        projectInviteResourceForOrganisationTwo = newProjectInviteResource()
+        projectUserInviteResourceForOrganisationTwo = newProjectUserInviteResource()
                 .withProject(project.getId())
                 .withOrganisation(organisationTwo.getId())
                 .build();
@@ -92,25 +92,25 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
 
     @Test
     public void testPartnersOnProjectCanSaveInvite() {
-        assertTrue(rules.partnersOnProjectCanSaveInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationOne));
-        assertTrue(rules.partnersOnProjectCanSaveInvite(projectInviteResourceForOrganisationTwo, userOnProjectForOrganisationTwo));
-        assertFalse(rules.partnersOnProjectCanSaveInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationTwo));
-        assertFalse(rules.partnersOnProjectCanSaveInvite(projectInviteResourceForOrganisationOne, userNotOnProject));
+        assertTrue(rules.partnersOnProjectCanSaveInvite(projectUserInviteResourceForOrganisationOne, userOnProjectForOrganisationOne));
+        assertTrue(rules.partnersOnProjectCanSaveInvite(projectUserInviteResourceForOrganisationTwo, userOnProjectForOrganisationTwo));
+        assertFalse(rules.partnersOnProjectCanSaveInvite(projectUserInviteResourceForOrganisationOne, userOnProjectForOrganisationTwo));
+        assertFalse(rules.partnersOnProjectCanSaveInvite(projectUserInviteResourceForOrganisationOne, userNotOnProject));
     }
 
     @Test
     public void testPartnersOnProjectCanSendInvite() {
-        assertTrue(rules.partnersOnProjectCanSendInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationOne));
-        assertTrue(rules.partnersOnProjectCanSendInvite(projectInviteResourceForOrganisationTwo, userOnProjectForOrganisationTwo));
-        assertFalse(rules.partnersOnProjectCanSendInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationTwo));
-        assertFalse(rules.partnersOnProjectCanSendInvite(projectInviteResourceForOrganisationOne, userNotOnProject));
+        assertTrue(rules.partnersOnProjectCanSendInvite(projectUserInviteResourceForOrganisationOne, userOnProjectForOrganisationOne));
+        assertTrue(rules.partnersOnProjectCanSendInvite(projectUserInviteResourceForOrganisationTwo, userOnProjectForOrganisationTwo));
+        assertFalse(rules.partnersOnProjectCanSendInvite(projectUserInviteResourceForOrganisationOne, userOnProjectForOrganisationTwo));
+        assertFalse(rules.partnersOnProjectCanSendInvite(projectUserInviteResourceForOrganisationOne, userNotOnProject));
 
     }
 
     @Test
     public void testPartnersOnProjectCanViewInvite(){
-        assertTrue(rules.partnersOnProjectCanViewInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationOne));
-        assertTrue(rules.partnersOnProjectCanViewInvite(projectInviteResourceForOrganisationOne, userOnProjectForOrganisationTwo));
-        assertFalse(rules.partnersOnProjectCanViewInvite(projectInviteResourceForOrganisationOne, userNotOnProject));
+        assertTrue(rules.partnersOnProjectCanViewInvite(projectUserInviteResourceForOrganisationOne, userOnProjectForOrganisationOne));
+        assertTrue(rules.partnersOnProjectCanViewInvite(projectUserInviteResourceForOrganisationOne, userOnProjectForOrganisationTwo));
+        assertFalse(rules.partnersOnProjectCanViewInvite(projectUserInviteResourceForOrganisationOne, userNotOnProject));
     }
 }

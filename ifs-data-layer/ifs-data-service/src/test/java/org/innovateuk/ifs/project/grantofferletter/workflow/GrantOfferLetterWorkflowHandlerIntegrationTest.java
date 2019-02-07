@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.grantofferletter.workflow;
 
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
@@ -24,6 +23,7 @@ import java.util.function.Function;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -93,9 +93,9 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
 
                 callWorkflowAndCheckTransitionFailsExternalUser(((project, projectUser) -> {
 
-                    when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId())).thenReturn(projectUser);
+                    when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(project.getId(), PROJECT_MANAGER, projectUser.getUser().getId())).thenReturn(projectUser);
                     boolean removed = golWorkflowHandler.removeSignedGrantOfferLetter(project, projectUser.getUser());
-                    verify(projectUserRepositoryMock).findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId());
+                    verify(projectUserRepositoryMock).findByProjectIdAndRoleAndUserId(project.getId(), PROJECT_MANAGER, projectUser.getUser().getId());
 
                     return removed;
 
@@ -163,9 +163,9 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
 
         callWorkflowAndCheckTransitionAndEventFired((project, projectUser) -> {
 
-            when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId())).thenReturn(projectUser);
+            when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(project.getId(), PROJECT_MANAGER, projectUser.getUser().getId())).thenReturn(projectUser);
             boolean removed = golWorkflowHandler.removeSignedGrantOfferLetter(project, projectUser.getUser());
-            verify(projectUserRepositoryMock).findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId());
+            verify(projectUserRepositoryMock).findByProjectIdAndRoleAndUserId(project.getId(), PROJECT_MANAGER, projectUser.getUser().getId());
 
             return removed;
         },
@@ -178,9 +178,9 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
 
         callWorkflowAndCheckTransitionFailsExternalUser((project, projectUser) -> {
 
-            when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId())).thenReturn(null);
+            when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(project.getId(), PROJECT_MANAGER, projectUser.getUser().getId())).thenReturn(null);
             boolean removed = golWorkflowHandler.removeSignedGrantOfferLetter(project, projectUser.getUser());
-            verify(projectUserRepositoryMock).findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId());
+            verify(projectUserRepositoryMock).findByProjectIdAndRoleAndUserId(project.getId(), PROJECT_MANAGER, projectUser.getUser().getId());
 
             return removed;
         }, GrantOfferLetterState.SENT);

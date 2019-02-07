@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
@@ -262,9 +262,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return redirectToFinanceContact(projectId, organisation);
     }
 
-    private void resendInvite(Long id, Long projectId, BiFunction<Long, ProjectInviteResource, ServiceResult<Void>> sendInvite) {
+    private void resendInvite(Long id, Long projectId, BiFunction<Long, ProjectUserInviteResource, ServiceResult<Void>> sendInvite) {
 
-        Optional<ProjectInviteResource> existingInvite = projectDetailsService
+        Optional<ProjectUserInviteResource> existingInvite = projectDetailsService
                 .getInvitesByProject(projectId)
                 .getSuccess()
                 .stream()
@@ -296,19 +296,19 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     private String sendInvite(String inviteName, String inviteEmail, UserResource loggedInUser, ValidationHandler validationHandler,
                               Supplier<String> failureView, Supplier<String> successView, Long projectId, Long organisation,
-                              BiFunction<Long, ProjectInviteResource, ServiceResult<Void>> sendInvite) {
+                              BiFunction<Long, ProjectUserInviteResource, ServiceResult<Void>> sendInvite) {
 
         validateIfTryingToInviteSelf(loggedInUser.getEmail(), inviteEmail, validationHandler);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ProjectInviteResource invite = createProjectInviteResourceForNewContact(projectId, inviteName, inviteEmail, organisation);
+            ProjectUserInviteResource invite = createProjectInviteResourceForNewContact(projectId, inviteName, inviteEmail, organisation);
 
             ServiceResult<Void> saveResult = projectDetailsService.saveProjectInvite(invite);
 
             return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
 
-                Optional<ProjectInviteResource> savedInvite = getSavedInvite(projectId, invite);
+                Optional<ProjectUserInviteResource> savedInvite = getSavedInvite(projectId, invite);
 
                 if (savedInvite.isPresent()) {
                     ServiceResult<Void> inviteResult = sendInvite.apply(projectId, savedInvite.get());
@@ -327,7 +327,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         }
     }
 
-    private Optional<ProjectInviteResource> getSavedInvite(Long projectId, ProjectInviteResource invite) {
+    private Optional<ProjectUserInviteResource> getSavedInvite(Long projectId, ProjectUserInviteResource invite) {
 
         return projectDetailsService.getInvitesByProject(projectId).getSuccess().stream()
                 .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
@@ -508,22 +508,22 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         List<ProjectUserResource> organisationProjectUsers = simpleFilter(partnerUsers, pu ->
                 pu.getOrganisation().equals(financeContactForm.getOrganisation()));
 
-        List<ProjectInviteResource> projectInviteResourceList =
+        List<ProjectUserInviteResource> projectUserInviteResourceList =
                 projectDetailsService.getInvitesByProject(projectId).getSuccess();
 
         Function<ProjectUserResource, ProjectUserInviteModel> financeContactModelMappingFn =
                 user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser());
 
-        Function<ProjectInviteResource, ProjectUserInviteModel> inviteeMappingFn = invite ->
+        Function<ProjectUserInviteResource, ProjectUserInviteModel> inviteeMappingFn = invite ->
                 new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", invite.getId());
 
-        Predicate<ProjectInviteResource> projectInviteResourceFilterFn = invite ->
+        Predicate<ProjectUserInviteResource> projectInviteResourceFilterFn = invite ->
                 financeContactForm.getOrganisation().equals(invite.getOrganisation()) &&
                         invite.getStatus() != InviteStatus.OPENED;
 
         List<ProjectUserInviteModel> thisOrganisationUsers = simpleMap(organisationProjectUsers, financeContactModelMappingFn);
-        List<ProjectInviteResource> projectInviteResources = simpleFilter(projectInviteResourceList, projectInviteResourceFilterFn);
-        List<ProjectUserInviteModel> invitedUsers = simpleMap(projectInviteResources, inviteeMappingFn);
+        List<ProjectUserInviteResource> projectUserInviteResources = simpleFilter(projectUserInviteResourceList, projectInviteResourceFilterFn);
+        List<ProjectUserInviteModel> invitedUsers = simpleMap(projectUserInviteResources, inviteeMappingFn);
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
@@ -569,13 +569,13 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return simpleMap(partnerProjectUsers, ProjectUserResource::getOrganisation);
     }
 
-    private ProjectInviteResource createProjectInviteResourceForNewContact(Long projectId, String name,
-                                                                           String email, Long organisationId) {
+    private ProjectUserInviteResource createProjectInviteResourceForNewContact(Long projectId, String name,
+                                                                               String email, Long organisationId) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
-        ProjectInviteResource inviteResource = new ProjectInviteResource();
+        ProjectUserInviteResource inviteResource = new ProjectUserInviteResource();
 
         inviteResource.setProject(projectId);
         inviteResource.setName(name);

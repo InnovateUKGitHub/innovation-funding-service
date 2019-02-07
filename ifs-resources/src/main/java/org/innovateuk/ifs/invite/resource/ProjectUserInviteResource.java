@@ -6,9 +6,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 
 /**
- * DTO to transfer Project Invite related Entities
+ * DTO to transfer Project User Invite related Entities
  */
-public class ProjectInviteResource extends InviteResource {
+public class ProjectUserInviteResource extends InviteResource {
 
     private Long id;
     private Long user;
@@ -28,11 +28,11 @@ public class ProjectInviteResource extends InviteResource {
     private String competitionName;
 
 
-    public ProjectInviteResource() {
+    public ProjectUserInviteResource() {
         // no-arg constructor
     }
 
-    public ProjectInviteResource(Long id, Long user, String name, String email, Long project, Long organisation, Long applicationId, String hash, InviteStatus status, String leadApplicant, String competitionName) {
+    public ProjectUserInviteResource(Long id, Long user, String name, String email, Long project, Long organisation, Long applicationId, String hash, InviteStatus status, String leadApplicant, String competitionName) {
         this.id = id;
         this.user = user;
         this.name = name;
@@ -46,7 +46,7 @@ public class ProjectInviteResource extends InviteResource {
         this.leadApplicant = leadApplicant;
     }
 
-    public ProjectInviteResource(String name, String email, Long project) {
+    public ProjectUserInviteResource(String name, String email, Long project) {
         this.name = name;
         this.email = email;
         this.project = project;
@@ -184,7 +184,7 @@ public class ProjectInviteResource extends InviteResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectInviteResource that = (ProjectInviteResource) o;
+        ProjectUserInviteResource that = (ProjectUserInviteResource) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)

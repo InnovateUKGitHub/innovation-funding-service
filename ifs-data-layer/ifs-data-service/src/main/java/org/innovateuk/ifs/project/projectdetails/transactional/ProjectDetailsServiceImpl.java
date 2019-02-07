@@ -9,10 +9,10 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.invite.mapper.ProjectInviteMapper;
-import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
+import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
+import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -23,6 +23,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
@@ -53,9 +54,9 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -89,10 +90,10 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
-    private ProjectInviteMapper projectInviteMapper;
+    private ProjectUserInviteMapper projectInviteMapper;
 
     @Autowired
-    private ProjectInviteRepository projectInviteRepository;
+    private ProjectUserInviteRepository projectUserInviteRepository;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
@@ -110,7 +111,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
-        return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
+        return find(projectUserRepository.findByProjectIdAndRole(projectId, PROJECT_MANAGER),
                 notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
     }
 
@@ -304,7 +305,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser newFinanceContact) {
 
-        List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
+        List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
         existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
         project.addProjectUser(newFinanceContact);
         return serviceSuccess();
@@ -384,7 +385,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> inviteFinanceContact(Long projectId, ProjectInviteResource inviteResource) {
+    public ServiceResult<Void> inviteFinanceContact(Long projectId, ProjectUserInviteResource inviteResource) {
         return getProject(projectId)
                 .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_FINANCE_CONTACT));
@@ -392,18 +393,18 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> inviteProjectManager(Long projectId, ProjectInviteResource inviteResource) {
+    public ServiceResult<Void> inviteProjectManager(Long projectId, ProjectUserInviteResource inviteResource) {
 
         return getProject(projectId)
                 .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
     }
 
-    private ServiceResult<Void> inviteContact(Long projectId, ProjectInviteResource projectResource, Notifications kindOfNotification) {
+    private ServiceResult<Void> inviteContact(Long projectId, ProjectUserInviteResource projectResource, Notifications kindOfNotification) {
 
-        ProjectInvite projectInvite = projectInviteMapper.mapToDomain(projectResource);
+        ProjectUserInvite projectInvite = projectInviteMapper.mapToDomain(projectResource);
         projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
-        projectInviteRepository.save(projectInvite);
+        projectUserInviteRepository.save(projectInvite);
 
         Notification notification = new Notification(systemNotificationSource, createInviteContactNotificationTarget(projectInvite), kindOfNotification, createGlobalArgsForInviteContactEmail(projectId, projectResource));
 
@@ -414,7 +415,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return new UserNotificationTarget(projectInvite.getName(), projectInvite.getEmail());
     }
 
-    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, ProjectInviteResource inviteResource) {
+    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, ProjectUserInviteResource inviteResource) {
         Project project = projectRepository.findOne(projectId);
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
@@ -429,7 +430,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return globalArguments;
     }
 
-    private String getInviteUrl(String baseUrl, ProjectInviteResource inviteResource) {
+    private String getInviteUrl(String baseUrl, ProjectUserInviteResource inviteResource) {
         return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
     }
 }

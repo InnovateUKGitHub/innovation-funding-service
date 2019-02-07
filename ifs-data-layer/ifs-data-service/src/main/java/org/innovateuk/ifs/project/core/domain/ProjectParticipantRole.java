@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.invite.domain;
+package org.innovateuk.ifs.project.core.domain;
 
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.invite.domain.ParticipantRole;
 
 import java.util.Map;
 

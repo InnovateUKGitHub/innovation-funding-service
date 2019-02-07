@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -70,13 +70,13 @@ public class ProjectDetailsController {
 
     @PostMapping("/{projectId}/invite-finance-contact")
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final ProjectInviteResource inviteResource) {
+                                                 @RequestBody @Valid final ProjectUserInviteResource inviteResource) {
         return projectDetailsService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
     }
 
     @PostMapping("/{projectId}/invite-project-manager")
     public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final ProjectInviteResource inviteResource) {
+                                                 @RequestBody @Valid final ProjectUserInviteResource inviteResource) {
         return projectDetailsService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 }
