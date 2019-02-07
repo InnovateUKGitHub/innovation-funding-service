@@ -566,13 +566,13 @@
 <th:block th:fragment="modal-handle-project-offline">
     <div class="modal-handle-project-offline" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="govuk-heading-m">Manage this project offline</h2>
-        <p class="govuk-body">Are you sure you want to manage this project '<th:block th:text="${model.project.name}"></th:block>' outside of the online service&quest;</p>
-        <p class="govuk-body">The project will become permanently inactive online. Both you and the applicant can still view the application.</p>
+        <h2 class="govuk-heading-m">Manage offline</h2>
+        <p class="govuk-body">Are you sure you want to manage the project '<th:block th:text="${model.project.name}"></th:block>' outside of the Innovation Funding Service?</p>
+        <p class="govuk-body">This cannot be reversed. Innovate UK and the partners can still view the application but will not be able to see anything in project setup.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <form th:action="@{/competition/{competitionId}/project/{projectId}/handle-offline(competitionId=${model.competitionId},projectId=${model.project.id})}" method="post">
             <div>
-                <button class="govuk-button" type="submit">Manage project offline</button>
+                <button class="govuk-button" type="submit">Manage offline</button>
                 <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
@@ -583,13 +583,13 @@
 <th:block th:fragment="modal-complete-project-offline">
     <div class="modal-complete-project-offline" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="govuk-heading-m">Mark project as completed offline</h2>
-        <p class="govuk-body">Are you sure you want to mark project set up of '<th:block th:text="${model.project.name}"></th:block>' as completed outside of the online service&quest;</p>
-        <p class="govuk-body">The project will be marked as completed for both you and the applicant.</p>
+        <h2 class="govuk-heading-m">Mark as completed offline</h2>
+        <p class="govuk-body">Are you sure you want to mark the project '<th:block th:text="${model.project.name}"></th:block>' as having been completed outside of the Innovation Funding Service?</p>
+        <p class="govuk-body">Innovate UK and the partners will see that it is marked as complete.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <form th:action="@{/competition/{competitionId}/project/{projectId}/complete-offline(competitionId=${model.competitionId},projectId=${model.project.id})}" method="post">
             <div>
-                <button class="govuk-button" type="submit">Mark project as completed offline</button>
+                <button class="govuk-button" type="submit">Mark as completed offline</button>
                 <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>

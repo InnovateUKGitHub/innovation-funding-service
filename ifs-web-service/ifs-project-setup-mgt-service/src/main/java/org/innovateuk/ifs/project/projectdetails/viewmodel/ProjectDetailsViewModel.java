@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import java.util.List;
 import java.util.Map;
 
+import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_OFFLINE;
 import static org.innovateuk.ifs.project.resource.ProjectState.HANDLED_OFFLINE;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 
@@ -55,6 +56,10 @@ public class ProjectDetailsViewModel {
 
     public boolean isHandleOffline() {
         return HANDLED_OFFLINE.equals(project.getProjectState());
+    }
+
+    public boolean isCompleteOffline() {
+        return COMPLETED_OFFLINE.equals(project.getProjectState());
     }
 
     public boolean isShowWithdrawLink() {

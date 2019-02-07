@@ -15,48 +15,46 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Set up your project',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div class="warning-alert" th:if="${model.projectState.offline}">
-            <p class="govuk-body">Project setup will be processed offline. For support get in touch with 0300 321 4357</p>
+            <p class="govuk-body">Innovate UK is managing this project's setup offline. For help call 0300 321 4357.</p>
         </div>
 
-        <th:block th:unless="${model.projectState.offline}">
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half">
-                    <dl class="govuk-list govuk-!-font-size-16 govuk-!-margin-bottom-6">
-                        <dt>Project number:</dt>
-                        <dd th:text="${model.applicationId}"/>
-                        <dt>Competition:</dt>
-                        <dd th:text="${model.competitionName}"/>
-                        <dt>Funding body:</dt>
-                        <dd>Innovate UK</dd>
-                    </dl>
-                </div>
-                <div class="govuk-grid-column-one-half">
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li><a th:href="${'/application/' + model.applicationId + '/feedback'} + ${model.originQuery}"
-                               class="govuk-link">
-                            view application feedback</a></li>
-                        <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
-                               class="govuk-link">
-                            view the competition terms and conditions</a></li>
-                    </ul>
-                </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <dl class="govuk-list govuk-!-font-size-16 govuk-!-margin-bottom-6">
+                    <dt>Project number:</dt>
+                    <dd th:text="${model.applicationId}"/>
+                    <dt>Competition:</dt>
+                    <dd th:text="${model.competitionName}"/>
+                    <dt>Funding body:</dt>
+                    <dd>Innovate UK</dd>
+                </dl>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <ul class="govuk-list govuk-list--bullet">
+                    <li><a th:href="${'/application/' + model.applicationId + '/feedback'} + ${model.originQuery}"
+                           class="govuk-link">
+                        view application feedback</a></li>
+                    <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
+                           class="govuk-link">
+                        view the competition terms and conditions</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <th:block th:if="${model.projectComplete}">
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">The project is live, you can review progress at <a href="https://grants.innovateuk.org" class="govuk-link">_connect</a></p>
             </div>
 
-            <th:block th:if="${model.projectComplete}">
-                <div class="success-alert govuk-!-margin-bottom-6">
-                    <p class="govuk-body">The project is live, you can review progress at <a href="https://grants.innovateuk.org" class="govuk-link">_connect</a></p>
-                </div>
+            <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
+        </th:block>
 
-                <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
-            </th:block>
-
-            <th:block th:unless="${model.projectComplete}">
-                <div class="message-alert">
-                    <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
-                    <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
-                    <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}" class="govuk-link">View the status of partners</a></p>
-                </div>
-            </th:block>
+        <th:block th:unless="${model.projectComplete}">
+            <div class="message-alert">
+                <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
+                <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
+                <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}" class="govuk-link">View the status of partners</a></p>
+            </div>
         </th:block>
 
         <div class="progress-list progress-list--individual-blocks">
@@ -118,13 +116,16 @@
                                 Officer</a>
                             <th:block th:unless="${model.monitoringOfficerSection.accessible}">Monitoring Officer</th:block>
                         </h2>
-                        <p th:if="${model.monitoringOfficerAssigned}" class="govuk-body govuk-!-margin-0">
-                            Your Monitoring Officer for this project is
-                            <th:block th:text="${model.monitoringOfficerName}"/>.
-                        </p>
-                        <p th:unless="${model.monitoringOfficerAssigned}" class="govuk-body govuk-!-margin-0">
-                            We will assign the project a Monitoring Officer.
-                        </p>
+
+                        <th:block class="warning-alert" th:unless="${model.projectState.offline}">
+                            <p th:if="${model.monitoringOfficerAssigned}" class="govuk-body govuk-!-margin-0">
+                                Your Monitoring Officer for this project is
+                                <th:block th:text="${model.monitoringOfficerName}"/>.
+                            </p>
+                            <p th:unless="${model.monitoringOfficerAssigned}" class="govuk-body govuk-!-margin-0">
+                                We will assign the project a Monitoring Officer.
+                            </p>
+                        </th:block>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${(model.monitoringOfficerAssigned || model.projectState.offline ? model.monitoringOfficerStatus.getSectionStatus() : 'awaiting-assignment')})" />
                 </li>
