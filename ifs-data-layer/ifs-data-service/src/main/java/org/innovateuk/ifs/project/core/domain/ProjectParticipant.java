@@ -8,7 +8,7 @@ import org.innovateuk.ifs.user.domain.User;
 import javax.persistence.*;
 
 /**
- * ProjectUser defines a User's role on a Project and in relation to a particular Organisation.
+ * A defines a User's role on a Project
  */
 @MappedSuperclass
 public abstract class ProjectParticipant extends Participant<Project, ProjectParticipantRole> {

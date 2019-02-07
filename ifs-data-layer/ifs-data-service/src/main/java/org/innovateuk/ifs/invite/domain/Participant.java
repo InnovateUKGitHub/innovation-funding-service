@@ -27,8 +27,6 @@ public abstract class Participant<P extends ProcessActivity, R extends Participa
 
     public abstract P getProcess();
 
-//    public abstract I getInvite();
-
     public abstract R getRole();
 
     // TODO make this Optional<User>
