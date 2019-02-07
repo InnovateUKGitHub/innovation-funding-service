@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerRe
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.testdata.builders.data.ProjectData;
+import org.innovateuk.ifs.testdata.services.CsvUtils;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 
 /**
  * Generates data from Competitions, including any Applications taking part in this Competition
@@ -58,12 +60,11 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         }));
     }
 
-    public ProjectDataBuilder withProjectAddressOrganisationAddress() {
+    public ProjectDataBuilder withProjectAddressOrganisationAddress(List<CsvUtils.OrganisationLine> organisationLines) {
         return with(data -> doAs(data.getLeadApplicant(), () -> {
             Long leadApplicantId = data.getLeadApplicant().getId();
             OrganisationResource leadOrganisation = organisationService.getByUserAndApplicationId(leadApplicantId, data.getApplication().getId()).getSuccess();
-            AddressResource address = leadOrganisation.getAddresses().get(0).getAddress();
-            projectDetailsService.updateProjectAddress(leadOrganisation.getId(), data.getProject().getId(), address).getSuccess();
+            projectDetailsService.updateProjectAddress(leadOrganisation.getId(), data.getProject().getId(), getAddress(leadOrganisation, organisationLines)).getSuccess();
         }));
     }
 
@@ -86,7 +87,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         }));
     }
 
-    public ProjectDataBuilder withBankDetails(String organisationName, String accountNumber, String sortCode) {
+    public ProjectDataBuilder withBankDetails(String organisationName, String accountNumber, String sortCode, List<CsvUtils.OrganisationLine> organisationLines) {
         return with(data -> {
 
             Organisation organisation = retrieveOrganisationByName(organisationName);
@@ -101,7 +102,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
                 bankDetails.setProject(data.getProject().getId());
                 bankDetails.setOrganisation(organisationResource.getId());
                 bankDetails.setCompanyName(organisationResource.getName());
-                bankDetails.setAddress(organisationResource.getAddresses().get(0).getAddress());
+                bankDetails.setAddress(getAddress(organisationResource, organisationLines));
                 bankDetails.setOrganisationTypeName(organisationType.getName());
                 bankDetails.setRegistrationNumber(organisationResource.getCompaniesHouseNumber());
 
@@ -139,6 +140,19 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     private ProjectDataBuilder(List<BiConsumer<Integer, ProjectData>> multiActions,
                                ServiceLocator serviceLocator) {
         super(multiActions, serviceLocator);
+    }
+
+    private AddressResource getAddress(OrganisationResource organisationResource, List<CsvUtils.OrganisationLine> organisationLines) {
+        CsvUtils.OrganisationLine organisationLine = organisationLines.stream().filter(line -> line.name.equals(organisationResource.getName())).findFirst().get();
+        return newAddressResource().
+                withId().
+                withAddressLine1(organisationLine.addressLine1).
+                withAddressLine2(organisationLine.addressLine2).
+                withAddressLine3(organisationLine.addressLine3).
+                withTown(organisationLine.town).
+                withPostcode(organisationLine.postcode).
+                withCounty(organisationLine.county).
+                build();
     }
 
     @Override

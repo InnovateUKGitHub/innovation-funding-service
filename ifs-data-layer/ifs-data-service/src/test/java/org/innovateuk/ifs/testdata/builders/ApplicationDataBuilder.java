@@ -119,17 +119,14 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 application.setDurationInMonths(durationInMonths)));
     }
 
-    public ApplicationDataBuilder inviteCollaborator(UserResource collaborator) {
+    public ApplicationDataBuilder inviteCollaborator(UserResource collaborator, Organisation organisation) {
 
         return asLeadApplicant(data -> {
-
-            List<Organisation> organisations = organisationRepository.findDistinctByUsersId(collaborator.getId());
-            Organisation organisation = organisations.get(0);
 
             ApplicationInviteResource singleInvite = doInviteCollaborator(data, organisation.getName(),
                     Optional.of(collaborator.getId()), collaborator.getEmail(), collaborator.getName(), Optional.empty());
 
-            doAs(systemRegistrar(), () -> acceptApplicationInviteService.acceptInvite(singleInvite.getHash(), collaborator.getId(), Optional.empty()));
+            doAs(systemRegistrar(), () -> acceptApplicationInviteService.acceptInvite(singleInvite.getHash(), collaborator.getId(), Optional.of(organisation.getId())));
         });
     }
 

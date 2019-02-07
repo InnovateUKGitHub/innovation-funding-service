@@ -70,7 +70,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line) {
 
-        UnaryOperator<S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
+        UnaryOperator<S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber);
 
         UnaryOperator<S> verifyEmail = BaseUserDataBuilder::verifyEmail;
 

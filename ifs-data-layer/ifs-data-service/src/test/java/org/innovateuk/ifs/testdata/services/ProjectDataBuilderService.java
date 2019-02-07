@@ -17,7 +17,9 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.testdata.builders.BaseDataBuilder.IFS_SYSTEM_MAINTENANCE_USER_EMAIL;
 import static org.innovateuk.ifs.testdata.builders.ProjectDataBuilder.newProjectData;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.readOrganisations;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.readProjects;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -33,6 +35,8 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
 
     private List<CsvUtils.ProjectLine> projectLines;
 
+    private List<CsvUtils.OrganisationLine> organisationLines;
+
     @Autowired
     private TestService testService;
 
@@ -44,6 +48,7 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
     @PostConstruct
     public void setup() {
         projectLines = readProjects();
+        organisationLines = readOrganisations();
 
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
 
@@ -71,7 +76,7 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
                 builder -> !isBlank(line.projectManager) ? builder.withProjectManager(line.projectManager) : builder;
 
         UnaryOperator<ProjectDataBuilder> setProjectAddressIfNecessary =
-                builder -> line.projectAddressAdded ? builder.withProjectAddressOrganisationAddress() : builder;
+                builder -> line.projectAddressAdded ? builder.withProjectAddressOrganisationAddress(organisationLines) : builder;
 
         UnaryOperator<ProjectDataBuilder> setMonitoringOfficerIfNecessary =
                 builder -> !isBlank(line.moFirstName) ?
@@ -93,7 +98,7 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
             ProjectDataBuilder currentBuilder = builder;
 
             for (Triple<String, String, String> bd : line.bankDetailsForOrganisations) {
-                currentBuilder = currentBuilder.withBankDetails(bd.getLeft(), bd.getMiddle(), bd.getRight());
+                currentBuilder = currentBuilder.withBankDetails(bd.getLeft(), bd.getMiddle(), bd.getRight(), organisationLines);
             }
 
             return currentBuilder;
@@ -107,15 +112,17 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
             }
         };
 
-        testService.doWithinTransaction(() ->
-                assignProjectManagerIfNecessary.
-                        andThen(setProjectAddressIfNecessary).
-                        andThen(setMonitoringOfficerIfNecessary).
-                        andThen(selectFinanceContactsIfNecessary).
-                        andThen(submitBankDetailsIfNecessary).
-                        andThen(withdrawIfNecessary).
-                        apply(baseBuilder).
-                        build());
+        doAs(retrieveUserByEmail(IFS_SYSTEM_MAINTENANCE_USER_EMAIL), () ->
+                testService.doWithinTransaction(() ->
+                        assignProjectManagerIfNecessary.
+                                andThen(setProjectAddressIfNecessary).
+                                andThen(setMonitoringOfficerIfNecessary).
+                                andThen(selectFinanceContactsIfNecessary).
+                                andThen(submitBankDetailsIfNecessary).
+                                andThen(withdrawIfNecessary).
+                                apply(baseBuilder).
+                                build())
+        );
 
     }
 }
