@@ -61,7 +61,7 @@ public class MonitoringOfficerRegistrationController {
     }
 
     @PostMapping("/{inviteHash}/register")
-    public String submitYourDetails(Model model,
+    public String submitDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerRegistrationForm monitoringOfficerRegistrationForm,
                                     BindingResult bindingResult,
@@ -90,7 +90,6 @@ public class MonitoringOfficerRegistrationController {
         }
     }
 
-
     @GetMapping(value = "/{inviteHash}/register/account-created")
     public String accountCreated(@PathVariable("inviteHash") String inviteHash, UserResource loggedInUser) {
         boolean userIsLoggedIn = loggedInUser != null;
@@ -113,8 +112,8 @@ public class MonitoringOfficerRegistrationController {
         if(loggedInUser != null) {
             return "registration/error";
         } else {
-            MonitoringOfficerInviteResource monitoringOfficverInviteResource = competitionSetupMonitoringOfficerRestService.getMonitoringOfficerInvite(inviteHash).getSuccess();
-            model.addAttribute("model", monitoringOfficerRegistrationModelPopulator.populateModel(monitoringOfficverInviteResource.getEmail()));
+            MonitoringOfficerInviteResource monitoringOfficerInviteResource = competitionSetupMonitoringOfficerRestService.getMonitoringOfficerInvite(inviteHash).getSuccess();
+            model.addAttribute("model", monitoringOfficerRegistrationModelPopulator.populateModel(monitoringOfficerInviteResource.getEmail()));
             return "monitoring-officer/create-account";
         }
     }

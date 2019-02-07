@@ -7,7 +7,6 @@ public class MonitoringOfficerInviteResource {
     private long id;
     private String hash;
     private String email;
-    private long competitionId;
     private InviteStatus status;
 
     public long getId() {
@@ -32,14 +31,6 @@ public class MonitoringOfficerInviteResource {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public long getCompetitionId() {
-        return competitionId;
-    }
-
-    public void setCompetitionId(long competition) {
-        this.competitionId = competitionId;
     }
 
     public InviteStatus getStatus() {
