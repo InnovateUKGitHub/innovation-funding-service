@@ -441,7 +441,7 @@ Lead partner selects a finance contact
     And the user clicks the button/link                 link = Project details
     And the user clicks the button/link                 jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
     And the user should not see duplicated select options
-    And the user should not see the text in the page    jQuery = label:contains("Pending")
+    And the user should not see the element             jQuery = label:contains("Pending")
     And the user selects the radio button               financeContact    financeContact2
     And the user clicks the button/link                 jQuery = .govuk-button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}

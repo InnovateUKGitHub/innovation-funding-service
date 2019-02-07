@@ -134,7 +134,7 @@ Custom Suite Setup
 
 the assessor fills all fields with valid inputs
     Select From List By Index                             id = rejectReasonValid    2
-    The user should not see the text in the page          Please enter a reason
+    The user should not see the element                   jQuery = .govuk-error-message:contains("Please enter a reason")
     the user enters multiple strings into a text field    id = rejectComment  a${SPACE}  102
     the user should see a field and summary error         Maximum word count exceeded. Please reduce your word count to 100.
     The user enters text to a text field                  id = rejectComment    Unable to assess the application as i'm on holiday.

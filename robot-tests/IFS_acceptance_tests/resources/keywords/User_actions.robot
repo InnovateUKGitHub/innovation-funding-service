@@ -19,11 +19,6 @@ the user clicks the button twice
     the user clicks the button/link  ${element}
     the user clicks the button/link  ${element}
 
-The user should not see the text in the page
-    [Arguments]    ${NOT_VISIBLE_TEXT}
-    Wait Until Page Does Not Contain Without Screenshots    ${NOT_VISIBLE_TEXT}
-
-
 The user should see the element
     [Arguments]    ${ELEMENT}
     Wait Until Element Is Visible Without Screenshots    ${ELEMENT}
