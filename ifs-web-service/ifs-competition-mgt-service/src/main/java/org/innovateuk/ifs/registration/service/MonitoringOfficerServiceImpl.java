@@ -18,12 +18,12 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
 
     @Override
     public ServiceResult<Void> createMonitoringOfficer(String inviteHash, MonitoringOfficerRegistrationForm monitoringOfficerRegistrationForm) {
-        MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource =
-                new MonitoringOfficerRegistrationResource(
-                        monitoringOfficerRegistrationForm.getPassword(),
-                        monitoringOfficerRegistrationForm.getFirstName(),
-                        monitoringOfficerRegistrationForm.getLastName()
-                );
+        MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource = new MonitoringOfficerRegistrationResource(
+                monitoringOfficerRegistrationForm.getFirstName(),
+                monitoringOfficerRegistrationForm.getLastName(),
+                monitoringOfficerRegistrationForm.getPassword(),
+                monitoringOfficerRegistrationForm.getPhoneNumber()
+        );
         return competitionSetupMonitoringOfficerRestService.createMonitoringOfficer(inviteHash, monitoringOfficerRegistrationResource).toServiceResult();
     }
 }

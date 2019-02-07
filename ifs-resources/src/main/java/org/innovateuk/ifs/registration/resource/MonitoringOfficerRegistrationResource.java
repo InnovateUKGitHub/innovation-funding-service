@@ -9,14 +9,24 @@ import org.innovateuk.ifs.user.resource.UserResource;
  * DTO for registering a Monitoring officer user
  */
 public class MonitoringOfficerRegistrationResource {
+
     private final String firstName;
     private final String lastName;
     private final String password;
+    private final String phoneNumber;
 
-    public MonitoringOfficerRegistrationResource(String firstName, String lastName, String password) {
+    public MonitoringOfficerRegistrationResource() {
+        firstName = null;
+        lastName = null;
+        password = null;
+        phoneNumber = null;
+    }
+
+    public MonitoringOfficerRegistrationResource(String firstName, String lastName, String password, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getFirstName() {
@@ -31,11 +41,16 @@ public class MonitoringOfficerRegistrationResource {
         return password;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     public UserResource toUserResource() {
-        UserResource userResource = new UserResource();
+        final UserResource userResource = new UserResource();
         userResource.setFirstName(this.getFirstName());
         userResource.setLastName(this.getLastName());
         userResource.setPassword(this.getPassword());
+        userResource.setPhoneNumber(this.getPhoneNumber());
         return userResource;
     }
 

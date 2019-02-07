@@ -15,7 +15,10 @@ import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -77,6 +80,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private StakeholderInviteRepository stakeholderInviteRepository;
+
+    @Autowired
+    private MonitoringOfficerInviteRepository monitoringOfficerInviteRepository;
 
     @Autowired
     private StakeholderRepository stakeholderRepository;
@@ -272,6 +278,15 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                         .andOnSuccessReturnVoid());
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> createMonitoringOfficer(String hash, MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource) {
+        return getMonitoringOfficerInviteByHash(hash)
+                .andOnSuccess(invite -> createMonitoringOfficerUser(monitoringOfficerRegistrationResource, invite)
+                        .andOnSuccess(() -> updateMonitoringOfficerInvite(invite))
+                        .andOnSuccessReturnVoid());
+    }
+
     private ServiceResult<Void> associateUserWithCompetition(Competition competition, User user) {
         stakeholderRepository.save(new Stakeholder(competition, user));
         return serviceSuccess();
@@ -309,6 +324,19 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 });
     }
 
+    private ServiceResult<User> createMonitoringOfficerUser(MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource, MonitoringOfficerInvite monitoringOfficerInvite) {
+        final UserResource userResource = monitoringOfficerRegistrationResource.toUserResource();
+        userResource.setEmail(monitoringOfficerInvite.getEmail());
+        userResource.setRoles(singletonList(Role.MONITORING_OFFICER));
+        return validateUser(userResource).
+                andOnSuccess(validUser -> {
+                    final User user = userMapper.mapToDomain(userResource);
+                    return createUserWithUid(user, userResource.getPassword()).
+                            andOnSuccess(this::activateUser)
+                            .andOnSuccessReturn(() -> user);
+                });
+    }
+
     private ServiceResult<Void> updateInviteStatus(RoleInvite roleInvite) {
         roleInvite.open();
         roleInviteRepository.save(roleInvite);
@@ -318,6 +346,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private ServiceResult<Void> updateStakeholderInviteStatus(StakeholderInvite stakeholderInvite) {
         stakeholderInvite.open();
         stakeholderInviteRepository.save(stakeholderInvite);
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> updateMonitoringOfficerInvite(MonitoringOfficerInvite monitoringOfficerInvite) {
+        monitoringOfficerInviteRepository.save(monitoringOfficerInvite.open());
         return serviceSuccess();
     }
 
@@ -331,6 +364,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<StakeholderInvite> getStakeholderInviteByHash(String hash) {
         return find(stakeholderInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
+    }
+
+    private ServiceResult<MonitoringOfficerInvite> getMonitoringOfficerInviteByHash(String hash) {
+        return find(monitoringOfficerInviteRepository.getByHash(hash), notFoundError(MonitoringOfficerInvite.class, hash));
     }
 
     private ServiceResult<User> createUserWithUid(User user, String password) {

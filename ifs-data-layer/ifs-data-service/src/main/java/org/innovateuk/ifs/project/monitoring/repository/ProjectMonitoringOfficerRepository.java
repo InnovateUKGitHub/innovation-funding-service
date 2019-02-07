@@ -13,4 +13,3 @@ public interface ProjectMonitoringOfficerRepository extends PagingAndSortingRepo
 
     boolean existsByUserEmailAndRole(String email, ProjectParticipantRole role);
 }
-

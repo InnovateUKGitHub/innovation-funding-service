@@ -8,18 +8,12 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER;
+
 /**
  * Form field model for registration of monitoring officer users
  */
 public class MonitoringOfficerRegistrationForm {
-
-    public MonitoringOfficerRegistrationForm() { }
-
-    public MonitoringOfficerRegistrationForm(String firstName, String lastName, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-    }
 
     @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
@@ -42,6 +36,19 @@ public class MonitoringOfficerRegistrationForm {
             @Size(min = 8, message = "{validation.standard.password.length.min}"),
     })
     private String password;
+
+    @NotBlank(message = "{validation.standard.phonenumber.required}")
+    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}")
+    private String phoneNumber;
+
+    public MonitoringOfficerRegistrationForm() { }
+
+    public MonitoringOfficerRegistrationForm(String firstName, String lastName, String password, String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -67,6 +74,14 @@ public class MonitoringOfficerRegistrationForm {
         this.password = password;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,6 +94,7 @@ public class MonitoringOfficerRegistrationForm {
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
                 .append(password, that.password)
+                .append(phoneNumber, that.phoneNumber)
                 .isEquals();
     }
 
@@ -88,6 +104,7 @@ public class MonitoringOfficerRegistrationForm {
                 .append(firstName)
                 .append(lastName)
                 .append(password)
+                .append(phoneNumber)
                 .toHashCode();
     }
 }
