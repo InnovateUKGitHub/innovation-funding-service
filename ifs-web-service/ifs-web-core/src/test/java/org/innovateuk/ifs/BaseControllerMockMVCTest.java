@@ -87,6 +87,20 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withRolesGlobal(asList(Role.APPLICANT, Role.ASSESSOR))
             .withUID("1234-abcdefgh-abc1234").build();
 
+    protected UserResource innovationLeadAndApplicant = newUserResource().withId(4L)
+            .withFirstName("Fred")
+            .withLastName("Smith")
+            .withEmail("fred.smith@email.co.uk")
+            .withRolesGlobal(asList(Role.APPLICANT, Role.INNOVATION_LEAD))
+            .withUID("1234-abcdefgh-abc1234").build();
+
+    protected UserResource liveProjectsAndApplicant = newUserResource().withId(4L)
+            .withFirstName("Fred")
+            .withLastName("Smith")
+            .withEmail("fred.smith@email.co.uk")
+            .withRolesGlobal(asList(Role.APPLICANT, Role.LIVE_PROJECTS_USER))
+            .withUID("1234-abcdefgh-abc1234").build();
+
     protected UserResource stakeholderAndAssessor = newUserResource().withId(4L)
             .withFirstName("Maria")
             .withLastName("Briggs")

@@ -18,8 +18,10 @@ import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -68,6 +70,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     @Mock
     private ApplicationRestService applicationRestService;
+
+    @Spy
+    @SuppressWarnings("unused")
+    private NavigationUtils navigationUtils;
 
     @Test
     public void viewProjectDetails() throws Exception {
@@ -308,6 +314,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + project.getId() + "/withdraw"))
                 .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/previous"))
                 .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:http://localhost:80/management/competition/1/applications/previous"))
                 .andReturn();
 
         verify(projectRestService).withdrawProject(project.getId());

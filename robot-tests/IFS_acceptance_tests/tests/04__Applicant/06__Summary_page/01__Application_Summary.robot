@@ -4,8 +4,8 @@ Documentation     INFUND-46: As a lead applicant and I am on the application for
 ...               INFUND-3954 :Applicant shouldn't be able to mark as complete with empty questions
 ...
 ...               INFUND-1075: As an Applicant I want to see the Application Summary page redesigned so that they meet the agreed style
-Suite Setup       log in and create new application if there is not one already  Robot test application
-Suite Teardown    The user closes the browser
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
@@ -67,3 +67,11 @@ the Scope section should be expanded
 
 the Project summary question should be marked as complete
     Element Should Contain    jQuery = button:contains("Project summary")    Complete
+
+Custom suite setup
+    log in and create new application if there is not one already  Robot test application
+    Connect to database  @{database}
+
+Custom suite teardown
+    Disconnect from database
+    The user closes the browser

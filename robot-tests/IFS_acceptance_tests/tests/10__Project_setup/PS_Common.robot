@@ -233,7 +233,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user selects the checkbox           app-row-104
     the user clicks the button/link         jQuery = .govuk-button:contains("Write and send email")
     the internal sends the descision notification email to all applicants  EmailTextBody
-    the user should see the text in the page    Manage funding applications
+    the user should see the element         jQuery = h1:contains("Manage funding applications")
 
 lead partner navigates to project and fills project details
     log in as a different user            &{lead_applicant_credentials}
@@ -300,7 +300,7 @@ the project finance user approves bank details for
     [Arguments]    ${org_name}  ${org_id}
     the user navigates to the page            ${server}/project-setup-management/project/${org_id}/review-all-bank-details
     the user clicks the button/link           link = ${org_name}
-    the user should see the text in the page  ${org_name}
+    the user should see the element           jQuery = td:contains("${org_name}")
     the user clicks the button/link           jQuery = .govuk-button:contains("Approve bank account details")
     the user clicks the button/link           jQuery = .govuk-button:contains("Approve account")
 

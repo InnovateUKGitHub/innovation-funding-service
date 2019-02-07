@@ -69,7 +69,7 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...
 ...               IFS-3571 Interview panels - Internal user view of applications and associated feedback
 Suite Setup       Custom Suite Setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
@@ -287,12 +287,12 @@ Applicant can still see their feedback once the comp feedback has been released
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
+    Connect to database  @{database}
     the Interview Panel is activated in the db
     ${today} =  get today short month
     set suite variable  ${today}
 
 the Interview Panel is activated in the db
-    Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`competition` SET `has_interview_stage`=1 WHERE `id`='${CLOSED_COMPETITION}';
 
 the competition admin selects the applications and adds them to the invite list
@@ -409,3 +409,7 @@ the compAdmin can cancel resend inivte to an applicant
     the user clicks the button/link    link = Cancel
     the user navigates to the page     ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/invite/${Neural_network_application}/view
     the user clicks the button/link    link = Edit and resend invite
+
+Custom suite teardown
+    Disconnect from database
+    The user closes the browser

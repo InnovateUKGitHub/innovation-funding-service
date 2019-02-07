@@ -30,7 +30,7 @@ ${manageExternalUsers}  ${server}/management/admin/external/users
 # Competitions and Applications Variables
 ${openCompetitionRTO_name}       Predicting market trends programme
 ${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
-${openCompetitionRTOCloseDate}       ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
+${openCompetitionRTOCloseDate}   ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
 
 ${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
 ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
@@ -115,15 +115,23 @@ ${INELIGIBLE_PROJECT_COMPETITION_NAME_2}    SPAM: Solar power aggregation meshes
 ${INELIGIBLE_PROJECT_COMPETITION_NAME_2_NUMBER}       ${application_ids['${INELIGIBLE_PROJECT_COMPETITION_NAME_2}']}
 ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}     Electricity harvesting from rough terrain driving
 ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3_NUMBER}       ${application_ids['${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}']}
-
+${MARKOFFLINE_COMPETITION_NAME}     Biosciences round three: plastic recovery in the industrial sector
+${MARKOFFLINE_COMPETITION}           ${competition_ids['${MARKOFFLINE_COMPETITION_NAME}']}
+${MARKOFFLINE_APPLICATION_1_TITLE}   Smart skips for plastic storage and retrieval
+${MARKOFFLINE_APPLICATION_1_NUMBER}  ${application_ids['${MARKOFFLINE_APPLICATION_1_TITLE}']}
 
 
 ${NON_IFS_COMPETITION_NAME}     Transforming big data
 
-${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
+${DASHBOARD_SELECTION_PAGE_TITLE}  Dashboard
+
+${APPLICANT_DASHBOARD_URL}    ${SERVER}/applicant/dashboard
+${APPLICANT_DASHBOARD_TITLE}  Applications
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
-${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
+
+${ASSESSOR_DASHBOARD_URL}    ${SERVER}/assessment/assessor/dashboard
+${ASSESSOR_DASHBOARD_TITLE}  Assessments
 
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
 

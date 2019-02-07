@@ -176,7 +176,7 @@ Assessor tries to accept expired invitation
     [Setup]  get the initial milestone value
     Given we are moving the milestone to yesterday         ASSESSMENT_PANEL  ${CLOSED_COMPETITION}
     When the user reads his email and clicks the link      ${assessor_riley_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
-    Then the user should see the text in the page          This invitation is now closed
+    Then the user should see the element                   jQuery = h1:contains("This invitation is now closed")
     [Teardown]  we are moving the milestone to tomorrow    ASSESSMENT_PANEL  ${CLOSED_COMPETITION}
 
 Assign application link decativated if competition is in close state
@@ -292,17 +292,18 @@ Assessor cannot see competition on dashboard after funders panel date expiry
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
+    Connect to database  @{database}
     ${today} =  get today short month
     set suite variable  ${today}
     get the initial milestone value
 
 Custom Tear Down
     return back to original milestone  FUNDERS_PANEL  ${assessmentPanelDate}  ${CLOSED_COMPETITION}
+    Disconnect from database
     the user closes the browser
 
 Get the proper milestone value from the db
     [Arguments]  ${type}
-    Connect to Database    @{database}
     ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${CLOSED_COMPETITION}' AND type='${type}';
     ${result} =  get from list  ${result}  0
     ${milestone} =  get from list  ${result}  0
@@ -310,7 +311,6 @@ Get the proper milestone value from the db
 
 return back to original milestone
     [Arguments]  ${type}  ${date}  ${competitionId}
-    Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `type`='${type}' AND `competition_id`='${competitionId}'
 
 we are moving the milestone to yesterday
@@ -325,7 +325,6 @@ we are moving the milestone to tomorrow
 
 update the database
     [Arguments]  ${date}  ${type}  ${competitionId}
-    Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `type`='${type}' AND `competition_id`='${competitionId}'
 
 get the initial milestone value

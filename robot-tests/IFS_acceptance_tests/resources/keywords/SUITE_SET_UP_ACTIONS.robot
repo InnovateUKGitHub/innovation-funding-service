@@ -16,22 +16,6 @@ Login new application invite academic
     Run Keyword If  '${status}' == 'FAIL'  Run keywords  Create new application with the same user  Academic robot test application  1
     ...                                            AND   Invite and accept the invitation  ${recipient}  ${subject}  ${pattern}
 
-new account complete all but one
-    the guest user opens the browser
-    we create a new user                              ${openCompetitionBusinessRTO}  sam  business  ${submit_bus_email}  radio-1
-    create new account for submitting                 ${application_bus_name}
-    Logout as user
-    we create a new user                              ${openCompetitionBusinessRTO}  liam  rto  ${submit_rto_email}  radio-3
-    create new account for submitting                 ${application_rto_name}
-
-create new account for submitting
-    [Arguments]  ${application_name}
-    the user clicks the button/link                   link=Untitled application (start here)
-    the user clicks the button/link                   link=Application details
-    the user enters text to a text field              css=[id="application.name"]    ${application_name}
-    the user clicks the button/link                   jQuery=button:contains("Save and return")
-    the user marks every section but one as complete  ${application_name}  Experimental development
-
 the user marks every section but one as complete
     [Arguments]  ${application_name}  ${rescat}
     the user navigates to the page    ${server}
@@ -113,7 +97,7 @@ create new submit application
 
 Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    Given the user navigates to the page                ${DASHBOARD_URL}
+    Given the user navigates to the page                ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                 link=Academic robot test application
     the user fills in the inviting steps no edit        ${test_mailbox_one}+academictest@gmail.com
     logout as user
@@ -163,7 +147,7 @@ The user navigates to the overview page of the Robot test application
     the user navigates to the page       ${server}/application/${id}
 
 The user navigates to the finance overview of the academic
-    When the user navigates to the page    ${DASHBOARD_URL}
+    When the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Finances overview
 

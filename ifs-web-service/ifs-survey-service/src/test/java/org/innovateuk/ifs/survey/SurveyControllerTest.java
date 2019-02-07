@@ -2,8 +2,10 @@ package org.innovateuk.ifs.survey;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.survey.controller.SurveyController;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Spy;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.when;
@@ -16,6 +18,10 @@ public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyContro
 
     @Mock
     private SurveyRestService surveyRestService;
+
+    @Spy
+    @SuppressWarnings("unused")
+    private NavigationUtils navigationUtils;
 
     @Override
     protected SurveyController supplyControllerUnderTest() {
@@ -73,6 +79,7 @@ public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyContro
         mockMvc.perform(post("/{competitionId}/feedback", competitionId)
                 .param("comments", "comments")
                 .param("satisfaction", "1"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:http://localhost:80"));
     }
 }

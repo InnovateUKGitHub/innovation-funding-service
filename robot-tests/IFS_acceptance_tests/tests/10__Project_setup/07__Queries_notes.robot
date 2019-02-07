@@ -433,7 +433,7 @@ New note can be posted
     [Tags]
     When the user clicks the button/link             jQuery = .govuk-button:contains("Save note")
     Then the user should not see the element         jQuery = .govuk-button:contains("Save note")
-    Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
+    Then the user should see the element             jQuery = p:contains("Lee Bowman - Innovate UK (Finance team)")
 
 Note sections are no longer editable
     [Documentation]    INFUND-4845
@@ -444,8 +444,8 @@ Note sections are no longer editable
 Project finance user can comment on the note
     [Documentation]    INFUND-7756
     [Tags]
-    When the user should see the text in the page    an eligibility query's title
-    And the user should see the text in the page     this is some note text
+    When the user should see the element             jQuery = h2:contains("an eligibility query's title")
+    And the user should see the element              jQuery = p:contains("this is some note text")
     And the user should see the element              id = post-new-comment
 
 Large pdf uploads not allowed for note comments
@@ -453,20 +453,20 @@ Large pdf uploads not allowed for note comments
     [Tags]
     Given the user clicks the button/link            id = post-new-comment
     When the user uploads the file                   name = attachment    ${too_large_pdf}
-    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    Then the user should see the element             jQuery = h1:contains("${too_large_pdf_validation_error}")
     [Teardown]    the user goes back to the previous page
 
 Non pdf uploads not allowed for note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user uploads the file                   name = attachment    ${text_file}
-    Then the user should see the text in the page    ${wrong_filetype_validation_error}
+    Then the user should see a field error           ${wrong_filetype_validation_error}
 
 Project finance can upload a pdf file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     Then the user uploads the file                  name = attachment   ${valid_pdf}
-    And the user should see the text in the page    ${valid_pdf}
+    And the user should see the element             link = ${valid_pdf}
 
 Project finance can remove the file from note comments
     [Documentation]    INFUND-7756
