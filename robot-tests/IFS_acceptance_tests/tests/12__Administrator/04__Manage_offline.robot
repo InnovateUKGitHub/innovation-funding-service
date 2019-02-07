@@ -29,17 +29,17 @@ Ifs Admin marks a project as completed offline
 
 Project setup shows project is completed offline
     Given the user clicks the button/link  link = Projects in setup
-    Then the user should see the element   jQuery = a:contains("${MARKOFFLINE_APPLICATION_1_NUMBER}") ~ p:contains("Set up is being handled offline")
+    Then the user should see the element   jQuery = a:contains("${MARKOFFLINE_APPLICATION_1_NUMBER}") ~ p:contains("Set up is complete offline")
 
 *** Keywords ***
 the user marks the project as managed offline
-    the user navigates to the page    https://ifs.local-dev/project-setup-management/competition/${MARKOFFLINE_COMPETITION}/status/all
+    the user navigates to the page    ${server}/project-setup-management/competition/${MARKOFFLINE_COMPETITION}/status/all
     the user clicks the button/link   jQuery = #table-project-status td:contains("Incomplete") a
     the user clicks the button/link   link = Manage project set up offline
     the user clicks the button/link   css = .modal-handle-project-offline button[type="submit"]
 
 the user marks the project as completed offline
-    the user navigates to the page    https://ifs.local-dev/project-setup-management/competition/${MARKOFFLINE_COMPETITION}/status/all
+    the user navigates to the page    ${server}/project-setup-management/competition/${MARKOFFLINE_COMPETITION}/status/all
     the user clicks the button/link   jQuery = #table-project-status td:contains("View") a
     the user clicks the button/link   link = Mark as completed offline
     the user clicks the button/link   css = .modal-complete-project-offline button[type="submit"]
