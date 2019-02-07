@@ -9,7 +9,6 @@ The user reads his email
     email contains pattern    ${email_to_test}    ${pattern}
     delete email    ${email_to_test}
     close mailbox
-    Set Test Variable    ${email_to_test}
 
 ####################### CLICKING EMAILED LINKS ############################
 The user reads his email and clicks the link
