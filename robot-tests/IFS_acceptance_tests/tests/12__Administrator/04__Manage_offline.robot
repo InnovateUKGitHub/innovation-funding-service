@@ -17,7 +17,7 @@ Project setup options are disabled
     And the user should see the element    jQuery = th:contains("${MARKOFFLINE_APPLICATION_1_TITLE}") ~ td:contains("View") + .na + .na + .na + .na + .na + .na
 
 Applicant sees the project is being managed offline
-    Given Log in as a different user       &{RTO_lead_applicant_credentials}
+    Given Log in as a different user       &{lead_applicant_credentials}
     When the user clicks the button/link   link = ${MARKOFFLINE_APPLICATION_1_TITLE}
     Then the user should see the element   jQuery = .warning-alert:contains("Innovate UK is managing this project's setup offline. For help call 0300 321 4357.")
     And the user should see the element    jQuery = .progress-list .read-only + .read-only +.waiting +.read-only + .read-only + .read-only + .read-only
