@@ -48,7 +48,8 @@ INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multi
 set @question_public_description_id = (SELECT LAST_INSERT_ID());
 
 -- Application questions
-INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (1,'Horizon 2020',1,0,'Horizon 202','Horizon 2020',5,NULL,@template_id,@section_application_questions_id,NULL,'GENERAL',NULL);
+-- TODO What happens with the H2020 question?
+--INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (1,'Horizon 2020',1,0,'Horizon 202','Horizon 2020',5,NULL,@template_id,@section_application_questions_id,NULL,'GENERAL',NULL);
 
 -- Project costs
 INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (0,NULL,1,1,'Provide the project costs for \'{organisationName}\'','Project finances',17,NULL,@template_id,@section_your_project_costs_id,NULL,'GENERAL',NULL);
