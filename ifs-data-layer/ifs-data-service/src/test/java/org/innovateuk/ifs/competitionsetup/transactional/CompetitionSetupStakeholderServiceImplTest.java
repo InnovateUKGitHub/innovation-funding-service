@@ -45,7 +45,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests the MonitoringOfficerServiceImpl with mocked repository.
+ * Tests the CompetitionSetupStakeholderServiceImpl with mocked repository.
  */
 public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitTest<CompetitionSetupStakeholderServiceImpl> {
 
