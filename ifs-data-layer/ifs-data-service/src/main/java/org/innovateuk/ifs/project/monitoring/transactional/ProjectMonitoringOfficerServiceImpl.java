@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.mapper.MonitoringOfficerInviteMapper;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -33,6 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -40,7 +42,8 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER;
+import static org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_INVITE;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Transactional and secured service implementation providing operations around monitoring officers.
@@ -54,8 +57,7 @@ public class ProjectMonitoringOfficerServiceImpl extends BaseTransactionalServic
     private static final String WEB_CONTEXT = "/management/monitoring-officer";
 
     enum Notifications {
-        STAKEHOLDER_INVITE,
-        ADD_STAKEHOLDER
+        MONITORING_OFFICER_INVITE
     }
 
     @Autowired
@@ -87,43 +89,37 @@ public class ProjectMonitoringOfficerServiceImpl extends BaseTransactionalServic
     public ServiceResult<Void> inviteMonitoringOfficer(UserResource invitedUser) {
 
         return validateInvite(invitedUser)
-                .andOnSuccess(() -> validateUserIsNotInternal(invitedUser.getEmail()))
-                .andOnSuccess(() -> validateUserInviteNotPending(invitedUser))
-                .andOnSuccess(() -> validateUserNotAlreadyStakeholderOnCompetition(invitedUser.getEmail()))
-                .andOnSuccess(() -> addOrInviteUser(invitedUser)
-                );
+                .andOnSuccess(this::validateUserIsNotInternal)
+                .andOnSuccess(this::validateUserInviteNotPending)
+                .andOnSuccess(this::addOrInviteUser);
     }
 
-    private ServiceResult<Void> validateInvite(UserResource invitedUser) {
+    private ServiceResult<UserResource> validateInvite(UserResource invitedUser) {
 
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName())) {
-            return serviceFailure(STAKEHOLDER_INVITE_INVALID);
+            return serviceFailure(MONITORING_OFFICER_INVITE_INVALID);
         }
-        return serviceSuccess();
+        return serviceSuccess(invitedUser);
     }
 
-    private ServiceResult<Void> validateUserIsNotInternal(String emailAddress) {
+    private ServiceResult<UserResource> validateUserIsNotInternal(UserResource user) {
+        String emailAddress = user.getEmail();
         String domain = StringUtils.substringAfter(emailAddress, "@");
         internalUserEmailDomains = StringUtils.defaultIfBlank(internalUserEmailDomains, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
         String[] domains = internalUserEmailDomains.split(",");
         for (String acceptedDomain : domains) {
             if (acceptedDomain.equalsIgnoreCase(domain)) {
-                return serviceFailure(STAKEHOLDERS_CANNOT_BE_INTERNAL_USERS);
+                return serviceFailure(MONITORING_OFFICERS_CANNOT_BE_INTERNAL_USERS);
             }
         }
 
-        return serviceSuccess();
+        return serviceSuccess(user);
     }
 
-    private ServiceResult<Void> validateUserInviteNotPending(UserResource invitedUser) {
+    private ServiceResult<UserResource> validateUserInviteNotPending(UserResource invitedUser) {
         boolean foundPendingInvite = monitoringOfficerInviteRepository.existsByStatusAndEmail(SENT, invitedUser.getEmail());
-        return foundPendingInvite ? serviceFailure(STAKEHOLDER_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess();
-    }
-
-    private ServiceResult<Void> validateUserNotAlreadyStakeholderOnCompetition(String email) {
-        boolean isUserStakeholderOnCompetition = monitoringOfficerRepository.existsByUserEmailAndRole(email, MONITORING_OFFICER);
-        return isUserStakeholderOnCompetition ? serviceFailure(STAKEHOLDER_HAS_ACCEPTED_INVITE) : serviceSuccess();
+        return foundPendingInvite ? serviceFailure(MONITORING_OFFICER_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess(invitedUser);
     }
 
     private ServiceResult<Void> addOrInviteUser(UserResource invitedUser) {
@@ -131,7 +127,7 @@ public class ProjectMonitoringOfficerServiceImpl extends BaseTransactionalServic
 
         if (user.isPresent()) {
             if (!user.get().hasRole(Role.MONITORING_OFFICER)) {
-                addStakeholderRoleToUser(user.get());
+                addMonitoringOfficerRoleToUser(user.get());
             }
             return serviceSuccess();
         } else {
@@ -147,30 +143,28 @@ public class ProjectMonitoringOfficerServiceImpl extends BaseTransactionalServic
                 generateInviteHash(),
                 CREATED);
 
-        MonitoringOfficerInvite savedStakeholderInvite = monitoringOfficerInviteRepository.save(monitoringOfficerInvite);
-
-        return serviceSuccess(savedStakeholderInvite);
+        return serviceSuccess(monitoringOfficerInviteRepository.save(monitoringOfficerInvite));
     }
 
     private ServiceResult<Void> sendMonitoringOfficerInviteNotification(MonitoringOfficerInvite monitoringOfficerInvite) {
 
-        Map<String, Object> globalArgs = createGlobalArgsForStakeholderInvite(monitoringOfficerInvite);
+        Map<String, Object> globalArgs = createGlobalArgsForMonitoringOfficerInvite(monitoringOfficerInvite);
 
         Notification notification = new Notification(systemNotificationSource,
                 singletonList(createMonitoringOfficerInviteNotificationTarget(monitoringOfficerInvite)),
-                Notifications.STAKEHOLDER_INVITE, globalArgs);
+                MONITORING_OFFICER_INVITE, globalArgs);
 
-        ServiceResult<Void> stakeholderInviteEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
+        ServiceResult<Void> sendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
 
-        stakeholderInviteEmailSendResult.handleSuccessOrFailure(
+        sendResult.handleSuccessOrFailure(
                 failure -> handleInviteError(monitoringOfficerInvite, failure),
                 success -> handleInviteSuccess(monitoringOfficerInvite)
         );
 
-        return stakeholderInviteEmailSendResult;
+        return sendResult;
     }
 
-    private Map<String, Object> createGlobalArgsForStakeholderInvite(MonitoringOfficerInvite monitoringOfficerInvite) {
+    private Map<String, Object> createGlobalArgsForMonitoringOfficerInvite(MonitoringOfficerInvite monitoringOfficerInvite) {
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, monitoringOfficerInvite));
         return globalArguments;
@@ -197,12 +191,23 @@ public class ProjectMonitoringOfficerServiceImpl extends BaseTransactionalServic
 
     @Override
     public ServiceResult<MonitoringOfficerInviteResource> getInviteByHash(String hash) {
-        MonitoringOfficerInvite stakeholderInvite = monitoringOfficerInviteRepository.getByHash(hash);
-        return serviceSuccess(monitoringOfficerInviteMapper.mapToResource(stakeholderInvite));
+        return getByHash(hash).andOnSuccessReturn(monitoringOfficerInviteMapper::mapToResource);
     }
 
-    private void addStakeholderRoleToUser(User user) {
-        user.addRole(Role.STAKEHOLDER);
+    @Override
+    @Transactional
+    public ServiceResult<MonitoringOfficerInviteResource> openInvite(String hash) {
+        return getByHash(hash)
+                .andOnSuccessReturn(Invite::open)
+                .andOnSuccessReturn(monitoringOfficerInviteMapper::mapToResource);
+    }
+
+    private ServiceResult<MonitoringOfficerInvite> getByHash(String hash) {
+        return find(monitoringOfficerInviteRepository.getByHash(hash), notFoundError(MonitoringOfficerInvite.class, hash));
+    }
+
+    private void addMonitoringOfficerRoleToUser(User user) {
+        user.addRole(Role.MONITORING_OFFICER);
         userRepository.save(user);
     }
 }

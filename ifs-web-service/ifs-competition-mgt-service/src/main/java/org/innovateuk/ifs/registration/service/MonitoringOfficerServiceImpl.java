@@ -21,8 +21,7 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
         MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource = new MonitoringOfficerRegistrationResource(
                 monitoringOfficerRegistrationForm.getFirstName(),
                 monitoringOfficerRegistrationForm.getLastName(),
-                monitoringOfficerRegistrationForm.getPassword(),
-                monitoringOfficerRegistrationForm.getPhoneNumber()
+                monitoringOfficerRegistrationForm.getPhoneNumber(), monitoringOfficerRegistrationForm.getPassword()
         );
         return competitionSetupMonitoringOfficerRestService.createMonitoringOfficer(inviteHash, monitoringOfficerRegistrationResource).toServiceResult();
     }

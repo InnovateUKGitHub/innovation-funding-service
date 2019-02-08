@@ -12,21 +12,21 @@ public class MonitoringOfficerRegistrationResource {
 
     private final String firstName;
     private final String lastName;
-    private final String password;
     private final String phoneNumber;
+    private final String password;
 
     public MonitoringOfficerRegistrationResource() {
         firstName = null;
         lastName = null;
-        password = null;
         phoneNumber = null;
+        password = null;
     }
 
-    public MonitoringOfficerRegistrationResource(String firstName, String lastName, String password, String phoneNumber) {
+    public MonitoringOfficerRegistrationResource(String firstName, String lastName, String phoneNumber, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.password = password;
         this.phoneNumber = phoneNumber;
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -37,20 +37,20 @@ public class MonitoringOfficerRegistrationResource {
         return lastName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public UserResource toUserResource() {
         final UserResource userResource = new UserResource();
         userResource.setFirstName(this.getFirstName());
         userResource.setLastName(this.getLastName());
-        userResource.setPassword(this.getPassword());
         userResource.setPhoneNumber(this.getPhoneNumber());
+        userResource.setPassword(this.getPassword());
         return userResource;
     }
 
@@ -65,6 +65,7 @@ public class MonitoringOfficerRegistrationResource {
         return new EqualsBuilder()
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
+                .append(phoneNumber, that.phoneNumber)
                 .append(password, that.password)
                 .isEquals();
     }
@@ -74,6 +75,7 @@ public class MonitoringOfficerRegistrationResource {
         return new HashCodeBuilder(17, 37)
                 .append(firstName)
                 .append(lastName)
+                .append(phoneNumber)
                 .append(password)
                 .toHashCode();
     }
