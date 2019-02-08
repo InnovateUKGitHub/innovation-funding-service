@@ -16,8 +16,8 @@ public enum ProjectState implements ProcessState, IdentifiableEnum {
     SETUP(17, State.PENDING),
     LIVE(18, State.ACCEPTED),
     WITHDRAWN(48, State.WITHDRAWN),
-    HANDLED_OFFLINE(49, State.OFFLINE),
-    COMPLETED_OFFLINE(50, State.VERIFIED);
+    HANDLED_OFFLINE(51, State.HANDLED_OFFLINE),
+    COMPLETED_OFFLINE(52, State.COMPLETED_OFFLINE);
 
     private final long id;
     private final State backingState;
