@@ -224,4 +224,4 @@ the user clicks the forgot psw link
 
 Close browser and delete emails
     Close any open browsers
-    Delete the emails from both test mailboxes
+    Delete the emails from the local test mailbox
