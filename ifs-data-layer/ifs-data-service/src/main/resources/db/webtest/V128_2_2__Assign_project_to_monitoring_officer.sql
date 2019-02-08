@@ -15,10 +15,6 @@ SET @assigned_project_id =
 SET @assigned_application_id =
 (SELECT application_id FROM project WHERE name = 'Magic material');
 
-INSERT INTO user_organisation
-VALUES
-(@mo_user_id, @mo_organisation_id);
-
 INSERT INTO project_user
 (project_id, organisation_id, user_id, project_role, participant_status_id)
 VALUES
