@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Transactional and secured service providing operations around monitoring officers.
@@ -22,6 +21,9 @@ public interface ProjectMonitoringOfficerService {
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<MonitoringOfficerInviteResource> getInviteByHash(String hash);
 
-    @Transactional
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "READ_MONITORING_OFFICER_INVITE_ON_HASH",
+            description = "The System Registration user can read an invite for a given hash",
+            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<MonitoringOfficerInviteResource> openInvite(String hash);
 }

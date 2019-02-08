@@ -28,8 +28,8 @@ public class ProjectMonitoringOfficerController {
     }
 
     @GetMapping("/get-monitoring-officer-invite/{inviteHash}")
-    public RestResult<MonitoringOfficerInviteResource> getInvite(@PathVariable("inviteHash") String inviteHash) {
-        return projectMonitoringOfficerService.getInviteByHash(inviteHash).toGetResponse();
+    public RestResult<MonitoringOfficerInviteResource> openInvite(@PathVariable("inviteHash") String inviteHash) {
+        return projectMonitoringOfficerService.openInvite(inviteHash).toGetResponse();
     }
 
     @PostMapping("/monitoring-officer/create/{inviteHash}")
