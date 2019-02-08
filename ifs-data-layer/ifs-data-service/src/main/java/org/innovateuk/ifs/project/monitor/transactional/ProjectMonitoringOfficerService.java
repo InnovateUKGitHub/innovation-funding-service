@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.monitoring.transactional;
+package org.innovateuk.ifs.project.monitor.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;

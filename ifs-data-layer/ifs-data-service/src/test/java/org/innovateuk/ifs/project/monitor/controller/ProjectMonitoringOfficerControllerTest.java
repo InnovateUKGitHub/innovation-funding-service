@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.project.monitoring.controller;
+package org.innovateuk.ifs.project.monitor.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
-import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitor.transactional.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.monitoring.transactional;
+package org.innovateuk.ifs.project.monitor.transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -14,9 +14,9 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
-import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
-import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitor.domain.MonitoringOfficerInvite;
+import org.innovateuk.ifs.project.monitor.repository.MonitoringOfficerInviteRepository;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
@@ -42,7 +42,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_INVITE;
+import static org.innovateuk.ifs.project.monitor.transactional.ProjectMonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_INVITE;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**

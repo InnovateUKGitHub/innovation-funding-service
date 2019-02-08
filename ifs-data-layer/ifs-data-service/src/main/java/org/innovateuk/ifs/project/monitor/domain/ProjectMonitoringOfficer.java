@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.monitoring.domain;
+package org.innovateuk.ifs.project.monitor.domain;
 
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipant;

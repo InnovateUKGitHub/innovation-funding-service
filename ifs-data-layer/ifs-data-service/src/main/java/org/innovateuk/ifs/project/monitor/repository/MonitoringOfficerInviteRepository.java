@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.project.monitoring.repository;
+package org.innovateuk.ifs.project.monitor.repository;
 
 import org.innovateuk.ifs.competition.domain.StakeholderInvite;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
-import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
+import org.innovateuk.ifs.project.monitor.domain.MonitoringOfficerInvite;
 
 import java.util.List;
 
