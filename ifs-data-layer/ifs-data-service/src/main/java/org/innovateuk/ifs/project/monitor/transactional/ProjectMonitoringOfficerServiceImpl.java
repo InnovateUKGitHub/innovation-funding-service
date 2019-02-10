@@ -16,7 +16,6 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.monitor.domain.MonitoringOfficerInvite;
 import org.innovateuk.ifs.project.monitor.repository.MonitoringOfficerInviteRepository;
-import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
@@ -62,9 +61,6 @@ public class ProjectMonitoringOfficerServiceImpl extends BaseTransactionalServic
 
     @Autowired
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepository;
-
-    @Autowired
-    private ProjectMonitoringOfficerRepository monitoringOfficerRepository;
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
