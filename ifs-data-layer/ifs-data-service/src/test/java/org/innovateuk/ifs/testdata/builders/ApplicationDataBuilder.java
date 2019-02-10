@@ -98,8 +98,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                                 .getSuccess(),
                         x -> type.equals(x.getQuestionSetupType())).get();
 
-                data.getCompetition().setCompetitionStatus(CompetitionStatus.OPEN);
-
                 questionStatusService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
                                 .getApplication()
                                 .getId()),
