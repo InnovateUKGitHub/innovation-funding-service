@@ -14,6 +14,8 @@ delete from document_config_file_type where document_config_id in (select dct.id
 
 delete from document_config where id in (select dct.id from (select dc.id from document_config dc where dc.competition_id in (1,2,3,4,5,6,7,8)) as dct);
 
+delete from grant_claim_maximum_competition where competition_id in (1,2,3,4,5,6,7,8);
+
 delete from question where competition_id in (1,2,3,4,5,6,7,8);
 delete from public_content where competition_id in (1);
 
