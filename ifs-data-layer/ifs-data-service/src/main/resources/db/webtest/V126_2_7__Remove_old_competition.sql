@@ -11,15 +11,15 @@ delete from appendix_file_types where form_input_id in (select fit.id from (sele
 
 delete from form_input where id in (select fit.id from (select fi.id from form_input fi join question q on q.id = fi.question_id where q.competition_id in (1,2,3,4,5,6,7,8)) as fit);
 
-DROP TABLE IF EXISTS document_config_file_type;
+delete from document_config_file_type where document_config_id in (select id from document_config where competition_id in (1,2,3,4,5,6,7,8));
 
-DROP TABLE IF EXISTS document_config;
+delete from document_config where competition_id in (1,2,3,4,5,6,7,8);
 
-DROP TABLE IF EXISTS grant_claim_maximum_competition;
+delete from grant_claim_maximum_competition where competition_id in (1,2,3,4,5,6,7,8);
 
-DROP TABLE IF EXISTS file_type;
+delete from file_type;
 
-DROP TABLE IF EXISTS schedule_status;
+delete from schedule_status;
 
 delete from question where competition_id in (1,2,3,4,5,6,7,8);
 delete from public_content where competition_id in (1);
