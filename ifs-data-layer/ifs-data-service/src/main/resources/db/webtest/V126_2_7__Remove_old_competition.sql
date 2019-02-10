@@ -10,6 +10,8 @@ delete from appendix_file_types where form_input_id in (select fit.id from (sele
 
 delete from form_input where id in (select fit.id from (select fi.id from form_input fi join question q on q.id = fi.question_id where q.competition_id in (1,2,3,4,5,6,7,8)) as fit);
 
+delete from document_config where id in (select id from document_config where competition_id in (1,2,3,4,5,6,7,8));
+
 delete from question where competition_id in (1,2,3,4,5,6,7,8);
 delete from public_content where competition_id in (1);
 

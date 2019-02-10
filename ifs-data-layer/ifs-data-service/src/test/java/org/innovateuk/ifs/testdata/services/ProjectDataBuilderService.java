@@ -47,8 +47,8 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
 
     @PostConstruct
     public void setup() {
-        projectLines = readProjects();
         organisationLines = readOrganisations();
+        projectLines = readProjects();
 
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
 
