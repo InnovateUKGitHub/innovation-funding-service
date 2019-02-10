@@ -1,4 +1,5 @@
 -- Remove the Competition 1 and all the competition templates. They now exist in the test data dump file
+SET foreign_key_checks = 0;
 
 delete from form_input_validator where form_input_id in (select fi.id from form_input fi join question q on q.id = fi.question_id where q.competition_id in (1,2,3,4,5,6,7,8));
 
@@ -25,9 +26,7 @@ delete from public_content where competition_id in (1);
 
 delete from setup_status where target_id in (1,2,3,4,5,6,7,8) and target_class_name = 'org.innovateuk.ifs.competition.domain.Competition';
 
-SET foreign_key_checks = 0;
 delete from section where competition_id in (1,2,3,4,5,6,7,8);
-SET foreign_key_checks = 1;
 
 delete from milestone where competition_id in (1,2,3,4,5,6,7,8);
 
@@ -40,3 +39,5 @@ update competition_type set template_competition_id = NULL where name = 'Aerospa
 update competition_type set template_competition_id = NULL where name = "The Prince's Trust";
 
 delete from competition where id in (1,2,3,4,5,6,7,8);
+
+SET foreign_key_checks = 1;
