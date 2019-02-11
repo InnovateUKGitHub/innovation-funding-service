@@ -31,6 +31,8 @@ ${manageExternalUsers}  ${server}/management/admin/external/users
 ${openCompetitionRTO_name}       Predicting market trends programme
 ${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
 ${openCompetitionRTOCloseDate}   ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
+${openCompetitionRTOApplication1Name}  Hydrology the dynamics of Earth\'s surface water
+${openCompetitionRTOApplication1Id}    ${application_ids["${openCompetitionRTOApplication1Name}"]}
 
 ${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
 ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
