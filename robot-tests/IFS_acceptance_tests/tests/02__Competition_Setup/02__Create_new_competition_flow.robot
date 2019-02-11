@@ -725,7 +725,7 @@ User cannot delete competition with assessors
 The Applicant is able to apply to the competition once is Open
     [Documentation]  IFS-182
     [Tags]  MySQL
-    [Setup]  Change the milestone in the database to tomorrow    ${competitionId}  OPEN_DATE
+    [Setup]  update milestone to yesterday          ${competitionId}  OPEN_DATE
     Given log in as a different user                &{lead_applicant_credentials}
     And logged in user applies to competition       ${competitionTitle}  1
 

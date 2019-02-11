@@ -85,7 +85,7 @@ Guest user can apply to a Non-IFS competition at the FrontDoor
     When the user enters text to a text field                                      id = keywords    search
     And the user clicks the button/link                                            jQuery = button:contains("Update results")
     Get competitions id and set it as suite variable     Test non-IFS competition
-    And update milestone to yesterday      ${competitionId}
+    And update milestone to yesterday                                              ${competitionId}  OPEN_DATE
     When the user clicks the button/link                                           link = Test non-IFS competition
     Then The user should see the element                                           link = Register and apply online
 

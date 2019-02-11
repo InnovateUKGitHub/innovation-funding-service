@@ -91,10 +91,9 @@ Competition Opens automatically on date
     [Tags]    MySQL
     Given the user should see the element    jQuery = h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
     When update milestone to yesterday       ${READY_TO_OPEN_COMPETITION}  OPEN_DATE
-    And the user reloads the page
     When the user navigates to the page      ${CA_Live}
     Then the user should see the element     jQuery = h2:contains('Open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
-    [Teardown]  Return the competition's milestones to their initial values           ${competitionId}  ${openDate}  ${submissionDate}
+    [Teardown]  Return the competition's milestones to their initial values           ${READY_TO_OPEN_COMPETITION}  ${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}  ${READY_TO_OPEN_COMPETITION_CLOSE_DATE_DB}
 
 Search existing applications
     [Documentation]    INFUND-3829
@@ -129,8 +128,8 @@ Non IFS competitions do not appear in search results
 *** Keywords ***
 Custom suite setup
     Connect to Database  @{database}
-    update milestone to yesterday     ${READY_TO_OPEN_COMPETITION}  OPEN_DATE
     The user logs-in in new browser  &{Comp_admin1_credentials}
+    Change the milestone in the database to tomorrow     ${READY_TO_OPEN_COMPETITION}  OPEN_DATE
 
 the total calculation should be correct
     [Documentation]    This keyword is for the total of the search results with or without second page
