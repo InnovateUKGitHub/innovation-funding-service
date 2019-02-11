@@ -49,12 +49,14 @@
             <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
         </th:block>
 
-        <th:block th:unless="${model.projectComplete}">
-            <div class="message-alert">
-                <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
-                <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
-                <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}" class="govuk-link">View the status of partners</a></p>
-            </div>
+        <th:block th:unless="${model.projectState.offline}">
+            <th:block th:unless="${model.projectComplete}">
+                <div class="message-alert">
+                    <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
+                    <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
+                    <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}" class="govuk-link">View the status of partners</a></p>
+                </div>
+            </th:block>
         </th:block>
 
         <div class="progress-list progress-list--individual-blocks">
