@@ -135,7 +135,7 @@ the applicant submits the procurement application
 
 Competition is closed
     Get competitions id and set it as suite variable    ${comp_name}
-    the submission date changes in the db in the past   ${competitionId}
+    update milestone to yesterday                       ${competitionId}  SUBMISSION_DATE
 
 the assessor submits the assessment
     the assessor adds score and feedback for every question    11   # value 5: is the number of questions to loop through to submit feedback

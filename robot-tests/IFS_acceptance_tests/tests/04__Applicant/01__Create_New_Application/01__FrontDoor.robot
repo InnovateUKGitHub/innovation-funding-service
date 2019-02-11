@@ -43,9 +43,6 @@ Guest user can see Competitions and their information
 Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
     [Tags]    MySQL  HappyPath
-    Get competitions id and set it as suite variable  ${READY_TO_OPEN_COMPETITION_NAME}
-    ${openDate}  ${submissionDate} =  Save competition's current dates  ${competitionId}
-
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Opening soon  Opens
 
@@ -57,7 +54,7 @@ Guest user can see the opening and closing status of competitions
     When the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Closing soon  Opened
 
-    [Teardown]  Return the competition's milestones to their initial values  ${competitionId}  ${openDate}  ${submissionDate}
+    [Teardown]  Return the competition's milestones to their initial values  ${READY_TO_OPEN_COMPETITION}  ${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}  ${READY_TO_OPEN_COMPETITION_CLOSE_DATE_DB}
 
 Guest user can filter competitions by Innovation area
     [Documentation]    INFUND-6923

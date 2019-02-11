@@ -10,10 +10,9 @@ Resource         ../../07__Assessor/Assessor_Commons.robot
 Assessment should not be visible when the deadline has passed
     [Documentation]  INFUND-1188
     [Tags]  MySQL
-    When The assessment deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the past
-    And the user reloads the page
+    Given update milestone to yesterday         ${IN_ASSESSMENT_COMPETITION}  ASSESSOR_DEADLINE
     Then The user should not see the element    link=Park living
-    [Teardown]  Reset competition's milestone  ${assessorDeadline}
+    [Teardown]  Reset competition's milestone   ${assessorDeadline}
 
 *** Keywords ***
 Reset competition's milestone

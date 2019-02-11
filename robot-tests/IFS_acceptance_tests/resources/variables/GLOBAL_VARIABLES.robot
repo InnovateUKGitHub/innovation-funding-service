@@ -76,7 +76,8 @@ ${createApplicationOpenCompetitionAssessorDeadlineDayMonth}    ${getPrettyMilest
 
 ${READY_TO_OPEN_COMPETITION_NAME}         Photonics for health
 ${READY_TO_OPEN_COMPETITION}              ${competition_ids['${READY_TO_OPEN_COMPETITION_NAME}']}
-${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}    ${getMilestoneDateTimeDb(${READY_TO_OPEN_COMPETITION}, "OPEN_DATE")}
+${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}     ${getMilestoneDateTimeDb(${READY_TO_OPEN_COMPETITION}, "OPEN_DATE")}
+${READY_TO_OPEN_COMPETITION_CLOSE_DATE_DB}    ${getMilestoneDateTimeDb(${READY_TO_OPEN_COMPETITION}, "SUBMISSION_DATE")}
 ${NOT_EDITABLE_COMPETITION_NAME}          Integrated delivery programme - low carbon vehicles
 ${NOT_EDITABLE_COMPETITION}               ${competition_ids['${NOT_EDITABLE_COMPETITION_NAME}']}
 ${FUNDERS_PANEL_COMPETITION_NAME}         Internet of Things
