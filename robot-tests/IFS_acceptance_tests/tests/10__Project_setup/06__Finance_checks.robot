@@ -86,9 +86,6 @@ Force Tags        Project Setup
 Resource          PS_Common.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
 
-*** Variables ***
-${ELBOW_GREASE_PROJECT}    ${getProjectId("Elbow grease")}
-
 *** Test Cases ***
 Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016, INFUND-4820, INFUND-7718

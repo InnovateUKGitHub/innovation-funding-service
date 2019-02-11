@@ -64,7 +64,7 @@ Internal finance can see Project details not yet completed
     [Tags]  HappyPath
     When the user logs-in in new browser           &{internal_finance_credentials}
     And the user navigates to the page             ${internal_competition_status}
-    And the user clicks the button/link            css = #table-project-status tr:nth-child(1) td:nth-child(2) a
+    And the user clicks the button/link            css = #table-project-status tr:nth-child(2) td:nth-child(2) a
     Then the user should see the element           jQuery = #no-project-manager:contains("Not yet completed")
     And the user should see the element            jQuery = #project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
 
@@ -73,8 +73,8 @@ Competition admin can see Project details not yet completed
     [Tags]  HappyPath
     [Setup]  Log in as a different user            &{Comp_admin1_credentials}
     Given the user navigates to the page           ${internal_competition_status}
-    And the user should not see the element        css = #table-project-status tr:nth-child(1) td.status.ok a    #Check here that there is no Green-Check
-    When the user clicks the button/link           css = #table-project-status tr:nth-child(1) td:nth-child(2) a
+    And the user should not see the element        css = #table-project-status tr:nth-child(2) td.status.ok a    #Check here that there is no Green-Check
+    When the user clicks the button/link           css = #table-project-status tr:nth-child(2) td:nth-child(2) a
     Then the competition admin should see that their Project details aren't completed
 
 Status updates correctly for internal user's table    # This uses the Elbow grease project
@@ -83,11 +83,11 @@ Status updates correctly for internal user's table    # This uses the Elbow grea
     Given the user navigates to the page    ${internal_competition_status}
     And the competition admin should see the status of each project setup stage
     # Internal user can view project details via the clickable 'hour glass' for Project details
-    When the user clicks the button/link    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting a
+    When the user clicks the button/link    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.waiting a
     Then the user should see the element    jQuery = h1:contains("Project details")
     And the user clicks the button/link     link = Projects in setup
-    And the user should see the element     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting
-    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(2)  # Project details
+    And the user should see the element     css = #table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.waiting
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(2)  # Project details
 
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805, INFUND-7432
@@ -457,15 +457,6 @@ Non-lead partner cannot change start date, project manager or project address
     And the user should not see the element     link = Project Manager
     And the user should not see the element     link = Correspondence address
 
-Internal user should see project details are incomplete
-    [Documentation]    INFUND-6781
-    [Tags]
-    [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page     ${internal_competition_status}
-    When the user clicks the button/link     jQuery = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting
-    Then the user should see the element     jQuery = td:contains("Correspondence address") ~ td:contains("Not yet completed")
-    And the user should see the element      jQuery = td:contains("Project Manager") ~ td:contains("Not yet completed")
-
 Academic Partner nominates Finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-6781
     [Tags]  HappyPath
@@ -693,12 +684,12 @@ the user should see the project setup stages
     the user should see the element    jQuery = h2:contains("Grant offer letter")
 
 the competition admin should see the status of each project setup stage
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)                       # Documents
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4)                       # Monitoring Officer
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)                       # Bank details
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action    # Finance checks
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)                       # Spend Profile
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(8)                       # GOL
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(3)                       # Documents
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(4)                       # Monitoring Officer
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(5)                       # Bank details
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td.govuk-table__cell.status.action    # Finance checks
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(7)                       # Spend Profile
+    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(8)                       # GOL
 
 the competition admin should see that their Project details aren't completed
     the user should see the element    jQuery = p:contains("These project details were supplied by the lead partner on behalf of the project.")

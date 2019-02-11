@@ -25,6 +25,19 @@ ${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}     ${test_mailbox_one}+marian@gmail
 ${PS_GOL_APPLICATION_PARTNER_EMAIL}             ${test_mailbox_one}+karen@gmail.com
 ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            ${test_mailbox_one}+juan@gmail.com
 
+#Project: Elbow grease
+${Big_Riffs_Name}        Big Riffs And Insane Solos Ltd
+${Big_Riffs_Id}          ${organisation_ids["${Big_Riffs_Name}"]}
+${Aberystwyth_Name}      Aberystwyth University
+${Aberystwyth_Id}        ${organisation_ids["${Aberystwyth_Name}"]}
+${Listen_To_Name}        Listen To Metal Ltd
+${Listen_To_Id}          ${organisation_ids["${Listen_To_Name}"]}
+${ELBOW_GREASE_TITLE}               Elbow grease
+${ELBOW_GREASE_APPLICATION_NO}      ${application_ids["Elbow grease"]}
+${ELBOW_GREASE_PROJECT_ID}          ${project_ids["${ELBOW_GREASE_TITLE}"]}
+${ELBOW_GREASE_LEAD_PM_EMAIL}       louis.morgan@example.com
+${ELBOW_GREASE_PARTNER_EMAIL}       howard.white@example.com
+${ELBOW_GREASE_ACADEMIC_EMAIL}      deborah.moore@example.com
 
 ${Dreambit_Name}    Dreambit
 ${Dreambit_Id}      ${organisation_ids["${Dreambit_Name}"]}
@@ -93,13 +106,12 @@ ${PS_BD_APPLICATION_NUMBER}     ${application_ids["${PS_BD_APPLICATION_TITLE}"]}
 ${PS_BD_APPLICATION_PROJECT}    ${project_ids["${PS_BD_APPLICATION_TITLE}"]}
 ${PS_BD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Vitruvius_Name}
 ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}      diane.scott@vitruvius.example.com
-${PS_BD_APPLICATION_PM_EMAIL}                diane.scott@vitruvius.example.com
 ${PS_BD_APPLICATION_LEAD_FINANCE}            Diane Scott
 ${PS_BD_APPLICATION_LEAD_TELEPHONE}          49692921151
-${PS_BD_APPLICATION_PARTNER_EMAIL}           ryan.welch@abcad.example.com
-${PS_BD_APPLICATION_PARTNER_FINANCE}         Ryan Welch
-${PS_BD_APPLICATION_ACADEMIC_EMAIL}          sara.armstrong@armstrong.example.com
-${PS_BD_APPLICATION_ACADEMIC_FINANCE}        Sara Armstrong
+${PS_BD_APPLICATION_PARTNER_EMAIL}           phil.mcguire@abcad.example.com
+${PS_BD_APPLICATION_PARTNER_FINANCE}         Phil Mcguire
+${PS_BD_APPLICATION_ACADEMIC_EMAIL}          darren.richards@armstrong.example.com
+${PS_BD_APPLICATION_ACADEMIC_FINANCE}        Darren Richards
 
 #Project: New materials for lighter stock
 # EF = Experian feedback

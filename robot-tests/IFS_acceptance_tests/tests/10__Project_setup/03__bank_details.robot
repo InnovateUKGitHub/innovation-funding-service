@@ -26,7 +26,7 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               IFS-2398 - 2164 Add count of outstanding bank details checks to the task management link
 ...
 ...               IFS-2731  PS - External - Submitting Bank details with manually added Oper Address leads to ISE
-Suite Setup       finance contacts are submitted by all users
+Suite Setup       the user logs-in in new browser    &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          PS_Common.robot
@@ -38,19 +38,9 @@ Resource          PS_Common.robot
 # is tested in the File 01__project_details.robot
 
 *** Test Cases ***
-Links to other sections in Project setup dependent on project details for partners
-    [Documentation]    INFUND-4428
-    [Tags]
-    When the user navigates to the page           ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
-    Then the user should see the element          link = Monitoring Officer
-    And the user should see the element           link = Finance checks
-    And the user should not see the element       link = Spend profile
-    And the user should not see the element       link = Grant offer letter
-
 Project Finance should not be able to access bank details page
     [Documentation]    INFUND-7090, INFUND-7109
     [Tags]  HappyPath
-    [Setup]    log in as a different user      &{internal_finance_credentials}
     Given the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details    ${403_error_message}
     When the user navigates to the page        ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     Then the user should not see the element   css = #table-project-status tr:nth-of-type(4) td:nth-of-type(4).status.action
@@ -259,7 +249,7 @@ Project Finance can see the progress of partners bank details
     And the user should see the element             jQuery = li:contains("${Armstrong_Butler_Name}") .action-required
     When the user clicks the button/link            link = ${A_B_Cad_Services_Name}
     Then the user should see the element            jQuery = h2:contains("${A_B_Cad_Services_Name} - Account details")
-    And the user should see the element             jQuery = p:contains("Ryan Welch")
+    And the user should see the element             jQuery = p:contains("${PS_BD_APPLICATION_PARTNER_FINANCE}")
     And the user should see the element             jQuery = p:contains("${PS_BD_APPLICATION_PARTNER_EMAIL}")
     And the user goes back to the previous page
     When the user clicks the button/link            link = ${Armstrong_Butler_Name}
@@ -324,21 +314,15 @@ the user submits the bank account details
     the user clicks the button/link       jQuery = .govuk-button:contains("Submit bank account details")
     the user clicks the button/link       id = submit-bank-details
 
-finance contacts are submitted by all users
-    the user logs-in in new browser            &{lead_applicant_credentials_bd}
-    the partner submits their finance contact  ${Vitruvius_Id}  ${PS_BD_APPLICATION_PROJECT}  &{lead_applicant_credentials_bd}
-    the partner submits their finance contact  ${A_B_Cad_Services_Id}  ${PS_BD_APPLICATION_PROJECT}  &{collaborator1_credentials_bd}
-    the partner submits their finance contact  ${Armstrong_Butler_Id}  ${PS_BD_APPLICATION_PROJECT}  &{collaborator2_credentials_bd}
-
 the project finance user downloads the bank details
     the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export  ${DOWNLOAD_FOLDER}/bank_details.csv
 
 the user opens the excel and checks the content
     ${contents} =                     read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
-    ${vitruvius_details} =            get from list  ${contents}  3
+    ${vitruvius_details} =            get from list  ${contents}  6
     ${vitruvius} =                    get from list  ${vitruvius_details}  0
     should be equal                 ${vitruvius}  ${Vitruvius_Name}
-    ${Armstrong_Butler_details} =     get from list  ${contents}  5
+    ${Armstrong_Butler_details} =     get from list  ${contents}  8
     ${Armstrong_Butler} =             get from list  ${Armstrong_Butler_details}  0
     should be equal                 ${Armstrong_Butler}  ${Armstrong_Butler_Name}
     ${application_number} =           get from list  ${vitruvius_details}  1
