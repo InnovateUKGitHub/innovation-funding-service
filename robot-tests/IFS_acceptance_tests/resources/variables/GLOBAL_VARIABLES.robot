@@ -69,6 +69,8 @@ ${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}  ${application_ids['${CLOSED_COMPE
 
 ${createApplicationOpenCompetition}             Home and industrial efficiency programme
 ${createApplicationOpenCompetitionId}           ${competition_ids['${createApplicationOpenCompetition}']}
+${createApplicationOpenCompetitionApplication1Name}  Networking home IOT devices
+${createApplicationOpenCompetitionApplication1Number}  ${application_ids['${createApplicationOpenCompetitionApplication1Name}']}
 ${createApplicationOpenCompetitionOpenDate}     ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "OPEN_DATE")}
 ${createApplicationOpenCompetitionCloseDate}    ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "SUBMISSION_DATE")}
 ${createApplicationOpenCompetitionAssessorAcceptsDayMonth}    ${getPrettyMilestoneDayMonth(${createApplicationOpenCompetitionId}, "ASSESSOR_ACCEPTS")}

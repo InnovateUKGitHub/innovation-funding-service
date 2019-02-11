@@ -45,15 +45,12 @@ Guest user can see the opening and closing status of competitions
     [Tags]    MySQL  HappyPath
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Opening soon  Opens
-
-    Given Change the open date of the Competition in the database to one day before  ${READY_TO_OPEN_COMPETITION_NAME}
+    Given update milestone to yesterday     ${READY_TO_OPEN_COMPETITION}  OPEN_DATE
     When the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Open now  Opened
-
     Given Change the close date of the Competition in the database to thirteen days  ${READY_TO_OPEN_COMPETITION_NAME}
     When the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Closing soon  Opened
-
     [Teardown]  Return the competition's milestones to their initial values  ${READY_TO_OPEN_COMPETITION}  ${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}  ${READY_TO_OPEN_COMPETITION_CLOSE_DATE_DB}
 
 Guest user can filter competitions by Innovation area

@@ -24,9 +24,10 @@ Comp Admin creates The Prince's Trust type competition
 Applicant applies to newly created The Prince's Trust competition
     [Documentation]  IFS-2688
     [Tags]    MySQL
-    When Change the open date of the Competition in the database to one day before  ${comp_name}
-    And Log in as a different user                                                  &{RTO_lead_applicant_credentials}
-    Then logged in user applies to competition                                            ${comp_name}  3
+    [Setup]  Get competitions id and set it as suite variable  ${comp_name}
+    Given update milestone to yesterday                     ${competitionId}  OPEN_DATE
+    And Log in as a different user                          &{RTO_lead_applicant_credentials}
+    Then logged in user applies to competition              ${comp_name}  3
 
 Applicant submits his application
     [Documentation]  IFS-2688 IFS-3287

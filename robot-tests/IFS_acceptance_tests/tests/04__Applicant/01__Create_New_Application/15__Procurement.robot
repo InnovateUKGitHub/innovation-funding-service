@@ -20,7 +20,8 @@ Comp Admin creates procurement competition
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
     [Tags]    MySQL
-    Given Change the open date of the Competition in the database to one day before  ${comp_name}
+    [Setup]  Get competitions id and set it as suite variable  ${comp_name}
+    Given update milestone to yesterday                                               ${competitionId}  OPEN_DATE
     When Log in as a different user                                                   &{RTO_lead_applicant_credentials}
     Then logged in user applies to competition                                       ${comp_name}  3
 

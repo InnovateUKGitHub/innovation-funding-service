@@ -29,9 +29,10 @@ Comp Admin creates an ATI competition
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
     [Tags]  MySQL
-    When Change the open date of the Competition in the database to one day before                                 ${ATIcompetitionTitle}
-    And Log in as a different user            &{lead_applicant_credentials}
-    Then logged in user applies to competition                  ${ATIcompetitionTitle}  1
+    [Setup]  Get competitions id and set it as suite variable  ${ATIcompetitionTitle}
+    Givenupdate milestone to yesterday                      ${competitionId}  OPEN_DATE
+    When log in as a different user                         &{lead_applicant_credentials}
+    Then logged in user applies to competition              ${ATIcompetitionTitle}  1
 
 Single applicant cannot submit his application to a collaborative comp
     [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421

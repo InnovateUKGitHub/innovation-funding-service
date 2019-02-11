@@ -74,7 +74,9 @@ Comp admin completes ths competition setup
 Competition is Open to Applications
     [Documentation]    INFUND-6393
     [Tags]  MySQL  HappyPath
-    Change the open date of the Competition in the database to one day before  ${compWithoutGrowth}
+    [Setup]  Get competitions id and set it as suite variable  ${compWithoutGrowth}
+    Given update milestone to yesterday      ${competitionId}
+
 
 Create new Application for this Competition
     [Tags]  HappyPath
@@ -139,7 +141,8 @@ Once the project growth table is selected
     Then the user clicks the button/link                 css = button[type="submit"]
     And the user navigates to the page                   ${CA_UpcomingComp}
     Then the user should see the element                 jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
-    [Teardown]  Change the open date of the Competition in the database to one day before  ${compWithGrowth}
+    Get competitions id and set it as suite variable     ${compWithGrowth}
+    [Teardown]  update milestone to yesterday      ${competitionId}
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
