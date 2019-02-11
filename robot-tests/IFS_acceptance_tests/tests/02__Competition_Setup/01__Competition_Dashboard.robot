@@ -89,9 +89,6 @@ Upcoming competitions calculations
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
     [Tags]    MySQL
-    Get competitions id and set it as suite variable  ${READY_TO_OPEN_COMPETITION_NAME}
-    ${openDate}  ${submissionDate} =  Save competition's current dates  ${competitionId}
-
     Given the user should see the element    jQuery = h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
     When Change the open date of the Competition in the database to one day before    ${READY_TO_OPEN_COMPETITION_NAME}
     And the user reloads the page
