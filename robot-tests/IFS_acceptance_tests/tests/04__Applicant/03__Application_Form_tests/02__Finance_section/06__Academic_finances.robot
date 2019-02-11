@@ -73,7 +73,7 @@ Academics upload
     When the user navigates to Your-finances page      Academic robot test application
     And the user clicks the button/link                link = Your project costs
     When the academic partner uploads a file           ${5mb_pdf}
-    Then the user should not see the text in the page  No file currently uploaded
+    Then the user should not see the element           jQUery = p:contains("No file currently uploaded.")
     And the user should see the element                link = ${5mb_pdf}
 
 Academic partner can view the file on the finances
@@ -96,7 +96,7 @@ Lead applicant can't view the file on the finances page
     [Setup]    log in as a different user              &{lead_applicant_credentials}
     When the user navigates to Your-finances page      Academic robot test application
     And the user clicks the button/link                link = Your project costs
-    Then the user should not see the text in the page  ${5mb_pdf}
+    Then the user should not see the element           link = ${5mb_pdf}
 
 Academic finances JeS link showing
     [Documentation]    INFUND-2402, INFUND-8347
@@ -138,7 +138,7 @@ File delete should not be allowed when marked as complete
     [Documentation]    INFUND-2437
     [Tags]
     When the user navigates to Your-finances page        Academic robot test application
-    Then the user should not see the text in the page    Remove
+    Then the user should not see the element             jQuery = button:contains("Remove")
 
 Academic finance overview
     [Documentation]  INFUND-917 INFUND-2399

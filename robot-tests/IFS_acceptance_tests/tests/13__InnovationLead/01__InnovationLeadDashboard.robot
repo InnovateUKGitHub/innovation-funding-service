@@ -47,7 +47,7 @@ Innnovation lead can see competitions assigned to him only
     When Log in as a different user       &{innovation_lead_two}
     Then the user should see the element  link = ${openGenericCompetition}
     And the user should see the element   link = ${openCompetitionRTO_name}
-    And the user should not see the text in the page  ${openCompetitionBusinessRTO_name}
+    And the user should not see the element    jQuery = h3:contains("${openCompetitionBusinessRTO_name}")
     When the user clicks the button/link  css = #section-4 a  #Project setup tab
     Then the user should see the element  link = ${PROJECT_SETUP_COMPETITION_NAME}
     [Teardown]  The user clicks the button/link  link = Dashboard

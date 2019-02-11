@@ -169,7 +169,7 @@ Project finance can see the within limit research participation level
     And the user should see the text in the element    css = .list-eligibility dd:nth-of-type(2)    0.25 %
     And the user should see the element                jQuery = .success-alert:contains("The research participation levels of this project are within the required range.")
     When the user clicks the button/link               link = Finance checks
-    And the user should not see the text in the page   The research participation levels of this project are within the required range.
+    And the user should not see the element            jQuery = .success-alert:contains("The research participation levels of this project are within the required range.")
 
 Proj finance can see the maximum research participation level
     [Documentation]    INFUND-7579

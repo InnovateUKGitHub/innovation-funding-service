@@ -395,12 +395,12 @@ Academic partner spend profile client side validations
     And the user enters text to a text field           css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(1) input    0  # Other - Directly allocated
     And the user enters text to a text field           css = .spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(1) input    0  # Other - Exceptions
     And Set Focus To Element                           link = Set up your project
-    Then the user should not see the text in the page  This field should be 0 or higher
+    Then the user should not see the element           jQuery = .govuk-error-message:contains("This field should be 0 or higher")
     When the user enters text to a text field          css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(2) input   0  # Other - Directly allocated
     And the user enters text to a text field           css = .spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    0  # Other - Directly allocated
     And the user enters text to a text field           css = .spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(2) input    0  # Other - Exceptions
     And the user enters text to a text field           css = .spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(3) input    0  # Other - Exceptions
-    And the user should not see the text in the page   Your total costs are higher than your eligible costs
+    And the user should not see the element            jQuery = .govuk-error-message:contains("Your total costs are higher than your eligible costs")
 
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846

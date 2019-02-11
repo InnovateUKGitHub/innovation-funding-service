@@ -40,7 +40,7 @@ Accept invitation as academic
     Then the user should see the element                link = Your project costs
     And the user should not see the element             link = Your organisation
     When the user clicks the button/link                link = Your project costs
-    Then the user should not see the text in the page   Labour
+    Then the user should not see the element            jQuery = h3:contains("Labour")
     And the user should not see an error in the page
 
 *** Keywords ***
