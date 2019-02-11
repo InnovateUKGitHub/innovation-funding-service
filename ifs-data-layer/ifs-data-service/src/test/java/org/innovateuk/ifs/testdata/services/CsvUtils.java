@@ -12,6 +12,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -448,6 +449,7 @@ public class CsvUtils {
         public boolean inviteOnly;
         public boolean nonIfs;
         public String nonIfsUrl;
+        public CompetitionCompletionStage competitionCompletionStage;
 
         private CompetitionLine(List<String> line, int lineNumber) {
 
@@ -487,6 +489,8 @@ public class CsvUtils {
             inviteOnly = nullableBoolean(line.get(i++));
             nonIfs = nullableBoolean(line.get(i++));
             nonIfsUrl = nullable(line.get(i++));
+            competitionCompletionStage = CompetitionCompletionStage.valueOf(line.get(i++));
+
         }
     }
 
