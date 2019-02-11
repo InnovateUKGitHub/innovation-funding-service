@@ -139,6 +139,12 @@ The user fills the empty question fields
     The user enters text to a text field    css=.editor    Guidance text test
     The user enters text to a text field    id=question.maxWords    150
 
+The user fills the empty assessment fields
+    The user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
+    The user enters text to a text field    id=guidanceRows[0].scoreFrom    30
+    The user enters text to a text field    id=guidanceRows[0].scoreTo    35
+    The user enters text to a text field    id=guidanceRows[0].justification    This is a justification
+
 The user checks the question fields
     The user should see the element    jQuery = dd:contains("Test title")
     The user should see the element    jQuery = dd:contains("Subtitle test")
