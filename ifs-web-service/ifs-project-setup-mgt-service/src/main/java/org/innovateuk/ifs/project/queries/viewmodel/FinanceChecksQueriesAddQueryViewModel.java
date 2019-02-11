@@ -17,6 +17,7 @@ public class FinanceChecksQueriesAddQueryViewModel {
     private int maxTitleCharacters;
     private Long organisationId;
     private String baseUrl;
+    private Long applicationId;
 
 
     public FinanceChecksQueriesAddQueryViewModel(String organisationName,
@@ -32,7 +33,8 @@ public class FinanceChecksQueriesAddQueryViewModel {
                                          int maxQueryCharacters,
                                          int maxTitleCharacters,
                                          Long organisationId,
-                                         String baseUrl) {
+                                         String baseUrl,
+                                         Long applicationId) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContactName = financeContactName;
@@ -47,6 +49,7 @@ public class FinanceChecksQueriesAddQueryViewModel {
         this.maxTitleCharacters = maxTitleCharacters;
         this.organisationId = organisationId;
         this.baseUrl = baseUrl;
+        this.applicationId = applicationId;
 
     }
 
@@ -157,5 +160,13 @@ public class FinanceChecksQueriesAddQueryViewModel {
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 }

@@ -18,7 +18,6 @@ import java.util.Set;
  * to manage {@link Organisation} related data.
  */
 @RestController
-@ZeroDowntime(reference = "IFS-4104", description = "Remove non kebab case mappings. ")
 @RequestMapping("/organisation")
 public class OrganisationController {
 
@@ -28,19 +27,14 @@ public class OrganisationController {
     @Autowired
     private OrganisationInitialCreationService organisationCreationService;
 
-    @GetMapping({"/find-by-application-id/{applicationId}", "/findByApplicationId/{applicationId}"})
+    @GetMapping("/find-by-application-id/{applicationId}")
     public RestResult<Set<OrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return organisationService.findByApplicationId(applicationId).toGetResponse();
     }
 
-    @GetMapping({"/find-by-id/{organisationId}", "/findById/{organisationId}"})
+    @GetMapping("/find-by-id/{organisationId}")
     public RestResult<OrganisationResource> findById(@PathVariable("organisationId") final Long organisationId) {
         return organisationService.findById(organisationId).toGetResponse();
-    }
-
-    @GetMapping({"/primary-for-user/{userId}", "/getPrimaryForUser/{userId}"})
-    public RestResult<OrganisationResource> getPrimaryForUser(@PathVariable("userId") final long userId) {
-        return organisationService.getPrimaryForUser(userId).toGetResponse();
     }
 
     @GetMapping("/by-user-and-application-id/{userId}/{applicationId}")
@@ -60,12 +54,12 @@ public class OrganisationController {
         return organisationService.getAllByUserId(userId).toGetResponse();
     }
 
-    @PostMapping({"/create-or-match", "/createOrMatch"})
+    @PostMapping("/create-or-match")
     public RestResult<OrganisationResource> createOrMatch(@RequestBody OrganisationResource organisation) {
         return organisationCreationService.createOrMatch(organisation).toPostCreateResponse();
     }
 
-    @PostMapping({"/create-and-link-by-invite", "/createAndLinkByInvite"})
+    @PostMapping("/create-and-link-by-invite")
     public RestResult<OrganisationResource> createAndLinkByInvite(@RequestBody OrganisationResource organisation,
                                                           @RequestParam("inviteHash") String inviteHash) {
         return organisationCreationService.createAndLinkByInvite(organisation, inviteHash).toPostCreateResponse();
@@ -81,7 +75,7 @@ public class OrganisationController {
         return organisationService.update(organisationResource).toPutWithBodyResponse();
     }
 
-    @PostMapping({"/update-name-and-registration/{organisationId}", "/updateNameAndRegistration/{organisationId}"})
+    @PostMapping("/update-name-and-registration/{organisationId}")
     public RestResult<OrganisationResource> updateNameAndRegistration(@PathVariable("organisationId") Long organisationId, @RequestParam(value = "name") String name, @RequestParam(value = "registration") String registration) {
         return organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration).toPostCreateResponse();
     }

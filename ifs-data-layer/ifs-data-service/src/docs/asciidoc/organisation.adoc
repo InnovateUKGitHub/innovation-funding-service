@@ -22,18 +22,6 @@ include::{snippets}/organisation/find-by-application-id/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/organisation/find-by-application-id/curl-request.adoc[]
 
-=== Retrieve primary organisation by user
-==== Request
-include::{snippets}/organisation/get-primary-for-user/http-request.adoc[]
-include::{snippets}/organisation/get-primary-for-user/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/organisation/get-primary-for-user/http-response.adoc[]
-include::{snippets}/organisation/get-primary-for-user/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/organisation/get-primary-for-user/curl-request.adoc[]
-
 === Get user organisation for application
 ==== Request
 include::{snippets}/organisation/get-by-user-and-application-id/http-request.adoc[]

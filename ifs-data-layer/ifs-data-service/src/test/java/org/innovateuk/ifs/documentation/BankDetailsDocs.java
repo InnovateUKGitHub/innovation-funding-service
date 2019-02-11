@@ -3,7 +3,7 @@ package org.innovateuk.ifs.documentation;
 import org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -14,7 +14,7 @@ public class BankDetailsDocs {
             fieldWithPath("organisation").description("Organisation to which these bank details belong"),
             fieldWithPath("sortCode").description("Sort code for the bank, identifying a specific branch"),
             fieldWithPath("accountNumber").description("Bank account number"),
-            fieldWithPath("organisationAddress").description("Banking address used by organisation"),
+            fieldWithPath("address").description("Banking address"),
             fieldWithPath("organisationTypeName").description("The type of organisation"),
             fieldWithPath("companyName").description("The company name"),
             fieldWithPath("registrationNumber").description("The registration number"),
@@ -32,12 +32,13 @@ public class BankDetailsDocs {
             .withOrganisation(1L)
             .withSortCode("123456")
             .withAccountNumber("12345678")
-            .withOrganiationAddress(newOrganisationAddressResource().build());
+            .withAddress(newAddressResource().build());
 
     public static final FieldDescriptor[] projectBankDetailsStatusSummaryFields = {
             fieldWithPath("competitionId").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition name"),
             fieldWithPath("projectId").description("Project id for bank details status summary"),
+            fieldWithPath("projectName").description("Project name for bank details status summary"),
             fieldWithPath("applicationId").description("Application id for bank details status summary"),
             fieldWithPath("bankDetailsStatusResources").description("Bank details status"),
             fieldWithPath("leadOrganisation").description("The lead organisation of this project")

@@ -26,7 +26,8 @@ IFS.core.formValidation = (function () {
           lastname: '#lastName'
         },
         messageInvalid: {
-          tooWeak: 'Password is too weak.'
+          tooWeak: 'Password is too weak.',
+          containsName: 'Password should not contain either your first or last name.'
         }
       },
       containsLowercase: {
@@ -69,6 +70,10 @@ IFS.core.formValidation = (function () {
         fields: '[data-maxwordslength]',
         messageInvalid: 'This field has a maximum number of words.'
       },
+      postcode: {
+        fields: '[data-postcode-errormessage]:not([readonly])',
+        messageInvalid: 'Enter a valid postcode.'
+      },
       date: {
         fields: '.date-group input',
         messageInvalid: {
@@ -92,6 +97,9 @@ IFS.core.formValidation = (function () {
       higherthan: {
         fields: '[data-higherthan]',
         messageInvalid: 'The maximum must be larger than the minimum.'
+      },
+      anyChange: {
+        fields: '[data-anychange-errormessage]:not([readonly])'
       },
       typeTimeout: 300,
       // data-{{type}}-showmessage will define how the errors will be shown,
@@ -130,11 +138,13 @@ IFS.core.formValidation = (function () {
       jQuery('body').on('change ifsValidate', s.maxlength.fields, function () { IFS.core.formValidation.checkMaxLength(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.minwordslength.fields, function () { IFS.core.formValidation.checkMinWordsLength(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.maxwordslength.fields, function () { IFS.core.formValidation.checkMaxWordsLength(jQuery(this)) })
+      jQuery('body').on('blur change ifsValidate', s.postcode.fields, function () { IFS.core.formValidation.checkPostcode(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.tel.fields, function () { IFS.core.formValidation.checkTel(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.date.fields, function () { IFS.core.formValidation.checkDate(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.pattern.fields, function () { IFS.core.formValidation.checkPattern(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.lowerthan.fields, function () { IFS.core.formValidation.checkLowerThan(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.higherthan.fields, function () { IFS.core.formValidation.checkHigherThan(jQuery(this)) })
+      jQuery('body').on('change', s.anyChange.fields, function () { IFS.core.formValidation.anyChange(jQuery(this)) })
 
       jQuery('body').on('change', '[data-set-section-valid]', function () {
         var section = jQuery(this).attr('data-set-section-valid')
@@ -157,29 +167,30 @@ IFS.core.formValidation = (function () {
       })
     },
     checkPasswordPolicy: function (field, errorStyles) {
+      //  clear tooWeakPassword and containsName message as this is validated in the back end.
+      IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak', 'visuallyhidden'), 'show')
+      IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-containsName', 'visuallyhidden'), 'show')
+      // clear the customError if it has been set by a server validation error
+      if (s.html5validationMode && field[0].validity.customError) {
+        field[0].setCustomValidity('')
+      }
       var hasUppercase = IFS.core.formValidation.checkFieldContainsUppercase(field)
       var hasLowercase = IFS.core.formValidation.checkFieldContainsLowercase(field)
       var hasNumber = IFS.core.formValidation.checkFieldContainsNumber(field)
       var isMinlength = IFS.core.formValidation.checkMinLength(field)
       var isFilledOut = IFS.core.formValidation.checkRequired(field)
       var formGroup = field.closest('.govuk-form-group')
-      var confirmsToPasswordPolicy = hasUppercase && hasLowercase && hasNumber && isMinlength && isFilledOut
+      var conformsToPasswordPolicy = hasUppercase && hasLowercase && hasNumber && isMinlength && isFilledOut
       if (errorStyles) {
-        if (confirmsToPasswordPolicy) {
+        if (conformsToPasswordPolicy) {
           formGroup.removeClass('govuk-form-group--error')
           field.removeClass('govuk-input--error')
-          //  clear tooWeakPassword message as this is validated in the back end.
-          IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak', 'visuallyhidden'))
-          // clear the customError if it has been set by a server validation error
-          if (s.html5validationMode && field[0].validity.customError) {
-            field[0].setCustomValidity('')
-          }
         } else {
           formGroup.addClass('govuk-form-group--error')
           field.addClass('govuk-input--error')
         }
       }
-      return confirmsToPasswordPolicy
+      return conformsToPasswordPolicy
     },
     checkFieldContainsUppercase: function (field) {
       var fieldVal = field.val()
@@ -254,17 +265,6 @@ IFS.core.formValidation = (function () {
       // check if email value exists to avoid invalid email message on empty fields
       if (email) {
         var validEmail = emailRegex.test(email)
-
-        // If server response finds email already invited then cancel error msg on change of email details
-        // Get value of error msg
-        // If email is changed then remove error msg
-
-        var currentServerError = field.closest('tr').find('.govuk-error-message').text()
-        var currentServerMsgCheck = 'An invite has already been created for this email address.'
-
-        if (currentServerError === currentServerMsgCheck) {
-          IFS.core.formValidation.setValid(field, currentServerMsgCheck, displayValidationMessages)
-        }
 
         // check if email address is invalid
         if (!validEmail) {
@@ -389,6 +389,13 @@ IFS.core.formValidation = (function () {
           return true
         }
       }
+    },
+    anyChange: function (field) {
+      jQuery.each(field[0].attributes, function (index, attribute) {
+        if (attribute.name.indexOf('data-anychange-errormessage') === 0) {
+          IFS.core.formValidation.setValid(field, attribute.value, 'show')
+        }
+      })
     },
     checkRequired: function (field) {
       var requiredAttribute = 'required'
@@ -523,6 +530,24 @@ IFS.core.formValidation = (function () {
       var words = IFS.core.formValidation.countWords(value)
 
       if (words.length > maxWordsLength) {
+        IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
+        return false
+      } else {
+        IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+        return true
+      }
+    },
+    checkPostcode: function (field) {
+      // matches postcode validation in ApplicationSectionController.java
+      var postcodeAttribute = 'postcode'
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, postcodeAttribute)
+      var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, postcodeAttribute)
+      var re = /^.{3,10}$/
+
+      var postcode = field.val()
+      var validPostcode = re.test(postcode)
+
+      if (!validPostcode) {
         IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
         return false
       } else {
@@ -790,6 +815,9 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
+
+      var formInTable = field.parents('.form-in-table').length > 0
+
       var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
@@ -800,10 +828,17 @@ IFS.core.formValidation = (function () {
 
       if (formGroup.length) {
         if (s.html5validationMode) { field[0].setCustomValidity(message) }
-        if (visuallyhidden === false) { formGroup.addClass('govuk-form-group--error') }
+        if (visuallyhidden === false) {
+          formGroup.addClass('govuk-form-group--error')
+          if (formInTable) {
+            field.closest('.form-in-table').addClass('govuk-form-group--error')
+          }
+        }
         var errorEl = formGroup.find('.govuk-error-message:contains("' + message + '")')
         if (errorEl.length === 0) {
-          if (visuallyhidden === false) { field.addClass('govuk-input--error') }
+          if (visuallyhidden === false) {
+            field.addClass('govuk-input--error')
+          }
           formGroup.find('legend,label').first().after('<span class="govuk-error-message' + (visuallyhidden ? ' govuk-visually-hidden' : '') + '">' + message + '</span>')
         }
       }
@@ -838,17 +873,19 @@ IFS.core.formValidation = (function () {
     },
     setValid: function (field, message, displayValidationMessages) {
       var validShowMessageValue = jQuery.inArray(displayValidationMessages, s.displaySettings) !== -1
-
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
+
+      var formInTable = field.parents('.form-in-table').length > 0
+      var formInTableErrors = field.parents('.form-in-table').find('.govuk-input--error').length
+
       var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
       var errorSummary = jQuery('.govuk-error-summary__list')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
-
       // if it is a .govuk-form-group we assume the basic form structure with just one field per group
       // i.e.
       // <div class="govuk-form-group">
@@ -864,6 +901,9 @@ IFS.core.formValidation = (function () {
         if (formGroup.find('.govuk-error-message').length === 0) {
           formGroup.removeClass('govuk-form-group--error')
           field.removeClass('govuk-input--error')
+          if (formInTable && formInTableErrors === 0) {
+            field.closest('.form-in-table').removeClass('govuk-form-group--error')
+          }
           // set corresponding radios/checkboxes valid
           if (s.html5validationMode) {
             jQuery('[name="' + name + '"]').each(function () { this.setCustomValidity('') })

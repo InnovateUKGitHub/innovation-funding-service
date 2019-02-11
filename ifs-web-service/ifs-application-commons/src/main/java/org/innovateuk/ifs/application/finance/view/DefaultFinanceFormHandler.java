@@ -3,20 +3,16 @@ package org.innovateuk.ifs.application.finance.view;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.DefaultFinanceRowRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +21,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -73,55 +67,23 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
         }
 
         storeFinancePosition(request, applicationFinanceResource.getId(), competitionId, userId);
-        ValidationMessages errors = getAndStoreCostitems(request, applicationFinanceResource.getId(), cost ->
-                getFinanceRowRestService().update(cost));
-        addRemoveCostRows(request, applicationId, userId);
-
-        return errors;
+        return ValidationMessages.noErrors();
     }
-
 
     @Override
     public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
-
-        if (fieldName == null || value == null) {
-            return new ValidationMessages();
-        }
-
-        String cleanedFieldName = fieldName;
-        if (fieldName.startsWith("cost-")) {
-            cleanedFieldName = fieldName.replace("cost-", "");
-        } else if (fieldName.startsWith("formInput[")) {
-            cleanedFieldName = fieldName.replace("formInput[", "").replace("]", "");
-        }
-
-        LOG.info("store field: " + cleanedFieldName + " val: " + value);
-        return storeField(cleanedFieldName, value, userId, applicationId);
+        return ValidationMessages.noErrors();
     }
 
     @Override
     public ValidationMessages addCost(Long applicationId, Long userId, Long questionId) {
-        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
-        return getFinanceRowRestService().add(applicationFinance.getId(), questionId, null).getSuccess();
+        return ValidationMessages.noErrors();
     }
 
     @Override
     public FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
         return getFinanceRowRestService().addWithoutPersisting(applicationFinance.getId(), questionId).getSuccess();
-    }
-
-    private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId) {
-        Map<String, String[]> requestParams = request.getParameterMap();
-        if (requestParams.containsKey("add_cost")) {
-            String addCostParam = request.getParameter("add_cost");
-            ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
-            financeService.addCost(applicationFinance.getId(), Long.valueOf(addCostParam));
-        }
-        if (requestParams.containsKey("remove_cost")) {
-            String removeCostParam = request.getParameter("remove_cost");
-            getFinanceRowRestService().delete(Long.valueOf(removeCostParam)).getSuccess();
-        }
     }
 
     private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId, Long competitionId, Long userId) {
@@ -155,9 +117,6 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
                 handleOrganisationSizeChange(applicationFinance, competitionId, userId, oldValue, newValue);
                 applicationFinance.setOrganisationSize(newValue);
                 break;
-            case "projectLocation":
-                applicationFinance.setWorkPostcode(value);
-                break;
             default:
                 LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
         }
@@ -176,51 +135,6 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
                 fundingLevelResetHandler.resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
             }
         }
-    }
-
-    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
-        FinanceFormField financeFormField = getCostFormField(fieldName, value);
-        FinanceRowType costType = FinanceRowType.fromType(FormInputType.findByName(financeFormField.getKeyType()));
-        FinanceRowHandler financeRowHandler = getFinanceRowItemHandler(costType);
-        Long costFormFieldId = 0L;
-        if (financeFormField.getId() != null && !"null".equals(financeFormField.getId()) && !financeFormField.getId().startsWith("unsaved")) {
-            costFormFieldId = Long.parseLong(financeFormField.getId());
-        }
-        FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
-        if(costItem != null) {
-            return storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
-        } else {
-            return new ValidationMessages();
-        }
-    }
-
-    private ValidationMessages storeFinanceRowItem(FinanceRowItem costItem, Long userId, Long applicationId, String question) {
-
-        if (costItem.getId().equals(0L)) {
-            return addFinanceRowItem(costItem, userId, applicationId, question);
-        } else {
-            RestResult<ValidationMessages> messages = getFinanceRowRestService().update(costItem);
-            ValidationMessages validationMessages = messages.getSuccess();
-
-            if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
-                LOG.debug("no validation errors on cost items");
-                return messages.getSuccess();
-            } else {
-                messages.getSuccess().getErrors()
-                        .forEach(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
-                return messages.getSuccess();
-            }
-        }
-    }
-
-    private ValidationMessages addFinanceRowItem(FinanceRowItem costItem, Long userId, Long applicationId, String question) {
-        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-
-        if (question != null && !question.isEmpty()) {
-            Long questionId = Long.parseLong(question);
-            return getFinanceRowRestService().add(applicationFinanceResource.getId(), questionId, costItem).getSuccess();
-        }
-        return null;
     }
 
     @Override

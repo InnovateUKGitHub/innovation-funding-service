@@ -35,7 +35,7 @@ public class UserProfilePopulatorTest extends BaseUnitTest {
         List<OrganisationResource> organisations = newOrganisationResource()
                 .withName("organisation")
                 .withOrganisationTypeName("Type")
-                .withCompanyHouseNumber("123")
+                .withCompaniesHouseNumber("123")
                 .build(1);
 
         when(organisationRestService.getAllByUserId(user.getId())).thenReturn(restSuccess(organisations));
@@ -48,7 +48,7 @@ public class UserProfilePopulatorTest extends BaseUnitTest {
         assertEquals(actual.getOrganisations().iterator().next().getName(),
                 organisations.get(0).getName());
         assertEquals(actual.getOrganisations().iterator().next().getRegistrationNumber(),
-                organisations.get(0).getCompanyHouseNumber());
+                organisations.get(0).getCompaniesHouseNumber());
         assertEquals(actual.getOrganisations().iterator().next().getType(),
                 organisations.get(0).getOrganisationTypeName());
 

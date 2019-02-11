@@ -1,15 +1,12 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.form.AddressForm;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
+import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
@@ -27,19 +24,16 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
-import static java.lang.String.format;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -64,7 +58,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     private RegistrationCookieService registrationCookieService;
 
     @Mock
-    private CompanyHouseRestService companyHouseRestService;
+    private CompaniesHouseRestService companiesHouseRestService;
 
     @Mock
     private ApplicationRestService applicationRestService;
@@ -78,10 +72,6 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
 
     private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
-    private String POSTCODE_LOOKUP = "CH64 3RU";
-    private String POSTCODE_LOOKUP_URL_ENCODED = "CH64%203RU";
-    private OrganisationResource organisationResource;
-    private Long competitionId;
 
     private OrganisationCreationForm organisationForm;
     private OrganisationTypeForm organisationTypeForm;
@@ -94,33 +84,22 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         return new OrganisationCreationSearchController();
     }
 
-    @Override
     @Before
-    public void setUp() {
-        super.setUp();
-
+    public void setUpForms() {
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
-        organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
-        when(companyHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
+        when(companiesHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(applicationRestService.createApplication(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(restSuccess(applicationResource));
         when(organisationSearchRestService.getOrganisation(businessOrganisationTypeResource.getId(), COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(organisationSearchRestService.searchOrganisation(anyLong(), anyString())).thenReturn(restSuccess(new ArrayList<>()));
         when(addressRestService.validatePostcode("CH64 3RU")).thenReturn(restSuccess(true));
         when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource()));
 
-
-        AddressForm addressForm = new AddressForm();
-        addressForm.setPostcodeInput("");
-        addressForm.setSelectedPostcodeIndex(null);
-        addressForm.setPostcodeOptions(Collections.emptyList());
-
         organisationTypeForm = new OrganisationTypeForm();
         organisationTypeForm.setOrganisationType(1L);
 
         organisationForm = new OrganisationCreationForm();
-        organisationForm.setAddressForm(addressForm);
         organisationForm.setTriedToSave(true);
         organisationForm.setOrganisationSearchName("company name");
         organisationForm.setOrganisationTypeId(1L);
@@ -135,123 +114,13 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         organisationFormUseSearchResult.setOrganisationSearchName("searchname");
         organisationFormUseSearchResult.setOrganisationName("actualname");
 
-        competitionId = 2L;
-
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
         ReflectionTestUtils.setField(controller, "validator", validator);
     }
 
     @Test
-    public void testManualOrganisationEntry() throws Exception {
-        OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
-        organisationFormCookieValue.setManualEntry(true);
-
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormCookieValue));
-
-        Cookie[] cookies = mockMvc.perform(post("/organisation/create/find-organisation")
-                .param("organisationSearchName", "BusinessName")
-                .param("not-in-company-house", ""))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/find-organisation"))
-                .andReturn().getResponse().getCookies();
-
-        mockMvc.perform(get("/organisation/create/find-organisation")
-                .cookie(cookies))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/organisation/find-organisation"))
-                .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(true))));
-    }
-
-    @Test
-    public void testFindBusinessManualAddress() throws Exception {
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-
-        mockMvc.perform(post("/organisation/create/find-organisation")
-                .param("organisationSearchName", "BusinessName")
-                .param("manual-address", ""))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/find-organisation"));
-
-        verify(registrationCookieService, times(1)).saveToOrganisationCreationCookie(any(), any());
-    }
-
-    @Test
-    public void testFindBusinessSearchAddress() throws Exception {
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-
-        mockMvc.perform(post("/organisation/create/find-organisation")
-                .param("addressForm.postcodeInput", POSTCODE_LOOKUP)
-                .param("search-address", "")
-                .header("referer", "/organisation/create/find-organisation/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(format("redirect:/organisation/create/find-organisation?searchTerm=%s", POSTCODE_LOOKUP_URL_ENCODED)));
-
-        mockMvc.perform(get(format("/organisation/create/find-organisation/%s", POSTCODE_LOOKUP)))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/organisation/find-organisation"))
-                .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(false))));
-    }
-
-    @Test
-    public void testFindBusinessSearchAddressInvalid() throws Exception {
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-
-        mockMvc.perform(post("/organisation/create/find-organisation")
-                .param("postcodeInput", "")
-                .param("search-address", "")
-                .header("referer", "/organisation/create/find-organisation/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/find-organisation"));
-
-        mockMvc.perform(get("/organisation/create/find-organisation"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/organisation/find-organisation"))
-                .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(false))));
-    }
-
-    @Test
-    public void testCreateOrganisation_addressSearchShowsEmptyPostCodeValidationError() throws Exception {
-        OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
-        organisationFormCookieValue.setTriedToSave(true);
-        organisationFormCookieValue.getAddressForm().setSelectedPostcode(new AddressResource());
-
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormCookieValue));
-
-        mockMvc.perform(get("/organisation/create/find-organisation"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/organisation/find-organisation"))
-                .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(false))))
-                .andExpect(model().attributeHasFieldErrors("organisationForm", "addressForm.selectedPostcode.addressLine1"));
-    }
-
-    @Test
-    public void testFindBusinessSelectAddress() throws Exception {
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-
-        mockMvc.perform(post("/organisation/create/find-organisation")
-                .param("manualEntry", "true")
-                .param("addressForm.postcodeInput", POSTCODE_LOOKUP)
-                .param("addressForm.selectedPostcodeIndex", String.valueOf(0))
-                .param("select-address", "")
-                .header("referer", "/organisation/create/find-organisation/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(format("redirect:/organisation/create/find-organisation/%s/0", POSTCODE_LOOKUP_URL_ENCODED)));
-
-        mockMvc.perform(get(format("/organisation/create/find-organisation/%s/0", POSTCODE_LOOKUP)))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/organisation/find-organisation"))
-                .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(false))));
-    }
-
-    @Test
-    public void testSearchOrganisation_findBusinessSearchCompanyHouse() throws Exception {
+    public void searchOrganisation_findBusinessSearchCompaniesHouse() throws Exception {
         OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
         organisationFormCookieValue.setOrganisationSearching(true);
 
@@ -268,7 +137,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testFindBusinessSearchCompanyHouseInvalid() throws Exception {
+    public void findBusinessSearchCompaniesHouseInvalid() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
 
         mockMvc.perform(post("/organisation/create/find-organisation")
@@ -279,7 +148,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSaveOrganisationtest_findBusinessConfirmCompanyDetailsInvalid() throws Exception {
+    public void saveOrganisationtest_findBusinessConfirmCompaniesDetailsInvalid() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
@@ -295,18 +164,13 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSaveOrganisation_successfulSaveShouldRedirectToConfirmCompanyDetailsPage() throws Exception {
+    public void saveOrganisation_successfulSaveShouldRedirectToConfirmCompaniesDetailsPage() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
         mockMvc.perform(post("/organisation/create/find-organisation")
                 .param("organisationName", "BusinessName")
                 .param("manualEntry", "true")
-                .param("addressForm.selectedPostcode.addressLine1", "a")
-                .param("addressForm.selectedPostcode.locality", "abc")
-                .param("addressForm.selectedPostcode.region", "def")
-                .param("addressForm.selectedPostcode.postcode", "abc post")
-                .param("addressForm.selectedPostcode.town", "abc town")
                 .param("save-organisation-details", "")
                 .header("referer", "/organisation/create/find-organisation/"))
                 .andExpect(status().is3xxRedirection())
@@ -314,7 +178,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testCreateOrganisation() throws Exception {
+    public void createOrganisation() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
@@ -325,7 +189,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSelectedBusinessGet() throws Exception {
+    public void selectedBusinessGet() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
@@ -335,137 +199,16 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSelectedBusinessSubmit() throws Exception {
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-
-        mockMvc.perform(post("/organisation/create/selected-organisation/" + COMPANY_ID)
-                .param("addressForm.postcodeInput", POSTCODE_LOOKUP)
-                .param("searchOrganisationId", COMPANY_ID)
-                .param("search-address", "")
-                .header("referer", "/organisation/create/selected-organisation/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(format("redirect:/organisation/create/selected-organisation/%s/search-postcode?searchTerm=%s", COMPANY_ID, POSTCODE_LOOKUP_URL_ENCODED)));
-    }
-
-    @Test
-    public void testSearchAddress_setUseSearchResultAddressInCookieShouldResultInSuccessfulSaveOfOrganisationToCookie() throws Exception {
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormUseSearchResult));
-
-        mockMvc.perform(post("/organisation/create/selected-organisation/" + COMPANY_ID)
-                .param("addressForm.postcodeInput", POSTCODE_LOOKUP)
-                .param("search-address", "")
-                .param("searchOrganisationId", COMPANY_ID)
-                .header("referer", "/organisation/create/selected-organisation/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(format("redirect:/organisation/create/selected-organisation/%s/search-postcode?searchTerm=%s", COMPANY_ID, POSTCODE_LOOKUP_URL_ENCODED)));
-
-        mockMvc.perform(get(format("/organisation/create/selected-organisation/%s/search-postcode?searchTerm=%s", COMPANY_ID, POSTCODE_LOOKUP)))
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(view().name("registration/organisation/confirm-selected-organisation"))
-        .andExpect(model().attributeHasNoErrors("organisationForm"));
-
-        verify(registrationCookieService, atLeastOnce()).saveToOrganisationCreationCookie(any(), any());
-    }
-
-    @Test
-    public void testAmendOrganisationAddressPostCode() throws Exception {
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormUseSearchResult));
-        when(addressRestService.doLookup(anyString())).thenReturn(restSuccess(new ArrayList<>()));
-        mockMvc.perform(get(format("/organisation/create/selected-organisation/%s/%s", COMPANY_ID, POSTCODE_LOOKUP)))
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(view().name("registration/organisation/confirm-selected-organisation"))
-        .andExpect(model().attributeHasNoErrors("organisationForm"))
-        .andExpect(model().attributeExists("model"));
-    }
-
-    @Test
-    public void testAmendOrganisationAddressPostCode_selectedOrganisationSelectedPostcode() throws Exception {
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormUseSearchResult));
-
-        ArrayList<AddressResource> addresses = new ArrayList<>();
-        addresses.add(new AddressResource());
-        addresses.add(new AddressResource());
-        addresses.add(new AddressResource());
-        when(addressRestService.doLookup(anyString())).thenReturn(restSuccess(addresses));
-        mockMvc.perform(get(format("/organisation/create/selected-organisation/%s/0", COMPANY_ID)))
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(view().name("registration/organisation/confirm-selected-organisation"))
-        .andExpect(model().attributeHasNoErrors("organisationForm"))
-        .andExpect(model().attributeExists("model"));
-    }
-
-    @Test
-    public void testSelectAddress_selectedBusinessSubmitSelectAddress() throws Exception {
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormUseSearchResult));
-
-        mockMvc.perform(post("/organisation/create/selected-organisation/" + COMPANY_ID)
-                .param("addressForm.postcodeInput", POSTCODE_LOOKUP)
-                .param("searchOrganisationId", COMPANY_ID)
-                .param("addressForm.selectedPostcodeIndex", "0")
-                .param("select-address", "")
-                .header("referer", "/organisation/create/selected-organisation/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(format("redirect:/organisation/create/selected-organisation/%s/%s", COMPANY_ID, "0")));
-
-        mockMvc.perform(get(format("/organisation/create/selected-organisation/%s/%s", COMPANY_ID, "0")))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/organisation/confirm-selected-organisation"))
-                .andExpect(model().attributeHasNoErrors("organisationForm"));
-    }
-
-    @Test
-    public void testManualAddress_selectedBusinessManualAddress() throws Exception {
-        OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
-//        organisationFormCookieValue.setUseSearchResultAddress(true);
-
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationFormCookieValue));
-
-        mockMvc.perform(post("/organisation/create/selected-organisation/" + COMPANY_ID)
-                .param("searchOrganisationId", COMPANY_ID)
-                .param("manual-address", "true"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/selected-organisation/"+COMPANY_ID));
-    }
-
-    @Test
-    public void testSelectedBusinessSaveBusiness() throws Exception {
+    public void selectedBusinessSaveBusiness() throws Exception {
 
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
         mockMvc.perform(post("/organisation/create/selected-organisation/" + COMPANY_ID)
-                .param("useSearchResultAddress", "true")
-                .param("_useSearchResultAddress", "on")
                 .param("save-organisation-details", "true")
                 .param("searchOrganisationId", COMPANY_ID)
                 .header("referer", "/organisation/create/selected-organisation/"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/confirm-organisation"));
-    }
-
-
-
-    /**
-     * Check if request is redirected back to the form, when submit is invalid.
-     */
-    @Test
-    public void testSearchAddress_selectedBusinessInvalidSubmit() throws Exception {
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-
-        mockMvc.perform(post("/organisation/create/selected-organisation/" + COMPANY_ID)
-                .param("manualEntry", "true")
-                .param("addressForm.postcodeInput", "")
-                .param("search-address", "")
-                .param("searchOrganisationId", COMPANY_ID)
-                .header("referer", "/organisation/create/selected-organisation/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(format("redirect:/organisation/create/selected-organisation/%s", COMPANY_ID)));
+                .andExpect(view().name("redirect:/organisation/create/selected-organisation/" + COMPANY_ID));
     }
 }

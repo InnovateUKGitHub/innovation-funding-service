@@ -1,7 +1,6 @@
 *** Settings ***
 Resource    ../../resources/defaultResources.robot
 
-
 *** Variables ***
 #Project: London underground – enhancements to existing stock and logistics
 # GOL = Grant Offer Letter
@@ -122,7 +121,6 @@ ${PS_EF_APPLICATION_PROJECT}    ${project_ids["${PS_EF_APPLICATION_TITLE}"]}
 ${PS_EF_APPLICATION_LEAD_ORGANISATION_ID}    ${Ntag_Id}
 ${PS_EF_APPLICATION_LEAD_ORGANISATION_NAME}  ${Ntag_Name}
 ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}      steven.hicks@ntag.example.com
-${PS_EF_APPLICATION_PM_EMAIL}                steven.hicks@ntag.example.com
 ${PS_EF_APPLICATION_PARTNER_EMAIL}           robert.perez@jetpulse.example.com
 ${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
 
@@ -169,18 +167,18 @@ project finance submits monitoring officer
     [Arguments]    ${project_id}  ${fname}  ${lname}  ${email}  ${phone_number}
     log in as a different user              &{internal_finance_credentials}
     the user navigates to the page          ${server}/project-setup-management/project/${project_id}/monitoring-officer
-    the user enters text to a text field    id=firstName    ${fname}
-    the user enters text to a text field    id=lastName    ${lname}
-    The user enters text to a text field    id=emailAddress    ${email}
-    The user enters text to a text field    id=phoneNumber    ${phone_number}
-    the user clicks the button/link         jQuery=.govuk-button[type="submit"]:contains("Assign Monitoring Officer")
-    the user clicks the button/link         jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+    the user enters text to a text field    id = firstName    ${fname}
+    the user enters text to a text field    id = lastName    ${lname}
+    The user enters text to a text field    id = emailAddress    ${email}
+    The user enters text to a text field    id = phoneNumber    ${phone_number}
+    the user clicks the button/link         jQuery = .govuk-button[type = "submit"]:contains("Assign Monitoring Officer")
+    the user clicks the button/link         jQuery = .modal-assign-mo button:contains("Assign Monitoring Officer")
 
 partner submits his bank details
     [Arguments]  ${email}  ${project}  ${account_number}  ${sort_code}
     partner fills in his bank details  ${email}  ${project}  ${account_number}  ${sort_code}
-    wait until keyword succeeds without screenshots  30 s  500 ms  the user should not see the element  jQuery=.govuk-button:contains("Submit bank account details")   # Added this wait so to give extra execution time
-    the user should see the element    jQuery=dt:contains("Account number") + dd:contains("****")
+    wait until keyword succeeds without screenshots  30 s  500 ms  the user should not see the element  jQuery = .govuk-button:contains("Submit bank account details")   # Added this wait so to give extra execution time
+    the user should see the element    jQuery = dt:contains("Account number") + dd:contains("****")
     # Have splitted this check from the rest of the keyword, which i now name into 'partner fills in his bank details'
     # Because this little check adds a bit of extra time and validation that the Bank details are submitted.
     # However, not all test cases submit the Bank details when the button is pressed, as we also check for validation messages
@@ -190,19 +188,19 @@ partner fills in his bank details
     [Arguments]  ${email}  ${project}  ${account_number}  ${sort_code}
     log in as a different user                       ${email}    ${short_password}
     the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
-    the user enters text to a text field             id=accountNumber  ${account_number}
-    the user enters text to a text field             id=sortCode  ${sort_code}
-    the user clicks the button twice                 css=label[for="address-use-org"]
-    the user sees that the radio button is selected  addressType  REGISTERED  # Added this check to give extra execution time
-    the user should see the element                  css=#registeredAddress
-    wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery=.govuk-button:contains("Submit bank account details")
-    wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  id=submit-bank-details
+    the user enters text to a text field             id = accountNumber  ${account_number}
+    the user enters text to a text field             id = sortCode  ${sort_code}
+    the user enters text to a text field             name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                  id = postcode-lookup
+    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery = .govuk-button:contains("Submit bank account details")
+    wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  id = submit-bank-details
 
 finance contacts are selected and bank details are approved
     log in as a different user      &{lead_applicant_credentials}
     the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/
-    ${finance_contact}  ${val}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=.progress-list li:nth-child(1):contains("Completed")
-    the user clicks the button/link   link=Project details
+    ${finance_contact}  ${val} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery = .progress-list li:nth-child(1):contains("Completed")
+    the user clicks the button/link   link = Project details
     run keyword if  '${finance_contact}' == 'PASS'  run keywords  partners submit their finance contacts  bank details are approved for all businesses
 
 Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
@@ -210,32 +208,32 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     The user logs-in in new browser  &{lead_applicant_credentials}
-    ${update_comp}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=h2:contains("Set up your project") ~ ul a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+    ${update_comp}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery = h2:contains("Set up your project") ~ ul a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     run keyword if    '${update_comp}' == 'PASS'  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user   &{lead_applicant_credentials}
     Set Suite Variable  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
     the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
-    ${project_details}  ${completed}=  Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=ul li.complete a:contains("Project details")
+    ${project_details}  ${completed} =   Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery = ul li.complete a:contains("Project details")
     run keyword if  '${project_details}' == 'PASS'  lead partner navigates to project and fills project details
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user              &{internal_finance_credentials}
     the user navigates to the page          ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
-    the user moves focus to the element     css=label[for="app-row-1"]
+    Set Focus To Element                    css = label[for = "app-row-1"]
     the user selects the checkbox           app-row-1
-    the user moves focus to the element     css=label[for="app-row-2"]
+    Set Focus To Element                    css = label[for = "app-row-2"]
     the user selects the checkbox           app-row-2
-    the user clicks the button/link         jQuery=button:contains("Successful")
-    the user should see the element         jQuery=td:contains("Successful")
-    the user clicks the button/link         jQuery=a:contains("Competition")
-    the user clicks the button/link         jQuery=a:contains("Manage funding notifications")
-    the user moves focus to the element     css=label[for="app-row-103"]
+    the user clicks the button/link         jQuery = button:contains("Successful")
+    the user should see the element         jQuery = td:contains("Successful")
+    the user clicks the button/link         jQuery = a:contains("Competition")
+    the user clicks the button/link         jQuery = a:contains("Manage funding notifications")
+    Set Focus To Element                    css = label[for = "app-row-103"]
     the user selects the checkbox           app-row-103
-    the user moves focus to the element     css=label[for="app-row-104"]
+    Set Focus To Element                    css = label[for = "app-row-104"]
     the user selects the checkbox           app-row-104
-    the user clicks the button/link         jQuery=.govuk-button:contains("Write and send email")
+    the user clicks the button/link         jQuery = .govuk-button:contains("Write and send email")
     the internal sends the descision notification email to all applicants  EmailTextBody
-    the user should see the text in the page    Manage funding applications
+    the user should see the element         jQuery = h1:contains("Manage funding applications")
 
 lead partner navigates to project and fills project details
     log in as a different user            &{lead_applicant_credentials}
@@ -244,16 +242,18 @@ lead partner navigates to project and fills project details
 project lead submits project address
 #Used in 12__ATI_compCreationToSubmission
     [Arguments]  ${project_id}
-    the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-address
-    the user selects the radio button  addressType  OPERATING
-    the user clicks the button/link    css=#main-content > form > button  #Save project address
+    the user navigates to the page                ${server}/project-setup/project/${project_id}/details/project-address
+    the user enters text to a text field          id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link               id = postcode-lookup
+    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link               jQuery = button:contains("Save address")
 
 project lead submits project details
     [Arguments]  ${project_id}
     project lead submits project address    ${project_id}
     the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-manager
     the user selects the radio button  projectManager  projectManager2
-    the user clicks the button/link    jQuery=.govuk-button:contains("Save")
+    the user clicks the button/link    jQuery = .govuk-button:contains("Save")
     the user navigates to the page     ${server}/project-setup/project/${project_id}/details
 
 partners submit their finance contacts
@@ -270,16 +270,16 @@ navigate to external finance contact page, choose finance contact and save
     [Arguments]  ${org_id}   ${financeContactSelector}  ${project}
     the user navigates to the page     ${server}/project-setup/project/${project}/details/finance-contact?organisation=${org_id}
     the user selects the radio button  financeContact  ${financeContactSelector}
-    the user clicks the button/link    jQuery=.govuk-button:contains("Save")
+    the user clicks the button/link    jQuery = .govuk-button:contains("Save")
     ${project_details}  ${complete}=  Run Keyword And Ignore Error Without Screenshots    the user should see the element    link=Select project location
     run keyword if  '${project_details}' == 'PASS'  select project location  ${org_id}  ${project}
 
 Select project location
     [Arguments]  ${org_id}  ${projectId}
     the user navigates to the page        ${server}/project-setup/project/${projectId}/organisation/${org_id}/partner-project-location
-    the user enters text to a text field  css=#postcode  ${postcode}
-    the user clicks the button/link       css=button[type="submit"]
-    the user clicks the button/link       link=Set up your project
+    the user enters text to a text field  css = #postcode  ${postcode}
+    the user clicks the button/link       css = button[type = "submit"]
+    the user clicks the button/link       link = Set up your project
 
 bank details are approved for all businesses
     partners submit bank details
@@ -299,27 +299,34 @@ the project finance user has approved bank details
 the project finance user approves bank details for
     [Arguments]    ${org_name}  ${org_id}
     the user navigates to the page            ${server}/project-setup-management/project/${org_id}/review-all-bank-details
-    the user clicks the button/link           link=${org_name}
-    the user should see the text in the page  ${org_name}
-    the user clicks the button/link           jQuery=.govuk-button:contains("Approve bank account details")
-    the user clicks the button/link           jQuery=.govuk-button:contains("Approve account")
+    the user clicks the button/link           link = ${org_name}
+    the user should see the element           jQuery = td:contains("${org_name}")
+    the user clicks the button/link           jQuery = .govuk-button:contains("Approve bank account details")
+    the user clicks the button/link           jQuery = .govuk-button:contains("Approve account")
 
-project manager submits other documents
+project manager submits both documents
     [Arguments]  ${email}  ${password}  ${project}
-    log in as a different user       ${email}  ${password}
-    the user navigates to the page   ${server}/project-setup/project/${project}/partner/documents
-    choose file                      name=collaborationAgreement    ${upload_folder}/testing.pdf
-    choose file                      name=exploitationPlan    ${upload_folder}/testing.pdf
-    the user reloads the page
-    the user clicks the button/link  jQuery=.govuk-button:contains("Submit documents")
-    the user clicks the button/link  jQuery=.govuk-button:contains("Submit")
+    log in as a different user          ${email}  ${password}
+    the user navigates to the page      ${server}/project-setup/project/${project}/document/all
+    the user clicks the button/link     link = Collaboration agreement
+    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+    the user clicks the button/link     link = Exploitation plan
+    choose file                         name = document    ${upload_folder}/${valid_pdf}
+    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submitDocumentButtonConfirm
 
-project finance approves other documents
+project finance approves both documents
     [Arguments]  ${project}
-    log in as a different user       &{internal_finance_credentials}
-    the user navigates to the page   ${SERVER}/project-setup-management/project/${project}/partner/documents
-    the user clicks the button/link  jQuery=.govuk-button:contains("Accept documents")
-    the user clicks the button/link  jQuery=.modal-accept-docs .govuk-button:contains("Accept documents")
+    log in as a different user             &{internal_finance_credentials}
+    the user navigates to the page         ${SERVER}/project-setup-management/project/${project}/document/all
+    the user clicks the button/link        link = Collaboration agreement
+    internal user approve uploaded documents
+    the user clicks the button/link         link = Return to documents
+    the user clicks the button/link         link = Exploitation plan
+    internal user approve uploaded documents
 
 project finance generates the Spend Profile
     [Arguments]  ${lead}  ${partner}  ${academic_partner}  ${project}
@@ -328,18 +335,18 @@ project finance generates the Spend Profile
     project finance approves Viability for  ${partner}  ${project}
     project finance approves Eligibility    ${lead}  ${partner}  ${academic_partner}  ${project}
     the user navigates to the page          ${server}/project-setup-management/project/${project}/finance-check
-    the user clicks the button/link         css=.generate-spend-profile-main-button
-    the user clicks the button/link         css=#generate-spend-profile-modal-button
+    the user clicks the button/link         css = .generate-spend-profile-main-button
+    the user clicks the button/link         css = #generate-spend-profile-modal-button
 
 project finance approves Viability for
     [Arguments]  ${partner}  ${project}
     the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
     the user selects the checkbox        costs-reviewed
     the user selects the checkbox        project-viable
-    the user moves focus to the element  link=Contact us
-    the user selects the option from the drop-down menu  Green  id=rag-rating
-    the user clicks the button/link      css=#confirm-button
-    the user clicks the button/link      jQuery=.modal-confirm-viability .govuk-button:contains("Confirm viability")
+    Set Focus To Element                 link = Contact us
+    the user selects the option from the drop-down menu  Green  id = rag-rating
+    the user clicks the button/link      css = #confirm-button
+    the user clicks the button/link      jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
 
 project finance approves Eligibility
     [Arguments]  ${lead}  ${partner}  ${academic_partner}  ${project}
@@ -352,17 +359,17 @@ project finance approves Eligibility
 
 the user approves project costs
     the user selects the checkbox      project-eligible
-    the user selects the option from the drop-down menu  Green  id=rag-rating
-    the user clicks the button/link    jQuery=.govuk-button:contains("Approve eligible costs")
-    the user clicks the button/link    name=confirm-eligibility
+    the user selects the option from the drop-down menu  Green  id = rag-rating
+    the user clicks the button/link    jQuery = .govuk-button:contains("Approve eligible costs")
+    the user clicks the button/link    name = confirm-eligibility
 
 proj finance approves the spend profiles
     [Arguments]  ${project}
     log in as a different user       &{internal_finance_credentials}
     the user navigates to the page   ${server}/project-setup-management/project/${project}/spend-profile/approval
     the user selects the checkbox    approvedByLeadTechnologist
-    the user clicks the button/link  jQuery=.govuk-button:contains("Approved")
-    the user clicks the button/link  jQuery=.modal-accept-profile button:contains("Approve")
+    the user clicks the button/link  jQuery = .govuk-button:contains("Approved")
+    the user clicks the button/link  jQuery = .modal-accept-profile button:contains("Approve")
 
 all partners submit their Spend Profile
     Login and submit partners spend profile  ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${Kazio_Id}  ${PS_GOL_APPLICATION_PROJECT}
@@ -373,19 +380,19 @@ Login and submit partners spend profile
     [Arguments]  ${email}  ${org_id}  ${project}
     log in as a different user       ${email}  ${short_password}
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
-    the user clicks the button/link  link=Submit to lead partner
-    the user clicks the button/link  jQuery=button.govuk-button:contains("Submit")
+    the user clicks the button/link  link = Submit to lead partner
+    the user clicks the button/link  jQuery = button.govuk-button:contains("Submit")
 
 Login and submit leads spend profile
     [Arguments]  ${email}  ${org_id}  ${org_name}  ${project}
     log in as a different user       ${email}  ${short_password}
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
-    the user clicks the button/link  link=${org_name}
-    the user clicks the button/link  css=[name="mark-as-complete"]
+    the user clicks the button/link  link = ${org_name}
+    the user clicks the button/link  css = [name="mark-as-complete"]
     the user navigates to the page   ${server}/project-setup/project/${project}/partner-organisation/${org_id}/spend-profile
-    the user clicks the button/link  jQuery=.govuk-button:contains("Review and send total project spend profile")
-    the user clicks the button/link  link=Send project spend profile
-    the user clicks the button/link  id=submit-send-all-spend-profiles
+    the user clicks the button/link  jQuery = .govuk-button:contains("Review and send total project spend profile")
+    the user clicks the button/link  link = Send project spend profile
+    the user clicks the button/link  id = submit-send-all-spend-profiles
 
 project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
     log in as a different user                          &{internal_finance_credentials}
@@ -395,6 +402,12 @@ project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
 
 the user changes the start date
     [Arguments]  ${year}
-    the user clicks the button/link  link=Target start date
-    the user enters text to a text field  id=projectStartDate_year  ${year}
-    the user clicks the button/link  jQuery=.govuk-button:contains("Save")
+    the user clicks the button/link         link = Target start date
+    the user enters text to a text field    id = projectStartDate_year  ${year}
+    the user clicks the button/link         jQuery = .govuk-button:contains("Save")
+
+internal user approve uploaded documents
+    the user selects the radio button      approved   true
+    the user clicks the button/link        id = submit-button
+    the user clicks the button/link        id = accept-document
+    the user should see the element        jQuery = p:contains("You have approved this document.")

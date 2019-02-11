@@ -1,70 +1,31 @@
 package org.innovateuk.ifs.application.forms.saver;
 
+import org.innovateuk.ifs.application.forms.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_SECTION_AS_COMPLETE;
+import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_SECTION_AS_INCOMPLETE;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.*;
 
 /**
- * Tests for {@link ApplicationSectionFinanceSaver}
+ * Tests for {@link YourProjectCostsCompleter}
  */
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationSectionFinanceSaverTest {
 
-    @InjectMocks
-    private ApplicationSectionFinanceSaver saver;
-
-    @Mock
-    private SectionService sectionService;
-
-    private final Long competitionId = 5L;
-
-    @Before
-    public void setup() {
-        when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES))
-                .thenReturn(
-                        newSectionResource()
-                                .withCompetition(competitionId)
-                                .withType(SectionType.ORGANISATION_FINANCES)
-                                .build(1));
-
-        when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES))
-                .thenReturn(
-                        newSectionResource()
-                                .withCompetition(competitionId)
-                                .withType(SectionType.FUNDING_FINANCES)
-                                .build(1));
-    }
-
-    @Test
-    public void handleMarkAcademicFinancesAsNotRequired() {
-        saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.PUBLIC_SECTOR_OR_CHARITY.getId(), newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build(), 3L, competitionId, 7L);
-        saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.RESEARCH.getId(), newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build(), 3L, competitionId, 7L);
-
-        saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.RESEARCH.getId(), newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build(), 3L, competitionId, 7L);
-
-        verify(sectionService, times(2)).markAsNotRequired(anyLong(), anyLong(), anyLong());
-    }
+    private ApplicationSectionFinanceSaver saver = new ApplicationSectionFinanceSaver();
 
     @Test
     public void handleStateAid_MarkAsComplete() {
@@ -94,31 +55,5 @@ public class ApplicationSectionFinanceSaverTest {
         saver.handleStateAid(params, application, form, selectedSection);
 
         assertEquals(Boolean.FALSE, application.getStateAidAgreed());
-    }
-
-    @Test
-    public void handleRequestFundingRequests_requestFunding() {
-        final Map<String, String[]> params = new HashMap<>();
-        final Long applicationId = 3L;
-        final Long processRoleId = 15L;
-
-        params.put(REQUESTING_FUNDING, null);
-
-        saver.handleRequestFundingRequests(params, applicationId, competitionId, processRoleId);
-
-        verify(sectionService, times(2)).markAsInComplete(anyLong(), anyLong(), anyLong());
-    }
-
-    @Test
-    public void handleRequestFundingRequests_notRequestFunding() {
-        final Map<String, String[]> params = new HashMap<>();
-        final Long applicationId = 3L;
-        final Long processRoleId = 15L;
-
-        params.put(NOT_REQUESTING_FUNDING, null);
-
-        saver.handleRequestFundingRequests(params, applicationId, competitionId, processRoleId);
-
-        verify(sectionService, times(2)).markAsNotRequired(anyLong(), anyLong(), anyLong());
     }
 }

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.populator.section;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
@@ -10,7 +11,6 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,14 +25,19 @@ import java.util.Optional;
 @Component
 public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourFinancesSectionViewModel> {
 
-    @Autowired
-    private SectionService sectionService;
+    private final SectionService sectionService;
+    private final FinanceService financeService;
+    private final FileEntryRestService fileEntryRestService;
 
-    @Autowired
-    private FinanceService financeService;
-
-    @Autowired
-    private FileEntryRestService fileEntryRestService;
+    public YourFinancesSectionPopulator(final ApplicationNavigationPopulator navigationPopulator,
+                                        final SectionService sectionService,
+                                        final FinanceService financeService,
+                                        final FileEntryRestService fileEntryRestService) {
+        super(navigationPopulator);
+        this.sectionService = sectionService;
+        this.financeService = financeService;
+        this.fileEntryRestService = fileEntryRestService;
+    }
 
     @Override
     protected YourFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
@@ -47,18 +52,12 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
                                  BindingResult bindingResult,
                                  Boolean readOnly,
                                  Optional<Long> applicantOrganisationId) {
-        ApplicantSectionResource yourOrganisation = findChildSectionByType(section, SectionType.ORGANISATION_FINANCES);
-        ApplicantSectionResource yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
-
-        boolean yourFundingComplete = completedSectionIds.contains(yourFunding.getSection().getId());
-        boolean yourOrganisationComplete = completedSectionIds.contains(yourOrganisation.getSection().getId());
 
         initializeApplicantFinances(section);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, section.getApplication().getId());
         BaseFinanceResource organisationFinances = organisationFinanceOverview.getFinancesByOrganisation().get(section.getCurrentApplicant().getOrganisation().getId());
 
-        viewModel.setNotRequestingFunding(yourFundingComplete && yourOrganisationComplete && organisationFinances.getGrantClaimPercentage() != null && organisationFinances.getGrantClaimPercentage() == 0);
         viewModel.setCompletedSectionIds(completedSectionIds);
         viewModel.setOrganisationFinance(organisationFinances);
     }
@@ -70,13 +69,8 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
         }
     }
 
-    private ApplicantSectionResource findChildSectionByType(ApplicantSectionResource section, SectionType sectionType) {
-        return section.getApplicantChildrenSections().stream().filter(child -> child.getSection().getType().equals(sectionType)).findAny().get();
-    }
-
     @Override
     public SectionType getSectionType() {
         return SectionType.FINANCE;
     }
 }
-

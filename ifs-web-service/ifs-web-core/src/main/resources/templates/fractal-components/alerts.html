@@ -1,93 +1,102 @@
+<div class="wide-page">
+    <div class="govuk-width-container">
+        <div class="govuk-inset-text">
+            <p class="govuk-body">
+                This is an IFS component.
+            </p>
+        </div>
 
-<h1 class="govuk-heading-xl">Alert examples</h1>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-quarter">
-    <div>Success</div>
-  </div>
-  <div class="govuk-grid-column-three-quarters">
-    <div class="success-alert">
-      <p class="govuk-body">You have succeeded or completed something</p>
+        <h2 class="govuk-heading-m">
+            Examples
+        </h2>
+        <p class="govuk-body">
+            Red and green alerts have matching colour text. All other alerts have black text.
+        </p>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Blue info alert</h3>
+                <p class="govuk-body">
+                    To make the user aware of something and prompt them to act.
+                    One link can be within the text. More than one link should be in a bulleted list.
+                </p>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+                <div class="message-alert">
+                    <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
+                    <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
+                    <p class="govuk-body"><a href="#" class="govuk-link">View the status of partners</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Green complete alert</h3>
+                <p class="govuk-body">
+                    To show an action is complete.
+                </p>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+                <div class="success-alert">
+                    <p class="govuk-body">Application details are marked as complete</p>
+                </div>
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Grey pending alert</h3>
+                <p class="govuk-body">
+                    To provide visual feedback that action is waiting on someone else.
+                    e.g. another partner or Innovate UK.
+                </p>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+                <div class="assigned-alert">
+                    <p class="govuk-body">
+                        The bank details you submitted are being reviewed by Innovate UK.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Red alert</h3>
+                <p class="govuk-body">
+                    To draw attention to something that is blocked and requires immediate action to proceed.
+                </p>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+                <div class="warning-alert">
+                    <p class="govuk-body">
+                        You have a pending finance query to respond to.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Black assigned alert</h3>
+                <p class="govuk-body">
+                    To inform the user of who this question is assigned to.
+                </p>
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+                <div class="assign-container assigned-alert">
+                    <span class="secondary-notification govuk-body">
+                      Assigned to you.
+                    </span>
+                    <div class="assign-button-container">
+                        <div class="assign-button">
+                            <button type="button">
+                                <span class="secondary-notification govuk-body">
+                                    Assign this question to someone else
+                                </span>
+                            </button>
+                        </div>
+                        {{ render '@assign-list' }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-quarter">
-    <div>Fail - internal only</div>
-  </div>
-  <div class="govuk-grid-column-three-quarters">
-    <div class="fail-alert">
-      <p class="govuk-body">You have failed or been rejected</p>
-    </div>
-  </div>
-</div>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-quarter">
-    <div>Alert</div>
-  </div>
-  <div class="govuk-grid-column-three-quarters">
-    <div class="warning-alert">
-      <p class="govuk-body">You must know this - or there is a problem</p>
-    </div>
-  </div>
-</div>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-quarter">
-    <div>Info</div>
-  </div>
-  <div class="govuk-grid-column-three-quarters">
-    <div class="message-alert">
-      <p class="govuk-body">You might want to know or complete this</p>
-    </div>
-  </div>
-</div>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-quarter">
-    <div>Assign</div>
-  </div>
-  <div class="govuk-grid-column-three-quarters">
-    <div class="assign-alert">
-      <p class="govuk-body">This is assigned or reassigned to you <a href="#">Assigned to you</a></p>
-    </div>
-  </div>
-</div>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-quarter">
-    <div>Assigned</div>
-  </div>
-  <div class="govuk-grid-column-three-quarters">
-    <div class="assigned-alert">
-      <p class="govuk-body">This is assigned to [someone else] <a href="#">Assigned to</a></p>
-    </div>
-  </div>
-</div>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-quarter">
-    <div>Declare</div>
-  </div>
-  <div class="govuk-grid-column-three-quarters">
-    <div class="declare-alert">
-      <p class="govuk-body">You must declare that you are ok with this</p>
-    </div>
-  </div>
-</div>
-<h2 class="govuk-heading-m">Examples</h2>
-<div class="message-alert">
-  <h2 class="govuk-heading-s">Research category determines funding</h2>
-  <p class="govuk-body">The research category is used to calculate the funding for all collaborators in the application. Changing this selection will reset the funding level for all collaborators that have their funding section.</p>
-</div>
-<div class="declare-alert">
-  <p class="govuk-body">You will not be able to make change to your application or resubmit after this point.</p>
-</div>
-<div class="message-alert">
-  <h2 class="govuk-heading-s">Complete your profile</h2>
-  <p class="govuk-body">You must complete your profile to continue.</p>
-  <ul class="govuk-list govuk-list--bullet">
-    <li><a href="#">your name</a></li>
-    <li><a href="#">declaration of interest</a></li>
-  </ul>
-</div>
-<div class="warning-alert">
-  <h2 class="govuk-heading-s">Deadline reminder: Wednesday 20 April 2016</h2>
-  <p class="govuk-body">Please accept or reject your assessment invites.</p>
-  <p class="govuk-body">You will have 5 days after the deadline to complete your assessments.</p>
 </div>

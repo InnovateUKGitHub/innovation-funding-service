@@ -65,10 +65,8 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
         return new InterviewInviteController();
     }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
         when(rejectionReasonRestService.findAllActive()).thenReturn(restSuccess(rejectionReasons));
     }
 

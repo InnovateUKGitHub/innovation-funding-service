@@ -21,6 +21,7 @@ import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,6 @@ import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.RedirectUtils.buildRedirect;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -75,6 +75,9 @@ public class ProjectDetailsController {
 
     @Autowired
     private ApplicationRestService applicationRestService;
+
+    @Autowired
+    private NavigationUtils navigationUtils;
 
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
@@ -129,8 +132,29 @@ public class ProjectDetailsController {
                                 )
                         );
 
-        return buildRedirect(request,
-                "management/competition/" + competitionId + "/applications/previous");
+        return navigationUtils.getRedirectToSameDomainUrl(request, "management/competition/" + competitionId + "/applications/previous");
+    }
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "HANDLE_PROJECT_OFFLINE", description = "Only the IFS administrator users are able to handle projects offline")
+    @PostMapping("/{projectId}/handle-offline")
+    public String handleProjectOffline(@PathVariable("competitionId") final long competitionId,
+                                  @PathVariable("projectId") final long projectId,
+                                  HttpServletRequest request) {
+
+        projectRestService.handleProjectOffline(projectId).getSuccess();
+        return String.format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
+    }
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "COMPLETE_PROJECT_OFFLINE", description = "Only the IFS administrator users are able to complete projects offline")
+    @PostMapping("/{projectId}/complete-offline")
+    public String completeProjectOffline(@PathVariable("competitionId") final long competitionId,
+                                       @PathVariable("projectId") final long projectId,
+                                       HttpServletRequest request) {
+
+        projectRestService.completeProjectOffline(projectId).getSuccess();
+        return String.format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {

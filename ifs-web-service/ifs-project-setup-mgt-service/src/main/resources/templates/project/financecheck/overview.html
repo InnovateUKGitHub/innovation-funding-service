@@ -15,7 +15,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=|${model.overview.projectId} : ${model.overview.projectName}|,size='govuk-heading-xl'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=|${model.applicationId}: ${model.overview.projectName}|,size='govuk-heading-xl'" />
             </div>
             <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
                 <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Finance checks</h2>
@@ -26,8 +26,10 @@
 
         <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
 
-        <h3 class="govuk-heading-m">Finances summary</h3>
-        <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
+        <th:block th:unless="${model.summaries.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+            <h3 class="govuk-heading-m">Finances summary</h3>
+            <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
+        </th:block>
 
         <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>
 

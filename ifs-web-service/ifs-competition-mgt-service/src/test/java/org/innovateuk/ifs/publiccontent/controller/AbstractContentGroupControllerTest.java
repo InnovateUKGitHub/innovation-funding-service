@@ -56,7 +56,7 @@ public class AbstractContentGroupControllerTest extends BaseControllerMockMVCTes
         TestPublicContentViewModel expectedViewModel = new TestPublicContentViewModel();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId())).thenReturn(true);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
         when(publicContentService.uploadFile(competition.getId(), publicContentSectionType,
                 expectedFormToSave.getContentGroups())).thenReturn(serviceSuccess());
         when(publicContentService.getCompetitionById(competition.getId())).thenReturn(publicContent);
@@ -87,7 +87,7 @@ public class AbstractContentGroupControllerTest extends BaseControllerMockMVCTes
         TestPublicContentViewModel expectedViewModel = new TestPublicContentViewModel();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId())).thenReturn(true);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
         when(publicContentService.removeFile(expectedFormToSave)).thenReturn(serviceSuccess());
         when(publicContentService.getCompetitionById(competition.getId())).thenReturn(publicContent);
         when(formSaver.save(expectedFormToSave, publicContent)).thenReturn(serviceSuccess());

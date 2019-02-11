@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -89,7 +90,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     private Set<CompetitionResearchCategoryLink> researchCategories = new HashSet<>();
 
     @OneToMany(mappedBy = "competition", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private List<ProjectDocument> projectDocuments = new ArrayList<>();
+    private List<CompetitionDocument> competitionDocuments = new ArrayList<>();
 
     private String activityCode;
 
@@ -111,8 +112,6 @@ public class Competition extends AuditableEntity implements ProcessActivity {
             inverseJoinColumns = @JoinColumn(name = "organisation_type_id", referencedColumnName = "id"))
     private List<OrganisationType> leadApplicantTypes;
 
-    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this field to support ETL's which rely on it")
-    private Boolean fullApplicationFinance = true;
     private Boolean setupComplete;
 
     private Boolean useResubmissionQuestion = true;
@@ -136,8 +135,21 @@ public class Competition extends AuditableEntity implements ProcessActivity {
 
     private Boolean stateAid;
 
+    private Boolean includeYourOrganisationSection;
+
+    private Boolean includeJesForm;
+
     @Enumerated(EnumType.STRING)
     private ApplicationFinanceType applicationFinanceType;
+
+    private Boolean includeProjectGrowthTable;
+
+    @Enumerated(EnumType.STRING)
+    private CompetitionCompletionStage completionStage;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "funding_type")
+    private FundingType fundingType;
 
     public Competition() {
         setupComplete = false;
@@ -181,6 +193,9 @@ public class Competition extends AuditableEntity implements ProcessActivity {
                 return CompetitionStatus.FUNDERS_PANEL;
             } else if (!isMilestoneReached(MilestoneType.FEEDBACK_RELEASED)) {
                 return ASSESSOR_FEEDBACK;
+            } else if (isMilestoneReached(MilestoneType.FEEDBACK_RELEASED) &&
+                    CompetitionCompletionStage.RELEASE_FEEDBACK.equals(getCompletionStage())) {
+                return PREVIOUS;
             } else {
                 return PROJECT_SETUP;
             }
@@ -517,12 +532,12 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         researchCategories.forEach(this::addResearchCategory);
     }
 
-    public List<ProjectDocument> getProjectDocuments() {
-        return projectDocuments;
+    public List<CompetitionDocument> getCompetitionDocuments() {
+        return competitionDocuments;
     }
 
-    public void setProjectDocuments(List<ProjectDocument> projectDocuments) {
-        this.projectDocuments = projectDocuments;
+    public void setCompetitionDocuments(List<CompetitionDocument> competitionDocuments) {
+        this.competitionDocuments = competitionDocuments;
     }
 
     public List<Milestone> getMilestones() {
@@ -600,16 +615,6 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         return "";
     }
 
-    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this field to support ETL's which rely on it")
-    public Boolean isFullApplicationFinance() {
-        return fullApplicationFinance;
-    }
-
-    @ZeroDowntime(reference = "IFS-4280", description = "Retaining this field to support ETL's which rely on it")
-    public void setFullApplicationFinance(Boolean fullApplicationFinance) {
-        this.fullApplicationFinance = fullApplicationFinance;
-    }
-
     public Integer getAssessorCount() {
         return assessorCount;
     }
@@ -653,6 +658,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
                     CompetitionStatus.CLOSED);
         }
         setMilestoneDate(MilestoneType.ASSESSORS_NOTIFIED, date);
+    }
+
+    public boolean isNonFinanceType() {
+        return sections.stream().noneMatch(section -> SectionType.FINANCE.equals(section.getType()));
     }
 
     public void releaseFeedback(ZonedDateTime date) {
@@ -751,6 +760,14 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         this.stateAid = stateAid;
     }
 
+    public Boolean getIncludeYourOrganisationSection() {
+        return includeYourOrganisationSection;
+    }
+
+    public void setIncludeYourOrganisationSection(final Boolean includeYourOrganisationSection) {
+        this.includeYourOrganisationSection = includeYourOrganisationSection;
+    }
+
     public ApplicationFinanceType getApplicationFinanceType() {
         return applicationFinanceType;
     }
@@ -758,5 +775,36 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     public void setApplicationFinanceType(final ApplicationFinanceType applicationFinanceType) {
         this.applicationFinanceType = applicationFinanceType;
     }
-}
 
+    public Boolean getIncludeJesForm() {
+        return includeJesForm;
+    }
+
+    public void setIncludeJesForm(Boolean includeJesForm) {
+        this.includeJesForm = includeJesForm;
+    }
+
+    public Boolean getIncludeProjectGrowthTable() {
+        return includeProjectGrowthTable;
+    }
+
+    public void setIncludeProjectGrowthTable(final Boolean includeProjectGrowthTable) {
+        this.includeProjectGrowthTable = includeProjectGrowthTable;
+    }
+
+    public CompetitionCompletionStage getCompletionStage() {
+        return completionStage;
+    }
+
+    public void setCompletionStage(CompetitionCompletionStage completionStage) {
+        this.completionStage = completionStage;
+    }
+
+    public FundingType getFundingType() {
+        return this.fundingType;
+    }
+
+    public void setFundingType(FundingType fundingType) {
+        this.fundingType = fundingType;
+    }
+}

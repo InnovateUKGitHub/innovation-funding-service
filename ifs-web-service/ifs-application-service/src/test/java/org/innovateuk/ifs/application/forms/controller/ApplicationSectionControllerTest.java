@@ -19,12 +19,14 @@ import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopul
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
-import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
-import org.innovateuk.ifs.form.resource.*;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
@@ -34,6 +36,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
@@ -44,10 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
@@ -60,10 +60,10 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -97,11 +97,9 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     @Mock
     private OverheadFileSaver overheadFileSaver;
 
-    @Mock
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
-
     @Spy
     @InjectMocks
+    @SuppressWarnings("unused")
     private ApplicationRedirectionService applicationRedirectionService;
 
     @Mock
@@ -113,11 +111,19 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
+    @Mock
+    private FinanceUtil financeUtil;
+
+    @Mock
+    @SuppressWarnings("unused")
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
+
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
     private ApplicantSectionResourceBuilder sectionBuilder;
+    private ApplicantResource applicantResource;
 
     @Override
     protected ApplicationSectionController supplyControllerUnderTest() {
@@ -125,9 +131,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Before
-    @Override
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -146,11 +150,11 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(organisations.get(0)));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
         when(overheadFileSaver.isOverheadFileRequest(any(HttpServletRequest.class))).thenCallRealMethod();
-        when(financeViewHandlerProvider.getFinanceFormHandler(anyLong())).thenReturn(defaultFinanceFormHandler);
+        when(financeViewHandlerProvider.getFinanceFormHandler(any(), anyLong())).thenReturn(defaultFinanceFormHandler);
 
-        ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
-        when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
-        sectionBuilder = newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
+        applicantResource = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
+        when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicantResource).withApplicants(asList(applicantResource)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
+        sectionBuilder = newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicantResource).withApplicants(asList(applicantResource)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
         when(applicantRestService.getSection(anyLong(), anyLong(), anyLong())).thenReturn(sectionBuilder.build());
         when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
         when(formInputViewModelGenerator.fromSection(any(), any(), any(), any())).thenReturn(Collections.emptyList());
@@ -172,7 +176,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testApplicationFormWithOpenSection() throws Exception {
+    public void applicationFormWithOpenSection() throws Exception {
 
         Long currentSectionId = sectionResources.get(2).getId();
 
@@ -185,11 +189,11 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
         assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
     }
 
     @Test
-    public void testApplicationFormWithOpenSectionWhenTraversedFromSummaryPage() throws Exception {
+    public void applicationFormWithOpenSection_whenTraversedFromSummaryPage() throws Exception {
         Long currentSectionId = sectionResources.get(2).getId();
 
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
@@ -197,11 +201,11 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         mockMvc.perform(get("/application/1/form/section/" + currentSectionId).header("referer", "/application/1/summary"))
                 .andExpect(view().name("application-form"));
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
     }
 
     @Test
-    public void testApplicationFormWithOpenFinanceSection() throws Exception {
+    public void applicationFormWithOpenSection_financeSection() throws Exception {
         Long currentSectionId = sectionResources.get(6).getId();
         MvcResult result = mockMvc.perform(get("/application/1/form/section/" + currentSectionId))
                 .andExpect(view().name("application-form"))
@@ -210,20 +214,11 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
         assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
     }
 
     @Test
-    public void testAddAnother() throws Exception {
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param("add_cost", String.valueOf(questionId)))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));
-    }
-
-    @Test
-    public void testApplicationFormSubmit() throws Exception {
+    public void applicationFormSubmit() throws Exception {
 
         LocalDate futureDate = LocalDate.now().plusDays(1);
 
@@ -242,7 +237,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testNotRequestingFunding() throws Exception {
+    public void applicationFormSubmit_notRequestingFunding() throws Exception {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(NOT_REQUESTING_FUNDING, "1")
@@ -252,7 +247,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testRequestingFunding() throws Exception {
+    public void applicationFormSubmit_requestingFunding() throws Exception {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(REQUESTING_FUNDING, "1")
@@ -262,93 +257,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testSubmitFinanceSubSectionWithRedirectToYourFinances() throws Exception {
-        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.FUNDING_FINANCES).build()).build());
-        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
-        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(TERMS_AGREED_KEY, "1")
-                        .param("-otherPublicFunding", String.valueOf(true))
-        ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
-                .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
-    }
-
-    @Test
-    public void testApplicationFinanceMarkAsCompleteFailWithTerms() throws Exception {
-        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.FUNDING_FINANCES).build()).build());
-        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.YOUR_FINANCE).build();
-        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
-        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
-
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param("-otherPublicFunding", String.valueOf(true))
-        ).andExpect(status().isOk())
-                .andExpect(view().name("application-form"))
-                .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrors("form", TERMS_AGREED_KEY));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
-    }
-
-    @Test
-    public void testApplicationFinanceMarkAsCompleteFailWithoutOtherPublicFunding() throws Exception {
-        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.FUNDING_FINANCES).build()).build());
-        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.YOUR_FINANCE).build();
-        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
-        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
-
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(TERMS_AGREED_KEY, "1")
-        ).andExpect(status().isOk())
-                .andExpect(view().name("application-form"))
-                .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrors("form", "formInput[cost-otherPublicFunding]"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
-    }
-
-    @Test
-    public void testApplicationFinanceMarkAsCompleteFailWithoutStateAid() throws Exception {
-        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build()).build());
-
-        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
-
-        when(organisationRestService.getByUserAndApplicationId(anyLong(), anyLong())).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()));
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-        ).andExpect(status().isOk())
-                .andExpect(view().name("application-form"))
-                .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrors("form", STATE_AID_AGREED_KEY));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
-    }
-
-    @Test
-    public void testApplicationFinanceMarkAsCompleteSuccessWithoutStateAidButWithTermsForAcademic() throws Exception {
-        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build()).build());
-        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
-
-        when(organisationRestService.getByUserAndApplicationId(anyLong(), anyLong())).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build()));
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(TERMS_AGREED_KEY, String.valueOf("1"))
-        ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"));
-    }
-
-    @Test
-    public void testApplicationYourOrganisationMarkAsCompleteFailWithoutOrganisationSize() throws Exception {
+    public void applicationFormSubmit_yourOrganisationMarkAsCompleteFailsWithoutOrganisationSize() throws Exception {
         when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build()).build());
         when(organisationRestService.getByUserAndApplicationId(anyLong(), anyLong())).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()));
         mockMvc.perform(
@@ -357,11 +266,23 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
     }
 
     @Test
-    public void testApplicationFormSubmitMarkSectionInComplete() throws Exception {
+    public void applicationFormSubmit_projectLocation() throws Exception {
+        String projectLocationPostcode = "123";
+        when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.PROJECT_LOCATION).build()).build());
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param("financePosition-projectLocation", projectLocationPostcode)
+                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"));
+    }
+
+    @Test
+    public void applicationFormSubmit_markSectionInComplete() throws Exception {
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
@@ -374,7 +295,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testApplicationFormSubmitMarkAsComplete() throws Exception {
+    public void applicationFormSubmit_markAsComplete() throws Exception {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param(MARK_AS_COMPLETE, "12")
@@ -384,16 +305,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testAcademicFinanceProjectCostsQuestionSubmitAlsoMarksOrganisationFinanceAndYourFundingAsNotRequired() throws Exception {
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(TERMS_AGREED_KEY, "1")
-        ).andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void testApplicationFormSubmitMarkAsIncomplete() throws Exception {
+    public void applicationFormSubmit_markAsIncomplete() throws Exception {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param(MARK_AS_INCOMPLETE, "3")
@@ -403,7 +315,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testApplicationFormSubmitGivesNoValidationErrorsIfNoQuestionIsEmptyOnSectionSubmit() throws Exception {
+    public void applicationFormSubmit_givesNoValidationErrorsIfNoQuestionIsEmptyOnSectionSubmit() throws Exception {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "Question 1 Response")
@@ -414,7 +326,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
 
     // See INFUND-1222 - not checking empty values on save now (only on mark as complete).
     @Test
-    public void testApplicationFormSubmitGivesNoValidationErrorsIfQuestionIsEmptyOnSectionSubmit() throws Exception {
+    public void applicationFormSubmit_givesNoValidationErrorsIfQuestionIsEmptyOnSectionSubmit() throws Exception {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
@@ -424,7 +336,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testApplicationFormSubmitNotAllowedMarkAsComplete() throws Exception {
+    public void applicationFormSubmit_notAllowedMarkAsComplete() throws Exception {
         // Question should not be marked as complete, since the input is not valid.
 
         when(applicationSaver.saveApplicationForm(any(ApplicationResource.class), anyLong(), any(ApplicationForm.class), anyLong(), anyLong(), any(HttpServletRequest.class), any(HttpServletResponse.class), anyBoolean()))
@@ -438,11 +350,11 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().hasErrors());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
     }
 
     @Test
-    public void testApplicationFormSubmitAssignQuestion() throws Exception {
+    public void applicationFormSubmit_assignQuestion() throws Exception {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "Question 1 Response")
@@ -456,19 +368,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testDeleteCost() throws Exception {
-        String sectionId = "1";
-        Long costId = 1L;
-
-        mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param("remove_cost", String.valueOf(costId)))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));
-    }
-
-    @Test
-    public void testRedirectToSectionUnique() throws Exception {
+    public void redirectToSection_unique() throws Exception {
         SectionResource financeSection = newSectionResource().withType(SectionType.FINANCE).build();
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.FINANCE))
                 .thenReturn(asList(financeSection));
@@ -481,7 +381,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testRedirectToSectionNotUnique() throws Exception {
+    public void redirectToSection_notUnique() throws Exception {
         SectionResource financeSection = newSectionResource().withType(SectionType.FINANCE).build();
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.FINANCE))
                 .thenReturn(asList(financeSection, newSectionResource().build()));
@@ -494,7 +394,7 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testRedirectToSectionMissing() throws Exception {
+    public void redirectToSection_missing() throws Exception {
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.FINANCE))
                 .thenReturn(asList());
 
@@ -505,33 +405,15 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testOverheadFile_overheadFileSaverIsCalledOnFormSubmit() throws Exception {
+    public void applicationFormSubmit_overheadFileSaverIsCalledOnFormSubmit() throws Exception {
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(TERMS_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection());
     }
 
     @Test
-    public void testOverheadFile_errorsAreNotShownOnOverheadFileRequest() throws Exception {
-        mockMvc.perform(
-                fileUpload("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
-        ).andExpect(status().is2xxSuccessful())
-                .andExpect(model().hasNoErrors());
-    }
-
-    @Test
-    public void testOverheadFile_pageIsNotRedirectedOnOverheadFileUploadRequest() throws Exception {
-        mockMvc.perform(
-                fileUpload("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
-                        .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
-        ).andExpect(status().is2xxSuccessful());
-    }
-
-    @Test
-    public void testApplicationFormWithOpenSectionForApplicant() throws Exception {
+    public void applicationFormWithOpenSectionForApplicant() throws Exception {
 
         Long currentSectionId = sectionResources.get(2).getId();
         ApplicationResource application = newApplicationResource().build();
@@ -551,6 +433,30 @@ public class ApplicationSectionControllerTest extends AbstractApplicationMockMVC
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
         assertEquals(YourFinancesSectionViewModel.class, viewModelResult.getClass());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
+    }
+
+    @Test
+    public void applicationFormWithOpenSectionForInternal() throws Exception {
+
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
+
+        Long currentSectionId = sectionResources.get(7).getId();
+        ApplicationResource application = newApplicationResource().build();
+        ProcessRoleResource applicantProcessRole = newProcessRoleResource().withOrganisation(2L).withRole(Role.APPLICANT).build();
+        ProcessRoleResource assessorProcessRole = newProcessRoleResource().withRole(Role.ASSESSOR).build();
+        ProcessRoleResource collabProcessRole = newProcessRoleResource().withOrganisation(2L).withRole(Role.COLLABORATOR).build();
+
+        when(sectionService.getById(anyLong())).thenReturn(sectionResources.get(7));
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(new ArrayList<ProcessRoleResource>(asList(applicantProcessRole, assessorProcessRole, collabProcessRole))));
+        when(applicantRestService.getSection(applicantProcessRole.getUser(), application.getId(), currentSectionId)).thenReturn(sectionBuilder.build());
+        when(financeUtil.isUsingJesFinances(any(CompetitionResource.class), anyLong())).thenReturn(false);
+
+        mockMvc.perform(get("/application/{applicationId}/form/section/{sectionId}/{applicantOrganisationId}", application.getId(), currentSectionId, applicantProcessRole.getOrganisationId()))
+                .andExpect(status().is3xxRedirection());
+
+        verify(sectionService).getById(anyLong());
+        verify(userRestService).findProcessRole(application.getId());
+        verify(applicantRestService).getSection(applicantProcessRole.getUser(), application.getId(), currentSectionId);
     }
 }

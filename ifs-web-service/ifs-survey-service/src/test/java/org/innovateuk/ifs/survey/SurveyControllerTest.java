@@ -2,29 +2,30 @@ package org.innovateuk.ifs.survey;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.survey.controller.SurveyController;
-import org.junit.Before;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Spy;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyController> {
 
     @Mock
     private SurveyRestService surveyRestService;
 
+    @Spy
+    @SuppressWarnings("unused")
+    private NavigationUtils navigationUtils;
+
     @Override
     protected SurveyController supplyControllerUnderTest() {
         return new SurveyController();
-    }
-
-    @Before
-    public void setUp() {
-        super.setUp();
     }
 
     @Test
@@ -78,6 +79,7 @@ public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyContro
         mockMvc.perform(post("/{competitionId}/feedback", competitionId)
                 .param("comments", "comments")
                 .param("satisfaction", "1"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:http://localhost:80"));
     }
 }

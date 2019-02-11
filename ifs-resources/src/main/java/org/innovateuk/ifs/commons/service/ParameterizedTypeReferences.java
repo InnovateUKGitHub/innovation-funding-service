@@ -165,8 +165,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<InviteOrganisationResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<ProjectInviteResource>> projectInviteResourceListType() {
-        return new ParameterizedTypeReference<List<ProjectInviteResource>>() {};
+    public static ParameterizedTypeReference<List<ProjectUserInviteResource>> projectInviteResourceListType() {
+        return new ParameterizedTypeReference<List<ProjectUserInviteResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ExternalInviteResource>> externalInviteResourceListType() {
@@ -276,10 +276,9 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
     }
-
-
-    public static ParameterizedTypeReference<List<ProjectDocumentResource>> projectDocumentResourceListType() {
-        return new ParameterizedTypeReference<List<ProjectDocumentResource>>() {};
+    
+    public static ParameterizedTypeReference<List<CompetitionDocumentResource>> competitionDocumentResourceListType() {
+        return new ParameterizedTypeReference<List<CompetitionDocumentResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<SpendProfileStatusResource>> spendProfileStatusResourceListType() {

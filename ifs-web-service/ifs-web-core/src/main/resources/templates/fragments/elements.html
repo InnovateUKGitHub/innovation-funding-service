@@ -35,7 +35,8 @@
                 <li th:unless="${hideDashboardLink}"
                     class="govuk-header__navigation-item"
                     th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, userDashboardLink)} ? 'govuk-header__navigation-item--active'">
-                    <a th:href="${userDashboardLink}"
+                    <a id="dashboard-navigation-link"
+                       th:href="${userDashboardLink}"
                        class="govuk-header__link">Dashboard</a>
                 </li>
                 <li th:unless="${hideDashboardLink} or ${#strings.isEmpty(userProfileLink)}"
@@ -157,11 +158,40 @@
                            data-autosave-disabled />
                     <label for="agree-terms-page"
                            class="govuk-label govuk-checkboxes__label">
-                        As a member of this consortium I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${competitionId})}" class="govuk-link">grant terms and conditions</a> set out by Innovate UK.
+                        As a member of this consortium I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${competitionId})}" class="govuk-link">competition terms and conditions</a> set out by Innovate UK.
                     </label>
                 </div>
             </div>
 
+        </fieldset>
+    </div>
+</th:block>
+
+<!--  ========================== Element: Agree to eligible for state aid =============== -->
+<th:block th:fragment="application-agree-eligible-for-state-aid">
+    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('stateAidAgreed')} ? 'govuk-form-group--error'">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
+            </legend>
+            <th:block th:if="${#fields.hasErrors('stateAidAgreed')}">
+                <span class="govuk-error-message"  th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}" />
+            </th:block>
+            <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input id="agree-state-aid"
+                           class="govuk-checkboxes__input"
+                           th:field="${form.stateAidAgreed}"
+                           type="checkbox"
+                           value="yes"
+                           data-switches-button-status="#mark-all-as-complete"
+                           data-autosave-disabled />
+                    <label for="agree-state-aid"
+                           class="govuk-label govuk-checkboxes__label">
+                        I confirm that by submitting my application my organisation will be <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid" target="_blank" class="govuk-link">eligible for state aid</a> (opens in a new window) within 90 days of any offer being made.
+                    </label>
+                </div>
+            </div>
         </fieldset>
     </div>
 </th:block>
@@ -210,7 +240,7 @@
 	        <p class="govuk-body">
                 <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
                 <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
-                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" />
+                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}" />
             </p>
             <p class="govuk-body" th:if="${currentProject}">
                 <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}" class="govuk-link">Start to plan your project</a>
@@ -220,7 +250,7 @@
             <h2 class="govuk-heading-s govuk-!-margin-0">Your application has not been successful in this competition.</h2>
             <p class="govuk-body">
                 <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
-                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')+'.'}" />
+                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}" />
             </p>
         </div>
     </th:block>

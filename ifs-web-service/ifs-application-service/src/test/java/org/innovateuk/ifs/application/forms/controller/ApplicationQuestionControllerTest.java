@@ -99,8 +99,10 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
 
     @Mock
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
+
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
+
     @Mock
     private YourFinancesSectionPopulator yourFinancesSectionPopulator;
 
@@ -137,11 +139,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Before
-    @Override
-    public void setUp() {
-
-        // Process mock annotations
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -161,7 +159,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
         when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(organisations.get(0)));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
-        when(financeViewHandlerProvider.getFinanceFormHandler(anyLong())).thenReturn(defaultFinanceFormHandler);
+        when(financeViewHandlerProvider.getFinanceFormHandler(any(), anyLong())).thenReturn(defaultFinanceFormHandler);
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
@@ -183,7 +181,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void testQuestionPage() throws Exception {
+    public void questionPage() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
@@ -207,7 +205,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void testQuestionSubmit() throws Exception {
+    public void questionSubmit() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -220,7 +218,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void testQuestionSubmitEdit() throws Exception {
+    public void questionSubmitEdit() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -229,11 +227,11 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
                         .param(EDIT_QUESTION, "1_2")
         )
                 .andExpect(view().name("application-form"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class), any(Optional.class), any(Optional.class), any(Boolean.class));
     }
 
     @Test
-    public void testQuestionSubmitAssign() throws Exception {
+    public void questionSubmitAssign() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -246,7 +244,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void testQuestionSubmitMarkAsCompleteQuestion() throws Exception {
+    public void questionSubmitMarkAsCompleteQuestion() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -257,7 +255,7 @@ public class ApplicationQuestionControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void testQuestionSubmitSaveElement() throws Exception {
+    public void questionSubmitSaveElement() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);

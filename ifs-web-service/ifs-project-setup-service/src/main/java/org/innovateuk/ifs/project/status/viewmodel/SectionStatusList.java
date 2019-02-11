@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.viewmodel;
 
 import org.innovateuk.ifs.sections.SectionStatus;
 
+import static org.innovateuk.ifs.sections.SectionStatus.EMPTY;
 import static org.innovateuk.ifs.sections.SectionStatus.TICK;
 
 /**
@@ -14,16 +15,18 @@ public class SectionStatusList {
     private SectionStatus bankDetailsStatus;
     private SectionStatus financeChecksStatus;
     private SectionStatus spendProfileStatus;
-    private SectionStatus otherDocumentsStatus;
+    private SectionStatus documentsStatus;
     private SectionStatus grantOfferLetterStatus;
 
-    public SectionStatusList(SectionStatus projectDetailsStatus, SectionStatus monitoringOfficerStatus, SectionStatus bankDetailsStatus, SectionStatus financeChecksStatus, SectionStatus spendProfileStatus, SectionStatus otherDocumentsStatus, SectionStatus grantOfferLetterStatus) {
+    public SectionStatusList(SectionStatus projectDetailsStatus, SectionStatus monitoringOfficerStatus, SectionStatus bankDetailsStatus,
+                             SectionStatus financeChecksStatus, SectionStatus spendProfileStatus,
+                             SectionStatus documentsStatus, SectionStatus grantOfferLetterStatus) {
         this.projectDetailsStatus = projectDetailsStatus;
         this.monitoringOfficerStatus = monitoringOfficerStatus;
         this.bankDetailsStatus = bankDetailsStatus;
         this.financeChecksStatus = financeChecksStatus;
         this.spendProfileStatus = spendProfileStatus;
-        this.otherDocumentsStatus = otherDocumentsStatus;
+        this.documentsStatus = documentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
     }
 
@@ -47,8 +50,8 @@ public class SectionStatusList {
         return spendProfileStatus;
     }
 
-    public SectionStatus getOtherDocumentsStatus() {
-        return otherDocumentsStatus;
+    public SectionStatus getDocumentsStatus() {
+        return documentsStatus;
     }
 
     public SectionStatus getGrantOfferLetterStatus() {
@@ -61,5 +64,9 @@ public class SectionStatusList {
                 && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
                 && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
                 && grantOfferLetterStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus());
+    }
+
+    public static SectionStatusList offline() {
+        return new SectionStatusList(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
     }
 }

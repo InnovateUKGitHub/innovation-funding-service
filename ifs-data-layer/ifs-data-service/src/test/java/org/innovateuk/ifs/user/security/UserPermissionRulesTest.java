@@ -3,7 +3,11 @@ package org.innovateuk.ifs.user.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.competition.repository.StakeholderRepository;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
@@ -22,6 +26,8 @@ import java.util.function.Function;
 import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
@@ -34,9 +40,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
@@ -51,6 +55,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private StakeholderRepository stakeholderRepositoryMock;
 
     @Test
     public void anyoneCanViewThemselves() {
@@ -75,6 +82,34 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                     assertFalse(rules.internalUsersCanViewEveryone(otherUser, user));
                 }
             });
+        });
+    }
+
+    @Test
+    public void stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo() {
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        Stakeholder stakeholder = newStakeholder().withCompetition(competition).build();
+        UserResource stakeholderResource = newUserResource().withRoleGlobal(STAKEHOLDER).build();
+        UserResource userResource = newUserResource().withRoleGlobal(LEADAPPLICANT).build();
+        User user = newUser().withId(userResource.getId()).build();
+        List<ProcessRole> processRoles = newProcessRole()
+                .withUser(user)
+                .build(2);
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withProject(project)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build(2);
+
+        when(processRoleRepositoryMock.findByUserId(userResource.getId())).thenReturn(processRoles);
+        when(projectUserRepositoryMock.findByUserId(userResource.getId())).thenReturn(projectUsers);
+        when(stakeholderRepositoryMock.findByStakeholderId(stakeholderResource.getId())).thenReturn(asList(stakeholder));
+
+        assertTrue(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, stakeholderResource));
+
+        allInternalUsers.forEach(internalUser -> {
+            assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser));
         });
     }
 
@@ -558,7 +593,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void allUsersWithProjectRolesExceptMonitoringOfficersCanAccessProcessRolesWithinConsortium(){
+    public void allUsersWithProjectRolesExceptMonitoringOfficersCanAccessProcessRolesWithinConsortium() {
         final Long userId = 11L;
         final Long applicationId = 1L;
 
@@ -583,7 +618,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void allUsersWithProjectRolesCanNotAccessProcessRolesWhenNotInConsortium(){
+    public void allUsersWithProjectRolesCanNotAccessProcessRolesWhenNotInConsortium() {
         final Long userId = 11L;
         final Long applicationId = 1L;
 
@@ -617,7 +652,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void ifsAdminCanViewAnyUsersProfile(){
+    public void ifsAdminCanViewAnyUsersProfile() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(ifsAdminUser())) {
                 assertTrue(rules.ifsAdminCanViewAnyUsersProfile(newUserProfileResource().build(), user));
@@ -628,7 +663,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void ifsAdminCanEditInternalUser(){
+    public void ifsAdminCanEditInternalUser() {
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
@@ -642,7 +677,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void ifsAdminCanDeactivateUser(){
+    public void ifsAdminCanDeactivateUser() {
 
         UserResource userToDeactivate = UserResourceBuilder.newUserResource().build();
 
@@ -656,7 +691,21 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void ifsAdminCanReactivateUser(){
+    public void systemMaintenanceUserCanDeactivateUser() {
+
+        UserResource userToDeactivate = UserResourceBuilder.newUserResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(systemMaintenanceUser())) {
+                assertTrue(rules.systemMaintenanceUserCanDeactivateUsers(userToDeactivate, user));
+            } else {
+                assertFalse(rules.systemMaintenanceUserCanDeactivateUsers(userToDeactivate, user));
+            }
+        });
+    }
+
+    @Test
+    public void ifsAdminCanReactivateUser() {
 
         UserResource userToReactivate = UserResourceBuilder.newUserResource().build();
 
@@ -670,7 +719,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void internalUsersCanAccessAllUserOrganisations(){
+    public void internalUsersCanAccessAllUserOrganisations() {
 
         UserOrganisationResource userOrganisationResource = UserOrganisationResourceBuilder.newUserOrganisationResource().build();
 
@@ -679,6 +728,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 assertTrue(rules.internalUsersCanViewUserOrganisation(userOrganisationResource, user));
             } else {
                 assertFalse(rules.internalUsersCanViewUserOrganisation(userOrganisationResource, user));
+            }
+        });
+    }
+
+    @Test
+    public void systemMaintenanceUserCanUpdateExternalUserEmailAddress() {
+
+        UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(systemMaintenanceUser())) {
+                assertTrue(rules.systemMaintenanceUserCanUpdateUsersEmailAddress(userResource, user));
+            } else {
+                assertFalse(rules.systemMaintenanceUserCanUpdateUsersEmailAddress(userResource, user));
             }
         });
     }
@@ -707,6 +770,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         assertTrue(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
 
     }
+
     @Override
     protected UserPermissionRules supplyPermissionRulesUnderTest() {
         return new UserPermissionRules();

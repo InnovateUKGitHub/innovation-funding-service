@@ -19,7 +19,7 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       Custom Suite Setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
@@ -28,27 +28,26 @@ User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
     [Tags]
     When the user navigates to the page              ${server}/assessment/${WITHDRAWN_ASSESSMENT}/assignment
-    Then the user should see the text in the page    Invitation withdrawn
-    [Teardown]    the user clicks the button/link    jQuery=#navigation a:contains(Dashboard)
+    Then the user should see the element             jQuery = h1:contains("Invitation withdrawn")
+    [Teardown]    the user clicks the button/link    jQuery = #navigation a:contains(Dashboard)
 
 Competition link should navigate to the applications
     [Documentation]    INFUND-3716
-    [Tags]    HappyPath
-    [Setup]
-    When The user clicks the button/link   link=${IN_ASSESSMENT_COMPETITION_NAME}
-    Then the user should see the element   jQuery=h2:contains("Applications for assessment")
+    [Tags]
+    When The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Then the user should see the element   jQuery = h2:contains("Applications for assessment")
 
 Calculation of the applications for assessment should be correct
     Then the total calculation in dashboard should be correct    Applications for assessment    //div/form/div/ul/li
 
 Details of the competition are visible
     [Documentation]    INFUND-3723
-    [Tags]    HappyPath
-    Then the user should see the element   jQuery=dt:contains("Competition") + dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
-    And the user should see the element    jQuery=dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
-    And the user should see the element    jQuery=dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
+    [Tags]
+    Then the user should see the element   jQuery = dt:contains("Competition") + dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    And the user should see the element    jQuery = dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
+    And the user should see the element    jQuery = dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
     ${date} =  request the date from the database
-    And the user should see the element    jQuery=dt:contains("Submit applications deadline:") + dd:contains("${date}")
+    And the user should see the element    jQuery = dt:contains("Submit applications deadline:") + dd:contains("${date}")
 
 
 User can view the competition brief
@@ -57,10 +56,10 @@ User can view the competition brief
     When The user opens the link in new window           View competition brief
     Then the user should get a competition brief window
     And the user should not see an error in the page
-    And the user should see the text in the page         ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user should see the element                  jQuery=.govuk-list li:contains("Competition opens")
-    And the user should see the element                  jQuery=.govuk-list li:contains("Competition closes")
-    And the user should see the element                  jQuery=.govuk-button:contains("Start new application")
+    And the user should see the element                  jQuery = h1:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    And the user should see the element                  jQuery = .govuk-list li:contains("Competition opens")
+    And the user should see the element                  jQuery = .govuk-list li:contains("Competition closes")
+    And the user should see the element                  jQuery = .govuk-button:contains("Start new application")
     [Teardown]    the user closes the competition brief
 
 Applications should have correct status and order
@@ -71,14 +70,14 @@ Accept an application for assessment
     [Documentation]    INFUND-1180
     ...
     ...    INFUND-4128
-    [Tags]    HappyPath
-    Given the user should see the element                      jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
-    When The user clicks the button/link                      jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
-    And the user should see the element                       jQuery=h1:contains("Accept application")
+    [Tags]
+    Given the user should see the element                     jQuery = .in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
+    When The user clicks the button/link                      jQuery = .in-progress li:nth-child(1) a:contains("Accept or reject")
+    And the user should see the element                       jQuery = h1:contains("Accept application")
     And the user selects the radio button                     assessmentAccept  true
-    And The user clicks the button/link                       jQuery=button:contains("Confirm")
+    And The user clicks the button/link                       jQuery = button:contains("Confirm")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And the user should see the element                       jQuery=.in-progress li:nth-child(6):contains("Intelligent water system"):contains("Accepted")
+    And the user should see the element                       jQuery = .in-progress li:nth-child(6):contains("Intelligent water system"):contains("Accepted")
 
 Reject an application for assessment
     [Documentation]    INFUND-1180
@@ -88,80 +87,84 @@ Reject an application for assessment
     ...    INFUND-6358
     [Tags]
     [Setup]    Log in as a different user                &{assessor_credentials}
-    Given The user clicks the button/link                link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user should see the element                  jQuery=.in-progress li:nth-child(1):contains("Park living"):contains("Pending")
-    When The user clicks the button/link                 jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
-    And the user should see the element                  jQuery=h1:contains("Accept application")
-    And the user should not see the element              id=rejectComment
+    Given The user clicks the button/link                link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user should see the element                  jQuery = .in-progress li:nth-child(1):contains("Park living"):contains("Pending")
+    When The user clicks the button/link                 jQuery = .in-progress li:nth-child(1) a:contains("Accept or reject")
+    And the user should see the element                  jQuery = h1:contains("Accept application")
+    And the user should not see the element              id = rejectComment
     And the user selects the radio button                assessmentAccept  false
-    And The user clicks the button/link                  jQuery=button:contains("Confirm")
-    Then the user should see an error                    Please enter a reason.
+    And The user clicks the button/link                  jQuery = button:contains("Confirm")
+    Then the user should see a field and summary error   Please enter a reason.
     And the assessor fills all fields with valid inputs
-    And the user clicks the button/link                  jQuery=.govuk-button:contains("Confirm")
+    And the user clicks the button/link                  jQuery = .govuk-button:contains("Confirm")
     And the application for assessment should be removed
 
 Applications should not have a check-box when the status is Open
     [Documentation]    INFUND-3726
-    Then The user should not see the element    css=.assessment-submit-checkbox
+    Then The user should not see the element    css = .assessment-submit-checkbox
 
 Check the comp admin see the assessor has rejected the application
     [Documentation]  IFS-396
     [Tags]
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
-    Given the user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
-    And the user clicks the button/link    jQuery=a:contains("Manage applications")
-    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("View progress")
-    And the user should see the element    jQuery=h2:contains("Rejected (1)")
-    And the user should see the element    jQuery=.assessors-rejected td:contains("Not my area of expertise")
-    And the user should see the element    jQuery=.assessors-rejected td:contains("Unable to assess the application as i'm on holiday.")
+    Given the user clicks the button/link  link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery = a:contains("Manage assessments")
+    And the user clicks the button/link    jQuery = a:contains("Manage applications")
+    And the user clicks the button/link    jQuery = tr:nth-child(1) a:contains("View progress")
+    And the user should see the element    jQuery = h2:contains("Rejected (1)")
+    And the user should see the element    jQuery = .assessors-rejected td:contains("Not my area of expertise")
+    And the user should see the element    jQuery = .assessors-rejected td:contains("Unable to assess the application as i'm on holiday.")
 
 Comp admin can see the application is rejected on manage assessment page
     [Documentation]  IFS-396
     [Tags]
     [Setup]  the user navigates to the page  ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
-    Given the user clicks the button/link    link=Manage applications
-    When the user clicks the button/link     jQuery=td:contains("Park living") ~ td a:contains("View progress")
-    Then the user should see the element     jQuery=.assessors-rejected td:contains("Not my area of expertise")
-    And the user should see the element      jQuery=.assessors-rejected td:contains("Unable to assess the application as i'm on holiday.")
+    Given the user clicks the button/link    link = Manage applications
+    When the user clicks the button/link     jQuery = td:contains("Park living") ~ td a:contains("View progress")
+    Then the user should see the element     jQuery = .assessors-rejected td:contains("Not my area of expertise")
+    And the user should see the element      jQuery = .assessors-rejected td:contains("Unable to assess the application as i'm on holiday.")
 
 *** Keywords ***
 Custom Suite Setup
+   Connect to database  @{database}
    The user logs-in in new browser  &{assessor2_credentials}
-   ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=h1:contains("Sign in successful")
+   ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Select a dashboard")
    Run Keyword If  '${status}' == 'PASS'  Run keywords   the user selects the checkbox   selectedRole1
-   ...                              AND    the user clicks the button/link   css=.button[type="submit"]   #Continue
+   ...                              AND    the user clicks the button/link   css = .button[type = "submit"]   #Continue
 
 the assessor fills all fields with valid inputs
-    Select From List By Index                             id=rejectReasonValid    2
-    The user should not see the text in the page          Please enter a reason
-    the user enters multiple strings into a text field    id=rejectComment  a${SPACE}  102
-    The user should see an error                          Maximum word count exceeded. Please reduce your word count to 100.
-    The user enters text to a text field                  id=rejectComment    Unable to assess the application as i'm on holiday.
+    Select From List By Index                             id = rejectReasonValid    2
+    The user should not see the element                   jQuery = .govuk-error-message:contains("Please enter a reason")
+    the user enters multiple strings into a text field    id = rejectComment  a${SPACE}  102
+    the user should see a field and summary error         Maximum word count exceeded. Please reduce your word count to 100.
+    The user enters text to a text field                  id = rejectComment    Unable to assess the application as i'm on holiday.
 
 the application for assessment should be removed
-    The user should not see the element    link=Park living
+    The user should not see the element    link = Park living
 
 The order of the applications should be correct according to the status
-    element should contain    css=li:nth-child(1) .msg-deadline-waiting    Pending
-    element should contain    css=li:nth-child(2) .msg-deadline-waiting    Pending
-    element should contain    css=li:nth-child(3) .msg-deadline-waiting    Pending
-    element should contain    css=.progress-list li:nth-child(4) .msg-progress    Accepted
-    element should contain    css=.progress-list li:nth-child(5) .msg-progress    Accepted
-    element should contain    css=.progress-list li:nth-child(6) .msg-progress    Accepted
+    element should contain    css = li:nth-child(1) .msg-deadline-waiting    Pending
+    element should contain    css = li:nth-child(2) .msg-deadline-waiting    Pending
+    element should contain    css = li:nth-child(3) .msg-deadline-waiting    Pending
+    element should contain    css = .progress-list li:nth-child(4) .msg-progress    Accepted
+    element should contain    css = .progress-list li:nth-child(5) .msg-progress    Accepted
+    element should contain    css = .progress-list li:nth-child(6) .msg-progress    Accepted
 
 The user should get a competition brief window
-    Select Window   title=Competition Overview - Innovation Funding Service
+    Select Window   title = Competition Overview - Innovation Funding Service
 
 The user closes the competition brief
     Close Window
     Select Window
 
 request the date from the database
-    Connect to Database  @{database}
     log  ${IN_ASSESSMENT_COMPETITION}
-    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%e %M %Y') FROM `${database_name}`.`milestone` WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' AND type='ASSESSOR_DEADLINE';
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%e %M %Y') FROM `${database_name}`.`milestone` WHERE `competition_id` = '${IN_ASSESSMENT_COMPETITION}' AND type = 'ASSESSOR_DEADLINE';
     log  ${result}
     ${result} =  get from list  ${result}  0
     ${assessorDeadline} =  get from list  ${result}  0
     [Return]  ${assessorDeadline}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 
 import java.util.List;
@@ -66,12 +67,15 @@ public class ProjectStatusResourceBuilder extends BaseBuilder<ProjectStatusResou
         return withArray((monitoringOfficerStatus, psr) -> setField("monitoringOfficerStatus", monitoringOfficerStatus, psr), monitoringOfficerStatuses);
     }
 
-    public ProjectStatusResourceBuilder withOtherDocumentsStatus(ProjectActivityStates... otherDocumentsStatuses) {
-        return withArray((otherDocumentsStatus, psr) -> setField("otherDocumentsStatus", otherDocumentsStatus, psr), otherDocumentsStatuses);
+    public ProjectStatusResourceBuilder withDocumentsStatus(ProjectActivityStates... documentsStatuses) {
+        return withArray((documentsStatus, psr) -> setField("documentsStatus", documentsStatus, psr), documentsStatuses);
     }
 
     public ProjectStatusResourceBuilder withGrantOfferLetterStatus(ProjectActivityStates... grantOfferLetterStatuses) {
         return withArray((grantOfferLetterStatus, psr) -> setField("grantOfferLetterStatus", grantOfferLetterStatus, psr), grantOfferLetterStatuses);
     }
 
+    public ProjectStatusResourceBuilder withProjectState(ProjectState... projectState) {
+        return withArraySetFieldByReflection("projectState", projectState);
+    }
 }

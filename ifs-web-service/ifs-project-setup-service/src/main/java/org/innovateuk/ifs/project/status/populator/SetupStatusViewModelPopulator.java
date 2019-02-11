@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 
 /**
@@ -53,7 +55,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private CompetitionRestService competitionRestService;
-
+    
     public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId,
                                                                      UserResource loggedInUser,
                                                                      String originQuery) {
@@ -74,6 +76,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         return awaitAll(basicDetailsRequest, teamStatusRequest, monitoringOfficerRequest, isProjectManagerRequest, partnerOrganisationsRequest).thenApply(futureResults -> {
 
             BasicDetails basicDetails = basicDetailsRequest.get();
+
             ProjectTeamStatusResource teamStatus = teamStatusRequest.get();
             Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerRequest.get();
             boolean isProjectManager = isProjectManagerRequest.get();
@@ -95,14 +98,16 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                          boolean isProjectManager,
                                                          List<OrganisationResource> partnerOrganisations,
                                                          String originQuery) {
+
+        boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
+
         SectionAccessList sectionAccesses = getSectionAccesses(basicDetails, teamStatus);
-        SectionStatusList sectionStatuses = getSectionStatuses(basicDetails, teamStatus, monitoringOfficer, isProjectManager);
+        SectionStatusList sectionStatuses = getSectionStatuses(basicDetails, teamStatus, monitoringOfficer, isProjectManager, collaborationAgreementRequired);
 
         boolean pendingQueries = SectionStatus.FLAG.equals(sectionStatuses.getFinanceChecksStatus());
 
         boolean leadPartner = isLeadPartner(teamStatus, basicDetails.getOrganisation());
-        int partnerOrganisationsCount = partnerOrganisations.size();
-        boolean collaborationAgreementRequired = partnerOrganisationsCount > 1;
+        boolean projectDocuments = basicDetails.getCompetition().getCompetitionDocuments().size() > 0;
 
         return new SetupStatusViewModel(
                 basicDetails.getProject(),
@@ -113,12 +118,21 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 sectionAccesses,
                 sectionStatuses,
                 collaborationAgreementRequired,
+                projectDocuments,
                 isProjectManager,
                 pendingQueries,
                 originQuery);
     }
 
-    private SectionStatusList getSectionStatuses(BasicDetails basicDetails, ProjectTeamStatusResource teamStatus, Optional<MonitoringOfficerResource> monitoringOfficer, boolean isProjectManager) {
+    private SectionStatusList getSectionStatuses(BasicDetails basicDetails,
+                                                 ProjectTeamStatusResource teamStatus,
+                                                 Optional<MonitoringOfficerResource> monitoringOfficer,
+                                                 boolean isProjectManager,
+                                                 boolean collaborationAgreementRequired) {
+
+        if (teamStatus.getProjectState().isOffline()) {
+            return SectionStatusList.offline();
+        }
 
         CompetitionResource competition = basicDetails.getCompetition();
         OrganisationResource organisation = basicDetails.getOrganisation();
@@ -148,10 +162,24 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(), financeChecksAccess);
         SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
-        SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, isProjectManager);
+        SectionStatus documentsStatus = sectionStatus.documentsSectionStatus(isProjectManager, getCompetitionDocuments(competition, collaborationAgreementRequired), project.getProjectDocuments());
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(ownOrganisation.getGrantOfferLetterStatus(), isLeadPartner);
 
-        return new SectionStatusList(projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus);
+        return new SectionStatusList(projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus,
+                financeChecksStatus, spendProfileStatus, documentsStatus, grantOfferStatus);
+
+    }
+
+    private List<CompetitionDocumentResource> getCompetitionDocuments(CompetitionResource competition, boolean collaborationAgreementRequired) {
+
+        List<CompetitionDocumentResource> competitionDocuments = competition.getCompetitionDocuments();
+
+        if (!collaborationAgreementRequired) {
+            competitionDocuments.removeIf(
+                    document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
+        }
+
+        return competitionDocuments;
     }
 
     private boolean isLeadPartner(ProjectTeamStatusResource teamStatus, OrganisationResource organisation) {
@@ -173,10 +201,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(organisation);
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
         SectionAccess spendProfileAccess = statusAccessor.canAccessSpendProfileSection(organisation);
-        SectionAccess otherDocumentsAccess = statusAccessor.canAccessOtherDocumentsSection(organisation);
+        SectionAccess documentsAccess = statusAccessor.canAccessDocumentsSection(organisation);
         SectionAccess grantOfferAccess = statusAccessor.canAccessGrantOfferLetterSection(organisation);
 
-        return new SectionAccessList(companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess);
+        return new SectionAccessList(companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess,
+                bankDetailsAccess, financeChecksAccess, spendProfileAccess, documentsAccess, grantOfferAccess);
     }
 
     private boolean requiredProjectDetailsForMonitoringOfficerComplete(boolean partnerProjectLocationRequired, boolean isProjectDetailsSubmitted, ProjectTeamStatusResource teamStatus) {

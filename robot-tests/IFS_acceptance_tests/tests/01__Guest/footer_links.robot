@@ -13,22 +13,22 @@ Resource          ../../resources/defaultResources.robot
 Guest user can click on the footer links
     [Documentation]    IFS-362
     [Tags]
-    Given the user tries the footer links          ${frontDoor}
-    And the user tries the footer links            ${LOGIN_URL}
-    And the user navigates to the page             ${LOGIN_URL}
-    When Logging in and Error Checking             &{lead_applicant_credentials}
-    Then the user tries the footer links           ${DASHBOARD_URL}
+    Given the user tries the footer links    ${frontDoor}
+    And the user tries the footer links      ${LOGIN_URL}
+    And the user navigates to the page       ${LOGIN_URL}
+    When Logging in and Error Checking       &{lead_applicant_credentials}
+    Then the user tries the footer links     ${APPLICANT_DASHBOARD_URL}
 
 *** Keywords ***
 the user tries the footer links
     [Arguments]    ${page}
-    Given the user navigates to the page   ${page}
-    And the user should see the element   link=Innovate UK
-    And the user should see the element   link=Innovation funding advice
-    And the user should see the element   link=Events
-    And the user should see the element   link=Connect to innovation experts
-    And the user should see the element   link=Innovate UK blog
-    And the user should see the element   link=GOV.UK accessibility
+    Given the user navigates to the page    ${page}
+    And the user should see the element     link = Innovate UK
+    And the user should see the element     link = Innovation funding advice
+    And the user should see the element     link = Events
+    And the user should see the element     link = Connect to innovation experts
+    And the user should see the element     link = Innovate UK blog
+    And the user should see the element     link = GOV.UK accessibility
     And the user tries the link             ${page}    Terms and conditions    Terms and conditions
     And the user tries the link             ${page}    Contact us    Contact us
     And the user tries the link             ${page}    Latest funding opportunities    Innovation competitions
@@ -36,6 +36,6 @@ the user tries the footer links
 
 the user tries the link
     [Arguments]    ${page}    ${link}    ${header_one}
-    Given the user navigates to the page  ${page}
-    When the user clicks the button/link  link=${link}
-    Then the user should see the element  jQuery=h1:contains(${header_one})
+    Given the user navigates to the page    ${page}
+    When the user clicks the button/link    link = ${link}
+    Then the user should see the element    jQuery = h1:contains(${header_one})

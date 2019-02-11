@@ -16,7 +16,15 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.project.application}: ${model.project.name}|,size='govuk-heading-xl'" />
+
+        <div class="warning-alert" th:if="${model.handleOffline}">
+            <p class="govuk-body">This project is being managed offline.</p>
+        </div>
+
+        <div class="warning-alert" th:if="${model.completeOffline}">
+            <p class="govuk-body">Project setup has been completed offline.</p>
+        </div>
 
         <h2 class="govuk-heading-m">Project details</h2>
         <p class="govuk-body">These project details were supplied by the lead partner on behalf of the project.</p>
@@ -40,7 +48,7 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
-                        Project address
+                        Correspondence address
                     </td>
                     <td class="govuk-table__cell" id="project-address">
                         <th:block th:if="${model.project.address.id == null}">Not yet completed</th:block>
@@ -127,10 +135,27 @@
                 </tbody>
             </table>
         </th:block>
-            <th:block th:if="${model.showWithdrawLink}">
+        <th:block th:if="${model.showWithdrawLink}">
+            <div>
                 <a data-js-modal="modal-withdraw-project" class="button-clear govuk-!-margin-top-6">Withdraw project</a>
                     <th:block th:insert="fragments/modals :: modal-withdraw-project" />
-            </th:block>
+            </div>
+        </th:block>
+
+
+        <th:block th:if="${model.showHandleOfflineLink}">
+            <div>
+                <a data-js-modal="modal-handle-project-offline" class="button-clear govuk-!-margin-top-6">Manage offline</a>
+                <th:block th:insert="fragments/modals :: modal-handle-project-offline" />
+            </div>
+        </th:block>
+
+        <th:block th:if="${model.showCompleteOfflineLink}">
+            <div>
+                <a data-js-modal="modal-complete-project-offline" class="button-clear govuk-!-margin-top-6">Mark as completed offline</a>
+                <th:block th:insert="fragments/modals :: modal-complete-project-offline" />
+            </div>
+        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

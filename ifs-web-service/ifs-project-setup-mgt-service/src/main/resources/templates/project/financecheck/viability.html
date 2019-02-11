@@ -19,7 +19,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${competitionTitle},size='govuk-heading-xl',smallText=${model.organisationName == model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <th:block th:if="${model.isShowApprovalMessage()}">
@@ -32,7 +32,7 @@
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
               <th class="govuk-table__header" scope="col">Total costs</th>
-              <th class="govuk-table__header govuk-table__header--numeric" scope="col">% Grant</th>
+              <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding level (%)</th>
               <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total project cost</th>
               <th class="govuk-table__header govuk-table__header--numeric" scope="col">Grant applied for (&pound;)</th>
               <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>

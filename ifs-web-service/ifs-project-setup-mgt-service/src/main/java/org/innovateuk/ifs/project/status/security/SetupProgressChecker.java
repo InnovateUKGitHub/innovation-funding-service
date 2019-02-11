@@ -53,18 +53,9 @@ class SetupProgressChecker {
         return COMPLETE.equals(projectStatus.getSpendProfileStatus());
     }
 
-    public boolean isOtherDocumentsSubmitted() {
-        return ACTION_REQUIRED.equals(projectStatus.getOtherDocumentsStatus());
+    public boolean allDocumentsApproved() {
+        return COMPLETE.equals(projectStatus.getDocumentsStatus());
     }
-
-    public boolean isOtherDocumentsApproved() {
-        return COMPLETE.equals(projectStatus.getOtherDocumentsStatus());
-    }
-
-    public boolean isOtherDocumentsRejected() {
-        return REJECTED.equals(projectStatus.getOtherDocumentsStatus());
-    }
-
 
     public boolean isOrganisationRequiringFunding() {
         return !NOT_REQUIRED.equals(projectStatus.getBankDetailsStatus());
@@ -92,5 +83,9 @@ class SetupProgressChecker {
 
     public boolean isGrantOfferLetterApproved() {
         return COMPLETE.equals(projectStatus.getGrantOfferLetterStatus());
+    }
+
+    public boolean isOffline() {
+        return projectStatus.getProjectState().isOffline();
     }
 }

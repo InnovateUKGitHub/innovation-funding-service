@@ -68,10 +68,12 @@ abstract class BaseCompletableFutureTupleHandler {
     private String futureName;
     private Executor threadPool;
     private CompletableFuture<?>[] futures;
+    private long timeoutValue;
 
-    BaseCompletableFutureTupleHandler(String futureName, Executor threadPool, CompletableFuture<?>... futures) {
+    BaseCompletableFutureTupleHandler(String futureName, Executor threadPool, long timeoutValue, CompletableFuture<?>... futures) {
         this.futureName = futureName;
         this.threadPool = threadPool;
+        this.timeoutValue = timeoutValue;
         this.futures = futures;
     }
 
@@ -136,14 +138,14 @@ abstract class BaseCompletableFutureTupleHandler {
 
         // this ensures that all of the top-level Futures and their descendant Futures are fully completed prior to
         // executing the next Future
-        AsyncFuturesHolder.waitForFuturesAndChildFuturesToCompleteFrom(asList(futures));
+        AsyncFuturesHolder.waitForFuturesAndChildFuturesToCompleteFrom(asList(futures), timeoutValue);
     }
 
     <R> R getResult(int index)  {
         return getResult(futures[index]);
     }
 
-    List<?> getResultsAsList()  {
+    <P> List<P> getResultsAsList()  {
         return simpleMap(futures, this::getResult);
     }
 

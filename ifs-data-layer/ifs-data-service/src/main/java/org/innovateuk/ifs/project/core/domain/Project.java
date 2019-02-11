@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.core.domain;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
@@ -62,14 +62,6 @@ public class Project implements ProcessActivity {
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="collaborationAgreementFileEntryId", referencedColumnName="id")
-    private FileEntry collaborationAgreement;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
-    private FileEntry exploitationPlan;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="signedGrantOfferFileEntryId", referencedColumnName = "id")
     private FileEntry signedGrantOfferLetter;
@@ -82,7 +74,6 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
-    //TODO IFS-471 use workflow for approving other documents
     @NotNull
     @Enumerated(STRING)
     private ApprovalType otherDocumentsApproved = ApprovalType.UNSET;
@@ -90,11 +81,13 @@ public class Project implements ProcessActivity {
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SpendProfile> spendProfiles;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = {CascadeType.REMOVE})
+    private List<ProjectDocument> projectDocuments = new ArrayList<>();
+
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
-                   Long durationInMonths, String name, ZonedDateTime documentsSubmittedDate,
-                   ApprovalType otherDocumentsApproved) {
+                   Long durationInMonths, String name, ZonedDateTime documentsSubmittedDate, ApprovalType otherDocumentsApproved ) {
 
         this.id = id;
         this.application = application;
@@ -102,8 +95,8 @@ public class Project implements ProcessActivity {
         this.address = address;
         this.durationInMonths = durationInMonths;
         this.name = name;
-        this.documentsSubmittedDate = documentsSubmittedDate;
         this.otherDocumentsApproved = otherDocumentsApproved;
+        this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
     public void addProjectUser(ProjectUser projectUser) {
@@ -234,22 +227,6 @@ public class Project implements ProcessActivity {
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
     }
 
-    public FileEntry getCollaborationAgreement() {
-        return collaborationAgreement;
-    }
-
-    public void setCollaborationAgreement(FileEntry collaborationAgreement) {
-        this.collaborationAgreement = collaborationAgreement;
-    }
-
-    public FileEntry getExploitationPlan() {
-        return exploitationPlan;
-    }
-
-    public void setExploitationPlan(FileEntry exploitationPlan) {
-        this.exploitationPlan = exploitationPlan;
-    }
-
     public FileEntry getSignedGrantOfferLetter() {
         return signedGrantOfferLetter;
     }
@@ -274,11 +251,12 @@ public class Project implements ProcessActivity {
         this.grantOfferLetter = grantOfferLetter;
     }
 
+    @NotNull
     public ApprovalType getOtherDocumentsApproved() {
         return otherDocumentsApproved;
     }
 
-    public void setOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
+    public void setOtherDocumentsApproved(@NotNull ApprovalType otherDocumentsApproved) {
         this.otherDocumentsApproved = otherDocumentsApproved;
     }
 
@@ -296,6 +274,14 @@ public class Project implements ProcessActivity {
 
     public void setSpendProfiles(List<SpendProfile> spendProfiles) {
         this.spendProfiles = spendProfiles;
+    }
+
+    public List<ProjectDocument> getProjectDocuments() {
+        return projectDocuments;
+    }
+
+    public void setProjectDocuments(List<ProjectDocument> projectDocuments) {
+        this.projectDocuments = projectDocuments;
     }
 
     public boolean isPartner(User user) {

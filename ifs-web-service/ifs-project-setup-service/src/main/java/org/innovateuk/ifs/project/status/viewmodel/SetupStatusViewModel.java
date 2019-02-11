@@ -5,6 +5,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 /**
  * A view model that backs the Project Status page
  */
+
 public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;
@@ -22,16 +24,18 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private Long competitionId;
     private boolean monitoringOfficerAssigned;
     private boolean leadPartner;
-    private boolean hasCompanyHouse;
+    private boolean hasCompaniesHouse;
     private boolean projectComplete;
     private String monitoringOfficerName;
     private Long organisationId;
     private SectionAccessList sectionAccesses;
     private SectionStatusList sectionStatuses;
     private boolean collaborationAgreementRequired;
+    private boolean competitionDocuments;
     private boolean projectManager;
     private boolean pendingQuery;
     private String originQuery;
+    private ProjectState projectState;
 
     public SetupStatusViewModel() {}
 
@@ -43,6 +47,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 SectionAccessList sectionAccesses,
                                 SectionStatusList sectionStatuses,
                                 boolean collaborationAgreementRequired,
+                                boolean competitionDocuments,
                                 boolean projectManager,
                                 boolean pendingQuery,
                                 String originQuery) {
@@ -53,7 +58,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.competitionName = competition.getName();
         this.competitionId = competition.getId();
         this.leadPartner = leadPartner;
-        this.hasCompanyHouse = organisation.getCompanyHouseNumber() != null && !organisation.getCompanyHouseNumber().isEmpty();
+        this.hasCompaniesHouse = organisation.getCompaniesHouseNumber() != null && !organisation.getCompaniesHouseNumber().isEmpty();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
         this.organisationId = organisation.getId();
@@ -61,9 +66,11 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.sectionStatuses = sectionStatuses;
         this.projectComplete = sectionStatuses.isProjectComplete();
         this.collaborationAgreementRequired = collaborationAgreementRequired;
+        this.competitionDocuments = competitionDocuments;
         this.projectManager = projectManager;
         this.pendingQuery = pendingQuery;
         this.originQuery = originQuery;
+        this.projectState = project.getProjectState();
     }
 
     public Long getProjectId() {
@@ -126,8 +133,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return sectionAccesses.getSpendProfileSection();
     }
 
-    public SectionAccess getOtherDocumentsSection() {
-        return sectionAccesses.getOtherDocumentsSection();
+    public SectionAccess getDocumentsSection() {
+        return sectionAccesses.getDocumentsSection();
     }
 
     public SectionAccess getGrantOfferLetterSection() {
@@ -152,8 +159,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return sectionStatuses.getSpendProfileStatus();
     }
 
-    public SectionStatus getOtherDocumentsStatus() {
-        return sectionStatuses.getOtherDocumentsStatus();
+    public SectionStatus getDocumentsStatus() {
+        return sectionStatuses.getDocumentsStatus();
     }
 
     public SectionStatus getGrantOfferLetterStatus() {
@@ -164,8 +171,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return competitionId;
     }
 
-    public boolean isHasCompanyHouse() {
-        return hasCompanyHouse;
+    public boolean isHasCompaniesHouse() {
+        return hasCompaniesHouse;
     }
 
     public boolean isProjectComplete() {
@@ -173,6 +180,10 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isCollaborationAgreementRequired() { return collaborationAgreementRequired; }
+
+    public boolean isCompetitionDocuments() {
+        return competitionDocuments;
+    }
 
     public boolean isProjectManager() { return projectManager; }
 
@@ -182,5 +193,9 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public String getOriginQuery() {
         return originQuery;
+    }
+
+    public ProjectState getProjectState() {
+        return projectState;
     }
 }

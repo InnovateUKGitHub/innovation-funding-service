@@ -19,7 +19,7 @@
                      role="alert"
                      aria-labelledby="error-summary-title"
                      tabindex="-1">
-                    <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
@@ -53,7 +53,7 @@
                         (filename=${model.appendixDetails.filename},
                         filesizeKbytes=${model.appendixDetails.filesizeKbytes},
                         fileDescription=${model.appendixFileDescription}+':',
-                        downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.appendixDetails.formInputId})})" />
+                        downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download/{fileName}(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.appendixDetails.formInputId},fileName=${model.appendixDetails.filename})})" />
                     </div>
 
                     <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">

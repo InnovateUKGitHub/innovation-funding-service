@@ -35,6 +35,7 @@ public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(() -> classUnderTest.getMonitoringOfficer(123L), () -> {
             verify(permissionRules).internalUsersCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verify(permissionRules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
+            verify(permissionRules).stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, getLoggedInUser());
             verifyNoMoreInteractions(permissionRules);
         });
     }

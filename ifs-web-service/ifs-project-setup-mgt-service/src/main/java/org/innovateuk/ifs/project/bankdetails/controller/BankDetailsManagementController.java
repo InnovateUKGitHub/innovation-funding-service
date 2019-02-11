@@ -30,7 +30,6 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
@@ -63,6 +62,7 @@ public class BankDetailsManagementController {
             @P("projectId")@PathVariable("projectId") Long projectId,
             UserResource loggedInUser) {
         model.addAttribute("isCompAdminUser", loggedInUser.hasRole(COMP_ADMIN));
+
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)
                 .getSuccess();
         return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);
@@ -109,10 +109,7 @@ public class BankDetailsManagementController {
         return validationHandler.performActionOrBindErrorsToField("",
                 failureView,
                 () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
-                () -> {
-                    Void result = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).getSuccess();
-                    return serviceSuccess(result);
-                }
+                () -> bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource)
         );
     }
 
@@ -162,14 +159,14 @@ public class BankDetailsManagementController {
         });
     }
 
-    private OrganisationAddressResource buildOrganisationAddressResource(OrganisationResource organisation, ChangeBankDetailsForm form){
-        AddressResource address = form.getAddressForm().getSelectedPostcode();
+    private OrganisationAddressResource buildOrganisationAddressResource(OrganisationResource organisation, ChangeBankDetailsForm form) {
+        AddressResource address = form.getAddressForm().getManualAddress();
         return new OrganisationAddressResource(organisation, address, new AddressTypeResource(BANK_DETAILS.getOrdinal(), BANK_DETAILS.name()));
     }
 
     private OrganisationResource buildOrganisationResource(final OrganisationResource organisationResource, ChangeBankDetailsForm form){
         organisationResource.setName(form.getOrganisationName());
-        organisationResource.setCompanyHouseNumber(form.getRegistrationNumber());
+        organisationResource.setCompaniesHouseNumber(form.getRegistrationNumber());
         return organisationResource;
     }
 
@@ -194,8 +191,8 @@ public class BankDetailsManagementController {
         bankDetailsResource.setProject(projectId);
         bankDetailsResource.setOrganisation(organisation.getId());
         bankDetailsResource.setCompanyName(organisation.getName());
-        bankDetailsResource.setRegistrationNumber(organisation.getCompanyHouseNumber());
-        bankDetailsResource.setOrganisationAddress(organisationAddressResource);
+        bankDetailsResource.setRegistrationNumber(organisation.getCompaniesHouseNumber());
+        bankDetailsResource.setAddress(organisationAddressResource.getAddress());
 
         return bankDetailsResource;
     }

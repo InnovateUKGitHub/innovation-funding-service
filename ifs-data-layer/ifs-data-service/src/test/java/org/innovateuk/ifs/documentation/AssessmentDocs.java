@@ -28,6 +28,7 @@ public class AssessmentDocs {
             fieldWithPath("competition").description("the competition id of the application being assessed"),
             fieldWithPath("assessmentState").description("the current workflow state of the assessment process"),
             fieldWithPath("internalParticipant").description("the user id of an internal user who is working on the process"),
+            fieldWithPath("collaborativeProject").description("flag indicating if the project is collaborative")
     };
 
     public static final AssessmentResourceBuilder assessmentResourceBuilder = newAssessmentResource()

@@ -9,7 +9,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkUrl=@{/assessor/dashboard}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessments',linkUrl=@{/assessor/dashboard}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor agreement',size='govuk-heading-xl'" />
@@ -21,7 +21,7 @@
 
                 <form class="govuk-!-margin-top-6" th:action="@{/profile/agreement}" method="post" th:unless="${model.currentAgreement}">
                     <p class="govuk-body">By creating an account with us you agree to the terms and conditions contained in this assessor agreement.</p>
-                    <button class="govuk-button" type="submit">Save and return to assessor dashboard</button>
+                    <button class="govuk-button" type="submit">Save and return to assessments</button>
                     <a th:href="@{/assessor/dashboard}" class="govuk-link">Cancel</a>
                 </form>
 
@@ -31,7 +31,7 @@
                 </p>
 
                 <div th:if="${model.currentAgreement}">
-                    <a th:href="@{/assessor/dashboard}" class="govuk-button">Return to assessor dashboard</a>
+                    <a th:href="@{/assessor/dashboard}" class="button-secondary">Return to assessments</a>
                 </div>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />

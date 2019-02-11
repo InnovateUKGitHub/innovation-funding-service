@@ -3,18 +3,21 @@ package org.innovateuk.ifs.competitionsetup.core.viewmodel;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleAllMatch;
 
 public class MenuViewModel extends CompetitionSetupViewModel {
 
     private ZonedDateTime publishDate;
     private boolean isPublicContentPublished;
-    private Map<CompetitionSetupSection, Optional<Boolean>> statuses;
+    private Map<CompetitionSetupSection, Boolean> statuses;
 
     public MenuViewModel(GeneralSetupViewModel generalSetupViewModel, ZonedDateTime publishDate,
                          boolean isPublicContentPublished,
-                         Map<CompetitionSetupSection, Optional<Boolean>> statuses) {
+                         Map<CompetitionSetupSection, Boolean> statuses) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.publishDate = publishDate;
         this.isPublicContentPublished = isPublicContentPublished;
@@ -38,14 +41,11 @@ public class MenuViewModel extends CompetitionSetupViewModel {
     }
 
     public boolean sectionCompleteAndCompetitionNotLive(CompetitionSetupSection setupSection) {
-        return statuses.get(setupSection).orElse(Boolean.FALSE) && !generalSetupViewModel.getCompetition().isSetupAndLive();
+        return sectionIsComplete(setupSection) && !generalSetupViewModel.getCompetition().isSetupAndLive();
     }
 
-    public boolean sectionIsNotHome(CompetitionSetupSection setupSection) {
-        return !setupSection.equals(CompetitionSetupSection.HOME);
-    }
-
-    public boolean sectionIsDocuments(CompetitionSetupSection setupSection) {
-        return setupSection.equals(CompetitionSetupSection.PROJECT_DOCUMENT);
+    private boolean sectionIsComplete(CompetitionSetupSection setupSection) {
+        List<CompetitionSetupSection> relatedSections = combineLists(setupSection, setupSection.getAllNextSections());
+        return simpleAllMatch(relatedSections, section -> statuses.getOrDefault(section, false));
     }
 }

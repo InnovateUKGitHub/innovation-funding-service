@@ -2,8 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectDetailsController;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -16,7 +15,7 @@ import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddre
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
+import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,8 +40,9 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         when(projectDetailsServiceMock.updateProjectStartDate(123L, LocalDate.of(2017, 2, 1))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{id}/startdate", 123L).
-                param("projectStartDate", "2017-02-01"))
+        mockMvc.perform(post("/project/{id}/startdate", 123L)
+                .param("projectStartDate", "2017-02-01")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}"));
 
@@ -54,8 +54,9 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         when(projectDetailsServiceMock.updateProjectStartDate(123L, LocalDate.of(2015, 1, 1))).thenReturn(serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE));
 
-        mockMvc.perform(post("/project/{id}/startdate", 123L).
-                param("projectStartDate", "2015-01-01"))
+        mockMvc.perform(post("/project/{id}/startdate", 123L)
+                .param("projectStartDate", "2015-01-01")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isBadRequest())
                 .andDo(document("project/{method-name}"));
     }
@@ -65,8 +66,9 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         when(projectDetailsServiceMock.updateProjectStartDate(123L, LocalDate.of(2015, 1, 5))).thenReturn(serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH));
 
-        mockMvc.perform(post("/project/{id}/startdate", 123L).
-                param("projectStartDate", "2015-01-05"))
+        mockMvc.perform(post("/project/{id}/startdate", 123L)
+                .param("projectStartDate", "2015-01-05")
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isBadRequest())
                 .andDo(document("project/{method-name}"));
     }
@@ -79,8 +81,9 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
         when(projectDetailsServiceMock.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/duration/{durationInMonths}", projectId, durationInMonths)
-                        .contentType(APPLICATION_JSON)
-                        .accept(APPLICATION_JSON))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -97,7 +100,8 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         when(projectDetailsServiceMock.setProjectManager(project1Id, projectManagerId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
+        mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -114,7 +118,8 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         when(projectDetailsServiceMock.setProjectManager(project1Id, projectManagerId)).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
 
-        mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
+        mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isBadRequest())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -129,7 +134,8 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
         when(projectDetailsServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -152,7 +158,8 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
         when(projectDetailsServiceMock.updatePartnerProjectLocation(composite, postcode)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postcode={postcode}", projectId, organisationId, postcode))
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postcode={postcode}", projectId, organisationId, postcode)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
@@ -173,7 +180,8 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         when(projectDetailsServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
 
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isBadRequest())
                 .andDo(document("project/{method-name}"));
     }
@@ -184,7 +192,8 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         when(projectDetailsServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
 
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isBadRequest())
                 .andDo(document("project/{method-name}"));
     }
@@ -192,9 +201,10 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
     @Test
     public void inviteProjectManager() throws Exception {
         Long projectId = 123L;
-        ProjectInviteResource invite = newProjectInviteResource().build();
+        ProjectUserInviteResource invite = newProjectUserInviteResource().build();
         when(projectDetailsServiceMock.inviteProjectManager(projectId, invite)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/invite-project-manager", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(invite)))
                 .andExpect(status().isOk())
@@ -208,9 +218,10 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
     @Test
     public void inviteFinanceContact() throws Exception {
         Long projectId = 123L;
-        ProjectInviteResource invite = newProjectInviteResource().build();
+        ProjectUserInviteResource invite = newProjectUserInviteResource().build();
         when(projectDetailsServiceMock.inviteFinanceContact(projectId, invite)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/invite-finance-contact", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(invite)))
                 .andExpect(status().isOk())
@@ -226,23 +237,22 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         long projectId = 123L;
         long leadOrganisationId = 456L;
-        OrganisationAddressType addressType = OrganisationAddressType.PROJECT;
 
         AddressResource address = newAddressResource().build();
 
-        when(projectDetailsServiceMock.updateProjectAddress(leadOrganisationId, projectId, addressType, address)).thenReturn(serviceSuccess());
+        when(projectDetailsServiceMock.updateProjectAddress(leadOrganisationId, projectId, address)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/address?leadOrganisationId={leadOrganisationId}&addressType={addressType}", projectId, leadOrganisationId, addressType)
+        mockMvc.perform(post("/project/{projectId}/address?leadOrganisationId={leadOrganisationId}", projectId, leadOrganisationId)
+                .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(address)))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
-                            parameterWithName("projectId").description("Id of project that the project address is being set on")
+                                parameterWithName("projectId").description("Id of project that the project address is being set on")
                         ),
                         requestParameters(
-                            parameterWithName("leadOrganisationId").description("Id of the Lead Organisation for this Project"),
-                            parameterWithName("addressType").description("The type of address that is being selected")
+                                parameterWithName("leadOrganisationId").description("Id of the Lead Organisation for this Project")
                         )
                 ));
     }

@@ -1,4 +1,2 @@
 ext.activeProfile="local"
-ext.ifsIdpLogoutUrl="https://ifs.local-dev/Logout"
-ext.ifsWebGoogleanalyticsTrackingid=""
-ext.ifsSystemUserUUID="c0d02979-e66e-11e7-ac43-0242ac120002"
+ext.ifsLiveProjectsURL="https://ifs-local.dev/live-projects-landing-page"

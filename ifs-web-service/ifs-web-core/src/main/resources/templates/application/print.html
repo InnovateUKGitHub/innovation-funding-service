@@ -11,7 +11,7 @@
     <div class="hidden">You can print your application by pressing CTRL+P (Windows) or CMD+P (mac)</div>
 </div>
 
-<div>
+<div th:with="procurementCompetition=${currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
     <section class="portrait" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
         <h1 th:text="${section.getName()}" class="govuk-heading-l" />
         <th:block th:each="question : ${sectionQuestions.get(section.id)}">
@@ -25,7 +25,7 @@
         </th:block>
     </section>
 
-    <section class="landscape" th:if="${financeSection}">
+    <section class="landscape" th:unless="${financeSection == null or procurementCompetition}">
         <div>
             <h1 class="govuk-heading-l">Finances</h1>
             <p class="govuk-body">This is the overview of the finances provided by all partners in this project.</p>
@@ -35,6 +35,7 @@
 
     <section class="landscape" th:if="${fundingFinancesSection}">
         <div>
+            <h1 th:if="${procurementCompetition}" class="govuk-heading-l">Finances</h1>
             <h2 class="govuk-heading-m">Funding breakdown</h2>
             <th:block th:insert="application/print-elements :: financial_summary_table" />
         </div>

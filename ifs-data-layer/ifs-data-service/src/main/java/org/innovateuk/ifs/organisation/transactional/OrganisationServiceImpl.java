@@ -7,7 +7,6 @@ import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Academic;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -86,15 +85,6 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<OrganisationResource> getPrimaryForUser(final long userId) {
-        List<Organisation> organisations = organisationRepository.findDistinctByUsersId(userId);
-        if (organisations.isEmpty()) {
-            return serviceFailure(CommonErrors.notFoundError(Organisation.class));
-        }
-        return serviceSuccess(organisationMapper.mapToResource(organisations.get(0)));
-    }
-
-    @Override
     public ServiceResult<OrganisationResource> getByUserAndApplicationId(long userId, long applicationId) {
         Organisation org = organisationRepository.findByProcessRolesUserIdAndProcessRolesApplicationId(userId, applicationId);
         return find(org, notFoundError(Organisation.class, userId, applicationId)).andOnSuccessReturn(o ->
@@ -141,7 +131,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
             if (organisationName.length() <= MAX_CHARACTER_DB_LENGTH) {
                 organisation.setName(decodeOrganisationName(organisationName));
-                organisation.setCompanyHouseNumber(registrationNumber);
+                organisation.setCompaniesHouseNumber(registrationNumber);
                 return serviceSuccess(organisationMapper.mapToResource(organisation));
             }
             return serviceFailure(BANK_DETAILS_COMPANY_NAME_TOO_LONG);

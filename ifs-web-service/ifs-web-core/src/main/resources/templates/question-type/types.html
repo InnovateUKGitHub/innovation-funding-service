@@ -93,7 +93,7 @@
          formInput=${model.formInput},
          question=${model.question},
          filename=${model.filename},
-         downloadUrl=${isCompManagementDownload} ? @{${model.application.id + '/forminput/' + formInput.id + '/download'}} : @{${'/application/' + model.application.id + '/form/question/' + question.id + '/forminput/' + formInput.id + '/download'}},
+         downloadUrl=${isCompManagementDownload} ? @{${model.application.id + '/forminput/' + formInput.id + '/download/' + model.filename}} : @{${'/application/' + model.application.id + '/form/question/' + question.id + '/forminput/' + formInput.id + '/download/' + model.filename}},
          viewmode=${model.viewmode},
          mayRemove=${model.mayRemove},
          inputField='formInput['+${formInput.id}+']',
@@ -150,7 +150,7 @@
                         <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" />
                     </th:block>
                     <label th:for="${inputField}" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
-                    <button th:name="${saveName}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${inputField}">Save</button>
+                    <button th:name="${saveName}" th:id="${inputField+'-button'}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${inputField}">Save</button>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(filename)}">
                     <p class="uploaded-file govuk-body">

@@ -43,7 +43,7 @@ public class SetupSectionInternalUser {
             return fail("Unable to access Monitoring Officer section until Project Details are submitted");
         }
 
-        if(isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)){
+        if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
             return projectSetupProgressChecker.isMonitoringOfficerSubmitted() ? ACCESSIBLE : NOT_ACCESSIBLE;
         }
 
@@ -60,6 +60,9 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {
+        if (projectSetupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
         return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
@@ -67,8 +70,8 @@ public class SetupSectionInternalUser {
         boolean approved = projectSetupProgressChecker.isSpendProfileApproved();
         boolean submitted = projectSetupProgressChecker.isSpendProfileSubmitted();
         if (approved || submitted) {
-            if(isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
-                if(approved) {
+            if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
+                if (approved) {
                     return ACCESSIBLE;
                 } else {
                     return NOT_ACCESSIBLE;
@@ -81,12 +84,12 @@ public class SetupSectionInternalUser {
         return NOT_ACCESSIBLE;
     }
 
-    public SectionAccess canAccessOtherDocumentsSection(UserResource userResource) {
-        if(!projectSetupProgressChecker.isOtherDocumentsSubmitted() && !(projectSetupProgressChecker.isOtherDocumentsApproved() || projectSetupProgressChecker.isOtherDocumentsRejected())) {
+    public SectionAccess canAccessDocumentsSection(UserResource userResource) {
+        if (projectSetupProgressChecker.isOffline()) {
             return NOT_ACCESSIBLE;
         }
 
-        if((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.isOtherDocumentsApproved()){
+        if ((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.allDocumentsApproved()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -94,7 +97,7 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSection(UserResource userResource) {
-        if(!projectSetupProgressChecker.isGrantOfferLetterSent()) {
+        if (!projectSetupProgressChecker.isGrantOfferLetterSent()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -102,9 +105,9 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
-        if(projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
-            if(isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
-                if(projectSetupProgressChecker.isGrantOfferLetterApproved()){
+        if (documentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
+            if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
+                if (projectSetupProgressChecker.isGrantOfferLetterApproved()) {
                     return ACCESSIBLE;
                 } else {
                     return NOT_ACCESSIBLE;
@@ -117,14 +120,23 @@ public class SetupSectionInternalUser {
         return NOT_ACCESSIBLE;
     }
 
+    private boolean documentsApproved() {
+        return projectSetupProgressChecker.allDocumentsApproved();
+    }
+
     public SectionAccess canAccessFinanceChecksQueriesSection(UserResource userResource) {
+        if (projectSetupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
         return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessFinanceChecksNotesSection(UserResource userResource) {
+        if (projectSetupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
         return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
-
 
     private SectionAccess fail(String message) {
         LOG.info(message);
@@ -132,7 +144,7 @@ public class SetupSectionInternalUser {
     }
 
     public ProjectActivityStates grantOfferLetterActivityStatus(UserResource userResource) {
-        if(isInternalAdmin(userResource)) {
+        if (isInternalAdmin(userResource)) {
             return projectSetupProgressChecker.getRoleSpecificActivityState().get(COMP_ADMIN);
         } else {
             return projectSetupProgressChecker.getGrantOfferLetterState();

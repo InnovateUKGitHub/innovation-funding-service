@@ -69,3 +69,15 @@ include::{snippets}/milestone/save-milestone/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/milestone/save-milestone/curl-request.adoc[]
+
+=== Update completion stage
+==== Request
+include::{snippets}/milestone/update-completion-stage/http-request.adoc[]
+include::{snippets}/milestone/update-completion-stage/path-parameters.adoc[]
+include::{snippets}/milestone/update-completion-stage/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/milestone/update-completion-stage/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/milestone/update-completion-stage/curl-request.adoc[]

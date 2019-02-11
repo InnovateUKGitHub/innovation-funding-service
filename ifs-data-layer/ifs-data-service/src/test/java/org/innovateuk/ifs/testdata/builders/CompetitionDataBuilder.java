@@ -108,7 +108,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 List<OrganisationTypeEnum> leadApplicantTypes,
                                                 Integer researchRatio,
                                                 Boolean resubmission,
-                                                String nonIfsUrl) {
+                                                String nonIfsUrl, FundingType fundingType) {
 
         return asCompAdmin(data -> {
 
@@ -154,6 +154,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setHasInterviewStage(hasInterviewStage);
                 competition.setAssessorFinanceView(assessorFinanceView);
                 competition.setNonIfsUrl(nonIfsUrl);
+                competition.setIncludeJesForm(true); //TODO IFS-4719 web test data needs to be configurable.
+                competition.setFundingType(fundingType);
             });
         });
     }
@@ -420,7 +422,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             testService.doWithinTransaction(() -> fn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build())));
     }
 
-    public CompetitionDataBuilder withPublicContent(boolean published, String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, FundingType fundingType, String projectSize, List<String> keywords, boolean inviteOnly) {
+    public CompetitionDataBuilder withPublicContent(boolean published, String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, String projectSize, List<String> keywords, boolean inviteOnly) {
         return asCompAdmin(data -> publicContentService.findByCompetitionId(data.getCompetition().getId()).andOnSuccessReturnVoid(publicContent -> {
 
             if (published) {
@@ -428,7 +430,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 publicContent.setProjectFundingRange(fundingRange);
                 publicContent.setEligibilitySummary(eligibilitySummary);
                 publicContent.setSummary(competitionDescription);
-                publicContent.setFundingType(fundingType);
                 publicContent.setProjectSize(projectSize);
                 publicContent.setKeywords(keywords);
                 publicContent.setInviteOnly(inviteOnly);

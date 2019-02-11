@@ -12,7 +12,7 @@ public class DashboardTabsViewModel {
     }
 
     public boolean live() {
-        return isInternal(userResource);
+        return isInternal(userResource) || isStakeholder(userResource);
     }
 
     public boolean upcoming() {
@@ -23,15 +23,19 @@ public class DashboardTabsViewModel {
         return isInternalAdmin(userResource);
     }
 
-    public boolean projectSetup(){
-        return isInternal(userResource);
+    public boolean projectSetup() {
+        return isInternal(userResource) || isStakeholder(userResource);
     }
 
-    public boolean previous(){
-        return isInternal(userResource);
+    public boolean previous() {
+        return isInternal(userResource) || isStakeholder(userResource);
     }
 
-    public boolean support(){
+    public boolean support() {
         return isSupport(userResource);
+    }
+
+    public boolean isInternalUser() {
+        return isInternal(userResource);
     }
 }

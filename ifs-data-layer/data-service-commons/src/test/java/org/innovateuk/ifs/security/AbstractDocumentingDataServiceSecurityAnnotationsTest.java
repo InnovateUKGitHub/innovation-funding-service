@@ -8,9 +8,8 @@ import org.springframework.stereotype.Service;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.util.CollectionFunctions.union;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * Base class to document security permissions and rules in the data layer
@@ -31,12 +30,11 @@ public abstract class AbstractDocumentingDataServiceSecurityAnnotationsTest exte
 
     @Override
     protected final List<Class<?>> excludedClasses() {
-        return union(asList(UidAuthenticationService.class), additionalExcludedClasses());
+        return combineLists(UidAuthenticationService.class, additionalExcludedClasses());
     }
 
     /**
      * Add classes which are not present in this base project but still need to be ignored.
-     * @return
      */
     protected abstract List<Class<?>> additionalExcludedClasses();
 

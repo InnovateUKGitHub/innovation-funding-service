@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.service.ProjectDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -51,26 +50,26 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     }
 
     @Override
-    public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource address) {
-        return projectDetailsRestService.updateProjectAddress(leadOrganisationId, projectId, addressType, address).toServiceResult();
+    public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressResource address) {
+        return projectDetailsRestService.updateProjectAddress(leadOrganisationId, projectId, address).toServiceResult();
     }
 
     @Override
-    public ServiceResult<Void> saveProjectInvite (ProjectInviteResource projectInviteResource) {
-        return projectInviteRestService.saveProjectInvite(projectInviteResource).toServiceResult();
+    public ServiceResult<Void> saveProjectInvite (ProjectUserInviteResource projectUserInviteResource) {
+        return projectInviteRestService.saveProjectInvite(projectUserInviteResource).toServiceResult();
     }
 
     @Override
-    public ServiceResult<Void> inviteFinanceContact(Long projectId, ProjectInviteResource projectInviteResource) {
-        return projectDetailsRestService.inviteFinanceContact (projectId, projectInviteResource).toServiceResult();
+    public ServiceResult<Void> inviteFinanceContact(Long projectId, ProjectUserInviteResource projectUserInviteResource) {
+        return projectDetailsRestService.inviteFinanceContact (projectId, projectUserInviteResource).toServiceResult();
     }
 
-    @Override public ServiceResult<Void> inviteProjectManager(final Long projectId, final ProjectInviteResource projectInviteResource) {
-        return projectDetailsRestService.inviteProjectManager (projectId, projectInviteResource).toServiceResult();
+    @Override public ServiceResult<Void> inviteProjectManager(final Long projectId, final ProjectUserInviteResource projectUserInviteResource) {
+        return projectDetailsRestService.inviteProjectManager (projectId, projectUserInviteResource).toServiceResult();
     }
 
     @Override
-    public ServiceResult<List<ProjectInviteResource>>  getInvitesByProject (Long projectId) {
+    public ServiceResult<List<ProjectUserInviteResource>>  getInvitesByProject (Long projectId) {
         return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
     }
 }

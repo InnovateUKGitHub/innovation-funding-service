@@ -6,24 +6,24 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
-import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -44,18 +44,23 @@ public class ApplicationNavigationPopulatorTest {
     @Mock
     private ApplicationService applicationService;
 
+    @Before
+    public void setUp() {
+        reset(questionService, sectionService, applicationService);
+    }
+
     @Test
-    public void testAddNavigation() {
-        SectionResource section = SectionResourceBuilder.newSectionResource().build();
+    public void addNavigation() {
+        SectionResource section = newSectionResource().build();
         Long applicationId = 1L;
         String previousName = "prev";
         String nextName = "next";
-        QuestionResource previousQuestion = QuestionResourceBuilder.newQuestionResource()
+        QuestionResource previousQuestion = newQuestionResource()
                 .withShortName(previousName).build();
-        QuestionResource nextQuestion = QuestionResourceBuilder.newQuestionResource()
+        QuestionResource nextQuestion = newQuestionResource()
                 .withShortName(nextName).build();
-        SectionResource previousSection = SectionResourceBuilder.newSectionResource().withQuestionGroup(false).build();
-        SectionResource nextSection = SectionResourceBuilder.newSectionResource().withQuestionGroup(false).build();
+        SectionResource previousSection = newSectionResource().withQuestionGroup(false).build();
+        SectionResource nextSection = newSectionResource().withQuestionGroup(false).build();
         when(questionService.getPreviousQuestionBySection(section.getId())).thenReturn(Optional.of(previousQuestion));
         when(questionService.getNextQuestionBySection(section.getId())).thenReturn(Optional.of(nextQuestion));
         when(sectionService.getSectionByQuestionId(previousQuestion.getId())).thenReturn(previousSection);
@@ -70,157 +75,179 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithoutSection(){
+    public void addAppropriateBackURLToModelWithoutSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), false);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithoutSectionClosedApplication(){
+    public void addAppropriateBackURLToModelWithoutSectionClosedApplication(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
         setupApplicationClosed(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), false);
         verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
         verify(model).addAttribute(eq("backTitle"), contains("Application summary"));
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithoutSectionClosedCompetition(){
+    public void addAppropriateBackURLToModelWithoutSectionClosedCompetition(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
         setupApplicationCompetitionClosed(applicationId);
-        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
+        target.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty(), Optional.empty(), false);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), contains("Application overview"));
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithFinanceSubSection(){
+    public void addAppropriateBackURLToModelWithFinanceSubSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
         setupApplicationOpen(applicationId);
 
         SectionResource section = newSectionResource().withType(SectionType.FUNDING_FINANCES).build();
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty());
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty(), Optional.empty(), false);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1/form/FINANCE"));
         verify(model).addAttribute(eq("backTitle"), contains("Your finances"));
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithGeneralSection(){
+    public void addAppropriateBackURLToModelWithGeneralSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
         SectionResource section = newSectionResource().withType(SectionType.GENERAL).build();
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty());
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.empty(), Optional.empty(), false);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
     }
 
     @Test
-    public void testNavigationSkipsExcludedSectionTypesWithQuestionGroup() {
-        SectionResource section = SectionResourceBuilder.newSectionResource().withId(1L).build();
-        Long applicationId = 1L;
+    public void navigationSkipsExcludedSectionTypesWithQuestionGroup() {
+        long applicationId = 1L;
+        SectionResource section = newSectionResource().withId(1L).build();
 
-        QuestionResource previousQuestion = QuestionResourceBuilder.newQuestionResource().build();
-        QuestionResource nextQuestion = QuestionResourceBuilder.newQuestionResource().build();
+        QuestionResource previousQuestion = newQuestionResource().withId(1L).build();
+        QuestionResource nextQuestion = newQuestionResource().withId(2L).build();
 
-        List<Long> projectCostQuestions = Arrays.asList(1L,2L);
-        List<Long> organisationQuestions = Arrays.asList(2L,3L);
-        List<Long> fundingQuestions = Arrays.asList(4L,5L);
+        List<Long> projectCostQuestions = asList(1L, 2L);
 
-        SectionResource previousSection = SectionResourceBuilder.newSectionResource().withId(2L).withType(SectionType.ORGANISATION_FINANCES).withQuestionGroup(true).withQuestions(projectCostQuestions).build();
-        SectionResource nextSection = SectionResourceBuilder.newSectionResource().withId(3L).withType(SectionType.ORGANISATION_FINANCES).withQuestionGroup(true).withQuestions(organisationQuestions).build();
-        SectionResource validPreviousSection = SectionResourceBuilder.newSectionResource().withName("Section 4").withId(4L).withType(SectionType.PROJECT_COST_FINANCES).withQuestionGroup(true).withQuestions(fundingQuestions).build();
-        SectionResource validNextSection = SectionResourceBuilder.newSectionResource().withName("Section 5").withId(5L).withType(SectionType.FUNDING_FINANCES).withQuestionGroup(true).withQuestions(organisationQuestions).build();
+        SectionResource previousSection =
+                newSectionResource()
+                        .withId(8L)
+                        .withType(SectionType.ORGANISATION_FINANCES)
+                        .withQuestionGroup(true)
+                        .withQuestions(projectCostQuestions)
+                        .withName("foo")
+                        .build();
 
-        SectionResource sectionToSkip = SectionResourceBuilder.newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build();
+        SectionResource nextSection =
+                newSectionResource()
+                        .withId(9L)
+                        .withType(SectionType.ORGANISATION_FINANCES)
+                        .withQuestionGroup(true)
+                        .withQuestions(projectCostQuestions)
+                        .withName("bar")
+                        .build();
 
         when(questionService.getPreviousQuestionBySection(section.getId())).thenReturn(Optional.of(previousQuestion));
-        when(questionService.getPreviousQuestion(anyLong())).thenReturn(Optional.of(previousQuestion));
         when(questionService.getNextQuestionBySection(section.getId())).thenReturn(Optional.of(nextQuestion));
-        when(sectionService.getSectionByQuestionId(anyLong())).thenReturn(previousSection).thenReturn(validPreviousSection).thenReturn(nextSection).thenReturn(validNextSection);
-        when(questionService.getNextQuestion(anyLong())).thenReturn(Optional.of(nextQuestion));
+        when(sectionService.getSectionByQuestionId(1L)).thenReturn(previousSection);
+        when(sectionService.getSectionByQuestionId(2L)).thenReturn(nextSection);
 
-        NavigationViewModel result = target.addNavigation(section, applicationId, Collections.singletonList(sectionToSkip.getType()));
+        NavigationViewModel result = target.addNavigation(section, applicationId);
 
-        assertTrue(result.getPreviousUrl().contains("/section/4"));
-        assertEquals("Section 4", result.getPreviousText());
-        assertTrue(result.getNextUrl().contains("/section/5"));
-        assertEquals("Section 5", result.getNextText());
+        assertTrue(result.getPreviousUrl().contains("/section/" + previousSection.getId()));
+        assertEquals(previousSection.getName(), result.getPreviousText());
+        assertTrue(result.getNextUrl().contains("/section/" + nextSection.getId()));
+        assertEquals(nextSection.getName(), result.getNextText());
+
+        InOrder inOrder = inOrder(questionService, sectionService);
+        inOrder.verify(questionService).getPreviousQuestionBySection(section.getId());
+        inOrder.verify(questionService).getNextQuestionBySection(section.getId());
+        inOrder.verify(sectionService).getSectionByQuestionId(anyLong());
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testNavigationSkipsExcludedSectionTypesWithNoQuestionGroup() {
-        SectionResource section = SectionResourceBuilder.newSectionResource().withId(1L).build();
-        Long applicationId = 1L;
+    public void navigationSkipsExcludedSectionTypesWithNoQuestionGroup() {
+        long applicationId = 1L;
+        SectionResource section = newSectionResource().withId(1L).build();
 
-        QuestionResource previousQuestion = QuestionResourceBuilder.newQuestionResource().withId(1L).build();
-        QuestionResource nextQuestion = QuestionResourceBuilder.newQuestionResource().withId(2L).build();
-        QuestionResource previousValidQuestion = QuestionResourceBuilder.newQuestionResource().withId(3L).withShortName("Question 3").build();
-        QuestionResource nextValidQuestion = QuestionResourceBuilder.newQuestionResource().withId(4L).withShortName("Question 4").build();
+        QuestionResource previousQuestion = newQuestionResource().withId(7L).withShortName("foo").build();
+        QuestionResource nextQuestion = newQuestionResource().withId(11L).withShortName("bar").build();
 
-        List<Long> projectCostQuestions = Arrays.asList(1L,2L);
-        List<Long> organisationQuestions = Arrays.asList(2L,3L);
-        List<Long> fundingQuestions = Arrays.asList(4L,5L);
+        List<Long> projectCostQuestions = asList(1L,2L);
 
-        SectionResource previousSection = SectionResourceBuilder.newSectionResource().withId(2L).withType(SectionType.ORGANISATION_FINANCES).withQuestionGroup(false).withQuestions(projectCostQuestions).build();
-        SectionResource nextSection = SectionResourceBuilder.newSectionResource().withId(3L).withType(SectionType.ORGANISATION_FINANCES).withQuestionGroup(false).withQuestions(organisationQuestions).build();
-        SectionResource validPreviousSection = SectionResourceBuilder.newSectionResource().withName("Section 4").withId(4L).withType(SectionType.PROJECT_COST_FINANCES).withQuestionGroup(false).withQuestions(fundingQuestions).build();
-        SectionResource validNextSection = SectionResourceBuilder.newSectionResource().withName("Section 5").withId(5L).withType(SectionType.FUNDING_FINANCES).withQuestionGroup(false).withQuestions(organisationQuestions).build();
+        SectionResource previousSection = newSectionResource()
+                .withId(3L)
+                .withType(SectionType.ORGANISATION_FINANCES)
+                .withQuestionGroup(false)
+                .withQuestions(projectCostQuestions)
+                .build();
 
-        SectionResource sectionToSkip = SectionResourceBuilder.newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build();
+        SectionResource nextSection = newSectionResource()
+                .withId(5L)
+                .withType(SectionType.ORGANISATION_FINANCES)
+                .withQuestionGroup(false)
+                .withQuestions(projectCostQuestions)
+                .build();
 
         when(questionService.getPreviousQuestionBySection(section.getId())).thenReturn(Optional.of(previousQuestion));
-        when(questionService.getPreviousQuestion(anyLong())).thenReturn(Optional.of(previousValidQuestion));
         when(questionService.getNextQuestionBySection(section.getId())).thenReturn(Optional.of(nextQuestion));
-        when(sectionService.getSectionByQuestionId(anyLong())).thenReturn(previousSection).thenReturn(validPreviousSection).thenReturn(nextSection).thenReturn(validNextSection);
-        when(questionService.getNextQuestion(anyLong())).thenReturn(Optional.of(nextValidQuestion));
+        when(sectionService.getSectionByQuestionId(previousQuestion.getId())).thenReturn(previousSection);
+        when(sectionService.getSectionByQuestionId(nextQuestion.getId())).thenReturn(nextSection);
 
-        NavigationViewModel result = target.addNavigation(section, applicationId, Collections.singletonList(sectionToSkip.getType()));
+        NavigationViewModel result = target.addNavigation(section, applicationId);
 
-        assertTrue(result.getPreviousUrl().contains("/question/3"));
-        assertEquals("Question 3", result.getPreviousText());
-        assertTrue(result.getNextUrl().contains("/question/4"));
-        assertEquals("Question 4", result.getNextText());
+        assertTrue(result.getPreviousUrl().contains("/question/" + previousQuestion.getId()));
+        assertEquals(previousQuestion.getShortName(), result.getPreviousText());
+        assertTrue(result.getNextUrl().contains("/question/" + nextQuestion.getId()));
+        assertEquals(nextQuestion.getShortName(), result.getNextText());
+
+        InOrder inOrder = inOrder(questionService, sectionService);
+        inOrder.verify(questionService).getPreviousQuestionBySection(section.getId());
+        inOrder.verify(questionService).getNextQuestionBySection(section.getId());
+        inOrder.verify(sectionService).getSectionByQuestionId(nextQuestion.getId());
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithApplicantOrganisation(){
+    public void addAppropriateBackURLToModelWithApplicantOrganisation(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
         SectionResource section = newSectionResource().withCompetition(11L).withType(SectionType.OVERVIEW_FINANCES).build();
 
         setupApplicationOpen(applicationId);
 
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L));
-        verify(model).addAttribute(eq("backURL"), contains("management/competition/11/application/1"));
-        verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L), Optional.empty(), false);
+        verify(model).addAttribute(eq("backURL"), contains("application/" + applicationId + "/summary"));
+        verify(model).addAttribute(eq("backTitle"), eq("Application summary"));
     }
 
     @Test
-    public void testAddAppropriateBackURLToModelWithFinanceSubSectionWithApplicantOrganisation(){
+    public void addAppropriateBackURLToModelWithFinanceSubSectionWithApplicantOrganisation(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
 
         setupApplicationOpen(applicationId);
 
         SectionResource section = newSectionResource().withType(SectionType.FUNDING_FINANCES).withParentSection(33L).build();
-        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L));
+        target.addAppropriateBackURLToModel(applicationId, model, section, Optional.of(22L), Optional.empty(), false);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1/form/section/33/22"));
         verify(model).addAttribute(eq("backTitle"), contains("Your finances"));

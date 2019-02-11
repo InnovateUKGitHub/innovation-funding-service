@@ -21,15 +21,16 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -62,6 +63,17 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
                 assertTrue(rules.internalUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
                 assertFalse(rules.internalUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void stakeholdersCanSeeAllOrganisations() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(STAKEHOLDER)) {
+                assertTrue(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            } else {
+                assertFalse(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             }
         });
     }

@@ -122,11 +122,10 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
 
     @Before
-    public void setup() {
-        super.setUp();
+    public void setupCommonExpectations() {
+
         setupCookieUtil(cookieUtil);
-        when(organisationRestService.getPrimaryForUser(financeTeamUser.getId())).thenReturn(restSuccess(innovateOrganisationResource));
-        when(organisationRestService.getPrimaryForUser(financeContactUser.getId())).thenReturn(restSuccess(leadOrganisationResource));
+
         when(projectRestService.getPartnerOrganisation(projectId, financeContactUser.getId())).thenReturn(restSuccess(partnerOrg));
 
         // populate viewmodel

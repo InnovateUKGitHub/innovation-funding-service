@@ -14,7 +14,6 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -48,7 +47,7 @@ public class AssessmentOverviewController {
     private AssessmentFinancesSummaryModelPopulator assessmentFinancesSummaryModelPopulator;
 
     @Autowired
-    private AssessmentDetailedFinancesModelPopulator assessmentDetailedFinancesSummaryModelPopulator;
+    private AssessmentDetailedFinancesModelPopulator assessmentDetailedFinancesModelPopulator;
 
     @Autowired
     private AssessmentService assessmentService;
@@ -79,14 +78,15 @@ public class AssessmentOverviewController {
     public String getDetailedFinances(Model model,
                                       @PathVariable("assessmentId") long assessmentId,
                                       @PathVariable("organisationId") long organisationId) {
-        model.addAttribute("model", assessmentDetailedFinancesSummaryModelPopulator.populateModel(assessmentId, organisationId, model));
+        model.addAttribute("model", assessmentDetailedFinancesModelPopulator.populateModel(assessmentId, organisationId, model));
         return "assessment/application-detailed-finances";
     }
 
-    @GetMapping("/application/{applicationId}/formInput/{formInputId}/download")
+    @GetMapping("/application/{applicationId}/formInput/{formInputId}/download/**")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix(
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
+            @PathVariable(value = "fileName", required = false) final String fileName,
             UserResource loggedInUser) {
         ProcessRoleResource processRole = userRestService.findProcessRole(applicationId).getSuccess().stream()
                 .filter(role -> loggedInUser.getId().equals(role.getUser()))

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
@@ -70,15 +71,15 @@ public class CompetitionManagementCompetitionController {
     public String releaseFeedback(@PathVariable("competitionId") Long competitionId) {
         competitionPostSubmissionRestService.releaseFeedback(competitionId);
 
-        if (isCompetitionTypeEOI(competitionId)) {
+        if (isReleaseFeedbackCompletionStage(competitionId)) {
             return "redirect:/dashboard/previous";
         } else {
             return "redirect:/dashboard/project-setup";
         }
     }
 
-    private boolean isCompetitionTypeEOI(Long competitionId) {
+    private boolean isReleaseFeedbackCompletionStage(Long competitionId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        return "Expression of interest".equals(competition.getCompetitionTypeName());
+        return CompetitionCompletionStage.RELEASE_FEEDBACK.equals(competition.getCompletionStage());
     }
 }

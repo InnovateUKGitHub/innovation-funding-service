@@ -22,16 +22,17 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/application/download/overheadfile")
-@SecuredBySpring(value="Controller", description = "Applicant can download their uploaded overheads spreadsheet", securedType = OverheadFileDownloadController.class)
-@PreAuthorize("hasAuthority('applicant')")
+@SecuredBySpring(value="Controller", description = "Applicants and internal users can download uploaded overheads spreadsheet", securedType = OverheadFileDownloadController.class)
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead')")
 public class OverheadFileDownloadController {
+
     @Autowired
     private OverheadFileRestService overheadFileRestService;
 
     @GetMapping("/{overheadId}")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
-            @PathVariable("overheadId") final Long overheadId) throws ExecutionException {
+            @PathVariable("overheadId") final Long overheadId) {
 
         final ByteArrayResource resource = overheadFileRestService.getOverheadFile(overheadId).getSuccess();
         final FileEntryResource fileEntryResource = overheadFileRestService.getOverheadFileDetails(overheadId).getSuccess();

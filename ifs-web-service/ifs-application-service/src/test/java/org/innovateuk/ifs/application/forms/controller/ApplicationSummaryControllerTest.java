@@ -7,15 +7,15 @@ import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummary
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
-import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
-import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.summary.controller.ApplicationSummaryController;
 import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -47,6 +47,7 @@ import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE_OR_COLLABORATIVE;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.*;
@@ -117,8 +118,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     }
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -208,7 +208,8 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
                 false,
                 false,
                 false,
-                false);
+                false,
+                SINGLE_OR_COLLABORATIVE);
         applicationTeamViewModel.setSummary(true);
 
         return applicationTeamViewModel;
@@ -231,5 +232,18 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         ApplicationSummaryViewModel model = testApplicationSummary();
         assertTrue(model.isSupport());
 
+    }
+
+    @Test
+    public void applicationFeedbackWhenLoggedInAsNonSupport() throws Exception {
+
+        setLoggedInUser(applicant);
+
+        ApplicationResource app = applications.get(0);
+        when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(true));
+
+        mockMvc.perform(get("/application/{applicationId}/summary", app.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/" + app.getId() + "/feedback"));
     }
 }

@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.application.creation.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
+import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -21,9 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -42,7 +38,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
     private CookieUtil cookieUtil;
 
     @Mock
-    private CompanyHouseRestService companyHouseRestService;
+    private CompaniesHouseRestService companiesHouseRestService;
 
     @Mock
     private PublicContentItemRestService publicContentItemRestService;
@@ -54,18 +50,14 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
 
     private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
-    private OrganisationResource organisationResource;
-    private ApplicationResource applicationResource;
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
+
         setupCookieUtil(cookieUtil);
 
-        applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
-        organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
-        when(companyHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
+        when(companiesHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
     }
 
     @Test

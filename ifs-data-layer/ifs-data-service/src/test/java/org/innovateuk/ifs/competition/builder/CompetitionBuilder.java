@@ -6,9 +6,9 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.Milestone;
-import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.user.domain.User;
@@ -22,6 +22,7 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
 public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuilder> {
@@ -47,12 +48,12 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> competition.setSections(sections));
     }
 
-    public CompetitionBuilder withSetupComplete(boolean setupComplete) {
-        return with(competition -> setField("setupComplete", setupComplete, competition));
+    public CompetitionBuilder withSetupComplete(boolean... setupComplete) {
+        return withArraySetFieldByReflection("setupComplete", setupComplete);
     }
 
-    public CompetitionBuilder withLocationPerPartner(boolean locationPerPartner) {
-        return with(competition -> setField("locationPerPartner", locationPerPartner, competition));
+    public CompetitionBuilder withLocationPerPartner(boolean... locationPerPartner) {
+        return withArraySetFieldByReflection("locationPerPartner", locationPerPartner);
     }
 
     public CompetitionBuilder withStartDate(ZonedDateTime startDate) {
@@ -149,6 +150,11 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((date, competition) -> competition.closeAssessment(date), dates);
     }
 
+    public CompetitionBuilder withCollaborationLevel(CollaborationLevel... collaborationLevels) {
+        return withArray((collaborationLevel, competition) ->
+                competition.setCollaborationLevel(collaborationLevel), collaborationLevels);
+    }
+
     public CompetitionBuilder withAssessorCount(Integer... assessorCounts) {
         return withArraySetFieldByReflection("assessorCount", assessorCounts);
     }
@@ -178,6 +184,14 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withStateAid(Boolean... stateAid) {
         return withArraySetFieldByReflection("stateAid", stateAid);
+    }
+
+    public CompetitionBuilder withCompetitionDocuments(List<CompetitionDocument>... projectDocuments) {
+        return withArraySetFieldByReflection("competitionDocuments", projectDocuments);
+    }
+
+    public CompetitionBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSection) {
+        return withArraySetFieldByReflection("includeYourOrganisationSection", includeYourOrganisationSection);
     }
 
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
@@ -227,6 +241,19 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
                     .withAssessorFeedbackDate(now.minusDays(2L))
                     .withReleaseFeedbackDate(now.minusDays(10L))
                     .withFeedbackReleased(now.minusDays(1L));
+        } else if(PREVIOUS.equals(status)) {
+            return withSetupComplete(true)
+                    .withStartDate(now.minusDays(9L))
+                    .withEndDate(now.minusDays(8L))
+                    .withAssessorAcceptsDate(now.minusDays(7L))
+                    .withAssessorsNotifiedDate(now.minusDays(6L))
+                    .withFundersPanelDate(now.minusDays(5L))
+                    .withFundersPanelEndDate(now.minusDays(4L))
+                    .withAssessmentClosedDate(now.minusDays(3L))
+                    .withAssessorFeedbackDate(now.minusDays(2L))
+                    .withReleaseFeedbackDate(now.minusDays(10L))
+                    .withFeedbackReleased(now.minusDays(1L))
+                    .withCompetitionType(newCompetitionType().withName("Expression of interest").build());
         } else if(COMPETITION_SETUP.equals(status)) {
             return withSetupComplete(false);
         } else {
@@ -270,6 +297,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((competition, leadTechnologist) -> setField("leadTechnologist", competition, leadTechnologist), leadTechnologists);
     }
 
+    public CompetitionBuilder withIncludeProjectGrowthTable(Boolean... includeProjectGrowthTable) {
+        return withArraySetFieldByReflection("includeProjectGrowthTable", includeProjectGrowthTable);
+    }
+
     public CompetitionBuilder withCreatedBy(User... users) {
         return withArraySetFieldByReflection("createdBy", users);
     }
@@ -284,5 +315,17 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
         return withArraySetFieldByReflection("modifiedOn", modifiedOns);
+    }
+
+    public CompetitionBuilder withIncludeJesForm(boolean... includeJesForms) {
+        return withArraySetFieldByReflection("includeJesForm", includeJesForms);
+    }
+
+    public CompetitionBuilder withCompletionStage(CompetitionCompletionStage... completionStage) {
+        return withArraySetFieldByReflection("completionStage", completionStage);
+    }
+
+    public CompetitionBuilder withFundingType(FundingType... fundingTypes) {
+        return withArray((fundingType, competition) -> competition.setFundingType(fundingType), fundingTypes);
     }
 }

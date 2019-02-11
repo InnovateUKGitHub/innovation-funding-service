@@ -30,7 +30,7 @@
                 </th:block>
                 <input class="govuk-input"
                        type="text"
-                       th:errorclass="fgovuk-input--error"
+                       th:errorclass="govuk-input--error"
                        th:field="*{firstName}"
                        required="required"
                        minlength="2"
@@ -69,43 +69,9 @@
                 <span class="govuk-hint">You will need this to sign into your account.</span>
                 <th:block th:text="${model.email}">robertplant@innovateuk.org</th:block>
             </p>
+            
+            <th:block th:insert="fragments/passwords :: password (fieldName='password', label='Create password')" />
 
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('password')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="password">
-                    Create password
-                </label>
-                <th:block th:if="${#fields.hasErrors('password')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
-                </th:block>
-                <div class="govuk-hint" id="password-hint">
-                    <p class="govuk-body">Your password is case-sensitive and needs to:</p>
-                    <ul class="govuk-list govuk-list--bullet status">
-                        <li data-minlength-validationstatus="">be at least 8 characters long</li>
-                        <li data-containsuppercase-validationstatus="">contain at least 1 capital letter</li>
-                        <li data-containsnumber-validationstatus="">contain at least 1 number</li>
-                    </ul>
-                    <p class="govuk-body govuk-!-margin-bottom-0">Your password can include spaces to make a phrase.</p>
-                </div>
-                <div class="password-toggle">
-                    <input data-containsnumber-showmessage="visuallyhidden"
-                           data-containsuppercase-showmessage="visuallyhidden"
-                           data-minlength-showmessage="visuallyhidden"
-                           data-required-showmessage="visuallyhidden"
-                           data-duplicate-required-minlength="true"
-                           aria-describedby="password-hint"
-                           class="govuk-input"
-                           type="password"
-                           required="required"
-                           minlength="8"
-                           id="password"
-                           name="password"
-                           th:errorclass="govuk-input--error"
-                           th:field="*{password}"
-                           th:attr="data-required-errormessage=#{validation.standard.password.required},
-                                    data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'8')}"/>
-                    <button type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
-                </div>
-            </div>
             <button class="govuk-button govuk-!-margin-top-6">Create account</button>
         </form>
 

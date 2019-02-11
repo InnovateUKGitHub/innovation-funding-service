@@ -135,9 +135,21 @@ function startPybot() {
     else
       local rerunString=''
     fi
+    if [[ ${dryRun} -eq 1 ]]
+      then
+        local dryRunString='--dryrun'
+      else
+        local dryRunString=''
+    fi
+    if [[ ${eu} -eq 1 ]]
+      then
+        local includeEuTags='--include EU2020'
+      else
+        local includeEuTags='--exclude EU2020'
+    fi
 
 
-    pybot --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
+    pybot --outputdir target/${targetDir} ${rerunString} ${dryRunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
     -v PROTOCOL:'https://' \
@@ -152,6 +164,7 @@ function startPybot() {
     $includeHappyPath \
     $includeBespokeTags \
     $excludeBespokeTags \
+    $includeEuTags \
     --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }
 
@@ -176,7 +189,6 @@ function runTests() {
     do
         wait $job
     done
-
 }
 
 function deleteEmails() {
@@ -198,7 +210,7 @@ function clearOldReports() {
 }
 
 function getZAPReport() {
-    wget -qO - ifs.local-dev:9000/OTHER/core/other/htmlreport/ > target/${targetDir}/ZAPReport.html
+    curl --silent ifs.local-dev:9000/OTHER/core/other/htmlreport/ -o target/${targetDir}/ZAPReport.html
 }
 
 function saveResultsToCompressedFolder() {
@@ -279,9 +291,11 @@ rerunFailed=0
 stopGrid=0
 showZapReport=0
 compress=0
+eu=0
+dryRun=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":q :h :t :r :c :w :z :d: :x :I: :E:" opt ; do
+while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E:" opt ; do
     case ${opt} in
         q)
             quickTest=1
@@ -320,6 +334,12 @@ while getopts ":q :h :t :r :c :w :z :d: :x :I: :E:" opt ; do
         ;;
         x)
           compress=1
+        ;;
+        R)
+          dryRun=1
+        ;;
+        B)
+          eu=1
         ;;
         \?)
             coloredEcho "=> Invalid option: -$OPTARG" red >&2

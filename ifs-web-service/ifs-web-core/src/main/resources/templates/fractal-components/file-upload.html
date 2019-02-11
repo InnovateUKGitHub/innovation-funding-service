@@ -1,84 +1,92 @@
-<h1 class="govuk-heading-xl">File upload example</h1>
+<div class="govuk-width-container">
 
-<h2 class="govuk-heading-s">No file uploaded in edit mode</h2>
-
-<div class="upload-section">
-    <h3 class="govuk-heading-s govuk-!-margin-0">Appendix</h3>
-    <details class="govuk-details">
-        <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">What should I include in the appendix?</span>
-        </summary>
-        <div class="govuk-details__text wysiwyg-styles">
-            <p class="govuk-body">You may include an appendix of additional information to support your response to this question.
-               This appendix may include graphics describing the innovation or the nature of the problem.
-               You may want to include evidence of freedom to operate, patent searches or competitor analysis as supporting information.</p>
-            <p class="govuk-body">The appendix should:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>be in a portable document format (.pdf)</li>
-                <li>be readable with 100% magnification</li>
-                <li>contain your application number and project title at the top</li>
-                <li>not be any longer than 5 sides of A4. Longer appendices will only have the first 5 pages assessed</li>
-                <li>be less than 10MB in size</li>
-            </ul>
-        </div>
-    </details>
-    <div>
-        <p class="govuk-body uploaded-file">No file currently uploaded.</p>
-        <input type="file" id="formInput-1066" name="formInput[1066]" class="inputfile">
-        <label for="formInput-1066" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
+    <div class="govuk-inset-text">
+        <p class="govuk-body">This is an IFS version of a GDS component.</p>
     </div>
+
+    <h2 class="govuk-heading-s">Before upload</h2>
+
+    <div class="upload-section">
+        <h2 class="govuk-heading-m govuk-!-margin-0">Exploitation plan</h2>
+        <p class="govuk-hint govuk-!-margin-top-0">This is a confirmation of the business plan that your project hopes to achieve.
+            You should describe the partner activities that will exploit the results of the project.</p>
+        <details class="govuk-details" role="group">
+            <summary class="govuk-details__summary" role="button" aria-controls="details-content">
+                <span class="govuk-details__summary-text">What should I include in the exploitation plan?</span>
+            </summary>
+            <div class="govuk-details__text" id="details-content">
+                <p class="govuk-body">This plan will evolve and change during the lifetime of the project. Its aim is to confirm the
+                    business case for the project. It should also describe partner activities that will exploit the
+                    results of the project so that:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>changes in the commercial environment can be monitored and accounted for</li>
+                    <li>adequate resources are committed to exploitation</li>
+                    <li>exploitation can be monitored by the stakeholders</li>
+                </ul>
+
+                <p class="govuk-body">A framework of the exploitation plan is available for <a href="/files/exploitation_plan.doc" class="govuk-link">download</a>.</p>
+                <p class="govuk-body">The uploaded exploitation plan must:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>be in portable document format (PDF)</li>
+                    <li>be legible at 100% magnification</li>
+                    <li>be less than 10MB in file size</li>
+                </ul>
+            </div>
+        </details>
+
+        <form action="#" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="" />
+            <div>
+                <p class="govuk-body uploaded-file">No file currently uploaded.</p>
+                <input type="file" id="exploitationPlan" name="exploitationPlan" class="inputfile">
+
+                <label for="exploitationPlan" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
+                <button name="uploadExploitationPlanClicked" class="button-secondary" type="submit" data-for-file-upload="exploitationPlan">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <h2 class="govuk-heading-s govuk-!-margin-top-9">After upload</h2>
+
+    <div class="upload-section">
+        <h2 class="govuk-heading-m govuk-!-margin-0">Exploitation plan</h2>
+        <p class="govuk-hint govuk-!-margin-top-0">This is a confirmation of the business plan that your project hopes to achieve.
+            You should describe the partner activities that will exploit the results of the project.</p>
+        <details class="govuk-details" role="group">
+            <summary class="govuk-details__summary" role="button" aria-controls="details-content-820aedc9-2a11-4664-993f-2a0fec6aadcf" aria-expanded="false">
+                <span class="govuk-details__summary-text">What should I include in the exploitation plan?</span>
+            </summary>
+            <div class="govuk-details__text" id="details-content-820aedc9-2a11-4664-993f-2a0fec6aadcf" aria-hidden="true">
+                <p class="govuk-body">This plan will evolve and change during the lifetime of the project. Its aim is to confirm the
+                    business case for the project. It should also describe partner activities that will exploit the
+                    results of the project so that:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>changes in the commercial environment can be monitored and accounted for</li>
+                    <li>adequate resources are committed to exploitation</li>
+                    <li>exploitation can be monitored by the stakeholders</li>
+                </ul>
+
+                <p class="govuk-body">A framework of the exploitation plan is available for <a href="/files/exploitation_plan.doc" class="govuk-link">download</a>.</p>
+                <p class="govuk-body">The uploaded exploitation plan must:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>be in portable document format (PDF)</li>
+                    <li>be legible at 100% magnification</li>
+                    <li>be less than 10MB in file size</li>
+                </ul>
+            </div>
+        </details>
+
+        <form action="/project-setup/project/1/partner/documents" method="post" enctype="multipart/form-data"><input type="hidden" name="_csrf" value="3ccd7da6ba891ac95b6d3fbe560c8919e051bc218afd33bd48aaa940d72e57a4401e7f7eab80f4e14c0f76bab66aa0e90b848640b59755623c13f67dff1624580f2e01cb6231fca9b3af182a1d148067ea16b19430ffd2b2d90489c0639d5689799456681ac1b2325a63e236140c6d752126333c645c9ee473f292d716537674">
+            <div>
+                <p class="uploaded-file govuk-body">
+                    <a class="govuk-link" href="#" target="_blank">vat-receipt.pdf</a>
+                    (opens in a new window).
+                </p>
+                <button name="removeExploitationPlanClicked" value="" class="button-secondary" type="submit">Remove</button>
+            </div>
+        </form>
+
+    </div>
+
 </div>
 
-<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-
-<h2 class="govuk-heading-s">No file uploaded in readonly mode</h2>
-
-<div class="upload-section">
-    <h3 class="govuk-heading-s govuk-!-margin-0">Appendix</h3>
-    <p class="govuk-body uploaded-file">No file currently uploaded.</p>
-</div>
-
-<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-
-<h2 class="govuk-heading-s">File uploaded in edit mode</h2>
-
-<div class="upload-section">
-    <h3 class="govuk-heading-s govuk-!-margin-0">Appendix</h3>
-    <details class="govuk-details">
-        <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">What should I include in the appendix?</span>
-        </summary>
-        <div class="govuk-details__text wysiwyg-styles">
-            <p class="govuk-body">You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor. Academic collaborators may refer to their research standing.</p>
-            <p class="govuk-body">The appendix should:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>be in a portable document format (.pdf)</li>
-                <li>be readable with 100% magnification</li>
-                <li>contain your application number and project title at the top</li>
-                <li>include up to half an A4 page per partner describing the skills and experience of the main people who will be working on the project</li>
-                <li>be less than 10MB in size</li>
-            </ul>
-        </div>
-    </details>
-    <p class="uploaded-file govuk-body">
-        <a class="govuk-link"
-           href="/application/139/form/question/439/forminput/1074/download"
-           target="_blank">Changes to the plan.pdf</a>
-        (opens in a new window).
-    </p>
-    <button name="remove_uploaded_file" value="" class="button-secondary" type="submit">Remove</button>
-</div>
-
-<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-
-<h2 class="govuk-heading-s">File uploaded in readonly mode</h2>
-
-<div class="upload-section">
-    <h3 class="govuk-heading-s govuk-!-margin-0">Appendix</h3>
-    <p class="govuk-body uploaded-file">
-        <a class="govuk-link"
-           href="/application/139/form/question/439/forminput/1074/download"
-           target="_blank">Changes to the plan.pdf</a>
-        (opens in a new window).
-    </p>
-</div>

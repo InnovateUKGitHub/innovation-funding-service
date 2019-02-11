@@ -34,7 +34,7 @@ public class FinanceModelPopulatorTest {
                 .withName("name")
                 .withId(competitionId)
                 .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
-                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
+                .withNonFinanceType(true)
                 .build();
 
         assertTrue(competition.isNonFinanceType());
@@ -42,7 +42,6 @@ public class FinanceModelPopulatorTest {
         FinanceViewModel viewModel = (FinanceViewModel) populator.populateModel(competition, Optional.empty());
 
         assertEquals(FinanceViewModel.class, viewModel.getClass());
-        assertFalse(viewModel.isSectorCompetition());
         assertTrue(viewModel.isNoFinancesCompetition());
     }
 }

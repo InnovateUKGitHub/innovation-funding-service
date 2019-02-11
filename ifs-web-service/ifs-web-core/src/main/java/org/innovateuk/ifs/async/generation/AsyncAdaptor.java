@@ -49,11 +49,11 @@ public abstract class AsyncAdaptor {
         return asyncFuturesGenerator.awaitAll(future1, future2, future3, future4);
     }
 
-    protected CompletableFutureTupleNHandler awaitAll(CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
+    protected CompletableFutureTupleNHandler<?> awaitAll(CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
         return asyncFuturesGenerator.awaitAll(future1, future2, future3, future4, moreFutures);
     }
 
-    protected CompletableFutureTupleNHandler awaitAll(List<? extends CompletableFuture<?>> futures) {
+    protected <R> CompletableFutureTupleNHandler<R> awaitAll(List<CompletableFuture<R>> futures) {
         return asyncFuturesGenerator.awaitAll(futures);
     }
 
@@ -73,7 +73,7 @@ public abstract class AsyncAdaptor {
         return asyncFuturesGenerator.awaitAll(futureName, future1, future2, future3, future4, moreFutures);
     }
 
-    protected void waitForFuturesAndChildFuturesToCompleteFrom(List<? extends CompletableFuture<?>> futures) {
-        AsyncFuturesHolder.waitForFuturesAndChildFuturesToCompleteFrom(futures);
+    protected void waitForFuturesAndChildFuturesToCompleteFrom(List<? extends CompletableFuture<?>> futures, long timeoutValue) {
+        AsyncFuturesHolder.waitForFuturesAndChildFuturesToCompleteFrom(futures, timeoutValue );
     }
 }

@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,6 +35,7 @@ public class NonIfsDetailsFormPopulatorTest {
         CompetitionResource competition = newCompetitionResource()
                 .withName(COMPETITION_NAME).withInnovationSector(INNOVATION_SECTOR).withInnovationAreas(asSet(INNOVATION_AREA))
                 .withNonIfsUrl(COMPETITION_URL).withFundersPanelEndDate(NOTIFIED).withStartDate(OPEN).withEndDate(CLOSE)
+                .withFundingType(GRANT)
                 .build();
 
         NonIfsDetailsForm form = target.populate(competition);
@@ -46,6 +48,7 @@ public class NonIfsDetailsFormPopulatorTest {
         assertThat(form.getApplicantNotifiedDate().getDate(), equalTo(NOTIFIED));
         assertThat(form.getOpenDate().getDate(), equalTo(OPEN));
         assertThat(form.getCloseDate().getDate(), equalTo(CLOSE));
+        assertThat(form.getFundingType(), equalTo(GRANT));
 
     }
 }

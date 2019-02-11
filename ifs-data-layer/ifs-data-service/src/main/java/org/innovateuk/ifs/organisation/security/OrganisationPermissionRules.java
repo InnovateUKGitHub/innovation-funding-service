@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
@@ -42,6 +42,11 @@ public class OrganisationPermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ", description = "Stakeholders can see all Organisations")
+    public boolean stakeholdersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return isStakeholder(user);
+    }
+
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")
     public boolean systemRegistrationUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isSystemRegistrationUser(user);
@@ -61,7 +66,6 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "Users linked to Applications can view the basic details of the other Organisations on their own Applications")
     public boolean usersCanViewOrganisationsOnTheirOwnApplications(OrganisationResource organisation, UserResource user) {
 
-        // TODO DW - INFUND-1556 - this code feels pretty heavy given that all we need to do is find a link between a User and an Organisation via an Application
         List<ProcessRole> processRoles = processRoleRepository.findByUserId(user.getId());
         List<Long> applicationsThatThisUserIsLinkedTo = simpleMap(processRoles, ProcessRole::getApplicationId);
         List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsLinkedTo, applicationId ->

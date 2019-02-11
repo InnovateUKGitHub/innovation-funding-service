@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "compass-importer": "^0.4.1",
+    "cryptiles": "^4.1.2",
     "eslint": "^4.19.1",
     "files-exist": "^1.1.0",
     "govuk-frontend": "^1.1.1",
@@ -12,14 +13,17 @@
     "gulp-standard": "^11.0.0",
     "gulp-uglify": "^3.0.0",
     "html5shiv": "^3.7.3",
+    "http-proxy-agent": "^2.1.0",
     "jquery": "^1.12.4",
     "jquery-ui": "^1.12.1",
     "js-cookie": "^2.2.0",
     "jshint-stylish": "^2.2.1",
-    "resolve": "^1.7.1"
+    "resolve": "^1.7.1",
+    "sshpk": "^1.15.1"
   },
   "devDependencies": {
-    "@frctl/fractal": "^1.1.7"
+    "@frctl/fractal": "^1.1.7",
+    "jest": "^23.6.0"
   },
   "engines": {
     "node": "^8.11.1"
@@ -31,6 +35,14 @@
       "Cookies",
       "showdown",
       "md"
+    ]
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "<rootDir>/build/"
     ]
   },
   "private": true

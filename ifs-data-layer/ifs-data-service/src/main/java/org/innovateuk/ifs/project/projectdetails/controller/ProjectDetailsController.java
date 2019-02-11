@@ -1,21 +1,14 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -55,9 +48,8 @@ public class ProjectDetailsController {
     @PostMapping("/{projectId}/address")
     public RestResult<Void> updateProjectAddress(@PathVariable("projectId") final Long projectId,
                                                  @RequestParam("leadOrganisationId") final Long leadOrganisationId,
-                                                 @RequestParam("addressType") final String addressType,
                                                  @RequestBody AddressResource addressResource) {
-        return projectDetailsService.updateProjectAddress(leadOrganisationId, projectId, OrganisationAddressType.valueOf(addressType), addressResource).toPostResponse();
+        return projectDetailsService.updateProjectAddress(leadOrganisationId, projectId, addressResource).toPostResponse();
     }
 
     @PostMapping("/{projectId}/organisation/{organisation}/finance-contact")
@@ -78,13 +70,13 @@ public class ProjectDetailsController {
 
     @PostMapping("/{projectId}/invite-finance-contact")
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final ProjectInviteResource inviteResource) {
+                                                 @RequestBody @Valid final ProjectUserInviteResource inviteResource) {
         return projectDetailsService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
     }
 
     @PostMapping("/{projectId}/invite-project-manager")
     public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final ProjectInviteResource inviteResource) {
+                                                 @RequestBody @Valid final ProjectUserInviteResource inviteResource) {
         return projectDetailsService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 }

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -26,7 +27,6 @@ import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusS
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.Address;
 import org.innovateuk.ifs.sil.experian.resource.Condition;
@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
 
 import static java.lang.Short.parseShort;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -54,6 +53,7 @@ import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -120,7 +120,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Override
     @Transactional
     public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
-        Address address = toExperianAddressFormat(bankDetailsResource.getOrganisationAddress().getAddress());
+        Address address = toExperianAddressFormat(bankDetailsResource.getAddress());
         AccountDetails accountDetails = new AccountDetails(
                 bankDetailsResource.getSortCode(),
                 bankDetailsResource.getAccountNumber(),
@@ -141,7 +141,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
         ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary
                 = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(),
-                project.getApplication().getCompetition().getName(), project.getId(), project.getApplication().getId(),
+                project.getApplication().getCompetition().getName(), project.getId(), project.getName(), project.getApplication().getId(),
                 bankDetailsStatusResources, leadOrganisation.getName());
         return serviceSuccess(projectBankDetailsStatusSummary);
     }
@@ -183,38 +183,32 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     private ServiceResult<AccountDetails> saveSubmittedBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
         BankDetails bankDetails = bankDetailsMapper.mapToDomain(bankDetailsResource);
-        OrganisationAddressResource organisationAddressResource = bankDetailsResource.getOrganisationAddress();
-        AddressResource addressResource = organisationAddressResource.getAddress();
+        AddressResource addressResource = bankDetailsResource.getAddress();
 
-        if (organisationAddressResource.getId() != null) {
-            OrganisationAddress organisationAddress = organisationAddressRepository.findOne(organisationAddressResource.getId());
-            bankDetails.setOrganisationAddress(organisationAddress);
-            if (addressResource.getId() != null) { // Existing address selected.
-                organisationAddress.setAddress(addressRepository.findOne(addressResource.getId()));
-            }
-        } else {
-            updateAddressForExistingBankDetails(organisationAddressResource, addressResource, bankDetailsResource, bankDetails);
-        }
+        updateAddressForExistingBankDetails(addressResource, bankDetailsResource, bankDetails);
 
         bankDetailsRepository.save(bankDetails);
 
         return serviceSuccess(accountDetails);
     }
 
-    private void updateAddressForExistingBankDetails(OrganisationAddressResource organisationAddressResource, AddressResource addressResource, BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
-        if (organisationAddressResource.getAddressType().getId().equals(BANK_DETAILS.getOrdinal())) {
-            AddressType addressType = addressTypeRepository.findOne(BANK_DETAILS.getOrdinal());
-            List<OrganisationAddress> bankOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(bankDetailsResource.getOrganisation(), addressType);
+    private void updateAddressForExistingBankDetails(AddressResource addressResource, BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
+        AddressType addressType = addressTypeRepository.findOne(BANK_DETAILS.getOrdinal());
+        List<OrganisationAddress> bankOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(bankDetailsResource.getOrganisation(), addressType);
 
-            OrganisationAddress newOrganisationAddress;
-            if (bankOrganisationAddresses != null && !bankOrganisationAddresses.isEmpty()) {
-                newOrganisationAddress = bankOrganisationAddresses.get(0);
-                newOrganisationAddress.getAddress().updateFrom(addressResource);
-            } else {
-                newOrganisationAddress = organisationAddressRepository.save(organisationAddressMapper.mapToDomain(organisationAddressResource));
-            }
-            bankDetails.setOrganisationAddress(newOrganisationAddress);
+        OrganisationAddress newOrganisationAddress;
+        if (bankOrganisationAddresses != null && !bankOrganisationAddresses.isEmpty()) {
+            newOrganisationAddress = bankOrganisationAddresses.get(0);
+            newOrganisationAddress.getAddress().updateFrom(addressResource);
+        } else {
+            addressResource.setId(null);
+            OrganisationAddressResource organisationAddressResource = new OrganisationAddressResource();
+            organisationAddressResource.setAddress(addressResource);
+            organisationAddressResource.setOrganisation(bankDetailsResource.getOrganisation());
+            organisationAddressResource.setAddressType(new AddressTypeResource(BANK_DETAILS.getOrdinal()));
+            newOrganisationAddress = organisationAddressRepository.save(organisationAddressMapper.mapToDomain(organisationAddressResource));
         }
+        bankDetails.setOrganisationAddress(newOrganisationAddress);
     }
 
     private ServiceResult<AccountDetails> updateExistingBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
@@ -299,7 +293,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Override
     public ServiceResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals() {
 
-        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRepository.getPendingBankDetailsApprovalsForProjectStateNotIn(singleton(ProjectState.WITHDRAWN));
+        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRepository.getPendingBankDetailsApprovalsForProjectStateNotIn(asList(WITHDRAWN, HANDLED_OFFLINE, COMPLETED_OFFLINE));
 
         return serviceSuccess(pendingBankDetails);
     }
@@ -307,7 +301,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Override
     public ServiceResult<Long> countPendingBankDetailsApprovals() {
 
-        Long countBankDetails = bankDetailsRepository.countPendingBankDetailsApprovalsForProjectStateNotIn(singleton(ProjectState.WITHDRAWN));
+        Long countBankDetails = bankDetailsRepository.countPendingBankDetailsApprovalsForProjectStateNotIn(asList(WITHDRAWN, HANDLED_OFFLINE, COMPLETED_OFFLINE));
 
         return serviceSuccess(countBankDetails);
     }

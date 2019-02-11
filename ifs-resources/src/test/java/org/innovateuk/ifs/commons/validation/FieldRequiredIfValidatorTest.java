@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -28,7 +29,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 public class FieldRequiredIfValidatorTest {
 
     private LocalValidatorFactoryBean localValidatorFactory;
-
 
     private TestController controller = new TestController();
 
@@ -128,16 +128,88 @@ public class FieldRequiredIfValidatorTest {
                 .andExpect(model().attributeHasFieldErrors("form", "catQuantity"))
                 .andExpect(view().name("failure"));
     }
-
     @Test
-    public void isValid_integerFieldIsRequiredAndNull() throws Exception {
+    public void isValid_bigDecimalFieldIsRequiredAndNotEmpty() throws Exception {
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("hasCats", "true"))
+                .param("hasMoney", "true")
+                .param("cost", "10"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasNoErrors())
+                .andExpect(view().name("success"));
+    }
+
+    @Test
+    public void isValid_bigDecimalFieldIsRequiredAndEmpty() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasMoney", "true")
+                .param("cost", ""))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().errorCount(1))
-                .andExpect(model().attributeHasFieldErrors("form", "catQuantity"))
+                .andExpect(model().attributeHasFieldErrors("form", "cost"))
+                .andExpect(view().name("failure"));
+    }
+
+    @Test
+    public void isValid_bigDecimalFieldIsRequiredAndWhitespace() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasMoney", "true")
+                .param("cost", "  "))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrors("form", "cost"))
+                .andExpect(view().name("failure"));
+    }
+
+    @Test
+    public void isValid_bigDecimalFieldIsRequiredAndNull() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasMoney", "true"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrors("form", "cost"))
+                .andExpect(view().name("failure"));
+    }
+
+    @Test
+    public void isValid_booleanFieldIsRequiredAndNotEmpty() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasPets", "true")
+                .param("hasCats", "false"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasNoErrors())
+                .andExpect(view().name("success"));
+    }
+
+    @Test
+    public void isValid_booleanFieldIsRequiredAndEmpty() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasPets", "true")
+                .param("hasCats", ""))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrors("form", "hasCats"))
+                .andExpect(view().name("failure"));
+    }
+
+    @Test
+    public void isValid_booleanFieldIsRequiredAndNull() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasPets", "true"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrors("form", "hasCats"))
                 .andExpect(view().name("failure"));
     }
 
@@ -223,9 +295,16 @@ public class FieldRequiredIfValidatorTest {
                 .andExpect(view().name("success"));
     }
 
-    @FieldRequiredIf(required = "foodAllergies", argument = "hasFoodAllergies", predicate = true, message = "{validation.testform.foodAllergies.required}")
-    @FieldRequiredIf(required = "pleaseGiveFurtherDetails", argument = "anythingElseToDeclare", predicate = true, message = "{validation.testform.pleasegivefurtherdetails.required}")
-    @FieldRequiredIf(required = "catQuantity", argument = "hasCats", predicate = true, message="{validation.testform.catquantity.required}")
+    @FieldRequiredIf(required = "foodAllergies", argument = "hasFoodAllergies", predicate = true,
+            message = "{validation.testform.foodAllergies.required}")
+    @FieldRequiredIf(required = "pleaseGiveFurtherDetails", argument = "anythingElseToDeclare", predicate = true,
+            message = "{validation.testform.pleaseGiveFurtherDetails.required}")
+    @FieldRequiredIf(required = "hasCats", argument = "hasPets", predicate = true,
+            message="{validation.testform.hasCats.required}")
+    @FieldRequiredIf(required = "catQuantity", argument = "hasCats", predicate = true,
+            message="{validation.testform.catQuantity.required}")
+    @FieldRequiredIf(required = "cost", argument = "hasMoney", predicate = true,
+            message="{validation.testform.cost.required}")
     public static class TestForm {
 
         private Boolean hasFoodAllergies;
@@ -234,8 +313,13 @@ public class FieldRequiredIfValidatorTest {
         private Boolean anythingElseToDeclare;
         private String pleaseGiveFurtherDetails;
 
+        private Boolean hasPets;
+
         private Boolean hasCats;
         private Integer catQuantity;
+
+        private Boolean hasMoney;
+        private BigDecimal cost;
 
 
         public TestForm() {
@@ -273,6 +357,14 @@ public class FieldRequiredIfValidatorTest {
             this.pleaseGiveFurtherDetails = pleaseGiveFurtherDetails;
         }
 
+        public Boolean getHasPets() {
+            return hasPets;
+        }
+
+        public void setHasPets(Boolean hasPets) {
+            this.hasPets = hasPets;
+        }
+
         public Boolean getHasCats() {
             return hasCats;
         }
@@ -287,6 +379,22 @@ public class FieldRequiredIfValidatorTest {
 
         public void setCatQuantity(Integer catQuantity) {
             this.catQuantity = catQuantity;
+        }
+
+        public Boolean getHasMoney() {
+            return hasMoney;
+        }
+
+        public void setHasMoney(Boolean hasMoney) {
+            this.hasMoney = hasMoney;
+        }
+
+        public BigDecimal getCost() {
+            return cost;
+        }
+
+        public void setCost(BigDecimal cost) {
+            this.cost = cost;
         }
     }
 

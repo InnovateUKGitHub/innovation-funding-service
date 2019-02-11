@@ -2,7 +2,7 @@ package org.innovateuk.ifs.nonifs.formpopulator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneOrEmptyRowForm;
+import org.innovateuk.ifs.nonifs.form.MilestoneOrEmptyRowForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,7 @@ public class NonIfsDetailsFormPopulator {
         form.setRegistrationCloseDate(new MilestoneRowForm(MilestoneType.REGISTRATION_DATE, competitionResource.getRegistrationDate()));
         form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, competitionResource.getStartDate()));
         form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, competitionResource.getEndDate()));
+        form.setFundingType(competitionResource.getFundingType());
         return form;
     }
 }

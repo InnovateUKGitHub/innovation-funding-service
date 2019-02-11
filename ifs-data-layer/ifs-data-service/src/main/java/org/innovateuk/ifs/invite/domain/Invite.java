@@ -37,7 +37,7 @@ public abstract class Invite<T, I extends Invite<T,I>> {
     private  String name;
     @NotBlank
     @Email
-    private  String email; // invitee
+    private String email; // invitee
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false) // case sensitive? remove anyway

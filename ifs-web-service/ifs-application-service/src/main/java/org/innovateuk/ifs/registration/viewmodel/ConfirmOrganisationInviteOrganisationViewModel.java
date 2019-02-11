@@ -1,10 +1,5 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-
 /**
  * View model for invited organisation confirmation
  */
@@ -13,19 +8,26 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
     private String organisationType;
     private String registrationName;
     private String registrationNumber;
-    private long organisationTypeId;
-    private String emailLeadApplicant;
-    private AddressResource organisationAddress;
+    private String leadApplicantEmail;
+    private boolean showRegistrationNumber;
+    private boolean leadOrganisation;
     private String registerUrl;
 
-    public ConfirmOrganisationInviteOrganisationViewModel(ApplicationInviteResource inviteResource, OrganisationResource organisation, AddressResource organisationAddress, String registerUrl) {
-        this.partOfOrganisation = inviteResource.getInviteOrganisationNameConfirmedSafe();
-        this.organisationType = organisation.getOrganisationTypeName();
-        this.organisationTypeId = organisation.getOrganisationType();
-        this.registrationName = organisation.getName();
-        this.registrationNumber = organisation.getCompanyHouseNumber();
-        this.emailLeadApplicant = inviteResource.getLeadApplicantEmail();
-        this.organisationAddress = organisationAddress;
+    public ConfirmOrganisationInviteOrganisationViewModel(final String partOfOrganisation,
+                                                          final String organisationType,
+                                                          final String registrationName,
+                                                          final String registrationNumber,
+                                                          final String leadApplicantEmail,
+                                                          final boolean showRegistrationNumber,
+                                                          final boolean leadOrganisation,
+                                                          final String registerUrl) {
+        this.partOfOrganisation = partOfOrganisation;
+        this.organisationType = organisationType;
+        this.registrationName = registrationName;
+        this.registrationNumber = registrationNumber;
+        this.leadApplicantEmail = leadApplicantEmail;
+        this.showRegistrationNumber = showRegistrationNumber;
+        this.leadOrganisation = leadOrganisation;
         this.registerUrl = registerUrl;
     }
 
@@ -45,16 +47,16 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
         return registrationNumber;
     }
 
-    public Boolean getRegistrationNumberNotEmptyAndNotResearch() {
-        return registrationNumber != null && !registrationNumber.isEmpty() && !OrganisationTypeEnum.isResearch(organisationTypeId);
+    public String getLeadApplicantEmail() {
+        return leadApplicantEmail;
     }
 
-    public String getEmailLeadApplicant() {
-        return emailLeadApplicant;
+    public boolean isShowRegistrationNumber() {
+        return showRegistrationNumber;
     }
 
-    public AddressResource getOrganisationAddress() {
-        return organisationAddress;
+    public boolean isLeadOrganisation() {
+        return leadOrganisation;
     }
 
     public String getRegisterUrl() {

@@ -14,24 +14,38 @@ import java.util.Set;
 /**
  * Form for the eligibility competition setup section.
  */
-@FieldRequiredIf(required = "fundingLevelPercentage", argument = "overrideFundingRules", predicate = true, message = "{validation.eligibilityform.fundingLevel.required}")
+@FieldRequiredIf(required = "researchCategoryId", argument = "researchCategoriesApplicable", predicate = true, message = "{validation.eligibilityform.researchcategoryid.required}")
+@FieldRequiredIf(required = "overrideFundingRules", argument = "researchCategoriesApplicable", predicate = true, message = "{validation.eligibilityform.overrideFundingRules.required}")
+@FieldRequiredIf(required = "fundingLevelPercentage", argument = "researchCategoriesApplicable", predicate = false, message = "{validation.eligibilityform.fundingLevel.required}")
+@FieldRequiredIf(required = "fundingLevelPercentageOverride", argument = "overrideFundingRules", predicate = true, message = "{validation.eligibilityform.fundingLevel.required}")
 public class EligibilityForm extends CompetitionSetupForm {
 
     @NotBlank(message = "{validation.eligibilityform.multiplestream.required}")
     private String multipleStream;
+
     @Size(max = 255, message = "{validation.eligibilityform.streamname.length.max}")
     private String streamName;
-    @NotEmpty(message = "{validation.eligibilityform.researchcategoryid.required}")
+
+    @NotNull(message = "{validation.eligibilityform.researchCategoriesApplicable.required}")
+    private Boolean researchCategoriesApplicable;
+
     private Set<Long> researchCategoryId;
+
     @NotBlank(message = "{validation.eligibilityform.singleorcollaborative.required}")
     private String singleOrCollaborative;
+
     @NotEmpty(message = "{validation.eligibilityform.leadApplicantTypes.required}")
     private List<Long> leadApplicantTypes;
-    @NotNull(message = "{validation.eligibilityform.overrideFundingRules.required}")
+
     private Boolean overrideFundingRules;
+
     private Integer fundingLevelPercentage;
+
+    private Integer fundingLevelPercentageOverride;
+
     @NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
     private int researchParticipationAmountId = ResearchParticipationAmount.NONE.getId();
+
     @NotBlank(message = "{validation.eligibilityform.resubmission.required}")
     private String resubmission;
 
@@ -57,6 +71,14 @@ public class EligibilityForm extends CompetitionSetupForm {
 
     public void setStreamName(String streamName) {
         this.streamName = streamName;
+    }
+
+    public Boolean getResearchCategoriesApplicable() {
+        return researchCategoriesApplicable;
+    }
+
+    public void setResearchCategoriesApplicable(final Boolean researchCategoriesApplicable) {
+        this.researchCategoriesApplicable = researchCategoriesApplicable;
     }
 
     public Set<Long> getResearchCategoryId() {
@@ -91,12 +113,27 @@ public class EligibilityForm extends CompetitionSetupForm {
         this.overrideFundingRules = overrideFundingRules;
     }
 
+    public Integer getConfiguredFundingLevelPercentage() {
+        if (Boolean.TRUE.equals(getOverrideFundingRules())) {
+            return getFundingLevelPercentageOverride();
+        }
+        return getFundingLevelPercentage();
+    }
+
     public Integer getFundingLevelPercentage() {
         return fundingLevelPercentage;
     }
 
     public void setFundingLevelPercentage(Integer fundingLevelPercentage) {
         this.fundingLevelPercentage = fundingLevelPercentage;
+    }
+
+    public Integer getFundingLevelPercentageOverride() {
+        return fundingLevelPercentageOverride;
+    }
+
+    public void setFundingLevelPercentageOverride(Integer fundingLevelPercentageOverride) {
+        this.fundingLevelPercentageOverride = fundingLevelPercentageOverride;
     }
 
     public int getResearchParticipationAmountId() {

@@ -145,8 +145,8 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         return doSetAdministrativeSupportCosts(OverheadRateType.DEFAULT_PERCENTAGE, OverheadRateType.DEFAULT_PERCENTAGE.getRate());
     }
 
-    public IndustrialCostDataBuilder withAdministrationSupportCostsCustomRate(Integer customRate) {
-        return doSetAdministrativeSupportCosts(OverheadRateType.CUSTOM_RATE, customRate);
+    public IndustrialCostDataBuilder withAdministrationSupportCostsTotalRate(Integer customRate) {
+        return doSetAdministrativeSupportCosts(OverheadRateType.TOTAL, customRate);
     }
 
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {

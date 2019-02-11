@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.Map;
@@ -22,12 +23,21 @@ public class ProjectStatusResource {
     private ProjectActivityStates financeChecksStatus;
     private ProjectActivityStates spendProfileStatus;
     private ProjectActivityStates monitoringOfficerStatus;
-    private ProjectActivityStates otherDocumentsStatus;
+    private ProjectActivityStates documentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
     private Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState;
     private boolean grantOfferLetterSent;
+    private ProjectState projectState;
 
-    public ProjectStatusResource(String projectTitle, Long projectNumber, String formattedProjectNumber, Long applicationNumber, String formattedApplicationNumber, Integer numberOfPartners, String projectLeadOrganisationName, ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus, Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState, boolean grantOfferLetterSent) {
+    public ProjectStatusResource(String projectTitle, Long projectNumber, String formattedProjectNumber,
+                                 Long applicationNumber, String formattedApplicationNumber,
+                                 Integer numberOfPartners, String projectLeadOrganisationName,
+                                 ProjectActivityStates projectDetailsStatus, ProjectActivityStates bankDetailsStatus,
+                                 ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus,
+                                 ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates documentsStatus,
+                                 ProjectActivityStates grantOfferLetterStatus, Map<Role,
+                                 ProjectActivityStates> roleSpecificGrantOfferLetterState, boolean grantOfferLetterSent,
+                                 ProjectState projectState) {
         this.projectTitle = projectTitle;
         this.projectNumber = projectNumber;
         this.formattedProjectNumber = formattedProjectNumber;
@@ -40,10 +50,11 @@ public class ProjectStatusResource {
         this.financeChecksStatus = financeChecksStatus;
         this.spendProfileStatus = spendProfileStatus;
         this.monitoringOfficerStatus = monitoringOfficerStatus;
-        this.otherDocumentsStatus = otherDocumentsStatus;
+        this.documentsStatus = documentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
         this.roleSpecificGrantOfferLetterState = roleSpecificGrantOfferLetterState;
         this.grantOfferLetterSent = grantOfferLetterSent;
+        this.projectState = projectState;
     }
 
     // Required for JSON mapping
@@ -118,12 +129,12 @@ public class ProjectStatusResource {
         this.monitoringOfficerStatus = monitoringOfficerStatus;
     }
 
-    public ProjectActivityStates getOtherDocumentsStatus() {
-        return otherDocumentsStatus;
+    public ProjectActivityStates getDocumentsStatus() {
+        return documentsStatus;
     }
 
-    public void setOtherDocumentsStatus(ProjectActivityStates otherDocumentsStatus) {
-        this.otherDocumentsStatus = otherDocumentsStatus;
+    public void setDocumentsStatus(ProjectActivityStates documentsStatus) {
+        this.documentsStatus = documentsStatus;
     }
 
     public ProjectActivityStates getGrantOfferLetterStatus() {
@@ -174,6 +185,14 @@ public class ProjectStatusResource {
         this.formattedApplicationNumber = formattedApplicationNumber;
     }
 
+    public ProjectState getProjectState() {
+        return projectState;
+    }
+
+    public void setProjectState(ProjectState projectState) {
+        this.projectState = projectState;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -195,7 +214,7 @@ public class ProjectStatusResource {
                 .append(financeChecksStatus, that.financeChecksStatus)
                 .append(spendProfileStatus, that.spendProfileStatus)
                 .append(monitoringOfficerStatus, that.monitoringOfficerStatus)
-                .append(otherDocumentsStatus, that.otherDocumentsStatus)
+                .append(documentsStatus, that.documentsStatus)
                 .append(grantOfferLetterStatus, that.grantOfferLetterStatus)
                 .isEquals();
     }
@@ -215,7 +234,7 @@ public class ProjectStatusResource {
                 .append(financeChecksStatus)
                 .append(spendProfileStatus)
                 .append(monitoringOfficerStatus)
-                .append(otherDocumentsStatus)
+                .append(documentsStatus)
                 .append(grantOfferLetterStatus)
                 .toHashCode();
     }
@@ -235,7 +254,7 @@ public class ProjectStatusResource {
                 .append("financeChecksStatus", financeChecksStatus)
                 .append("spendProfileStatus", spendProfileStatus)
                 .append("monitoringOfficerStatus", monitoringOfficerStatus)
-                .append("otherDocumentsStatus", otherDocumentsStatus)
+                .append("documentsStatus", documentsStatus)
                 .append("grantOfferLetterStatus", grantOfferLetterStatus)
                 .toString();
     }

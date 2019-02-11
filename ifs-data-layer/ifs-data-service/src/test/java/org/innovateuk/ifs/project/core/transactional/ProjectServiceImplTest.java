@@ -8,8 +8,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.invite.domain.ProjectInvite;
-import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
+import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -21,13 +21,15 @@ import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
@@ -58,15 +60,15 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
@@ -125,7 +127,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private ProjectUserRepository projectUserRepositoryMock;
 
     @Mock
-    private ProjectInviteRepository projectInviteRepositoryMock;
+    private ProjectUserInviteRepository projectUserInviteRepositoryMock;
 
 
     @Mock
@@ -205,7 +207,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withRole(PROJECT_FINANCE_CONTACT).
                 withUser(u).
                 withOrganisation(o).
-                withInvite(newProjectInvite().
+                withInvite(newProjectUserInvite().
                         build()).
                 build(1);
 
@@ -214,9 +216,15 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withApplication(application).
                 withPartnerOrganisations(po).
                 withDateSubmitted(ZonedDateTime.now()).
-                withOtherDocumentsApproved(ApprovalType.APPROVED).
                 withSpendProfileSubmittedDate(ZonedDateTime.now()).
                 build();
+
+        ProjectDocument projectDocument = ProjectDocumentBuilder
+                .newProjectDocument()
+                .withProject(p)
+                .withStatus(DocumentStatus.APPROVED)
+                .build();
+        p.setProjectDocuments(singletonList(projectDocument));
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
@@ -224,7 +232,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testCreateProjectFromApplication() {
+    public void createProjectFromApplication() {
 
         ProjectResource newProjectResource = newProjectResource().build();
 
@@ -281,7 +289,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testCreateProjectFromApplicationAlreadyExists() {
+    public void createProjectFromApplicationAlreadyExists() {
 
         ProjectResource existingProjectResource = newProjectResource().build();
         Project existingProject = newProject().withApplication(application).build();
@@ -305,7 +313,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testWithdrawProject() {
+    public void withdrawProject() {
         Long projectId = 123L;
         Long userId = 456L;
         Project project = newProject().withId(projectId).build();
@@ -330,7 +338,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testWithdrawProjectFails() {
+    public void withdrawProjectFails() {
         Long projectId = 321L;
         Long userId = 987L;
         Project project = newProject().withId(projectId).build();
@@ -355,7 +363,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testWithdrawProjectCannotFindIdFails() {
+    public void withdrawProjectCannotFindIdFails() {
         Long projectId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource user = newUserResource()
@@ -372,7 +380,57 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testFindByUserIdReturnsOnlyDistinctProjects() {
+    public void handleProjectOffline() {
+        Long projectId = 123L;
+        Long userId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectWorkflowHandlerMock.handleProjectOffline(eq(project), any())).thenReturn(true);
+
+        ServiceResult<Void> result = service.handleProjectOffline(projectId);
+        assertTrue(result.isSuccess());
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(userRepositoryMock).findOne(userId);
+        verify(projectWorkflowHandlerMock).handleProjectOffline(eq(project), any());
+    }
+
+    @Test
+    public void completeProjectOffline() {
+        Long projectId = 123L;
+        Long userId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectWorkflowHandlerMock.completeProjectOffline(eq(project), any())).thenReturn(true);
+
+        ServiceResult<Void> result = service.completeProjectOffline(projectId);
+        assertTrue(result.isSuccess());
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(userRepositoryMock).findOne(userId);
+        verify(projectWorkflowHandlerMock).completeProjectOffline(eq(project), any());
+    }
+
+    @Test
+    public void findByUserIdReturnsOnlyDistinctProjects() {
 
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
@@ -397,7 +455,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testAddPartnerOrganisationNotOnProject(){
+    public void addPartnerOrganisationNotOnProject(){
         Organisation organisationNotOnProject = newOrganisation().build();
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
@@ -412,7 +470,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testAddPartnerPartnerAlreadyExists(){
+    public void addPartnerPartnerAlreadyExists(){
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
@@ -427,15 +485,15 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testAddPartner(){
+    public void addPartner(){
         User newUser = newUser().build();
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
         when(userRepositoryMock.findOne(newUser.getId())).thenReturn(u);
-        List<ProjectInvite> projectInvites = newProjectInvite().withUser(user).build(1);
+        List<ProjectUserInvite> projectInvites = newProjectUserInvite().withUser(user).build(1);
         projectInvites.get(0).open();
-        when(projectInviteRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
+        when(projectUserInviteRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
 
         // Method under test
         ServiceResult<ProjectUser> shouldSucceed = service.addPartner(p.getId(), newUser.getId(), o.getId());
@@ -445,7 +503,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testCreateProjectsFromFundingDecisions() {
+    public void createProjectsFromFundingDecisions() {
 
         ProjectResource newProjectResource = newProjectResource().build();
 
@@ -502,7 +560,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testCreateProjectsFromFundingDecisionsSaveFails() throws Exception {
+    public void createProjectsFromFundingDecisionsSaveFails() throws Exception {
 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenThrow(new DataIntegrityViolationException("dummy constraint violation"));

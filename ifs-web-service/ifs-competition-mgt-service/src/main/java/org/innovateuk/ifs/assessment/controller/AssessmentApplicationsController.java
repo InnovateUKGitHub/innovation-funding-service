@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.application.list.populator.ManageApplicationsModelPopulator;
-import org.innovateuk.ifs.management.navigation.NavigationOrigin;
+import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -40,7 +40,7 @@ public class AssessmentApplicationsController extends BaseAssessmentController {
 
         ApplicationCountSummaryPageResource applicationCounts = getCounts(competitionId, page, filter);
 
-        String originQuery = buildOriginQueryString(NavigationOrigin.MANAGE_APPLICATIONS, queryParams);
+        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.MANAGE_APPLICATIONS, queryParams);
 
         model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, filter, originQuery));
         model.addAttribute("originQuery", originQuery);

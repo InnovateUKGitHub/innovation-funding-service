@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your funding'" />
+</head>
+<body class="govuk-template__body finance-row-form">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${model.financesUrl}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Your funding',subTitle=${model.applicationName},size='govuk-heading-xl'" />
+        <th:block th:if="${model.fundingSectionLocked}">
+            <th:block th:insert="application/your-funding-fragments :: locked" />
+        </th:block>
+        <th:block th:unless="${model.fundingSectionLocked}">
+            <form th:object="${form}"
+                  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+                  th:attr="data-autosave=@{/application/{applicationId}/form/your-funding/{sectionId}/auto-save(applicationId=${model.applicationId},sectionId=${model.sectionId})},
+                           data-application-id=${model.applicationId},
+                           data-section-id=${model.sectionId}"
+                  enctype="multipart/form-data"
+                  novalidate="novalidate"
+                  method="POST">
+
+                <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+                <input type="hidden" id="cacheTest" value=""/>
+                <th:block th:unless="${model.readOnly}" >
+                    <input type="hidden"
+                           th:field="*{otherFundingQuestionId}" />
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('requestingFunding')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                Are you requesting funding?
+                            </legend>
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('requestingFunding')}"
+                                  th:text="${err}"></span>
+                            <div id="requestingFunding" class="govuk-radios">
+                                <div class="govuk-radios__item" data-target="request-funding">
+                                    <input type="radio"
+                                           class="govuk-radios__input"
+                                           id="request-funding-yes"
+                                           value="true"
+                                           th:field="*{requestingFunding}"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"/>
+                                    <label for="request-funding-yes" class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <th:block th:insert="application/your-funding-fragments :: requesting_funding" />
+                                <div class="govuk-radios__item">
+                                    <input type="radio"
+                                           class="govuk-radios__input"
+                                           id="request-funding-no"
+                                           name="request-funding"
+                                           value="false"
+                                           th:field="*{requestingFunding}"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"/>
+                                    <label for="request-funding-no" class="govuk-label govuk-radios__label">No</label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="govuk-form-group govuk-!-margin-bottom-9" th:classappend="${#fields.hasErrors('otherFunding')} ? 'govuk-form-group--error'">
+                        <h2 class="govuk-heading-m">Other funding</h2>
+                        <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                <h2 class="govuk-fieldset__heading govuk-visually-hidden">Other funding</h2>
+                            </legend>
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
+                                  th:text="${err}"></span>
+                            <span class="govuk-hint">Have you received any other public sector funding for this project? This is important as other public sector support counts as part of the funding you can receive.</span>
+                            <div id="otherFunding" class="govuk-radios">
+                                <div class="govuk-radios__item" data-target="other-funding-table">
+                                    <input type="radio"
+                                           class="govuk-radios__input"
+                                           id="other-funding-yes"
+                                           value="true"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.finance.other.funding.required}"
+                                           th:field="*{otherFunding}" />
+                                    <label for="other-funding-yes"
+                                           class="govuk-label govuk-radios__label">
+                                        Yes
+                                    </label>
+                                </div>
+                                <th:block th:insert="application/your-funding-fragments :: other_funding_table" />
+                                <div class="govuk-radios__item">
+                                    <input type="radio"
+                                           class="govuk-radios__input"
+                                           id="other-funding-no"
+                                           value="false"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.finance.other.funding.required}"
+                                           th:field="*{otherFunding}" />
+                                    <label for="other-funding-no"
+                                           class="govuk-label govuk-radios__label">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('termsAgreed')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                                <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
+                            </legend>
+                            <th:block th:if="${#fields.hasErrors('termsAgreed')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
+                            </th:block>
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input id="agree-terms-page"
+                                           class="govuk-checkboxes__input"
+                                           th:field="*{termsAgreed}"
+                                           type="checkbox"
+                                           value="true"
+                                           data-switches-button-status="#mark-all-as-complete"
+                                           data-autosave-disabled />
+                                    <label for="agree-terms-page"
+                                           class="govuk-label govuk-checkboxes__label">
+                                        As a member of this consortium I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.competitionId})}" class="govuk-link">competition terms and conditions</a> set out by Innovate UK.
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </th:block>
+                <th:block th:if="${model.readOnly}">
+                    <dl class="govuk-list readonly-data">
+                        <dt>Funding level</dt>
+                        <dd th:text="${form.grantClaimPercentage == null ? 0 : form.grantClaimPercentage +'%'}">50%</dd>
+                    </dl>
+                    <h2 class="govuk-heading-m">Other funding for this project</h2>
+                    <th:block th:unless="${form.otherFunding}">
+                        <p class="govuk-body">No other funding</p>
+                    </th:block>
+                    <th:block th:if="${form.otherFunding}">
+                        <div class="table-overflow">
+                            <table class="govuk-table">
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th id="other-funding-source" class="govuk-table__header" scope="col">Source of funding</th>
+                                    <th id="other-funding-date" class="width-150 govuk-table__header" scope="col">Date secured</th>
+                                    <th id="other-funding-amount" class="width-150 govuk-table__header" scope="col">Funding amount</th>
+                                </tr>
+                                </thead>
+                                <tbody class="govuk-table__body">
+                                <tr class="govuk-table__row" th:each="entry : ${form.otherFundingRows}" th:unless="${entry.value.blank}">
+                                    <th class="govuk-table__header" scope="row" th:text="${entry.value.source}">National rail</th>
+                                    <td class="govuk-table__cell" th:text="${entry.value.date}">17 April 2016</td>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${entry.value.fundingAmount != null ? #numbers.formatInteger(entry.value.fundingAmount,0,'DEFAULT') : '0'}"></td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="row" colspan="2">Total other funding</th>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${#numbers.formatInteger(form.otherFundingTotal, 0, 'DEFAULT')}"></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </th:block>
+                </th:block>
+                <div class="form-footer" th:if="${model.open}">
+                    <div class="form-footer__actions">
+                        <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="complete"
+                                class="button-clear" value="true">Mark as complete
+                        </button>
+                        <button th:if="${model.complete}" type="submit" name="edit" class="button-clear" value="true">
+                            Edit your funding
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <a th:href="${model.financesUrl}"
+                       th:if="${model.readOnly}"
+                       class="govuk-!-margin-top-6 button-secondary">Return to finances
+                    </a>
+                    <button type="submit" th:unless="${model.readOnly}"
+                            class="govuk-!-margin-top-6 govuk-button">
+                        Save and return to finances
+                    </button>
+                </div>
+            </form>
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

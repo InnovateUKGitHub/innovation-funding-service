@@ -92,7 +92,8 @@ public class ProjectSpendProfileApprovalController {
 
     private ProjectSpendProfileApprovalViewModel populateSpendProfileApprovalViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
+        Long applicationId = project.getApplication();
+        ApplicationResource application = applicationService.getById(applicationId);
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         UserResource user = userRestService.retrieveUserById(competition.getLeadTechnologist()).getSuccess();
@@ -101,14 +102,13 @@ public class ProjectSpendProfileApprovalController {
 
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
 
-        return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, approvalType, organisationResources);
+        return new ProjectSpendProfileApprovalViewModel(competitionSummary, leadTechnologist, approvalType, organisationResources, applicationId, project.getName());
     }
 
     private String redirectToCompetitionSummaryPage(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        return "redirect:/competition/" + competition.getId() + "/status";
+        return "redirect:/competition/" + application.getCompetition() + "/status";
     }
 }

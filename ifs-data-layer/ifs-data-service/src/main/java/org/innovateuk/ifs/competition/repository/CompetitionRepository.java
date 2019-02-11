@@ -20,8 +20,6 @@ import java.util.List;
  */
 public interface CompetitionRepository extends PagingAndSortingRepository<Competition, Long> {
 
-    String EOI_COMPETITION_TYPE = "'Expression of interest'";
-
     /* Filters competitions to those in live state */
     String LIVE_QUERY_WHERE_CLAUSE = "WHERE CURRENT_TIMESTAMP >= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
@@ -33,7 +31,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String PROJECT_SETUP_WHERE_CLAUSE = "WHERE ( " +
             "EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
             ") AND c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE " +
-            "AND ct.name != " + EOI_COMPETITION_TYPE;
+            "AND c.completionStage = 'PROJECT_SETUP'";
 
     /* Filters competitions to those in upcoming state */
     String UPCOMING_CRITERIA = "FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
@@ -48,8 +46,9 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     /* Filters by innovation lead id or stakeholder id and in project setup state */
     String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE = "WHERE ap.user.id = :userId " +
             "AND ap.role in ('INNOVATION_LEAD', 'STAKEHOLDER') " +
-            "AND EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = ap.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
-            "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";
+            "AND EXISTS (SELECT a.manageFundingEmailDate FROM Application a WHERE a.competition.id = ap.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
+            "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE " +
+            "AND ap.competition.completionStage = 'PROJECT_SETUP'";
 
     /* Filters by innovation lead or stakeholder and in feedback released state */
     String INNOVATION_LEAD_STAKEHOLDER_FEEDBACK_RELEASED_WHERE_CLAUSE = "WHERE ap.user.id = :userId AND " +
@@ -62,7 +61,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "AND CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = ap.competition.id) " +
             "AND NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = ap.competition.id) " +
             "AND ap.competition.setupComplete = TRUE AND ap.competition.template = FALSE AND ap.competition.nonIfs = FALSE";
-
 
     /* Innovation leads should not access competitions in states: In preparation and Ready to open */
     String SEARCH_QUERY_LEAD_TECHNOLOGIST = "SELECT ap.competition FROM AssessmentParticipant ap LEFT JOIN ap.competition.milestones m LEFT JOIN ap.competition.competitionType ct " +
@@ -77,7 +75,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "AND (c.setupComplete IS NOT NULL AND c.setupComplete != FALSE) " +
             "ORDER BY m.date";
 
-
     String UPCOMING_QUERY = "SELECT c " + UPCOMING_CRITERIA;
 
     String UPCOMING_COUNT_QUERY = "SELECT count(c) " + UPCOMING_CRITERIA;
@@ -88,9 +85,9 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String INNOVATION_LEAD_STAKEHOLDER_LIVE_COUNT_QUERY = "SELECT count(distinct ap.competition.id) " + "FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE;
 
-    String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c LEFT JOIN c.competitionType ct " + PROJECT_SETUP_WHERE_CLAUSE;
+    String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
 
-    String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c LEFT JOIN c.competitionType ct " + PROJECT_SETUP_WHERE_CLAUSE;
+    String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
 
     String INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_QUERY = "SELECT ap.competition FROM AssessmentParticipant ap " + INNOVATION_LEAD_STAKEHOLDER_PROJECT_SETUP_WHERE_CLAUSE;
 
@@ -105,7 +102,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String NON_IFS_QUERY = "SELECT c FROM Competition c WHERE nonIfs = TRUE";
 
     String NON_IFS_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE nonIfs = TRUE";
-
 
     String SEARCH_QUERY = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
             "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
@@ -151,7 +147,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
                     " and a.competition = c.id " +
                     " and p.application_id = a.id " +
                     " and pp.target_id = p.id and pp.process_type = 'ProjectProcess' " +
-                    " and pp.activity_state_id not in (select id from activity_state where activity_type = 'PROJECT_SETUP' and state = 'WITHDRAWN') " +
+                    " and pp.activity_state_id not in (select id from activity_state where activity_type = 'PROJECT_SETUP' and state in ('WITHDRAWN', 'HANDLED_OFFLINE', 'COMPLETED_OFFLINE')) " +
 
                     // where all Viability is either Approved or Not Required
                     " and not exists (select v.id from process v " +
@@ -278,8 +274,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<Competition> findByName(String name);
 
     Competition findById(Long id);
-
-    List<Competition> findByIdIsIn(List<Long> ids);
 
     @Override
     List<Competition> findAll();

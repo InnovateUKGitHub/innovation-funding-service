@@ -34,6 +34,8 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected List<UserResource> allInternalUsers;
 
+    protected List<UserResource> compAdminAndProjectFinance;
+
     protected UserResource compAdminUser() {
         return getUserWithRole(COMP_ADMIN);
     }
@@ -62,6 +64,10 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(SYSTEM_REGISTRATION_USER);
     }
 
+    protected UserResource systemMaintenanceUser() {
+        return getUserWithRole(SYSTEM_MAINTAINER);
+    }
+
     protected UserResource anonymousUser() {
         return (UserResource) ReflectionTestUtils.getField(new DefaultPermissionMethodHandler(new PermissionedObjectClassToPermissionsToPermissionsMethods()), "ANONYMOUS_USER");
     }
@@ -74,8 +80,8 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
     public void setupSetsOfData() {
         allRoles = asList(Role.values());
         allGlobalRoleUsers = simpleMap(allRoles, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
-        allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser(), stakeholderUser(), ifsAdminUser());
-
+        allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser(), ifsAdminUser());
+        compAdminAndProjectFinance = asList(compAdminUser(), projectFinanceUser());
     }
 
     protected UserResource getUserWithRole(Role type) {
@@ -107,7 +113,5 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         user.setRoles(projectFinanceUser);
     }
 
-
     protected abstract T supplyPermissionRulesUnderTest();
-
 }

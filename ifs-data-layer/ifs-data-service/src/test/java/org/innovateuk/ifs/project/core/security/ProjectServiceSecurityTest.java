@@ -124,6 +124,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
             verify(projectPermissionRules).internalUsersCanViewProjects(project, getLoggedInUser());
             verify(projectPermissionRules).monitoringOfficerOnProjectCanView(project, getLoggedInUser());
+            verify(projectPermissionRules).stakeholdersCanViewProjects(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -181,6 +182,20 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void testWithdrawProject() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.withdrawProject(123L),
+                Role.IFS_ADMINISTRATOR);
+    }
+
+    @Test
+    public void handleProjectOffline() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.handleProjectOffline(123L),
+                Role.IFS_ADMINISTRATOR);
+    }
+
+    @Test
+    public void completeProjectOffline() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.completeProjectOffline(123L),
                 Role.IFS_ADMINISTRATOR);
     }
 

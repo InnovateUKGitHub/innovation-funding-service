@@ -7,6 +7,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -102,7 +103,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
     }
 
     private boolean applicationFormHasNotBeenInitialised(CompetitionResource competition) {
-        return !competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId());
+        return !competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId());
     }
 
     private List<Error> doSetupComplete(final CompetitionResource competition, final InitialDetailsForm initialDetailsForm) {
@@ -112,6 +113,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
         competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
         competition.setStateAid(initialDetailsForm.getStateAid());
+        competition.setFundingType(initialDetailsForm.getFundingType());
 
         errors.addAll(attemptOpeningMilestoneSave(initialDetailsForm, competition));
         errors.addAll(attemptAddingInnovationAreasToCompetition(initialDetailsForm, competition));
@@ -138,8 +140,8 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         List<Long> innovationAreas = initialDetailsForm.getInnovationAreaCategoryIds();
 
         if (competition.getInnovationSector() != null) {
-            List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccess();
-            List<Long> allInnovationAreasIds = getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toList());
+            List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreasExcludingNone().getSuccess();
+            List<Long> allInnovationAreasIds = getAllInnovationAreaIdsExcludingNone(allInnovationAreas).collect(Collectors.toList());
             List<Long> newInnovationAreaIds = initialDetailsForm.getInnovationAreaCategoryIds();
 
             if(CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())
@@ -191,7 +193,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
                 singletonList(allInnovationAreas.stream().map(child -> child.getName()).collect(Collectors.joining(", ")))));
     }
 
-    private Stream<Long> getAllInnovationAreaIds(List<InnovationAreaResource> allInnovationAreas) {
+    private Stream<Long> getAllInnovationAreaIdsExcludingNone(List<InnovationAreaResource> allInnovationAreas) {
         return allInnovationAreas.stream().map(InnovationAreaResource::getId);
     }
 
@@ -284,6 +286,9 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         } else if("autosaveInnovationAreaIds".equals(fieldName)) {
             processInnovationAreas(value, competitionResource);
             return competitionSetupRestService.update(competitionResource).toServiceResult();
+        } else if ("fundingType".equals(fieldName)) {
+            competitionResource.setFundingType(FundingType.valueOf(value));
+            return competitionSetupRestService.update(competitionResource).toServiceResult();
         }
         return super.handleIrregularAutosaveCase(competitionResource,
                 fieldName,
@@ -308,9 +313,9 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         return valueSet;
     }
 
-    private Set<Long> getAllInnovationAreaIds() {
-        List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccess();
-        return getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toSet());
+    private Set<Long> getAllInnovationAreaIdsExcludingNone() {
+        List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreasExcludingNone().getSuccess();
+        return getAllInnovationAreaIdsExcludingNone(allInnovationAreas).collect(Collectors.toSet());
     }
 
     private void processInnovationAreas(String commaSeparatedIds, CompetitionResource competitionResource) {
@@ -319,7 +324,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         boolean allInnovationAreaIsSelected = innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS);
 
         if(allInnovationAreaIsSelected) {
-            innovationAreaIds = getAllInnovationAreaIds();
+            innovationAreaIds = getAllInnovationAreaIdsExcludingNone();
         }
 
         competitionResource.setInnovationAreas(innovationAreaIds);

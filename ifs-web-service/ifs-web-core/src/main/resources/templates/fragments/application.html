@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-                  <h2 th:text="${section.name}" class="govuk-heading-m govuk-!-margin-top-6" />
+              <h2 th:text="${section.name}" class="govuk-heading-m govuk-!-margin-top-6" />
 
           </th:block>
       </th:block>
@@ -66,45 +66,46 @@
                             questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
                      th:id="'form-input-'+${formInput.getId()}">
 
-                  <th:block
-                      th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
-                      <th:block
-                          th:unless="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
-                          <th:block
-                              th:insert="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})"/>
-                      </th:block>
-                      <th:block
-                          th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
-                          <th:block
-                              th:insert="fragments/application-details :: application_details(${formInputViewModels.get(formInput.id)})"/>
-                      </th:block>
-                      <th:block
-                          th:if="${question.questionNumber!=null && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FILEUPLOAD}">
-                          <th:block th:if="!${#lists.isEmpty(feedback)}">
-                              <th:block th:each="item : ${feedback}">
-                                  <div th:if="${formInput.getQuestion()} == ${item.question}" class="clear-floats">
-                                      <div class="govuk-grid-row govuk-!-margin-top-6">
-                                          <div class="govuk-grid-column-one-half">
-                                              <h3 class="govuk-heading-s">Feedback</h3>
-                                          </div>
-                                          <div class="govuk-grid-column-one-half alignright govuk-heading-s">
-                                              <th:block th:each="score : ${score}">
-                                                  <th:block th:if="${formInput.getQuestion()} == ${score.question}">
-                                                      Score <span th:text="${score.value}">Feedback score</span>/10
-                                                  </th:block>
-                                                </th:block>
+                    <th:block
+                        th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
+                        <th:block
+                            th:unless="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
+                            <th:block
+                                th:insert="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})"/>
+                        </th:block>
+                        <th:block
+                            th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
+                            <th:block
+                                th:insert="fragments/application-details :: application_details(${formInputViewModels.get(formInput.id)})"/>
+                        </th:block>
+                        <th:block
+                            th:if="${question.questionNumber!=null && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FILEUPLOAD}">
+                            <th:block th:if="!${#lists.isEmpty(feedback)}">
+                                <th:block th:each="item : ${feedback}">
+                                    <th:block th:if="${formInput.getQuestion()} == ${item.question}">
+                                        <div class="clear-floats">
+                                            <div class="govuk-grid-row govuk-!-margin-top-6">
+                                                <div class="govuk-grid-column-one-half">
+                                                    <h3 class="govuk-heading-s">Feedback</h3>
+                                                </div>
+                                                <div class="govuk-grid-column-one-half alignright govuk-heading-s">
+                                                    <th:block th:each="score : ${score}">
+                                                        <th:block th:if="${formInput.getQuestion()} == ${score.question}">
+                                                            Score <span th:text="${score.value}">Feedback score</span>/10
+                                                        </th:block>
+                                                    </th:block>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="govuk-grid-row">
-                                        <div class="govuk-grid-column-full">
-                                            <p class="govuk-body" th:text="${item.value}">Feedback text</p>
+                                        <div class="govuk-grid-row">
+                                            <div class="govuk-grid-column-full">
+                                                <p class="govuk-body" th:text="${item.value}">Feedback text</p>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </th:block>
                                 </th:block>
                             </th:block>
                         </th:block>
-
                     </th:block>
                 </div>
             </div>
@@ -115,14 +116,17 @@
 
     <section th:if="${hasFinanceSection}">
         <h2 class="govuk-heading-m govuk-!-margin-top-6">Finance</h2>
-        <div class="collapsible">
-            <h3>Finances summary
+        <div class="collapsible" th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+
+            <h3>
+                <span th:unless="${procurementCompetition}">Finances summary</span>
+                <span th:if="${procurementCompetition}">Funding breakdown</span>
                 <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
                     <div class="section-status section-complete"
-                         th:if="${completedViewModel.sectionsMarkedAsComplete.contains(financeSectionId)}">Complete
+                         th:if="${completedViewModel.financeOverviewSectionComplete}">Complete
                     </div>
                     <div class="section-status section-incomplete"
-                         th:unless="${completedViewModel.sectionsMarkedAsComplete.contains(financeSectionId)}">
+                         th:unless="${completedViewModel.financeOverviewSectionComplete}">
                         Incomplete
                     </div>
                 </th:block>
@@ -130,25 +134,26 @@
 
             <div class="question">
 
-                <p class="govuk-body">This is the overview of the finances provided by all partners in this project.</p>
-                <p class="govuk-body"
-                   th:if="${(currentApplication.isOpen() and isApplicant)}">
+                <p class="govuk-body" th:unless="${procurementCompetition}">This is the overview of the finances provided by all partners in this project.</p>
+
+                <p class="govuk-body" th:if="${(currentApplication.open and isApplicant)}">
                     To make changes to your organisations' finances, go back to the
-                    <a th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'
-                       class="govuk-link">your finances</a>
-                    section.
+                    <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${currentApplication.id},financeSectionId=${financeSectionId})}"
+                       class="govuk-link">your finances</a> section.
                 </p>
 
                 <div>
-                    <th:block ifs:global="${applicationFinanceSummaryViewModel}"
-                              th:replace="finance/finance-summary :: application_finances_summary (isApplicant = ${isApplicant || isApplicant == null}, supportUserAndSummaryPage=${supportUserAndSummaryPage})"></th:block>
-                    <th:block ifs:global="${applicationResearchParticipationViewModel}"
-                              th:replace="finance/finance-summary :: research_participation_alert"
-                              th:if="${(currentApplication.isOpen() and isApplicant)}"></th:block>
+                    <th:block th:unless="${procurementCompetition}">
+                        <th:block ifs:global="${applicationFinanceSummaryViewModel}"
+                                  th:replace="finance/finance-summary :: application_finances_summary (isApplicant = ${isApplicant || isApplicant == null})"></th:block>
+                        <th:block ifs:global="${applicationResearchParticipationViewModel}"
+                                  th:replace="finance/finance-summary :: research_participation_alert"
+                                  th:if="${(currentApplication.isOpen() and isApplicant)}"></th:block>
+                    </th:block>
 
-                    <h2 class="govuk-heading-s">Funding breakdown</h2>
+                    <h2 class="govuk-heading-s" th:unless="${procurementCompetition}">Funding breakdown</h2>
                     <th:block ifs:global="${applicationFundingBreakdownViewModel}"
-                              th:insert="finance/finance-summary :: financial_summary_table"/>
+                              th:insert="finance/finance-summary :: financial_summary_table (isApplicant = ${isApplicant || isApplicant == null}, supportUserAndSummaryPage=${supportUserAndSummaryPage})"/>
                 </div>
             </div>
         </div>

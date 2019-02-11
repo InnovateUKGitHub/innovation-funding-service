@@ -17,6 +17,7 @@ import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,13 +37,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder
-        .newCompetitionSetupQuestionResource;
-import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
+import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
@@ -85,25 +85,26 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     private QuestionSetupRestService questionSetupRestService;
 
     @Mock
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
+
+    @Mock
     private CompetitionRestService competitionRestService;
 
     @Override
     protected CompetitionSetupApplicationController supplyControllerUnderTest() { return new CompetitionSetupApplicationController(); }
 
-    @Override
     @Before
     public void setUp() {
-        super.setUp();
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
         ReflectionTestUtils.setField(controller, "validator", validator);
 
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(true);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(true);
     }
 
     @Test
-    public void testGetEditCompetitionFinance() throws Exception {
+    public void getEditCompetitionFinance() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
@@ -119,7 +120,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetEditCompetitionFinanceRedirect() throws Exception {
+    public void getEditCompetitionFinanceRedirect() throws Exception {
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(UNEDITABLE_COMPETITION));
 
         mockMvc.perform(get(URL_PREFIX + "/question/finance/edit"))
@@ -130,7 +131,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testPostEditCompetitionFinance() throws Exception {
+    public void postEditCompetitionFinance() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
@@ -151,22 +152,32 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testPostEditCompetitionFinanceNoFinance() throws Exception {
+    public void postEditCompetitionFinanceWithErrors() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES)))
-                .thenReturn(ServiceResult.serviceSuccess());
 
-        mockMvc.perform(post(URL_PREFIX + "/question/finance/none/edit")
+        mockMvc.perform(post(URL_PREFIX + "/question/finance/edit")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("applicationFinanceType", String.valueOf(NO_FINANCES)))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
+                .param("financesRequired", String.valueOf(true)))
+                .andExpect(status().isOk())
+                .andExpect(model().errorCount(5))
+                .andExpect(model().attributeExists("competitionSetupForm"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "applicationFinanceType",
+                        "NotNull"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeGrowthTable",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeYourOrganisationSection",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeJesForm",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "fundingRules",
+                        "FieldRequiredIf"));
 
-        verify(competitionSetupService).saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES));
+        verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(CompetitionSetupForm.class),
+                eq(competition), eq(APPLICATION_FORM), eq(FINANCES));
     }
 
     @Test
@@ -237,7 +248,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         question.setType(ASSESSED_QUESTION);
 
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
 
         mockMvc.perform(post(URL_PREFIX +"/question/" + questionId + "/edit")
                 .param("question.type", ASSESSED_QUESTION.name())
@@ -258,7 +269,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
 
         mockMvc.perform(post(URL_PREFIX +"/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
@@ -266,7 +277,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup/question"));
 
-        verify(competitionSetupQuestionService, never()).updateQuestion(question);
+        verify(questionSetupCompetitionRestService, never()).save(question);
     }
 
     @Test
@@ -281,7 +292,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
         when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(CompetitionSetupSection.class)))
                 .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
@@ -312,7 +323,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         assertEquals(Boolean.TRUE, viewModel.getGeneral().isEditable());
 
-        verify(competitionSetupQuestionService, never()).updateQuestion(question);
+        verify(questionSetupCompetitionRestService, never()).save(question);
     }
 
     @Test
@@ -327,7 +338,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
 
         mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.type", SCOPE.name())
@@ -349,7 +360,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup/question"));
 
-        verify(competitionSetupQuestionService, never()).updateQuestion(question);
+        verify(questionSetupCompetitionRestService, never()).save(question);
     }
 
     @Test
@@ -364,7 +375,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
 
         mockMvc.perform(post(URL_PREFIX + "/question/" + questionId.toString() + "/edit")
                 .param("question.type", ASSESSED_QUESTION.name())
@@ -407,7 +418,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
 
         MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId.toString() + "/edit")
                 .param("question.type", ASSESSED_QUESTION.name())
@@ -449,7 +460,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .withType(ASSESSED_QUESTION).build();
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
         when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(CompetitionSetupSection.class)))
                 .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
@@ -489,7 +500,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .withQuestionId(questionId)
                 .withType(ASSESSED_QUESTION).build();
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
 
         MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
@@ -525,10 +536,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
         when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(CompetitionSetupSection.class)))
                 .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
-
 
         MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
@@ -567,7 +577,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
         when(competitionSetupPopulator.populateGeneralModelAttributes(competition, CompetitionSetupSection.APPLICATION_FORM))
                 .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
@@ -745,13 +755,13 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .withType(QuestionSetupType.ASSESSED_QUESTION).build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupQuestionService.getQuestion(QUESTION_ID)).thenReturn(ServiceResult.serviceSuccess(question));
+        when(questionSetupCompetitionRestService.getByQuestionId(QUESTION_ID)).thenReturn(restSuccess(question));
 
         mockMvc.perform(get(URL_PREFIX + "/question/" + QUESTION_ID + "/edit"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup/question"));
 
-        verify(competitionSetupQuestionService, atLeastOnce()).getQuestion(QUESTION_ID);
+        verify(questionSetupCompetitionRestService, atLeastOnce()).getByQuestionId(QUESTION_ID);
         verify(competitionSetupRestService, never()).update(competition);
         verify(competitionSetupRestService).markSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
         verify(questionSetupRestService, times(1)).markQuestionSetupIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, QUESTION_ID);
@@ -765,7 +775,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard"));
 
-        verify(competitionSetupQuestionService, never()).getQuestion(QUESTION_ID);
+        verify(questionSetupCompetitionRestService, never()).getByQuestionId(QUESTION_ID);
         verify(competitionSetupRestService, never()).update(UNEDITABLE_COMPETITION);
     }
 
@@ -773,37 +783,37 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     public void createQuestion() throws Exception {
         CompetitionSetupQuestionResource competitionSetupQuestionResource = newCompetitionSetupQuestionResource().withQuestionId(10L).build();
 
-        when(competitionSetupQuestionService.createDefaultQuestion(COMPETITION_ID)).thenReturn(serviceSuccess(competitionSetupQuestionResource));
+        when(questionSetupCompetitionRestService.addDefaultToCompetition(COMPETITION_ID)).thenReturn(restSuccess((competitionSetupQuestionResource)));
 
         mockMvc.perform(post(URL_PREFIX + "/landing-page")
                 .param("createQuestion", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:" + URL_PREFIX + "/question/10/edit"));
 
-        verify(competitionSetupQuestionService).createDefaultQuestion(COMPETITION_ID);
+        verify(questionSetupCompetitionRestService).addDefaultToCompetition(COMPETITION_ID);
     }
 
     @Test
     public void createQuestion_serviceErrorResultsInInternalServerErrorResponse() throws Exception {
         Error error = Error.globalError("Something is wrong.");
 
-        when(competitionSetupQuestionService.createDefaultQuestion(COMPETITION_ID)).thenReturn(serviceFailure(error));
+        when(questionSetupCompetitionRestService.addDefaultToCompetition(COMPETITION_ID)).thenReturn(restFailure(error));
 
         mockMvc.perform(post(URL_PREFIX + "/landing-page")
                 .param("createQuestion", "true"))
                 .andExpect(status().is5xxServerError());
 
-        verify(competitionSetupQuestionService).createDefaultQuestion(COMPETITION_ID);
+        verify(questionSetupCompetitionRestService).addDefaultToCompetition(COMPETITION_ID);
     }
 
     @Test
-    public void testDeleteQuestion() throws Exception {
+    public void deleteQuestion() throws Exception {
         Long questionId = 1L;
 
         CompetitionResource competition = newCompetitionResource().build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupQuestionService.deleteQuestion(questionId)).thenReturn(serviceSuccess());
+        when(questionSetupCompetitionRestService.deleteById(questionId)).thenReturn(restSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/landing-page")
                 .param("deleteQuestion", questionId.toString()))
@@ -811,6 +821,6 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(model().hasNoErrors())
                 .andExpect(view().name("redirect:" + URL_PREFIX + "/landing-page"));
 
-        verify(competitionSetupQuestionService).deleteQuestion(questionId);
+        verify(questionSetupCompetitionRestService).deleteById(questionId);
     }
 }

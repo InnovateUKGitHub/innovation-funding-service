@@ -3,45 +3,39 @@ package org.innovateuk.ifs.registration.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotBlank;
-import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Object to store the data that is used for the company house form, while creating a new application.
+ * Object to store the data that is used for the companies house form, while creating a new application.
  */
+
+@FieldRequiredIf(required = "organisationSearchName", argument = "organisationSearching", predicate = true, message = "{validation.standard.organisationsearchname.required}")
+@FieldRequiredIf(required = "organisationName", argument = "manualEntry", predicate = true, message = "{validation.standard.organisationname.required}")
 public class OrganisationCreationForm implements Serializable {
-    @Valid
-    private AddressForm addressForm = new AddressForm();
     private boolean triedToSave = false;
 
     @NotNull(message = "{validation.standard.organisationtype.required}")
     private Long organisationTypeId;
-
-    @NotBlank(message = "{validation.standard.organisationsearchname.required}")
-    // on empty value don't check pattern since then there already is a validation message.
     private String organisationSearchName;
     private String searchOrganisationId;
     private boolean organisationSearching;
     private boolean manualEntry = false;
-    private boolean useSearchResultAddress = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
-    @NotBlank(message = "{validation.standard.organisationname.required}")
     private String organisationName;
 
     public OrganisationCreationForm() {
         this.organisationSearchResults = new ArrayList<>();
     }
 
-    public OrganisationCreationForm(List<OrganisationSearchResult> companyHouseList) {
-        this.organisationSearchResults = companyHouseList;
+    public OrganisationCreationForm(List<OrganisationSearchResult> companiesHouseList) {
+        this.organisationSearchResults = companiesHouseList;
     }
 
     public boolean isManualEntry() {
@@ -111,28 +105,12 @@ public class OrganisationCreationForm implements Serializable {
         this.searchOrganisationId = searchOrganisationId;
     }
 
-    public AddressForm getAddressForm() {
-        return addressForm;
-    }
-
-    public void setAddressForm(AddressForm addressForm) {
-        this.addressForm = addressForm;
-    }
-
     public boolean isTriedToSave() {
         return triedToSave;
     }
 
     public void setTriedToSave(boolean triedToSave) {
         this.triedToSave = triedToSave;
-    }
-
-    public boolean isUseSearchResultAddress() {
-        return useSearchResultAddress;
-    }
-
-    public void setUseSearchResultAddress(boolean useSearchResultAddress) {
-        this.useSearchResultAddress = useSearchResultAddress;
     }
 
     @JsonIgnore
@@ -152,8 +130,6 @@ public class OrganisationCreationForm implements Serializable {
                 .append(triedToSave, that.triedToSave)
                 .append(organisationSearching, that.organisationSearching)
                 .append(manualEntry, that.manualEntry)
-                .append(useSearchResultAddress, that.useSearchResultAddress)
-                .append(addressForm, that.addressForm)
                 .append(organisationTypeId, that.organisationTypeId)
                 .append(organisationSearchName, that.organisationSearchName)
                 .append(searchOrganisationId, that.searchOrganisationId)
@@ -165,14 +141,12 @@ public class OrganisationCreationForm implements Serializable {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(addressForm)
                 .append(triedToSave)
                 .append(organisationTypeId)
                 .append(organisationSearchName)
                 .append(searchOrganisationId)
                 .append(organisationSearching)
                 .append(manualEntry)
-                .append(useSearchResultAddress)
                 .append(organisationSearchResults)
                 .append(organisationName)
                 .toHashCode();

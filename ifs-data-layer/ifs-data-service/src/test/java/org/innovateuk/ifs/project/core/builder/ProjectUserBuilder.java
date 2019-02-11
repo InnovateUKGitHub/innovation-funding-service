@@ -3,9 +3,9 @@ package org.innovateuk.ifs.project.core.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.user.domain.User;
 

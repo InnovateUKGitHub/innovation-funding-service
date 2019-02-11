@@ -10,6 +10,11 @@
 
 <th:block th:fragment="project-status-table(status, columnType)">
     <th:block th:switch="${status.name()}">
+        <td th:case="'VIEW'" class="govuk-table__cell status">
+            <th:block th:if="${url}">
+                <a th:href="${url}" class="govuk-link">View</a>
+            </th:block>
+        </td>
         <td th:case="'COMPLETE'" class="govuk-table__cell status ok">
           <th:block th:if="${url}">
               <a th:href="${url}" class="govuk-link">
@@ -72,7 +77,7 @@
             id="section-2"
             class="govuk-tabs__list-item">
             <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}"
-               th:text="'Query responses (' + ${openQueryCount} + ')'"
+               th:text="'Queries (' + ${openQueryCount} + ')'"
                class="govuk-tabs__tab"
                th:attr="aria-selected=${selectedTab == 'queries'} ? 'true' : 'false'"></a>
         </li>

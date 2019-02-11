@@ -22,6 +22,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessCompaniesHouseSection(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (setupProgressChecker.isCompaniesHouseSectionRequired(organisation)) {
             return ACCESSIBLE;
@@ -32,6 +35,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessProjectDetailsSection(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Project Details section until Companies House details are complete for Organisation")) {
@@ -42,6 +48,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessFinanceContactPage(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (isCompaniesHouseIncompleteOrGOLAlreadyGenerated(organisation)) {
             return NOT_ACCESSIBLE;
@@ -51,6 +60,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessPartnerProjectLocationPage(OrganisationResource organisation, boolean partnerProjectLocationRequired) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (!partnerProjectLocationRequired) {
             return NOT_ACCESSIBLE;
@@ -73,6 +85,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess leadCanAccessProjectManagerPage(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (isCompaniesHouseIncompleteOrGOLAlreadyGeneratedOrNotLeadPartner(organisation)) {
             return NOT_ACCESSIBLE;
@@ -82,6 +97,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess leadCanAccessProjectStartDatePage(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (isCompaniesHouseIncompleteOrNotLeadPartner(organisation)) {
             return NOT_ACCESSIBLE;
@@ -95,6 +113,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess leadCanAccessProjectAddressPage(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (isCompaniesHouseIncompleteOrGOLAlreadyGeneratedOrNotLeadPartner(organisation)) {
             return NOT_ACCESSIBLE;
@@ -135,6 +156,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation, boolean partnerProjectLocationRequired) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Monitoring Officer section until Companies House details are complete for Organisation")) {
@@ -153,6 +177,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessBankDetailsSection(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Bank Details section until Companies House information is complete")) {
@@ -173,6 +200,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessFinanceChecksSection(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Bank Details section until Companies House information is complete")) {
@@ -189,6 +219,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessSpendProfileSection(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Spend Profile section until Companies House information is complete")) {
@@ -216,6 +249,9 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canEditSpendProfileSection(OrganisationResource userOrganisation, Long organisationIdFromUrl) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (canAccessSpendProfileSection(userOrganisation) == NOT_ACCESSIBLE) {
             return NOT_ACCESSIBLE;
@@ -231,14 +267,17 @@ public class SetupSectionAccessibilityHelper {
         return userOrganisation.getId().equals(organisationIdFromUrl);
     }
 
-    public SectionAccess canAccessOtherDocumentsSection(OrganisationResource organisation) {
+    public SectionAccess canAccessDocumentsSection(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (setupProgressChecker.isLeadPartnerOrganisation(organisation)) {
             return ACCESSIBLE;
         }
 
         if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Non-lead Partners are unable to access Other Documents section until their Companies House information " +
+                "Non-lead Partners are unable to access Documents section until their Companies House information " +
                         "is complete")) {
             return ACCESSIBLE;
         }
@@ -247,13 +286,21 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
+        if (setupProgressChecker.isOffline()) {
+            return NOT_ACCESSIBLE;
+        }
 
-        if (setupProgressChecker.isSpendProfileApproved() && setupProgressChecker.isOtherDocumentsApproved()
-                && setupProgressChecker.isGrantOfferLetterAvailable() && setupProgressChecker.isGrantOfferLetterSent()) {
+        if (setupProgressChecker.isSpendProfileApproved() && documentsApproved()
+                && setupProgressChecker.isGrantOfferLetterAvailable()
+                && setupProgressChecker.isGrantOfferLetterSent()) {
             return ACCESSIBLE;
         }
 
         return NOT_ACCESSIBLE;
+    }
+
+    private boolean documentsApproved() {
+        return setupProgressChecker.isDocumentsApproved();
     }
 
     public boolean isSpendProfileGenerated() {

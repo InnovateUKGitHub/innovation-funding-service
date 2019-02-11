@@ -60,7 +60,8 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("filter", filter)
                         .param("sendFilter", sendFilter.toString())
                         .param("fundingFilter", fundingFilter.toString())
-                        .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON)
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("application-summary/{method-name}",
                         pathParameters(parameterWithName("competitionId").description("The competition id")),
                         requestParameters(
@@ -90,7 +91,8 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("filter", filter)
                         .param("sendFilter", sendFilter.toString())
                         .param("fundingFilter", fundingFilter.toString())
-                        .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON)
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("application-summary/{method-name}",
                         pathParameters(parameterWithName("competitionId").description("The competition id")),
                         requestParameters(
@@ -116,7 +118,8 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("all", "")
                         .param("filter", filter)
                         .param("fundingFilter", fundingFilter.toString())
-                        .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON)
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("application-summary/{method-name}",
                         pathParameters(parameterWithName("competitionId").description("The competition id")),
                         requestParameters(
@@ -148,7 +151,8 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         .param("size", size + "")
                         .param("filter", filter)
                         .param("informFilter", informFilter.toString())
-                        .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON)
+                        .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("application-summary/{method-name}",
                         pathParameters(parameterWithName("competitionId").description("The competition id")),
                         requestParameters(
@@ -181,8 +185,6 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         pathParameters(parameterWithName("applicationId").description("The application id")),
                         responseFields(
                                 fieldWithPath("leadOrganisation").description("Lead organisation"),
-                                fieldWithPath("leadOrganisation.operatingAddress").description("Operating address"),
-                                fieldWithPath("leadOrganisation.registeredAddress").description("Registered address"),
                                 fieldWithPath("leadOrganisation.organisationName").description("Organisation name"),
                                 fieldWithPath("leadOrganisation.users[]").description("Users in lead organisation"),
                                 fieldWithPath("leadOrganisation.users[].name").description("User's name"),
@@ -190,8 +192,6 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                                 fieldWithPath("leadOrganisation.users[].phoneNumber").description("User's telephone number"),
                                 fieldWithPath("leadOrganisation.users[].lead").description("Is user the lead applicant"),
                                 fieldWithPath("partnerOrganisations[]").description("Collaborating organisations"),
-                                fieldWithPath("partnerOrganisations[].operatingAddress").description("Operating address"),
-                                fieldWithPath("partnerOrganisations[].registeredAddress").description("Registered address"),
                                 fieldWithPath("partnerOrganisations[].organisationName").description("Organisation name"),
                                 fieldWithPath("partnerOrganisations[].users[]").description("Users in partner organisation"),
                                 fieldWithPath("partnerOrganisations[].users[].name").description("User's name"),

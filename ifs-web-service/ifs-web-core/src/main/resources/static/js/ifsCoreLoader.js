@@ -32,7 +32,6 @@ IFS.core.loadOrder = {
       IFS.core.singleSubmit.init()
       IFS.core.submitNotification.init()
       IFS.core.passwordToggle.init()
-      IFS.core.backLink.init()
       IFS.core.preventInputRegex.init()
     },
     finalize: function () {
@@ -51,6 +50,16 @@ IFS.core.loadOrder = {
     },
     finalize: function () {
       IFS.core.financeSpecifics.init()
+    }
+  },
+  'finance-row-form': {
+    init: function () {
+      IFS.core.financeRowForm.init()
+    }
+  },
+  'overheads': {
+    finalize: function () {
+      IFS.core.overheads.init()
     }
   }
 }

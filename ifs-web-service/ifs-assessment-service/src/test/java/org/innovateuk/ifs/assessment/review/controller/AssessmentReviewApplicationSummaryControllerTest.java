@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
-import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
+import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
@@ -138,7 +138,6 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
 
     @Before
     public void setUp() {
-        super.setUp();
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -153,7 +152,7 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
     }
 
     @Test
-    public void testApplicationSummary() throws Exception {
+    public void applicationSummary() throws Exception {
         long reviewId = 1L;
         ApplicationResource app = applications.get(0);
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -172,12 +171,12 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
         AssessmentReviewApplicationSummaryViewModel resultModel = (AssessmentReviewApplicationSummaryViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(resultModel.getSummaryViewModel().getCurrentApplication(), app);
-        assertEquals(resultModel.getCompetition(), competitionResource);
+        assertEquals(resultModel.getCurrentCompetition(), competitionResource);
         assertEquals(resultModel.getSummaryViewModel().getFeedbackSummary(), emptyList());
     }
 
     @Test
-    public void testAssessorCanViewOwnFeedbackOnApplicationWhenInPanel() throws Exception {
+    public void assessorCanViewOwnFeedbackOnApplicationWhenInPanel() throws Exception {
         long reviewId = 1L;
         long questionId = 2L;
 

@@ -40,11 +40,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
-    public RestResult<OrganisationResource> getPrimaryForUser(Long userId) {
-        return getWithRestResult(organisationRestURL + "/primary-for-user/" + userId, OrganisationResource.class);
-    }
-
-    @Override
     public RestResult<OrganisationResource> getByUserAndApplicationId(long userId, long applicationId) {
         return getWithRestResult(organisationRestURL + "/by-user-and-application-id/" + userId + "/" + applicationId, OrganisationResource.class);
     }
@@ -78,6 +73,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
             log.error(e);
             organisationName = organisation.getName();
         }
-        return postWithRestResult(organisationRestURL + "/update-name-and-registration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class);
+        return postWithRestResult(organisationRestURL + "/update-name-and-registration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompaniesHouseNumber(), OrganisationResource.class);
     }
 }

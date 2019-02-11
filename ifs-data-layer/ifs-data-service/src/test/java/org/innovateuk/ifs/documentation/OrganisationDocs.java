@@ -13,9 +13,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class OrganisationDocs {
 
     public static final FieldDescriptor[] organisationResourceFields = {
-            fieldWithPath("id").description("Id of the organisaiton"),
+            fieldWithPath("id").description("Id of the organisation"),
             fieldWithPath("name").description("Name of the organisation"),
-            fieldWithPath("companyHouseNumber").description("The companies house number"),
+            fieldWithPath("companiesHouseNumber").description("The companies house number"),
             fieldWithPath("processRoles").description("Ids of the process roles"),
             fieldWithPath("applicationFinances").description("Ids of the applications finances"),
             fieldWithPath("addresses").description("List of organisation addresses"),
@@ -28,7 +28,7 @@ public class OrganisationDocs {
     public static final OrganisationResourceBuilder organisationResourceBuilder = newOrganisationResource()
             .withId(1L)
             .withName("Company name")
-            .withCompanyHouseNumber("0123456789")
+            .withCompaniesHouseNumber("0123456789")
             .withProcessRoles(asList(1L, 2L))
             .withAddress(newOrganisationAddressResource()
                     .withAddress(newAddressResource()

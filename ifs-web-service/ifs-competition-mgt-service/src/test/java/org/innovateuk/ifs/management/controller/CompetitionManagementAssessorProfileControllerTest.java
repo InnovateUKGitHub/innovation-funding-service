@@ -13,11 +13,7 @@ import org.innovateuk.ifs.populator.AssessorProfileDeclarationModelPopulator;
 import org.innovateuk.ifs.populator.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.user.resource.AffiliationListResource;
-import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
-import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
-import org.innovateuk.ifs.viewmodel.AssessorProfileSkillsViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,11 +22,9 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
-import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
@@ -42,11 +36,10 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSES
 import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.AffiliationType.*;
+import static org.innovateuk.ifs.user.resource.AffiliationType.FAMILY_FINANCIAL;
+import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -83,10 +76,8 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
         return new CompetitionManagementAssessorProfileController();
     }
 
-    @Override
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpCompetition() {
 
         competition = newCompetitionResource()
                 .withCompetitionStatus(IN_ASSESSMENT)

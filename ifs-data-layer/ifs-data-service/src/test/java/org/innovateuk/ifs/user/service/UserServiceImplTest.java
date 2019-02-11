@@ -7,6 +7,9 @@ import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
+import org.innovateuk.ifs.invite.domain.Invite;
+import org.innovateuk.ifs.invite.domain.RoleInvite;
+import org.innovateuk.ifs.invite.repository.UserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
@@ -47,9 +50,10 @@ import static java.util.Collections.*;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder.newSiteTermsAndConditionsResource;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
@@ -107,6 +111,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Mock
     private SystemNotificationSource systemNotificationSource;
+
+    @Mock
+    private UserInviteRepository userInviteRepositoryMock;
 
     @Mock(name = "randomHashSupplier")
     private Supplier<String> randomHashSupplierMock;
@@ -687,6 +694,71 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertTrue(result.isSuccess());
         assertTrue(user.hasRole(APPLICANT));
+    }
+
+    @Test
+    public void updateEmail() {
+
+        User user = newUser().build();
+        String updateEmail = "new@gmail.com";
+
+        List<Invite> invite = singletonList(new RoleInvite("Mister", "mister@email.com", "", APPLICANT, OPENED));
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(invite);
+        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceSuccess("uid"));
+
+        ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
+
+        assertTrue(result.isSuccess());
+        assertEquals(updateEmail, user.getEmail());
+    }
+
+    @Test
+    public void updateEmailForNoInviteUsers() {
+
+        User user = newUser().build();
+        String updateEmail = "new@gmail.com";
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(emptyList());
+        user.setEmail(updateEmail);
+        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceSuccess("uid"));
+
+        ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
+
+        assertTrue(result.isSuccess());
+        assertEquals(updateEmail, user.getEmail());
+    }
+
+    @Test
+    public void updateEmailAndDisplayErrorIfDuplicateEmailHasBeenFound() {
+
+        User user = newUser().withEmailAddress("new@gmail.com").build();
+        String updateEmail = "new@gmail.com";
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(USERS_DUPLICATE_EMAIL_ADDRESS));
+
+        ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void updateEmailAndDisplayErrorIfNoExistingEmailHasBeenFound() {
+
+        User user = newUser().withEmailAddress("master@gmail.co.uk").build();
+        String updateEmail = "new@gmail.com";
+        String emailToFind = "master@gmail.com";
+
+        when(userRepositoryMock.findByEmail(emailToFind)).thenReturn(Optional.empty());
+        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
+
+        ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
+
+        assertTrue(result.isFailure());
+        assertEquals("master@gmail.co.uk", user.getEmail());
     }
 
     private User createUserExpectations(Long userId, Set<Long> termsAndConditionsIds) {

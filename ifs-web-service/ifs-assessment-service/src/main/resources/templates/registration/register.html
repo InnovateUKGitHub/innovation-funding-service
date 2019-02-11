@@ -10,7 +10,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back', linkUrl=@{/registration/{inviteHash}/start(inviteHash=${model.competitionInviteHash})}, currentApplication=${currentApplication}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <div th:if="${#fields.hasErrors('${form.*}')}"
@@ -71,7 +71,7 @@
                     </div>
 
 
-                    <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
+                    <th:block th:insert="fragments/addresses :: address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
 
                     <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
                         <label class="govuk-label govuk-label--s" for="phoneNumber">
@@ -97,7 +97,7 @@
                         </p>
                     </div>
 
-                    <th:block th:insert="fragments/password :: registration"/>
+                    <th:block th:insert="fragments/passwords :: password (fieldName='password', label='Create password')" />
 
                     <button class="govuk-button govuk-!-margin-top-6" name="create-account" type="submit">Continue</button>
                 </form>

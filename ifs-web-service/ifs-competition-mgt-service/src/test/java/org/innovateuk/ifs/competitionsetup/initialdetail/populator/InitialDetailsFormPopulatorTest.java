@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.initialdetail.populator;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
@@ -63,10 +64,11 @@ public class InitialDetailsFormPopulatorTest {
 				.withName("name")
 				.withBudgetCode("budgetcode")
                 .withStateAid(Boolean.TRUE)
+				.withFundingType(FundingType.GRANT)
 				.withId(8L).build();
 
 		List<InnovationAreaResource> innovationAreaCategories = new ArrayList<>();
-		when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreaCategories));
+		when(categoryRestService.getInnovationAreasExcludingNone()).thenReturn(restSuccess(innovationAreaCategories));
 		when(categoryFormatter.format(innovationAreas, innovationAreaCategories)).thenReturn("formattedcategories");
 
 		CompetitionSetupForm result = service.populateForm(competition);
@@ -84,6 +86,7 @@ public class InitialDetailsFormPopulatorTest {
 		assertEquals(Integer.valueOf(2000), form.getOpeningDateYear());
 		assertEquals("name", form.getTitle());
 		assertEquals(Boolean.TRUE, form.getStateAid());
+		assertEquals(FundingType.GRANT, form.getFundingType());
 	}
 
 	@Test
@@ -102,7 +105,7 @@ public class InitialDetailsFormPopulatorTest {
 				.withId(8L).build();
 
 		List<InnovationAreaResource> innovationAreaCategories = newInnovationAreaResource().withId(6L, 7L).build(2);
-		when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreaCategories));
+		when(categoryRestService.getInnovationAreasExcludingNone()).thenReturn(restSuccess(innovationAreaCategories));
 
 		CompetitionSetupForm result = service.populateForm(competition);
 

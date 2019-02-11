@@ -114,7 +114,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
 
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModelPopulator.populate(applicationId, user);
-        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId);
+        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId, user);
 
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
         if (interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess()) {
@@ -144,6 +144,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                 applicationFundingBreakdownViewModel,
                 interviewFeedbackViewModel,
                 projectWithdrawn,
+                application.isCollaborativeProject(),
                 ApplicationSummaryOrigin.valueOf(origin),
                 buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams),
                 buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "competitionId", "projectId")

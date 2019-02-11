@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 
 import java.util.List;
@@ -42,4 +43,7 @@ public class ProjectTeamStatusResourceBuilder extends BaseBuilder<ProjectTeamSta
         return withArray((status, projectTeamStatusResource) -> addToList("partnerStatuses", status, projectTeamStatusResource), projectLeadStatus);
     }
 
+    public ProjectTeamStatusResourceBuilder withProjectState(ProjectState... projectState) {
+        return withArraySetFieldByReflection("projectState", projectState);
+    }
 }

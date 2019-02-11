@@ -9,16 +9,19 @@ import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
-import org.innovateuk.ifs.invite.domain.ProjectInvite;
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.mapper.RoleInviteMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
-import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
+import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
-import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -62,7 +65,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     private RoleInviteRepository roleInviteRepository;
 
     @Autowired
-    private ProjectInviteRepository projectInviteRepository;
+    private ProjectUserInviteRepository projectUserInviteRepository;
 
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
@@ -88,28 +91,28 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         INVITE_INTERNAL_USER
     }
 
-    private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.gov.uk";
+    private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.ukri.org";
 
     @Value("${ifs.system.internal.user.email.domain}")
     private String internalUserEmailDomain;
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role adminRoleType) {
+    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role) {
 
-        return validateInvite(invitedUser, adminRoleType)
-                .andOnSuccess(() -> validateInternalUserRole(adminRoleType))
+        return validateInvite(invitedUser, role)
+                .andOnSuccess(() -> validateInternalUserRole(role))
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(role -> saveInvite(invitedUser, adminRoleType))
+                .andOnSuccess(() -> saveInvite(invitedUser, role))
                 .andOnSuccess(this::inviteInternalUser);
     }
 
-    private ServiceResult<Void> validateInvite(UserResource invitedUser, Role adminRoleType) {
+    private ServiceResult<Void> validateInvite(UserResource invitedUser, Role role) {
 
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
-                || StringUtils.isEmpty(invitedUser.getLastName()) || adminRoleType == null){
+                || StringUtils.isEmpty(invitedUser.getLastName()) || role == null){
             return serviceFailure(USER_ROLE_INVITE_INVALID);
         }
         return serviceSuccess();
@@ -282,20 +285,20 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     }
 
-    private ServiceResult<List<ProjectInvite>> findProjectInvitesBySearchCriteria(String searchString, SearchCategory searchCategory ) {
-            List<ProjectInvite> projectInvites;
+    private ServiceResult<List<ProjectUserInvite>> findProjectInvitesBySearchCriteria(String searchString, SearchCategory searchCategory ) {
+            final List<ProjectUserInvite> projectInvites;
             switch (searchCategory) {
                 case NAME:
-                    projectInvites = projectInviteRepository.findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    projectInvites = projectUserInviteRepository.findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
                     break;
 
                 case ORGANISATION_NAME:
-                    projectInvites = projectInviteRepository.findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    projectInvites = projectUserInviteRepository.findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
                     break;
 
                 case EMAIL:
                 default:
-                    projectInvites = projectInviteRepository.findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    projectInvites = projectUserInviteRepository.findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
                     break;
             }
             return serviceSuccess(projectInvites);
@@ -313,7 +316,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 appInvite.getStatus())).collect(Collectors.toList());
     }
 
-    private List<ExternalInviteResource> getProjectInvitesAsExternalInviteResource(List<ProjectInvite> prjInvites){
+    private List<ExternalInviteResource> getProjectInvitesAsExternalInviteResource(List<ProjectUserInvite> prjInvites){
 
         return prjInvites.stream().map(projectInvite ->
                 new ExternalInviteResource(

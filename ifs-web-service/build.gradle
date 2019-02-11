@@ -1,12 +1,13 @@
-def targetBuild = hasProperty('profile') ? profile : 'docker';
-apply from: targetBuild + "-build.gradle";
+apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: "fractal.gradle";
 apply from: "front-end.gradle"
+apply plugin: 'idea'
+
 
 group 'innovateuk'
 version project.version
 
-apply plugin: 'idea'
+processResources.dependsOn applyProfiles
 
 buildscript {
 
@@ -32,6 +33,10 @@ endpointDocumentation.dependsOn "ifs-project-setup-service:test"
 endpointDocumentation.dependsOn "ifs-front-door-service:test"
 endpointDocumentation.dependsOn "eu-grant-registration-service:test"
 
-ext.ifsDataServiceRestBaseURL="http://data-service:8080"
-ext.serverPort=8080
+ext.ifsDataServiceRestBaseURL = "http://data-service:8080"
+ext.serverPort = 8080
+ext.ifsIdpLogoutUrl="https://ifs.local-dev/Logout"
+ext.ifsWebGoogleanalyticsTrackingid=""
+ext.ifsSystemUserUUID="c0d02979-e66e-11e7-ac43-0242ac120002"
 
+ext.ifsMultiDashboardRoles=ext.has('ifs.multi.dashboard.roles') ? ext.get('ifs.multi.dashboard.roles') : "LIVE_PROJECTS_USER,APPLICANT,ASSESSOR,STAKEHOLDER"

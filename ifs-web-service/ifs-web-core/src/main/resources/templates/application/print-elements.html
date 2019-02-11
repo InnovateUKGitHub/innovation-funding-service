@@ -5,28 +5,47 @@
 
 <th:block th:fragment="application_details">
 
-    <h2 class="govuk-heading-s">Competition name</h2>
-    <div class="textarea-wrapped">
-        <div class="readonly" th:text="${currentCompetition.name}" />
+    <div class="govuk-form-group">
+        <h2 class="govuk-heading-s">Competition name</h2>
+        <div class="textarea-wrapped">
+            <div class="readonly">
+                <p class="govuk-body" th:text="${currentCompetition.name}" data-md-to-html=""></p>
+            </div>
+        </div>
     </div>
 
-    <th:block th:if="${researchCategoryRequired}">
+    <div class="govuk-form-group">
+        <h2 class="govuk-heading-s">Project title</h2>
+        <div class="textarea-wrapped">
+            <div class="readonly">
+                <p class="govuk-body" th:text="${currentApplication.name}" data-md-to-html=""></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-form-group" th:if="${researchCategoryRequired}">
         <h2 class="govuk-heading-s">Research category</h2>
         <div class="textarea-wrapped">
-            <div class="readonly" th:text="${currentApplication.researchCategory.name}" />
+            <div class="readonly">
+                <p class="govuk-body" th:text="${currentApplication.researchCategory.name}" data-md-to-html=""></p>
+            </div>
         </div>
-    </th:block>
-
-    <h2 class="govuk-heading-s">Innovation area</h2>
-    <div class="textarea-wrapped">
-        <div class="readonly" th:text="${currentApplication.innovationArea.name} ?: 'Not listed'" />
     </div>
 
-    <h2 class="govuk-heading-s">Resubmission</h2>
-    <div class="textarea-wrapped">
-        <div>
-            <div th:if="${currentApplication.resubmission}">Yes</div>
-            <div th:unless="${currentApplication.resubmission}">No</div>
+    <div class="govuk-form-group">
+        <h2 class="govuk-heading-s">Innovation area</h2>
+        <div class="textarea-wrapped">
+            <div class="readonly">
+                <p class="govuk-body" th:text="${currentApplication.innovationArea.name} ?: 'Not listed'" data-md-to-html=""></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-form-group">
+        <h2 class="govuk-heading-s">Resubmission</h2>
+        <div class="textarea-wrapped">
+            <p class="govuk-body" th:if="${currentApplication.resubmission}">Yes</p>
+            <p class="govuk-body" th:unless="${currentApplication.resubmission}">No</p>
         </div>
     </div>
 
@@ -42,27 +61,14 @@
         </div>
     </div>
 
-    <h2 class="govuk-heading-s">Estimated timescales</h2>
+    <h2 class="govuk-heading-s">Project start date</h2>
+    <p class="govuk-body" th:text="${currentApplication.startDate} ? ${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')} : 'This field has not been completed.'"></p>
 
-    <dl class="govuk-list">
-        <dt>Project start date:</dt>
-        <dd th:classappend="${currentApplication.startDate == null} ? 'govuk-hint'">
-            <span
-                th:classappend="${currentApplication.startDate == null} ? 'govuk-!-font-size-16'"
-                th:text="${currentApplication.startDate} ? ${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')} : 'This field has not been completed.'"
-            />
-        </dd>
-        <dt>Duration in months:</dt>
-        <dd th:classappend="${currentApplication.durationInMonths == null} ? 'govuk-hint'">
-            <span
-                th:classappend="${currentApplication.durationInMonths == null} ? 'govuk-!-font-size-16'"
-                th:text="${currentApplication.durationInMonths} ?: 'This field has not been completed.'"
-            />
-        </dd>
-    </dl>
+    <h2 class="govuk-heading-s">Duration in months</h2>
+    <p class="govuk-body" th:text="${currentApplication.durationInMonths} ?: 'This field has not been completed.'"></p>
 
     <h2 class="govuk-heading-s">Lead organisation</h2>
-    <div th:text="${leadOrganisation.getName()}"></div>
+    <p class="govuk-body" th:text="${leadOrganisation.getName()}"></p>
 
     <h2 class="govuk-heading-s">Partners</h2>
     <ul class="govuk-list govuk-list--bullet">
@@ -91,7 +97,7 @@
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" />
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
-                <th class="govuk-table__header govuk-table__header--numeric" scope="col">% Grant</th>
+                <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding level (%)</th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)</th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project (&pound;)</th>

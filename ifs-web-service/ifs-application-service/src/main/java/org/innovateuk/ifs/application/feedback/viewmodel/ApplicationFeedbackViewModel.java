@@ -30,6 +30,7 @@ public class ApplicationFeedbackViewModel {
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final InterviewFeedbackViewModel interviewFeedbackViewModel;
     private final boolean projectWithdrawn;
+    private final boolean collaborativeProject;
     private final ApplicationSummaryOrigin origin;
     private final String originQuery;
     private final String backUrl;
@@ -48,6 +49,7 @@ public class ApplicationFeedbackViewModel {
                                         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
                                         InterviewFeedbackViewModel interviewFeedbackViewModel,
                                         boolean projectWithdrawn,
+                                        boolean collaborativeProject,
                                         ApplicationSummaryOrigin origin,
                                         String originQuery,
                                         String backUrl) {
@@ -65,6 +67,7 @@ public class ApplicationFeedbackViewModel {
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.interviewFeedbackViewModel = interviewFeedbackViewModel;
         this.projectWithdrawn = projectWithdrawn;
+        this.collaborativeProject = collaborativeProject;
         this.origin = origin;
         this.originQuery = originQuery;
         this.backUrl = backUrl;
@@ -124,6 +127,10 @@ public class ApplicationFeedbackViewModel {
 
     public boolean isProjectWithdrawn() {
         return projectWithdrawn;
+    }
+
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
     }
 
     public ApplicationSummaryOrigin getOrigin() {

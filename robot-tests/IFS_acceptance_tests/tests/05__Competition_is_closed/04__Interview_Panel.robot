@@ -69,7 +69,7 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...
 ...               IFS-3571 Interview panels - Internal user view of applications and associated feedback
 Suite Setup       Custom Suite Setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
@@ -217,11 +217,11 @@ Applicant can upload the reponse to interview panel
 
 Applicant can remove the uploaded response
     [Documentation]  IFS-3253  IFS-3378
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user      ${peter_styles_email}   ${short_password}
     Given the user clicks the button/link    link = ${computer_vision_application_name}
-    And the user should see the element      jQuery = .message-alert p:contains("As the lead applicant you can respond to feedback. This response will be noted by the interview panel.")  #checking banner message befor uploading file.
-    When the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link=testing_5MB.pdf
+    And the user should see the element      jQuery = .message-alert p:contains("If you are asked to respond to feedback you can upload your response below.")  #checking banner message befor uploading file.
+    When the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link = testing_5MB.pdf
     Then the user should see the element     jQuery = .message-alert p:contains("Your response has been uploaded. This response will be noted by the interview panel.")  #checking banner message after uploading file.
     When the user clicks the button/link     css = .button-secondary  #remove
     Then the user should see the element     jQuery = p:contains("No file currently uploaded") ~ label:contains("+ Upload")
@@ -235,6 +235,7 @@ CompAdmin checks for interview panel key statistics
 
 CompAdmin can access the Allocate applications to assessors screen
     [Documentation]  IFS-3435  IFS-3436  IFS-3450
+    [Tags]  HappyPath
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/allocate-assessors
     Then the user should see the element     jQuery = a:contains("${assessor_joel}")
     And the user should see the element      jQuery = h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
@@ -246,6 +247,7 @@ CompAdmin can access the Allocate applications to assessors screen
 
 CompAdmin allocate applications to assessor
     [Documentation]  IFS-3451  IFS-3485
+    [Tags]  HappyPath
     Given the user clicks the button/link    jQuery = tr:contains("${Neural_network_application}") label
     And the user clicks the button/link      jQuery = tr:contains("${computer_vision_application}") label
     When the user clicks the button/link     css = .govuk-button[name="addSelected"]  #Allocate
@@ -259,6 +261,7 @@ CompAdmin allocate applications to assessor
 
 Assessor can view the list of allocated applications
     [Documentation]  IFS-3534  IFS-3566
+    [Tags]  HappyPath
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
     When the user navigates to the page      ${SERVER}/assessment/assessor/dashboard/competition/${CLOSED_COMPETITION}/interview
     Then the user should see the element     jQuery = h1:contains("${CLOSED_COMPETITION_NAME}")
@@ -269,6 +272,7 @@ Assessor can view the list of allocated applications
 
 Assessor marks appplications as successful and releases competition feedback
     [Documentation]  IFS-3542
+    [Tags]  HappyPath
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${SERVER}/management/competition/18/funding
     Then the user marks applications as successful and send funding decision email
@@ -283,12 +287,12 @@ Applicant can still see their feedback once the comp feedback has been released
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
+    Connect to database  @{database}
     the Interview Panel is activated in the db
     ${today} =  get today short month
     set suite variable  ${today}
 
 the Interview Panel is activated in the db
-    Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`competition` SET `has_interview_stage`=1 WHERE `id`='${CLOSED_COMPETITION}';
 
 the competition admin selects the applications and adds them to the invite list
@@ -341,10 +345,10 @@ the user checks for the key statistics for invite assessors
 
 the compAdmin uploads additional feedback for an application
     the user uploads the file          id = feedback[0]   ${too_large_pdf}  #checking for large file upload
-    the user should see the element    jQuery = h1:contains("Attempt to upload a large file")
+    the user should get an error page  ${too_large_pdf_validation_error}
     the user goes back to the previous page
     the user uploads the file          id = feedback[0]   ${text_file}    #checking validation for worng fomrate file upload
-    the user should see a field and summary error      Your upload must be a PDF.
+    the user should see a field and summary error      ${wrong_filetype_validation_error}
     the compAdmin/applicant upload feedback     id = feedback[0]  ${5mb_pdf}  link = ${5mb_pdf}
 
 the compAdmin/applicant upload feedback
@@ -405,3 +409,7 @@ the compAdmin can cancel resend inivte to an applicant
     the user clicks the button/link    link = Cancel
     the user navigates to the page     ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/invite/${Neural_network_application}/view
     the user clicks the button/link    link = Edit and resend invite
+
+Custom suite teardown
+    Disconnect from database
+    The user closes the browser

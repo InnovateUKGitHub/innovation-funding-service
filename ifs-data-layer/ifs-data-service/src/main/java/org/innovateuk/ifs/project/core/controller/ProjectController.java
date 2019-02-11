@@ -60,4 +60,14 @@ public class ProjectController {
     public RestResult<Void> withdrawProject(@PathVariable("projectId") final long projectId) {
         return projectService.withdrawProject(projectId).toPostWithBodyResponse();
     }
+
+    @PostMapping("/{projectId}/handle-offline")
+    public RestResult<Void> handleProjectOffline(@PathVariable("projectId") final long projectId) {
+        return projectService.handleProjectOffline(projectId).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/{projectId}/complete-offline")
+    public RestResult<Void> completeProjectOffline(@PathVariable("projectId") final long projectId) {
+        return projectService.completeProjectOffline(projectId).toPostWithBodyResponse();
+    }
 }

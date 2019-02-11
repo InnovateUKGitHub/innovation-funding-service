@@ -7,7 +7,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
@@ -50,7 +49,7 @@ public class AssessorDashboardModelPopulator {
 
     public AssessorDashboardViewModel populateModel(long userId) {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
-                .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR).getSuccess();
+                .getAssessorParticipants(userId).getSuccess();
 
         UserProfileStatusResource profileStatusResource = profileRestService.getUserProfileStatus(userId).getSuccess();
 
@@ -170,6 +169,6 @@ public class AssessorDashboardModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ZonedDateTime panelDate = competition.getFundersPanelDate();
 
-        return ZonedDateTime.now().plusDays(1L).isAfter(panelDate);
+        return ZonedDateTime.now().isAfter(panelDate);
     }
 }

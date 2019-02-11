@@ -1,8 +1,11 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
-apply from: targetBuild + "-build.gradle"
 
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
+
+apply from: rootProject.file("gradle-support/profile-handler.gradle")
+
+processResources.dependsOn applyProfiles
 
 apply from: "../flyway.gradle"
 
@@ -38,7 +41,7 @@ tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":late
 
 
 def enabled = project.hasProperty('ifs.data-service.enabled') ? project.property('ifs.data-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
+[stop, removeContainer, createContainer, deploy, wait, flywayClean, flywayMigrate].each { task ->
     task.enabled = enabled
 }
 deploy.dependsOn ":docker:ifs-mysql:ifs-database:wait"
@@ -50,9 +53,10 @@ createContainer.portBindings = ['8086:8080','9006:8000']
 createContainer.networkAliases=["ifs-data-service"]
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
-ext.companyHouseKey = ext.get('ifs.company-house.key')
+ext.companiesHouseKey = ext.get('ifs.companies-house.key')
 
 ext.companiesHouseLookupEnabled = ext.has('ifs.companies-house.enabled') ? ext.get('ifs.companies-house.enabled') : true
+ext.grantProcessFilterByCompetitionIds = ext.has('ifs.grant.process.filterBy.competitionIds') ? ext.get('ifs.grant.process.filterBy.competitionIds') : ""
 
 bootRun {
     addResources = false
@@ -111,7 +115,7 @@ dependencies {
     compile "com.google.guava:guava:22.0"
     compile "commons-io:commons-io:2.5"
     compile 'org.jsoup:jsoup:1.10.3'
-    compile "net.sf.opencsv:opencsv:2.3"
+    compile "com.opencsv:opencsv:4.3.2"
     compile "org.xhtmlrenderer:flying-saucer-core:9.1.6"
     compile "org.xhtmlrenderer:flying-saucer-pdf:9.1.6"
 
@@ -121,6 +125,7 @@ dependencies {
     testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-data-layer:data-service-file", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-sil-resources", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "com.openpojo:openpojo:0.8.4"
@@ -153,10 +158,17 @@ test {
 
 
 task syncShib(type:Exec) {
-    commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
+    commandLine 'docker', 'exec', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
+task prepareAnonymisedDB(dependsOn:[":docker:ifs-mysql:ifs-database:updateIfsWebUser", syncShib]) {
+    syncShib.mustRunAfter ":docker:ifs-mysql:ifs-database:updateIfsWebUser"
+}
+
+flywayClean.dependsOn applyProfiles
 flywayMigrate.dependsOn processResources
 
 ext.ifsDataServiceRestBaseURL="http://data-service:8080"
 ext.serverPort=8080
+
+ext.ifsAllocateLiveProjectsRole=ext.has('ifs.allocate.live.projects.role') ? ext.get('ifs.allocate.live.projects.role') : true

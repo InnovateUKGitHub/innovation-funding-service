@@ -20,9 +20,12 @@ public class Organisation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(nullable = false)
     private String name;
-    private String companyHouseNumber; // might start with zero, so use a string.
+
+    @Column(name = "companies_house_number")
+    private String companiesHouseNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType organisationType;
@@ -49,9 +52,9 @@ public class Organisation {
     public Organisation(String name) {
         this.name = name;
     }
-    public Organisation(String name, String companyHouseNumber) {
+    public Organisation(String name, String companiesHouseNumber) {
         this.name = name;
-        this.companyHouseNumber = companyHouseNumber;
+        this.companiesHouseNumber = companiesHouseNumber;
     }
 
     public Long getId() {
@@ -79,12 +82,12 @@ public class Organisation {
         return users;
     }
 
-    public String getCompanyHouseNumber() {
-        return companyHouseNumber;
+    public String getCompaniesHouseNumber() {
+        return companiesHouseNumber;
     }
 
-    public void setCompanyHouseNumber(String companyHouseNumber) {
-        this.companyHouseNumber = companyHouseNumber;
+    public void setCompaniesHouseNumber(String companiesHouseNumber) {
+        this.companiesHouseNumber = companiesHouseNumber;
     }
 
     public List<OrganisationAddress> getAddresses() {

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.application.view.service;
 
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -12,12 +11,13 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.application.view.populator.ManageApplicationModelPopulator;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageApplicationViewModel;
-import org.innovateuk.ifs.management.navigation.NavigationOrigin;
+import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,15 +71,15 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        String queryParam = buildOriginQueryString(NavigationOrigin.valueOf(origin), queryParams);
+        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.valueOf(origin), queryParams);
         queryParams.put("competitionId", asList(String.valueOf(competitionId)));
         queryParams.put("applicationId", asList(String.valueOf(application.getId())));
-        String backUrl = buildBackUrl(NavigationOrigin.valueOf(origin), queryParams, "assessorId", "applicationId", "competitionId");
+        String backUrl = buildBackUrl(ManagementApplicationOrigin.valueOf(origin), queryParams, "assessorId", "applicationId", "competitionId");
 
         ManageApplicationViewModel viewModel = manageApplicationModelPopulator.populate(application,
                         competition,
                         backUrl,
-                        queryParam,
+                        originQuery,
                         user,
                         getAppendices(application.getId(), responses),
                         form);

@@ -53,7 +53,7 @@ public class AbstractPublicContentSectionControllerTest extends
         TestPublicContentViewModel expectedViewModel = new TestPublicContentViewModel();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId())).thenReturn(true);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
         when(publicContentService.getCompetitionById(competition.getId())).thenReturn(publicContent);
         when(modelPopulator.populate(publicContent, true)).thenReturn(expectedViewModel);
         when(formPopulator.populate(publicContent)).thenReturn(expectedFormPopulated);
@@ -75,7 +75,7 @@ public class AbstractPublicContentSectionControllerTest extends
         TestPublicContentViewModel expectedViewModel = new TestPublicContentViewModel();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId())).thenReturn(true);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
         when(publicContentService.getCompetitionById(competition.getId())).thenReturn(publicContent);
         when(modelPopulator.populate(publicContent, false)).thenReturn(expectedViewModel);
         when(formPopulator.populate(publicContent)).thenReturn(expectedFormPopulated);
@@ -97,7 +97,7 @@ public class AbstractPublicContentSectionControllerTest extends
         TestPublicContentViewModel expectedViewModel = new TestPublicContentViewModel();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId())).thenReturn(true);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
         when(publicContentService.getCompetitionById(competition.getId())).thenReturn(publicContent);
         when(formSaver.markAsComplete(expectedFormToSave, publicContent)).thenReturn(serviceSuccess());
         when(modelPopulator.populate(publicContent, true)).thenReturn(expectedViewModel);

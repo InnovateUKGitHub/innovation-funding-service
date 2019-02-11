@@ -1,0 +1,17 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name}
+
+You have been invited to view the following competition on the Innovation Funding Service:
+${competitionName}
+
+Please create an account to view this competition.
+
+Before you accept this invitation, make sure you are acting within all agreements you have signed with Innovate UK. You cannot apply to this competition yourself, nor can your family members or other associates.
+
+Please confirm your account and create your password here: ${inviteUrl}
+
+Yours sincerely
+
+Innovation Funding Service Team
+</@layout.defaultPlainText>

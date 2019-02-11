@@ -7,6 +7,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
@@ -136,7 +137,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
                 .ifPresent(applicationFinanceResources ->
                         applicationFinanceResources.forEach(applicationFinance -> {
                             if (applicationFinance.getGrantClaim() != null && financeQuestion.isPresent()) {
-                                applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
+                                applicationFinance.getGrantClaim().setGrantClaimPercentage(null);
                                 financeRowCostsService.addCost(applicationFinance.getId(), financeQuestion.get().getId(), applicationFinance.getGrantClaim());
                             }
                         })
@@ -149,6 +150,8 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
         boolean maximumFundingLevelOverridden = grantClaimMaximumService.isMaximumFundingLevelOverridden(
                 application.getCompetition().getId()).getSuccess();
 
-        return organisation.getOrganisationType().equals(BUSINESS.getId()) && !maximumFundingLevelOverridden;
+        return application.getCompetition().getFundingType() != FundingType.PROCUREMENT
+                && organisation.getOrganisationType().equals(BUSINESS.getId())
+                && !maximumFundingLevelOverridden;
     }
 }

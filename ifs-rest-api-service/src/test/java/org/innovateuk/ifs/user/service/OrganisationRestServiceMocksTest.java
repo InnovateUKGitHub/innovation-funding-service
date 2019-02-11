@@ -64,12 +64,12 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
         OrganisationResource organisation = new OrganisationResource();
         organisation.setId(organisationId);
         organisation.setName("Vitruvius Stonework Limited");
-        organisation.setCompanyHouseNumber("60674010");
+        organisation.setCompaniesHouseNumber("60674010");
 
 
         String organisationNameEncoded = UriUtils.encode(organisation.getName(), "UTF-8");
 
-        setupPostWithRestResultExpectations(organisationsUrl + "/update-name-and-registration/" + organisationId + "?name=" + organisationNameEncoded + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class, null, organisation, OK);
+        setupPostWithRestResultExpectations(organisationsUrl + "/update-name-and-registration/" + organisationId + "?name=" + organisationNameEncoded + "&registration=" + organisation.getCompaniesHouseNumber(), OrganisationResource.class, null, organisation, OK);
         OrganisationResource receivedResource = service.updateNameAndRegistration(organisation).getSuccess();
 
         Assert.assertEquals(organisation, receivedResource);
@@ -94,17 +94,6 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
 
         OrganisationResource response = service.createAndLinkByInvite(expected, inviteHash).getSuccess();
         assertEquals(expected, response);
-    }
-
-    @Test
-    public void getPrimaryForUser() {
-        long userId = 1L;
-        OrganisationResource organisationResource = newOrganisationResource().build();
-        setupGetWithRestResultExpectations(format("%s/primary-for-user/%s", organisationsUrl, userId), OrganisationResource.class, organisationResource);
-
-        OrganisationResource result = service.getPrimaryForUser(userId).getSuccess();
-
-        assertEquals(result, organisationResource);
     }
 
     @Test

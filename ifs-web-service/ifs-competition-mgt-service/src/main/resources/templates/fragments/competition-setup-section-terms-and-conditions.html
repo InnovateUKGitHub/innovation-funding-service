@@ -2,7 +2,7 @@
 <!-- =================Section: Terms and Conditions (3) =========================== -->
 <th:block th:fragment="section-content">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to save section.</h2>
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
@@ -50,10 +50,10 @@
 
     <ul class="govuk-list pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='initial')}">
+            <a rel="prev" title="Navigate to previous part"
+               th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${model.general.competition.id},sectionPath='public-content')}">
                 <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Initial details</span>
+                <span class="pagination-part-title">Public content</span>
             </a>
         </li>
         <li class="next">

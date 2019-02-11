@@ -75,7 +75,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 .withProjectStartDate(LocalDate.now())
                 .withProjectEndDate(LocalDate.now().plusYears(1L))
                 .withProjectName("Project Name")
-                .withParticipantId("123456")
+                .withParticipantId("123456789")
                 .build();
 
         euGrantResource = newEuGrantResource()
@@ -144,7 +144,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
 
     @Test
     public void submit() throws Exception {
-        when(euGrantService.submit(uuid)).thenReturn(serviceSuccess(euGrantResource));
+        when(euGrantService.submit(uuid, true)).thenReturn(serviceSuccess(euGrantResource));
 
         mockMvc.perform(
                 post("/eu-grant/{uuid}/submit", uuid.toString()))
@@ -172,7 +172,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 fieldWithPath("contact.telephone").description("Telephone number of the contact."),
                 fieldWithPath("funding").description("Contact details for the eu grant."),
                 fieldWithPath("funding.grantAgreementNumber").description("This might also be referred to as your project ID."),
-                fieldWithPath("funding.participantId").description("The 6-digit number unique to your organisation."),
+                fieldWithPath("funding.participantId").description("The 9-digit number unique to your organisation."),
                 fieldWithPath("funding.projectName").description("The name of your project."),
                 fieldWithPath("funding.projectStartDate").description("The date the project will start."),
                 fieldWithPath("funding.projectEndDate").description("The date the project will end."),

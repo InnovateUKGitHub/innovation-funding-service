@@ -44,7 +44,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         when(projectServiceMock.getProjectById(project1Id)).thenReturn(serviceSuccess(testProjectResource1));
 
-        mockMvc.perform(get("/project/{id}", project1Id))
+        mockMvc.perform(get("/project/{id}", project1Id)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the project that is being requested")
@@ -59,7 +60,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         List<ProjectResource> projects = projectResourceBuilder.build(projectNumber);
         when(projectServiceMock.findAll()).thenReturn(serviceSuccess(projects));
 
-        mockMvc.perform(get("/project/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+        mockMvc.perform(get("/project/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON)
+                .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(
                         document("project/{method-name}",
                                 responseFields(
@@ -75,10 +77,11 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         when(projectServiceMock.getProjectUsers(123L)).thenReturn(serviceSuccess(projectUsers));
 
-        mockMvc.perform(get("/project/{projectId}/project-users", 123L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(projectUsers))).
-                andDo(document("project/{method-name}",
+        mockMvc.perform(get("/project/{projectId}/project-users", 123L)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectUsers)))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
                         ),
@@ -93,13 +96,13 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         when(projectServiceMock.createProjectFromApplication(applicationId)).thenReturn(serviceSuccess(expectedProject));
 
-        mockMvc.perform(post("/project/create-project/application/{applicationId}", applicationId))
-                .andDo(
-                        document("project/{method-name}",
+        mockMvc.perform(post("/project/create-project/application/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application to turn into a project")
                         ),
-                                responseFields(projectResourceFields)
+                        responseFields(projectResourceFields)
                 ));
     }
 
@@ -108,12 +111,40 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         Long projectId = 456L;
         when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/withdraw", projectId))
-                .andDo(
-                        document("project/{method-name}",
-                         pathParameters(
-                                 parameterWithName("projectId").description("Id of the project to withdraw")
-                         )
+        mockMvc.perform(post("/project/{projectId}/withdraw", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to withdraw")
+                        )
+                ));
+    }
+
+    @Test
+    public void handleProjectOffline() throws Exception {
+        Long projectId = 456L;
+        when(projectServiceMock.handleProjectOffline(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/handle-offline", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to handle offline")
+                        )
+                ));
+    }
+
+    @Test
+    public void completeProjectOffline() throws Exception {
+        Long projectId = 456L;
+        when(projectServiceMock.completeProjectOffline(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/complete-offline", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to complete offline")
+                        )
                 ));
     }
 }

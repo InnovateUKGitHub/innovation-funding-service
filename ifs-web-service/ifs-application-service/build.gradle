@@ -58,9 +58,8 @@ dependencies {
     testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
 
-    testCompile "net.sf.opencsv:opencsv:2.3"
+    testCompile "com.opencsv:opencsv:4.3.2"
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"
-
-
+processResources.dependsOn ":ifs-web-service:applyProfiles"

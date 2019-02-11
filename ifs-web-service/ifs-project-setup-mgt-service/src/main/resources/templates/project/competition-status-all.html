@@ -60,11 +60,11 @@
                         <tr class="govuk-table__row">
                           <th class="govuk-table__header" scope="col">Project</th>
                           <th class="govuk-table__header status" scope="col">Project details</th>
+                          <th class="govuk-table__header status" scope="col">Documents</th>
                           <th class="govuk-table__header status" scope="col">MO</th>
                           <th class="govuk-table__header status" scope="col">Bank details</th>
                           <th class="govuk-table__header status" scope="col">Finance checks</th>
                           <th class="govuk-table__header status" scope="col">Spend profile</th>
-                          <th class="govuk-table__header status" scope="col">Other docs</th>
                           <th class="govuk-table__header status" scope="col">GOL</th>
                         </tr>
                       </thead>
@@ -74,12 +74,19 @@
                               <div class="govuk-heading-s govuk-!-margin-0" th:text="${project.projectTitle}" />
                                 <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
                               <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link" />
+                              <p class="govuk-!-display-inline govuk-!-margin-left-4" th:if="${project.projectState == T(org.innovateuk.ifs.project.resource.ProjectState).HANDLED_OFFLINE}">Setup is being managed offline</p>
+                              <p class="govuk-!-display-inline govuk-!-margin-left-4" th:if="${project.projectState == T(org.innovateuk.ifs.project.resource.ProjectState).COMPLETED_OFFLINE}">Setup has been completed offline</p>
                               <small>
                                 <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
                                 <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
                               </small>
                             </th>
                             <th:block th:insert="project/fragments :: project-status-table(${project.projectDetailsStatus}, 'project-details')" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
+
+                            <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessDocuments}"
+                                      th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/document/all'}" />
+                            <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessDocuments}"
+                                      th:insert="project/fragments :: project-status-table(${project.documentsStatus}, 'documents')" />
 
                             <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
                                       th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO')" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
@@ -101,11 +108,6 @@
                             <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
                                       th:insert="project/fragments :: project-status-table(${project.spendProfileStatus}, 'spend-profile')" />
 
-                            <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
-                                      th:insert="project/fragments :: project-status-table(${project.otherDocumentsStatus}, 'other-documents')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/partner/documents'}" />
-                            <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
-                                      th:insert="project/fragments :: project-status-table(${project.otherDocumentsStatus}, 'other-documents')" />
-
                             <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
                                       th:insert="project/fragments :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL')"
                                       th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/grant-offer-letter/send'}" />
@@ -116,11 +118,11 @@
                       </tbody>
                       <tfoot class="govuk-table__foot bank-export">
                         <tr class="govuk-table__row" th:if="${model.canExportBankDetails}">
-                          <td class="govuk-table__cell" colspan="3"></td>
+                          <td class="govuk-table__cell" colspan="4"></td>
                           <td class="govuk-table__cell aligncentre">
                             <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionProjectsStatusResource.competitionNumber})}" class="govuk-link">Export all bank details</a>
                           </td>
-                          <td class="govuk-table__cell" colspan="4"></td>
+                          <td class="govuk-table__cell" colspan="3"></td>
                         </tr>
                       </tfoot>
                     </table>

@@ -1,18 +1,17 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -25,6 +24,8 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.controller.CompetitionManagementApplicationController;
 import org.innovateuk.ifs.management.application.view.populator.ApplicationOverviewIneligibilityModelPopulator;
@@ -36,14 +37,10 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverv
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageApplicationViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligibleApplicationViewModel;
-import org.innovateuk.ifs.invite.InviteService;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.application.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -66,7 +63,6 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
@@ -83,7 +79,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -579,7 +574,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
 
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
-        when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
@@ -607,7 +602,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
 
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
-        when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
@@ -635,12 +630,6 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         ApplicationTeamResource teamResource = new ApplicationTeamResource();
         ApplicationTeamOrganisationResource leadOrg = new ApplicationTeamOrganisationResource();
         leadOrg.setOrganisationName("lead");
-        AddressResource regAddress = newAddressResource().withAddressLine1("1").withAddressLine2("Floor 1").withAddressLine3("Polaris House").withCounty("Wilts").withPostcode("SN1 1AB").withTown("Swindon").build();
-        AddressResource opAddress = newAddressResource().withAddressLine1("A").withAddressLine2("Floor G").withAddressLine3("North Star House").withCounty("Somerset").withPostcode("TN1 1ZZ").withTown("Taunton").build();
-        OrganisationAddressResource regAddressResource = newOrganisationAddressResource().withAddress(regAddress).build();
-        OrganisationAddressResource opAddressResource = newOrganisationAddressResource().withAddress(opAddress).build();
-        leadOrg.setOperatingAddress(opAddressResource);
-        leadOrg.setRegisteredAddress(regAddressResource);
         ApplicationTeamUserResource leaderUser = new ApplicationTeamUserResource();
         leaderUser.setEmail("lee.der@email.com");
         leaderUser.setName("Lee Der");
@@ -649,8 +638,6 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         leadOrg.setUsers(Collections.singletonList(leaderUser));
         ApplicationTeamOrganisationResource partnerOrg = new ApplicationTeamOrganisationResource();
         partnerOrg.setOrganisationName("Partner");
-        partnerOrg.setOperatingAddress(regAddressResource);
-        partnerOrg.setRegisteredAddress(opAddressResource);
         ApplicationTeamUserResource partnerUser = new ApplicationTeamUserResource();
         partnerUser.setEmail("pard.ner@email.com");
         partnerUser.setName("Pard Ner");
@@ -671,10 +658,6 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         assertEquals(applications.get(0).getCompetition().longValue(), resultModel.getCompetitionId());
         assertEquals(applications.get(0).getName(), resultModel.getApplicationName());
         assertEquals("lead", resultModel.getTeam().getLeadOrganisation().getOrganisationName());
-        assertEquals("TN1 1ZZ", resultModel.getTeam().getLeadOrganisation().getOperatingAddress().getAddress().getPostcode());
-        assertEquals("SN1 1AB", resultModel.getTeam().getLeadOrganisation().getRegisteredAddress().getAddress().getPostcode());
-        assertEquals("TN1 1ZZ", resultModel.getTeam().getPartnerOrganisations().get(0).getRegisteredAddress().getAddress().getPostcode());
-        assertEquals("SN1 1AB", resultModel.getTeam().getPartnerOrganisations().get(0).getOperatingAddress().getAddress().getPostcode());
         assertEquals("lee.der@email.com", resultModel.getTeam().getLeadOrganisation().getUsers().get(0).getEmail());
         assertEquals("pard.ner@email.com", resultModel.getTeam().getPartnerOrganisations().get(0).getUsers().get(0).getEmail());
         verify(applicationRestService).getApplicationById(applications.get(0).getId());
@@ -722,7 +705,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
 
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
-        when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(competitionResource, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
@@ -779,7 +762,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
                 FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
                 when(formInputResponseRestService.getFileDetails(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
 
-                mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/forminput/" + formInputId + "/download"))
+                mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/forminput/" + formInputId + "/download/file1.csv"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentType(("text/csv")))
                         .andExpect(header().string("Content-Type", "text/csv"))

@@ -79,7 +79,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(registration_users)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">60</stringProp>
         <longProp name="ThreadGroup.start_time">1463338013000</longProp>
         <longProp name="ThreadGroup.end_time">1463338013000</longProp>
@@ -487,7 +487,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(applicant_users)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">360</stringProp>
         <longProp name="ThreadGroup.start_time">1473948831000</longProp>
         <longProp name="ThreadGroup.end_time">1463338044000</longProp>
@@ -1736,7 +1736,7 @@ hello world</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">50</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(assessor_users)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">360</stringProp>
         <longProp name="ThreadGroup.start_time">1473948831000</longProp>
         <longProp name="ThreadGroup.end_time">1463338044000</longProp>
@@ -3162,7 +3162,7 @@ hello world</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(invite_users)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">60</stringProp>
         <longProp name="ThreadGroup.start_time">1463338044000</longProp>
         <longProp name="ThreadGroup.end_time">1463338044000</longProp>
@@ -3669,7 +3669,7 @@ hello world</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(front_door_users)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">360</stringProp>
         <longProp name="ThreadGroup.start_time">1518107018000</longProp>
         <longProp name="ThreadGroup.end_time">1518107018000</longProp>
@@ -3934,9 +3934,9 @@ hello world</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
+          <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(competition_management_users)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>

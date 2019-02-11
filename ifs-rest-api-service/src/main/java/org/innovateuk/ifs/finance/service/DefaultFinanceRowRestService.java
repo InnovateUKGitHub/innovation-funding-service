@@ -8,6 +8,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
  */
 public interface DefaultFinanceRowRestService extends FinanceRowRestService {
 
-    RestResult<Void> delete(Long costId);
+    RestResult<FinanceRowItem> getCost(long costId);
 
 }

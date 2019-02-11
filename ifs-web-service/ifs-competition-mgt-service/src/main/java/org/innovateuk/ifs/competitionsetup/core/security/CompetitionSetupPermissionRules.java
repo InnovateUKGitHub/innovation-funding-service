@@ -23,7 +23,12 @@ public class CompetitionSetupPermissionRules {
         return competitionInitialDetailsSet(competitionCompositeId);
     }
 
+    @PermissionRule(value = "MANAGE_STAKEHOLDERS", description = "Allowed to manage stakeholders")
+    public boolean manageStakeholders(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
+        return competitionInitialDetailsSet(competitionCompositeId);
+    }
+
     private boolean competitionInitialDetailsSet(CompetitionCompositeId competitionCompositeId) {
-        return competitionSetupService.isInitialDetailsCompleteOrTouched(competitionCompositeId.id());
+        return competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionCompositeId.id());
     }
 }

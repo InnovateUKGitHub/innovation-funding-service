@@ -14,27 +14,28 @@ The Comp admin closes the competition In Assessment
     [Documentation]    INFUND-6459
     ...
     ...    INFUND-6602
-    When The user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link   jQuery=.govuk-button:contains("Close assessment")
-    Then The user should see the element  jQuery=h1:contains("Panel")
-    And The user clicks the button/link   link=All competitions
-    And The user should see the element   jQuery=h2:contains("Panel") ~ ul a:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    When The user clicks the button/link  link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    And The user clicks the button/link   jQuery = .govuk-button:contains("Close assessment")
+    Then The user should see the element  jQuery = h1:contains("Panel")
+    And The user clicks the button/link   link = All competitions
+    And The user should see the element   jQuery = h2:contains("Panel") ~ ul a:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
 
 Comp admin is not allowed to reinstate an application once assessment is closed
     [Documentation]    IFS-1654
     When the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
-    And the user clicks the button/link       link=${application_ids['Application with ineligible']}
-    Then the user should not see the element  jQuery=a:contains("Reinstate application")
+    And the user clicks the button/link       link = ${application_ids['Application with ineligible']}
+    Then the user should not see the element  jQuery = a:contains("Reinstate application")
 
 Assessors shouldn't see the closed competition
     [Documentation]    INFUND-6459
     [Setup]    Log in as a different user     &{assessor2_credentials}
-    Then The user should not see the element  link=${IN_ASSESSMENT_COMPETITION_NAME}
+    Then The user should not see the element  link = ${IN_ASSESSMENT_COMPETITION_NAME}
 
 *** Keywords ***
 Custom Suite Teardown
     # That is to reset competition's milestone back to its original value, that was NUll before pressing the button "Close assessment"
     Connect to Database  @{database}
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']};
+    Disconnect from database
     #Changed the status of the competition to "In Assessment" for the rest of the tests
     the user closes the browser

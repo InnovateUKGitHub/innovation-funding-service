@@ -6,15 +6,13 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
 Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
-Force Tags        Email    Applicant
+Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-
-*** Variables ***
 
 *** Test Cases ***
 The invited user should not follow the registration flow again
     [Documentation]    INFUND-1458
-    [Tags]    HappyPath
+    [Tags]  HappyPath
     Given we create a new user                          ${openCompetitionBusinessRTO}  Stuart  Anderson  ${test_mailbox_one}+invitedregistered@gmail.com  ${RTO_TYPE_ID}
     And logout as user
     Given the lead applicant invites a registered user  ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
@@ -23,25 +21,21 @@ The invited user should not follow the registration flow again
 
 The user clicks the login link
     [Documentation]    INFUND-1458
-    [Tags]    HappyPath
-    When the user clicks the button/link                link=Continue
+    [Tags]  HappyPath
+    When the user clicks the button/link                link = Continue
     And The guest user inserts user email and password  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
-    Then the user should see the element                jQuery=h1:contains("Your organisation")
-    And the user should see the element                 jQuery=dt:contains("INNOVATE LTD")
-
-The continue button should redirect to the overview page
-    [Documentation]    INFUND-1458
-    [Tags]    HappyPath
-    When the user clicks the button/link           css = .govuk-button[type="submit"]    #Save and continue
-    Then the user should see the text in the page  Application overview
+    Then the user should see the element                jQuery = h1:contains("Your organisation")
+    And the user should see the element                 jQuery = dt:contains("INNOVATE LTD")
+    When the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
+    Then the user should see the element                jQuery = h1:contains("Application overview")
 
 The user edits the name this should be changed in the View team page
     [Documentation]    INFUND-2716
-    [Tags]    HappyPath
-    Given the user navigates to the page  ${DASHBOARD_URL}
-    When the user clicks the button/link  link=Profile
-    And the user clicks the button/link   link=Edit your details
+    [Tags]  HappyPath
+    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
+    When the user clicks the button/link  link = Profile
+    And the user clicks the button/link   link = Edit your details
     And the user enters profile details
     Then the user should see the change in the view team members page
 
@@ -49,47 +43,48 @@ Invite a user with the same organisation under the same organisation
     [Documentation]    INFUND-3759
     [Setup]    Log in as a different user                               ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
-    Then the invited user should get a message to contact the helpdesk  ${test_mailbox_one}+invite2@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
+    Then the invited user should get a message to contact the helpdesk  ${test_mailbox_one}+invite2@gmail.com  Invitation to contribute in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 *** Keywords ***
 the user enters profile details
-    The user enters text to a text field  id=firstName    Dennis
-    The user enters text to a text field  id=lastName    Bergkamp
-    focus                                 css=[name="create-account"]
-    The user clicks the button/link       css=[name="create-account"]
+    The user enters text to a text field  id = firstName    Dennis
+    The user enters text to a text field  id = lastName    Bergkamp
+    Set Focus To Element                                   css = [name="create-account"]
+    The user clicks the button/link       css = [name="create-account"]
 
 the user should see the change in the view team members page
-    The user clicks the button/link  link=Dashboard
-    The user clicks the button/link  css=#main-content section:nth-of-type(1) li:nth-child(2) h3 a
-    The user clicks the button/link  link=Application team
-    The user should see the element  jQuery=.table-overflow:eq(1) td:nth-child(1):contains("Dennis Bergkamp")
+    The user clicks the button/link  link = Dashboard
+    The user clicks the button/link  css = #main-content section:nth-of-type(1) li:nth-child(2) h3 a
+    The user clicks the button/link  link = Application team
+    The user should see the element  jQuery = .table-overflow:eq(1) td:nth-child(1):contains("Dennis Bergkamp")
 
 Existing user creates a new application and invites a user from the same organisation
     the user navigates to the page        ${openCompetitionBusinessRTO_overview}
-    the user clicks the button/link       jQuery=a:contains("Start new application")
-    the user clicks the button/link       jQuery=.govuk-button:contains("Continue")
+    the user clicks the button/link       jQuery = a:contains("Start new application")
+    the user clicks the button/link       jQuery = .govuk-button:contains("Continue")
     the user should see a field and summary error   Please select an option to continue.
     the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
-    the user clicks the button/link       jQuery=.govuk-button:contains("Continue")
-    the user clicks the button/link       css=.govuk-button[type="submit"]    #Save and continue
-    the user clicks the button/link       link=Update and add contributors from INNOVATE LTD
-    The user clicks the button/link       jQuery=button:contains("Add another contributor")
-    The user enters text to a text field  name=stagedInvite.name    Olivier Giroud
-    The user enters text to a text field  name=stagedInvite.email    ${test_mailbox_one}+invite2@gmail.com
-    the user clicks the button/link       jQuery=.govuk-button:contains("Invite")
+    the user clicks the button/link       jQuery = .govuk-button:contains("Continue")
+    the user clicks the button/link       css = .govuk-button[type="submit"]    #Save and continue
+    the user clicks the button/link       link = Application team
+    the user clicks the button/link       link = Update and add contributors from INNOVATE LTD
+    The user clicks the button/link       jQuery = button:contains("Add another contributor")
+    The user enters text to a text field  name = stagedInvite.name    Olivier Giroud
+    The user enters text to a text field  name = stagedInvite.email    ${test_mailbox_one}+invite2@gmail.com
+    the user clicks the button/link       jQuery = .govuk-button:contains("Invite")
     the user reloads the page
-    the user should see the element       jQuery=.table-overflow td:contains(${test_mailbox_one}+invite2@gmail.com) + td:contains("Invite pending for 0 days")
-    the user clicks the button/link       link=Return to application team page
-    the user clicks the button/link       jQuery=.govuk-button:contains("Save and return to application overview")
-    the user clicks the button/link       link=Application details
-    the user enters text to a text field  css=[id="application.name"]    Invite a user with the same org
-    the user clicks the button/link       jQuery=.govuk-button:contains("Save and return")
+    the user should see the element       jQuery = .table-overflow td:contains(${test_mailbox_one}+invite2@gmail.com) + td:contains("Invite pending for 0 days")
+    the user clicks the button/link       link = Return to application team page
+    the user clicks the button/link       jQuery = .govuk-button:contains("Save and return to application overview")
+    the user clicks the button/link       link = Application details
+    the user enters text to a text field  css = [id="application.name"]    Invite a user with the same org
+    the user clicks the button/link       jQuery = .govuk-button:contains("Save and return")
 
 The invited user should get a message to contact the helpdesk
     [Arguments]    ${recipient}  ${subject}  ${pattern}
     Logout as user
     When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}   2
-    When the user clicks the button/link                link=Continue
+    When the user clicks the button/link                link = Continue
     And The guest user inserts user email and password  ${recipient}  ${correct_password}
     And the guest user clicks the log-in button
-    Then the user should see the element                jQuery=h1:contains("Confirm your organisation")
+    Then the user should see the element                jQuery = h1:contains("Confirm your organisation")

@@ -3,14 +3,12 @@ package org.innovateuk.ifs.project.financechecks;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.ProjectFinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
+import org.innovateuk.ifs.application.forms.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
-import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -18,18 +16,20 @@ import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
-import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksController;
+import org.innovateuk.ifs.project.financechecks.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
+import org.innovateuk.ifs.project.financechecks.viewmodel.FinanceChecksProjectCostsViewModel;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -55,6 +55,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -70,20 +71,14 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockMVCTest<ProjectFinanceChecksController> {
-    @Spy
-    @InjectMocks
-    private ProjectFinanceOverviewModelManager projectFinanceOverviewModelManager;
-
-    @Spy
-    @InjectMocks
-    private OpenProjectFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Mock
     private ApplicationModelPopulator applicationModelPopulator;
@@ -101,16 +96,10 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     private Model model;
 
     @Mock
-    private ProjectFinanceFormHandler projectFinanceFormHandler;
-
-    @Mock
     private ProjectService projectService;
 
     @Mock
     private FinanceCheckService financeCheckServiceMock;
-
-    @Mock
-    private DefaultProjectFinanceModelManager defaultProjectFinanceModelManager;
 
     @Mock
     private ProjectFinanceService projectFinanceService;
@@ -127,6 +116,12 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     @Mock
     private FinanceUtil financeUtil;
 
+    @Mock
+    private FinanceChecksEligibilityProjectCostsFormPopulator formPopulator;
+
+    @Mock
+    private ProjectFinanceChangesViewModelPopulator projectFinanceChangesViewModelPopulator;
+
     private OrganisationResource industrialOrganisation;
 
     private ApplicationResource application = newApplicationResource().withId(123L).build();
@@ -141,8 +136,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
 
     @Before
-    public void setUp() {
-        super.setUp();
+    public void setUpData() {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -153,11 +147,12 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
         application = applications.get(0);
         project.setApplication(application.getId());
+        project.setCompetition(competitionId);
 
         industrialOrganisation = newOrganisationResource()
                 .withId(2L)
                 .withName("Industrial Org")
-                .withCompanyHouseNumber("123456789")
+                .withCompaniesHouseNumber("123456789")
                 .withOrganisationTypeName(OrganisationTypeEnum.BUSINESS.name())
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .build();
@@ -175,13 +170,10 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(organisationRestService.getOrganisationById(industrialOrganisation.getId())).thenReturn(restSuccess(industrialOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
-        when(financeViewHandlerProvider.getProjectFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeViewHandlerProvider.getProjectFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(projectFinanceFormHandler);
 
         FinanceViewModel financeViewModel = new FinanceViewModel();
         financeViewModel.setOrganisationGrantClaimPercentage(74);
 
-        when(defaultProjectFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(loggedInUser);
     }
@@ -197,7 +189,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
                 .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
-        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).build();
+        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).withCompetition(competitionId).build();
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
@@ -234,7 +226,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
                 .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
-        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).build();
+        ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).withCompetition(competitionId).build();
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
@@ -265,11 +257,14 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(formPopulator.populateForm(project.getId(), industrialOrganisation.getId())).thenReturn(new YourProjectCostsForm());
 
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-checks/eligibility")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/eligibility")).
+                andExpect(model().attribute("model", instanceOf(FinanceChecksProjectCostsViewModel.class))).
                 andReturn();
+
 
         assertReadOnlyViewEligibilityDetails(result);
     }
@@ -296,9 +291,12 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     public void testEligibilityChanges() throws Exception {
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
+        ProjectFinanceChangesViewModel viewModel = mock(ProjectFinanceChangesViewModel.class);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, industrialOrganisation, getLoggedInUser().getId())).thenReturn(viewModel);
         mockMvc.perform(get("/project/" + project.getId() + "/finance-checks/eligibility/changes"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/financecheck/eligibility-changes"))
+                .andExpect(model().attribute("model", viewModel))
                 .andReturn();
     }
 

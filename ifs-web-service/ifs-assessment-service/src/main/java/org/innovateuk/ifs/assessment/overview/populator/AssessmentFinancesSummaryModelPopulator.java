@@ -71,7 +71,12 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         addFinanceDetails(model, competition.getId(), assessment.getApplication());
 
         return new AssessmentFinancesSummaryViewModel(assessmentId, assessment.getApplication(),
-                assessment.getApplicationName(), competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage());
+                assessment.getApplicationName(),
+                competition.getAssessmentDaysLeft(),
+                competition.getAssessmentDaysLeftPercentage(),
+                assessment.isCollaborativeProject(),
+                competition.getFundingType()
+        );
     }
 
     private void addApplicationAndOrganisationDetails(Model model, long applicationId, AssessorFinanceView financeVew) {

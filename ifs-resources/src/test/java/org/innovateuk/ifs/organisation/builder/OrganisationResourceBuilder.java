@@ -43,8 +43,8 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
         return withArray((name, organisation) -> setField("name", name, organisation), names);
     }
 
-    public OrganisationResourceBuilder withCompanyHouseNumber(String... numbers) {
-        return withArray((number, organisation) -> setField("companyHouseNumber", number, organisation), numbers);
+    public OrganisationResourceBuilder withCompaniesHouseNumber(String... numbers) {
+        return withArray((number, organisation) -> setField("companiesHouseNumber", number, organisation), numbers);
     }
 
     public OrganisationResourceBuilder withOrganisationType(Long... organisationTypeIds) {

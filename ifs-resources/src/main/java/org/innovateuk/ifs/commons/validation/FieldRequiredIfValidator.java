@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -49,51 +50,52 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
         }
     }
 
-    private boolean isPredicateMet(Object object, String argumentFieldName, boolean predicateValue) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    private boolean isPredicateMet(Object object, String argumentFieldName, boolean predicateValue) throws
+            IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Boolean argumentValue = (Boolean) PropertyUtils.getProperty(object, argumentFieldName);
         return argumentValue != null && argumentValue == predicateValue;
     }
 
-    private boolean isRequiredFieldBlank(Object object, String requiredFieldName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    private boolean isRequiredFieldBlank(Object object, String requiredFieldName) throws IllegalAccessException,
+            NoSuchMethodException, InvocationTargetException {
         Object requiredFieldValue = PropertyUtils.getProperty(object, requiredFieldName);
 
-        if (requiredFieldValue instanceof String) {
-            return isRequiredFieldValueBlank((String) requiredFieldValue);
+        if (requiredFieldValue == null) {
+            return true;
         }
 
-        if (requiredFieldValue instanceof Collection) {
-            return isRequiredFieldValueBlank((Collection) requiredFieldValue);
+        if (requiredFieldValue instanceof Boolean) {
+            return false;
         }
 
         if (requiredFieldValue instanceof Integer) {
-            return isRequiredFieldValueBlank((Integer) requiredFieldValue);
+            return false;
+        }
+
+        if (requiredFieldValue instanceof BigDecimal) {
+            return false;
+        }
+
+        if (requiredFieldValue instanceof String) {
+            return StringUtils.isBlank((String) requiredFieldValue);
+        }
+
+        if (requiredFieldValue instanceof Collection) {
+            return ((Collection) requiredFieldValue).isEmpty();
         }
 
         if (requiredFieldValue instanceof Optional) {
-            return isRequiredFieldValueBlank((Optional) requiredFieldValue);
+            return !((Optional) requiredFieldValue).isPresent();
         }
 
-        throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName + "] must be of type String or Collection. Found " + requiredFieldValue.getClass().getName());
+        throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName
+                + "] must be of type Boolean, Integer, String, Optional, BigDecimal, or Collection. Found "
+                + requiredFieldValue.getClass().getName());
     }
 
-    private boolean isRequiredFieldValueBlank(Integer requiredFieldValue) {
-        return requiredFieldValue==null;
-    }
-
-    private boolean isRequiredFieldValueBlank(String requiredFieldValue) {
-        return StringUtils.isBlank(requiredFieldValue);
-    }
-
-    private boolean isRequiredFieldValueBlank(Collection<?> requiredFieldValue) {
-        return requiredFieldValue.isEmpty();
-    }
-
-    private boolean isRequiredFieldValueBlank(Optional<?> requiredFieldValue) {
-        return !requiredFieldValue.isPresent();
-    }
-
-
-    private void addConstraintViolationMessageToField(ConstraintValidatorContext context, String message, String fieldName) {
+    private void addConstraintViolationMessageToField(ConstraintValidatorContext context,
+                                                      String message,
+                                                      String fieldName) {
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate(message)
                 .addPropertyNode(fieldName)

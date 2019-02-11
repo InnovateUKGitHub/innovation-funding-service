@@ -62,17 +62,21 @@ function deploy() {
     oc create -f $(getBuildLocation)/ifs-services/ ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/survey/ ${SVC_ACCOUNT_CLAUSE}
 
-    # EU Grant Registration is not ready for production release yet.
-    if ! $(isProductionEnvironment ${TARGET}); then
-        oc create -f $(getBuildLocation)/eu-grant-registration/ ${SVC_ACCOUNT_CLAUSE}
-    fi
+    oc create -f $(getBuildLocation)/eu-grant-registration/ ${SVC_ACCOUNT_CLAUSE}
 
     oc create -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 }
 
 function shibInit() {
-     oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
+    echo "Shib init.."
+    LDAP_POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }')
+    echo "Ldap pod: ${LDAP_POD}"
+
+    while RESULT=$(oc rsh ${SVC_ACCOUNT_CLAUSE} $LDAP_POD /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database 2>&1); echo $RESULT; echo $RESULT | grep "ERROR"; do
+        echo "Shibinit failed. Retrying.."
+        sleep 10
+    done
 }
 
 # Entry point
@@ -98,5 +102,6 @@ then
     scaleDataService
     scaleFinanceDataService
     scaleSurveyDataService
+    scaleEuDataService
 fi
 
