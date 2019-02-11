@@ -14,7 +14,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Set up your project',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-        <div class="warning-alert" th:if="${model.projectState.offline}">
+        <div class="message-alert" th:if="${model.projectState.offline}">
             <p class="govuk-body">Innovate UK is managing this project's setup offline. For help call 0300 321 4357.</p>
         </div>
 
@@ -53,7 +53,7 @@
             <div class="message-alert">
                 <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
                 <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
-                <p class="govuk-body"><a th:unless="${model.projectState.offline}" th:href="@{/project/{id}/team-status(id=${model.projectId})}" class="govuk-link">View the status of partners</a></p>
+                <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}" class="govuk-link">View the status of partners</a></p>
             </div>
         </th:block>
 
