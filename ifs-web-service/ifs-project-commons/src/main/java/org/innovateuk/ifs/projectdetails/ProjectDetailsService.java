@@ -2,7 +2,7 @@ package org.innovateuk.ifs.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 
 import java.time.LocalDate;
@@ -25,11 +25,11 @@ public interface ProjectDetailsService {
 
     ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressResource address);
 
-    ServiceResult<Void> inviteFinanceContact (Long projectId, ProjectInviteResource projectInviteResource);
+    ServiceResult<Void> inviteFinanceContact (Long projectId, ProjectUserInviteResource projectUserInviteResource);
 
-    ServiceResult<Void> inviteProjectManager (Long projectId, ProjectInviteResource projectInviteResource);
+    ServiceResult<Void> inviteProjectManager (Long projectId, ProjectUserInviteResource projectUserInviteResource);
 
-    ServiceResult<Void> saveProjectInvite(ProjectInviteResource projectInviteResource);
+    ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource);
 
-    ServiceResult<List<ProjectInviteResource>> getInvitesByProject(Long projectId);
+    ServiceResult<List<ProjectUserInviteResource>> getInvitesByProject(Long projectId);
 }

@@ -135,7 +135,6 @@ Project Finance approves the bank details
     And the user clicks the button/link             jQuery = .govuk-button:contains("Approve account")
     Then the user should not see the element        jQuery = .govuk-button:contains("Approve bank account details")
     And the user should see the element             jQuery = .success-alert:contains("The bank details provided have been approved.")
-    And the user should not see the text in the page    We are unable to save your bank account details
     When the user goes back to the previous page
     And the user goes back to the previous page
     When the user enters text to a text field       css = [id = "addressForm.manualAddress.addressLine1"]    Montrose House 3

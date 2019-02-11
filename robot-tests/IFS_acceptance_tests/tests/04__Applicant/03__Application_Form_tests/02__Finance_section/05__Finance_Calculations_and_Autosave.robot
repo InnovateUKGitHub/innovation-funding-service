@@ -219,40 +219,6 @@ the applicant adds one row for the other costs
     the user enters text to a text field    css = #other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
     Set Focus To Element                    jQuery = button:contains("Other costs")
 
-the total of the other funding should be correct
-    the user should see the element    id = other-funding-total
-    Textfield Value Should Be          id = other-funding-total    £20,000
-
-The applicant cannot see the 'other funding' details
-    the user should not see the text in the page    ${OTHER_FUNDING_SOURCE}
-    the user should not see the text in the page    ${OTHER_FUNDING_DATE}
-    the user should not see the text in the page    ${OTHER_FUNDING_AMOUNT}
-
-The applicant can leave the 'Your finances' page but the details are still saved
-    Execute Javascript    jQuery('form').attr('data-test','true');
-    the user reloads the page
-    the user should see the element    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    Textfield Should Contain    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
-    Textfield Should Contain    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
-
-The applicant selects 'Yes' and fills two rows
-    the user clicks the button/link         jQuery = label:contains(Yes)
-    Run Keyword And Ignore Error Without Screenshots    Click element    jQuery = #other-funding-table button:contains("Remove")
-    the user should see the element         css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2)
-    the user should see the element         id = other-funding-table
-    the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
-    the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
-    the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
-    Set Focus To Element                    jQuery = button:contains(Add another source of funding)
-    the user clicks the button/link         jQuery = button:contains(Add another source of funding)
-    the user should see the element         css = #other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2)
-    the user clicks the button/link         css = #other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
-    the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
-    the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
-    the user should see the element         css = #other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
-    the user enters text to a text field    css = #other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
-    Set Focus To Element                    jQuery = button:contains(Add another source of funding)
-
 Totals should be correct
     [Arguments]    ${TOTAL_FIELD}    ${FIELD_VALUE}    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
     the user should see the element    ${total_field}
@@ -271,10 +237,6 @@ Admin costs total should be correct
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
     Wait Until Element Contains Without Screenshots    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
     Element Should Contain    jQuery = button:contains("Overhead costs")    ${ADMIN_VALUE}
-
-the total costs should reflect overheads
-    [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
 
 The row should be removed
     [Arguments]    ${ROW}

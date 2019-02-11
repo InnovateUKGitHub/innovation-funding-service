@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.Map;
@@ -26,6 +27,7 @@ public class ProjectStatusResource {
     private ProjectActivityStates grantOfferLetterStatus;
     private Map<Role, ProjectActivityStates> roleSpecificGrantOfferLetterState;
     private boolean grantOfferLetterSent;
+    private ProjectState projectState;
 
     public ProjectStatusResource(String projectTitle, Long projectNumber, String formattedProjectNumber,
                                  Long applicationNumber, String formattedApplicationNumber,
@@ -34,7 +36,8 @@ public class ProjectStatusResource {
                                  ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus,
                                  ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates documentsStatus,
                                  ProjectActivityStates grantOfferLetterStatus, Map<Role,
-                                 ProjectActivityStates> roleSpecificGrantOfferLetterState, boolean grantOfferLetterSent) {
+                                 ProjectActivityStates> roleSpecificGrantOfferLetterState, boolean grantOfferLetterSent,
+                                 ProjectState projectState) {
         this.projectTitle = projectTitle;
         this.projectNumber = projectNumber;
         this.formattedProjectNumber = formattedProjectNumber;
@@ -51,6 +54,7 @@ public class ProjectStatusResource {
         this.grantOfferLetterStatus = grantOfferLetterStatus;
         this.roleSpecificGrantOfferLetterState = roleSpecificGrantOfferLetterState;
         this.grantOfferLetterSent = grantOfferLetterSent;
+        this.projectState = projectState;
     }
 
     // Required for JSON mapping
@@ -179,6 +183,14 @@ public class ProjectStatusResource {
 
     public void setFormattedApplicationNumber(String formattedApplicationNumber) {
         this.formattedApplicationNumber = formattedApplicationNumber;
+    }
+
+    public ProjectState getProjectState() {
+        return projectState;
+    }
+
+    public void setProjectState(ProjectState projectState) {
+        this.projectState = projectState;
     }
 
     @Override

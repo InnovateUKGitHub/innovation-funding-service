@@ -84,4 +84,8 @@ class SetupProgressChecker {
     public boolean isGrantOfferLetterApproved() {
         return COMPLETE.equals(projectStatus.getGrantOfferLetterStatus());
     }
+
+    public boolean isOffline() {
+        return projectStatus.getProjectState().isOffline();
+    }
 }

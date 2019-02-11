@@ -87,7 +87,7 @@ Large pdfs not allowed for either document
     And the user goes to documents page                 Back to document overview  Exploitation plan
     When the user uploads to the collaboration agreement/exploitation plan    ${too_large_pdf}
     Then the user should see the element                jQuery = h1:contains("${too_large_pdf_validation_error}")
-    And the user should not see the text in the page     ${too_large_pdf}
+    And the user should not see the element             link = ${too_large_pdf}")
     And the user goes back to the previous page
     [Teardown]  the user clicks the button/link          link = Back to document overview
 
@@ -100,7 +100,7 @@ Non pdf files not allowed for either document
     And the user goes to documents page                  Back to document overview  Exploitation plan
     When the user uploads to the collaboration agreement/exploitation plan      ${text_file}
     Then the user should see a field error               ${wrong_filetype_validation_error}
-    And the user should not see the text in the page     ${text_file}
+    And the user should not see the element              jQuery = .govuk-error-message:contains("${text_file}")
 
 PM can upload both documents
     [Documentation]  INFUND-3011  IFS-2371-2258
@@ -189,21 +189,21 @@ Non-lead partner can still view the Collaboration agreement
 PM can remove the first document
     [Documentation]    INFUND-3011
     [Tags]  HappyPath
-    [Setup]    log in as a different user    ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
-    Given the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
-    And the user goes to documents page      Documents  Collaboration agreement
-    When the user clicks the button/link     name = deleteDocument
-    Then the user should not see the text in the page    ${valid_pdf}
+    [Setup]    log in as a different user       ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
+    Given the user navigates to the page        ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
+    And the user goes to documents page         Documents  Collaboration agreement
+    When the user clicks the button/link        name = deleteDocument
+    Then the user should not see the element    link = ${valid_pdf}
 
 Non-lead partner cannot view either document once removed
     [Documentation]    INFUND-4252
     [Tags]
-    [Setup]    log in as a different user    ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
-    When the user navigates to the page      ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/document/all
-    And the user clicks the button/link      link = Collaboration agreement
-    Then the user should not see the text in the page    ${valid_pdf}
-    When the user goes to documents page     Back to document overview  Exploitation plan
-    Then the user should not see the text in the page    ${valid_pdf}
+    [Setup]    log in as a different user         ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
+    When the user navigates to the page           ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/document/all
+    And the user clicks the button/link           link = Collaboration agreement
+    Then the user should not see the element      link = ${valid_pdf}
+    When the user goes to documents page          Back to document overview  Exploitation plan
+    Then the user should not see the element      link = ${valid_pdf}
 
 PM can upload both documents after they have been removed
     [Documentation]    INFUND-3011
