@@ -86,4 +86,8 @@ class SetupProgressChecker {
     public boolean isGrantOfferLetterSent() {
         return projectTeamStatus.getLeadPartnerStatus().isGrantOfferLetterSent();
     }
+
+    public boolean isOffline() {
+        return projectTeamStatus.getProjectState().isOffline();
+    }
 }

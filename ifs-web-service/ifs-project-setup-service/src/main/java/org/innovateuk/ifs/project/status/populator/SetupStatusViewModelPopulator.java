@@ -130,6 +130,10 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                  boolean isProjectManager,
                                                  boolean collaborationAgreementRequired) {
 
+        if (teamStatus.getProjectState().isOffline()) {
+            return SectionStatusList.offline();
+        }
+
         CompetitionResource competition = basicDetails.getCompetition();
         OrganisationResource organisation = basicDetails.getOrganisation();
         ProjectResource project = basicDetails.getProject();
@@ -163,6 +167,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         return new SectionStatusList(projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus,
                 financeChecksStatus, spendProfileStatus, documentsStatus, grantOfferStatus);
+
     }
 
     private List<CompetitionDocumentResource> getCompetitionDocuments(CompetitionResource competition, boolean collaborationAgreementRequired) {

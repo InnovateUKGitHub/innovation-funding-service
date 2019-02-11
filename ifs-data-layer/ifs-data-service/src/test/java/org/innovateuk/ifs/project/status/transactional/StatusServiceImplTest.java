@@ -24,9 +24,11 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
@@ -92,11 +94,13 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
+import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -124,6 +128,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     private Project p;
     private BankDetails bankDetails;
     private SpendProfile spendProfile;
+    private ProjectProcess projectProcess;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -196,6 +201,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Mock
     private SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
+
+    @Mock
+    private ProjectProcessRepository projectProcessRepositoryMock;
 
     @Before
     public void setUp() {
@@ -291,6 +299,10 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withRoleName(PROJECT_PARTNER.getName()).
                 build(1);
 
+        projectProcess = newProjectProcess()
+                .withActivityState(LIVE)
+                .build();
+
         bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
         spendProfile = newSpendProfile().withOrganisation(o).withGeneratedDate(Calendar.getInstance()).withMarkedComplete(TRUE).build();
 
@@ -298,6 +310,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         Mockito.when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
         Mockito.when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
+        Mockito.when(projectProcessRepositoryMock.findOneByTargetId(any())).thenReturn(projectProcess);
 
         User internalUser = newUser().withRoles(singleton(COMP_ADMIN)).build();
         when(userRepositoryMock.findOne(internalUser.getId())).thenReturn(internalUser);

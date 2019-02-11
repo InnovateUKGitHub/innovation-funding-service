@@ -10,7 +10,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.neCompetitionDocumentResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder.newCompetitionDocumentResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
@@ -34,7 +34,7 @@ public class CompetitionSetupCompetitionDocumentControllerTest extends BaseContr
     @Test
     public void save() throws Exception {
 
-        CompetitionDocumentResource competitionDocumentResource = neCompetitionDocumentResource()
+        CompetitionDocumentResource competitionDocumentResource = newCompetitionDocumentResource()
                 .withTitle("Title")
                 .withGuidance("Guidance")
                 .build();
@@ -53,7 +53,7 @@ public class CompetitionSetupCompetitionDocumentControllerTest extends BaseContr
     @Test
     public void saveAll() throws Exception {
 
-        List<CompetitionDocumentResource> competitionDocumentResources = neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = newCompetitionDocumentResource()
                 .withTitle("Title")
                 .withGuidance("Guidance")
                 .build(2);
@@ -74,7 +74,7 @@ public class CompetitionSetupCompetitionDocumentControllerTest extends BaseContr
 
         long projectDocumentId = 1L;
 
-        CompetitionDocumentResource competitionDocumentResource = neCompetitionDocumentResource().build();
+        CompetitionDocumentResource competitionDocumentResource = newCompetitionDocumentResource().build();
 
         when(competitionSetupDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(competitionDocumentResource));
 
@@ -91,7 +91,7 @@ public class CompetitionSetupCompetitionDocumentControllerTest extends BaseContr
 
         long competitionId = 1L;
 
-        List<CompetitionDocumentResource> competitionDocumentResources = neCompetitionDocumentResource().build(2);
+        List<CompetitionDocumentResource> competitionDocumentResources = newCompetitionDocumentResource().build(2);
 
         when(competitionSetupDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionDocumentResources));
 
