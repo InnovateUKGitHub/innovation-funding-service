@@ -120,6 +120,7 @@ public class CsvUtils {
         public List<Triple<String, String, String>> bankDetailsForOrganisations;
         public List<String> organisationsWithApprovedFinanceChecks;
         public ProjectState projectState;
+        public Boolean projectDocumentsUploaded;
 
         private ProjectLine(List<String> line) {
             int i = 0;
@@ -173,6 +174,7 @@ public class CsvUtils {
             }
 
             projectState = ProjectState.valueOf(line.get(i++));
+            projectDocumentsUploaded = nullableBoolean(line.get(i++));
         }
     }
 

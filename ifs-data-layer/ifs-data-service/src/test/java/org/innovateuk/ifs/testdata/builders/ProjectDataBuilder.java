@@ -1,11 +1,17 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.apache.commons.compress.parallel.InputStreamSupplier;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
+import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -17,12 +23,16 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
 
 /**
  * Generates data from Competitions, including any Applications taking part in this Competition
@@ -85,6 +95,20 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             MonitoringOfficerResource mo = new MonitoringOfficerResource(firstName, lastName, email, phoneNumber, data.getProject().getId());
             monitoringOfficerService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccess();
         }));
+    }
+
+    public ProjectDataBuilder withProjectDocuments() {
+        return with(data -> doAs(data.getLeadApplicant(), () -> {
+
+            List<CompetitionDocument> competitionDocuments = competitionDocumentConfigRepository.findByCompetitionId(data.getApplication().getCompetition());
+            competitionDocuments.stream()
+                    .forEach(competitionDocument -> addProjectDocument(data, competitionDocument.getId()));
+
+        }));
+    }
+
+    private void addProjectDocument(ProjectData data, long documentConfigId){
+        documentsService.createDocumentFileEntry(data.getProject().getId(), documentConfigId, new FileEntryResource(), null);
     }
 
     public ProjectDataBuilder withBankDetails(String organisationName, String accountNumber, String sortCode, List<CsvUtils.OrganisationLine> organisationLines) {

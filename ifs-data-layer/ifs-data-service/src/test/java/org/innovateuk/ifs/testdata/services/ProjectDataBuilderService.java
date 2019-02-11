@@ -78,6 +78,9 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
         UnaryOperator<ProjectDataBuilder> setProjectAddressIfNecessary =
                 builder -> line.projectAddressAdded ? builder.withProjectAddressOrganisationAddress(organisationLines) : builder;
 
+        UnaryOperator<ProjectDataBuilder> setProjectDocumentsIfNecessary =
+                builder -> line.projectDocumentsUploaded ? builder.withProjectDocuments() : builder;
+
         UnaryOperator<ProjectDataBuilder> setMonitoringOfficerIfNecessary =
                 builder -> !isBlank(line.moFirstName) ?
                         builder.withMonitoringOfficer(line.moFirstName, line.moLastName, line.moEmail, line.moPhoneNumber) : builder;
@@ -120,6 +123,7 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
                                 andThen(selectFinanceContactsIfNecessary).
                                 andThen(submitBankDetailsIfNecessary).
                                 andThen(withdrawIfNecessary).
+                                andThen(setProjectDocumentsIfNecessary).
                                 apply(baseBuilder).
                                 build())
         );
