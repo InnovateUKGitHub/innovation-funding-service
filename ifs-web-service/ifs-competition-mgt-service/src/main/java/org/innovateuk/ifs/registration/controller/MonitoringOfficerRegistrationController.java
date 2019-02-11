@@ -10,6 +10,7 @@ import org.innovateuk.ifs.registration.form.MonitoringOfficerRegistrationForm;
 import org.innovateuk.ifs.registration.populator.MonitoringOfficerRegistrationModelPopulator;
 import org.innovateuk.ifs.registration.service.MonitoringOfficerService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
@@ -45,6 +47,9 @@ public class MonitoringOfficerRegistrationController {
     @Autowired
     private MonitoringOfficerService monitoringOfficerService;
 
+    @Autowired
+    private NavigationUtils navigationUtils;
+
     public MonitoringOfficerRegistrationController(MonitoringOfficerRegistrationModelPopulator monitoringOfficerRegistrationModelPopulator,
                                                    CompetitionSetupMonitoringOfficerRestService competitionSetupMonitoringOfficerRestService,
                                                    MonitoringOfficerService monitoringOfficerService) {
@@ -53,13 +58,33 @@ public class MonitoringOfficerRegistrationController {
         this.monitoringOfficerService = monitoringOfficerService;
     }
 
+
     @GetMapping("/{inviteHash}/register")
-    public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @ModelAttribute("form") MonitoringOfficerRegistrationForm monitoringOfficerRegistrationForm) {
-        MonitoringOfficerInviteResource monitoringOfficerInviteResource = competitionSetupMonitoringOfficerRestService.getMonitoringOfficerInvite(inviteHash).getSuccess();
-        model.addAttribute("model", monitoringOfficerRegistrationModelPopulator.populateModel(monitoringOfficerInviteResource.getEmail()));
-        return "monitoring-officer/create-account";
+    public String openInvite(@PathVariable("inviteHash") String inviteHash,
+                             Model model,
+                             HttpServletRequest request,
+                             @ModelAttribute("form") MonitoringOfficerRegistrationForm monitoringOfficerRegistrationForm) { return competitionSetupMonitoringOfficerRestService.checkExistingUser(inviteHash).andOnSuccessReturn(
+                userExists -> {
+                    if (userExists) {
+                        addMonitoringOfficerRole(inviteHash);
+                        return dashboardRedirect(request);
+                    } else {
+                        MonitoringOfficerInviteResource monitoringOfficerInviteResource = competitionSetupMonitoringOfficerRestService.getMonitoringOfficerInvite(inviteHash).getSuccess();
+                        model.addAttribute("model", monitoringOfficerRegistrationModelPopulator.populateModel(monitoringOfficerInviteResource.getEmail()));
+                        return "monitoring-officer/create-account";
+                    }
+                }).getSuccess();
     }
 
+    private void addMonitoringOfficerRole(String inviteHash) {
+        competitionSetupMonitoringOfficerRestService.addMonitoringOfficerRole(inviteHash);
+    }
+
+    private  String dashboardRedirect(HttpServletRequest request) {
+        return navigationUtils.getRedirectToLandingPageUrl(request);
+    }
+
+    // existing user and not logged in
     @PostMapping("/{inviteHash}/register")
     public String submitDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
@@ -91,12 +116,11 @@ public class MonitoringOfficerRegistrationController {
     }
 
     @GetMapping(value = "/{inviteHash}/register/account-created")
-    public String accountCreated(@PathVariable("inviteHash") String inviteHash, UserResource loggedInUser) {
+    public String accountCreated(@PathVariable("inviteHash") String inviteHash, HttpServletRequest request, UserResource loggedInUser) {
         boolean userIsLoggedIn = loggedInUser != null;
 
-        // the user is already logged in, take them back to the dashboard
         if (userIsLoggedIn) {
-            return "redirect:/";
+            return dashboardRedirect(request);
         }
 
         return competitionSetupMonitoringOfficerRestService.getMonitoringOfficerInvite(inviteHash).andOnSuccessReturn(invite -> {
@@ -109,7 +133,7 @@ public class MonitoringOfficerRegistrationController {
     }
 
     private String doViewYourDetails(Model model, String inviteHash, UserResource loggedInUser) {
-        if(loggedInUser != null) {
+        if (loggedInUser != null) {
             return "registration/error";
         } else {
             MonitoringOfficerInviteResource monitoringOfficerInviteResource = competitionSetupMonitoringOfficerRestService.getMonitoringOfficerInvite(inviteHash).getSuccess();

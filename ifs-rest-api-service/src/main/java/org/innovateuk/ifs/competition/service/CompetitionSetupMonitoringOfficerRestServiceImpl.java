@@ -23,4 +23,14 @@ public class CompetitionSetupMonitoringOfficerRestServiceImpl extends BaseRestSe
             String url = format("%s/monitoring-officer/create/%s", BASE_URL, inviteHash);
             return postWithRestResultAnonymous(url, monitoringOfficerRegistrationResource, Void.class);
     }
+
+    @Override
+    public RestResult<Boolean> checkExistingUser(String inviteHash) {
+        return getWithRestResultAnonymous(format("%s/monitoring-officer/check-existing-user/%s", BASE_URL, inviteHash), Boolean.class);
+    }
+
+    @Override
+    public RestResult<Void> addMonitoringOfficerRole(String inviteHash) {
+        return postWithRestResultAnonymous(format("%s/monitoring-officer/add-monitoring-officer-role/%s", BASE_URL, inviteHash));
+    }
 }

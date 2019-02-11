@@ -12,4 +12,8 @@ public interface CompetitionSetupMonitoringOfficerRestService {
     RestResult<MonitoringOfficerInviteResource> getMonitoringOfficerInvite(String inviteHash);
 
     RestResult<Void> createMonitoringOfficer(String inviteHash, MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource);
+
+    RestResult<Boolean> checkExistingUser(String inviteHash);
+
+    RestResult<Void> addMonitoringOfficerRole(String inviteHash);
 }

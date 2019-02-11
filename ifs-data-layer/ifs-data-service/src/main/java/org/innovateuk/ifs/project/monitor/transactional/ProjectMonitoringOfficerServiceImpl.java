@@ -8,7 +8,9 @@ import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.mapper.MonitoringOfficerInviteMapper;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
+import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -17,9 +19,7 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.monitor.domain.MonitoringOfficerInvite;
 import org.innovateuk.ifs.project.monitor.repository.MonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -42,13 +41,13 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.monitor.transactional.ProjectMonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_INVITE;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 
 /**
  * Transactional and secured service implementation providing operations around monitoring officers.
  */
 @Service
-public class ProjectMonitoringOfficerServiceImpl extends BaseTransactionalService implements ProjectMonitoringOfficerService {
+public class ProjectMonitoringOfficerServiceImpl extends InviteService<MonitoringOfficerInvite> implements ProjectMonitoringOfficerService {
 
     private static final Log LOG = LogFactory.getLog(ProjectMonitoringOfficerServiceImpl.class);
 
@@ -122,7 +121,7 @@ public class ProjectMonitoringOfficerServiceImpl extends BaseTransactionalServic
         Optional<User> user = userRepository.findByEmail(invitedUser.getEmail());
 
         if (user.isPresent()) {
-            if (!user.get().hasRole(Role.MONITORING_OFFICER)) {
+            if (!user.get().hasRole(MONITORING_OFFICER)) {
                 addMonitoringOfficerRoleToUser(user.get());
             }
             return serviceSuccess();
@@ -198,12 +197,35 @@ public class ProjectMonitoringOfficerServiceImpl extends BaseTransactionalServic
                 .andOnSuccessReturn(monitoringOfficerInviteMapper::mapToResource);
     }
 
-    private ServiceResult<MonitoringOfficerInvite> getByHash(String hash) {
-        return find(monitoringOfficerInviteRepository.getByHash(hash), notFoundError(MonitoringOfficerInvite.class, hash));
+    @Override
+    public ServiceResult<Boolean> checkUserExistsForInvite(String hash) {
+        return super.checkUserExistsForInvite(hash);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> addMonitoringOfficerRole(String hash) {
+        return getByHash(hash).andOnSuccess(this::applyMonitoringOfficerRoleFromInvite);
+    }
+
+    @Override
+    protected Class<MonitoringOfficerInvite> getInviteClass() {
+        return MonitoringOfficerInvite.class;
+    }
+
+    @Override
+    protected InviteRepository<MonitoringOfficerInvite> getInviteRepository() {
+        return monitoringOfficerInviteRepository;
+    }
+
+    private  ServiceResult<Void> applyMonitoringOfficerRoleFromInvite(MonitoringOfficerInvite invite) {
+        invite.getUser().addRole(MONITORING_OFFICER);
+        userRepository.save(invite.getUser());
+        return serviceSuccess();
     }
 
     private void addMonitoringOfficerRoleToUser(User user) {
-        user.addRole(Role.MONITORING_OFFICER);
-        userRepository.save(user);
+        user.addRole(MONITORING_OFFICER);
+//        userRepository.save(user);
     }
 }

@@ -36,4 +36,14 @@ public class ProjectMonitoringOfficerController {
     public RestResult<Void> createMonitoringOfficer(@PathVariable("inviteHash") String inviteHash, @RequestBody MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource) {
         return registrationService.createMonitoringOfficer(inviteHash, monitoringOfficerRegistrationResource).toPostResponse();
     }
+
+    @GetMapping("/monitoring-officer/check-existing-user/{inviteHash}")
+    public RestResult<Boolean> checkExistingUser(@PathVariable("inviteHash") String hash) {
+        return projectMonitoringOfficerService.checkUserExistsForInvite(hash).toGetResponse();
+    }
+
+    @PostMapping("/monitoring-officer/add-monitoring-officer-role/{inviteHash}")
+    public RestResult<Void> addMonitoringOfficerRole(@PathVariable("inviteHash") String hash) {
+        return projectMonitoringOfficerService.addMonitoringOfficerRole(hash).toPostResponse();
+    }
 }
