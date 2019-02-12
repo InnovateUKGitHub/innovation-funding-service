@@ -12,7 +12,7 @@ Assessment should not be visible when the deadline has passed
     [Tags]  MySQL
     Given update milestone to yesterday         ${IN_ASSESSMENT_COMPETITION}  ASSESSOR_DEADLINE
     Then The user should not see the element    link=Park living
-    [Teardown]  Reset competition's milestone   ${assessorDeadline}
+    [Teardown]  Reset competition's milestone   ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DB}
 
 *** Keywords ***
 Reset competition's milestone

@@ -75,7 +75,7 @@ Competition is Open to Applications
     [Documentation]    INFUND-6393
     [Tags]  MySQL  HappyPath
     [Setup]  Get competitions id and set it as suite variable  ${compWithoutGrowth}
-    Given update milestone to yesterday      ${competitionId}
+    Given update milestone to yesterday      ${competitionId}  OPEN_DATE
 
 
 Create new Application for this Competition
