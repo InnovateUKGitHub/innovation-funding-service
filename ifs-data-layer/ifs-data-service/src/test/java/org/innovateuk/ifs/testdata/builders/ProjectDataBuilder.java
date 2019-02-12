@@ -8,6 +8,10 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -18,13 +22,13 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.tools.jline_embedded.internal.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -87,6 +91,23 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         });
     }
 
+    public ProjectDataBuilder withApprovedFinanceChecks() {
+        return with(data -> {
+            Set<OrganisationResource> organisations = organisationService.findByApplicationId(data.getApplication().getId()).getSuccess();
+            for (OrganisationResource org : organisations) {
+                LOG.error("org name: " + org.getName());
+                doAs(anyProjectFinanceUser(), () -> updateFinanceChecks(data.getProject().getId(), org.getId()));
+            }
+        });
+    }
+
+    private void updateFinanceChecks(Long projectId, Long organisationId) {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        financeCheckService.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.GREEN).getSuccess();
+        financeCheckService.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN).getSuccess();
+//        spendProfileService.generateSpendProfile(projectId).getSuccess();
+    }
+
     public ProjectDataBuilder withMonitoringOfficer(String firstName, String lastName, String email, String phoneNumber) {
         return with(data -> doAs(anyProjectFinanceUser(), () -> {
             MonitoringOfficerResource mo = new MonitoringOfficerResource(firstName, lastName, email, phoneNumber, data.getProject().getId());
@@ -95,7 +116,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     }
 
     public ProjectDataBuilder withProjectDocuments() {
-        return with(data -> doAs(data.getLeadApplicant(), () -> {
+        return with(data -> doAs(data.getProjectManager(), () -> {
             List<CompetitionDocument> competitionDocuments = competitionDocumentConfigRepository.findByCompetitionId(data.getApplication().getCompetition());
             competitionDocuments.stream()
                     .forEach(competitionDocument -> addProjectDocument(data, competitionDocument.getId()));

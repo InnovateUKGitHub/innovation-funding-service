@@ -119,7 +119,7 @@ public class CsvUtils {
         public String moPhoneNumber;
         public List<Triple<String, String, String>> bankDetailsForOrganisations;
         public Boolean bankDetailsApproved;
-        public List<String> organisationsWithApprovedFinanceChecks;
+        public Boolean organisationsWithApprovedFinanceChecks;
         public ProjectState projectState;
         public Boolean projectDocumentsUploaded;
 
@@ -169,13 +169,7 @@ public class CsvUtils {
 
             bankDetailsApproved = nullableBoolean(line.get(i++));
 
-            String financeChecksLine = line.get(i++);
-
-            if (!isBlank(financeChecksLine)) {
-                organisationsWithApprovedFinanceChecks = simpleMap(asList(financeChecksLine.split("\n")), String::trim);
-            } else {
-                organisationsWithApprovedFinanceChecks = emptyList();
-            }
+            organisationsWithApprovedFinanceChecks = nullableBoolean(line.get(i++));
 
             projectState = ProjectState.valueOf(line.get(i++));
             projectDocumentsUploaded = nullableBoolean(line.get(i++));
