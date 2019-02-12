@@ -167,6 +167,8 @@ public class CsvUtils {
                 bankDetailsForOrganisations = emptyList() ;
             }
 
+            bankDetailsApproved = nullableBoolean(line.get(i++));
+
             String financeChecksLine = line.get(i++);
 
             if (!isBlank(financeChecksLine)) {
@@ -706,7 +708,6 @@ public class CsvUtils {
             throw new RuntimeException(e);
         }
     }
-
 
     private static String nullable(String s) {
         return isBlank(s) || "N".equals(s) ? null : s;

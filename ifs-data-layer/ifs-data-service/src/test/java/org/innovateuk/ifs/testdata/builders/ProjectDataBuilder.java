@@ -97,7 +97,6 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     public ProjectDataBuilder withProjectDocuments() {
         return with(data -> doAs(data.getLeadApplicant(), () -> {
             List<CompetitionDocument> competitionDocuments = competitionDocumentConfigRepository.findByCompetitionId(data.getApplication().getCompetition());
-            LOG.error("Project Name " + data.getProject().getName() + " has this many documents to upload: " + String.valueOf(competitionDocuments.size()));
             competitionDocuments.stream()
                     .forEach(competitionDocument -> addProjectDocument(data, competitionDocument.getId()));
         }));
@@ -105,15 +104,13 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
     private void addProjectDocument(ProjectData data, long documentConfigId)  {
         try {
-            File file = new File("webtest.pdf");
+            File file = new File(ProjectDataBuilder.class.getResource("/webtest.pdf").toURI());
             InputStream inputStream = new FileInputStream(file);
             Supplier<InputStream> inputStreamSupplier = () -> inputStream;
             documentsService.createDocumentFileEntry(data.getProject().getId(), documentConfigId, new FileEntryResource(null, "pdf", "application/pdf", file.length()), inputStreamSupplier);
-            Log.error("Project Name " + data.getProject().getName() + " uploading file");
         } catch (Exception e) {
-            LOG.error("Unable to create project document file");
-            LOG.error(e.getMessage());
-            System.out.println(e.getStackTrace());
+            LOG.error("Unable to create project document file", e);
+            throw new RuntimeException(e);
         }
     }
 
