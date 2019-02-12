@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Stakeholder controller to handle RESTful services related to project monitoring officers
+ * Controller to handle RESTful services related to project monitoring officers
  */
 @RestController
 @RequestMapping("/competition/setup")

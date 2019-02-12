@@ -84,7 +84,6 @@ public class MonitoringOfficerRegistrationController {
         return navigationUtils.getRedirectToLandingPageUrl(request);
     }
 
-    // existing user and not logged in
     @PostMapping("/{inviteHash}/register")
     public String submitDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
