@@ -63,7 +63,16 @@ public class MonitoringOfficerRegistrationController {
     public String openInvite(@PathVariable("inviteHash") String inviteHash,
                              Model model,
                              HttpServletRequest request,
-                             @ModelAttribute("form") MonitoringOfficerRegistrationForm monitoringOfficerRegistrationForm) { return competitionSetupMonitoringOfficerRestService.checkExistingUser(inviteHash).andOnSuccessReturn(
+                             @ModelAttribute("form") MonitoringOfficerRegistrationForm monitoringOfficerRegistrationForm,
+                             UserResource loggedInUser) {
+
+        if (loggedInUser != null) {
+            if (!competitionSetupMonitoringOfficerRestService.getMonitoringOfficerInvite(inviteHash).getSuccess().getEmail().equalsIgnoreCase(loggedInUser.getEmail())) {
+                return "registration/error";
+            }
+        }
+
+        return competitionSetupMonitoringOfficerRestService.checkExistingUser(inviteHash).andOnSuccessReturn(
                 userExists -> {
                     if (userExists) {
                         addMonitoringOfficerRole(inviteHash);
