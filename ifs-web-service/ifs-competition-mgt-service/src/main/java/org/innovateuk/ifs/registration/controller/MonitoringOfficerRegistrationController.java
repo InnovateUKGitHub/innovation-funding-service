@@ -78,7 +78,7 @@ public class MonitoringOfficerRegistrationController {
                         addMonitoringOfficerRole(inviteHash);
                         return dashboardRedirect(request);
                     } else {
-                        MonitoringOfficerInviteResource monitoringOfficerInviteResource = competitionSetupMonitoringOfficerRestService.getMonitoringOfficerInvite(inviteHash).getSuccess();
+                        MonitoringOfficerInviteResource monitoringOfficerInviteResource = competitionSetupMonitoringOfficerRestService.openMonitoringOfficerInvite(inviteHash).getSuccess();
                         model.addAttribute("model", monitoringOfficerRegistrationModelPopulator.populateModel(monitoringOfficerInviteResource.getEmail()));
                         return "monitoring-officer/create-account";
                     }
@@ -89,7 +89,7 @@ public class MonitoringOfficerRegistrationController {
         competitionSetupMonitoringOfficerRestService.addMonitoringOfficerRole(inviteHash);
     }
 
-    private  String dashboardRedirect(HttpServletRequest request) {
+    private String dashboardRedirect(HttpServletRequest request) {
         return navigationUtils.getRedirectToLandingPageUrl(request);
     }
 

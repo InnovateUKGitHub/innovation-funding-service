@@ -19,6 +19,11 @@ public class CompetitionSetupMonitoringOfficerRestServiceImpl extends BaseRestSe
     }
 
     @Override
+    public RestResult<MonitoringOfficerInviteResource> openMonitoringOfficerInvite(String inviteHash) {
+        return getWithRestResultAnonymous(format("%s/open-monitoring-officer-invite/%s", BASE_URL, inviteHash), MonitoringOfficerInviteResource.class);
+    }
+
+    @Override
     public RestResult<Void> createMonitoringOfficer(String inviteHash, MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource) {
             String url = format("%s/monitoring-officer/create/%s", BASE_URL, inviteHash);
             return postWithRestResultAnonymous(url, monitoringOfficerRegistrationResource, Void.class);
