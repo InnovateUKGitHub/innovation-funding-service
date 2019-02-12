@@ -92,13 +92,12 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     }
 
     public ProjectDataBuilder withApprovedFinanceChecks() {
-        return with(data -> {
+        return with(data -> doAs(anyProjectFinanceUser(), () -> {
             Set<OrganisationResource> organisations = organisationService.findByApplicationId(data.getApplication().getId()).getSuccess();
             for (OrganisationResource org : organisations) {
-                LOG.error("org name: " + org.getName());
-                doAs(anyProjectFinanceUser(), () -> updateFinanceChecks(data.getProject().getId(), org.getId()));
+                updateFinanceChecks(data.getProject().getId(), org.getId());
             }
-        });
+        }));
     }
 
     private void updateFinanceChecks(Long projectId, Long organisationId) {
