@@ -82,6 +82,7 @@ ENV HTTP_PORT=9080 \
   IDP_PROXY_KEY="@auth_idp_proxy_key@" \
   IDP_PROXY_CERTIFICATE="@auth_idp_proxy_certificate@" \
   IDP_PROXY_CACERTIFICATE="@auth_idp_proxy_cacertificate@" \
+  IDP_LOG_LEVEL=INFO \
   SP_PROXY_CERTIFICATE="@auth_sp_proxy_certificate@" \
   IDP_SAML_SIGNING_KEY="@auth_idp_signing_key@" \
   IDP_SAML_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
@@ -93,7 +94,7 @@ ENV HTTP_PORT=9080 \
   MEMCACHE_ENDPOINT=
 
 # shibboleth configuration files \
-COPY idp/* /idp/
+COPY idp/ /idp/
 COPY newrelic.jar /
 COPY newrelic.yml /
 # Apache layer
@@ -134,6 +135,13 @@ RUN mkdir /etc/tomcat8/certs && \
                       /etc/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JAVA_HOME"/jre/lib/security/cacerts && \
   chmod -R u=rwX,g=rwX,o= /etc/shibboleth /opt/shibboleth-idp /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp /usr/local/bin \
                           /etc/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JAVA_HOME"/jre/lib/security/cacerts && \
+
+# Move files required for IDP/SP "extras" process which allows multiple IDP/SPs to be created
+  mkdir /etc/shibboleth/extras && \
+  mkdir -p /idp/templates && mkdir -p /idp/entities && mkdir -p /idp/certs && \
+  mv /idp/templates /etc/shibboleth/extras && \
+  mv /idp/entities /etc/shibboleth/extras && \
+  mv /idp/certs /etc/shibboleth/extras && \
 
   rm -rf /idp
 
