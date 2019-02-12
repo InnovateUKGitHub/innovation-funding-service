@@ -101,7 +101,7 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
                 builder -> line.organisationsWithApprovedFinanceChecks ? builder.withApprovedFinanceChecks(line.generateSpendProfile) : builder;
 
         UnaryOperator<ProjectDataBuilder> approveSpendProfileIfNecessary =
-                builder -> line.uploadSpendProfile ? builder.withSpendProfile() : builder;
+                builder -> line.uploadSpendProfile ? builder.withSpendProfile(line.approveSpendProfile) : builder;
 
         UnaryOperator<ProjectDataBuilder> submitBankDetailsIfNecessary = builder -> {
 

@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.testdata.builders.data.ProjectData;
@@ -104,9 +105,13 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         }));
     }
 
-    public ProjectDataBuilder withSpendProfile() {
+    public ProjectDataBuilder withSpendProfile(Boolean approveSpendProfile) {
         return with(data -> {
             uploadSpendProfile(data);
+            submitSpendProfile(data);
+            if (approveSpendProfile) {
+                approveSpendProfile(data);
+            }
         });
     }
 
@@ -121,8 +126,16 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         });
     }
 
-    private void approveSpendProfile() {
-        //                spend-profile/total/confirmation
+    private void submitSpendProfile(ProjectData data) {
+        doAs(data.getProjectManager(), () -> {
+            spendProfileService.completeSpendProfilesReview(data.getProject().getId());
+        });
+    }
+
+    private void approveSpendProfile(ProjectData data) {
+        doAs(anyProjectFinanceUser(), () -> {
+            spendProfileService.approveOrRejectSpendProfile(data.getProject().getId(), ApprovalType.APPROVED);
+        });
     }
 
     private void updateFinanceChecks(Long projectId, Long organisationId) {
