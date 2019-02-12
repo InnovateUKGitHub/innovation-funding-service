@@ -129,18 +129,20 @@
                         </li>
                         <li th:unless="${model.readOnly}">
                             <a class="disabled govuk-link" aria-disabled="true"
-                               th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT
-                                or model.h2020}">
+                               th:if="${!model.h2020 && (
+                                   model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                                || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
+                                || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
+                                || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT
+                                )}">
                                 Input and review funding decision
                             </a>
-                            <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT
-                                or model.h2020}"
+                            <a th:unless="${!model.h2020 && (
+                                   model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                                || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
+                                || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
+                                || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT
+                                )}"
                                th:href="@{/competition/{competitionId}/funding(competitionId=${model.competitionId})}"
                                class="govuk-link">
                                 Input and review funding decision
@@ -176,11 +178,11 @@
                                 </button>
                                 <th:block th:unless="${model.readOnly}"
                                           th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).FUNDERS_PANEL}"
-                                          th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK}">
+                                          th:if="${model.h2020 || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK}">
                                     <a class="govuk-button" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
-                                        th:if="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
+                                        th:if="${model.keyStatistics.canManageFundingNotifications || model.h2020}">Manage funding notifications</a>
                                     <a class="govuk-button--disabled govuk-button" aria-disabled="true"
-                                       th:unless="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
+                                       th:unless="${model.keyStatistics.canManageFundingNotifications || model.h2020}">Manage funding notifications</a>
                                 </th:block>
                                 <button th:unless="${model.readOnly}"
                                         type="submit"
