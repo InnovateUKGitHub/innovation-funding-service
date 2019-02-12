@@ -19,6 +19,7 @@ public class CompetitionInFlightViewModel {
     private Long competitionId;
     private String competitionName;
     private CompetitionStatus competitionStatus;
+    private Boolean isH2020;
     private String competitionType;
     private String innovationSector;
     private String innovationArea;
@@ -42,6 +43,7 @@ public class CompetitionInFlightViewModel {
         this.competitionName = competitionResource.getName();
         this.competitionStatus = competitionResource.getCompetitionStatus();
         this.competitionType = competitionResource.getCompetitionTypeName();
+        this.isH2020 = competitionResource.isH2020();
         this.innovationSector = competitionResource.getInnovationSectorName();
         this.innovationArea = StringUtils.join(competitionResource.getInnovationAreaNames(), ", ");
         this.executive = competitionResource.getExecutiveName();
@@ -70,6 +72,10 @@ public class CompetitionInFlightViewModel {
 
     public String getCompetitionType() {
         return competitionType;
+    }
+
+    public boolean isH2020() {
+        return isH2020;
     }
 
     public String getInnovationSector() {

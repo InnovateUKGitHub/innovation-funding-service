@@ -132,13 +132,15 @@
                                th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                                 or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
                                 or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
+                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT
+                                or model.h2020}">
                                 Input and review funding decision
                             </a>
                             <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                                 or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
                                 or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
+                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT
+                                or model.h2020}"
                                th:href="@{/competition/{competitionId}/funding(competitionId=${model.competitionId})}"
                                class="govuk-link">
                                 Input and review funding decision
