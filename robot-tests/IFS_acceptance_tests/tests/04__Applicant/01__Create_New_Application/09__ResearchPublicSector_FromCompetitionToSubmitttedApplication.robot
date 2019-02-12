@@ -37,7 +37,7 @@ The Applicant is able to apply to the competition once is Open and see the corre
     [Documentation]  IFS-182 IFS-2832  IFS-4046
     [Tags]  MySQL  HappyPath
     [Setup]  Get competitions id and set it as suite variable  ${compResearch}
-    Given update milestone to yesterday      ${competitionId}
+    Given update milestone to yesterday      ${competitionId}  OPEN_DATE
     And log in as a different user              &{collaborator2_credentials}
     And logged in user applies to competition research     ${compResearch}  2
     Then the user should see the element          jQuery = li:contains("${customQuestion}")

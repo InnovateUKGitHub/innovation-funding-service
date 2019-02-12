@@ -142,7 +142,7 @@ Once the project growth table is selected
     And the user navigates to the page                   ${CA_UpcomingComp}
     Then the user should see the element                 jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
     Get competitions id and set it as suite variable     ${compWithGrowth}
-    [Teardown]  update milestone to yesterday      ${competitionId}
+    [Teardown]  update milestone to yesterday      ${competitionId}  OPEN_DATE
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395

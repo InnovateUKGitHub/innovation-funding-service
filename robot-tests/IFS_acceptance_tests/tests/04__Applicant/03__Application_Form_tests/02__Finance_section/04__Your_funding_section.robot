@@ -177,4 +177,3 @@ the user changes the research category
 
 Custom suite teardown
     The user closes the browser
-    Disconnect from database

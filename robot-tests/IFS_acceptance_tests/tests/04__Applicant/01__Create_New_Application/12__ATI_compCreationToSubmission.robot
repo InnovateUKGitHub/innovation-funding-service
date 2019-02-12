@@ -30,7 +30,7 @@ Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
     [Tags]  MySQL
     [Setup]  Get competitions id and set it as suite variable  ${ATIcompetitionTitle}
-    Givenupdate milestone to yesterday                      ${competitionId}  OPEN_DATE
+    Given update milestone to yesterday                      ${competitionId}  OPEN_DATE
     When log in as a different user                         &{lead_applicant_credentials}
     Then logged in user applies to competition              ${ATIcompetitionTitle}  1
 

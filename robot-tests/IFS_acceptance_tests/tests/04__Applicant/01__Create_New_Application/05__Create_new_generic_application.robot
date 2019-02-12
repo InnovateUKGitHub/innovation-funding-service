@@ -25,7 +25,7 @@ CompAdmin creates a new Generic competition
     [Setup]  log in as a different user                &{Comp_admin1_credentials}
     Given the competition admin creates competition      4  ${competitionName}  Generic  Generic  2  GRANT  project-setup-completion-stage  no  1  true  collaborative
     Get competitions id and set it as suite variable     ${competitionName}
-    [Teardown]  update milestone to yesterday      ${competitionId}
+    [Teardown]  update milestone to yesterday      ${competitionId}  OPEN_DATE
 
 Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Documentation]  IFS-1012  IFS-2879
