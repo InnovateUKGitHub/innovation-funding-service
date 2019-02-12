@@ -91,20 +91,44 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         });
     }
 
-    public ProjectDataBuilder withApprovedFinanceChecks() {
+    public ProjectDataBuilder withApprovedFinanceChecks(Boolean generateSpendProfile) {
         return with(data -> doAs(anyProjectFinanceUser(), () -> {
             Set<OrganisationResource> organisations = organisationService.findByApplicationId(data.getApplication().getId()).getSuccess();
             for (OrganisationResource org : organisations) {
                 updateFinanceChecks(data.getProject().getId(), org.getId());
             }
+            if (generateSpendProfile) {
+                LOG.error("Generated spend profile for: " + data.getProject().getName());
+                spendProfileService.generateSpendProfile(data.getProject().getId()).getSuccess();
+            }
         }));
+    }
+
+    public ProjectDataBuilder withSpendProfile() {
+        return with(data -> {
+            uploadSpendProfile(data);
+        });
+    }
+
+    private void uploadSpendProfile(ProjectData data) {
+        doAs(anyProjectFinanceUser(), () -> {
+            Set<OrganisationResource> organisations = organisationService.findByApplicationId(data.getApplication().getId()).getSuccess();
+            for (OrganisationResource org : organisations) {
+                doAs(findAnyPartnerForOrganisation(data, org.getId()), () -> {
+                    spendProfileService.markSpendProfileComplete(new ProjectOrganisationCompositeId(data.getProject().getId(), org.getId()));
+                });
+            }
+        });
+    }
+
+    private void approveSpendProfile() {
+        //                spend-profile/total/confirmation
     }
 
     private void updateFinanceChecks(Long projectId, Long organisationId) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         financeCheckService.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.GREEN).getSuccess();
         financeCheckService.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN).getSuccess();
-//        spendProfileService.generateSpendProfile(projectId).getSuccess();
     }
 
     public ProjectDataBuilder withMonitoringOfficer(String firstName, String lastName, String email, String phoneNumber) {

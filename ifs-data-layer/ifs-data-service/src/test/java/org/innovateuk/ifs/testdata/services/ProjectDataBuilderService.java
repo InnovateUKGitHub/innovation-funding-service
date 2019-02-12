@@ -98,7 +98,10 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
 
 
         UnaryOperator<ProjectDataBuilder> approveFinanceChecksIfNecessary =
-                builder -> line.organisationsWithApprovedFinanceChecks ? builder.withApprovedFinanceChecks() : builder;
+                builder -> line.organisationsWithApprovedFinanceChecks ? builder.withApprovedFinanceChecks(line.generateSpendProfile) : builder;
+
+        UnaryOperator<ProjectDataBuilder> approveSpendProfileIfNecessary =
+                builder -> line.uploadSpendProfile ? builder.withSpendProfile() : builder;
 
         UnaryOperator<ProjectDataBuilder> submitBankDetailsIfNecessary = builder -> {
 
@@ -128,6 +131,7 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
                                 andThen(submitBankDetailsIfNecessary).
                                 andThen(withdrawIfNecessary).
                                 andThen(approveFinanceChecksIfNecessary).
+                                andThen(approveSpendProfileIfNecessary).
 //                                andThen(setProjectDocumentsIfNecessary).
                                 apply(baseBuilder).
                                 build())
