@@ -118,9 +118,11 @@ public class CsvUtils {
         public String moEmail;
         public String moPhoneNumber;
         public List<Triple<String, String, String>> bankDetailsForOrganisations;
+        public Boolean bankDetailsApproved;
         public List<String> organisationsWithApprovedFinanceChecks;
         public ProjectState projectState;
         public Boolean projectDocumentsUploaded;
+
 
         private ProjectLine(List<String> line) {
             int i = 0;

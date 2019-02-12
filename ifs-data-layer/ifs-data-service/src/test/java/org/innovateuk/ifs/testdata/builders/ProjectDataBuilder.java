@@ -1,17 +1,13 @@
 package org.innovateuk.ifs.testdata.builders;
 
-import org.apache.commons.compress.parallel.InputStreamSupplier;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -22,17 +18,18 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.tools.jline_embedded.internal.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
-import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
 
 /**
  * Generates data from Competitions, including any Applications taking part in this Competition
@@ -99,19 +96,28 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
     public ProjectDataBuilder withProjectDocuments() {
         return with(data -> doAs(data.getLeadApplicant(), () -> {
-
             List<CompetitionDocument> competitionDocuments = competitionDocumentConfigRepository.findByCompetitionId(data.getApplication().getCompetition());
+            LOG.error("Project Name " + data.getProject().getName() + " has this many documents to upload: " + String.valueOf(competitionDocuments.size()));
             competitionDocuments.stream()
                     .forEach(competitionDocument -> addProjectDocument(data, competitionDocument.getId()));
-
         }));
     }
 
-    private void addProjectDocument(ProjectData data, long documentConfigId){
-        documentsService.createDocumentFileEntry(data.getProject().getId(), documentConfigId, new FileEntryResource(), null);
+    private void addProjectDocument(ProjectData data, long documentConfigId)  {
+        try {
+            File file = new File("webtest.pdf");
+            InputStream inputStream = new FileInputStream(file);
+            Supplier<InputStream> inputStreamSupplier = () -> inputStream;
+            documentsService.createDocumentFileEntry(data.getProject().getId(), documentConfigId, new FileEntryResource(null, "pdf", "application/pdf", file.length()), inputStreamSupplier);
+            Log.error("Project Name " + data.getProject().getName() + " uploading file");
+        } catch (Exception e) {
+            LOG.error("Unable to create project document file");
+            LOG.error(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
     }
 
-    public ProjectDataBuilder withBankDetails(String organisationName, String accountNumber, String sortCode, List<CsvUtils.OrganisationLine> organisationLines) {
+    public ProjectDataBuilder withBankDetails(String organisationName, String accountNumber, String sortCode, List<CsvUtils.OrganisationLine> organisationLines, boolean bankDetailsApproved) {
         return with(data -> {
 
             Organisation organisation = retrieveOrganisationByName(organisationName);
@@ -129,6 +135,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
                 bankDetails.setAddress(getAddress(organisationResource, organisationLines));
                 bankDetails.setOrganisationTypeName(organisationType.getName());
                 bankDetails.setRegistrationNumber(organisationResource.getCompaniesHouseNumber());
+                bankDetails.setManualApproval(bankDetailsApproved);
 
                 bankDetailsService.submitBankDetails(bankDetails).getSuccess();
             });

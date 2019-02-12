@@ -101,7 +101,7 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
             ProjectDataBuilder currentBuilder = builder;
 
             for (Triple<String, String, String> bd : line.bankDetailsForOrganisations) {
-                currentBuilder = currentBuilder.withBankDetails(bd.getLeft(), bd.getMiddle(), bd.getRight(), organisationLines);
+                currentBuilder = currentBuilder.withBankDetails(bd.getLeft(), bd.getMiddle(), bd.getRight(), organisationLines, line.bankDetailsApproved);
             }
 
             return currentBuilder;
