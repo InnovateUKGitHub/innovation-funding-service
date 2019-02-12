@@ -71,7 +71,7 @@ Guest user can see the public information of an unopened competition
     [Setup]    the user navigates to the page           ${frontDoor}
     Given the user clicks the button/link in the paginated list    link = ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element                jQuery = h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
-    And the user should see the element                 jQuery = li:contains("${READY_TO_OPEN_COMPETITION_OPEN_DATE_TIME_DATE_LONG}")
+    And the user should see the element                 jQuery = li:contains("${READY_TO_OPEN_COMPETITION_OPEN_DATE_DATE_LONG}")
     And the user should see the element                 jQuery = .warning-alert:contains("This competition has not yet opened.")
     And the user should not see the element             jQuery = p:contains("Or sign in to continue an existing application.")
     And the user should see the element                 jQuery = .govuk-button:contains("Start new application")
@@ -79,9 +79,9 @@ Guest user can see the public information of an unopened competition
 Registration is closed on Non-IFS competitition when the Registration date is in the past
     [Documentation]  IFS-38 IFS-1117
     [Tags]    MySQL
-    Given Change the close date of the Competition in the database to tomorrow  ${NON_IFS_COMPETITION_NAME}
-    And the registration date of the non-ifs competition belongs to the past    ${competition_ids['${NON_IFS_COMPETITION_NAME}']}
-    When the user navigates to the page     ${server}/competition/${competition_ids['${NON_IFS_COMPETITION_NAME}']}/overview
+    Given Change the milestone in the database to tomorrow  ${NON_IFS_COMPETITION}  SUBMISSION_DATE
+    And update milestone to yesterday    ${NON_IFS_COMPETITION}  REGISTRATION_DATE
+    When the user navigates to the page     ${server}/competition/${NON_IFS_COMPETITION}/overview
     Then the user should see the element    jQuery = .warning-alert:contains("Registration has now closed.")
 
 Guest user can see the public information of a competition
@@ -161,11 +161,6 @@ Close survey window
 the user can see the correct date status of the competition
     [Arguments]    ${competition_name}    ${date_status}    ${open_text}
     the user should see the element    jQuery = h2:contains("${competition_name}") ~ h3:contains("${date_status}") ~ dl dt:contains("${open_text}")
-
-the registration date of the non-ifs competition belongs to the past
-    [Arguments]  ${competitionId}
-    ${yesterday} =  get yesterday
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='REGISTRATION_DATE';
 
 Custom suite setup
     The guest user opens the browser
