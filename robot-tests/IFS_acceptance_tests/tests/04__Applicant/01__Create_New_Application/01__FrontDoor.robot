@@ -71,7 +71,7 @@ Guest user can see the public information of an unopened competition
     [Setup]    the user navigates to the page           ${frontDoor}
     Given the user clicks the button/link in the paginated list    link = ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element                jQuery = h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
-    And the user should see the element                 jQuery = li:contains("Saturday 7 November 2020")
+    And the user should see the element                 jQuery = li:contains("${READY_TO_OPEN_COMPETITION_OPEN_DATE_TIME_DATE_LONG}")
     And the user should see the element                 jQuery = .warning-alert:contains("This competition has not yet opened.")
     And the user should not see the element             jQuery = p:contains("Or sign in to continue an existing application.")
     And the user should see the element                 jQuery = .govuk-button:contains("Start new application")
