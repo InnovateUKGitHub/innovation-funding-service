@@ -256,3 +256,17 @@ ${compType_ATI}        Aerospace Technology Institute
 @{EOI_questions}          Business opportunity and potential market  Innovation  Project team  Funding and adding value
 @{APC_questions}          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
 @{project_details}        Project summary  Public description  Scope
+
+#Project Setup
+${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy
+${PROJECT_SETUP_COMPETITION}          ${competition_ids["${PROJECT_SETUP_COMPETITION_NAME}"]}
+${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}    60674010
+${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}    4560000
+${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}    1230
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}    53532322
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}    1230000
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}    4560
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}    HIVE IT LIMITED
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}   ewan+1@hiveit.co.uk
+${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}            ${collaborator1_credentials["email"]}
+${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}   ${collaborator2_credentials["email"]}

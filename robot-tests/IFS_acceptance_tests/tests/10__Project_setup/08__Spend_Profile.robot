@@ -140,17 +140,17 @@ Project Finance goes through the Generate Spend Profile tab to generate the Spen
     [Documentation]    INFUND-5194, INFUND-5987, IFS-2062, IFS-2016
     [Tags]  HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/all
+    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
     And the user clicks the button/link     jQuery = a:contains("Generate spend profile")
     And the user clicks the button/link     link = ${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link    css = .generate-spend-profile-main-button
     And the user clicks the button/link     css = #generate-spend-profile-modal-button
     Then the user should see the element    jQuery = .success-alert p:contains("The finance checks have been approved and profiles generated.")
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the user should see the element    css = #table-project-status tr:nth-of-type(5) td:nth-of-type(4).ok
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/queries
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status/queries
     Then the user should not see the element  link = ${Katz_Name}
-    And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  ${PS_SP_Competition_Name}: Your spend profile is available for project ${PS_SP_APPLICATION_NUMBER}  The finance checks for all partners in the project have now been completed
+    And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  ${PS_Competition_Name}: Your spend profile is available for project ${PS_SP_APPLICATION_NUMBER}  The finance checks for all partners in the project have now been completed
 
 Project Finance should no longer see the project in the Generate Spend Profile tab
     [Documentation]    IFS-2016
@@ -553,7 +553,7 @@ Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871
     [Tags]
     [Setup]    Log in as a different user            &{internal_finance_credentials}
-    Given the user navigates to the page             ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
+    Given the user navigates to the page             ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     And the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(5) > td.govuk-table__cell.status.action > a  # Review Spend profile
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     And the user should see the element              jQuery = #main-content div.govuk-grid-row div.govuk-grid-column-one-third.alignright h2:contains("Spend profile")
@@ -615,7 +615,7 @@ Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543, INFUND-7119
     [Tags]    Experian
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
+    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the user should see the element     css = #table-project-status tr:nth-of-type(5) td:nth-of-type(1).status.ok         # Project details
     And the user should see the element      css = #table-project-status > tbody > tr:nth-child(5) > td:nth-child(3)           # Documents
     And the user should see the element      css = #table-project-status > tbody > tr:nth-child(5) > td:nth-child(4)           # Monitoring officer
@@ -641,7 +641,7 @@ Project Finance is able to Reject Spend Profile
 Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
     [Tags]
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the user should see the element    css = #table-project-status tr:nth-of-type(5) td:nth-of-type(6).status.rejected  # Rejected Spend profile
 
 Lead partner can see that the spend profile has been rejected
@@ -755,7 +755,7 @@ Project Finance is able to Approve Spend Profile
 Status updates correctly for internal user's table after approval
     [Documentation]    INFUND-5543
     [Tags]
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the user should see the element    css = #table-project-status tr:nth-of-type(5) td:nth-of-type(6).status.ok        # Completed Spend profile
     And the user should see the element     css = #table-project-status > tbody > tr:nth-child(5) > td.govuk-table__cell.status.action > a   # GOL
 
@@ -824,9 +824,9 @@ project finance cannot generate spend profile without bank details
     the element should be disabled    jQuery = button:contains(Generate spend profile)
 
 partners submit bank details
-    partner submits his bank details  ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
-    partner submits his bank details  ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
-    partner submits his bank details  ${PS_SP_APPLICATION_ACADEMIC_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${Account_One}  ${Sortcode_One}
+    partner submits his bank details  ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${Account_One}  ${Sortcode_One}
+    partner submits his bank details  ${PS_SP_APPLICATION_ACADEMIC_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${Account_One}  ${Sortcode_One}
 
 project finance approves bank details
     log in as a different user                          &{internal_finance_credentials}

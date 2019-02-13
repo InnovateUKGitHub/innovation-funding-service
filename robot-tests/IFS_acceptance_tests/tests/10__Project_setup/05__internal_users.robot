@@ -26,31 +26,31 @@ Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300, IFS-1881
     [Tags]  HappyPath
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    When the user clicks the button/link    link = ${PS_GOL_COMPETITION_NAME}
+    When the user clicks the button/link    link = ${PS_Competition_Name}
     Then the user should see the element    link = All projects
-    And the user should see the element     jQuery = tr:nth-child(3) th:contains("${PS_EF_APPLICATION_TITLE}")
-    And the user should see the element     jQuery = tr:nth-child(3) th a:contains("${PS_EF_APPLICATION_NO}")
+    And the user should see the element     jQuery = tr:nth-child(3) th:contains("${PS_IU_Application_Title}")
+    And the user should see the element     jQuery = tr:nth-child(3) th a:contains("${PS_IU_Application_No}")
     And the user should see the element     jQuery = tr:nth-child(3) th:contains("3 partners")
-    And the user should see the element     jQuery = tr:nth-child(3) th:contains("Lead: ${PS_EF_APPLICATION_LEAD_ORGANISATION_NAME}")
-    And the user should see the element     jQuery = tr:nth-child(4) th:contains("${PS_BD_APPLICATION_TITLE}")
+    And the user should see the element     jQuery = tr:nth-child(3) th:contains("Lead: ${Ntag_Name}")
+    And the user should see the element     jQuery = tr:nth-child(4) th:contains("${Grade_Crossing_Applicaiton_Titile}")
     And the user should see the element     jQuery = tr:nth-child(5) th:contains("${PS_SP_APPLICATION_TITLE}")
-    When the user clicks the button/link    link = ${PS_EF_APPLICATION_NO}
-    Then the user should be redirected to the correct page     ${server}/management/competition/${PS_GOL_Competition_Id}/application/${PS_EF_APPLICATION_NO}
+    When the user clicks the button/link    link = ${PS_IU_Application_No}
+    Then the user should be redirected to the correct page     ${server}/management/competition/${PS_Competition_Id}/application/${PS_IU_Application_No}
     And the user should not see an error in the page
 
 Pr Finance can visit an application and navigate back
     [Documentation]  IFS-544
     [Tags]  HappyPath
-    Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
-    When the user clicks the button/link  link = ${PS_EF_APPLICATION_NO}
+    Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    When the user clicks the button/link  link = ${PS_IU_Application_No}
     Then the user should see the element  jQuery = h1:contains("Application overview")
     When the user clicks the button/link  link = Back
-    Then the user should be redirected to the correct page  ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
+    Then the user should be redirected to the correct page  ${server}/project-setup-management/competition/${PS_Competition_Id}/status
 
 Project Finance can see the status of projects in PS
     [Documentation]  INFUND-5300, INFUND-7109
     [Tags]
-    Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
+    Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the user should see the element     css = #table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok
     And the user should see the element      css = #table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok
     And the user should see the element      css = #table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok
@@ -63,17 +63,17 @@ Other internal users cannot see Bank details or Finance checks
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     # This is added to HappyPath because CompAdmin should NOT have access to Bank details
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link           link = ${PS_GOL_COMPETITION_NAME}
+    And the user clicks the button/link           link = ${PS_Competition_Name}
     Then the user should see the element          link = All projects
     And the user should not see the element       css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(4) a
     And the user should not see the element       css = #table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5) a
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details    ${403_error_message}
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/finance-check    ${403_error_message}
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_IU_Application_Project}/review-all-bank-details    ${403_error_message}
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_IU_Application_Project}/finance-check    ${403_error_message}
 
 Comp Admin user can see the internal project summary page
     [Documentation]    INFUND-4049, INFUND-5899
     [Tags]
-    Given the user navigates to the page             ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
+    Given the user navigates to the page             ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the user should see the element             jQuery = th div:contains("${PS_EF_APPLICATION_TITLE}")
     And the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(3) > td:nth-child(4) > a   # Monitoring officer page link
     And the user should not see an error in the page

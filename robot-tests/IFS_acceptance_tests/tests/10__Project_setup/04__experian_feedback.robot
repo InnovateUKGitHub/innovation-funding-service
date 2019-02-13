@@ -24,16 +24,16 @@ Project Finance can see Bank details requiring action
     [Documentation]    INFUND-3763, INFUND-4903
     [Tags]  HappyPath
     Given the user navigates to the page  ${server}/management/dashboard/project-setup
-    When the user clicks the button/link  link = ${PS_EF_Competition_Name}
+    When the user clicks the button/link  link = ${PS_Competition_Name}
     And the user clicks the button/link   css = #table-project-status > tbody > tr:nth-child(7) > td:nth-child(5) a  # Complete Bank details
-    Then the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/review-all-bank-details
+    Then the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details
 
 Project Finance can see the company name with score
     [Documentation]  INFUND-3763
     [Tags]  HappyPath
-    Given the user navigates to the page          ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/review-all-bank-details
+    Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details
     And the user clicks the button/link           link = ${Gabtype_Name}
-    Then the user should be redirected to the correct page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/organisation/${Gabtype_Id}/review-bank-details
+    Then the user should be redirected to the correct page     ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/organisation/${Gabtype_Id}/review-bank-details
     And the user should see the element           jQuery = td:contains("${Gabtype_Name}") ~ td:contains("10 / 9")
 
 Project Finance can see the company number with status
@@ -45,7 +45,7 @@ Project Finance can see the company number with status
 Project Finance can see the account number with status
     [Documentation]    INFUND-3763
     [Tags]  HappyPath
-    Then the user should see the element      jQuery = td:contains("Bank account number / Sort code") ~ td:contains("${account_one} / ${sortCode_one}")
+    Then the user should see the element      jQuery = td:contains("Bank account number / Sort code") ~ td:contains("${Account_One} / ${Sortcode_One}")
     And the user should see the element       jQuery = tr:nth-child(3) td:nth-child(3):contains("No Match")
 
 Project Finance can see the address with score
@@ -63,9 +63,9 @@ Project Finance has the options to edit the details and to approve the bank deta
 Project Finance can change address and companies house details
     [Documentation]    INFUND-4054
     [Tags]  HappyPath
-    Given the user navigates to the page                     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/organisation/${Gabtype_Id}/review-bank-details
+    Given the user navigates to the page                     ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/organisation/${Gabtype_Id}/review-bank-details
     Then the user clicks the button/link                     link = Change bank account details
-    And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/organisation/${Gabtype_Id}/review-bank-details/change
+    And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/organisation/${Gabtype_Id}/review-bank-details/change
     And the text box should be editable                      id = organisationName
     And the user enters text to a text field                 id = organisationName  ${Gabtype_Name}
     And the user enters text to a text field                 id = registrationNumber  14935204
@@ -99,7 +99,7 @@ Project Finance cancels bank details changes
     [Documentation]    INFUND-4054,  INFUND-5899
     [Tags]
     When the user clicks the button/link                      link = Cancel bank account changes
-    Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/organisation/${Gabtype_Id}/review-bank-details
+    Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/organisation/${Gabtype_Id}/review-bank-details
     When the user clicks the button/link                      link = Change bank account details
     Then the text box should be editable                      id = organisationName
     And Set Focus To Element                                  css = [id = "addressForm.manualAddress.addressLine1"]
@@ -126,7 +126,7 @@ Project Finance updates bank account details
 Project Finance approves the bank details
     [Documentation]    INFUND-4054, INFUND-6714, INFUND-7161
     [Tags]  HappyPath
-    Given the user navigates to the page            ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/organisation/${Gabtype_Id}/review-bank-details
+    Given the user navigates to the page            ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/organisation/${Gabtype_Id}/review-bank-details
     And the user should see the element             jQuery = h2:contains("${Gabtype_Name} - Account details")
     When the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
     And the user clicks the button/link             jQuery = .button-clear:contains("Cancel")
@@ -145,7 +145,7 @@ Project Finance approves the bank details
 Project Finance cannot approve the bank details again
     [Documentation]    INFUND-9061
     [Tags]  HappyPath
-    Given the user navigates to the page            ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/organisation/${Kazio_Id}/review-bank-details
+    Given the user navigates to the page            ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/organisation/${Kazio_Id}/review-bank-details
     And the user should see the element             jQuery = h2:contains("${Kazio_Name} - Account details")
     When the user clicks the button/link            jQuery = .govuk-button:contains("Approve bank account details")
     And the user clicks the button/link             jQuery = .govuk-button:contains("Approve account")
@@ -156,8 +156,8 @@ Project Finance cannot approve the bank details again
 Lead partner can see that bank details has been approved
     [Documentation]    INFUND-7109
     [Tags]
-    [Setup]    log in as a different user          ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
-    When the user clicks the button/link           link = ${PS_GOL_APPLICATION_TITLE}
+    [Setup]    log in as a different user          ${PS_EF_Application_Lead_Partner_Email}  ${short_password}
+    When the user clicks the button/link           link = ${PS_EF_Application_Title}
     Then the user should see the element           css = ul li.complete:nth-child(4)
     When the user clicks the button/link           link = View the status of partners
     And the user should see the element            jQuery = h1:contains("Project team status")
@@ -167,13 +167,13 @@ Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
+    Given the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details  ${403_error_message}
 
 Project partners cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
-    [Setup]    log in as a different user  ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
-    Given the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
+    [Setup]    log in as a different user  ${PS_EF_Application_Partner_Email}  ${short_password}
+    Given the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/review-all-bank-details  ${403_error_message}
 
 *** Keywords ***
 the text box should be editable
