@@ -7,6 +7,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.user.resource.*;
 
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,12 +21,12 @@ public class UserRegistrationResource extends UserProfileBaseResource{
     })
     private String password;
 
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     public UserRegistrationResource() {
     }
 
-    public UserRegistrationResource(Title title, String firstName, String lastName, String phoneNumber,  String password, AddressResource address) {
+    public UserRegistrationResource(Title title, String firstName, String lastName, String phoneNumber, String password, AddressResource address) {
         setTitle(title);
         setFirstName(firstName);
         setLastName(lastName);
