@@ -46,7 +46,7 @@ Details of the competition are visible
     Then the user should see the element   jQuery = dt:contains("Competition") + dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element    jQuery = dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
     And the user should see the element    jQuery = dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
-    And the user should see the element    jQuery = dt:contains("Submit applications deadline:") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_TIME_DATE_LONG}")
+    And the user should see the element    jQuery = dt:contains("Submit applications deadline:") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DATE_LONG}")
 
 User can view the competition brief
     [Documentation]    INFUND-5494
