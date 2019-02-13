@@ -132,7 +132,7 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
                                 andThen(withdrawIfNecessary).
                                 andThen(approveFinanceChecksIfNecessary).
                                 andThen(approveSpendProfileIfNecessary).
-//                                andThen(setProjectDocumentsIfNecessary).
+                                andThen(setProjectDocumentsIfNecessary).
                                 apply(baseBuilder).
                                 build())
         );
