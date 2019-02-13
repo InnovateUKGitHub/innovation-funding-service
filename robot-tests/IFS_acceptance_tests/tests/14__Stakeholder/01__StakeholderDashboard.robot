@@ -21,11 +21,8 @@ ${previousStakeholderEmail}      blake.wood@gmail.com
 The internal user cannot invite a Stakeholder when they have triggered the name validation
     [Documentation]  IFS-4190
     [Tags]
-    Given the user logs-in in new browser  &{Comp_admin1_credentials}
-    And the user clicks the button/link    link = ${openProgrammeCompetitionName}
-    And The user clicks the button/link    link = View and update competition setup
-    And The user clicks the button/link    link = Stakeholders
-    When the user clicks the button/link   jQuery = span:contains("Invite a new stakeholder")
+    Given Comp admin navigate to stakeholders page
+    When the user clicks the button/link             jQuery = span:contains("Invite a new stakeholder")
     And the user triggers the name validation
     Then the user should see the name validation messages
 
@@ -51,13 +48,10 @@ The internal user can invite an applicant who already has an account
 The internal user can invite an assessor who is already a stakeholder
     [Documentation]  IFS-4288
     [Tags]
-    Given the user clicks the button/link   jQuery = a[href='?tab=add']
-    Then the user should see the element    jQuery = td:contains("Blake Wood")
-    And the user clicks the button/link     jQuery = span:contains("Invite a new stakeholder")
-    And the user enters the correct details of a current stakeholder
+    Given the user invite the stakholder
     Then the user should not see the element    jQuery = td:contains("Blake Wood")
-    When the user clicks the button/link    jQuery = a:contains("Added to competition")
-    Then the user should see the element    jQuery = td:contains("Blake Wood") ~ td:contains("${previousStakeholderEmail}") ~ td:contains("Added")
+    When the user clicks the button/link        jQuery = a:contains("Added to competition")
+    Then the user should see the element        jQuery = td:contains("Blake Wood") ~ td:contains("${previousStakeholderEmail}") ~ td:contains("Added")
 
 The internal user invites a new Stakeholder
     [Documentation]  IFS-4190
@@ -85,17 +79,12 @@ Create stakeholders account validations from email
     [Tags]
     Given the user reads his email and clicks the link    ${stakeholderEmail}  Invite to Innovation Funding Service  You have been invited to view the following competition  1
     When the user clicks the button/link                  jQuery = .govuk-button:contains("Create account")
-    Then the user should see a field and summary error    Please enter a first name.
-    And the user should see a field and summary error     Please enter a last name.
-    And the user should see a field and summary error     Please enter your password.
+    Then the user should see the validation errors
 
 Invited stakeholder registration flow
     [Documentation]  IFS-4252
     [Tags]
-    When the user enters text to a text field             id = firstName  Stake
-    And the user enters text to a text field              id = lastName  Holder
-    And the user enters text to a text field              id = password  ${short_password}
-    And the user clicks the button/link                   jQuery = .govuk-button:contains("Create account")
+    When the user enters the details and create account
     Then the user should see the element                  jQuery = h1:contains("Your account has been created")
     When the user clicks the button/link                  jQuery = a:contains("Sign into your account")
     Then Logging in and Error Checking                    ${stakeholderEmail}  ${short_password}
@@ -112,10 +101,7 @@ The internal user checks the status for newly added stakeholder
 The internal user adds a Stakeholder to the competition
     [Documentation]  IFS-4189  IFS-4314
     [Tags]
-    Given the user clicks the button/link     css = a[href="?tab=add"]
-    When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
-    And the user clicks the button/link       jQuery = a:contains("Added to competition")
-    Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
+    Given the user select stakeholder and add to competition
     When the user reads his email             ${stakeholder_user["email"]}    Invite to view a competition: ${openProgrammeCompetitionName}    You have been invited to view
     Then the user navigates to the page       ${LOGIN_URL}
 
@@ -156,8 +142,8 @@ The internal user removes a Stakeholder from the competition
     [Tags]
     [Setup]  Log in as a different user       &{Comp_admin1_credentials}
     Given the user navigates to the page      ${SERVER}/management/competition/setup/${competition_ids['${openProgrammeCompetitionName}']}/manage-stakeholders?tab=added
-    Given the user clicks the button/link     jQuery = td:contains("Rayon Kevin") button[type="submit"]
-    When the user clicks the button/link      css = a[href="?tab=add"]
+    When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
+    And the user clicks the button/link       css = a[href="?tab=add"]
     Then the user should see the element      jQuery = td:contains("Rayon Kevin") button[type="submit"]
 
 The Stakeholder can no longer see the competition
@@ -167,6 +153,12 @@ The Stakeholder can no longer see the competition
     Then the user should not see the element    jQuery = h3:contains("${openProgrammeCompetitionName}")
 
 *** Keywords ***
+Comp admin navigate to stakeholders page
+    the user logs-in in new browser    &{Comp_admin1_credentials}
+    the user clicks the button/link    link = ${openProgrammeCompetitionName}
+    the user clicks the button/link    link = View and update competition setup
+    the user clicks the button/link    link = Stakeholders
+
 the user triggers the name validation
     the user enters text to a text field    id = emailAddress  stakeHolder@test.com
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
@@ -178,10 +170,10 @@ the user should see the name validation messages
     the user should see a field and summary error    Your last name should have at least 2 characters.
 
 the user triggers the email validation
-    the user enters text to a text field             id = firstName     Stake
-    the user enters text to a text field             id = lastName      Holder
-    the user enters text to a text field             id = emailAddress  stakeHoldertest.com
-    the user clicks the button/link                  css = button[name = "inviteStakeholder"]
+    the user enters text to a text field    id = firstName     Stake
+    the user enters text to a text field    id = lastName      Holder
+    the user enters text to a text field    id = emailAddress  stakeHoldertest.com
+    the user clicks the button/link         css = button[name = "inviteStakeholder"]
 
 the user enters an Innovate UK email
     the user enters text to a text field    id = firstName     Stake
@@ -201,8 +193,31 @@ the user enters the correct details of applicant
     the user enters text to a text field    id = emailAddress  ${applicantEmail}
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
 
+the user invite the stakholder
+    the user clicks the button/link     jQuery = a[href='?tab=add']
+    the user should see the element     jQuery = td:contains("Blake Wood")
+    the user clicks the button/link     jQuery = span:contains("Invite a new stakeholder")
+    the user enters the correct details of a current stakeholder
+
 the user enters the correct details of a current stakeholder
     the user enters text to a text field    id = firstName     Blake
     the user enters text to a text field    id = lastName      Wood
     the user enters text to a text field    id = emailAddress  ${previousStakeholderEmail}
     the user clicks the button/link         css = button[name = "inviteStakeholder"]
+
+the user should see the validation errors
+    the user should see a field and summary error    Please enter a first name.
+    the user should see a field and summary error     Please enter a last name.
+    the user should see a field and summary error     Please enter your password.
+
+the user enters the details and create account
+    the user enters text to a text field     id = firstName  Stake
+    the user enters text to a text field     id = lastName  Holder
+    the user enters text to a text field     id = password  ${short_password}
+    the user clicks the button/link          jQuery = .govuk-button:contains("Create account")
+
+the user select stakeholder and add to competition
+    the user clicks the button/link           css = a[href="?tab=add"]
+    When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
+    And the user clicks the button/link       jQuery = a:contains("Added to competition")
+    Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
