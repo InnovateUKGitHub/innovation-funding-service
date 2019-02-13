@@ -158,8 +158,10 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             List<CompetitionDocument> competitionDocuments = competitionDocumentConfigRepository.findByCompetitionId(data.getApplication().getCompetition());
             competitionDocuments.stream()
                     .forEach(competitionDocument -> uploadProjectDocument(data, competitionDocument.getId()));
+            LOG.error("Uploaded competition documents");
             submitProjectDocuments(data, competitionDocuments);
-            approveProjectDocument(competitionDocuments);
+            LOG.error("Submitted competition documents");
+            approveProjectDocument(data, competitionDocuments);
         }));
     }
 
@@ -188,8 +190,8 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
                 .forEach(competitionDocument -> documentsService.submitDocument(data.getProject().getId(), competitionDocument.getId()));
     }
 
-    public ProjectDataBuilder approveProjectDocument(List<CompetitionDocument> competitionDocuments) {
-        return with(data -> {
+    public void approveProjectDocument(ProjectData data, List<CompetitionDocument> competitionDocuments) {
+         doAs(anyProjectFinanceUser(), () -> {
             ProjectDocumentDecision projectDocumentDecision = new ProjectDocumentDecision(true, null);
             competitionDocuments.stream()
                     .forEach(competitionDocument -> documentsService.documentDecision(data.getProject().getId(), competitionDocument.getId(), projectDocumentDecision));
