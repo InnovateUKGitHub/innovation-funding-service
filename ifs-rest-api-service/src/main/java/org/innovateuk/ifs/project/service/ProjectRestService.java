@@ -30,4 +30,7 @@ public interface ProjectRestService {
 
     RestResult<ProjectResource> createProjectFromApplicationId(Long applicationId);
 
+    RestResult<Void> handleProjectOffline(long projectId);
+
+    RestResult<Void> completeProjectOffline(long projectId);
 }
