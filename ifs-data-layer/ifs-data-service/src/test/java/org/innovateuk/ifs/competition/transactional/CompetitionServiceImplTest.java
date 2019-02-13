@@ -55,6 +55,7 @@ import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.ne
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -804,7 +805,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void getCompetitionOpenQueries() {
         List<CompetitionOpenQueryResource> openQueries = singletonList(new CompetitionOpenQueryResource(1L, 1L, "org", 1L, "proj"));
-        when(competitionRepositoryMock.getOpenQueryByCompetitionAndProjectStateNotIn(competitionId, singleton(ProjectState.WITHDRAWN))).thenReturn(openQueries);
+        when(competitionRepositoryMock.getOpenQueryByCompetitionAndProjectStateNotIn(competitionId, asList(WITHDRAWN, HANDLED_OFFLINE, COMPLETED_OFFLINE))).thenReturn(openQueries);
 
         List<CompetitionOpenQueryResource> response = service.findAllOpenQueries(competitionId).getSuccess();
 
@@ -814,7 +815,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void countCompetitionOpenQueries() {
         Long countOpenQueries = 4l;
-        when(competitionRepositoryMock.countOpenQueriesByCompetitionAndProjectStateNotIn(competitionId, singleton(ProjectState.WITHDRAWN))).thenReturn(countOpenQueries);
+        when(competitionRepositoryMock.countOpenQueriesByCompetitionAndProjectStateNotIn(competitionId, asList(WITHDRAWN, HANDLED_OFFLINE, COMPLETED_OFFLINE))).thenReturn(countOpenQueries);
 
         Long response = service.countAllOpenQueries(competitionId).getSuccess();
 

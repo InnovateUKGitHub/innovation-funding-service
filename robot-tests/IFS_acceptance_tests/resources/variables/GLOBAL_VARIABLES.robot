@@ -123,7 +123,10 @@ ${INELIGIBLE_PROJECT_COMPETITION_NAME_2}    SPAM: Solar power aggregation meshes
 ${INELIGIBLE_PROJECT_COMPETITION_NAME_2_NUMBER}       ${application_ids['${INELIGIBLE_PROJECT_COMPETITION_NAME_2}']}
 ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}     Electricity harvesting from rough terrain driving
 ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3_NUMBER}       ${application_ids['${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}']}
-
+${MARKOFFLINE_COMPETITION_NAME}     Biosciences round three: plastic recovery in the industrial sector
+${MARKOFFLINE_COMPETITION}           ${competition_ids['${MARKOFFLINE_COMPETITION_NAME}']}
+${MARKOFFLINE_APPLICATION_1_TITLE}   Smart skips for plastic storage and retrieval
+${MARKOFFLINE_APPLICATION_1_NUMBER}  ${application_ids['${MARKOFFLINE_APPLICATION_1_TITLE}']}
 
 
 ${NON_IFS_COMPETITION_NAME}     Transforming big data

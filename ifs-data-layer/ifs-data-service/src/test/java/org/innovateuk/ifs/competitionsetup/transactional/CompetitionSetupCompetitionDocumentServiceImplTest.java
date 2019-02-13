@@ -57,7 +57,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
     @Test
     public void save() {
 
-        CompetitionDocumentResource competitionDocumentResource = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+        CompetitionDocumentResource competitionDocumentResource = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
                 .withFileType(singletonList(1L))
                 .build();
         CompetitionDocument competitionDocument = new CompetitionDocument();
@@ -76,7 +76,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
 
     @Test
     public void saveAllWhenNoFileTypeSelected() {
-        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
                 .withFileType(singletonList(1L), emptyList())
                 .build(2);
 
@@ -91,7 +91,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
     @Test
     public void saveAll() {
 
-        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
                 .withId(1L, 2L)
                 .withFileType(singletonList(1L))
                 .build(2);
@@ -177,7 +177,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         competitionDocument2.setCompetition(competition);
 
         // create 2 document resources with same title & competition but different Id
-        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
                 .withCompetition(competition.getId())
                 .withTitle("Test1")
                 .withId(competitionDocument1.getId(), competitionDocument2.getId())

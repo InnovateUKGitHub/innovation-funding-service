@@ -31,7 +31,7 @@ Before Monitoring Officer is assigned
     And the user should see the element                 css = ul li.waiting:nth-child(3)
     When the user clicks the button/link                link = Monitoring Officer
     Then the user should see the element                jQuery = p:contains("Your project has not yet been assigned a Monitoring Officer.")
-    And the user should not see the text in the page    A Monitoring Officer has been assigned.
+    And the user should not see the element             jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
     When the user navigates to the page                 ${project_in_setup_team_status_page}
     And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
 
@@ -117,7 +117,7 @@ MO details can be added
     [Tags]  HappyPath
     When the user clicks the button/link                 jQuery = .govuk-button:contains("Assign Monitoring Officer")
     And the user clicks the button/link                  jQuery = .modal-assign-mo button:contains("Cancel")
-    Then the user should not see the text in the page    A Monitoring Officer has been assigned.
+    Then the user should not see the element             jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
     And the user clicks the button/link                  jQuery = .govuk-button:contains("Assign Monitoring Officer")
     And the user clicks the button/link                  jQuery = .modal-assign-mo button:contains("Assign Monitoring Officer")
     Then The user should see the element                 css = .success-alert
@@ -134,7 +134,7 @@ MO details(email step)
     [Tags]  HappyPath
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${PROJECT_SETUP_COMPETITION_NAME}: Your Monitoring Officer for project ${PROJECT_SETUP_APPLICATION_1}    has now been assigned a Monitoring Officer
+    And the user reads his email     ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${PROJECT_SETUP_COMPETITION_NAME}: Your Monitoring Officer for project ${PROJECT_SETUP_APPLICATION_1}    has now been assigned a Monitoring Officer
 
 MO details can be edited and viewed in the Set up your project page
     [Documentation]    INFUND-2630, INFUND-2621, INFUND-2634
@@ -160,8 +160,8 @@ MO details edit(email step)
     [Documentation]    INFUND-2630, INFUND-2634, IFS-3553
     [Tags]
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
-    When the user reads his email from the second mailbox    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${PROJECT_SETUP_COMPETITION_NAME}: Your Monitoring Officer for project ${PROJECT_SETUP_APPLICATION_1}    has now been assigned a Monitoring Officer
+    When the user reads his email    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
+    And the user reads his email     ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${PROJECT_SETUP_COMPETITION_NAME}: Your Monitoring Officer for project ${PROJECT_SETUP_APPLICATION_1}    has now been assigned a Monitoring Officer
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621

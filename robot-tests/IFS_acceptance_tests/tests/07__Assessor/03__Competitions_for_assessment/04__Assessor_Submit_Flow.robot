@@ -136,7 +136,7 @@ Summary:Word count check(Your feedback)
     Then the user should see a field and summary error           Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct                         Words remaining: -2
     When the user enters text to a text field                    id = feedback    Testing the feedback word count.
-    Then The user should not see the text in the page            Maximum word count exceeded. Please reduce your word count to 100.
+    Then the user should not see the element                     jQuery = .govuk-error-message:contains("Maximum word count exceeded. Please reduce your word count to 100.")
     And the word count should be correct                         Words remaining: 95
 
 Summary:Word count check(Comments for InnovateUK)
@@ -146,7 +146,7 @@ Summary:Word count check(Comments for InnovateUK)
     Then the user should see a field and summary error          Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct                        Words remaining: -2
     When the user enters text to a text field                   id = comment    Testing the comments word count.
-    Then The user should not see the text in the page           Maximum word count exceeded. Please reduce your word count to 100.
+    Then the user should not see the element                    jQuery = .govuk-error-message:contains("Maximum word count exceeded. Please reduce your word count to 100.")
     And the word count should be correct                        Words remaining: 95
 
 User Saves the Assessment as Recommended
@@ -155,7 +155,7 @@ User Saves the Assessment as Recommended
     Given the user enters text to a text field               id = feedback  ${EMPTY}
     And the user selects the radio button                    fundingConfirmation    true
     When The user clicks the button/link                     jQuery = .govuk-button:contains("Save assessment")
-    Then The user should not see the text in the page        Please enter your feedback
+    Then the user should not see the element                 jQuery = .govuk-error-message:contains("Please enter your feedback")
     And The user should see the element                      jQuery = .status-msg:contains("Assessed")
     And the user should see the element                      css = li:nth-child(7) .positive
     And the user should see the element                      css = li:nth-child(7) input[type = "checkbox"] ~ label
