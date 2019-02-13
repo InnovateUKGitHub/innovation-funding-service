@@ -6,5 +6,9 @@ import org.innovateuk.ifs.project.monitor.domain.MonitoringOfficerInvite;
 
 public interface MonitoringOfficerInviteRepository extends InviteRepository<MonitoringOfficerInvite> {
 
-    boolean existsByStatusAndEmail(InviteStatus sent, String email);
+    boolean existsByStatusAndEmail(InviteStatus status, String email);
+
+    default boolean sentInviteExistsByEmail(String email) {
+        return existsByStatusAndEmail(InviteStatus.SENT, email);
+    }
 }

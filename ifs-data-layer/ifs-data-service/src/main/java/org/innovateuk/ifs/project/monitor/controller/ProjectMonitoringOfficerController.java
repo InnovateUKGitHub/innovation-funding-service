@@ -5,7 +5,6 @@ import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.project.monitor.transactional.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -15,13 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/competition/setup")
 public class ProjectMonitoringOfficerController {
 
-    @Autowired
     private ProjectMonitoringOfficerService projectMonitoringOfficerService;
-
-    @Autowired
     private RegistrationService registrationService;
 
-    @Autowired
     public ProjectMonitoringOfficerController(ProjectMonitoringOfficerService projectMonitoringOfficerService, RegistrationService registrationService) {
         this.projectMonitoringOfficerService = projectMonitoringOfficerService;
         this.registrationService = registrationService;
