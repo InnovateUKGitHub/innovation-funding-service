@@ -225,6 +225,5 @@ public class ProjectMonitoringOfficerServiceImpl extends InviteService<Monitorin
 
     private void addMonitoringOfficerRoleToUser(User user) {
         user.addRole(MONITORING_OFFICER);
-//        userRepository.save(user);
     }
 }
