@@ -39,12 +39,26 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         when(projectMonitoringOfficerServiceMock.openInvite(hash)).thenReturn(serviceSuccess(invite));
 
-        mockMvc.perform(get("/competition/setup/get-monitoring-officer-invite/{hash}", hash))
+        mockMvc.perform(get("/competition/setup/open-monitoring-officer-invite/{hash}", hash))
                 .andExpect(status().isOk());
 
         verify(projectMonitoringOfficerServiceMock, only()).openInvite(hash);
     }
 
+    @Test
+    public void getInvite() throws Exception {
+        String hash = "hash";
+        MonitoringOfficerInviteResource invite = newMonitoringOfficerInviteResource()
+                .withHash(hash)
+                .build();
+
+        when(projectMonitoringOfficerServiceMock.getInviteByHash(hash)).thenReturn(serviceSuccess(invite));
+
+        mockMvc.perform(get("/competition/setup/get-monitoring-officer-invite/{hash}", hash))
+                .andExpect(status().isOk());
+
+        verify(projectMonitoringOfficerServiceMock, only()).getInviteByHash(hash);
+    }
     @Test
     public void createMonitoringOfficer() throws Exception {
         String hash = "hash";
@@ -60,5 +74,29 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 .andExpect(status().is2xxSuccessful());
 
         verify(registrationServiceMock, only()).createMonitoringOfficer(hash, registrationResource);
+    }
+
+    @Test
+    public void checkExistingUser() throws Exception {
+        String hash = "hash";
+
+        when(projectMonitoringOfficerServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/competition/setup/monitoring-officer/check-existing-user/{hash}", hash))
+                .andExpect(status().isOk());
+
+        verify(projectMonitoringOfficerServiceMock, only()).checkUserExistsForInvite(hash);
+    }
+
+    @Test
+    public void addMonitoringOfficerRole() throws Exception {
+        String hash = "hash";
+
+        when(projectMonitoringOfficerServiceMock.addMonitoringOfficerRole(hash)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/competition/setup/monitoring-officer/add-monitoring-officer-role/{hash}", hash))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(projectMonitoringOfficerServiceMock, only()).addMonitoringOfficerRole(hash);
     }
 }
