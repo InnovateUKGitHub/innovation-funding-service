@@ -36,14 +36,13 @@ Comp Admin Creates Competitions where Research can lead
 The Applicant is able to apply to the competition once is Open and see the correct Questions
     [Documentation]  IFS-182 IFS-2832  IFS-4046
     [Tags]  MySQL  HappyPath
-    [Setup]  Get competitions id and set it as suite variable  ${compResearch}
-    Given update milestone to yesterday      ${competitionId}  OPEN_DATE
-    And log in as a different user              &{collaborator2_credentials}
-    And logged in user applies to competition research     ${compResearch}  2
-    Then the user should see the element          jQuery = li:contains("${customQuestion}")
-    When the user should see the element          jQuery = li:contains("Scope")
-    Then the user should not see the element      jQuery = li:contains("Public description")
-    And the user should not see the element       jQuery = li:contains("Project summary")
+    [Setup]   get competition id and set open date to yesterday  ${compResearch}
+    Given log in as a different user                     &{collaborator2_credentials}
+    When logged in user applies to competition research  ${compResearch}  2
+    Then the user should see the element                 jQuery = li:contains("${customQuestion}")
+    And the user should see the element                  jQuery = li:contains("Scope")
+    And the user should not see the element              jQuery = li:contains("Public description")
+    And the user should not see the element              jQuery = li:contains("Project summary")
 
 Applicant Applies to Research leading Competition
     [Documentation]  IFS-1012  IFS-2879  IFS-4046

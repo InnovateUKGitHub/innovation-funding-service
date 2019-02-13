@@ -20,10 +20,9 @@ Comp Admin creates procurement competition
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
     [Tags]    MySQL
-    [Setup]  Get competitions id and set it as suite variable  ${comp_name}
-    Given update milestone to yesterday                                               ${competitionId}  OPEN_DATE
-    When Log in as a different user                                                   &{RTO_lead_applicant_credentials}
-    Then logged in user applies to competition                                       ${comp_name}  3
+    [Setup] get competition id and set open date to yesterday  ${comp_name}
+    Given Log in as a different user            &{RTO_lead_applicant_credentials}
+    Then logged in user applies to competition  ${comp_name}  3
 
 Applicant submits his application
     [Documentation]  IFS-2688 IFS-3287
@@ -36,7 +35,7 @@ Applicant submits his application
     And the user marks the procurement finances as complete         ${appl_name}   Calculate  52,214  yes
     And the user selects research category              Feasibility studies
     And the applicant submits the procurement application
-    [Teardown]  Competition is closed
+    [Teardown]  update milestone to yesterday  ${competitionId}  SUBMISSION_DATE
 
 Invite a registered assessor
     [Documentation]  IFS-2376

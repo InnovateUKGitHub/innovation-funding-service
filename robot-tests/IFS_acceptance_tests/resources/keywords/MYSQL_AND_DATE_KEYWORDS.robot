@@ -70,6 +70,11 @@ the days remaining should be correct (Applicant's dashboard)
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    jQuery=.in-progress li:contains("${applicationName}") .days-remaining
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
+Get competition id and set open date to yesterday
+     [Arguments]  ${competitionTitle}
+     Get competitions id and set it as suite variable  ${competitionTitle}
+     update milestone to yesterday                     ${competitionId}  OPEN_DATE
+
 Get competitions id and set it as suite variable
     [Arguments]  ${competitionTitle}
     ${competitionId} =  get comp id from comp title  ${competitionTitle}
