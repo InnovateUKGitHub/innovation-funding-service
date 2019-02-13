@@ -19,7 +19,7 @@ public class CompetitionInFlightViewModel {
     private Long competitionId;
     private String competitionName;
     private CompetitionStatus competitionStatus;
-    private Boolean isH2020;
+    private boolean isH2020;
     private String competitionType;
     private String innovationSector;
     private String innovationArea;
