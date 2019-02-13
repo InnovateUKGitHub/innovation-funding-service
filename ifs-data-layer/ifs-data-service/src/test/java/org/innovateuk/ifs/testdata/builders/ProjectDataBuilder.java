@@ -7,7 +7,9 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.Viability;
@@ -28,6 +30,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -99,7 +102,6 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
                 updateFinanceChecks(data.getProject().getId(), org.getId());
             }
             if (generateSpendProfile) {
-                LOG.error("Generated spend profile for: " + data.getProject().getName());
                 spendProfileService.generateSpendProfile(data.getProject().getId()).getSuccess();
             }
         }));
@@ -155,11 +157,13 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         return with(data -> doAs(data.getProjectManager(), () -> {
             List<CompetitionDocument> competitionDocuments = competitionDocumentConfigRepository.findByCompetitionId(data.getApplication().getCompetition());
             competitionDocuments.stream()
-                    .forEach(competitionDocument -> addProjectDocument(data, competitionDocument.getId()));
+                    .forEach(competitionDocument -> uploadProjectDocument(data, competitionDocument.getId()));
+            submitProjectDocuments(data, competitionDocuments);
+            approveProjectDocument(competitionDocuments);
         }));
     }
 
-    private void addProjectDocument(ProjectData data, long documentConfigId)  {
+    private void uploadProjectDocument(ProjectData data, long documentConfigId)  {
         try {
             File file = new File(ProjectDataBuilder.class.getResource("/webtest.pdf").toURI());
             InputStream inputStream = new FileInputStream(file);
@@ -169,6 +173,27 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             LOG.error("Unable to create project document file", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private void submitProjectDocuments(ProjectData data, List<CompetitionDocument> competitionDocuments) {
+        Project project = projectRepository.findOne(data.getProject().getId());
+        project.setDocumentsSubmittedDate(ZonedDateTime.now());
+        /*
+        * This is needed as when uploading project documents, it is not linking it
+        * to the projects causing a null pointer when trying to submit and mark
+        * as approved
+        * */
+        project.setProjectDocuments(projectDocumentRepository.findAllByProjectId(data.getProject().getId()));
+        competitionDocuments.stream()
+                .forEach(competitionDocument -> documentsService.submitDocument(data.getProject().getId(), competitionDocument.getId()));
+    }
+
+    public ProjectDataBuilder approveProjectDocument(List<CompetitionDocument> competitionDocuments) {
+        return with(data -> {
+            ProjectDocumentDecision projectDocumentDecision = new ProjectDocumentDecision(true, null);
+            competitionDocuments.stream()
+                    .forEach(competitionDocument -> documentsService.documentDecision(data.getProject().getId(), competitionDocument.getId(), projectDocumentDecision));
+        });
     }
 
     public ProjectDataBuilder withBankDetails(String organisationName, String accountNumber, String sortCode, List<CsvUtils.OrganisationLine> organisationLines, boolean bankDetailsApproved) {

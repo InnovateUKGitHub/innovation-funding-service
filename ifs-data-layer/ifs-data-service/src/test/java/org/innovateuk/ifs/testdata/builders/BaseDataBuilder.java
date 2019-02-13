@@ -58,6 +58,7 @@ import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.documents.mapper.ProjectDocumentsMapper;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.documents.transactional.DocumentsService;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -185,6 +186,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationInnovationAreaService applicationInnovationAreaService;
     protected AssessorFormInputResponseService assessorFormInputResponseService;
     protected IneligibleOutcomeMapper ineligibleOutcomeMapper;
+    protected ProjectDocumentsMapper projectDocumentsMapper;
     protected ApplicationResearchCategoryService applicationResearchCategoryService;
     protected FinanceService financeService;
 
@@ -285,6 +287,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         assessorFormInputResponseService = serviceLocator.getBean(AssessorFormInputResponseService.class);
         applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
         ineligibleOutcomeMapper = serviceLocator.getBean(IneligibleOutcomeMapper.class);
+        projectDocumentsMapper = serviceLocator.getBean(ProjectDocumentsMapper.class);
         applicationResearchCategoryService = serviceLocator.getBean(ApplicationResearchCategoryService.class);
         compAdminEmail = serviceLocator.getCompAdminEmail();
         projectFinanceEmail = serviceLocator.getProjectFinanceEmail();
