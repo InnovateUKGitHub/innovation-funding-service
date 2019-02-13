@@ -26,7 +26,7 @@ public class CompetitionResource {
     private static final int CLOSING_SOON_AMOUNT = 3;
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
-    private static final String H2020_TYPE_NAME = "H2020";
+    private static final String H2020_TYPE_NAME = "Programme";
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
 
     private Long id;
@@ -138,6 +138,7 @@ public class CompetitionResource {
         return CompetitionStatus.OPEN.equals(competitionStatus);
     }
 
+    @JsonIgnore
     public boolean isH2020() {
         return H2020_TYPE_NAME.equals(competitionTypeName);
     }
