@@ -7,6 +7,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.junit.Test;
@@ -19,6 +20,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -44,9 +47,9 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     }
 
     @Test
-    public void testSycCrmContact() {
+    public void sycCrmContactExternal() {
         Long userId = 1L;
-        UserResource user = newUserResource().build();
+        UserResource user = newUserResource().withRoleGlobal(APPLICANT).build();
         List<OrganisationResource> organisations = newOrganisationResource().withCompaniesHouseNumber("Something", "Else").build(2);
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
         when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(organisations));
@@ -55,14 +58,36 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         ServiceResult<Void> result = service.syncCrmContact(userId);
 
         assertThat(result.isSuccess(), equalTo(true));
-        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchSilContact(user, organisations.get(0))));
-        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchSilContact(user, organisations.get(1))));
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchSilContactExternal(user, organisations.get(0))));
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchSilContactExternal(user, organisations.get(1))));
     }
 
-    private Predicate<SilContact> matchSilContact(UserResource user, OrganisationResource organisation) {
+    @Test
+    public void sycCrmContactMonitoringOfficer() {
+        Long userId = 1L;
+        UserResource user = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
+        when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
+        when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.syncCrmContact(userId);
+
+        assertThat(result.isSuccess(), equalTo(true));
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchSilContactMonitoringOfficer(user)));
+    }
+
+
+    private Predicate<SilContact> matchSilContactExternal(UserResource user, OrganisationResource organisation) {
         return silContact -> {
             assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf(user.getId())));
             assertThat(silContact.getOrganisation().getRegistrationNumber(), equalTo(organisation.getCompaniesHouseNumber()));
+            return true;
+        };
+    }
+
+    private Predicate<SilContact> matchSilContactMonitoringOfficer(UserResource user) {
+        return silContact -> {
+            assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf("IFSMO01")));
+            assertThat(silContact.getOrganisation().getRegistrationNumber(), equalTo(""));
             return true;
         };
     }
