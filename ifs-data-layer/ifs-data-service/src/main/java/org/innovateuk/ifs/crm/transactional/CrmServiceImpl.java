@@ -41,13 +41,13 @@ public class CrmServiceImpl implements CrmService {
 
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
-         return find(userService.getUserById(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
-            if (!user.getSuccess().isInternalUser()) {
-                return getUserOrganisationByUserIdOrCreateOrganisationForMonitoringOfficer(user.getSuccess()).andOnSuccess(organisations -> {
+         return userService.getUserById(userId).andOnSuccess(user -> {
+            if (!user.isInternalUser()) {
+                return organisationService.getAllByUserId(userId).andOnSuccess(organisations -> {
                     ServiceResult<Void> result = serviceSuccess();
                     for (OrganisationResource organisation : organisations) {
                         result = result.andOnSuccess(() -> {
-                            SilContact silContact = toSilContact(user.getSuccess(), organisation);
+                            SilContact silContact = toSilContact(user, organisation);
                             LOG.info(format("Updating CRM contact %s and organisation %s",
                                     silContact.getEmail(), silContact.getOrganisation().getName()));
                             return silCrmEndpoint.updateContact(silContact);
@@ -55,27 +55,16 @@ public class CrmServiceImpl implements CrmService {
                     }
                     return result;
                 });
+            } else {
+                if (user.hasRole(MONITORING_OFFICER)) {
+                    SilContact silContact = MOtoSilContact(user);
+                    LOG.info(format("Updating CRM contact %s and organisation %s",
+                            silContact.getEmail(), silContact.getOrganisation().getName()));
+                    return silCrmEndpoint.updateContact(silContact);
+                }
             }
             return serviceSuccess();
          });
-    }
-
-    private ServiceResult<List<OrganisationResource>> getUserOrganisationByUserIdOrCreateOrganisationForMonitoringOfficer(UserResource user) {
-        if (user.hasRole(MONITORING_OFFICER)) {
-            OrganisationResource monitoringOfficerOrganisationResource = createMonitoringOfficerOrganisation();
-            return serviceSuccess(singletonList(monitoringOfficerOrganisationResource));
-        }
-
-        return organisationService.getAllByUserId(user.getId());
-    }
-
-    private OrganisationResource createMonitoringOfficerOrganisation() {
-        OrganisationResource organisationResource = new OrganisationResource();
-        organisationResource.setName("IFS MO Company");
-        organisationResource.setCompaniesHouseNumber("");
-        organisationResource.setId(1L);
-
-        return organisationResource;
     }
 
     private SilContact toSilContact(UserResource user, OrganisationResource organisation) {
@@ -92,6 +81,24 @@ public class CrmServiceImpl implements CrmService {
         silOrganisation.setSrcSysOrgId(String.valueOf(organisation.getId()));
 
         silContact.setOrganisation(silOrganisation);
+
+        return silContact;
+    }
+
+    private SilContact MOtoSilContact(UserResource user) {
+        SilContact silContact = new SilContact();
+        silContact.setEmail(user.getEmail());
+        silContact.setFirstName(user.getFirstName());
+        silContact.setLastName(user.getLastName());
+        silContact.setTitle(Optional.ofNullable(user.getTitle()).map(Title::getDisplayName).orElse(null));
+        silContact.setSrcSysContactId(String.valueOf(user.getId()));
+
+        SilOrganisation moSilOrganisation = new SilOrganisation();
+        moSilOrganisation.setName("Test");
+        moSilOrganisation.setRegistrationNumber("123");
+        moSilOrganisation.setSrcSysOrgId(String.valueOf("IFS1000"));
+
+        silContact.setOrganisation(moSilOrganisation);
 
         return silContact;
     }
