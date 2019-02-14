@@ -43,10 +43,6 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
     @Mock
     protected GrantMapper grantMapper;
 
-    @Spy
-    protected GrantProcessApplicationFilter grantProcessApplicationFilter =
-            new GrantProcessApplicationFilterImpl(null);
-
     @Override
     protected GrantServiceImpl supplyServiceUnderTest() {
         return new GrantServiceImpl();
