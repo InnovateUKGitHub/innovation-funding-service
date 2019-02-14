@@ -698,15 +698,14 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void updateEmail() {
-
-        User user = newUser().build();
         String updateEmail = "new@gmail.com";
+        User user = newUser().withUid("uid").withEmailAddress(updateEmail).build();
 
         List<Invite> invite = singletonList(new RoleInvite("Mister", "mister@email.com", "", APPLICANT, OPENED));
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(invite);
-        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceSuccess("uid"));
+        when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
 
         ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
 
@@ -717,13 +716,13 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void updateEmailForNoInviteUsers() {
 
-        User user = newUser().build();
+        User user = newUser().withUid("uid").build();
         String updateEmail = "new@gmail.com";
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(emptyList());
         user.setEmail(updateEmail);
-        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceSuccess("uid"));
+        when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
 
         ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
 
@@ -734,11 +733,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void updateEmailAndDisplayErrorIfDuplicateEmailHasBeenFound() {
 
-        User user = newUser().withEmailAddress("new@gmail.com").build();
+        User user = newUser().withUid("uid").withEmailAddress("new@gmail.com").build();
         String updateEmail = "new@gmail.com";
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(USERS_DUPLICATE_EMAIL_ADDRESS));
+        when(idpServiceMock.updateUserEmail(user.getUid(),user.getEmail())).thenReturn(ServiceResult.serviceFailure(USERS_DUPLICATE_EMAIL_ADDRESS));
 
         ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
 
