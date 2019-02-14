@@ -94,9 +94,9 @@ public class CrmServiceImpl implements CrmService {
         silContact.setSrcSysContactId(String.valueOf(user.getId()));
 
         SilOrganisation moSilOrganisation = new SilOrganisation();
-        moSilOrganisation.setName("Test");
-        moSilOrganisation.setRegistrationNumber("123");
-        moSilOrganisation.setSrcSysOrgId(String.valueOf("IFS1000"));
+        moSilOrganisation.setName("IFS MO Company");
+        moSilOrganisation.setRegistrationNumber("");
+        moSilOrganisation.setSrcSysOrgId(String.valueOf("IFSMO01"));
 
         silContact.setOrganisation(moSilOrganisation);
 
