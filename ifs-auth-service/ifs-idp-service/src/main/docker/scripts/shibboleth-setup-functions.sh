@@ -2,7 +2,7 @@
 
 #
 # This file contains shell functions that assist with the generation of shibboleth configuration files
-# such as IDP/SP entity descriptor XML files with place holder replacement.
+# such as IDP/SP entity descriptor XML files with placeholder replacement.
 #
 
 #
