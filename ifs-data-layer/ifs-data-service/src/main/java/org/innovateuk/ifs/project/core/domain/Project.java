@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
+import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
@@ -58,6 +59,9 @@ public class Project implements ProcessActivity {
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
+
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectMonitoringOfficer> projectMonitoringOfficers = new ArrayList<>();
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
@@ -296,5 +300,9 @@ public class Project implements ProcessActivity {
 
     private boolean projectUserForUser(User user, ProjectUser projectUser) {
         return projectUser.getUser().getId().equals(user.getId());
+    }
+
+    public List<ProjectMonitoringOfficer> getProjectMonitoringOfficers() {
+        return projectMonitoringOfficers;
     }
 }

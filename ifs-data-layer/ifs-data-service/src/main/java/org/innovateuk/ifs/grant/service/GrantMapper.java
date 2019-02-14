@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
@@ -123,19 +124,15 @@ class GrantMapper {
                 Role.INNOVATION_LEAD,
                 innovationLeadUser.getEmail());
 
-//        TODO IFS-5093 implement MO.
-//        User monitoringOfficer = null;
-//        Participant monitoringOfficerParticipant = toSimpleContactParticipant(
-//                monitoringOfficer.getId(),
-//                Role.MONITORING_OFFICER,
-//                monitoringOfficer.getEmail());
+        List<Participant> monitoringOfficerParticipants = simpleMap(project.getProjectMonitoringOfficers(),
+                mo -> toSimpleContactParticipant(mo.getUser().getId(), Role.MONITORING_OFFICER, mo.getUser().getEmail()));
 
         List<Participant> fullParticipantList = combineLists(
                 financeContactParticipants,
-                projectManagerParticipant,
-                innovationLeadParticipant //,
-                // monitoringOfficerParticipant
-                );
+                singletonList(projectManagerParticipant),
+                singletonList(innovationLeadParticipant),
+                monitoringOfficerParticipants
+        );
 
         grant.setParticipants(fullParticipantList);
 
