@@ -37,7 +37,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.monitor.transactional.ProjectMonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_INVITE;
@@ -113,7 +112,7 @@ public class ProjectMonitoringOfficerServiceImpl extends InviteService<Monitorin
     }
 
     private ServiceResult<UserResource> validateUserInviteNotPending(UserResource invitedUser) {
-        boolean foundPendingInvite = monitoringOfficerInviteRepository.existsByStatusAndEmail(SENT, invitedUser.getEmail());
+        boolean foundPendingInvite = monitoringOfficerInviteRepository.sentInviteExistsByEmail(invitedUser.getEmail());
         return foundPendingInvite ? serviceFailure(MONITORING_OFFICER_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess(invitedUser);
     }
 
@@ -226,6 +225,5 @@ public class ProjectMonitoringOfficerServiceImpl extends InviteService<Monitorin
 
     private void addMonitoringOfficerRoleToUser(User user) {
         user.addRole(MONITORING_OFFICER);
-//        userRepository.save(user);
     }
 }

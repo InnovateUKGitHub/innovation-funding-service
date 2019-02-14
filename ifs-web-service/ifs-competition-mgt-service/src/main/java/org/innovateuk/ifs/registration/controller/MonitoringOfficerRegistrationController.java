@@ -11,7 +11,6 @@ import org.innovateuk.ifs.registration.populator.MonitoringOfficerRegistrationMo
 import org.innovateuk.ifs.registration.service.MonitoringOfficerService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,26 +37,20 @@ public class MonitoringOfficerRegistrationController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    @Autowired
     private MonitoringOfficerRegistrationModelPopulator monitoringOfficerRegistrationModelPopulator;
-
-    @Autowired
     private CompetitionSetupMonitoringOfficerRestService competitionSetupMonitoringOfficerRestService;
-
-    @Autowired
     private MonitoringOfficerService monitoringOfficerService;
-
-    @Autowired
     private NavigationUtils navigationUtils;
 
     public MonitoringOfficerRegistrationController(MonitoringOfficerRegistrationModelPopulator monitoringOfficerRegistrationModelPopulator,
                                                    CompetitionSetupMonitoringOfficerRestService competitionSetupMonitoringOfficerRestService,
-                                                   MonitoringOfficerService monitoringOfficerService) {
+                                                   MonitoringOfficerService monitoringOfficerService,
+                                                   NavigationUtils navigationUtils) {
         this.monitoringOfficerRegistrationModelPopulator = monitoringOfficerRegistrationModelPopulator;
         this.competitionSetupMonitoringOfficerRestService = competitionSetupMonitoringOfficerRestService;
         this.monitoringOfficerService = monitoringOfficerService;
+        this.navigationUtils = navigationUtils;
     }
-
 
     @GetMapping("/{inviteHash}/register")
     public String openInvite(@PathVariable("inviteHash") String inviteHash,

@@ -48,7 +48,7 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
     @Override
     protected MonitoringOfficerRegistrationController supplyControllerUnderTest() {
         return new MonitoringOfficerRegistrationController(monitoringOfficerRegistrationModelPopulatorMock,
-                competitionSetupMonitoringOfficerRestServiceMock, monitoringOfficerServiceMock);
+                competitionSetupMonitoringOfficerRestServiceMock, monitoringOfficerServiceMock, navigationUtilsMock);
     }
 
     @Test
