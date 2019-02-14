@@ -41,30 +41,30 @@ public class CrmServiceImpl implements CrmService {
 
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
-         return userService.getUserById(userId).andOnSuccess(user -> {
-            if (!user.isInternalUser()) {
-                return organisationService.getAllByUserId(userId).andOnSuccess(organisations -> {
-                    ServiceResult<Void> result = serviceSuccess();
-                    for (OrganisationResource organisation : organisations) {
-                        result = result.andOnSuccess(() -> {
-                            SilContact silContact = toSilContact(user, organisation);
-                            LOG.info(format("Updating CRM contact %s and organisation %s",
-                                    silContact.getEmail(), silContact.getOrganisation().getName()));
-                            return silCrmEndpoint.updateContact(silContact);
-                        });
-                    }
-                    return result;
-                });
+        return userService.getUserById(userId).andOnSuccess(user -> {
+            if (user.hasRole(MONITORING_OFFICER)) {
+                SilContact silContact = toSilContactMonitoringOfficer(user);
+                LOG.info(format("Updating CRM contact %s and organisation %s",
+                        silContact.getEmail(), silContact.getOrganisation().getName()));
+                return silCrmEndpoint.updateContact(silContact);
             } else {
-                if (user.hasRole(MONITORING_OFFICER)) {
-                    SilContact silContact = toSilContactMonitoringOfficer(user);
-                    LOG.info(format("Updating CRM contact %s and organisation %s",
-                            silContact.getEmail(), silContact.getOrganisation().getName()));
-                    return silCrmEndpoint.updateContact(silContact);
+                if (!user.isInternalUser()) {
+                    return organisationService.getAllByUserId(userId).andOnSuccess(organisations -> {
+                        ServiceResult<Void> result = serviceSuccess();
+                        for (OrganisationResource organisation : organisations) {
+                            result = result.andOnSuccess(() -> {
+                                SilContact silContact = toSilContact(user, organisation);
+                                LOG.info(format("Updating CRM contact %s and organisation %s",
+                                        silContact.getEmail(), silContact.getOrganisation().getName()));
+                                return silCrmEndpoint.updateContact(silContact);
+                            });
+                        }
+                        return result;
+                    });
                 }
             }
             return serviceSuccess();
-         });
+        });
     }
 
     private SilContact toSilContact(UserResource user, OrganisationResource organisation) {

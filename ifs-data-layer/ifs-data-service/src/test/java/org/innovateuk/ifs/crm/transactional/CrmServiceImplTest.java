@@ -86,7 +86,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
     private Predicate<SilContact> matchSilContactMonitoringOfficer(UserResource user) {
         return silContact -> {
-            assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf("IFSMO01")));
+            assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf(user.getId())));
             assertThat(silContact.getOrganisation().getRegistrationNumber(), equalTo(""));
             return true;
         };
