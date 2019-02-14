@@ -174,6 +174,13 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         }));
     }
 
+    public ProjectDataBuilder withPublishGrantoffletter() {
+        return with(data -> doAs(anyProjectFinanceUser(), () -> {
+            LOG.error("sending grant offer letter");
+            grantOfferLetterService.sendGrantOfferLetter(data.getProject().getId());
+        }));
+    }
+
     private void uploadProjectDocument(ProjectData data, long documentConfigId)  {
         try {
             File file = new File(ProjectDataBuilder.class.getResource("/webtest.pdf").toURI());

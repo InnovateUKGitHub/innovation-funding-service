@@ -63,6 +63,7 @@ import org.innovateuk.ifs.project.documents.mapper.ProjectDocumentsMapper;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.documents.transactional.DocumentsService;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
+import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
@@ -191,6 +192,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProjectDocumentsMapper projectDocumentsMapper;
     protected ApplicationResearchCategoryService applicationResearchCategoryService;
     protected FinanceService financeService;
+    protected GrantOfferLetterService grantOfferLetterService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -292,6 +294,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         ineligibleOutcomeMapper = serviceLocator.getBean(IneligibleOutcomeMapper.class);
         projectDocumentsMapper = serviceLocator.getBean(ProjectDocumentsMapper.class);
         applicationResearchCategoryService = serviceLocator.getBean(ApplicationResearchCategoryService.class);
+        grantOfferLetterService = serviceLocator.getBean(GrantOfferLetterService.class);
         compAdminEmail = serviceLocator.getCompAdminEmail();
         projectFinanceEmail = serviceLocator.getProjectFinanceEmail();
     }

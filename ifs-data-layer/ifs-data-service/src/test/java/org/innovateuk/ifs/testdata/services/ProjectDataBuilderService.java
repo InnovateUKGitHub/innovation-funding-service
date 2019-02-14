@@ -81,6 +81,9 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
         UnaryOperator<ProjectDataBuilder> setProjectDocumentsIfNecessary =
                 builder -> line.projectDocumentsUploaded ? builder.withProjectDocuments() : builder;
 
+        UnaryOperator<ProjectDataBuilder> publishGrantOffLetterIfNecessary =
+                builder -> line.publishGrantOffLetter ? builder.withPublishGrantoffletter() : builder;
+
         UnaryOperator<ProjectDataBuilder> setMonitoringOfficerIfNecessary =
                 builder -> !isBlank(line.moFirstName) ?
                         builder.withMonitoringOfficer(line.moFirstName, line.moLastName, line.moEmail, line.moPhoneNumber) : builder;
@@ -133,6 +136,7 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
                                 andThen(approveFinanceChecksIfNecessary).
                                 andThen(approveSpendProfileIfNecessary).
                                 andThen(setProjectDocumentsIfNecessary).
+                                andThen(publishGrantOffLetterIfNecessary).
                                 apply(baseBuilder).
                                 build())
         );

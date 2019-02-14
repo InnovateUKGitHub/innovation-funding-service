@@ -125,6 +125,7 @@ public class CsvUtils {
         public Boolean generateSpendProfile;
         public Boolean uploadSpendProfile;
         public Boolean approveSpendProfile;
+        public Boolean publishGrantOffLetter;
 
         private ProjectLine(List<String> line) {
             int i = 0;
@@ -178,6 +179,7 @@ public class CsvUtils {
             generateSpendProfile = nullableBoolean(line.get(i++)) && organisationsWithApprovedFinanceChecks && bankDetailsApproved;
             uploadSpendProfile = nullableBoolean(line.get(i++)) && generateSpendProfile;
             approveSpendProfile = nullableBoolean(line.get(i++)) && uploadSpendProfile && generateSpendProfile;
+            publishGrantOffLetter = nullableBoolean(line.get(i++)) && approveSpendProfile;
         }
     }
 
