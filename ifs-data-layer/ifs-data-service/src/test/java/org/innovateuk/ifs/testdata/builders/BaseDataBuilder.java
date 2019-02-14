@@ -28,6 +28,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
+import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
@@ -54,8 +55,12 @@ import org.innovateuk.ifs.organisation.transactional.OrganisationTypeService;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.documents.mapper.ProjectDocumentsMapper;
+import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
+import org.innovateuk.ifs.project.documents.transactional.DocumentsService;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
@@ -166,6 +171,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected QuestionRepository questionRepository;
     protected FormInputRepository formInputRepository;
     protected FileEntryRepository fileEntryRepository;
+    protected ProjectDocumentRepository projectDocumentRepository;
+    protected DocumentsService documentsService;
+    protected ProjectRepository projectRepository;
+    protected CompetitionDocumentConfigRepository competitionDocumentConfigRepository;
     protected ApplicationFinanceRepository applicationFinanceRepository;
     protected ProjectUserRepository projectUserRepository;
     protected BankDetailsService bankDetailsService;
@@ -177,6 +186,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationInnovationAreaService applicationInnovationAreaService;
     protected AssessorFormInputResponseService assessorFormInputResponseService;
     protected IneligibleOutcomeMapper ineligibleOutcomeMapper;
+    protected ProjectDocumentsMapper projectDocumentsMapper;
     protected ApplicationResearchCategoryService applicationResearchCategoryService;
     protected FinanceService financeService;
 
@@ -251,6 +261,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         questionSetupTemplateService = serviceLocator.getBean(QuestionSetupTemplateService.class);
         formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
+        documentsService = serviceLocator.getBean(DocumentsService.class);
+        projectDocumentRepository = serviceLocator.getBean(ProjectDocumentRepository.class);
+        projectRepository = serviceLocator.getBean(ProjectRepository.class);
+        competitionDocumentConfigRepository = serviceLocator.getBean(CompetitionDocumentConfigRepository.class);
         applicationFinanceRepository = serviceLocator.getBean(ApplicationFinanceRepository.class);
         projectUserRepository = serviceLocator.getBean(ProjectUserRepository.class);
         bankDetailsService = serviceLocator.getBean(BankDetailsService.class);
@@ -273,6 +287,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         assessorFormInputResponseService = serviceLocator.getBean(AssessorFormInputResponseService.class);
         applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
         ineligibleOutcomeMapper = serviceLocator.getBean(IneligibleOutcomeMapper.class);
+        projectDocumentsMapper = serviceLocator.getBean(ProjectDocumentsMapper.class);
         applicationResearchCategoryService = serviceLocator.getBean(ApplicationResearchCategoryService.class);
         compAdminEmail = serviceLocator.getCompAdminEmail();
         projectFinanceEmail = serviceLocator.getProjectFinanceEmail();

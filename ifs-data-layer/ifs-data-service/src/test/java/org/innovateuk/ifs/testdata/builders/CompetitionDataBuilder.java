@@ -108,7 +108,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 List<OrganisationTypeEnum> leadApplicantTypes,
                                                 Integer researchRatio,
                                                 Boolean resubmission,
-                                                String nonIfsUrl, FundingType fundingType) {
+                                                String nonIfsUrl,
+                                                FundingType fundingType,
+                                                CompetitionCompletionStage completionStage) {
 
         return asCompAdmin(data -> {
 
@@ -156,6 +158,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setNonIfsUrl(nonIfsUrl);
                 competition.setIncludeJesForm(true); //TODO IFS-4719 web test data needs to be configurable.
                 competition.setFundingType(fundingType);
+                competition.setCompletionStage(completionStage);
             });
         });
     }

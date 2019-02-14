@@ -12,6 +12,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.*;
@@ -29,6 +30,7 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
@@ -149,18 +151,21 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     public List<ApplicationFinanceData> createApplicationFinances(
             ApplicationData applicationData,
             ApplicationLine applicationLine,
-            List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines) {
+            List<ApplicationOrganisationFinanceBlock> applicationFinanceLines,
+            List<ExternalUserLine> externalUsers) {
 
         if (!applicationLine.createFinanceResponses) {
             return emptyList();
         }
+
+        Map<String, String> usersOrganisations = simpleToMap(externalUsers, user -> user.emailAddress, user -> user.organisationName);
 
         List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
 
         List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
 
             UserResource user = retrieveUserByEmail(email);
-            OrganisationResource organisation = retrieveOrganisationByUserId(user.getId());
+            OrganisationResource organisation = organisationByName(usersOrganisations.get(email));
 
             return Triple.of(user.getEmail(), organisation.getName(),
                     OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
@@ -335,21 +340,23 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
     public ApplicationData createApplication(
             CompetitionData competition,
-            CsvUtils.ApplicationLine line,
-            List<InviteLine> inviteLines) {
+            ApplicationLine line,
+            List<InviteLine> inviteLines,
+            List<ExternalUserLine> externalUsers) {
 
         UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
 
-        long where_do_we_get_the_org_from = 123L;
+        Map<String, String> usersOrganisations = simpleToMap(externalUsers, user -> user.emailAddress, user -> user.organisationName);
+        Organisation org = organisationRepository.findOneByName(usersOrganisations.get(line.leadApplicant));
 
         ApplicationDataBuilder baseBuilder = applicationDataBuilder.withCompetition(competition.getCompetition()).
-                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission, where_do_we_get_the_org_from).
+                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission, org.getId()).
                 withInnovationArea(line.innovationArea).
                 withStartDate(line.startDate).
                 withDurationInMonths(line.durationInMonths);
 
         for (String collaborator : line.collaborators) {
-            baseBuilder = baseBuilder.inviteCollaborator(retrieveUserByEmail(collaborator));
+            baseBuilder = baseBuilder.inviteCollaborator(retrieveUserByEmail(collaborator), organisationRepository.findOneByName(usersOrganisations.get(collaborator)));
         }
 
         List<CsvUtils.InviteLine> pendingInvites = simpleFilter(inviteLines,
@@ -517,6 +524,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 withUser(user).
                 withAcademicCosts(costs -> costs.
                         withTsbReference("My REF").
+                        withGrantClaim(100).
+                        withOtherFunding("Lottery", LocalDate.of(2016, 4, 1), bd("2468")).
                         withDirectlyIncurredStaff(bd("22")).
                         withDirectlyIncurredTravelAndSubsistence(bd("44")).
                         withDirectlyIncurredOtherCosts(bd("66")).
