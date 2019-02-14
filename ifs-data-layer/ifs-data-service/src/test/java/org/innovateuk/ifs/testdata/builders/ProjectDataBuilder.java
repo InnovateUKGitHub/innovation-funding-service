@@ -7,6 +7,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
@@ -38,6 +39,7 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 
 /**
  * Generates data from Competitions, including any Applications taking part in this Competition
@@ -156,6 +158,13 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     public ProjectDataBuilder withProjectDocuments() {
         return with(data -> doAs(data.getProjectManager(), () -> {
             List<CompetitionDocument> competitionDocuments = competitionDocumentConfigRepository.findByCompetitionId(data.getApplication().getCompetition());
+            List<PartnerOrganisation> projectOrganisations = partnerOrganisationRepository.findByProjectId(data.getProject().getId());
+
+            if (projectOrganisations.size() == 1) {
+                competitionDocuments.removeIf(
+                        document -> document.getTitle().equals(COLLABORATION_AGREEMENT_TITLE));
+            }
+
             competitionDocuments.stream()
                     .forEach(competitionDocument -> uploadProjectDocument(data, competitionDocument.getId()));
             LOG.error("Uploaded competition documents");
@@ -180,11 +189,6 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     private void submitProjectDocuments(ProjectData data, List<CompetitionDocument> competitionDocuments) {
         Project project = projectRepository.findOne(data.getProject().getId());
         project.setDocumentsSubmittedDate(ZonedDateTime.now());
-        /*
-        * This is needed as when uploading project documents, it is not linking it
-        * to the projects causing a null pointer when trying to submit and mark
-        * as approved
-        * */
         project.setProjectDocuments(projectDocumentRepository.findAllByProjectId(data.getProject().getId()));
         competitionDocuments.stream()
                 .forEach(competitionDocument -> documentsService.submitDocument(data.getProject().getId(), competitionDocument.getId()));
