@@ -153,7 +153,7 @@ The internal user invites the applicant to assess another competition
 *** Keywords ***
 the assessor fills in all fields
     Select From List By Index                     id = rejectReasonValid  3
-    The user should not see the text in the page  ${empty_field_warning_message}
+    The user should not see the element           jQuery = .govuk-error-message:contains("${empty_field_warning_message}")
     The user enters text to a text field          id = rejectComment    Unable to assess this application.
 
 the user should not see the validation error in the create assessor form

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.registration.service;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -157,7 +157,7 @@ public class AcceptProjectInviteController {
         return restSuccess(ACCEPT_INVITE_FAILURE);
     }
 
-    public static ValidationMessages errorMessages(UserResource loggedInUser, ProjectInviteResource invite) {
+    public static ValidationMessages errorMessages(UserResource loggedInUser, ProjectUserInviteResource invite) {
         ValidationMessages errors = new ValidationMessages();
         if (!invite.getStatus().equals(SENT)) {
             errors.addError(globalError("registration.INVITE_ALREADY_ACCEPTED"));
@@ -167,7 +167,7 @@ public class AcceptProjectInviteController {
         return errors;
     }
 
-    private Supplier<RestResult<ProjectInviteResource>> inviteByHash(String hash) {
+    private Supplier<RestResult<ProjectUserInviteResource>> inviteByHash(String hash) {
         return () -> projectInviteRestService.getInviteByHash(hash);
     }
 

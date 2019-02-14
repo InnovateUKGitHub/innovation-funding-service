@@ -133,8 +133,7 @@ public class CompetitionSetupCompetitionDocumentControllerDocumentation extends 
 
         long competitionId = 1L;
 
-        List<CompetitionDocumentResource> competitionDocumentResources = newCompetitionDocumentResource()
-                .build(2);
+        List<CompetitionDocumentResource> competitionDocumentResources = newCompetitionDocumentResource().build(2);
 
         when(competitionSetupDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(competitionDocumentResources));
 

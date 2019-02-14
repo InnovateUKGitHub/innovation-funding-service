@@ -5,7 +5,7 @@ Documentation     INFUND-6794: As an applicant I will be invited to add funding 
 ...
 ...               IFS-2659: UJ - External - Finances - Able to submit without Other funding
 Suite Setup       Custom Suite Setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -121,6 +121,7 @@ Read only view of the other funding
 Custom Suite Setup
     Set predefined date variables
     the user logs-in in new browser                   &{lead_applicant_credentials}
+    Connect to database   @{database}
     ${applicationId} =  get application id by name    ${applicationName}
     the user navigates to the page                    ${server}/application/${applicationId}
     the user clicks the button/link                   link = Application details
@@ -178,3 +179,7 @@ the user changes the research category
     [Documentation]    INFUND-8260
     the user clicks the button twice   css = label[for="researchCategory2"]
     the user clicks the button/link    jQuery = button:contains(Save)
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

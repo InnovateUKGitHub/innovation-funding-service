@@ -22,7 +22,11 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.project.monitor.domain.MonitoringOfficerInvite;
+import org.innovateuk.ifs.project.monitor.repository.MonitoringOfficerInviteRepository;
+import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
@@ -129,6 +133,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
     @Mock
     private StakeholderRepository stakeholderRepository;
+
+    @Mock
+    private MonitoringOfficerInviteRepository monitoringOfficerInviteRepositoryMock;
+
+    @Mock
+    private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Test
     public void createUser() {
@@ -570,6 +580,39 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         verify(userMapperMock).mapToResource(savedUser);
         verify(passwordPolicyValidatorMock).validatePassword("thepassword", userToCreate);
         verify(registrationEmailServiceMock).sendUserVerificationEmail(userToCreate, Optional.empty(), Optional.empty());
+    }
+
+    @Test
+    public void createMonitoringOfficer() {
+        String email = "test@test.test";
+        String hash = "hash";
+        String password = "password";
+        String uid = "uid";
+
+        MonitoringOfficerRegistrationResource registrationResource =
+                new MonitoringOfficerRegistrationResource("first", "last", "phone", password);
+
+        User userToCreate = newUser()
+                .withId((Long) null)
+                .withFirstName(registrationResource.getFirstName())
+                .withLastName(registrationResource.getLastName())
+                .withPhoneNumber(registrationResource.getPhoneNumber())
+                .withEmailAddress(email)
+                .withRoles(singleton(Role.MONITORING_OFFICER))
+                .withUid(uid)
+                .build();
+
+        MonitoringOfficerInvite invite = new MonitoringOfficerInvite("name", email, hash, InviteStatus.OPENED );
+
+        when(monitoringOfficerInviteRepositoryMock.getByHash(hash)).thenReturn(invite);
+        when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
+        when(idpServiceMock.createUserRecordWithUid(email, password)).thenReturn(serviceSuccess(uid));
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
+        when(userMapperMock.mapToDomain(any(UserResource.class))).thenReturn(userToCreate);
+        when(idpServiceMock.activateUser(uid)).thenReturn(serviceSuccess(uid));
+        when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
+
+        service.createMonitoringOfficer(hash, registrationResource).getSuccess();
     }
 
     private void setUpUsersForEditInternalUserSuccess() {

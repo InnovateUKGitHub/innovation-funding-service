@@ -6,12 +6,12 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
@@ -39,7 +39,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -184,6 +184,26 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                                 projectWorkflowHandler.projectWithdrawn(existingProject, user) ?
                                 serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN))
         );
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> handleProjectOffline(long projectId) {
+
+        return getProject(projectId).andOnSuccess(
+                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.handleProjectOffline(existingProject, user) ?
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_HANDLED_OFFLINE)));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> completeProjectOffline(long projectId) {
+
+        return getProject(projectId).andOnSuccess(
+                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        projectWorkflowHandler.completeProjectOffline(existingProject, user) ?
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_COMPLETED_OFFLINE)));
     }
 
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {

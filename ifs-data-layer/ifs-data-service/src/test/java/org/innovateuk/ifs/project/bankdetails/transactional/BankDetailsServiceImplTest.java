@@ -62,6 +62,7 @@ import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResource
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -288,7 +289,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
 
         List<BankDetailsReviewResource> pendingBankDetails = Collections.singletonList(new BankDetailsReviewResource(1L, 11L, "Comp1", 12L, "project1", 22L, "Org1"));
 
-        when(bankDetailsRepositoryMock.getPendingBankDetailsApprovalsForProjectStateNotIn(singleton(ProjectState.WITHDRAWN))).thenReturn(pendingBankDetails);
+        when(bankDetailsRepositoryMock.getPendingBankDetailsApprovalsForProjectStateNotIn(asList(WITHDRAWN, HANDLED_OFFLINE, COMPLETED_OFFLINE))).thenReturn(pendingBankDetails);
 
         ServiceResult<List<BankDetailsReviewResource>> result = service.getPendingBankDetailsApprovals();
 
@@ -301,7 +302,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
 
         Long pendingBankDetailsCount = 8L;
 
-        when(bankDetailsRepositoryMock.countPendingBankDetailsApprovalsForProjectStateNotIn(singleton(ProjectState.WITHDRAWN))).thenReturn(pendingBankDetailsCount);
+        when(bankDetailsRepositoryMock.countPendingBankDetailsApprovalsForProjectStateNotIn(asList(WITHDRAWN, HANDLED_OFFLINE, COMPLETED_OFFLINE))).thenReturn(pendingBankDetailsCount);
 
         ServiceResult<Long> result = service.countPendingBankDetailsApprovals();
 

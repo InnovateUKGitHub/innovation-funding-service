@@ -13,7 +13,7 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 ...
 ...               IFS-1881 Project Setup internal project dashboard navigation
 Suite Setup       Custom suite setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../10__Project_setup/PS_Common.robot
@@ -89,7 +89,6 @@ Upcoming competitions calculations
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
     [Tags]    MySQL
-    [Setup]    Connect to Database    @{database}
     Get competitions id and set it as suite variable  ${READY_TO_OPEN_COMPETITION_NAME}
     ${openDate}  ${submissionDate} =  Save competition's current dates  ${competitionId}
 
@@ -132,6 +131,7 @@ Non IFS competitions do not appear in search results
 
 *** Keywords ***
 Custom suite setup
+    Connect to Database  @{database}
     Change the open date of the Competition in the database to tomorrow  ${READY_TO_OPEN_COMPETITION}
     The user logs-in in new browser  &{Comp_admin1_credentials}
 
@@ -157,3 +157,7 @@ check calculations on one page
     ${NO_OF_COMP_Page_one} =    Get Element Count    //section/div/ul/li
     ${length_summary} =    Get text    css = form .govuk-body span    #gets the total number
     Should Be Equal As Integers    ${length_summary}    ${NO_OF_COMP_Page_one}
+
+Custom suite teardown
+    the user closes the browser
+    Disconnect from database

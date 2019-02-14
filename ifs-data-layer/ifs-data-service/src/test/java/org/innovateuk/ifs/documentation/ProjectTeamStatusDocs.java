@@ -6,6 +6,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class ProjectTeamStatusDocs {
     public static final FieldDescriptor[] projectTeamStatusResourceFields = {
-            fieldWithPath("partnerStatuses").description("Project status for each partners in the project")
+            fieldWithPath("partnerStatuses").description("Project status for each partners in the project"),
+            fieldWithPath("projectState").description("State of the project")
     };
 }

@@ -125,4 +125,32 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         )
                 ));
     }
+
+    @Test
+    public void handleProjectOffline() throws Exception {
+        Long projectId = 456L;
+        when(projectServiceMock.handleProjectOffline(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/handle-offline", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to handle offline")
+                        )
+                ));
+    }
+
+    @Test
+    public void completeProjectOffline() throws Exception {
+        Long projectId = 456L;
+        when(projectServiceMock.completeProjectOffline(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/complete-offline", projectId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to complete offline")
+                        )
+                ));
+    }
 }

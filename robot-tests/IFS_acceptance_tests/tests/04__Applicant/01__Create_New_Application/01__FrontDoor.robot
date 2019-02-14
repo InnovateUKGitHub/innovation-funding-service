@@ -6,7 +6,8 @@ Documentation    INFUND-6923 Create new public Competition listings page for App
 ...              IFS-247 As an applicant I am able to see the competitions in 'Competition listings' in reverse chronological order
 ...
 ...              IFS-1117 As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
-Suite Setup      The guest user opens the browser
+Suite Setup      Custom suite setup
+Suite Teardown   Custom suite teardown
 Force Tags       Applicant
 Resource         ../../../resources/defaultResources.robot
 Resource         ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -42,7 +43,6 @@ Guest user can see Competitions and their information
 Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
     [Tags]    MySQL  HappyPath
-    [Setup]  Connect to Database  @{database}
     Get competitions id and set it as suite variable  ${READY_TO_OPEN_COMPETITION_NAME}
     ${openDate}  ${submissionDate} =  Save competition's current dates  ${competitionId}
 
@@ -85,7 +85,6 @@ Guest user can see the public information of an unopened competition
 Registration is closed on Non-IFS competitition when the Registration date is in the past
     [Documentation]  IFS-38 IFS-1117
     [Tags]    MySQL
-    [Setup]  Connect to Database    @{database}
     Given Change the close date of the Competition in the database to tomorrow  ${NON_IFS_COMPETITION_NAME}
     And the registration date of the non-ifs competition belongs to the past    ${competition_ids['${NON_IFS_COMPETITION_NAME}']}
     When the user navigates to the page     ${server}/competition/${competition_ids['${NON_IFS_COMPETITION_NAME}']}/overview
@@ -173,3 +172,11 @@ the registration date of the non-ifs competition belongs to the past
     [Arguments]  ${competitionId}
     ${yesterday} =  get yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='REGISTRATION_DATE';
+
+Custom suite setup
+    The guest user opens the browser
+    Connect To Database   @{database}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

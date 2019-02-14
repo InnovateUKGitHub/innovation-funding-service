@@ -35,7 +35,7 @@ The email address does not stay in the cookie
     [Documentation]    INFUND_2510
     [Tags]
     Given Applicant goes to the registration form
-    Then the user should not see the text in the page  ${test_mailbox_one}+rto@gmail.com
+    Then the user should not see the element        jQuery = strong:contains("${test_mailbox_one}+rto@gmail.com")
 
 Non registered users sign-up companies house route
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1920 INFUND-1785 INFUND-9280

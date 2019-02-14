@@ -10,7 +10,7 @@ import javax.persistence.MappedSuperclass;
  * A Participant in a {@link ProcessActivity}.
  */
 @MappedSuperclass
-public abstract class Participant<P extends ProcessActivity, I extends Invite<P,I>, R extends ParticipantRole> {
+public abstract class Participant<P extends ProcessActivity, R extends ParticipantRole> {
 
     @Column(name = "participant_status_id")
     private ParticipantStatus status;
@@ -26,8 +26,6 @@ public abstract class Participant<P extends ProcessActivity, I extends Invite<P,
     }
 
     public abstract P getProcess();
-
-    public abstract I getInvite();
 
     public abstract R getRole();
 

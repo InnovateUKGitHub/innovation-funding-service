@@ -8,11 +8,11 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.ProjectInvite;
-import org.innovateuk.ifs.invite.mapper.ProjectInviteMapper;
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
+import org.innovateuk.ifs.invite.mapper.ProjectUserInviteMapper;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
-import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -42,12 +42,12 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
-public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> implements ProjectInviteService {
+public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> implements ProjectInviteService {
 
     private static final Log LOG = LogFactory.getLog(ProjectInviteServiceImpl.class);
 
@@ -55,10 +55,10 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     private String webBaseUrl;
 
     @Autowired
-    private ProjectInviteMapper inviteMapper;
+    private ProjectUserInviteMapper inviteMapper;
 
     @Autowired
-    private ProjectInviteRepository projectInviteRepository;
+    private ProjectUserInviteRepository projectUserInviteRepository;
 
     @Autowired
     private ProjectService projectService;
@@ -81,24 +81,24 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     }
 
     @Override
-    protected Class<ProjectInvite> getInviteClass() {
-        return ProjectInvite.class;
+    protected Class<ProjectUserInvite> getInviteClass() {
+        return ProjectUserInvite.class;
     }
 
     @Override
-    protected InviteRepository<ProjectInvite> getInviteRepository() {
-        return projectInviteRepository;
+    protected InviteRepository<ProjectUserInvite> getInviteRepository() {
+        return projectUserInviteRepository;
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveProjectInvite(ProjectInviteResource projectInviteResource) {
+    public ServiceResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
 
-        return validateProjectInviteResource(projectInviteResource).andOnSuccess(() ->
-                validateUserNotAlreadyInvited(projectInviteResource).andOnSuccess(() ->
-                        validateTargetUserIsValid(projectInviteResource).andOnSuccess(() -> {
+        return validateProjectInviteResource(projectUserInviteResource).andOnSuccess(() ->
+                validateUserNotAlreadyInvited(projectUserInviteResource).andOnSuccess(() ->
+                        validateTargetUserIsValid(projectUserInviteResource).andOnSuccess(() -> {
 
-                            ProjectInvite projectInvite = inviteMapper.mapToDomain(projectInviteResource);
+                            ProjectUserInvite projectInvite = inviteMapper.mapToDomain(projectUserInviteResource);
                             Errors errors = new BeanPropertyBindingResult(projectInvite, projectInvite.getClass().getName());
                             validator.validate(projectInvite, errors);
                             if (errors.hasErrors()) {
@@ -106,14 +106,14 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
                                 return serviceFailure(badRequestError(errors.toString()));
                             } else {
                                 projectInvite.setHash(generateInviteHash());
-                                projectInviteRepository.save(projectInvite);
+                                projectUserInviteRepository.save(projectInvite);
                                 return serviceSuccess();
                             }
                         })));
     }
 
-    private ProjectInviteResource mapInviteToInviteResource(ProjectInvite invite) {
-        ProjectInviteResource inviteResource = inviteMapper.mapToResource(invite);
+    private ProjectUserInviteResource mapInviteToInviteResource(ProjectUserInvite invite) {
+        ProjectUserInviteResource inviteResource = inviteMapper.mapToResource(invite);
         Organisation organisation = organisationRepository.findById(inviteResource.getLeadOrganisationId()).get();
         inviteResource.setLeadOrganisation(organisation.getName());
         ProjectResource project = projectService.getProjectById(inviteResource.getProject()).getSuccess();
@@ -122,17 +122,17 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     }
 
     @Override
-    public ServiceResult<ProjectInviteResource> getInviteByHash(String hash) {
+    public ServiceResult<ProjectUserInviteResource> getInviteByHash(String hash) {
         return getByHash(hash).andOnSuccessReturn(this::mapInviteToInviteResource);
     }
 
     @Override
-    public ServiceResult<List<ProjectInviteResource>> getInvitesByProject(Long projectId) {
+    public ServiceResult<List<ProjectUserInviteResource>> getInvitesByProject(Long projectId) {
         if (projectId == null) {
             return serviceFailure(new Error(PROJECT_INVITE_INVALID_PROJECT_ID, NOT_FOUND));
         }
-        List<ProjectInvite> invites = projectInviteRepository.findByProjectId(projectId);
-        List<ProjectInviteResource> inviteResources = invites.stream().map(this::mapInviteToInviteResource).collect(Collectors.toList());
+        List<ProjectUserInvite> invites = projectUserInviteRepository.findByProjectId(projectId);
+        List<ProjectUserInviteResource> inviteResources = invites.stream().map(this::mapInviteToInviteResource).collect(Collectors.toList());
         return serviceSuccess(Lists.newArrayList(inviteResources));
     }
 
@@ -141,7 +141,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     public ServiceResult<Void> acceptProjectInvite(String inviteHash, Long userId) {
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
-                ProjectInvite projectInvite = projectInviteRepository.save(invite.open());
+                ProjectUserInvite projectInvite = projectUserInviteRepository.save(invite.open());
                 return projectService.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId()).andOnSuccess(pu -> {
                     pu.setInvite(projectInvite);
                     projectUserRepository.save(pu.accept());
@@ -166,22 +166,22 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
                 .andOnSuccess(u -> u.map(ServiceResult::serviceSuccess).orElseGet(() -> serviceFailure(notFoundError(UserResource.class))));
     }
 
-    private ServiceResult<Void> validateProjectInviteResource(ProjectInviteResource projectInviteResource) {
+    private ServiceResult<Void> validateProjectInviteResource(ProjectUserInviteResource projectUserInviteResource) {
 
-        if (StringUtils.isEmpty(projectInviteResource.getEmail()) || StringUtils.isEmpty(projectInviteResource.getName())
-                || projectInviteResource.getProject() == null || projectInviteResource.getOrganisation() == null) {
+        if (StringUtils.isEmpty(projectUserInviteResource.getEmail()) || StringUtils.isEmpty(projectUserInviteResource.getName())
+                || projectUserInviteResource.getProject() == null || projectUserInviteResource.getOrganisation() == null) {
             return serviceFailure(PROJECT_INVITE_INVALID);
         }
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateUserNotAlreadyInvited(ProjectInviteResource invite) {
+    private ServiceResult<Void> validateUserNotAlreadyInvited(ProjectUserInviteResource invite) {
 
-        List<ProjectInvite> existingInvites = projectInviteRepository.findByProjectIdAndEmail(invite.getProject(), invite.getEmail());
+        List<ProjectUserInvite> existingInvites = projectUserInviteRepository.findByProjectIdAndEmail(invite.getProject(), invite.getEmail());
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT);
     }
 
-    private ServiceResult<Void> validateTargetUserIsValid(ProjectInviteResource invite) {
+    private ServiceResult<Void> validateTargetUserIsValid(ProjectUserInviteResource invite) {
 
         String targetEmail = invite.getEmail();
 
@@ -192,7 +192,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
                 orElse(serviceSuccess());
     }
 
-    private ServiceResult<Void> validateUserIsNotAlreadyOnProject(ProjectInviteResource invite, User user) {
+    private ServiceResult<Void> validateUserIsNotAlreadyOnProject(ProjectUserInviteResource invite, User user) {
 
         List<ProjectUser> existingUserEntryForProject = projectUserRepository.findByProjectIdAndUserIdAndRole(invite.getProject(), user.getId(), PROJECT_PARTNER);
 

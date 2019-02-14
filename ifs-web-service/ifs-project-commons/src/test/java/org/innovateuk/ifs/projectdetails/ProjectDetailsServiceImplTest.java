@@ -2,8 +2,8 @@ package org.innovateuk.ifs.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.service.ProjectDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -117,7 +117,7 @@ public class ProjectDetailsServiceImplTest {
     @Test
     public void testInviteProjectFinanceUser() throws Exception {
 
-        ProjectInviteResource invite = ProjectInviteResourceBuilder.newProjectInviteResource().build();
+        ProjectUserInviteResource invite = ProjectUserInviteResourceBuilder.newProjectUserInviteResource().build();
 
         when(projectDetailsRestService.inviteFinanceContact(anyLong(), any())).thenReturn(restSuccess());
 
@@ -131,7 +131,7 @@ public class ProjectDetailsServiceImplTest {
     @Test
     public void testInviteProjectManagerUser() throws Exception {
 
-        ProjectInviteResource invite = ProjectInviteResourceBuilder.newProjectInviteResource().build();
+        ProjectUserInviteResource invite = ProjectUserInviteResourceBuilder.newProjectUserInviteResource().build();
 
         when(projectDetailsRestService.inviteProjectManager(anyLong(), any())).thenReturn(restSuccess());
 
@@ -145,7 +145,7 @@ public class ProjectDetailsServiceImplTest {
     @Test
     public void testSaveProjectInvite() throws Exception {
 
-        ProjectInviteResource invite = ProjectInviteResourceBuilder.newProjectInviteResource().build();
+        ProjectUserInviteResource invite = ProjectUserInviteResourceBuilder.newProjectUserInviteResource().build();
 
         when(projectInviteRestService.saveProjectInvite(invite)).thenReturn(restSuccess());
 

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.invite;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel;
@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.innovateuk.ifs.CookieTestUtil.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
+import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -87,7 +87,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     public void testFailureUserExistsButIsLoggedInWithTheWrongUser() throws Exception {
         loggedInUser = newUserResource().withEmail("loggedInUser@example.com").build();
         UserResource inviteUser = newUserResource().withEmail("inviteUser@example.com").build();
-        ProjectInviteResource invite = newProjectInviteResource().withHash("hash").withStatus(SENT).withEmail(inviteUser.getEmail()).build();
+        ProjectUserInviteResource invite = newProjectUserInviteResource().withHash("hash").withStatus(SENT).withEmail(inviteUser.getEmail()).build();
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(true));
         mockMvc.perform(get(ACCEPT_INVITE_MAPPING + invite.getHash()))
@@ -101,7 +101,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     public void testFailureInviteAlreadyAccepted() throws Exception {
         UserResource inviteUser = newUserResource().withEmail("email@example.com").build();
         loggedInUser = inviteUser;
-        ProjectInviteResource invite = newProjectInviteResource().withHash("hash").withStatus(OPENED).withEmail(inviteUser.getEmail()).build();
+        ProjectUserInviteResource invite = newProjectUserInviteResource().withHash("hash").withStatus(OPENED).withEmail(inviteUser.getEmail()).build();
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(true));
         mockMvc.perform(get(ACCEPT_INVITE_MAPPING + invite.getHash()))
@@ -115,7 +115,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     public void testInviteEntryUserExistsButIsNotLoggedIn() throws Exception {
         loggedInUser = null; // No one logged in.
         UserResource user = newUserResource().withEmail("email@example.com").build();
-        ProjectInviteResource invite = newProjectInviteResource().withHash("hash").withStatus(SENT).withEmail(user.getEmail()).build();
+        ProjectUserInviteResource invite = newProjectUserInviteResource().withHash("hash").withStatus(SENT).withEmail(user.getEmail()).build();
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(true));
         MvcResult result = mockMvc.perform(get(ACCEPT_INVITE_MAPPING + invite.getHash()))
@@ -132,7 +132,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     public void testInviteEntryUserExistsAndIsLoggedIn() throws Exception {
         UserResource inviteUser = newUserResource().withEmail("inviteUser@example.com").build();
         loggedInUser = inviteUser;
-        ProjectInviteResource invite = newProjectInviteResource().withHash("hash").withStatus(SENT).withEmail(inviteUser.getEmail()).build();
+        ProjectUserInviteResource invite = newProjectUserInviteResource().withHash("hash").withStatus(SENT).withEmail(inviteUser.getEmail()).build();
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(true));
         MvcResult result = mockMvc.perform(get(ACCEPT_INVITE_MAPPING + invite.getHash()))
@@ -147,7 +147,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     @Test
     public void testInviteEntryUserDoesNotExistAndNotLoggedIn() throws Exception {
         loggedInUser = null;
-        ProjectInviteResource invite = newProjectInviteResource().withHash("hash").withStatus(SENT).withEmail("doesNotYetExist@example.com").build();
+        ProjectUserInviteResource invite = newProjectUserInviteResource().withHash("hash").withStatus(SENT).withEmail("doesNotYetExist@example.com").build();
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(false));
         mockMvc.perform(get(ACCEPT_INVITE_MAPPING + invite.getHash()))
@@ -159,7 +159,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     public void testAcceptInviteUserDoesNotYetExistShowProject() throws Exception {
         loggedInUser = null;
         OrganisationResource organisation = newOrganisationResource().build();
-        ProjectInviteResource invite = newProjectInviteResource().withHash("hash").withStatus(SENT).withEmail("doesNotYetExist@example.com").withProjectName("project name").withOrganisation(organisation.getId()).build();
+        ProjectUserInviteResource invite = newProjectUserInviteResource().withHash("hash").withStatus(SENT).withEmail("doesNotYetExist@example.com").withProjectName("project name").withOrganisation(organisation.getId()).build();
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(false));
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(invite.getOrganisation())).thenReturn(restSuccess(organisation));
@@ -178,7 +178,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
         UserResource inviteUser = newUserResource().withEmail("doesExist@example.com").build();
         loggedInUser = inviteUser;
         OrganisationResource organisation = newOrganisationResource().build();
-        ProjectInviteResource invite = newProjectInviteResource().
+        ProjectUserInviteResource invite = newProjectUserInviteResource().
                 withHash("hash").
                 withStatus(SENT).
                 withEmail(inviteUser.getEmail()).

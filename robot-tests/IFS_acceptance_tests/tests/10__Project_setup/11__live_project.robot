@@ -71,7 +71,7 @@ Grant offer letter section is read-only
     [Tags]  HappyPath
     When the user clicks the button/link        link = Grant offer letter
     Then the user should not see the element    jQuery = .govuk-button:contains("Send signed offer letter")
-    And the user should not see the text in the page    Remove
+    And the user should not see the element     jQuery = button:contains("Remove")
     And the user should not see the element     name = signedGrantOfferLetter
 
 Project dashboard shows message that the project is live for industrial partner
@@ -140,7 +140,7 @@ Grant offer letter section is read-only for industrial partner
     [Tags]
     When the user clicks the button/link        link = Grant offer letter
     Then the user should not see the element    jQuery = .govuk-button:contains("Send signed offer letter")
-    And the user should not see the text in the page    Remove
+    And the user should not see the element     jQuery = button:contains("Remove")
     And the user should not see the element     name = signedGrantOfferLetter
 
 Project dashboard shows message that the project is live for academic partner
@@ -209,14 +209,14 @@ Grant offer letter section is read-only for academic partner
     [Tags]
     When the user clicks the button/link                link = Grant offer letter
     Then the user should not see the element            jQuery = .govuk-button:contains("Send signed offer letter")
-    And the user should not see the text in the page    Remove
+    And the user should not see the element             jQuery = button:contains("Remove")
     And the user should not see the element             name = signedGrantOfferLetter
 
 *** Keywords ***
 the project is completed if it is not already complete
     The user logs-in in new browser  ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     the user navigates to the page   ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    ${project_not_live}  ${value} =  run keyword and ignore error without screenshots  the user should not see the text in the page  The project is live
+    ${project_not_live}  ${value} =  run keyword and ignore error without screenshots  the user should not see the element    jQuery = .success-alert:contains("The project is live")
     run keyword if  '${project_not_live}' == 'PASS'  complete the project
 
 complete the project

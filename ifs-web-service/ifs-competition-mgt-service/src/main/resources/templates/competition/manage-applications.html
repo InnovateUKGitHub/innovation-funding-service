@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.inAssessment} ? 'Manage applications' : 'Allocate Applications'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.inAssessment} ? 'Manage applications' : 'Allocate applications'" />
     </head>
 
     <body class="govuk-template__body competition-management">
@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Manage assessments',linkUrl=@{/assessment/competition/{id}(id=${model.competitionId})})" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage applications' : 'Allocate Applications',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='govuk-heading-xl'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage applications' : 'Allocate applications',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='govuk-heading-xl'" />
 
                 <p class="govuk-body govuk-!-margin-top-6">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
                 <form method="GET">

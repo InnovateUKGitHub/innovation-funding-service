@@ -5,6 +5,7 @@ import org.innovateuk.ifs.documentation.ProjectPartnerStatusResourceDocs;
 import org.innovateuk.ifs.documentation.ProjectStatusDocs;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.status.controller.StatusController;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBui
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -58,6 +60,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         withFinanceChecksStatus(PENDING, NOT_STARTED, COMPLETE).
                         withSpendProfileStatus(PENDING, ACTION_REQUIRED, COMPLETE).
                         withGrantOfferLetterStatus(PENDING, PENDING, PENDING).
+                        withProjectState(LIVE).
                         build(3)).
                 build();
 

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
@@ -52,7 +52,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
+import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -251,7 +251,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource project = newProjectResource().withId(projectId).build();
 
-        List<ProjectInviteResource> invitedUsers = newProjectInviteResource().build(2);
+        List<ProjectUserInviteResource> invitedUsers = newProjectUserInviteResource().build(2);
 
         OrganisationResource leadOrganisation = newOrganisationResource().build();
 
@@ -458,11 +458,11 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
-        ProjectInviteResource projectInviteResource = new ProjectInviteResource(invitedUserName, invitedUserEmail, projectId);
-        projectInviteResource.setUser(invitedUserId);
-        projectInviteResource.setOrganisation(organisationId);
-        projectInviteResource.setApplicationId(applicationId);
-        projectInviteResource.setLeadOrganisationId(leadOrganisation.getId());
+        ProjectUserInviteResource projectUserInviteResource = new ProjectUserInviteResource(invitedUserName, invitedUserEmail, projectId);
+        projectUserInviteResource.setUser(invitedUserId);
+        projectUserInviteResource.setOrganisation(organisationId);
+        projectUserInviteResource.setApplicationId(applicationId);
+        projectUserInviteResource.setLeadOrganisationId(leadOrganisation.getId());
 
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectDetailsService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), invitedUserId)).thenReturn(serviceSuccess());
@@ -472,8 +472,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(applicationService.getById(applicationId)).thenReturn(applicationResource);
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(userService.getOrganisationProcessRoles(applicationResource, organisationId)).thenReturn(emptyList());
-        when(projectDetailsService.saveProjectInvite(projectInviteResource)).thenReturn(serviceSuccess());
-        when(projectDetailsService.inviteFinanceContact(projectId, projectInviteResource)).thenReturn(serviceSuccess());
+        when(projectDetailsService.saveProjectInvite(projectUserInviteResource)).thenReturn(serviceSuccess());
+        when(projectDetailsService.inviteFinanceContact(projectId, projectUserInviteResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{id}/details/finance-contact", projectId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -603,8 +603,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andExpect(view().name("redirect:/project/" + projectId + "/details")).
                 andReturn();
 
-        verify(projectDetailsService, never()).saveProjectInvite(any(ProjectInviteResource.class));
-        verify(projectDetailsService, never()).inviteProjectManager(Mockito.anyLong(), Mockito.any(ProjectInviteResource.class));
+        verify(projectDetailsService, never()).saveProjectInvite(any(ProjectUserInviteResource.class));
+        verify(projectDetailsService, never()).inviteProjectManager(Mockito.anyLong(), Mockito.any(ProjectUserInviteResource.class));
     }
 
     @Test
@@ -631,7 +631,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(2);
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionResource.getId()).build();
 
-        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(2L)
+        List<ProjectUserInviteResource> existingInvites = newProjectUserInviteResource().withId(2L)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -654,8 +654,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andExpect(view().name("project/finance-contact")).
                 andReturn();
 
-        verify(projectDetailsService, never()).saveProjectInvite(any(ProjectInviteResource.class));
-        verify(projectDetailsService, never()).inviteFinanceContact(Mockito.anyLong(), Mockito.any(ProjectInviteResource.class));
+        verify(projectDetailsService, never()).saveProjectInvite(any(ProjectUserInviteResource.class));
+        verify(projectDetailsService, never()).inviteFinanceContact(Mockito.anyLong(), Mockito.any(ProjectUserInviteResource.class));
     }
 
     @Test
@@ -682,7 +682,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRole(PARTNER).
                 build(2);
 
-        ProjectInviteResource createdInvite = newProjectInviteResource().withId()
+        ProjectUserInviteResource createdInvite = newProjectUserInviteResource().withId()
                 .withProject(projectId).withName(invitedUserName)
                 .withEmail(invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -692,7 +692,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         createdInvite.setApplicationId(projectResource.getApplication());
         createdInvite.setApplicationId(applicationId);
 
-        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(2L)
+        List<ProjectUserInviteResource> existingInvites = newProjectUserInviteResource().withId(2L)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -751,7 +751,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRole(PARTNER).
                 build(2);
 
-        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(2L)
+        List<ProjectUserInviteResource> existingInvites = newProjectUserInviteResource().withId(2L)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -801,7 +801,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 withRole(PARTNER).
                 build(2);
 
-        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(2L)
+        List<ProjectUserInviteResource> existingInvites = newProjectUserInviteResource().withId(2L)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -839,7 +839,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
-        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(inviteId)
+        List<ProjectUserInviteResource> existingInvites = newProjectUserInviteResource().withId(inviteId)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
@@ -866,7 +866,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
 
-        List<ProjectInviteResource> existingInvites = newProjectInviteResource().withId(inviteId)
+        List<ProjectUserInviteResource> existingInvites = newProjectUserInviteResource().withId(inviteId)
                 .withProject(projectId).withName("exist test", invitedUserName)
                 .withEmail("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)

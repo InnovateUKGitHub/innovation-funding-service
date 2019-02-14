@@ -19,7 +19,7 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       Custom Suite Setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
@@ -126,6 +126,7 @@ Comp admin can see the application is rejected on manage assessment page
 
 *** Keywords ***
 Custom Suite Setup
+   Connect to database  @{database}
    The user logs-in in new browser  &{assessor2_credentials}
    ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Select a dashboard")
    Run Keyword If  '${status}' == 'PASS'  Run keywords   the user selects the checkbox   selectedRole1
@@ -133,7 +134,7 @@ Custom Suite Setup
 
 the assessor fills all fields with valid inputs
     Select From List By Index                             id = rejectReasonValid    2
-    The user should not see the text in the page          Please enter a reason
+    The user should not see the element                   jQuery = .govuk-error-message:contains("Please enter a reason")
     the user enters multiple strings into a text field    id = rejectComment  a${SPACE}  102
     the user should see a field and summary error         Maximum word count exceeded. Please reduce your word count to 100.
     The user enters text to a text field                  id = rejectComment    Unable to assess the application as i'm on holiday.
@@ -157,10 +158,13 @@ The user closes the competition brief
     Select Window
 
 request the date from the database
-    Connect to Database  @{database}
     log  ${IN_ASSESSMENT_COMPETITION}
     ${result} =  Query  SELECT DATE_FORMAT(`date`, '%e %M %Y') FROM `${database_name}`.`milestone` WHERE `competition_id` = '${IN_ASSESSMENT_COMPETITION}' AND type = 'ASSESSOR_DEADLINE';
     log  ${result}
     ${result} =  get from list  ${result}  0
     ${assessorDeadline} =  get from list  ${result}  0
     [Return]  ${assessorDeadline}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

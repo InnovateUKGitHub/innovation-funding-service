@@ -104,27 +104,20 @@ Bank details client side validations
     [Tags]
     Given the user enters text to a text field           name = accountNumber    1234567
     When the user moves focus away from the element      name = accountNumber
-    Then the user should not see the text in the page    Please enter an account number.
-    And the user should not see the text in the page     Please correct this field
-    And the user should see a field error                Please enter a valid account number
-    When the user enters text to a text field            name = accountNumber    abcdefgh
-    And the user moves focus away from the element       name = accountNumber
-    Then the user should see a field error               Please enter an account number.
+    Then the user should see a field error               Please enter a valid account number
+    And the user should see a field error                This field should contain at least 8 characters.
     When the user enters text to a text field            name = accountNumber    12345679
     And the user moves focus away from the element       name = accountNumber
-    Then the user should not see the text in the page    Please enter an account number.
-    And the user should not see the text in the page     Please enter a valid account number.
-    And the user should not see the text in the page     Please correct this field
+    Then the user should not see the element             jQuery = .govuk-error-message:contains("This field should contain at least 8 characters.")
+    And the user should not see the element              jQuery = .govuk-error-message:contains("Please enter a valid account number.")
     When the user enters text to a text field            name = sortCode    12345
     And the user moves focus away from the element       name = sortCode
     Then the user should see a field error               Please enter a valid sort code.
-    When the user enters text to a text field            name = sortCode    abcdef
-    And the user moves focus away from the element       name = sortCode
-    Then the user should see a field error               Please enter a sort code.
+    And the user should see a field error                This field should contain at least 6 characters.
     When the user enters text to a text field            name = sortCode    123456
     And the user moves focus away from the element       name = sortCode
-    Then the user should not see the text in the page    Please enter a sort code.
-    And the user should not see the text in the page     Please enter a valid sort code.
+    Then the user should not see the element             jQuery = .govuk-error-message:contains("Please enter a sort code.")
+    And the user should not see the element              jQuery = .govuk-error-message:contains("Please enter a valid sort code.")
     Then The user should see the element                 jQuery = span:contains("The first line of the address cannot be blank.")
 
 Bank account postcode lookup
@@ -154,7 +147,7 @@ Bank details submission
     And the user enters text to a text field          name = sortCode  ${sortCode_two}
     When the user clicks the button/link              jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link               jquery = button:contains("Cancel")
-    And the user should not see the text in the page  The bank account details below are being reviewed
+    And the user should not see the element           jQUery = p:contains("The bank account details below are being reviewed")
     When the user clicks the button/link              jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link               id = submit-bank-details
     Then the user should see the element              jQuery = p:contains("The bank account details below are being")
@@ -187,7 +180,7 @@ Submission of bank details for academic user
     And the user enters text to a text field       name = sortCode  ${sortCode_one}
     When the user clicks the button/link           jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link            jquery = button:contains("Cancel")
-    And the user should not see the text in the page  The bank account details below are being reviewed
+    And the user should not see the element        jQuery = p:contains("The bank account details below are being reviewed")
     When the user clicks the button/link           jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link            id = submit-bank-details
     And the user should see the element            jQuery = p:contains("The bank account details below are being")
@@ -367,3 +360,4 @@ the bank details have been verified by the Experian
     [Arguments]  ${organisationId}
     Connect to Database  @{database}
     execute sql string  UPDATE `${database_name}`.`bank_details` SET `company_name_score` = 7, `registration_number_matched` = 1, `address_score` = 8, `manual_approval` = 1 WHERE `organisation_id` = '${organisationId}';
+    Disconnect from database

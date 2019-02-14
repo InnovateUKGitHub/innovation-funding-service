@@ -2,9 +2,8 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.invite.domain.Participant;
-import org.innovateuk.ifs.invite.domain.ProjectInvite;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.invite.domain.InvitedParticipant;
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -18,39 +17,28 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
  * ProjectUser defines a User's role on a Project and in relation to a particular Organisation.
  */
 @Entity
-public class ProjectUser extends Participant<Project, ProjectInvite, ProjectParticipantRole> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "id")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "projectId", referencedColumnName = "id")
-    private Project project;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "project_role")
-    private ProjectParticipantRole role;
+@Table(name = "project_user")
+public class ProjectUser extends ProjectParticipant implements InvitedParticipant<Project, ProjectUserInvite, ProjectParticipantRole> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invite_id", referencedColumnName = "id")
-    private ProjectInvite invite;
+    private ProjectUserInvite invite;
 
     public ProjectUser() {
-        // no-arg constructor
+    }
+
+    @Override
+    public ProjectUserInvite getInvite() {
+        return invite;
     }
 
     public ProjectUser(User user, Project project, ProjectParticipantRole role, Organisation organisation) {
-        this.user = user;
-        this.project = project;
-        this.role = role;
+        super(user, project, role);
         this.organisation = organisation;
     }
 
@@ -70,48 +58,16 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
         return this;
     }
 
-
-    @Override
-    public ProjectInvite getInvite() {
-        return invite;
-    }
-
-    @Override
-    public ProjectParticipantRole getRole() {
-        return role;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    @Override
-    public Project getProcess() {
-        return project;
-    }
-
     public Organisation getOrganisation() {
         return organisation;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public boolean isUser(Long userId) {
-        return this.user.hasId(userId);
+        return getUser().hasId(userId);
     }
 
     public boolean isPartner() {
@@ -126,12 +82,8 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
         return getRole().isProjectManager();
     }
 
-    public void setInvite(ProjectInvite invite) {
+    public void setInvite(ProjectUserInvite invite) {
         this.invite = invite;
-    }
-
-    public Project getProject() {
-        return project;
     }
 
     @Override
@@ -143,22 +95,18 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
         ProjectUser that = (ProjectUser) o;
 
         return new EqualsBuilder()
-                .append(id, that.id)
-                .append(user, that.user)
-                .append(project, that.project)
-                .append(role, that.role)
+                .appendSuper(super.equals(o))
                 .append(organisation, that.organisation)
+                .append(invite, that.invite)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(user)
-                .append(project)
-                .append(role)
+                .appendSuper(super.hashCode())
                 .append(organisation)
+                .append(invite)
                 .toHashCode();
     }
 }
