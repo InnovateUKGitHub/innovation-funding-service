@@ -704,7 +704,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         List<Invite> invite = singletonList(new RoleInvite("Mister", "mister@email.com", "", APPLICANT, OPENED));
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(invite);
         when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceSuccess("uid"));
 
@@ -720,7 +720,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         User user = newUser().build();
         String updateEmail = "new@gmail.com";
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(emptyList());
         user.setEmail(updateEmail);
         when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceSuccess("uid"));
@@ -737,7 +737,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         User user = newUser().withEmailAddress("new@gmail.com").build();
         String updateEmail = "new@gmail.com";
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(USERS_DUPLICATE_EMAIL_ADDRESS));
 
         ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);

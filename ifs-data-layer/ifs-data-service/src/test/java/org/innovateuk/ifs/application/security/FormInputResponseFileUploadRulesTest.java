@@ -137,7 +137,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
                 .withUser(stakeholderUser)
                 .build();
 
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         when(stakeholderRepositoryMock.findStakeholders(competition.getId())).thenReturn(InvokerHelper.asList(stakeholder));
 
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
