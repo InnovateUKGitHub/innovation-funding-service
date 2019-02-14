@@ -57,7 +57,7 @@ public class CrmServiceImpl implements CrmService {
                 });
             } else {
                 if (user.hasRole(MONITORING_OFFICER)) {
-                    SilContact silContact = MOtoSilContact(user);
+                    SilContact silContact = toSilContactMonitoringOfficer(user);
                     LOG.info(format("Updating CRM contact %s and organisation %s",
                             silContact.getEmail(), silContact.getOrganisation().getName()));
                     return silCrmEndpoint.updateContact(silContact);
@@ -85,7 +85,7 @@ public class CrmServiceImpl implements CrmService {
         return silContact;
     }
 
-    private SilContact MOtoSilContact(UserResource user) {
+    private SilContact toSilContactMonitoringOfficer(UserResource user) {
         SilContact silContact = new SilContact();
         silContact.setEmail(user.getEmail());
         silContact.setFirstName(user.getFirstName());
