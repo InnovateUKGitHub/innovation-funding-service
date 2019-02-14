@@ -23,6 +23,7 @@ public class ProjectStatusDocs {
             fieldWithPath("grantOfferLetterStatus").description("Grant offer letter status of the project status"),
             fieldWithPath("roleSpecificGrantOfferLetterState").description("Role specific grant offer letter state of the project status"),
             fieldWithPath("grantOfferLetterSent").description("Grant offer letter sent of the project status"),
+            fieldWithPath("projectState").description("Project state"),
     };
 
     public static final FieldDescriptor[] competitionProjectsStatusResourceFields = {

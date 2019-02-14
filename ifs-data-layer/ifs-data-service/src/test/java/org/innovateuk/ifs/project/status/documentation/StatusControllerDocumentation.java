@@ -5,7 +5,6 @@ import org.innovateuk.ifs.documentation.ProjectPartnerStatusResourceDocs;
 import org.innovateuk.ifs.documentation.ProjectStatusDocs;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.status.controller.StatusController;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
