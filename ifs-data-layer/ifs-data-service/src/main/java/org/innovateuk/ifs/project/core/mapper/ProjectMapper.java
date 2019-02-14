@@ -9,6 +9,8 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.documents.mapper.ProjectDocumentsMapper;
+import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
 
     @Autowired
     private ProjectProcessRepository projectProcessRepository;
+
+    @Autowired
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @Mappings({
             @Mapping(target = "projectState", ignore = true),
@@ -58,5 +63,19 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
             return null;
         }
         return object.getId();
+    }
+
+    public Long mapProjectMonitoringOfficerUserToId(ProjectMonitoringOfficer object) {
+        if (object == null) {
+            return null;
+        }
+        return object.getId();
+    }
+
+    public ProjectMonitoringOfficer mapProjectMonitoringOfficerIdUserToDomain(Long id) {
+        if (id == null) {
+            return null;
+        }
+        return projectMonitoringOfficerRepository.findOne(id);
     }
 }
