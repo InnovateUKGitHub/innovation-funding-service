@@ -8,8 +8,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.invite.domain.ProjectInvite;
-import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
+import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -60,15 +60,15 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
@@ -127,7 +127,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private ProjectUserRepository projectUserRepositoryMock;
 
     @Mock
-    private ProjectInviteRepository projectInviteRepositoryMock;
+    private ProjectUserInviteRepository projectUserInviteRepositoryMock;
 
 
     @Mock
@@ -207,7 +207,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withRole(PROJECT_FINANCE_CONTACT).
                 withUser(u).
                 withOrganisation(o).
-                withInvite(newProjectInvite().
+                withInvite(newProjectUserInvite().
                         build()).
                 build(1);
 
@@ -380,6 +380,56 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
+    public void handleProjectOffline() {
+        Long projectId = 123L;
+        Long userId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectWorkflowHandlerMock.handleProjectOffline(eq(project), any())).thenReturn(true);
+
+        ServiceResult<Void> result = service.handleProjectOffline(projectId);
+        assertTrue(result.isSuccess());
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(userRepositoryMock).findOne(userId);
+        verify(projectWorkflowHandlerMock).handleProjectOffline(eq(project), any());
+    }
+
+    @Test
+    public void completeProjectOffline() {
+        Long projectId = 123L;
+        Long userId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectWorkflowHandlerMock.completeProjectOffline(eq(project), any())).thenReturn(true);
+
+        ServiceResult<Void> result = service.completeProjectOffline(projectId);
+        assertTrue(result.isSuccess());
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(userRepositoryMock).findOne(userId);
+        verify(projectWorkflowHandlerMock).completeProjectOffline(eq(project), any());
+    }
+
+    @Test
     public void findByUserIdReturnsOnlyDistinctProjects() {
 
         Project project = newProject().withId(123L).build();
@@ -441,9 +491,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
         when(userRepositoryMock.findOne(newUser.getId())).thenReturn(u);
-        List<ProjectInvite> projectInvites = newProjectInvite().withUser(user).build(1);
+        List<ProjectUserInvite> projectInvites = newProjectUserInvite().withUser(user).build(1);
         projectInvites.get(0).open();
-        when(projectInviteRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
+        when(projectUserInviteRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
 
         // Method under test
         ServiceResult<ProjectUser> shouldSucceed = service.addPartner(p.getId(), newUser.getId(), o.getId());

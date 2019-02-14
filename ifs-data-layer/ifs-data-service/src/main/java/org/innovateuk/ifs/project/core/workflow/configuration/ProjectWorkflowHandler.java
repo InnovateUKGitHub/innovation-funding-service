@@ -53,6 +53,14 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
         return fireEvent(internalUserEvent(project, internalUser, ProjectEvent.PROJECT_WITHDRAWN), project);
     }
 
+    public boolean handleProjectOffline(Project project, User internalUser) {
+        return fireEvent(internalUserEvent(project, internalUser, ProjectEvent.HANDLE_OFFLINE), project);
+    }
+
+    public boolean completeProjectOffline(Project project, User internalUser) {
+        return fireEvent(internalUserEvent(project, internalUser, ProjectEvent.COMPLETE_OFFLINE), project);
+    }
+
     public ProjectState getState(Project project) {
         return getCurrentProcess(project).getProcessState();
     }

@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder;
+import org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.UUID;
 
 import static org.innovateuk.ifs.documentation.RestDocsUtil.createTopLevelArrayOfDocumentation;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
+import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class ProjectInviteDocs {
@@ -33,7 +33,7 @@ public class ProjectInviteDocs {
 
     public static final FieldDescriptor[] projectInviteFieldsList = createTopLevelArrayOfDocumentation(projectInviteFields);
 
-    public static final ProjectInviteResourceBuilder projectInviteResourceBuilder = newProjectInviteResource().
+    public static final ProjectUserInviteResourceBuilder PROJECT_USER_INVITE_RESOURCE_BUILDER = newProjectUserInviteResource().
             withStatus(InviteStatus.CREATED).
             withUser(654L).
             withProject(123L).

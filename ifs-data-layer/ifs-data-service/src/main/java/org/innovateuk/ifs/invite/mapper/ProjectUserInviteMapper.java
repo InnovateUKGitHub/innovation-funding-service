@@ -3,7 +3,8 @@ package org.innovateuk.ifs.invite.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -19,7 +20,7 @@ import org.mapstruct.Mappings;
           UserMapper.class
    }
 )
-public abstract class ProjectInviteMapper extends BaseMapper<ProjectInvite, ProjectInviteResource, Long> {
+public abstract class ProjectUserInviteMapper extends BaseMapper<ProjectUserInvite, ProjectUserInviteResource, Long> {
 
     @Mappings({
             @Mapping(source = "target.application.competition.name", target = "competitionName"),
@@ -34,7 +35,7 @@ public abstract class ProjectInviteMapper extends BaseMapper<ProjectInvite, Proj
             @Mapping(target = "leadOrganisation", ignore = true)
     })
     @Override
-    public abstract ProjectInviteResource mapToResource(ProjectInvite domain);
+    public abstract ProjectUserInviteResource mapToResource(ProjectUserInvite domain);
 
     public Long mapInviteToId(ProjectInvite object) {
         if (object == null) {

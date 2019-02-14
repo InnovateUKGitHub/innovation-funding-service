@@ -21,6 +21,7 @@ import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -45,7 +46,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
         Role role = Role.PROJECT_FINANCE;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         ProjectUserResource projectUser = newProjectUserResource().withRole(Role.FINANCE_CONTACT).withOrganisation(2L).build();
-        ProjectStatusResource projectStatus = newProjectStatusResource().withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
+        ProjectStatusResource projectStatus = newProjectStatusResource().withProjectState(LIVE).withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
         when(statusServiceMock.getProjectStatus(1L)).thenReturn(projectStatus);
         assertTrue(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
@@ -56,7 +57,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
         Role role = Role.COMP_ADMIN;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         ProjectUserResource projectUser = newProjectUserResource().withRole(Role.FINANCE_CONTACT).withOrganisation(2L).build();
-        ProjectStatusResource projectStatus = newProjectStatusResource().withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
+        ProjectStatusResource projectStatus = newProjectStatusResource().withProjectState(LIVE).withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
         when(statusServiceMock.getProjectStatus(1L)).thenReturn(projectStatus);
         assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
@@ -134,6 +135,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         ProjectStatusResource projectStatus = newProjectStatusResource()
                 .withDocumentsStatus(documentStatus)
+                .withProjectState(LIVE)
                 .build();
         when(statusServiceMock.getProjectStatus(projectId)).thenReturn(projectStatus);
         return rule.apply(rules, ProjectCompositeId.id(projectId), user);

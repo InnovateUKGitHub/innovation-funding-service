@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +36,9 @@ public class ProjectInviteRestServiceImpl extends BaseRestService implements Pro
     }
 
     @Override
-    public RestResult<ProjectInviteResource> getInviteByHash(String hash) {
+    public RestResult<ProjectUserInviteResource> getInviteByHash(String hash) {
         String url = PROJECT_INVITE_BASE_URL + GET_INVITE_BY_HASH + hash;
-        return getWithRestResultAnonymous(url, ProjectInviteResource.class);
+        return getWithRestResultAnonymous(url, ProjectUserInviteResource.class);
     }
 
     @Override
@@ -48,13 +48,13 @@ public class ProjectInviteRestServiceImpl extends BaseRestService implements Pro
     }
 
     @Override
-    public RestResult<Void> saveProjectInvite(ProjectInviteResource projectInviteResource) {
+    public RestResult<Void> saveProjectInvite(ProjectUserInviteResource projectUserInviteResource) {
         String url = PROJECT_INVITE_BASE_URL + PROJECT_INVITE_SAVE;
-        return postWithRestResult(url, projectInviteResource, Void.class);
+        return postWithRestResult(url, projectUserInviteResource, Void.class);
     }
 
     @Override
-    public RestResult<List<ProjectInviteResource>> getInvitesByProject (Long projectId){
+    public RestResult<List<ProjectUserInviteResource>> getInvitesByProject (Long projectId){
         String url = PROJECT_INVITE_BASE_URL + GET_PROJECT_INVITE_LIST + projectId;
         return getWithRestResult(url, projectInviteResourceListType());
     }

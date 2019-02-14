@@ -53,6 +53,16 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
                 .withExternal()
                     .source(SETUP)
                     .event(PROJECT_WITHDRAWN)
-                    .target(WITHDRAWN);
+                    .target(WITHDRAWN)
+                .and()
+                .withExternal()
+                    .source(SETUP)
+                    .event(HANDLE_OFFLINE)
+                    .target(HANDLED_OFFLINE)
+                .and()
+                .withExternal()
+                    .source(HANDLED_OFFLINE)
+                    .event(COMPLETE_OFFLINE)
+                    .target(COMPLETED_OFFLINE);
     }
 }

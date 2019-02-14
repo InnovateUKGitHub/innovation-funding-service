@@ -8,11 +8,11 @@ Suite Teardown    Close browser and delete emails
 Project dashboard shows message that the project is live
     [Documentation]    INFUND-6376
     [Tags]  HappyPath
-    Given log in as a different user                 ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
-    When the user navigates to the page              ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    Given log in as a different user                 ${PS_EF_Application_PM_Email}  ${short_password}
+    When the user navigates to the page              ${server}/project-setup/project/${PS_EF_Application_Project_No}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
-    When log in as a different user                  ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
-    And the user navigates to the page               ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    When log in as a different user                  ${PS_EF_Application_PM_Email}  ${short_password}
+    And the user navigates to the page               ${server}/project-setup/project/${PS_EF_Application_Project_No}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
 
 Status indicators should not show
@@ -71,17 +71,17 @@ Grant offer letter section is read-only
     [Tags]  HappyPath
     When the user clicks the button/link        link = Grant offer letter
     Then the user should not see the element    jQuery = .govuk-button:contains("Send signed offer letter")
-    And the user should not see the text in the page    Remove
+    And the user should not see the element     jQuery = button:contains("Remove")
     And the user should not see the element     name = signedGrantOfferLetter
 
 Project dashboard shows message that the project is live for industrial partner
     [Documentation]    INFUND-6376
     [Tags]  HappyPath
-    Given log in as a different user                 ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
-    When the user navigates to the page              ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    Given log in as a different user                 ${PS_EF_Application_Partner_Email}  ${short_password}
+    When the user navigates to the page              ${server}/project-setup/project/${PS_EF_Application_Project_No}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
-    When log in as a different user                  ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
-    And the user navigates to the page               ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    When log in as a different user                  ${PS_EF_Application_PM_Email}  ${short_password}
+    And the user navigates to the page               ${server}/project-setup/project/${PS_EF_Application_Project_No}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
 
 Status indicators should not show for industrial partner
@@ -140,17 +140,17 @@ Grant offer letter section is read-only for industrial partner
     [Tags]
     When the user clicks the button/link        link = Grant offer letter
     Then the user should not see the element    jQuery = .govuk-button:contains("Send signed offer letter")
-    And the user should not see the text in the page    Remove
+    And the user should not see the element     jQuery = button:contains("Remove")
     And the user should not see the element     name = signedGrantOfferLetter
 
 Project dashboard shows message that the project is live for academic partner
     [Documentation]    INFUND-6376
     [Tags]  HappyPath
-    Given log in as a different user                 ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
-    When the user navigates to the page              ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    Given log in as a different user                 ${PS_EF_Application_Academic_Email}  ${short_password}
+    When the user navigates to the page              ${server}/project-setup/project/${PS_EF_Application_Project_No}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
-    When log in as a different user                  ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
-    And the user navigates to the page               ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    When log in as a different user                  ${PS_EF_Application_PM_Email}  ${short_password}
+    And the user navigates to the page               ${server}/project-setup/project/${PS_EF_Application_Project_No}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
 
 Status indicators should not show for academic partner
@@ -209,36 +209,36 @@ Grant offer letter section is read-only for academic partner
     [Tags]
     When the user clicks the button/link                link = Grant offer letter
     Then the user should not see the element            jQuery = .govuk-button:contains("Send signed offer letter")
-    And the user should not see the text in the page    Remove
+    And the user should not see the element             jQuery = button:contains("Remove")
     And the user should not see the element             name = signedGrantOfferLetter
 
 *** Keywords ***
 the project is completed if it is not already complete
-    The user logs-in in new browser  ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
-    the user navigates to the page   ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    ${project_not_live}  ${value} =  run keyword and ignore error without screenshots  the user should not see the text in the page  The project is live
+    The user logs-in in new browser  ${PS_EF_Application_PM_Email}  ${short_password}
+    the user navigates to the page   ${server}/project-setup/project/${PS_EF_Application_Project_No}
+    ${project_not_live}  ${value} =  run keyword and ignore error without screenshots  the user should not see the element    jQuery = .success-alert:contains("The project is live")
     run keyword if  '${project_not_live}' == 'PASS'  complete the project
 
 complete the project
-    project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
-    project manager submits both documents       ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}  ${PS_GOL_APPLICATION_PROJECT}
-    project finance approves both documents      ${PS_GOL_APPLICATION_PROJECT}
-    project finance generates the Spend Profile  ${Gabtype_Id}  ${Kazio_Id}  ${Cogilith_Id}  ${PS_GOL_APPLICATION_PROJECT}
+    project finance approves bank details for $${PS_EF_Application_Title}
+    project manager submits both documents       ${PS_EF_Application_PM_Email}  ${short_password}  ${PS_EF_Application_Project_No}
+    project finance approves both documents      ${PS_EF_Application_Project_No}
+    project finance generates the Spend Profile  ${Gabtype_Id}  ${Kazio_Id}  ${Cogilith_Id}  ${PS_EF_Application_Project_No}
     all partners submit their Spend Profile
-    proj finance approves the spend profiles     ${PS_GOL_APPLICATION_PROJECT}
+    proj finance approves the spend profiles     ${PS_EF_Application_Project_No}
     grant offer letter is sent to users
     users upload signed grant offer letter and submit
     grant offer letter is approved
 
 grant offer letter is sent to users
     log in as a different user       &{internal_finance_credentials}
-    the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    the user navigates to the page   ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/grant-offer-letter/send
     the user clicks the button/link  id = send-gol
     the user clicks the button/link  jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
 
 users upload signed grant offer letter and submit
-    log in as a different user       ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
-    the user clicks the button/link  link = ${PS_GOL_APPLICATION_HEADER}
+    log in as a different user       ${PS_EF_Application_PM_Email}  ${short_password}
+    the user clicks the button/link  link = ${PS_EF_Application_Title}
     the user clicks the button/link  link = Grant offer letter
     choose file                      signedGrantOfferLetter    ${upload_folder}/${valid_pdf}
     the user clicks the button/link  jQuery = a:contains("Send to Innovate UK")
@@ -246,7 +246,7 @@ users upload signed grant offer letter and submit
 
 grant offer letter is approved
     log in as a different user         &{internal_finance_credentials}
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/grant-offer-letter/send
     the user selects the radio button  approvalType  acceptGOL
     the user clicks the button/link    id = submit-button
     the user clicks the button/link    jQuery = .modal-accept-signed-gol .govuk-button:contains("Accept signed grant offer letter")
