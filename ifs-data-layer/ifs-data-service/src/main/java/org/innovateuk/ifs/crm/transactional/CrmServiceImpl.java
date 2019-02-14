@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
@@ -62,7 +63,7 @@ public class CrmServiceImpl implements CrmService {
     private ServiceResult<List<OrganisationResource>> getUserOrganisationByUserIdOrCreateOrganisationForMonitoringOfficer(UserResource user) {
         if (user.hasRole(MONITORING_OFFICER)) {
             OrganisationResource monitoringOfficerOrganisationResource = createMonitoringOfficerOrganisation();
-            return serviceSuccess(Collections.singletonList(monitoringOfficerOrganisationResource)); // static import
+            return serviceSuccess(singletonList(monitoringOfficerOrganisationResource));
         }
 
         return organisationService.getAllByUserId(user.getId());
