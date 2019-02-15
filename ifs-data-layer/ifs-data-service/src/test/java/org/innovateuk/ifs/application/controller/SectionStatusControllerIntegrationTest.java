@@ -52,7 +52,7 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
     public void setUp() throws Exception {
         sectionId = 1L;
         applicationId = 1L;
-        section = sectionRepository.findOne(sectionId);
+        section = sectionRepository.findById(sectionId).get();
 
         leadApplicantProcessRole = 1L;
         leadApplicantOrganisationId = 3L;
@@ -73,7 +73,7 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
 
     @Test
     public void getCompletedSections() {
-        section = sectionRepository.findOne(sectionIdYourProjectCostsFinances);
+        section = sectionRepository.findById(sectionIdYourProjectCostsFinances).get();
         assertEquals("Your project costs", section.getName());
         assertTrue(section.hasChildSections());
         assertEquals(7, section.getChildSections().size());
@@ -94,7 +94,7 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
         SecuritySetter.swapOutForUser(collaborator);
         assertEquals(7, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccess().size());
 
-        section = sectionRepository.findOne(11L);
+        section = sectionRepository.findById(11L).get();
         assertEquals("Materials", section.getName());
         assertFalse(section.hasChildSections());
     }

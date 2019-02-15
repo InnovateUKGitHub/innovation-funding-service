@@ -17,6 +17,7 @@ import org.mockito.Mock;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
@@ -94,7 +95,7 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
                 .thenReturn(keyStatisticsResource.getAssessorsInvited());
         when(assessmentParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR,
                 ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
 
         CompetitionOpenKeyAssessmentStatisticsResource response = service.getOpenKeyStatisticsByCompetition
                 (competitionId).getSuccess();

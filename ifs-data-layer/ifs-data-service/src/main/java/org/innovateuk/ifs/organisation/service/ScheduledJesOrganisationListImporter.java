@@ -135,7 +135,7 @@ public class ScheduledJesOrganisationListImporter {
 
     private void importNewAcademicEntries(List<String> organisationNames) {
         List<Academic> newEntries = simpleMap(organisationNames, Academic::new);
-        academicRepository.save(newEntries);
+        academicRepository.saveAll(newEntries);
     }
 
     private void deleteExistingAcademicEntries() {

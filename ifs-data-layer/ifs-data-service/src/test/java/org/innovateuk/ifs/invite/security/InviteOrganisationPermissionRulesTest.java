@@ -19,6 +19,7 @@ import org.mockito.Mock;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -148,8 +149,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
                 .withApplicationState(ApplicationState.CREATED).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, collaborator));
@@ -167,8 +168,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
                 .withApplicationState(ApplicationState.OPEN).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, collaborator));
@@ -189,8 +190,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
         Application application = ApplicationBuilder.newApplication()
                 .withApplicationState(ApplicationState.CREATED).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, collaborator));
@@ -213,8 +214,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
                 .withApplicationState(ApplicationState.OPEN).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, collaborator));
@@ -232,8 +233,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
                 .withApplicationState(ApplicationState.SUBMITTED).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, collaborator));
@@ -251,8 +252,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
                 .withApplicationState(ApplicationState.OPEN).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertFalse(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource,
                 leadApplicant));
@@ -269,8 +270,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
                 .withApplicationState(ApplicationState.OPEN).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
     }
@@ -289,8 +290,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
                 .withApplicationState(ApplicationState.OPEN).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
     }
@@ -306,8 +307,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
                 .withApplicationState(ApplicationState.OPEN).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
     }
@@ -326,8 +327,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         Application application = ApplicationBuilder.newApplication()
                 .withCompetition(competition)
                 .withApplicationState(ApplicationState.OPEN).build();
-        when(applicationRepositoryMock.findOne(applicationResource.getId()))
-                .thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationResource.getId()))
+                .thenReturn(Optional.of(application));
 
         assertTrue(rules.leadApplicantCanCreateApplicationInvitesIfApplicationEditable(inviteOrganisationResource, leadApplicant));
     }

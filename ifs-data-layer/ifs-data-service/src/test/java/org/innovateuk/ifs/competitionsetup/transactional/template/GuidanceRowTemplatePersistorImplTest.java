@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.transactional.template;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
@@ -16,7 +18,7 @@ import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.refEq;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.when;
 
 public class GuidanceRowTemplatePersistorImplTest extends BaseServiceUnitTest<GuidanceRowTemplatePersistorImpl> {
@@ -86,7 +88,15 @@ public class GuidanceRowTemplatePersistorImplTest extends BaseServiceUnitTest<Gu
 
         List<GuidanceRow> result = service.persistByParentEntity(formInput);
 
-        assertThat(result, new ReflectionEquals(expectedGuidanceRows));
+        assertThat(result, new BaseMatcher<List<GuidanceRow>>() {
+            @Override
+            public boolean matches(Object item) {
+                return new ReflectionEquals(expectedGuidanceRows).matches(item);
+            }
+            @Override
+            public void describeTo(Description description) {
+            }
+        });
     }
 
     @Test
@@ -107,7 +117,7 @@ public class GuidanceRowTemplatePersistorImplTest extends BaseServiceUnitTest<Gu
 
         Mockito.verify(entityManagerMock).detach(guidanceRows.get(0));
         Mockito.verify(entityManagerMock).detach(guidanceRows.get(1));
-        Mockito.verify(guidanceRowRepositoryMock).delete(guidanceRows);
+        Mockito.verify(guidanceRowRepositoryMock).deleteAll(guidanceRows);
     }
 
 }

@@ -16,13 +16,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Component
 public class DatabaseTestHelper {
 
-    @Value("${flyway.url}")
+    @Value("${spring.flyway.url}")
     private String databaseUrl;
 
-    @Value("${flyway.user}")
+    @Value("${spring.flyway.user}")
     private String databaseUser;
 
-    @Value("${flyway.password}")
+    @Value("${spring.flyway.password}")
     private String databasePassword;
 
     /**

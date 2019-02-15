@@ -32,6 +32,7 @@ import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
@@ -47,13 +48,10 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
-/**
- *
- */
 public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceRowCostsServiceImpl> {
 
     @Mock
@@ -112,7 +110,7 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
                 .withTitle(metaFieldTitle)
                 .withType(metaFieldType).build();
 
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(application.getCompetition().getId(), organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
     }
 
@@ -123,8 +121,11 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         Application application = newApplication().withCompetition(openCompetition).build();
 
-        when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
-        when(organisationRepositoryMock.findOne(456L)).thenReturn(organisation);
+        when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.of(application));
+        when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(organisation));
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(openCompetition.getId(), OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.of(application));
+        when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(organisation));
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(application.getCompetition().getId(), OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
         ApplicationFinance newFinance = new ApplicationFinance(application, organisation);
@@ -134,7 +135,6 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
             assertEquals(organisation, finance.getOrganisation());
             return true;
         }));
-
 
         ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
                 with(id(newFinance.getId())).
@@ -154,7 +154,7 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
     public void addWhenApplicationNotOpen() {
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
         Application application = newApplication().withCompetition(openCompetition).build();
-        when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
+        when(applicationRepositoryMock.findById(123L)).thenReturn(Optional.of(application));
         ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonFailureKeys.COMPETITION_NOT_OPEN));
@@ -181,7 +181,7 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
                 .withFinanceRowMetadata(currentFinanceRowMetaValue)
                 .withTarget(applicationFinance).build();
 
-        when(applicationFinanceRowRepositoryMock.findOne(costId)).thenReturn(currentApplicationFinanceRow);
+        when(applicationFinanceRowRepositoryMock.findById(costId)).thenReturn(Optional.of(currentApplicationFinanceRow));
         when(organisationFinanceDefaultHandlerMock.costItemToCost(any())).thenReturn(convertedApplicationFinanceRow);
         when(organisationFinanceDefaultHandlerMock.updateCost(any())).thenReturn(convertedApplicationFinanceRow);
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(any(), any())).thenReturn(currentFinanceRowMetaValue.get(0));
@@ -212,11 +212,11 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
         ApplicationFinanceRow currentApplicationFinanceRow = newApplicationFinanceRow()
                 .withTarget(applicationFinance).build();
 
-        when(applicationFinanceRowRepositoryMock.findOne(costId)).thenReturn(currentApplicationFinanceRow);
+        when(applicationFinanceRowRepositoryMock.findById(costId)).thenReturn(Optional.of(currentApplicationFinanceRow));
         when(organisationFinanceDefaultHandlerMock.costItemToCost(any())).thenReturn(convertedApplicationFinanceRow);
         when(organisationFinanceDefaultHandlerMock.updateCost(any())).thenReturn(currentApplicationFinanceRow);
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(any(), any())).thenReturn(null);
-        when(financeRowMetaFieldRepositoryMock.findOne(financeRowMetaField.getId())).thenReturn(financeRowMetaField);
+        when(financeRowMetaFieldRepositoryMock.findById(financeRowMetaField.getId())).thenReturn(Optional.of(financeRowMetaField));
 
         ServiceResult<FinanceRowItem> result = service.updateCost(costId, newFinanceRowItem);
 
@@ -232,11 +232,11 @@ public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceR
         ApplicationFinanceRow currentApplicationFinanceRow = newApplicationFinanceRow()
                 .withTarget(applicationFinance).build();
 
-        when(applicationFinanceRowRepositoryMock.findOne(costId)).thenReturn(currentApplicationFinanceRow);
+        when(applicationFinanceRowRepositoryMock.findById(costId)).thenReturn(Optional.of(currentApplicationFinanceRow));
         when(organisationFinanceDefaultHandlerMock.costItemToCost(any())).thenReturn(convertedApplicationFinanceRow);
         when(organisationFinanceDefaultHandlerMock.updateCost(any())).thenReturn(currentApplicationFinanceRow);
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(any(), any())).thenReturn(null);
-        when(financeRowMetaFieldRepositoryMock.findOne(financeRowMetaField.getId())).thenReturn(financeRowMetaField);
+        when(financeRowMetaFieldRepositoryMock.findById(financeRowMetaField.getId())).thenReturn(Optional.of(financeRowMetaField));
 
         ServiceResult<FinanceRowItem> result = service.updateCost(costId, newFinanceRowItem);
 

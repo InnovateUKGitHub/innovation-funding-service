@@ -23,6 +23,6 @@ public class ApplicationInviteLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public ApplicationInviteResource getApplicationInviteResource(final Long id){
-        return applicationInviteMapper.mapToResource(applicationInviteRepository.findOne(id));
+        return applicationInviteMapper.mapToResource(applicationInviteRepository.findById(id).orElse(null));
     }
 }

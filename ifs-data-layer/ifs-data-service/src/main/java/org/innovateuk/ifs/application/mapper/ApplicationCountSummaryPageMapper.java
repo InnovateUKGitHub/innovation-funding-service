@@ -35,7 +35,7 @@ public class ApplicationCountSummaryPageMapper extends PageResourceMapper<Applic
     protected Function<ApplicationStatistics, ApplicationCountSummaryResource> contentElementConverter() {
         return as -> {
             ApplicationCountSummaryResource resource = applicationCountSummaryMapper.mapToResource(as);
-            Optional<Organisation> organisation = ofNullable(organisationRepository.findOne(as.getLeadOrganisationId()));
+            Optional<Organisation> organisation = organisationRepository.findById(as.getLeadOrganisationId());
             resource.setLeadOrganisation(organisation.map(Organisation::getName).orElse(""));
             return resource;
         };

@@ -227,7 +227,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Override
     public ServiceResult<Void> acceptInvite(String inviteHash, UserResource currentUser) {
-        final User user = userRepository.findOne(currentUser.getId());
+        final User user = userRepository.findById(currentUser.getId()).orElse(null);
         return getParticipantByInviteHash(inviteHash)
                 .andOnSuccess(p -> accept(p, user))
                 .andOnSuccessReturnVoid();
@@ -271,7 +271,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private AvailableAssessorResource mapToAvailableAssessorResource(User assessor) {
-        Profile profile = profileRepository.findOne(assessor.getProfileId());
+        Profile profile = profileRepository.findById(assessor.getProfileId()).orElse(null);
 
         AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
         availableAssessor.setId(assessor.getId());
@@ -397,7 +397,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private ServiceResult<InnovationArea> getInnovationArea(long innovationCategoryId) {
-        return find(innovationAreaRepository.findOne(innovationCategoryId), notFoundError(Category.class, innovationCategoryId, INNOVATION_AREA));
+        return find(innovationAreaRepository.findById(innovationCategoryId), notFoundError(Category.class, innovationCategoryId, INNOVATION_AREA));
     }
 
     private ServiceResult<AssessmentInvite> inviteUserToCompetition(String name, String email, Competition competition, InnovationArea innovationArea) {
@@ -430,7 +430,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private ServiceResult<Competition> getCompetition(long competitionId) {
-        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId));
     }
 
     @Override
@@ -549,7 +549,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Override
     public ServiceResult<Void> deleteAllInvites(long competitionId) {
-        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccessReturnVoid(competition ->
                         assessmentInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
     }
@@ -683,7 +683,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private ServiceResult<Profile> getProfileForUser(User user) {
-        return find(profileRepository.findOne(user.getProfileId()), notFoundError(Profile.class, user.getProfileId()));
+        return find(profileRepository.findById(user.getProfileId()), notFoundError(Profile.class, user.getProfileId()));
     }
 
     private ServiceResult<CompetitionParticipant> reject(AssessmentParticipant participant, RejectionReason rejectionReason, Optional<String> rejectionComment) {
@@ -699,7 +699,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private ServiceResult<RejectionReason> getRejectionReason(final RejectionReasonResource rejectionReason) {
-        return find(rejectionReasonRepository.findOne(rejectionReason.getId()), notFoundError(RejectionReason.class, rejectionReason.getId()));
+        return find(rejectionReasonRepository.findById(rejectionReason.getId()), notFoundError(RejectionReason.class, rejectionReason.getId()));
     }
 
     private String getInviteCompetitionName(AssessmentParticipant participant) {

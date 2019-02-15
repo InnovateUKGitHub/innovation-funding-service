@@ -25,6 +25,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
@@ -46,8 +47,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -85,7 +86,7 @@ public class ApplicationNotificationServiceImplTest {
         ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(Role.LEADAPPLICANT).build();
         Competition competition = newCompetition().build();
         Application application = newApplication().withProcessRoles(leadProcessRole).withCompetition(competition).build();
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
 
         ServiceResult<Void> result = service.sendNotificationApplicationSubmitted(application.getId());
@@ -178,12 +179,12 @@ public class ApplicationNotificationServiceImplTest {
 
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
-        when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
-        when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
-        when(applicationRepositoryMock.findOne(applicationThreeId)).thenReturn(applications.get(2));
+        when(applicationRepositoryMock.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
+        when(applicationRepositoryMock.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
+        when(applicationRepositoryMock.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
 
         notifications.forEach(notification ->
-            when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess())
+                when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess())
         );
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
@@ -191,13 +192,13 @@ public class ApplicationNotificationServiceImplTest {
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationServiceMock);
         inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
-        inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
+        inOrder.verify(applicationRepositoryMock).findById(applicationOneId);
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(0), EMAIL);
 
-        inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
+        inOrder.verify(applicationRepositoryMock).findById(applicationTwoId);
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(1), EMAIL);
 
-        inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
+        inOrder.verify(applicationRepositoryMock).findById(applicationThreeId);
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(2), EMAIL);
 
         inOrder.verifyNoMoreInteractions();
@@ -285,9 +286,9 @@ public class ApplicationNotificationServiceImplTest {
 
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
-        when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
-        when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
-        when(applicationRepositoryMock.findOne(applicationThreeId)).thenReturn(applications.get(2));
+        when(applicationRepositoryMock.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
+        when(applicationRepositoryMock.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
+        when(applicationRepositoryMock.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
 
         when(notificationServiceMock.sendNotificationWithFlush(notifications.get(0), EMAIL)).thenReturn(serviceSuccess());
         when(notificationServiceMock.sendNotificationWithFlush(notifications.get(1), EMAIL)).thenReturn(serviceSuccess());
@@ -298,13 +299,13 @@ public class ApplicationNotificationServiceImplTest {
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationServiceMock);
         inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
-        inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
+        inOrder.verify(applicationRepositoryMock).findById(applicationOneId);
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(0), EMAIL);
 
-        inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
+        inOrder.verify(applicationRepositoryMock).findById(applicationTwoId);
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(1), EMAIL);
 
-        inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
+        inOrder.verify(applicationRepositoryMock).findById(applicationThreeId);
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(2), EMAIL);
 
         inOrder.verifyNoMoreInteractions();
@@ -394,12 +395,12 @@ public class ApplicationNotificationServiceImplTest {
 
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
-        when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
-        when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
-        when(applicationRepositoryMock.findOne(applicationThreeId)).thenReturn(applications.get(2));
+        when(applicationRepositoryMock.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
+        when(applicationRepositoryMock.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
+        when(applicationRepositoryMock.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
 
         notifications.forEach(notification ->
-            when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceFailure(internalServerErrorError()))
+                when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceFailure(internalServerErrorError()))
         );
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
@@ -407,7 +408,7 @@ public class ApplicationNotificationServiceImplTest {
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationServiceMock);
         inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
-        inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
+        inOrder.verify(applicationRepositoryMock).findById(applicationOneId);
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(0), EMAIL);
 
         inOrder.verifyNoMoreInteractions();
@@ -467,11 +468,11 @@ public class ApplicationNotificationServiceImplTest {
                 from,
                 singletonList(to),
                 ApplicationNotificationServiceImpl.Notifications
-                .APPLICATION_INELIGIBLE,
+                        .APPLICATION_INELIGIBLE,
                 expectedNotificationArguments
         );
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationWorkflowHandlerMock.informIneligible(application)).thenReturn(true);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
@@ -479,7 +480,7 @@ public class ApplicationNotificationServiceImplTest {
         assertTrue(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationServiceMock);
-        inOrder.verify(applicationRepositoryMock).findOne(applicationId);
+        inOrder.verify(applicationRepositoryMock).findById(applicationId);
         inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
         inOrder.verifyNoMoreInteractions();
@@ -500,7 +501,7 @@ public class ApplicationNotificationServiceImplTest {
                 .withId(applicationId)
                 .build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationWorkflowHandlerMock.informIneligible(application)).thenReturn(false);
 
         ServiceResult<Void> serviceResult = service.informIneligible(applicationId, resource);
@@ -508,7 +509,7 @@ public class ApplicationNotificationServiceImplTest {
         assertEquals(APPLICATION_MUST_BE_INELIGIBLE.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
 
         InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationServiceMock);
-        inOrder.verify(applicationRepositoryMock).findOne(applicationId);
+        inOrder.verify(applicationRepositoryMock).findById(applicationId);
         inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
         inOrder.verifyNoMoreInteractions();
     }

@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for public content web service.
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class PublicContentServiceImplTest {
 
     private static final Long COMPETITION_ID = 1L;

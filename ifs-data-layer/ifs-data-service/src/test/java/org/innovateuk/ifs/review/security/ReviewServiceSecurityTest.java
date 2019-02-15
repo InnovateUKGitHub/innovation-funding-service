@@ -12,9 +12,9 @@ import org.junit.Test;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuilder.newReviewRejectOutcomeResource;
 import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 public class ReviewServiceSecurityTest extends BaseServiceSecurityTest<ReviewService> {

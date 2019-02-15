@@ -30,7 +30,7 @@ public abstract class GrantClaimMaximumMapper extends BaseMapper<GrantClaimMaxim
         if (id == null) {
             return null;
         }
-        return grantClaimMaximumRepository.findOne(id);
+        return grantClaimMaximumRepository.findById(id).orElse(null);
     }
 
     public Long grantClaimMaximumToId(GrantClaimMaximum object) {

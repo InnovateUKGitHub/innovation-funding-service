@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.function.Function.identity;
@@ -57,7 +58,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
         ProcessRole processRole = newProcessRole()
                 .withUser(newUser().with(id(assessorUser.getId())).build())
                 .build();
-        when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
+        when(processRoleRepositoryMock.findById(processRole.getId())).thenReturn(Optional.of(processRole));
 
         assessments = EnumSet.allOf(AssessmentState.class).stream().collect(toMap(identity(), state -> setupAssessment(processRole, state)));
     }
@@ -198,7 +199,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 .withParticipant(processRole)
                 .build();
 
-        when(assessmentRepositoryMock.findAll(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
+        when(assessmentRepositoryMock.findAllById(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
 
         assertTrue("the owner of a list of assessments can submit them", rules.userCanSubmitAssessments(assessmentSubmissionsResource, assessorUser));
     }
@@ -223,7 +224,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 )
                 .build();
 
-        when(assessmentRepositoryMock.findAll(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
+        when(assessmentRepositoryMock.findAllById(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
 
         assertFalse("other users cannot partially submit assessments", rules.userCanSubmitAssessments(assessmentSubmissionsResource, assessorUser));
     }
@@ -248,7 +249,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 )
                 .build();
 
-        when(assessmentRepositoryMock.findAll(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
+        when(assessmentRepositoryMock.findAllById(asList(1L, 2L))).thenReturn(asList(assessment1, assessment2));
 
         assertFalse("other users cannot submit assessments", rules.userCanSubmitAssessments(assessmentSubmissionsResource, assessorUser));
     }
@@ -258,7 +259,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                 .withProcessState(state)
                 .build();
 
-        when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
+        when(assessmentRepositoryMock.findById(assessment.getId())).thenReturn(Optional.of(assessment));
 
         return newAssessmentResource()
                 .withId(assessment.getId())

@@ -299,7 +299,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     }
 
     private ServiceResult<Competition> getCompetition(long competitionId) {
-        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId));
     }
 
     private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
@@ -430,7 +430,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
 
     @Override
     public ServiceResult<Void> deleteAllInvites(long competitionId) {
-        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccessReturnVoid(competition ->
                         interviewInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
     }

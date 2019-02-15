@@ -36,6 +36,6 @@ public class RejectionReasonServiceImpl implements RejectionReasonService {
 
     @Override
     public ServiceResult<RejectionReasonResource> findById(Long id) {
-        return find(rejectionReasonRepository.findOne(id), notFoundError(RejectionReason.class, id)).andOnSuccessReturn(rejectionReasonMapper::mapToResource);
+        return find(rejectionReasonRepository.findById(id), notFoundError(RejectionReason.class, id)).andOnSuccessReturn(rejectionReasonMapper::mapToResource);
     }
 }

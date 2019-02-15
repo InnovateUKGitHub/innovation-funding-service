@@ -3,6 +3,8 @@ package org.innovateuk.ifs.assessment.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionInviteController;
 import org.innovateuk.ifs.assessment.transactional.AssessmentInviteService;
+import org.innovateuk.ifs.documentation.InnovationAreaResourceDocs;
+import org.innovateuk.ifs.documentation.RejectionReasonResourceDocs;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -142,6 +144,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                                 parameterWithName("hash").description("hash of the invite being requested")
                         ),
                         responseFields(competitionInviteFields)
+                        .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
                 ));
     }
 
@@ -160,6 +163,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                                 parameterWithName("hash").description("hash of the invite being opened")
                         ),
                         responseFields(competitionInviteFields)
+                        .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
                 ));
     }
 
@@ -195,7 +199,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .content(objectMapper.writeValueAsString(compRejection)))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
-                        requestFields(competitionRejectionFields),
+                        requestFields(competitionRejectionFields).andWithPrefix("rejectReason.", RejectionReasonResourceDocs.rejectionReasonResourceFields),
                         pathParameters(
                                 parameterWithName("hash").description("hash of the invite being rejected")
                         )
@@ -409,6 +413,8 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .andDo(document("competitioninvite/{method-name}",
                         requestFields(existingUserStagedInviteResourceFields),
                         responseFields(competitionInviteFields)
+                        .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
+
                 ));
 
         verify(assessmentInviteServiceMock, only()).inviteUser(existingUserStagedInviteResource);
@@ -428,6 +434,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
                 .andDo(document("competitioninvite/{method-name}",
                         requestFields(newUserStagedInviteResourceFields),
                         responseFields(competitionInviteFields)
+                        .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
                 ));
 
         verify(assessmentInviteServiceMock, only()).inviteUser(newUserStagedInviteResource);

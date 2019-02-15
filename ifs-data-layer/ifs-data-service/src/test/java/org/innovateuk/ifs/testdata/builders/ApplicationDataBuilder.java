@@ -216,7 +216,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
         hash.ifPresent(h -> {
 
-            ApplicationInvite saved = applicationInviteRepository.findOne(usersInvite.getId());
+            ApplicationInvite saved = applicationInviteRepository.findById(usersInvite.getId()).get();
             saved.setHash(h);
             applicationInviteRepository.save(saved);
 

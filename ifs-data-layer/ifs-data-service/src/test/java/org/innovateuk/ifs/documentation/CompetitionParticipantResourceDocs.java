@@ -28,8 +28,11 @@ public class CompetitionParticipantResourceDocs {
             fieldWithPath("assessorAcceptsDate").description("Date of acceptance by the Assessor to the competition"),
             fieldWithPath("assessorDeadlineDate").description("Date of deadline for assessor to accept invitation to competition"),
             fieldWithPath("submittedAssessments").description("Number of submitted assessments for the competition"),
-            fieldWithPath("totalAssessments").description("Total number of assessments accepted by the assessor for the competition")
-   };
+            fieldWithPath("totalAssessments").description("Total number of assessments accepted by the assessor for the competition"),
+            fieldWithPath("competitionStatus").description("Status for the competition"),
+            fieldWithPath("pendingAssessments").description("Total number of pending assessments for the competition")
+
+    };
 
     public static final CompetitionParticipantResourceBuilder competitionParticipantResourceBuilder = newCompetitionParticipantResource()
             .withId(1L)

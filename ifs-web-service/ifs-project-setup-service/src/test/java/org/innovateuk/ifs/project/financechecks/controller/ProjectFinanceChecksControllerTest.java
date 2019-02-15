@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financechecks;
+package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
@@ -40,9 +40,7 @@ import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.Model;
 
@@ -71,8 +69,8 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -130,13 +128,14 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     private FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
 
-    @Spy
-    @InjectMocks
-    @SuppressWarnings("unused")
-    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
+    private ThreadViewModelPopulator threadViewModelPopulator;
 
     @Before
     public void setUpData() {
+
+        threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
+        spy(threadViewModelPopulator);
+        controller.setThreadViewModelPopulator(threadViewModelPopulator);
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -173,7 +172,6 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
         FinanceViewModel financeViewModel = new FinanceViewModel();
         financeViewModel.setOrganisationGrantClaimPercentage(74);
-
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(loggedInUser);
     }
@@ -264,7 +262,6 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
                 andExpect(view().name("project/financecheck/eligibility")).
                 andExpect(model().attribute("model", instanceOf(FinanceChecksProjectCostsViewModel.class))).
                 andReturn();
-
 
         assertReadOnlyViewEligibilityDetails(result);
     }
