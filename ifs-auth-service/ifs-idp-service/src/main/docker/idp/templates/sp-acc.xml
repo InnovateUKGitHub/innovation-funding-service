@@ -1,4 +1,4 @@
-<EntityDescriptor entityID="https://${DOMAIN}/SSO" validUntil="2028-09-05T14:54:23.360Z"
+<EntityDescriptor entityID="https://${DOMAIN}" validUntil="2028-09-05T14:54:23.360Z"
                   xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
     <SPSSODescriptor AuthnRequestsSigned="true" WantAssertionsSigned="true"
                      protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
