@@ -104,11 +104,11 @@ createEntitiesFromProperties() {
     PORT_POSTFIX=$(createPortPostfix ${PORT} ${PROTOCOL})
     TEMPLATE=$(property TEMPLATE ${properties})
 
-    if [ "${PORT_POSTFIX}" = "__EMPTY__" ] ; then
+#    if [ "${PORT_POSTFIX}" = "__EMPTY__" ] ; then
       entityName="${PROTOCOL}://${DOMAIN}"
-    else
-      entityName="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}"
-    fi
+#    else
+#      entityName="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}"
+#    fi
     entityNameHash=`echo -n ${entityName} | openssl sha1 | sed 's/^.* //'`
     echo "Creating entity ${entityName} using template ${TEMPLATE} : ${entityNameHash}"
 
