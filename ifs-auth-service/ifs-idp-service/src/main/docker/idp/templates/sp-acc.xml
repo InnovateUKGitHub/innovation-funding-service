@@ -1,20 +1,25 @@
-<EntityDescriptor entityID="https://${DOMAIN}" validUntil="2028-09-05T14:54:23.360Z"
-                  xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-    <SPSSODescriptor AuthnRequestsSigned="true" WantAssertionsSigned="true"
-                     protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-        <KeyDescriptor use="signing">
-            <ds:KeyInfo>
-                <ds:X509Data>
-                    <ds:X509Certificate>${CERTIFICATE}</ds:X509Certificate>
-                </ds:X509Data>
-            </ds:KeyInfo>
-        </KeyDescriptor>
-        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-                             Location="https://${DOMAIN}/services/auth/sp/saml2/logout"/>
-        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-                             Location="https://${DOMAIN}/services/auth/sp/saml2/logout"/>
-        <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</NameIDFormat>
-        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-                                  Location="https://${DOMAIN}?so=00D0Q0000000O0N" index="0" isDefault="true"/>
-    </SPSSODescriptor>
-</EntityDescriptor>
+<EntitiesDescriptor Name="innovateuk"
+                    xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                    xmlns:mdalg="urn:oasis:names:tc:SAML:metadata:algsupport" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
+                    xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <EntityDescriptor entityID="https://${DOMAIN}" validUntil="2028-09-05T14:54:23.360Z"
+                      xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <SPSSODescriptor AuthnRequestsSigned="true" WantAssertionsSigned="true"
+                         protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+            <KeyDescriptor use="signing">
+                <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>${CERTIFICATE}</ds:X509Certificate>
+                    </ds:X509Data>
+                </ds:KeyInfo>
+            </KeyDescriptor>
+            <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                 Location="https://${DOMAIN}/services/auth/sp/saml2/logout"/>
+            <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                                 Location="https://${DOMAIN}/services/auth/sp/saml2/logout"/>
+            <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</NameIDFormat>
+            <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                      Location="https://${DOMAIN}?so=00D0Q0000000O0N" index="0" isDefault="true"/>
+        </SPSSODescriptor>
+    </EntityDescriptor>
+</EntitiesDescriptor>
