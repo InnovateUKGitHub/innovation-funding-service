@@ -23,8 +23,6 @@ if (!isNamedEnv()) {
     }
 }
 
-def token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
-
 task prepareDeployment(type: Copy) {
 
     destinationDir = file('build/resources/main')
@@ -274,7 +272,9 @@ task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
 // Remote tasks
 
 task deleteProject(type: Exec) {
+    def token
     doFirst {
+        token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
         executable 'oc'
         args 'delete', 'project', openshiftEnv, "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
     }
@@ -301,7 +301,9 @@ task deleteProject(type: Exec) {
 }
 
 task createProject(dependsOn: deleteProject) {
+    def token
     doFirst {
+        token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
         exec {
             executable 'oc'
             args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
