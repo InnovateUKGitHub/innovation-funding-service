@@ -24,7 +24,7 @@ CompAdmin creates a new Generic competition
     [Tags]  HappyPath
     [Setup]  log in as a different user                &{Comp_admin1_credentials}
     Given the competition admin creates competition      4  ${competitionName}  Generic  Generic  2  GRANT  project-setup-completion-stage  no  1  true  collaborative
-    [Teardown]  Change the open date of the Competition in the database to one day before   ${competitionName}
+    Then get competition id and set open date to yesterday  ${competitionName}
 
 Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Documentation]  IFS-1012  IFS-2879

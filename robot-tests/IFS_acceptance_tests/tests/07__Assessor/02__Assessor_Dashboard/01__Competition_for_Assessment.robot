@@ -10,24 +10,14 @@ Resource         ../../07__Assessor/Assessor_Commons.robot
 Assessment should not be visible when the deadline has passed
     [Documentation]  INFUND-1188
     [Tags]  MySQL
-    ${assessorDeadline} =  Save competition's current assessor deadline  ${IN_ASSESSMENT_COMPETITION}
-    When The assessment deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the past
-    And the user reloads the page
+    Given update milestone to yesterday         ${IN_ASSESSMENT_COMPETITION}  ASSESSOR_DEADLINE
     Then The user should not see the element    link=Park living
-    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2020-09-04' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type='ASSESSOR_DEADLINE';
-    #[Teardown]  Reset competition's milestone  ${assessorDeadline}
+    [Teardown]  Reset competition's milestone   ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DB}
 
 *** Keywords ***
-Save competition's current assessor deadline
-    [Arguments]  ${competitionId}
-    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='ASSESSOR_DEADLINE';
-    ${result} =  get from list  ${result}  0
-    ${assessorDeadline} =  get from list  ${result}  0
-    [Return]  ${assessorDeadline}
-
 Reset competition's milestone
     [Arguments]  ${date}
-    Execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and `type`='ASSESSOR_DEADLINE';
+    Execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DB}' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and `type`='ASSESSOR_DEADLINE';
 
 Custom suite setup
     The user logs-in in new browser  &{assessor_credentials}
