@@ -18,7 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
@@ -26,16 +26,17 @@ import org.springframework.validation.Validator;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class OtherFundingValidatorTest {
 
 	private Validator validator;
@@ -166,7 +167,7 @@ public class OtherFundingValidatorTest {
         ApplicationFinance applicationFinance = ApplicationFinanceBuilder.newApplicationFinance().withApplication(application).build();
         ApplicationFinanceRow cost = ApplicationFinanceRowBuilder.newApplicationFinanceRow().withOwningFinance(applicationFinance).withItem(value).build();
         Question question = QuestionBuilder.newQuestion().build();
-        when(financeRowRepository.findOne(any(Long.class))).thenReturn(cost);
+        when(financeRowRepository.findById(any(Long.class))).thenReturn(Optional.of(cost));
         when(questionService.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FinanceRowType.OTHER_FUNDING.getFormInputType())).thenReturn(ServiceResult.serviceSuccess(question));
         List<ApplicationFinanceRow> listOfCostWithYes = new ArrayList<>();
         listOfCostWithYes.add(cost);

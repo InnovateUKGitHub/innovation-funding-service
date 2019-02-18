@@ -24,10 +24,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
+import java.util.Optional;
 
 import java.util.Map;
 
@@ -46,13 +47,13 @@ import static org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceIm
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.mockito.ArgumentMatchers.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(org.mockito.junit.MockitoJUnitRunner.Silent.class)
 public class ApplicationInviteNotificationServiceTest {
 
     @Mock
@@ -158,7 +159,9 @@ public class ApplicationInviteNotificationServiceTest {
                 new InviteOrganisation("SomeOrg", null, singletonList(invite));
         invite.setInviteOrganisation(inviteOrganisation);
 
-        when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
+        when(notificationServiceMock.sendNotificationWithFlush(isA(Notification.class), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
+        when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
         when(notificationServiceMock.sendNotificationWithFlush(createNotificationExpectations(invite, application,
                 competition, leadOrganisation), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
 
@@ -166,7 +169,9 @@ public class ApplicationInviteNotificationServiceTest {
 
         assertThat(results.isSuccess()).isTrue();
 
-        verify(organisationRepositoryMock).findOne(leadOrganisation.getId());
+        verify(organisationRepositoryMock).findById(leadOrganisation.getId());
+        verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(NotificationMedium.EMAIL));
+        verify(organisationRepositoryMock).findById(leadOrganisation.getId());
         verify(notificationServiceMock).sendNotificationWithFlush(createNotificationExpectations(invite, application,
                 competition, leadOrganisation), eq(NotificationMedium.EMAIL));
     }
@@ -230,14 +235,14 @@ public class ApplicationInviteNotificationServiceTest {
                 new InviteOrganisation("SomeOrg", null, singletonList(invite));
         invite.setInviteOrganisation(inviteOrganisation);
 
-        when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
         when(notificationServiceMock.sendNotificationWithFlush(isA(Notification.class), eq(NotificationMedium.EMAIL))).thenReturn(serviceFailure(forbiddenError()));
 
         ServiceResult<Void> results = inviteService.inviteCollaborators(singletonList(invite));
 
         assertThatServiceFailureIs(results, forbiddenError());
 
-        verify(organisationRepositoryMock).findOne(leadOrganisation.getId());
+        verify(organisationRepositoryMock).findById(leadOrganisation.getId());
         verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(NotificationMedium.EMAIL));
     }
 

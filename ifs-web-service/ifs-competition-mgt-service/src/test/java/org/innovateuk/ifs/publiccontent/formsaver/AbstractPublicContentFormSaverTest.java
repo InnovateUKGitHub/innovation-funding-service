@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
 
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
  * Tests for abstract form savers in public content.
  * {@link org.innovateuk.ifs.publiccontent.saver.AbstractPublicContentFormSaver} {@link org.innovateuk.ifs.publiccontent.saver.AbstractContentGroupFormSaver}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AbstractPublicContentFormSaverTest {
 
     private static final PublicContentSectionType TEST_TYPE = PublicContentSectionType.ELIGIBILITY;

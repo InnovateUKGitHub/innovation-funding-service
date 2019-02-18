@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,33 +25,22 @@ import org.springframework.test.web.servlet.MvcResult;
 import javax.servlet.http.Cookie;
 
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
-import static org.innovateuk.ifs.CookieTestUtil.encryptor;
-import static org.innovateuk.ifs.CookieTestUtil.getDecryptedCookieValue;
-import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
+import static org.innovateuk.ifs.CookieTestUtil.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.ACCEPT_INVITE_MAPPING;
-import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.ACCEPT_INVITE_SHOW_PROJECT;
-import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING;
-import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW;
-import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING;
+import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyLong;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AcceptProjectInviteControllerTest extends BaseUnitTest {
 
     @InjectMocks

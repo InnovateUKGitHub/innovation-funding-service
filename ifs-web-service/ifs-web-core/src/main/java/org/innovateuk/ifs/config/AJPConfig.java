@@ -2,8 +2,8 @@ package org.innovateuk.ifs.config;
 
 import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,26 +32,26 @@ public class AJPConfig {
     int maxThreads;
 
     @Bean
-    public EmbeddedServletContainerFactory servletContainer() {
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> servletContainer() {
+        return server -> {
+            if(tomcatAjpEnabled) {
 
-        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
-        if (tomcatAjpEnabled)
-        {
-            Connector ajpConnector = new Connector("AJP/1.3");
-            ajpConnector.setProtocol("AJP/1.3");
-            ajpConnector.setPort(ajpPort);
-            ajpConnector.setSecure(false);
-            ajpConnector.setAllowTrace(false);
-            ajpConnector.setAttribute("tomcatAuthentication", false);
-            ajpConnector.setAttribute("connectionTimeout", connectionTimeout);
-            ajpConnector.setAttribute("acceptCount", acceptCount);
-            ajpConnector.setAttribute("maxConnections", maxConnections);
-            ajpConnector.setAttribute("maxThreads", maxThreads);
-            ajpConnector.setAttribute("minSpareThreads", 20);
-            ajpConnector.setScheme("ajp");
-            tomcat.addAdditionalTomcatConnectors(ajpConnector);
-        }
+                Connector ajpConnector = new Connector("AJP/1.3");
+                ajpConnector.setProtocol("AJP/1.3");
+                ajpConnector.setPort(ajpPort);
+                ajpConnector.setSecure(false);
+                ajpConnector.setAllowTrace(false);
+                ajpConnector.setAttribute("tomcatAuthentication", false);
+                ajpConnector.setAttribute("connectionTimeout", connectionTimeout);
+                ajpConnector.setAttribute("acceptCount", acceptCount);
+                ajpConnector.setAttribute("maxConnections", maxConnections);
+                ajpConnector.setAttribute("maxThreads", maxThreads);
+                ajpConnector.setAttribute("minSpareThreads", 20);
+                ajpConnector.setScheme("ajp");
 
-        return tomcat;
+                server.addAdditionalTomcatConnectors(ajpConnector);
+            }
+        };
     }
+
 }

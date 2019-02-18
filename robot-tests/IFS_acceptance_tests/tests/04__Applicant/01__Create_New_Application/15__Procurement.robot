@@ -20,9 +20,9 @@ Comp Admin creates procurement competition
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
     [Tags]    MySQL
-    Given Change the open date of the Competition in the database to one day before  ${comp_name}
-    When Log in as a different user                                                   &{RTO_lead_applicant_credentials}
-    Then logged in user applies to competition                                       ${comp_name}  3
+    [Setup]  get competition id and set open date to yesterday  ${comp_name}
+    Given Log in as a different user            &{RTO_lead_applicant_credentials}
+    Then logged in user applies to competition  ${comp_name}  3
 
 Applicant submits his application
     [Documentation]  IFS-2688 IFS-3287
@@ -35,7 +35,7 @@ Applicant submits his application
     And the user marks the procurement finances as complete         ${appl_name}   Calculate  52,214  yes
     And the user selects research category              Feasibility studies
     And the applicant submits the procurement application
-    [Teardown]  Competition is closed
+    [Teardown]  update milestone to yesterday  ${competitionId}  SUBMISSION_DATE
 
 Invite a registered assessor
     [Documentation]  IFS-2376
@@ -135,7 +135,7 @@ the applicant submits the procurement application
 
 Competition is closed
     Get competitions id and set it as suite variable    ${comp_name}
-    the submission date changes in the db in the past   ${competitionId}
+    update milestone to yesterday                       ${competitionId}  SUBMISSION_DATE
 
 the assessor submits the assessment
     the assessor adds score and feedback for every question    11   # value 5: is the number of questions to loop through to submit feedback

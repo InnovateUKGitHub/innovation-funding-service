@@ -33,9 +33,9 @@ Comp Admin Creates EOI type competition
 Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080
     [Tags]  MySQL
-    When Change the open date of the Competition in the database to one day before  ${comp_name}
-    And Log in as a different user                                                  &{assessor_bob_credentials}
-    Then logged in user applies to competition                                      ${comp_name}  1
+    [Setup]  get competition id and set open date to yesterday  ${comp_name}
+    Given Log in as a different user            &{assessor_bob_credentials}
+    Then logged in user applies to competition  ${comp_name}  1
 
 Applicant submits his application
     [Documentation]  IFS-2196  IFS-2941  IFS-4046
@@ -64,7 +64,7 @@ Invite a registered assessor
 Allocated assessor accepts invite to assess the competition
     [Documentation]  IFS-2376
     [Tags]
-    [Setup]  Milestones are updated in database to move competition to assessment state
+    [Setup]  update milestone to yesterday                  ${competitionId}  SUBMISSION_DATE
     Given Log in as a different user                        &{assessor_credentials}
     When The user clicks the button/link                    Link = ${comp_name}
     And the user selects the radio button                   acceptInvitation  true
@@ -126,10 +126,6 @@ the lead applicant fills all the questions and marks as complete(EOI comp type)
     the user selects Research category   Feasibility studies
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
-
-Milestones are updated in database to move competition to assessment state
-    Get competitions id and set it as suite variable    ${comp_name}
-    the submission date changes in the db in the past   ${competitionId}
 
 the assessor submits the assessment
     the assessor adds score and feedback for every question    5   # value 5: is the number of questions to loop through to submit feedback

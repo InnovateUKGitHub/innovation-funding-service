@@ -124,7 +124,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
 
-        ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = new ArgumentCaptor<>();
+        ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = ArgumentCaptor.forClass(ApplicationFinanceResource.class);
 
         when(applicationFinanceRestServiceMock.update(eq(applicationFinance.getId()), updatedApplicationFinanceCaptor.capture())).thenReturn(
                 restSuccess(applicationFinance));
@@ -170,7 +170,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
 
-        ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = new ArgumentCaptor<>();
+        ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = ArgumentCaptor.forClass(ApplicationFinanceResource.class);
 
         when(applicationFinanceRestServiceMock.update(eq(applicationFinance.getId()), updatedApplicationFinanceCaptor.capture())).thenReturn(
                 restSuccess(applicationFinance));
@@ -205,7 +205,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
 
-        ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = new ArgumentCaptor<>();
+        ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = ArgumentCaptor.forClass(ApplicationFinanceResource.class);
 
         when(applicationFinanceRestServiceMock.update(eq(applicationFinance.getId()), updatedApplicationFinanceCaptor.capture())).thenReturn(
                 restSuccess(applicationFinance));

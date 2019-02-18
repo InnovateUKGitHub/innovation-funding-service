@@ -55,7 +55,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     @Override
     public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, int pageIndex, int pageSize, Long filterInnovationArea) {
 
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application -> {
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application -> {
                     Pageable pageable = new PageRequest(pageIndex, pageSize, new Sort(ASC, "user.firstName", "user.lastName"));
                     Page<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.findParticipantsWithoutAssessments(
                             application.getCompetition().getId(),
@@ -71,7 +71,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
 
     @Override
     public ServiceResult<List<ApplicationAssessorResource>> getAssignedAssessors(long applicationId) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application ->
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application ->
                 simpleMap(assessmentParticipantRepository.findParticipantsWithAssessments(application.getCompetition().getId(), ASSESSOR, ParticipantStatus.ACCEPTED, applicationId),
                         competitionParticipant -> {
                             Optional<Assessment> mostRecentAssessment = getMostRecentAssessment(competitionParticipant, applicationId);
@@ -106,7 +106,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
                 .filter(processRole -> !isLeadOrgId(leadOrgId, processRole))
                 .map(ProcessRole::getOrganisationId)
                 .distinct()
-                .map(orgId -> organisationRepository.findOne(orgId).getName())
+                .map(orgId -> organisationRepository.findById(orgId).get().getName())
                 .sorted(Collator.getInstance())
                 .collect(toList());
     }
@@ -124,7 +124,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
 
     private String getLeadOrganisationName(Application application) {
         return getLeadOrganisationId(application)
-                .map(orgId -> organisationRepository.findOne(orgId).getName())
+                .map(orgId -> organisationRepository.findById(orgId).get().getName())
                 .orElse("");
     }
 

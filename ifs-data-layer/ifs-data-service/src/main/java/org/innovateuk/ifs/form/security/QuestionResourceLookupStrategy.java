@@ -19,6 +19,6 @@ public class QuestionResourceLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public QuestionResource findResourceById(Long id){
-        return questionMapper.mapToResource(questionRepository.findOne(id));
+        return questionMapper.mapToResource(questionRepository.findById(id).orElse(null));
     }
 }

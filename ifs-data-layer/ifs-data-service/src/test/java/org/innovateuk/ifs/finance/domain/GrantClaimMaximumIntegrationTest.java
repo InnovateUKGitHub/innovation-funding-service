@@ -127,13 +127,13 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                                        Optional<OrganisationSize> organisationSize, int expectedMaximumGrant) {
 
         UserResource leadApplicant = applicationData.getLeadApplicant();
-        Organisation leadOrganisation = organisationRepository.findOne(applicationData.getApplication().getLeadOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(applicationData.getApplication().getLeadOrganisationId()).get();
 
         Long applicationId = applicationData.getApplication().getId();
         Long leadOrganisationId = leadOrganisation.getId();
 
         ResearchCategory researchCategory = researchCategoryRepository.findByName(researchCategoryName);
-        Application application = applicationRepository.findOne(applicationId);
+        Application application = applicationRepository.findById(applicationId).get();
         application.setResearchCategory(researchCategory);
 
         organisationSize.ifPresent(size -> {

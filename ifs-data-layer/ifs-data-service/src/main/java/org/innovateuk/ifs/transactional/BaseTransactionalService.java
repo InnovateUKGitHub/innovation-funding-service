@@ -72,7 +72,7 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
     }
 
     protected ServiceResult<Project> getProject(final Long id) {
-        return find(projectRepository.findOne(id), notFoundError(Project.class, id));
+        return find(projectRepository.findById(id), notFoundError(Project.class, id));
     }
 
     protected final Supplier<ServiceResult<Application>> openApplication(long applicationId) {
@@ -102,11 +102,11 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
     }
 
     protected ServiceResult<Application> getApplication(final Long id) {
-        return find(applicationRepository.findOne(id), notFoundError(Application.class, id));
+        return find(applicationRepository.findById(id), notFoundError(Application.class, id));
     }
 
     protected ServiceResult<Section> getSection(final Long id) {
-        return find(sectionRepository.findOne(id), notFoundError(Section.class, id));
+        return find(sectionRepository.findById(id), notFoundError(Section.class, id));
     }
 
     protected Supplier<ServiceResult<Competition>> competition(final Long id) {
@@ -114,7 +114,7 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
     }
 
     protected ServiceResult<Competition> getCompetition(final Long id) {
-        return find(competitionRepository.findOne(id), notFoundError(Competition.class, id));
+        return find(competitionRepository.findById(id), notFoundError(Competition.class, id));
     }
 
     protected Supplier<ServiceResult<Organisation>> organisation(Long id) {
@@ -122,7 +122,7 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
     }
 
     protected ServiceResult<Organisation> getOrganisation(Long id) {
-        return find(organisationRepository.findOne(id), notFoundError(Organisation.class, id));
+        return find(organisationRepository.findById(id), notFoundError(Organisation.class, id));
     }
 
     protected ServiceResult<PartnerOrganisation> getPartnerOrganisation(final Long projectId, final Long organisationId) {
@@ -134,6 +134,6 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
     }
 
     protected ServiceResult<Question> getQuestion(Long questionId) {
-        return find(questionRepository.findOne(questionId), notFoundError(Question.class));
+        return find(questionRepository.findById(questionId), notFoundError(Question.class));
     }
 }

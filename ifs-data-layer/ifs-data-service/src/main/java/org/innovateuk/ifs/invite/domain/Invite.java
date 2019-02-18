@@ -31,10 +31,10 @@ import static java.util.Objects.requireNonNull;
 @DiscriminatorOptions(force = true)
 public abstract class Invite<T, I extends Invite<T,I>> {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
-    private  String name;
+    private String name;
     @NotBlank
     @Email
     private String email; // invitee

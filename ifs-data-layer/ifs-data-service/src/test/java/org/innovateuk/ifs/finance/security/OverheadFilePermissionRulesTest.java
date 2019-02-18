@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -87,16 +88,15 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
 
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
-
-            when(applicationFinanceRowRepositoryMock.findOne(overheads.getId())).thenReturn((ApplicationFinanceRow) overheads);
-            when(applicationFinanceRowRepositoryMock.findOne(submittedOverheads.getId())).thenReturn((ApplicationFinanceRow) submittedOverheads);
+            when(applicationFinanceRowRepositoryMock.findById(overheads.getId())).thenReturn(Optional.of((ApplicationFinanceRow) overheads));
+            when(applicationFinanceRowRepositoryMock.findById(submittedOverheads.getId())).thenReturn(Optional.of((ApplicationFinanceRow) submittedOverheads));
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).
                     thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, applicationId, organisationId)).
                     thenReturn(newProcessRole().build());
 
-            when(applicationRepositoryMock.findById(applicationId)).thenReturn(application);
-            when(applicationRepositoryMock.findById(submittedApplicationId)).thenReturn(submittedApplication);
+            when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+            when(applicationRepositoryMock.findById(submittedApplicationId)).thenReturn(Optional.of(submittedApplication));
         }
 
         {

@@ -40,12 +40,11 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                     new AssessmentCreateResource(application.getId(), assessor.getId())).getSuccess()
             );
 
-            doAs(compAdmin(), () ->
-                    testService.doWithinTransaction(() -> {
-                        Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
-                        assessmentWorkflowHandler.notify(assessment);
-                    })
-            );
+            testService.doWithinTransaction(() -> {
+
+                Assessment assessment = assessmentRepository.findById(assessmentResource.getId()).get();
+                doAs(compAdmin(), () -> assessmentWorkflowHandler.notify(assessment));
+            });
 
             switch (state) {
                 case ACCEPTED:
@@ -66,12 +65,10 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
             }
 
             if (EnumSet.of(OPEN).contains(state)) {
-                doAs(compAdmin(), () ->
-                        testService.doWithinTransaction(() -> {
-                            Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
-                            assessment.setProcessState(state);
-                        })
-                );
+                testService.doWithinTransaction(() -> {
+                    Assessment assessment = assessmentRepository.findById(assessmentResource.getId()).get();
+                    assessment.setProcessState(state);
+                });
             }
 
             doAs(assessor, () -> {

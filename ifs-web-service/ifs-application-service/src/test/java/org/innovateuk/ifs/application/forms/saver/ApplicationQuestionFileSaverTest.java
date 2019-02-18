@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -43,7 +43,7 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 /**
  * Tests {@link ApplicationQuestionFileSaver}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationQuestionFileSaverTest {
 
     @InjectMocks
@@ -84,12 +84,12 @@ public class ApplicationQuestionFileSaverTest {
                 .withId(1000L)
                 .withType(FormInputType.FILEUPLOAD)
                 .build(1)));
-        when(formInputResponseRestService.createFileEntry(anyLong(), anyLong(), anyLong(), anyString(), anyLong(), anyString(), any(byte[].class))).thenReturn(restSuccess(newFileEntryResource().build()));
+        when(formInputResponseRestService.createFileEntry(anyLong(), anyLong(), anyLong(), nullable(String.class), anyLong(), nullable(String.class), any(byte[].class))).thenReturn(restSuccess(newFileEntryResource().build()));
 
         ValidationMessages result = fileSaver.saveFileUploadQuestionsIfAny(questions, params, uploadRequest, applicationId, processRoleId);
 
         assertFalse(result.hasErrors());
-        verify(formInputResponseRestService, times(1)).createFileEntry(anyLong(), anyLong(), anyLong(), anyString(), anyLong(), anyString(), any(byte[].class));
+        verify(formInputResponseRestService, times(1)).createFileEntry(anyLong(), anyLong(), anyLong(), nullable(String.class), anyLong(), anyString(), any(byte[].class));
     }
 
     @Test
@@ -103,13 +103,13 @@ public class ApplicationQuestionFileSaverTest {
                 .withId(1000L)
                 .withType(FormInputType.FILEUPLOAD)
                 .build(1)));
-        when(formInputResponseRestService.createFileEntry(anyLong(), anyLong(), anyLong(), anyString(), anyLong(), anyString(), any(byte[].class)))
+        when(formInputResponseRestService.createFileEntry(anyLong(), anyLong(), anyLong(), nullable(String.class), anyLong(), anyString(), any(byte[].class)))
                 .thenReturn(RestResult.restFailure(new Error("Something went wrong", HttpStatus.BAD_REQUEST)));
 
         ValidationMessages result = fileSaver.saveFileUploadQuestionsIfAny(questions, params, uploadRequest, applicationId, processRoleId);
 
         assertTrue(result.hasErrors());
-        verify(formInputResponseRestService, times(1)).createFileEntry(anyLong(), anyLong(), anyLong(), anyString(), anyLong(), anyString(), any(byte[].class));
+        verify(formInputResponseRestService, times(1)).createFileEntry(anyLong(), anyLong(), anyLong(), nullable(String.class), anyLong(), anyString(), any(byte[].class));
     }
 
     @Test
@@ -177,7 +177,7 @@ public class ApplicationQuestionFileSaverTest {
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
 
-        when(formInputResponseRestService.createFileEntry(anyLong(), anyLong(), anyLong(), anyString(), anyLong(), anyString(), any(byte[].class)))
+        when(formInputResponseRestService.createFileEntry(anyLong(), anyLong(), anyLong(), nullable(String.class), anyLong(), anyString(), any(byte[].class)))
                 .thenReturn(RestResult.restFailure(fieldError("fileField", "application/json", UNSUPPORTED_MEDIA_TYPE.name(), simpleJoiner(validMediaTypesFromDataLayer, ", "))));
 
         ValidationMessages result = fileSaver.saveFileUploadQuestionsIfAny(questions, params, uploadRequest, applicationId, processRoleId);

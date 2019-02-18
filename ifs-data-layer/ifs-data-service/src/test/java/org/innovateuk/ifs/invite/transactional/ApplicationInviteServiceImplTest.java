@@ -30,7 +30,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -53,12 +53,12 @@ import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilde
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationInviteServiceImplTest {
 
     @Mock
@@ -142,7 +142,7 @@ public class ApplicationInviteServiceImplTest {
                 .thenReturn(saveInviteOrganisationExpectations);
         when(inviteOrganisationMapper.mapToResource(isA(List.class))).thenReturn(emptyList());
 
-        when(inviteOrganisationRepositoryMock.findAll(isA(List.class)))
+        when(inviteOrganisationRepositoryMock.findAllById(isA(List.class)))
                 .thenReturn(newInviteOrganisation().build(inviteResources.size()));
 
         List<ApplicationInvite> savedInvites = ApplicationInviteBuilder.newApplicationInvite().build(5);
@@ -154,8 +154,8 @@ public class ApplicationInviteServiceImplTest {
         }));
 
 
-        when(applicationInviteRepositoryMock.save(saveInvitesExpectations)).thenReturn(savedInvites);
-        when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
+        when(applicationInviteRepositoryMock.saveAll(saveInvitesExpectations)).thenReturn(savedInvites);
+        when(applicationRepositoryMock.findById(isA(Long.class))).thenReturn(Optional.of(newApplication().withId(1L).build()));
         when(applicationInviteNotificationServiceMock.inviteCollaborators(isA(List.class))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result =
@@ -216,10 +216,10 @@ public class ApplicationInviteServiceImplTest {
                 .build();
 
         when(inviteOrganisationMapper.mapToResource(isA(List.class))).thenReturn(asList());
-        when(inviteOrganisationRepositoryMock.findAll(isA(List.class)))
+        when(inviteOrganisationRepositoryMock.findAllById(isA(List.class)))
                 .thenReturn(newInviteOrganisation().build(inviteResources.size()));
-        when(applicationRepositoryMock.findOne(isA(Long.class)))
-                .thenReturn(newApplication().withId(1L).build());
+        when(applicationRepositoryMock.findById(isA(Long.class)))
+                .thenReturn(Optional.of(newApplication().withId(1L).build()));
 
         ServiceResult<Void> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
@@ -227,7 +227,7 @@ public class ApplicationInviteServiceImplTest {
         assertThat(result.isFailure()).isTrue();
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
-        verify(applicationInviteRepositoryMock, never()).save(isA(List.class));
+        verify(applicationInviteRepositoryMock, never()).saveAll(isA(List.class));
     }
 
     @Test
@@ -246,9 +246,9 @@ public class ApplicationInviteServiceImplTest {
                 .build();
 
         when(inviteOrganisationMapper.mapToResource(isA(List.class))).thenReturn(asList());
-        when(inviteOrganisationRepositoryMock.findAll(isA(List.class)))
+        when(inviteOrganisationRepositoryMock.findAllById(isA(List.class)))
                 .thenReturn(newInviteOrganisation().build(inviteResources.size()));
-        when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
+        when(applicationRepositoryMock.findById(isA(Long.class))).thenReturn(Optional.of(newApplication().withId(1L).build()));
         when(applicationInviteNotificationServiceMock.inviteCollaborators(isA(List.class))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result =
@@ -285,9 +285,9 @@ public class ApplicationInviteServiceImplTest {
         Organisation organisation = newOrganisation().withId(3L).build();
 
         when(inviteOrganisationMapper.mapToResource(isA(List.class))).thenReturn(asList());
-        when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(inviteResources.size()));
-        when(organisationRepositoryMock.findOne(inviteOrganisationResource.getOrganisation())).thenReturn(organisation);
-        when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
+        when(inviteOrganisationRepositoryMock.findAllById(isA(List.class))).thenReturn(newInviteOrganisation().build(inviteResources.size()));
+        when(organisationRepositoryMock.findById(inviteOrganisationResource.getOrganisation())).thenReturn(Optional.of(organisation));
+        when(applicationRepositoryMock.findById(isA(Long.class))).thenReturn(Optional.of(newApplication().withId(1L).build()));
         when(applicationInviteNotificationServiceMock.inviteCollaborators(isA(List.class))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result =
@@ -327,16 +327,16 @@ public class ApplicationInviteServiceImplTest {
         InviteOrganisation inviteOrganisation = newInviteOrganisation().withOrganisationName("Already existing invite organisation name").withOrganisation(organisation).build();
 
         when(inviteOrganisationMapper.mapToResource(isA(List.class))).thenReturn(asList());
-        when(inviteOrganisationRepositoryMock.findAll(isA(List.class)))
+        when(inviteOrganisationRepositoryMock.findAllById(isA(List.class)))
                 .thenReturn(newInviteOrganisation().build(inviteResources.size()));
-        when(organisationRepositoryMock.findOne(inviteOrganisationResource.getOrganisation())).thenReturn(organisation);
+        when(organisationRepositoryMock.findById(inviteOrganisationResource.getOrganisation())).thenReturn(Optional.of(organisation));
         when(inviteOrganisationRepositoryMock.findOneByOrganisationIdAndInvitesApplicationId(
                 inviteOrganisation.getOrganisation().getId(),
                 applicationId
         ))
                 .thenReturn(inviteOrganisation);
 
-        when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
+        when(applicationRepositoryMock.findById(isA(Long.class))).thenReturn(Optional.of(newApplication().withId(1L).build()));
         when(applicationInviteNotificationServiceMock.inviteCollaborators(isA(List.class))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result =
@@ -386,7 +386,7 @@ public class ApplicationInviteServiceImplTest {
                 build();
 
         when(applicationInviteRepositoryMock.getByHash("an organisation hash")).thenReturn(invite);
-        when(inviteOrganisationRepositoryMock.findOne(inviteOrganisation.getId())).thenReturn(inviteOrganisation);
+        when(inviteOrganisationRepositoryMock.findById(inviteOrganisation.getId())).thenReturn(Optional.of(inviteOrganisation));
         when(inviteOrganisationMapper.mapToResource(inviteOrganisation)).thenReturn(expectedInviteOrganisationResource);
 
         InviteOrganisationResource inviteOrganisationResource =
@@ -453,7 +453,7 @@ public class ApplicationInviteServiceImplTest {
                 inviteProcessRoles,
                 invite.getTarget().getLeadApplicantProcessRole()
         );
-        inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
+        inOrder.verify(processRoleRepositoryMock).deleteAll(inviteProcessRoles);
         inOrder.verify(inviteOrganisationRepositoryMock).delete(invite.getInviteOrganisation());
         inOrder.verifyNoMoreInteractions();
 
@@ -501,7 +501,7 @@ public class ApplicationInviteServiceImplTest {
                 inviteProcessRoles,
                 applicationInviteToDelete.getTarget().getLeadApplicantProcessRole()
         );
-        inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
+        inOrder.verify(processRoleRepositoryMock).deleteAll(inviteProcessRoles);
         inOrder.verifyNoMoreInteractions();
 
         assertThat(applicationInviteResult.isSuccess()).isTrue();
@@ -563,7 +563,7 @@ public class ApplicationInviteServiceImplTest {
                 inviteProcessRoles,
                 applicationInviteToDelete.getTarget().getLeadApplicantProcessRole()
         );
-        inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
+        inOrder.verify(processRoleRepositoryMock).deleteAll(inviteProcessRoles);
         inOrder.verify(applicationFinanceRepositoryMock).findByApplicationIdAndOrganisationId(
                 application.getId(),
                 organisation.getId()
@@ -584,13 +584,13 @@ public class ApplicationInviteServiceImplTest {
                 .build();
 
         when(inviteOrganisationMapper.mapToResource(isA(List.class))).thenReturn(singletonList(inviteOrganisationResource));
-        when(applicationRepositoryMock.findOne(null)).thenReturn(newApplication().withId(1L).build());
-        when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(1));
+        when(applicationRepositoryMock.findById(null)).thenReturn(Optional.of(newApplication().withId(1L).build()));
+        when(inviteOrganisationRepositoryMock.findAllById(isA(List.class))).thenReturn(newInviteOrganisation().build(1));
 
         ServiceResult<Void> result = inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
         assertThat(result.isFailure()).isTrue();
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
-        verify(applicationInviteRepositoryMock, never()).save(isA(List.class));
+        verify(applicationInviteRepositoryMock, never()).saveAll(isA(List.class));
     }
 }

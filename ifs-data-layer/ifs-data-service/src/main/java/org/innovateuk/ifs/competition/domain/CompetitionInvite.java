@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 @MappedSuperclass
-public abstract class CompetitionInvite<I extends Invite<Competition, I>> extends Invite<Competition, I> implements Serializable {
+public abstract class CompetitionInvite<I extends Invite<Competition, I>> extends Invite<Competition, I> implements Serializable, ResendableInvite {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "target_id", referencedColumnName = "id")

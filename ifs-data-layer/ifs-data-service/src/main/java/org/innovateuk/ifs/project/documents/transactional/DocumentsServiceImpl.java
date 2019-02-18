@@ -81,7 +81,7 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     }
 
     private ServiceResult<CompetitionDocument> getCompetitionDocumentConfig(final long documentConfigId) {
-        return find(competitionDocumentConfigRepository.findOne(documentConfigId), notFoundError(CompetitionDocument.class, documentConfigId));
+        return find(competitionDocumentConfigRepository.findById(documentConfigId), notFoundError(CompetitionDocument.class, documentConfigId));
     }
 
     private List<String> getMediaTypes(List<FileType> fileTypes) {

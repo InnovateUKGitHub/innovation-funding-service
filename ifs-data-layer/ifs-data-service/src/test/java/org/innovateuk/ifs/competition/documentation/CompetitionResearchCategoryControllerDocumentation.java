@@ -3,6 +3,8 @@ package org.innovateuk.ifs.competition.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.controller.CompetitionResearchCategoryController;
 import org.innovateuk.ifs.competition.transactional.CompetitionResearchCategoryService;
+import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
+import org.innovateuk.ifs.documentation.ResearchCategoryResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -43,6 +45,8 @@ public class CompetitionResearchCategoryControllerDocumentation extends BaseCont
                                 parameterWithName("id").description("id of the competition we want the chosen research categories from")
                         ),
                         responseFields(competitionResearchCategoryLinkResourceFields)
+                                .andWithPrefix("[].category.", ResearchCategoryResourceDocs.researchCategoryResourceFields)
+                                .andWithPrefix("[].entity.", CompetitionResourceDocs.competitionResourceFields)
                 ));
 
 
