@@ -186,7 +186,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             File file = new File(ProjectDataBuilder.class.getResource("/webtest.pdf").toURI());
             InputStream inputStream = new FileInputStream(file);
             Supplier<InputStream> inputStreamSupplier = () -> inputStream;
-            documentsService.createDocumentFileEntry(data.getProject().getId(), documentConfigId, new FileEntryResource(null, "pdf", "application/pdf", file.length()), inputStreamSupplier);
+            documentsService.createDocumentFileEntry(data.getProject().getId(), documentConfigId, new FileEntryResource(null, "testing.pdf", "application/pdf", file.length()), inputStreamSupplier);
         } catch (Exception e) {
             LOG.error("Unable to create project document file", e);
             throw new RuntimeException(e);

@@ -18,21 +18,21 @@ Force Tags        Project Setup
 Resource          PS_Common.robot
 
 *** Variables ***
-${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${Grade_Crossing_Project_No}/monitoring-officer
+${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
     [Documentation]    INFUND-2634, INFUND-2621, INFUND-6706
     [Tags]  HappyPath
     [Setup]    The user logs-in in new browser          &{lead_applicant_credentials_bd}
-    Given the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    Given the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user should see the element                 jQuery = h2:contains("Monitoring Officer") ~ p:contains("We will assign the project a Monitoring Officer.")
     And the user should not see the element             css = ul li.complete:nth-child(3)
     And the user should see the element                 css = ul li.waiting:nth-child(3)
     When the user clicks the button/link                link = Monitoring Officer
     Then the user should see the element                jQuery = p:contains("Your project has not yet been assigned a Monitoring Officer.")
     And the user should not see the element             jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
-    When the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_No}/team-status
+    When the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
 
 Status updates correctly for internal user's table
@@ -123,7 +123,7 @@ MO details can be added
     Then The user should see the element                 css = .success-alert
     And the user should see the element                  jQuery = .success-alert:contains("A Monitoring Officer has been assigned.")
     Then Log in as a different user                      &{lead_applicant_credentials_bd}
-    And the user navigates to the page                   ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    And the user navigates to the page                   ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user should see the element                  css = ul li.complete:nth-child(3)
     And the user should see the text in the element      css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
     And the user clicks the button/link                  link = View the status of partners
@@ -145,7 +145,7 @@ MO details can be edited and viewed in the Set up your project page
     And the user edits the MO details
     And the user can see the changed MO details
     When Log in as a different user                    &{lead_applicant_credentials_bd}
-    Then the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    Then the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user should see the element                css = ul li.complete:nth-child(3)
     And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link                link = Monitoring Officer
@@ -153,7 +153,7 @@ MO details can be edited and viewed in the Set up your project page
     And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
     And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
     And the user should see the element                jQuery = .govuk-body:contains("08549731414")
-    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_No}/team-status
+    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 MO details edit(email step)
@@ -167,7 +167,7 @@ MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621
     [Tags]  HappyPath
     Given Log in as a different user                   &{collaborator1_credentials_bd}
-    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     Then the user should see the element               css = ul li.complete:nth-child(3)
     And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link                link = Monitoring Officer
@@ -175,10 +175,10 @@ MO details accessible/seen by all partners
     And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
     And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
     And the user should see the element                jQuery = .govuk-body:contains("08549731414")
-    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_No}/team-status
+    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
     When Log in as a different user                    &{lead_applicant_credentials_bd}
-    And the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    And the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     Then the user should see the element               css = ul li.complete:nth-child(3)
     And the user should see the text in the element    css = ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link                link = Monitoring Officer
@@ -186,14 +186,14 @@ MO details accessible/seen by all partners
     And the user should see the element                jQuery = .govuk-body:contains("Grace Harper")
     And the user should see the element                jQuery = .govuk-body:contains("${test_mailbox_two}+monitoringofficer@gmail.com")
     And the user should see the element                jQuery = .govuk-body:contains("08549731414")
-    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_No}/team-status
+    When the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]
     [Setup]    Log in as a different user      &{collaborator1_credentials_bd}
-    When the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    When the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     Then the user should see the element       link = Monitoring Officer
     #And the user should see the element        link = Finance checks
     And the user should not see the element    link = Spend profile

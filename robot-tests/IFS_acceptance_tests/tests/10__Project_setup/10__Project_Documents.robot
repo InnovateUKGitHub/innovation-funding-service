@@ -46,7 +46,7 @@ ${USER_BECKY_ORG_PUBSECTOR}  becky.mason@gmail.com
 Non-lead partner cannot upload either document
     [Documentation]  INFUND-3011  INFUND-2621  INFUND-5258  INFUND-5806  INFUND-5490
     [Tags]  HappyPath
-    When the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    When the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And The user should see the element        jQuery = p:contains("The Project Manager must upload supporting documents to be reviewed.")
     When the user goes to documents page       Documents  Collaboration agreement
     Then the user should see the element       jQuery = p:contains("Awaiting upload by the Project Manager")
@@ -70,7 +70,7 @@ PM cannot submit when both documents are not uploaded
     [Documentation]  INFUND-3012  INFUND-5490
     [Tags]  HappyPath
     Given log in as a different user           &{lead_applicant_credentials_bd}
-    And the user navigates to the page         ${server}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    And the user navigates to the page         ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link       link = Collaboration agreement
     Then the user should see the element       jQuery = label:contains("Upload")
     When the user goes to documents page       Back to document overview  Exploitation plan
@@ -79,7 +79,7 @@ PM cannot submit when both documents are not uploaded
 Large pdfs not allowed for either document
     [Documentation]  INFUND-3011
     [Tags]
-    Given the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    Given the user navigates to the page                ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link                 link = Collaboration agreement
     When the user uploads to the collaboration agreement/exploitation plan    ${too_large_pdf}
     Then the user should see the element                jQuery = h1:contains("${too_large_pdf_validation_error}")
@@ -112,7 +112,7 @@ Lead partner can view both documents
     [Documentation]  INFUND-3011  INFUND-2621
     [Tags]  HappyPath
     Given Log in as a different user                lewis.poole@vitruvius.example.com  ${short_password}
-    When the user navigates to the page             ${server}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    When the user navigates to the page             ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link             link = Collaboration agreement
     Then the user opens the link in new window      ${valid_pdf}
     And the user should not see an error in the page
@@ -121,12 +121,12 @@ Lead partner can view both documents
     And the user opens the link in new window       ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    [Teardown]    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    [Teardown]    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}
 
 Lead partner does not have the option to submit the documents
     [Documentation]  INFUND-3011
     [Tags]  HappyPath
-    [Setup]    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    [Setup]    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user should not see an error in the page
     And the user clicks the button/link          link = Collaboration agreement
     Then the user should not see the element     id = submitDocumentButton
@@ -144,7 +144,7 @@ Non-lead partner can view both documents
     [Documentation]  INFUND-2621  INFUND-3011  INFUND-3013  INFUND-5806  INFUND-4428
     [Tags]
     Given log in as a different user        &{collaborator1_credentials_bd}
-    When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user goes to documents page     Documents  Collaboration agreement
     And the user clicks the button/link     link = ${valid_pdf}
     Then the user should not see an error in the page
@@ -166,7 +166,7 @@ PM can view both documents
     [Documentation]  INFUND-3011  INFUND-2621
     [Tags]  HappyPath
     Given log in as a different user         &{lead_applicant_credentials_bd}
-    And the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    And the user navigates to the page       ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link     link = Collaboration agreement
     Then the user should see the element     link = ${valid_pdf}
     When the user goes to documents page     Back to document overview  Exploitation plan
@@ -182,7 +182,7 @@ Non-lead partner can still view the Collaboration agreement
     [Documentation]    INFUND-4252
     [Tags]
     [Setup]    log in as a different user            &{collaborator1_credentials_bd}
-    When the user navigates to the page              ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    When the user navigates to the page              ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user goes to documents page              Documents  Collaboration agreement
     Then the user should see the element             link = ${valid_pdf}
 
@@ -190,7 +190,7 @@ PM can remove the first document
     [Documentation]    INFUND-3011
     [Tags]  HappyPath
     [Setup]    log in as a different user       &{lead_applicant_credentials_bd}
-    Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user goes to documents page         Documents  Collaboration agreement
     When the user clicks the button/link        name = deleteDocument
     Then the user should not see the element    link = ${valid_pdf}
@@ -199,7 +199,7 @@ Non-lead partner cannot view either document once removed
     [Documentation]    INFUND-4252
     [Tags]
     [Setup]    log in as a different user         &{collaborator1_credentials_bd}
-    When the user navigates to the page           ${server}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    When the user navigates to the page           ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link           link = Collaboration agreement
     Then the user should not see the element      link = ${valid_pdf}
     When the user goes to documents page          Back to document overview  Exploitation plan
@@ -214,7 +214,7 @@ PM can upload both documents after they have been removed
 Status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011
     [Tags]
-    Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     Then the user should see the element        jQuery = ul li:contains("Document") span:contains("To be completed")
     When the user clicks the button/link        link = View the status of partners
     Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(2)
@@ -223,14 +223,14 @@ Mandatory document submission
     [Documentation]    INFUND-3011, INFUND-6152, INFUND-6139
     [Tags]  HappyPath
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
-    When the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    When the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     And the user reloads the page
     Then PM submits both documents
 
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    Given the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link    link = Collaboration agreement
     And the user clicks the button/link     link = ${valid_pdf}
     Then the user should not see an error in the page
@@ -250,7 +250,7 @@ Lead partner cannot remove the documents after submission by PM
     [Documentation]  INFUND-3012
     [Tags]
     [Setup]  The user logs-in in new browser       &{lead_applicant_credentials_bd}
-    Given the user navigates to the page           ${server}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    Given the user navigates to the page           ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link           link = Collaboration agreement
     Then the user should not see the element       name = deleteDocument
     When the user goes to documents page           Return to documents  Exploitation plan
@@ -271,7 +271,7 @@ Non-lead partner cannot remove the documents after submission by PM
     [Documentation]  INFUND-3012
     [Tags]
     [Setup]  log in as a different user         &{collaborator1_credentials_bd}
-    Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link        link = Collaboration agreement
     Then the user should not see the element    name = deleteDocument
     When the user goes to documents page        Return to documents  Exploitation plan
@@ -287,7 +287,7 @@ Non-lead partner can still view both documents after submitting
     Then the user clicks the button/link        link = ${valid_pdf}
     Then the user should not see an error in the page
     And the user closes the last opened tab
-    When the user navigates to the page         ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    When the user navigates to the page         ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user clicks the button/link         link = View the status of partners
     And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
 
@@ -297,7 +297,7 @@ CompAdmin can see uploaded files
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page     ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link     link = ${PS_Competition_Name}
-    When the user navigates to the page     ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_No}/document/all
+    When the user navigates to the page     ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link     link = Collaboration agreement
     And the user clicks the button/link     link = ${valid_pdf}
     Then the user should see the file without error
@@ -308,7 +308,7 @@ CompAdmin can see uploaded files
 CompAdmin rejects both documents
     [Documentation]    INFUND-4620
     [Tags]  HappyPath
-    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_No}/document/all
+    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link        link = Collaboration agreement
     Then compAdmin reject uploaded documents
     When the user goes to documents page        Return to documents  Exploitation plan
@@ -327,7 +327,7 @@ Partners can see the documents rejected
 After rejection, status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]
-    When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     When the user clicks the button/link    link = View the status of partners
     Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(2)
 
@@ -335,7 +335,7 @@ Project Manager can remove the offending documents
     [Documentation]    INFUND-7342
     [Tags]  HappyPath
     [Setup]    log in as a different user     &{lead_applicant_credentials_bd}
-    Given the user navigates to the page      ${server}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    Given the user navigates to the page      ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link      link = Collaboration agreement
     And the user clicks the button/link       name = deleteDocument
     Then the user should not see the element  link = ${valid_pdf}
@@ -347,7 +347,7 @@ After rejection, non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806, INFUND-7342
     [Tags]
     [Setup]    log in as a different user       &{collaborator1_credentials_bd}
-    Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    Given the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And The user should see the element         jQuery = p:contains("The Project Manager must upload supporting documents to be reviewed.")
     When the user goes to documents page        Documents  Collaboration agreement
     Then the user should not see the element    jQuery = label:contains("Upload")
@@ -366,7 +366,7 @@ After rejection, mandatory document submission
     [Tags]  HappyPath
     [Setup]    log in as a different user   &{lead_applicant_credentials_bd}
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
-    When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    When the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user clicks the button/link     link = Documents
     And the user reloads the page
     Then PM submits both documents
@@ -375,7 +375,7 @@ CompAdmin approves both documents
     [Documentation]    INFUND-4621, INFUND-5507, INFUND-7345
     [Tags]  HappyPath
     [Setup]    Log in as a different user       &{Comp_admin1_credentials}
-    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_No}/document/all
+    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link        link = Collaboration agreement
     Then internal user approve uploaded documents
     When the user goes to documents page        Return to documents  Exploitation plan
@@ -465,7 +465,7 @@ compAdmin reject uploaded documents
     the user should see the element             jQuery = p:contains("You have rejected this document. Please contact the Project Manager to explain your decision.")
 
 Partners can see both documents rejected
-    the user navigates to the page       ${SERVER}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    the user navigates to the page       ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     the user clicks the button/link      link = Collaboration agreement
     the user should see the element      jQuery = .warning-alert h2:contains("We will contact you to discuss this document.")
     the user should not see the element  jQuery = label:contains("Upload")
@@ -475,7 +475,7 @@ Partners can see both documents rejected
     the user should not see the element  jQuery = label:contains("Upload")
 
 Partners can see both documents approved
-    the user navigates to the page      ${SERVER}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    the user navigates to the page      ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     the user clicks the button/link     link = Collaboration agreement
     the user should see the element     jQuery = .success-alert h2:contains("This document has been approved by us.")
     the user clicks the button/link     link = Return to documents
@@ -497,10 +497,10 @@ PM submits both documents
     the user goes to documents page     Return to documents  Exploitation plan
     the user clicks the button/link     id = submitDocumentButton
     the user clicks the button/link     id = submitDocumentButtonConfirm
-    the user should be redirected to the correct page    ${SERVER}/project-setup/project/${Grade_Crossing_Project_No}
+    the user should be redirected to the correct page    ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}
 
 PM uploads the project documents
-    the user navigates to the page         ${SERVER}/project-setup/project/${Grade_Crossing_Project_No}/document/all
+    the user navigates to the page         ${SERVER}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     the user clicks the button/link        link = Exploitation plan
     the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
     the user should see the element        jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")

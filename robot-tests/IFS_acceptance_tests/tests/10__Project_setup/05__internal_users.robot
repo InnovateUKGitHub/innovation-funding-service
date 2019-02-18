@@ -33,7 +33,7 @@ Project Finance has a dashboard and can see projects in PS
     And the user should see the element     jQuery = tr:nth-child(3) th:contains("3 partners")
     And the user should see the element     jQuery = tr:nth-child(3) th:contains("Lead: ${Ntag_Name}")
     And the user should see the element     jQuery = tr:nth-child(4) th:contains("${Grade_Crossing_Applicaiton_Titile}")
-    And the user should see the element     jQuery = tr:nth-child(5) th:contains("${PS_SP_APPLICATION_TITLE}")
+    And the user should see the element     jQuery = tr:nth-child(5) th:contains("Point control and automated monitoring")
     When the user clicks the button/link    link = ${PS_IU_Application_No}
     Then the user should be redirected to the correct page     ${server}/management/competition/${PS_Competition_Id}/application/${PS_IU_Application_No}
     And the user should not see an error in the page

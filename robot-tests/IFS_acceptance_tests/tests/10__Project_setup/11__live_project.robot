@@ -1,18 +1,18 @@
 *** Settings ***
 Documentation     INFUND-6376 As a partner I want to be shown information in IFS when I have successfully completed Project Setup so I am clear on what steps to take now the project is live
 Resource          PS_Common.robot
-Suite Setup       the project is completed if it is not already complete
+Suite Setup       Project fiance approves the grant offer letter
 Suite Teardown    Close browser and delete emails
 
 *** Test Cases ***
 Project dashboard shows message that the project is live
     [Documentation]    INFUND-6376
     [Tags]  HappyPath
-    Given log in as a different user                 ${PS_EF_Application_PM_Email}  ${short_password}
-    When the user navigates to the page              ${server}/project-setup/project/${PS_EF_Application_Project_No}
+    Given log in as a different user                 ${PS_LP_Application_Lead_PM_Email}  ${short_password}
+    When the user navigates to the page              ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
-    When log in as a different user                  ${PS_EF_Application_PM_Email}  ${short_password}
-    And the user navigates to the page               ${server}/project-setup/project/${PS_EF_Application_Project_No}
+    When log in as a different user                  ${PS_LP_Application_Lead_PM_Email}  ${short_password}
+    And the user navigates to the page               ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
 
 Status indicators should not show
@@ -30,7 +30,7 @@ Project details section is read-only
     Then the user should not see the element    link = Target start date
     And the user should not see the element     link = Correspondence address
     And the user should not see the element     link = Project Manager
-    And the user should not see the element     link = ${Gabtype_NAME}
+    And the user should not see the element     link = ${Crystalrover_Name}
     [Teardown]    the user goes back to the previous page
 
 Bank details section is read-only
@@ -46,15 +46,15 @@ Spend profile section is read-only
     [Documentation]    INFUND-6376
     [Tags]  HappyPath
     When the user clicks the button/link        link = Spend profile
-    And the user clicks the button/link         link = ${Cogilith_Name}
+    And the user clicks the button/link         link = ${Zummacity_Name}
     Then the user should not see the element    jQuery = .govuk-button:contains("Edit spend profile")
     And the user should not see the element     jQuery = .govuk-button:contains("Allow edits")
     And the user goes back to the previous page
-    When the user clicks the button/link        link = ${Kazio_Name}
+    When the user clicks the button/link        link = ${Jabbertype_Name}
     Then the user should not see the element    jQuery = .govuk-button:contains("Edit spend profile")
     And the user should not see the element     jQuery = .govuk-button:contains("Allow edits")
     And the user goes back to the previous page
-    When the user clicks the button/link        link = ${Gabtype_NAME}
+    When the user clicks the button/link        link = ${Crystalrover_Name}
     Then the user should not see the element    jQuery = .govuk-button:contains("edit spend profile")
     And the user goes back to the previous page
     [Teardown]    the user goes back to the previous page
@@ -77,11 +77,11 @@ Grant offer letter section is read-only
 Project dashboard shows message that the project is live for industrial partner
     [Documentation]    INFUND-6376
     [Tags]  HappyPath
-    Given log in as a different user                 ${PS_EF_Application_Partner_Email}  ${short_password}
-    When the user navigates to the page              ${server}/project-setup/project/${PS_EF_Application_Project_No}
+    Given log in as a different user                 ${PS_LP_Application_Partner_Email}  ${short_password}
+    When the user navigates to the page              ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
-    When log in as a different user                  ${PS_EF_Application_PM_Email}  ${short_password}
-    And the user navigates to the page               ${server}/project-setup/project/${PS_EF_Application_Project_No}
+    When log in as a different user                  ${PS_LP_Application_Lead_PM_Email}  ${short_password}
+    And the user navigates to the page               ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
 
 Status indicators should not show for industrial partner
@@ -99,7 +99,7 @@ Project details section is read-only for industrial partner
     Then the user should not see the element    link = Target start date
     And the user should not see the element     link = Correspondence address
     And the user should not see the element     link = Project Manager
-    And the user should not see the element     link = ${Gabtype_NAME}
+    And the user should not see the element     link = ${Crystalrover_Name}
     [Teardown]    the user goes back to the previous page
 
 Bank details section is read-only for industrial partner
@@ -115,15 +115,15 @@ Spend profile section is read-only for industrial partner
     [Documentation]    INFUND-6376
     [Tags]  HappyPath
     When the user clicks the button/link        link = Spend profile
-    And the user clicks the button/link         link = ${Cogilith_Name}
+    And the user clicks the button/link         link = ${Zummacity_Name}
     Then the user should not see the element    jQuery = .govuk-button:contains("Edit spend profile")
     And the user should not see the element     jQuery = .govuk-button:contains("Allow edits")
     And the user goes back to the previous page
-    When the user clicks the button/link        link = ${Kazio_Name}
+    When the user clicks the button/link        link = ${Jabbertype_Name}
     Then the user should not see the element    jQuery = .govuk-button:contains("Edit spend profile")
     And the user should not see the element     jQuery = .govuk-button:contains("Allow edits")
     And the user goes back to the previous page
-    When the user clicks the button/link        link = ${Gabtype_NAME}
+    When the user clicks the button/link        link = ${Crystalrover_Name}
     Then the user should not see the element    jQuery = .govuk-button:contains("edit spend profile")
     And the user goes back to the previous page
     [Teardown]    the user goes back to the previous page
@@ -146,11 +146,11 @@ Grant offer letter section is read-only for industrial partner
 Project dashboard shows message that the project is live for academic partner
     [Documentation]    INFUND-6376
     [Tags]  HappyPath
-    Given log in as a different user                 ${PS_EF_Application_Academic_Email}  ${short_password}
-    When the user navigates to the page              ${server}/project-setup/project/${PS_EF_Application_Project_No}
+    Given log in as a different user                 ${PS_LP_Application_Academic_Email}  ${short_password}
+    When the user navigates to the page              ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
-    When log in as a different user                  ${PS_EF_Application_PM_Email}  ${short_password}
-    And the user navigates to the page               ${server}/project-setup/project/${PS_EF_Application_Project_No}
+    When log in as a different user                  ${PS_LP_Application_Lead_PM_Email}  ${short_password}
+    And the user navigates to the page               ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
 
 Status indicators should not show for academic partner
@@ -168,7 +168,7 @@ Project details section is read-only for academic partner
     Then the user should not see the element    link = Target start date
     And the user should not see the element     link = Correspondence address
     And the user should not see the element     link = Project Manager
-    And the user should not see the element     link = ${Gabtype_NAME}
+    And the user should not see the element     link = ${Crystalrover_Name}
     [Teardown]    the user goes back to the previous page
 
 Bank details section is read-only for academic partner
@@ -184,15 +184,15 @@ Spend profile section is read-only for academic partner
     [Documentation]    INFUND-6376
     [Tags]
     When the user clicks the button/link        link = Spend profile
-    And the user clicks the button/link         link = ${Cogilith_Name}
+    And the user clicks the button/link         link = ${Zummacity_Name}
     Then the user should not see the element    jQuery = .govuk-button:contains("Edit spend profile")
     And the user should not see the element     jQuery = .govuk-button:contains("Allow edits")
     And the user goes back to the previous page
-    When the user clicks the button/link        link = ${Kazio_Name}
+    When the user clicks the button/link        link = ${Jabbertype_Name}
     Then the user should not see the element    jQuery = .govuk-button:contains("Edit spend profile")
     And the user should not see the element     jQuery = .govuk-button:contains("Allow edits")
     And the user goes back to the previous page
-    When the user clicks the button/link        link = ${Gabtype_NAME}
+    When the user clicks the button/link        link = ${Crystalrover_Name}
     Then the user should not see the element    jQuery = .govuk-button:contains("edit spend profile")
     And the user goes back to the previous page
     [Teardown]    the user goes back to the previous page
@@ -213,40 +213,25 @@ Grant offer letter section is read-only for academic partner
     And the user should not see the element             name = signedGrantOfferLetter
 
 *** Keywords ***
-the project is completed if it is not already complete
-    The user logs-in in new browser  ${PS_EF_Application_PM_Email}  ${short_password}
-    the user navigates to the page   ${server}/project-setup/project/${PS_EF_Application_Project_No}
-    ${project_not_live}  ${value} =  run keyword and ignore error without screenshots  the user should not see the element    jQuery = .success-alert:contains("The project is live")
-    run keyword if  '${project_not_live}' == 'PASS'  complete the project
-
-complete the project
-    project finance approves bank details for $${PS_EF_Application_Title}
-    project manager submits both documents       ${PS_EF_Application_PM_Email}  ${short_password}  ${PS_EF_Application_Project_No}
-    project finance approves both documents      ${PS_EF_Application_Project_No}
-    project finance generates the Spend Profile  ${Gabtype_Id}  ${Kazio_Id}  ${Cogilith_Id}  ${PS_EF_Application_Project_No}
-    all partners submit their Spend Profile
-    proj finance approves the spend profiles     ${PS_EF_Application_Project_No}
-    grant offer letter is sent to users
-    users upload signed grant offer letter and submit
-    grant offer letter is approved
-
 grant offer letter is sent to users
-    log in as a different user       &{internal_finance_credentials}
-    the user navigates to the page   ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/grant-offer-letter/send
-    the user clicks the button/link  id = send-gol
-    the user clicks the button/link  jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
+    the user logs-in in new browser    &{internal_finance_credentials}
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
+    the user clicks the button/link    id = send-gol
+    the user clicks the button/link    jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
 
 users upload signed grant offer letter and submit
-    log in as a different user       ${PS_EF_Application_PM_Email}  ${short_password}
-    the user clicks the button/link  link = ${PS_EF_Application_Title}
-    the user clicks the button/link  link = Grant offer letter
-    choose file                      signedGrantOfferLetter    ${upload_folder}/${valid_pdf}
-    the user clicks the button/link  jQuery = a:contains("Send to Innovate UK")
-    the user clicks the button/link  id = submit-gol-for-review
+    log in as a different user         ${PS_LP_Application_Lead_PM_Email}  ${short_password}
+    the user clicks the button/link    link = ${PS_LP_Application_Title}
+    the user clicks the button/link    link = Grant offer letter
+    choose file                        signedGrantOfferLetter    ${upload_folder}/${valid_pdf}
+    the user clicks the button/link    jQuery = a:contains("Send to Innovate UK")
+    the user clicks the button/link    id = submit-gol-for-review
 
-grant offer letter is approved
+Project fiance approves the grant offer letter
+    grant offer letter is sent to users
+    users upload signed grant offer letter and submit
     log in as a different user         &{internal_finance_credentials}
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/grant-offer-letter/send
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
     the user selects the radio button  approvalType  acceptGOL
     the user clicks the button/link    id = submit-button
     the user clicks the button/link    jQuery = .modal-accept-signed-gol .govuk-button:contains("Accept signed grant offer letter")
