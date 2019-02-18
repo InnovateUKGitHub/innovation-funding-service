@@ -194,7 +194,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     }
 
     private void submitProjectDocuments(ProjectData data, List<CompetitionDocument> competitionDocuments) {
-        Project project = projectRepository.findOne(data.getProject().getId());
+        Project project = projectRepository.findById(data.getProject().getId()).get();
         project.setDocumentsSubmittedDate(ZonedDateTime.now());
         project.setProjectDocuments(projectDocumentRepository.findAllByProjectId(data.getProject().getId()));
         competitionDocuments.stream()
