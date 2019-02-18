@@ -39,6 +39,9 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
 
     public ProjectUser(User user, Project project, ProjectParticipantRole role, Organisation organisation) {
         super(user, project, role);
+        if (!ProjectParticipantRole.PROJECT_USER_ROLES.contains(role)) {
+            throw new IllegalArgumentException("ProjectUser cannot have role " + role);
+        }
         this.organisation = organisation;
     }
 
