@@ -2,11 +2,14 @@ INSERT INTO competition (name, max_research_ratio, academic_grant_percentage, mu
 VALUES ('Template for the Horizon 2020 competition type', '0', '100', '0', '0', '0', 0, 0, 'OVERVIEW', 1, 1, '1', '36', 0, '6', 0, 1, '0', '0', '15', '1970-01-01 00:00:01', '1970-01-01 00:00:01', '15');
 set @template_id = (SELECT LAST_INSERT_ID());
 
+-- TODO
+-- Confirm question names
+-- Confirm lead only questions
+
+
 -- Sections
 INSERT INTO section (assessor_guidance_description,description,display_in_assessment_application_summary,name,priority,competition_id,parent_section_id,question_group,section_type) VALUES (NULL,'Please provide Innovate UK with information about your project.',1,'Project details',1,@template_id,NULL,0,'GENERAL');
 set @section_project_details_id = (SELECT LAST_INSERT_ID());
-INSERT INTO section (assessor_guidance_description,description,display_in_assessment_application_summary,name,priority,competition_id,parent_section_id,question_group,section_type) VALUES (NULL,NULL,1,'Application questions',2,@template_id,NULL,0,'GENERAL');
-set @section_application_questions_id = (SELECT LAST_INSERT_ID());
 INSERT INTO section (assessor_guidance_description,description,display_in_assessment_application_summary,name,priority,competition_id,parent_section_id,question_group,section_type) VALUES (NULL,NULL,1,'Finances',3,@template_id,NULL,0,'GENERAL');
 set @section_finances_id = (SELECT LAST_INSERT_ID());
 INSERT INTO section (assessor_guidance_description,description,display_in_assessment_application_summary,name,priority,competition_id,parent_section_id,question_group,section_type) VALUES (NULL,NULL,1,'Your finances',4,@template_id,@section_finances_id,1,'FINANCE');
@@ -38,18 +41,11 @@ set @section_finances_overview_id = (SELECT LAST_INSERT_ID());
 
 -- Questions
 -- Project details
-INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (0,'Enter the full title of the project',1,0,'Application details','Application details',2,NULL,@template_id,@section_project_details_id,NULL,'LEAD_ONLY','APPLICATION_DETAILS');
-set @question_application_details_id = (SELECT LAST_INSERT_ID());
-INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (0,'Description not used',1,0,'Application team','Application team',1,NULL,@template_id,@section_project_details_id,NULL,'LEAD_ONLY','APPLICATION_TEAM');
-INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (0,'Description not used',1,0,'Research category','Research category',3,NULL,@template_id,@section_project_details_id,NULL,'LEAD_ONLY','RESEARCH_CATEGORY');
-INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (1,'Please provide a short summary of your project. Make sure you include what is innovative about it.',1,0,'Project summary','Project summary',4,NULL,@template_id,@section_project_details_id,NULL,'GENERAL','PROJECT_SUMMARY');
-set @question_project_summary_id = (SELECT LAST_INSERT_ID());
-INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (1,'Please provide a brief description of your project. If your application is successful, we will publish this description. This question is mandatory but we will not assess this content as part of your application.',1,0,'Public description','Public description',5,NULL,@template_id,@section_project_details_id,NULL,'GENERAL','PUBLIC_DESCRIPTION');
+INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (0,'Description not used',1,0,'Project details','Project details',1,NULL,@template_id,@section_project_details_id,NULL,'LEAD_ONLY','PROJECT_DETAILS');
+INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (0,'Description not used',1,0,'Application team','Application team',2,NULL,@template_id,@section_project_details_id,NULL,'LEAD_ONLY','APPLICATION_TEAM');
+INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (1,'Please provide a brief description of your project. If your application is successful, we will publish this description. This question is mandatory but we will not assess this content as part of your application.',1,0,'Public description','Public description',3,NULL,@template_id,@section_project_details_id,NULL,'GENERAL','PUBLIC_DESCRIPTION');
 set @question_public_description_id = (SELECT LAST_INSERT_ID());
-
--- Application questions
--- TODO What happens with the H2020 question?
---INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (1,'Horizon 2020',1,0,'Horizon 202','Horizon 2020',5,NULL,@template_id,@section_application_questions_id,NULL,'GENERAL',NULL);
+INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (0,'Description not used',1,0,'Project documents','Project documents',4,NULL,@template_id,@section_project_details_id,NULL,'LEAD_ONLY','PROJECT_DOCUMENTS');
 
 -- Project costs
 INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (0,NULL,1,1,'Provide the project costs for \'{organisationName}\'','Project finances',17,NULL,@template_id,@section_your_project_costs_id,NULL,'GENERAL',NULL);
@@ -103,9 +99,6 @@ INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multi
 
 -- Form Inputs
 -- project details
-INSERT INTO form_input (word_count,form_input_type_id,competition_id,included_in_application_summary,description,guidance_title,guidance_answer,priority,question_id,scope,active,allowed_file_types) VALUES (NULL,5,4,1,'Application details',NULL,NULL,0,@question_application_details_id ,'APPLICATION',1,NULL);
-INSERT INTO form_input (word_count,form_input_type_id,competition_id,included_in_application_summary,description,guidance_title,guidance_answer,priority,question_id,scope,active,allowed_file_types) VALUES (400,2,4,1,'Project summary','What should I include in the project summary?','<p>We will not score this summary, but it will give the assessors a useful introduction to your project. It should provide a clear overview of the whole project, including:</p> <ul class=\"list-bullet\">         <li>your vision for the project</li><li>key objectives</li><li>main areas of focus</li><li>details of how it is innovative</li></ul>',0,@question_project_summary_id,'APPLICATION',1,NULL);
-set @fi_project_summary_id = (SELECT LAST_INSERT_ID());
 INSERT INTO form_input (word_count,form_input_type_id,competition_id,included_in_application_summary,description,guidance_title,guidance_answer,priority,question_id,scope,active,allowed_file_types) VALUES (400,2,4,1,'Public description','What should I include in the project public description?','<p>Innovate UK publishes information about projects we have funded. This is in line with government practice on openness and transparency of public-funded activities.</p><p>Describe your project in a way that will be easy for a non-specialist to understand. Don\'t include any information that is confidential, for example, intellectual property or patent details.</p> ',0,@question_public_description_id,'APPLICATION',1,NULL);
 set @fi_public_description_id = (SELECT LAST_INSERT_ID());
 
@@ -142,8 +135,6 @@ INSERT INTO form_input (word_count,form_input_type_id,competition_id,included_in
 
 INSERT INTO form_input (word_count,form_input_type_id,competition_id,included_in_application_summary,description,guidance_title,guidance_answer,priority,question_id,scope,active,allowed_file_types) VALUES (NULL,16,4,1,NULL,NULL,NULL,0,@question_finance_summary_id,'APPLICATION',1,NULL);
 
-INSERT INTO form_input_validator (form_input_id,form_validator_id) VALUES (@fi_project_summary_id,2);
-INSERT INTO form_input_validator (form_input_id,form_validator_id) VALUES (@fi_project_summary_id,3);
 INSERT INTO form_input_validator (form_input_id,form_validator_id) VALUES (@fi_public_description_id,2);
 INSERT INTO form_input_validator (form_input_id,form_validator_id) VALUES (@fi_public_description_id,3);
 INSERT INTO form_input_validator (form_input_id,form_validator_id) VALUES (@fi_turnover_id,4);
