@@ -43,45 +43,20 @@ ${Queries_Application_Title}   High-speed rail and its effects on soil compactio
 ${Queries_Application_No}      ${application_ids["${Queries_Application_Title}"]}
 ${Queries_Application_Project}  ${project_ids["${Queries_Application_Title}"]}
 
-
 #Project: High-speed rail and its effects on air quality
-# MD = Mandatory Documents
-${Ooba_Name}        Ooba
-${Ooba_Id}          ${organisation_ids["${Ooba_Name}"]}
-${Wordpedia_Name}   Wordpedia
-${Wordpedia_Id}     ${organisation_ids["${Wordpedia_Name}"]}
-${Jabbertype_Name}  Jabbertype
-${Jabbertype_Id}    ${organisation_ids["${Jabbertype_Name}"]}
-${PS_MD_APPLICATION_TITLE}      High-speed rail and its effects on air quality
-${PS_MD_APPLICATION_NO}         ${application_ids["${PS_MD_APPLICATION_TITLE}"]}
-${PS_MD_APPLICATION_NUMBER}     ${PS_MD_APPLICATION_NO}
-${PS_MD_APPLICATION_HEADER}     ${PS_MD_APPLICATION_TITLE}
-${PS_MD_APPLICATION_PROJECT}    ${project_ids["${PS_MD_APPLICATION_TITLE}"]}
-${PS_MD_APPLICATION_LEAD_ORGANISATION_ID}    ${Ooba_ID}
-${PS_MD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Ooba_Name}
-${PS_MD_APPLICATION_LEAD_PARTNER_EMAIL}      ralph.young@ooba.example.com
-${PS_MD_APPLICATION_PM_EMAIL}                ralph.young@ooba.example.com
-${PS_MD_APPLICATION_PARTNER_EMAIL}           tina.taylor@wordpedia.example.com
-${PS_MD_APPLICATION_ACADEMIC_EMAIL}          antonio.jenkins@jabbertype.example.com
-
-#Project: Point control and automated monitoring
 # SP = Spend Profile
-${Katz_Name}     Katz
-${Katz_Id}       ${organisation_ids["${Katz_Name}"]}
-${Meembee_Name}  Meembee
-${Meembee_Id}    ${organisation_ids["${Meembee_Name}"]}
-${Zooveo_Name}   Zooveo
-${Zooveo_Id}     ${organisation_ids["${Zooveo_Name}"]}
-${PS_SP_APPLICATION_TITLE}      Point control and automated monitoring
-${PS_SP_APPLICATION_NO}         ${application_ids["${PS_SP_APPLICATION_TITLE}"]}
-${PS_SP_APPLICATION_NUMBER}     ${PS_SP_APPLICATION_NO}
-${PS_SP_APPLICATION_HEADER}     ${PS_SP_APPLICATION_TITLE}
-${PS_SP_APPLICATION_PROJECT}    ${project_ids["${PS_SP_APPLICATION_TITLE}"]}
-${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}  ${Katz_Name}
-${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}      theo.simpson@katz.example.com
-${PS_SP_APPLICATION_PM_EMAIL}                phillip.ramos@katz.example.com
-${PS_SP_APPLICATION_PARTNER_EMAIL}           kimberly.fowler@meembee.example.com
-${PS_SP_APPLICATION_ACADEMIC_EMAIL}          craig.ortiz@zooveo.example.com
+${Ooba_Lead_Org_Name}           Ooba
+${Ooba_Lead_Org_Id}             ${organisation_ids["${Ooba_Lead_Org_Name}"]}
+${Wordpedia_Partner_Org_Name}   Wordpedia
+${Wordpedia_Partner_Org_Id}     ${organisation_ids["${Wordpedia_Partner_Org_Name}"]}
+${Jabbertype_Partner_Org_Name}  Jabbertype
+${Jabbertype_Partner_Org_Id}    ${organisation_ids["${Jabbertype_Partner_Org_Name}"]}
+${PS_SP_Application_Title}         High-speed rail and its effects on air quality
+${PS_SP_Application_No}            ${application_ids["${PS_SP_Application_Title}"]}
+${PS_SP_Project_Id}                ${project_ids["${PS_SP_Application_Title}"]}
+${PS_SP_Lead_PM_Email}             ralph.young@ooba.example.com
+${PS_SP_Partner_Email}             tina.taylor@wordpedia.example.com
+${PS_SP_Academic_Partner_Email}    antonio.jenkins@jabbertype.example.com
 
 #Project: Grade crossing manufacture and supply
 # BD = Bank Details
@@ -93,7 +68,7 @@ ${Armstrong_Butler_Name}  Armstrong & Butler Ltd
 ${Armstrong_Butler_Id}    ${organisation_ids["${Armstrong_Butler_Name}"]}
 ${Grade_Crossing_Applicaiton_Titile}      Grade crossing manufacture and supply
 ${Grade_Crossing_Applicaiton_No}          ${application_ids["${Grade_Crossing_Applicaiton_Titile}"]}
-${Grade_Crossing_Project_No}              ${project_ids["${Grade_Crossing_Applicaiton_Titile}"]}
+${Grade_Crossing_Project_Id}              ${project_ids["${Grade_Crossing_Applicaiton_Titile}"]}
 ${Grade_Crossing_Lead_Partner_Email}      diane.scott@vitruvius.example.com
 ${Grade_Crossing_Partner_Email}           phil.mcguire@abcad.example.com
 ${Grade_Crossing_Partner_Finance}         Phil Mcguire
@@ -134,6 +109,21 @@ ${Sortcode_One}  404745
 ${Account_Two}   12345677
 ${Sortcode_two}  000004
 ${Postcode}      BS14NT
+
+#Project: Super-EFFY - Super Efficient Forecasting of Freight Yields
+#LP: Live Project
+${Crystalrover_Name}   Crystalrover
+${Crystalrover_Id}     ${organisation_ids["${Crystalrover_Name}"]}
+${Jabbertype_Name}     Jabbertype
+${Jabbertype_Id}       ${organisation_ids["${Jabbertype_Name}"]}
+${Zummacity_Name}      Zummacity
+${Zummacity_Id}        ${organisation_ids["${Zummacity_Name}"]}
+${PS_LP_Application_Title}         Super-EFFY - Super Efficient Forecasting of Freight Yields
+${PS_LP_Application_No}            ${application_ids["${PS_LP_Application_Title}"]}
+${PS_LP_Application_Project_Id}    ${project_ids["${PS_LP_Application_Title}"]}
+${PS_LP_Application_Lead_PM_Email}        dave.adams@gmail.com
+${PS_LP_Application_Partner_Email}        edward.morris@gmail.com
+${PS_LP_Application_Academic_Email}       myrtle.barton@jabbertype.example.com
 
 *** Keywords ***
 project finance submits monitoring officer
