@@ -11,6 +11,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -31,14 +33,14 @@ public class OrganisationAddressServiceImplTest extends BaseServiceUnitTest<Orga
 
         OrganisationAddress organisationAddress = OrganisationAddressBuilder.newOrganisationAddress().build();
         OrganisationAddressResource organisationAddressResource = OrganisationAddressResourceBuilder.newOrganisationAddressResource().build();
-        when(organisationAddressRepositoryMock.findOne(id)).thenReturn(organisationAddress);
+        when(organisationAddressRepositoryMock.findById(id)).thenReturn(Optional.of(organisationAddress));
         when(organisationAddressMapperMock.mapToResource(organisationAddress)).thenReturn(organisationAddressResource);
 
         ServiceResult<OrganisationAddressResource> result = service.findOne(id);
         assertTrue(result.isSuccess());
         assertEquals(organisationAddressResource, result.getSuccess());
 
-        verify(organisationAddressRepositoryMock).findOne(id);
+        verify(organisationAddressRepositoryMock).findById(id);
         verify(organisationAddressMapperMock).mapToResource(organisationAddress);
     }
 

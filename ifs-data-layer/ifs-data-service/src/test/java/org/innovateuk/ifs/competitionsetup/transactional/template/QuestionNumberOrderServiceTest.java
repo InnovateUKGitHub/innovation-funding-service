@@ -11,10 +11,12 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.mockito.ArgumentMatchers.refEq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
-import static org.mockito.Matchers.refEq;
-import static org.mockito.Mockito.*;
 
 public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<QuestionNumberOrderService> {
 
@@ -49,7 +51,7 @@ public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<Question
                 .withCompetition(competition)
                 .build(4);
 
-        verify(questionRepositoryMock, times(1)).save(refEq(updatedAssessedQuestions));
+        verify(questionRepositoryMock, times(1)).saveAll(refEq(updatedAssessedQuestions));
     }
 
 }

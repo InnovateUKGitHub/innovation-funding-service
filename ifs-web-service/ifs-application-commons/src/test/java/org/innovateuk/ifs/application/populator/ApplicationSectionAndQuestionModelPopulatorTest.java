@@ -40,7 +40,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
 import java.util.*;
@@ -61,11 +61,11 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyMap;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationSectionAndQuestionModelPopulatorTest {
 
     @InjectMocks
@@ -143,7 +143,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
         target.addMappedSectionsDetails(model, application, competition, section, userOrganisation, user.getId(), emptyMap(), markAsCompleteEnabled);
 
-        verify(model).addAttribute(eq("completedSections"), anyMap());
+        verify(model).addAttribute(eq("completedSections"), nullable(Map.class));
         verify(model).addAttribute(eq("sections"), anyMap());
         verify(model).addAttribute(eq("fundingFinancesSection"), isNull());
         verify(model).addAttribute(eq("questionFormInputs"), anyMap());
@@ -177,7 +177,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         when(questionService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, application.getId(), userOrganisation.getId()))
                 .thenReturn(questionAssignee);
         when(processRoleService.findAssignableProcessRoles(application.getId())).thenReturn(assignableUsers);
-        when(questionService.getNotificationsForUser(anyList(), eq(userId))).thenReturn(notifications);
+        when(questionService.getNotificationsForUser(anyCollection(), eq(userId))).thenReturn(notifications);
         when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(invites));
 
         target.addAssignableDetails(model, application, userOrganisation, user, section, currentQuestionId);

@@ -22,7 +22,11 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.project.monitor.domain.MonitoringOfficerInvite;
+import org.innovateuk.ifs.project.monitor.repository.MonitoringOfficerInviteRepository;
+import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
@@ -70,7 +74,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -130,6 +134,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Mock
     private StakeholderRepository stakeholderRepository;
 
+    @Mock
+    private MonitoringOfficerInviteRepository monitoringOfficerInviteRepositoryMock;
+
+    @Mock
+    private MonitoringOfficerRepository monitoringOfficerRepositoryMock;
+
     @Test
     public void createUser() {
         Set<Role> roles = singleton(Role.ASSESSOR);
@@ -164,7 +174,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withProfileId(userProfile.getId())
                 .build();
 
-        when(profileRepositoryMock.findOne(userToCreate.getProfileId())).thenReturn(userProfile);
+        when(profileRepositoryMock.findById(userToCreate.getProfileId())).thenReturn(Optional.of(userProfile));
         when(profileRepositoryMock.save(any(Profile.class))).thenReturn(userProfile);
         when(passwordPolicyValidatorMock.validatePassword("Passw0rd123", userToCreateResource.toUserResource())).thenReturn(serviceSuccess());
         when(userMapperMock.mapToDomain(userToCreateResource.toUserResource())).thenReturn(userToCreate);
@@ -186,7 +196,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(roles, user.getRoles());
 
             assertNotNull(user.getProfileId());
-            Profile profile = profileRepositoryMock.findOne(user.getProfileId());
+            Profile profile = profileRepositoryMock.findById(user.getProfileId()).get();
             assertEquals(profileId, profile.getId());
             assertNull(profile.getSkillsAreas());
             assertNull(profile.getBusinessType());
@@ -230,7 +240,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
-        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findById(123L)).thenReturn(Optional.of(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();
@@ -304,7 +314,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         UserResource userToCreate = newUserResource().withPassword("thepassword").build();
         Organisation selectedOrganisation = newOrganisation().build();
 
-        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findById(123L)).thenReturn(Optional.of(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceFailure(badRequestError("bad password")));
@@ -409,8 +419,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         setUpUsersForEditInternalUserSuccess();
 
         Role newRole = Role.SUPPORT;
-        
-        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
+
+        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
         when(userMapperMock.mapToDomain(userResourceInDB)).thenReturn(userInDB);
 
         ServiceResult<Void> result = service.editInternalUser(userToEdit, newRole);
@@ -427,7 +437,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
+        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
         when(idpServiceMock.deactivateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceSuccess(""));
         userInDB.setStatus(UserStatus.INACTIVE);
         when(userRepositoryMock.save(userInDB)).thenReturn(userInDB);
@@ -444,7 +454,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
+        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
         when(idpServiceMock.deactivateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
 
         ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
@@ -457,7 +467,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(null);
+        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
 
@@ -469,7 +479,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
+        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
         when(idpServiceMock.activateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceSuccess(""));
         userInDB.setStatus(UserStatus.ACTIVE);
         when(userRepositoryMock.save(userInDB)).thenReturn(updatedUserInDB);
@@ -486,7 +496,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
+        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.of(userInDB));
         when(idpServiceMock.activateUser(userToEdit.getUid())).thenReturn(ServiceResult.serviceFailure(GENERAL_NOT_FOUND));
 
         ServiceResult<Void> result = service.activateUser(userToEdit.getId());
@@ -499,7 +509,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(null);
+        when(userRepositoryMock.findById(userToEdit.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = service.activateUser(userToEdit.getId());
 
@@ -522,7 +532,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         Organisation selectedOrganisation = newOrganisation().withId(123L).build();
 
-        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findById(123L)).thenReturn(Optional.of(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();
@@ -570,6 +580,39 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         verify(userMapperMock).mapToResource(savedUser);
         verify(passwordPolicyValidatorMock).validatePassword("thepassword", userToCreate);
         verify(registrationEmailServiceMock).sendUserVerificationEmail(userToCreate, Optional.empty(), Optional.empty());
+    }
+
+    @Test
+    public void createMonitoringOfficer() {
+        String email = "test@test.test";
+        String hash = "hash";
+        String password = "password";
+        String uid = "uid";
+
+        MonitoringOfficerRegistrationResource registrationResource =
+                new MonitoringOfficerRegistrationResource("first", "last", "phone", password);
+
+        User userToCreate = newUser()
+                .withId((Long) null)
+                .withFirstName(registrationResource.getFirstName())
+                .withLastName(registrationResource.getLastName())
+                .withPhoneNumber(registrationResource.getPhoneNumber())
+                .withEmailAddress(email)
+                .withRoles(singleton(Role.MONITORING_OFFICER))
+                .withUid(uid)
+                .build();
+
+        MonitoringOfficerInvite invite = new MonitoringOfficerInvite("name", email, hash, InviteStatus.OPENED );
+
+        when(monitoringOfficerInviteRepositoryMock.getByHash(hash)).thenReturn(invite);
+        when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
+        when(idpServiceMock.createUserRecordWithUid(email, password)).thenReturn(serviceSuccess(uid));
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
+        when(userMapperMock.mapToDomain(any(UserResource.class))).thenReturn(userToCreate);
+        when(idpServiceMock.activateUser(uid)).thenReturn(serviceSuccess(uid));
+        when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
+
+        service.createMonitoringOfficer(hash, registrationResource).getSuccess();
     }
 
     private void setUpUsersForEditInternalUserSuccess() {

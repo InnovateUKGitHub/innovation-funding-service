@@ -19,6 +19,7 @@ import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -30,8 +31,8 @@ import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMateria
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
@@ -96,8 +97,8 @@ public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
                 .withOrganisation(businessOrg)
                 .build();
 
-        when(organisationRepositoryMock.findOne(researchOrgId)).thenReturn(researchOrg);
-        when(organisationRepositoryMock.findOne(businessOrgId)).thenReturn(businessOrg);
+        when(organisationRepositoryMock.findById(researchOrgId)).thenReturn(Optional.of(researchOrg));
+        when(organisationRepositoryMock.findById(businessOrgId)).thenReturn(Optional.of(businessOrg));
 
         when(applicationFinanceRepositoryMock.findByApplicationId(applicationId)).thenReturn(asList(appFinanceResearchOrg, appFinanceBusinessOrg));
 

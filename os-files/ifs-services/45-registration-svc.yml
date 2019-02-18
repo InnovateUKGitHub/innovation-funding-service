@@ -54,7 +54,7 @@ items:
           - name: NEW_RELIC_LOG
             value: "STDOUT"
           - name: LDAP_URL
-            value: ${LDAP_URL}
+            value: "${LDAP_URL}"
           - name: SHIBBOLETH_LDAP_PORT
             value: "${SHIBBOLETH_LDAP_PORT}"
           - name: SHIBBOLETH_LDAP_BASE_DN

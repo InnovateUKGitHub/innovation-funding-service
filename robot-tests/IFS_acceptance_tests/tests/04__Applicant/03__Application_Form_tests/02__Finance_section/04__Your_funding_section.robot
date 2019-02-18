@@ -10,9 +10,6 @@ Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
 
-*** Variables ***
-${applicationName}  Hydrology the dynamics of Earth's surface water
-
 *** Test Cases ***
 Other funding validation message
     [Documentation]  IFS-2659
@@ -63,7 +60,7 @@ If funding is complete. application details has a warning message
     ...    INFUND-6823
     [Tags]  HappyPath
     Given the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link    link = ${applicationName}
+    And the user clicks the button/link    link = ${openCompetitionRTOApplication1Name}
     When the user clicks the button/link   link = Research category
     And the user clicks the button/link    jQuery = button:contains(Edit)
     Then the user should see the element   jQuery = .message-alert p:contains("Changing the research category will reset the funding level for all business participants.")
@@ -73,7 +70,7 @@ Changing application details sets funding level to incomplete
     [Tags]  HappyPath
     Given the user clicks the button twice    css = label[for="researchCategory2"]
     And the user clicks the button/link       id = application-question-complete
-    And the user navigates to Your-finances page  ${applicationName}
+    And the user navigates to Your-finances page  ${openCompetitionRTOApplication1Name}
     Then the user should see the element      css = .task-list li:nth-of-type(4) .task-status-incomplete
 
 Funding level has been reset
@@ -121,13 +118,11 @@ Read only view of the other funding
 Custom Suite Setup
     Set predefined date variables
     the user logs-in in new browser                   &{lead_applicant_credentials}
-    Connect to database   @{database}
-    ${applicationId} =  get application id by name    ${applicationName}
-    the user navigates to the page                    ${server}/application/${applicationId}
+    the user navigates to the page                    ${server}/application/${openCompetitionRTOApplication1Id}
     the user clicks the button/link                   link = Application details
-    the user fills in the Application details         ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}
+    the user fills in the Application details         ${openCompetitionRTOApplication1Name}   ${tomorrowday}  ${month}  ${nextyear}
     the user selects research category                Feasibility studies
-    Complete the org size section                     ${applicationName}
+    Complete the org size section                     ${openCompetitionRTOApplication1Name}
 
 the user provides invalid value as percentage then he should see the error
     [Arguments]  ${error}  ${value}
@@ -182,4 +177,3 @@ the user changes the research category
 
 Custom suite teardown
     The user closes the browser
-    Disconnect from database

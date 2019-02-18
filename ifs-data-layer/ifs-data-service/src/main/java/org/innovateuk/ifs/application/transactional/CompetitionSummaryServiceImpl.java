@@ -23,7 +23,7 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
 
     @Override
     public ServiceResult<CompetitionSummaryResource> getCompetitionSummaryByCompetitionId(Long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
         BigDecimal limit = new BigDecimal(50L);
 
         CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();

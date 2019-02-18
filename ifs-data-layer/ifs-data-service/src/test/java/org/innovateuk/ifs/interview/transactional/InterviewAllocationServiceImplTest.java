@@ -33,6 +33,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -54,7 +55,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
 public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<InterviewAllocationServiceImpl> {
@@ -321,8 +322,8 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         AssessorInvitesToSendResource expectedInvitesToSendResource =
                 new AssessorInvitesToSendResource(singletonList(user.getName()), competition.getId(), competition.getName(), content);
 
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget,
                 templatePath, notificationArguments)).thenReturn(serviceSuccess(content));
 
@@ -332,7 +333,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
 
         InOrder inOrder = inOrder(competitionRepositoryMock, userRepositoryMock, notificationTemplateRendererMock, systemNotificationSourceMock);
         inOrder.verify(competitionRepositoryMock).findById(competition.getId());
-        inOrder.verify(userRepositoryMock).findOne(user.getId());
+        inOrder.verify(userRepositoryMock).findById(user.getId());
         inOrder.verify(notificationTemplateRendererMock).renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath, notificationArguments);
         inOrder.verifyNoMoreInteractions();
     }
@@ -365,7 +366,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
                         "customTextHtml", content
                 ));
 
-        when(applicationRepositoryMock.findOne(applications.get(0).getId())).thenReturn(applications.get(0));
+        when(applicationRepositoryMock.findById(applications.get(0).getId())).thenReturn(Optional.of(applications.get(0)));
         when(interviewParticipantRepositoryMock
                 .findByUserIdAndCompetitionIdAndRole(user.getId(), competition.getId(), CompetitionParticipantRole.INTERVIEW_ASSESSOR))
                 .thenReturn(interviewParticipant);
@@ -374,7 +375,7 @@ public class InterviewAllocationServiceImplTest extends BaseServiceUnitTest<Inte
         service.notifyAllocation(interviewNotifyAllocationResource).getSuccess();
 
         InOrder inOrder = inOrder(notificationServiceMock, applicationRepositoryMock, interviewParticipantRepositoryMock, interviewWorkflowHandlerMock, interviewRepositoryMock);
-        inOrder.verify(applicationRepositoryMock).findOne(applications.get(0).getId());
+        inOrder.verify(applicationRepositoryMock).findById(applications.get(0).getId());
         inOrder.verify(interviewWorkflowHandlerMock).notifyInvitation(interview);
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(expectedNotification, EMAIL);
         inOrder.verifyNoMoreInteractions();

@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class RejectionReason implements Comparable<RejectionReason> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull

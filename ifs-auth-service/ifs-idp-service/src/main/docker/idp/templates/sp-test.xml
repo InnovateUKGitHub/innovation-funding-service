@@ -1,0 +1,29 @@
+<EntityDescriptor entityID="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}"
+                  xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
+                  xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                  xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol">
+    <SPSSODescriptor
+            protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol">
+
+        <Extensions>
+            <idpdisc:DiscoveryResponse index="1"
+                                       Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+                                       Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/DS"/>
+            <idpdisc:DiscoveryResponse index="2"
+                                       Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+                                       Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/DS"/>
+        </Extensions>
+
+        <KeyDescriptor>
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>${CERTIFICATE}</ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+
+        <AssertionConsumerService index="1" isDefault="true"
+                                  Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/POST"/>
+    </SPSSODescriptor>
+</EntityDescriptor>

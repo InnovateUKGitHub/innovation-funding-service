@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.competitionsetup.transactional.template;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -9,6 +12,7 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
@@ -29,8 +33,8 @@ import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.refEq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
@@ -81,8 +85,15 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
                 .withActive(true)
                 .build(2);
 
-        assertThat(result.get(0), new ReflectionEquals(expectedFormInputs.get(0)));
-        assertThat(result.get(1), new ReflectionEquals(expectedFormInputs.get(1)));
+        assertThat(result, new BaseMatcher<List<FormInput>>() {
+            @Override
+            public boolean matches(Object item) {
+                return new ReflectionEquals(expectedFormInputs).matches(item);
+            }
+            @Override
+            public void describeTo(Description description) {
+            }
+        });
     }
 
     @Test
@@ -123,7 +134,15 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
                 .withActive(false)
                 .build(2);
 
-        assertThat(result.get(0), new ReflectionEquals(expectedFormInputs.get(0)));
+        assertThat(result, new BaseMatcher<List<FormInput>>() {
+            @Override
+            public boolean matches(Object item) {
+                return new ReflectionEquals(expectedFormInputs).matches(item);
+            }
+            @Override
+            public void describeTo(Description description) {
+            }
+        });
     }
 
     @Test
@@ -178,7 +197,7 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
         inOrder.verify(entityManagerMock).detach(formInputsList.get(0));
         inOrder.verify(entityManagerMock).detach(formInputsList.get(1));
 
-        inOrder.verify(formInputRepositoryMock).delete(formInputsList);
+        inOrder.verify(formInputRepositoryMock).deleteAll(formInputsList);
     }
 
 }

@@ -26,7 +26,7 @@ public class InviteOrganisationServiceImpl extends BaseTransactionalService impl
 
     @Override
     public ServiceResult<InviteOrganisationResource> getById(long id) {
-        return find(inviteOrganisationRepository.findOne(id), notFoundError(InviteOrganisation.class, id))
+        return find(inviteOrganisationRepository.findById(id), notFoundError(InviteOrganisation.class, id))
                 .andOnSuccessReturn(mapper::mapToResource);
     }
 

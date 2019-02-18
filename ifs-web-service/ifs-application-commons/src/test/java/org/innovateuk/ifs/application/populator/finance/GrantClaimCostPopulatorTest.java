@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for {@link GrantClaimCostPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class GrantClaimCostPopulatorTest {
     private static final Integer MAXIMUM_GRANT_CLAIM = 50;
     private static final Integer GRANT_CLAIM = 10;

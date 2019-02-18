@@ -53,7 +53,7 @@ import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -115,19 +115,19 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Value("${ifs.generate.test.data.competition.filter:BY_NAME}")
     private CompetitionFilter competitionFilter;
 
-    @Value("${flyway.url}")
+    @Value("${spring.flyway.url}")
     private String databaseUrl;
 
-    @Value("${flyway.user}")
+    @Value("${spring.flyway.user}")
     private String databaseUser;
 
-    @Value("${flyway.password}")
+    @Value("${spring.flyway.password}")
     private String databasePassword;
 
-    @Value("${flyway.locations}")
+    @Value("${spring.flyway.locations}")
     private String locations;
 
-    @Value("${flyway.placeholders.ifs.system.user.uuid}")
+    @Value("${spring.flyway.placeholders.ifs.system.user.uuid}")
     private String systemUserUUID;
 
     @Autowired

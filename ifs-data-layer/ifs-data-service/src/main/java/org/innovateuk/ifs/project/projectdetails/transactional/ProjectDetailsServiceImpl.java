@@ -145,7 +145,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     private List<ProjectUser> getLeadPartners(Project project) {
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadPartnerOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        Organisation leadPartnerOrganisation = organisationRepository.findById(leadRole.getOrganisationId()).orElse(null);
         return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
                 && pu.getRole().isPartner());
     }
@@ -357,8 +357,8 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                         find(getProject(projectId), getOrganisation(organisationId)).
                                 andOnSuccess((project, organisation) -> {
                                     Address oldAddress = project.getAddress();
-                                    if (address.getId() != null && addressRepository.exists(address.getId())) {
-                                        Address existingAddress = addressRepository.findOne(address.getId());
+                                    if (address.getId() != null && addressRepository.existsById(address.getId())) {
+                                        Address existingAddress = addressRepository.findById(address.getId()).orElse(null);
                                         project.setAddress(existingAddress);
                                     } else {
                                         Address newAddress = addressMapper.mapToDomain(address);
@@ -416,9 +416,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, ProjectUserInviteResource inviteResource) {
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadRole.getOrganisationId()).get();
         String leadOrganisationName = leadOrganisation.getName();
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());

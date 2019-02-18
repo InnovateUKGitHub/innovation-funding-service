@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.category.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -34,6 +35,7 @@ public class InnovationAreaResource extends CategoryResource {
         this.sectorName = sectorName;
     }
 
+    @JsonIgnore
     public boolean isNotNone() {
         return !"None".equals(getName());
     }

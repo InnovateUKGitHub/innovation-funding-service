@@ -1,5 +1,8 @@
 apply from: rootProject.file("gradle-support/java.gradle")
 
+group 'innovateuk'
+version project.version
+
 dependencies {
     compile project(':ifs-resources')
 

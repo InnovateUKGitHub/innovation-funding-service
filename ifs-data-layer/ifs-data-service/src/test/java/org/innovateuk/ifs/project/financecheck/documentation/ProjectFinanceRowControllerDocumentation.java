@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ValidationMessagesDocs.validationMessagesFields;
 import static org.innovateuk.ifs.project.financecheck.documentation.ProjectFinanceResponseFields.projectFinanceGrantClaimRowFields;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -39,7 +39,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
     public void addProjectCost() throws Exception {
         String url = BASE_URL + "/add/{projectFinanceId}/{questionId}";
 
-        when(validationUtil.validateProjectCostItem(any(FinanceRowItem.class))).thenReturn(new ValidationMessages());
+        when(validationUtil.validateProjectCostItem(nullable(FinanceRowItem.class))).thenReturn(new ValidationMessages());
         when(projectFinanceRowServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
 
         mockMvc.perform(post(url, 123L, 456L)

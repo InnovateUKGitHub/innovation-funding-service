@@ -11,6 +11,7 @@ project.ext['flyway.url']='jdbc:mysql://ifs-database:3306?characterEncoding=utf8
 project.ext['flyway.schemas']='ifs,ifs_test'
 project.ext['flyway.user']='root'
 project.ext['flyway.password']="password"
+project.ext['flyway.table']="schema_version"
 
 def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
 project.ext['flyway.locations']=flywayPatchesPath + "/migration," +

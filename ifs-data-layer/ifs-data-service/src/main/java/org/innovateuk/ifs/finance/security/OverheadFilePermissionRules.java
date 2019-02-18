@@ -12,6 +12,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
@@ -88,9 +90,9 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
     private boolean isApplicationSubmitted(final FinanceRow overheads) {
         final ApplicationFinance applicationFinance = (ApplicationFinance) overheads.getTarget();
         final Long applicationId = applicationFinance.getApplication().getId();
-        Application application = applicationRepository.findById(applicationId);
+        Optional<Application> application = applicationRepository.findById(applicationId);
 
-        return application.isSubmitted();
+        return application.get().isSubmitted();
     }
 
 }

@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
@@ -139,9 +140,9 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         project.setProjectDocuments(singletonList(projectDocument));
         project.setApplication(application);
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
-        when(competitionDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(configuredCompetitionDocument);
+        when(competitionDocumentConfigRepositoryMock.findById(documentConfigId)).thenReturn(Optional.of(configuredCompetitionDocument));
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
         when(competitionDocumentConfigRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(competitionDocuments);
     }
@@ -149,7 +150,7 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     @Test
     public void getValidMediaTypesForDocumentWhenConfiguredProjectDocumentNotPresent() {
 
-        when(competitionDocumentConfigRepositoryMock.findOne(documentConfigId)).thenReturn(null);
+        when(competitionDocumentConfigRepositoryMock.findById(documentConfigId)).thenReturn(Optional.empty());
         ServiceResult<List<String>> result = service.getValidMediaTypesForDocument(documentConfigId);
 
         assertTrue(result.isFailure());

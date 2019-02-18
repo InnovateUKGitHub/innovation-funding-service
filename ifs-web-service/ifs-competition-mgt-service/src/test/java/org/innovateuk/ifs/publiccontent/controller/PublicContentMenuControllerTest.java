@@ -10,7 +10,7 @@ import org.innovateuk.ifs.publiccontent.viewmodel.PublicContentMenuViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Class for testing public functions of {@link PublicContentMenuController}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<PublicContentMenuController> {
 
     private static final Long COMPETITION_ID = Long.valueOf(12);

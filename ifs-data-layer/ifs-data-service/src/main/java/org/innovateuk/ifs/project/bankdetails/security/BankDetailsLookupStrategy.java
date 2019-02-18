@@ -21,11 +21,11 @@ public class BankDetailsLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public BankDetails getBankDetails(Long bankDetailsId) {
-        return bankDetailsRepository.findOne(bankDetailsId);
+        return bankDetailsRepository.findById(bankDetailsId).orElse(null);
     }
 
     @PermissionEntityLookupStrategy
     public BankDetailsResource getBankDetailsResource(Long bankDetailsId) {
-        return bankDetailsMapper.mapToResource(bankDetailsRepository.findOne(bankDetailsId));
+        return bankDetailsMapper.mapToResource(bankDetailsRepository.findById(bankDetailsId).orElse(null));
     }
 }

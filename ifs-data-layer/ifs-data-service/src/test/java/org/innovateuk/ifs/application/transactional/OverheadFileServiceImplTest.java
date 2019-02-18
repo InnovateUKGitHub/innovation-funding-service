@@ -22,6 +22,7 @@ import org.mockito.Mock;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -71,7 +72,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         long overheadId = 1L;
 
         ApplicationFinanceRow overhead = newApplicationFinanceRow().build();
-        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(overhead);
+        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(Optional.of(overhead));
 
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
         when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
@@ -111,10 +112,10 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         long overheadId = 1L;
 
         ApplicationFinanceRow overhead = newApplicationFinanceRow().build();
-        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(overhead);
+        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(Optional.of(overhead));
 
         FileEntry fileEntry = newFileEntry().build();
-        when(fileEntryRepositoryMock.findOne(fileEntry.getId())).thenReturn(fileEntry);
+        when(fileEntryRepositoryMock.findById(fileEntry.getId())).thenReturn(Optional.of(fileEntry));
 
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
         when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
@@ -149,12 +150,12 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
 
         ApplicationFinanceRow overhead = newApplicationFinanceRow().withId(overheadId).build();
 
-        when(projectFinanceRowRepositoryMock.findOne(projectOverheadId)).thenReturn(newProjectFinanceRow().withOriginalApplicationFinanceRow(overhead).build());
+        when(projectFinanceRowRepositoryMock.findById(projectOverheadId)).thenReturn(Optional.of(newProjectFinanceRow().withOriginalApplicationFinanceRow(overhead).build()));
 
-        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(overhead);
+        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(Optional.of(overhead));
 
         FileEntry fileEntry = newFileEntry().build();
-        when(fileEntryRepositoryMock.findOne(fileEntry.getId())).thenReturn(fileEntry);
+        when(fileEntryRepositoryMock.findById(fileEntry.getId())).thenReturn(Optional.of(fileEntry));
 
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
         when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
@@ -184,10 +185,10 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         long overheadId = 1L;
 
         ApplicationFinanceRow overhead = newApplicationFinanceRow().build();
-        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(overhead);
+        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(Optional.of(overhead));
 
         FileEntry fileEntry = newFileEntry().build();
-        when(fileEntryRepositoryMock.findOne(fileEntry.getId())).thenReturn(fileEntry);
+        when(fileEntryRepositoryMock.findById(fileEntry.getId())).thenReturn(Optional.of(fileEntry));
 
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
         when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
@@ -203,7 +204,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccess(), retrievedFileEntryResource);
 
-        verify(fileEntryRepositoryMock).findOne(fileEntry.getId());
+        verify(fileEntryRepositoryMock).findById(fileEntry.getId());
     }
 
     @Test
@@ -213,12 +214,12 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
 
         ApplicationFinanceRow overhead = newApplicationFinanceRow().withId(overheadId).build();
 
-        when(projectFinanceRowRepositoryMock.findOne(projectOverheadId)).thenReturn(newProjectFinanceRow().withOriginalApplicationFinanceRow(overhead).build());
+        when(projectFinanceRowRepositoryMock.findById(projectOverheadId)).thenReturn(Optional.of(newProjectFinanceRow().withOriginalApplicationFinanceRow(overhead).build()));
 
-        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(overhead);
+        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(Optional.of(overhead));
 
         FileEntry fileEntry = newFileEntry().build();
-        when(fileEntryRepositoryMock.findOne(fileEntry.getId())).thenReturn(fileEntry);
+        when(fileEntryRepositoryMock.findById(fileEntry.getId())).thenReturn(Optional.of(fileEntry));
 
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
         when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
@@ -234,7 +235,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccess(), retrievedFileEntryResource);
 
-        verify(fileEntryRepositoryMock).findOne(fileEntry.getId());
+        verify(fileEntryRepositoryMock).findById(fileEntry.getId());
     }
 
     @Test
@@ -244,7 +245,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         long overheadId = 1L;
 
         ApplicationFinanceRow overhead = newApplicationFinanceRow().build();
-        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(overhead);
+        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(Optional.of(overhead));
 
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
         when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
@@ -276,7 +277,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         long fileId = 3L;
 
         ApplicationFinanceRow overhead = newApplicationFinanceRow().build();
-        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(overhead);
+        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(Optional.of(overhead));
 
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
         when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
@@ -292,6 +293,6 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         assertTrue(result.isSuccess());
 
         verify(fileServiceMock).deleteFileIgnoreNotFound(fileId);
-        verify(financeRowMetaValueRepositoryMock).delete(financeRowMetaValue.getId());
+        verify(financeRowMetaValueRepositoryMock).deleteById(financeRowMetaValue.getId());
     }
 }

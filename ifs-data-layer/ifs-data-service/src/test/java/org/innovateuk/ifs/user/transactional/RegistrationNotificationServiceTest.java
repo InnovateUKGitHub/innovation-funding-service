@@ -13,9 +13,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Map;
@@ -29,16 +27,15 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({StandardPasswordEncoder.class})
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<RegistrationNotificationService> {
 
     @Mock
-    private StandardPasswordEncoder standardPasswordEncoder;
+    private RegistrationNotificationService.PasswordEncoder passwordEncoder;
 
     private static final String webBaseUrl = "http://ifs-local-dev";
 
@@ -62,8 +59,8 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
                 .build();
 
         final String hash = "1e627a59879066b44781ca584a23be742d3197dff291245150e62f3d4d3d303e1a87d34fc8a3a2e0";
-        ReflectionTestUtils.setField(service, "encoder", standardPasswordEncoder);
-        when(standardPasswordEncoder.encode("1==sample@me.com==700")).thenReturn(hash);
+        ReflectionTestUtils.setField(service, "passwordEncoder", passwordEncoder);
+        when(passwordEncoder.encode("1==sample@me.com==700")).thenReturn(hash);
 
         final Token newToken = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), userResource.getId(), hash, now(), JsonNodeFactory.instance.objectNode());
         final String verificationLink = String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
@@ -96,8 +93,8 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
                 .build();
 
         final String hash = "1e627a59879066b44781ca584a23be742d3197dff291245150e62f3d4d3d303e1a87d34fc8a3a2e0";
-        ReflectionTestUtils.setField(service, "encoder", standardPasswordEncoder);
-        when(standardPasswordEncoder.encode("1==sample@me.com==700")).thenReturn(hash);
+        ReflectionTestUtils.setField(service, "passwordEncoder", passwordEncoder);
+        when(passwordEncoder.encode("1==sample@me.com==700")).thenReturn(hash);
 
         final Token newToken = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), userResource.getId(), hash, now(), JsonNodeFactory.instance.objectNode());
         final String verificationLink = String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
@@ -130,8 +127,8 @@ public class RegistrationNotificationServiceTest extends BaseServiceUnitTest<Reg
                 .build();
 
         final String hash = "1e627a59879066b44781ca584a23be742d3197dff291245150e62f3d4d3d303e1a87d34fc8a3a2e0";
-        ReflectionTestUtils.setField(service, "encoder", standardPasswordEncoder);
-        when(standardPasswordEncoder.encode("1==sample@me.com==700")).thenReturn(hash);
+        ReflectionTestUtils.setField(service, "passwordEncoder", passwordEncoder);
+        when(passwordEncoder.encode("1==sample@me.com==700")).thenReturn(hash);
 
         final Token existingToken = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), userResource.getId(), "existing-token", now(), JsonNodeFactory.instance.objectNode());
         final Token newToken = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), userResource.getId(), hash, now(), JsonNodeFactory.instance.objectNode());

@@ -297,7 +297,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Override
     @Transactional
     public ServiceResult<Void> updateEmail(long userId, String email) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+        return find(userRepository.findById(userId), notFoundError(User.class, userId))
                 .andOnSuccess( user -> updateUserEmail(user, email));
     }
 
