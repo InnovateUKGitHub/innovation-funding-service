@@ -112,7 +112,7 @@ def getLocalOCCredentials() {
     project.ext.localPort = localPortCommand.execute().text.replace("'", "").trim()
     dockerRegistryCredentials.url = project.ext.localIp + ":" + project.ext.localPort
     dockerRegistryCredentials.username = "unused"
-    dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+    dockerRegistryCredentials.password = dockerRegistryCredentials.password ?: System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
     dockerRegistryCredentials.email = "unused"
     return dockerRegistryCredentials
 }
@@ -123,7 +123,7 @@ def getRemoteOCCredentials() {
         // Get the docker repository for the remote OS cluster
         dockerRegistryCredentials.url = project.dockerRegistry
         dockerRegistryCredentials.username = "unused"
-        dockerRegistryCredentials.password = System.env.bamboo_openshift_svc_account_token
+        dockerRegistryCredentials.password = dockerRegistryCredentials.password ?: System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
         dockerRegistryCredentials.email = "unused"
     }
     catch (ignored) {
