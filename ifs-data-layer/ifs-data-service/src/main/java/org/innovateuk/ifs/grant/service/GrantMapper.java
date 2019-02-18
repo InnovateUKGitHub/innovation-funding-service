@@ -40,8 +40,7 @@ import java.util.stream.Collectors;
 import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTablePopulator.GRANT_CLAIM_IDENTIFIER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -56,7 +55,8 @@ class GrantMapper {
     private static final Map<Role, String> IFS_ROLES_TO_LIVE_ROLE_NAMES = asMap(
             PROJECT_FINANCE_CONTACT.name(), "Finance contact",
             PROJECT_MANAGER.name(), "Project manager",
-            Role.INNOVATION_LEAD.name(), "Innovation lead"
+            Role.INNOVATION_LEAD.name(), "Innovation lead",
+            MONITORING_OFFICER.name(), "Monitoring officer"
     );
 
     @Autowired
@@ -124,8 +124,12 @@ class GrantMapper {
                 Role.INNOVATION_LEAD,
                 innovationLeadUser.getEmail());
 
-        List<Participant> monitoringOfficerParticipants = simpleMap(project.getProjectMonitoringOfficers(),
-                mo -> toSimpleContactParticipant(mo.getUser().getId(), Role.MONITORING_OFFICER, mo.getUser().getEmail()));
+        List<Participant> monitoringOfficerParticipants = simpleMap(
+                project.getProjectMonitoringOfficers(),
+                mo -> toSimpleContactParticipant(
+                        mo.getUser().getId(), Role.MONITORING_OFFICER, mo.getUser().getEmail()
+                )
+        );
 
         List<Participant> fullParticipantList = combineLists(
                 financeContactParticipants,

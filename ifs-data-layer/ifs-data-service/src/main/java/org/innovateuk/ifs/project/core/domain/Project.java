@@ -107,6 +107,10 @@ public class Project implements ProcessActivity {
         projectUsers.add(projectUser);
     }
 
+    public void addProjectMonitoringOfficer(ProjectMonitoringOfficer projectMonitoringOfficer) {
+        projectMonitoringOfficers.add(projectMonitoringOfficer);
+    }
+
     public void addPartnerOrganisation(PartnerOrganisation partnerOrganisation) {
         partnerOrganisations.add(partnerOrganisation);
     }
@@ -200,6 +204,11 @@ public class Project implements ProcessActivity {
     public void setProjectUsers(List<ProjectUser> projectUsers) {
         this.projectUsers.clear();
         this.projectUsers.addAll(projectUsers);
+    }
+
+    public void setProjectMonitoringOfficers(List<ProjectMonitoringOfficer> projectMonitoringOfficers) {
+        this.projectMonitoringOfficers.clear();
+        this.projectMonitoringOfficers.addAll(projectMonitoringOfficers);
     }
 
     public void setPartnerOrganisations(List<PartnerOrganisation> partnerOrganisations) {

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
+import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 
 import java.time.LocalDate;
@@ -104,16 +105,18 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return with (project -> project.setSpendProfileSubmittedDate(date));
     }
 
+    public ProjectBuilder withProjectMonitoringOfficers(List<ProjectMonitoringOfficer>... projectMonitoringOfficersList) {
+        return withArray((projectMonitoringOfficers, project) -> project.setProjectMonitoringOfficers(projectMonitoringOfficers), projectMonitoringOfficersList);
+    }
+
     @Override
     protected void postProcess(int index, Project project) {
 
         // add Hibernate-style backlinks
-        project.getProjectUsers().forEach(pu -> {
-            setField("project", project, pu);
-        });
+        project.getProjectUsers().forEach(pu -> setField("project", project, pu));
 
-        project.getPartnerOrganisations().forEach(org -> {
-            setField("project", project, org);
-        });
+        project.getPartnerOrganisations().forEach(org -> setField("project", project, org));
+
+        project.getProjectMonitoringOfficers().forEach(mo -> setField("project", project, mo));
     }
 }

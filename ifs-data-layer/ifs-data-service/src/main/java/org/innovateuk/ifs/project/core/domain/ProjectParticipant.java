@@ -55,10 +55,6 @@ public abstract class ProjectParticipant extends Participant<Project, ProjectPar
         this.user = user;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public boolean isUser(Long userId) {
         return this.user.hasId(userId);
     }
