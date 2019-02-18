@@ -3,7 +3,7 @@ package org.innovateuk.ifs.threads.attachments.service;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 

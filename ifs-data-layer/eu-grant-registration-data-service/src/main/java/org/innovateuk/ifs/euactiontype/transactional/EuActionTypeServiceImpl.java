@@ -34,7 +34,7 @@ public class EuActionTypeServiceImpl implements EuActionTypeService{
     @Override
     public ServiceResult<EuActionTypeResource> getById(long id) {
 
-        return find(euActionTypeRepository.findOne(id), notFoundError(EuActionType.class, id))
+        return find(euActionTypeRepository.findById(id), notFoundError(EuActionType.class, id))
                 .andOnSuccessReturn(euActionTypeMapper::mapToResource);
 
     }

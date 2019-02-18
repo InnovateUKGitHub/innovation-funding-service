@@ -32,13 +32,13 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Innovation lead users can get the approved status of a Spend Profile for any Project")
     public boolean assignedInnovationLeadCanViewSPStatus(ProjectResource project, UserResource user){
-        Application application = applicationRepository.findOne(project.getApplication());
+        Application application = applicationRepository.findById(project.getApplication()).get();
         return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Stakeholders can get the approved status of a Spend Profile for any Project")
     public boolean assignedStakeholderCanViewSPStatus(ProjectResource project, UserResource user){
-        Application application = applicationRepository.findOne(project.getApplication());
+        Application application = applicationRepository.findById(project.getApplication()).get();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
@@ -91,7 +91,7 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             value = "VIEW_SPEND_PROFILE_CSV",
             description = "Innovation lead users can view Spend Profile data for project on competition assigned to them")
     public boolean innovationLeadUsersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        Project project = projectRepository.findOne(projectOrganisationCompositeId.getProjectId());
+        Project project = projectRepository.findById(projectOrganisationCompositeId.getProjectId()).get();
         return userIsInnovationLeadOnCompetition(project.getApplication().getCompetition().getId(), user.getId());
     }
 
@@ -99,7 +99,7 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             value = "VIEW_SPEND_PROFILE_CSV",
             description = "Stakeholders can view Spend Profile data for project on competition assigned to them")
     public boolean stakeholdersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        Project project = projectRepository.findOne(projectOrganisationCompositeId.getProjectId());
+        Project project = projectRepository.findById(projectOrganisationCompositeId.getProjectId()).get();
         return userIsStakeholderInCompetition(project.getApplication().getCompetition().getId(), user.getId());
     }
 

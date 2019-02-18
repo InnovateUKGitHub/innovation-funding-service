@@ -17,7 +17,7 @@ import static javax.persistence.EnumType.STRING;
 @Entity
 public class Alert {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull

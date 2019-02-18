@@ -169,11 +169,6 @@ Custom Suite Teardown
     The user closes the browser
     Disconnect from database
 
-Get the original values of the competition's milestones
-    ${openDate}  ${submissionDate} =  Save competition's current dates  ${UPCOMING_COMPETITION_TO_ASSESS_ID}
-    Set suite variable  ${openDate}
-    Set suite variable  ${submissionDate}
-
 Custom Suite Setup
     Set predefined date variables
     Connect to database  @{database}

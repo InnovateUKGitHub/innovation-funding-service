@@ -76,6 +76,6 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
         if (id == null) {
             return null;
         }
-        return projectMonitoringOfficerRepository.findOne(id);
+        return projectMonitoringOfficerRepository.findById(id).get();
     }
 }

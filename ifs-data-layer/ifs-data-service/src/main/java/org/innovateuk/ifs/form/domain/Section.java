@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Entity
 public class Section implements Comparable<Section> {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

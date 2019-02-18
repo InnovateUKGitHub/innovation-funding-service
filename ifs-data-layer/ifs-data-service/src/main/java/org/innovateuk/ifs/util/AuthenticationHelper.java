@@ -25,7 +25,7 @@ public class AuthenticationHelper {
     protected UserRepository userRepository;
 
     private ServiceResult<User> getUser(final Long id) {
-        return find(userRepository.findOne(id), notFoundError(User.class, id));
+        return find(userRepository.findById(id), notFoundError(User.class, id));
     }
 
     public ServiceResult<User> getCurrentlyLoggedInUser() {

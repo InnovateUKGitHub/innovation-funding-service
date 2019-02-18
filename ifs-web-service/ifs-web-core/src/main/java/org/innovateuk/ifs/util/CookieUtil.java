@@ -37,10 +37,10 @@ public class CookieUtil {
 
     private TextEncryptor encryptor;
 
-    @Value("${server.session.cookie.secure}")
+    @Value("${server.servlet.session.cookie.secure}")
     private Boolean cookieSecure;
 
-    @Value("${server.session.cookie.http-only}")
+    @Value("${server.servlet.session.cookie.http-only}")
     private Boolean cookieHttpOnly;
 
     @Value("${ifs.web.security.csrf.encryption.password}")

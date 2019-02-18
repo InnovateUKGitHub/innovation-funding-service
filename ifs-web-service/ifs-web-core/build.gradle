@@ -3,9 +3,12 @@ apply from: rootProject.file("gradle-support/zipkin-support.gradle")
 
 apply plugin: 'idea'
 
+bootJar.enabled=false
+jar.enabled=true
+
 buildscript {
 
-    ext['thymeleaf.version'] = '3.0.3.RELEASE'
+    ext['thymeleaf.version'] = '3.0.8.RELEASE'
 
     ext {
         thymeleafVersion = ext['thymeleaf.version']
@@ -18,10 +21,6 @@ buildscript {
 
 group 'innovateuk'
 version project.version
-
-bootRepackage {
-    enabled = false
-}
 
 configurations {
     testArtifacts
@@ -36,7 +35,7 @@ artifacts {
 
 dependencies {
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
-    compile "org.thymeleaf:thymeleaf-spring4:${thymeleafVersion}"
+    compile "org.thymeleaf:thymeleaf-spring5:${thymeleafVersion}"
     compile "org.thymeleaf.extras:thymeleaf-extras-java8time"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.plugin:spring-plugin-core"

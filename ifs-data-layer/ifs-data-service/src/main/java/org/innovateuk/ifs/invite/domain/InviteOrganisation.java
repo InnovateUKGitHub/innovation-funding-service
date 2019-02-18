@@ -16,7 +16,7 @@ import static javax.persistence.CascadeType.ALL;
 @Entity
 public class InviteOrganisation {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String organisationName;

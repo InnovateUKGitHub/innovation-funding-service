@@ -14,7 +14,7 @@ import java.time.ZonedDateTime;
 @Entity
 public class QuestionStatus {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Boolean markedAsComplete;

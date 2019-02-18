@@ -24,11 +24,11 @@ public class InterviewLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public InterviewResource getInterviewResource(final Long id) {
-        return interviewMapper.mapToResource(interviewRepository.findOne(id));
+        return interviewMapper.mapToResource(interviewRepository.findById(id).orElse(null));
     }
 
     @PermissionEntityLookupStrategy
     public Interview getInterview(final Long id) {
-        return interviewRepository.findOne(id);
+        return interviewRepository.findById(id).orElse(null);
     }
 }

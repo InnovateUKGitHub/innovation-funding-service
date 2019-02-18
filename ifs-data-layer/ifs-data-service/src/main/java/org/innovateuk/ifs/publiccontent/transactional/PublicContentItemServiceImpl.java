@@ -96,14 +96,14 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<PublicContentItemResource> byCompetitionId(Long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId);
+        Optional<Competition> competition = competitionRepository.findById(competitionId);
         PublicContent publicContent = publicContentRepository.findByCompetitionId(competitionId);
 
-        if(null == competition || null == publicContent) {
+        if(!competition.isPresent() || null == publicContent) {
             return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND));
         }
 
-        return ServiceResult.serviceSuccess(mapPublicContentToPublicContentItemResource(publicContent, competition));
+        return ServiceResult.serviceSuccess(mapPublicContentToPublicContentItemResource(publicContent, competition.get()));
     }
 
     private List<String> separateSearchStringToList(String searchString) {
@@ -114,11 +114,11 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         List<Long> competitionIds = new ArrayList<>();
 
         innovationAreaId.ifPresent(id -> {
-            InnovationArea innovationArea = innovationAreaRepository.findOne(id);
+            Optional<InnovationArea> innovationArea = innovationAreaRepository.findById(id);
 
-            if (innovationArea != null) {
+            if (innovationArea.isPresent()) {
                 competitionIds.addAll(simpleMap(
-                        competitionRepository.findByInnovationSectorCategoryId(innovationArea.getSector().getId()),
+                        competitionRepository.findByInnovationSectorCategoryId(innovationArea.get().getSector().getId()),
                         Competition::getId
                 ));
             }
@@ -143,7 +143,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
                     break;
                 }
             }
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             LOG.warn("Unable to decode searchstring", e);
         }
 

@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.junit.Assert.assertEquals;
@@ -41,7 +43,7 @@ public class ApplicationInviteLookupStrategyTest {
         ApplicationInviteResource applicationInviteResource = newApplicationInviteResource().withId(inviteId).build();
         ApplicationInvite applicationInvite = newApplicationInvite().withId(inviteId).build();
         when(applicationInviteMapper.mapToResource(applicationInvite)).thenReturn(applicationInviteResource);
-        when(applicationInviteRepository.findOne(inviteId)).thenReturn(applicationInvite);
+        when(applicationInviteRepository.findById(inviteId)).thenReturn(Optional.of(applicationInvite));
         assertEquals(applicationInviteResource, lookup.getApplicationInviteResource(inviteId));
     }
 }

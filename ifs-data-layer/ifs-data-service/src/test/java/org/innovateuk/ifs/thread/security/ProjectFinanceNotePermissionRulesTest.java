@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -25,9 +26,9 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTest<ProjectFinanceNotePermissionRules> {
@@ -60,7 +61,7 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
         projectProcessInLive = newProjectProcess().withActivityState(ProjectState.LIVE).build();
         projectProcessInWithdrawn = newProjectProcess().withActivityState(ProjectState.WITHDRAWN).build();
 
-        when(projectFinanceRepositoryMock.findOne(anyLong())).thenReturn(projectFinance);
+        when(projectFinanceRepositoryMock.findById(anyLong())).thenReturn(Optional.of(projectFinance));
     }
 
     private NoteResource sampleNote() {

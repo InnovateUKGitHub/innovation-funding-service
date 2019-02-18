@@ -95,7 +95,7 @@ Existing Assessor tries to accept expired invitation in closed assessment
     [Tags]  MySQL
     [Setup]    Close the competition in assessment
     Given Log in as a different user               &{existing_assessor1_credentials}
-    And wait until element is not visible          jQuery = a:contains("${IN_ASSESSMENT_COMPETITION_NAME}")  # the without screenshots keyword doesnt seemt to work here!
+    And the user should not see the element        link = ${IN_ASSESSMENT_COMPETITION_NAME}
     When the user navigates to the page            ${Invitation_for_upcoming_comp_assessor1}
     Then the user should see the element           jQuery = h1:contains("This invitation is now closed")
     [Teardown]  Reset competition's milestone
@@ -135,7 +135,6 @@ Upcoming competition should be visible
 The assessment period starts the comp moves to the comp for assessment
     [Documentation]  INFUND-3718  INFUND-3720
     [Tags]    MySQL
-    [Setup]  Retrieve original milestones
     Given the assessment start period changes in the db in the past     ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Then the user should not see the element   jQuery = h2:contains("Upcoming competitions to assess")
     [Teardown]  Reset milestones back to the original values
@@ -238,17 +237,12 @@ The user closes the competition brief
 *** Keywords ***
 Reset competition's milestone
     # That is to reset competition's milestone back to its original value, that was NUll before pressing the button "Close assessment"
-    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `type`='ASSESSMENT_CLOSED' AND `competition_id`='${competition_ids["${IN_ASSESSMENT_COMPETITION_NAME}"]}';
-
-Retrieve original milestones
-    ${openDate}  ${submissionDate} =  Save competition's current dates  ${UPCOMING_COMPETITION_TO_ASSESS_ID}
-    Set suite variable  ${openDate}
-    Set suite variable  ${submissionDate}
+    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `type`='ASSESSMENT_CLOSED' AND `competition_id`='${IN_ASSESSMENT_COMPETITION}';
 
 Reset milestones back to the original values
-    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `type`='OPEN_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
-    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
-    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `type`='ASSESSORS_NOTIFIED' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DB}' WHERE `type`='OPEN_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DB}' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DB}' WHERE `type`='ASSESSORS_NOTIFIED' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
 
 Custom suite setup
     The user logs-in in new browser  &{existing_assessor1_credentials}
