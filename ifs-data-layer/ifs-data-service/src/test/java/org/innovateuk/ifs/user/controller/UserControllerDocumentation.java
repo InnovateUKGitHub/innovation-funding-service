@@ -2,6 +2,8 @@ package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.documentation.EditUserResourceDocs;
+import org.innovateuk.ifs.documentation.UserDocs;
+import org.innovateuk.ifs.documentation.UserOrganisationResourceDocs;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
@@ -27,8 +29,8 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -106,7 +108,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("list of users with the selected role, ordered by first name, last name")
-                        )
+                        ).andWithPrefix("[].", userResourceFields)
                 ));
     }
 
@@ -141,6 +143,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
+                        .andWithPrefix("content[].", UserDocs.userResourceFields)
                 ));
     }
 
@@ -153,6 +156,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
+                        .andWithPrefix("content[].", UserDocs.userResourceFields)
                 ));
     }
 
@@ -279,7 +283,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                         ,
                         responseFields(
                                 fieldWithPath("[]").description("List of external users with associated organisations, which contain the search string and match the search category")
-                        )
+                        )                        .andWithPrefix("[].", UserOrganisationResourceDocs.userOrganisationResourceFields)
+
                 ));
 
         verify(userServiceMock).findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);

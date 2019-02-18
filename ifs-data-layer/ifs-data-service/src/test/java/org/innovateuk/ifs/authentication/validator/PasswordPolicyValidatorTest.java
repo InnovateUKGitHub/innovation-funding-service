@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
@@ -180,7 +181,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         org1.addUser(user);
         org2.addUser(user);
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1, org2));
 
         UserResource userResource = newUserResource().
@@ -213,7 +214,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         Organisation org1 = newOrganisation().withId(123L).withName("(((£&").build();
         org1.addUser(user);
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1));
 
         UserResource userResource = newUserResource().
@@ -233,7 +234,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         org1.addUser(user);
         org2.addUser(user);
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1, org2));
 
         UserResource userResource = newUserResource().
@@ -252,7 +253,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         Organisation org1 = newOrganisation().withName().withId(123L).build();
         Organisation org2 = newOrganisation().withName().withId(456L).build();
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1, org2));
 
         UserResource userResource = newUserResource().

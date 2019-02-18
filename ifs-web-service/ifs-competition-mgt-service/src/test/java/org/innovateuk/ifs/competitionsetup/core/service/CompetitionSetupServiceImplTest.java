@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -50,7 +50,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class CompetitionSetupServiceImplTest {
 
     private static final Long COMPETITION_ID = 3422L;
@@ -88,7 +88,7 @@ public class CompetitionSetupServiceImplTest {
 
         CompetitionSetupSectionModelPopulator matchingPopulator = mock(InitialDetailsModelPopulator.class);
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(INITIAL_DETAILS);
-        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+        when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
                 .thenReturn(new InitialDetailsViewModel(getBasicGeneralSetupView(INITIAL_DETAILS, competition),
                         emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false));
         service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
@@ -111,7 +111,7 @@ public class CompetitionSetupServiceImplTest {
 
         CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.ELIGIBILITY);
-        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+        when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
                 .thenReturn(new EligibilityViewModel(getBasicGeneralSetupView(CompetitionSetupSection.ELIGIBILITY, competition), new ResearchParticipationAmount[]{},
                         new CollaborationLevel[]{}, emptyList(), "", new FundingLevel[]{}, emptyList(), ""));
         CompetitionSetupSectionModelPopulator notMatchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
@@ -126,8 +126,8 @@ public class CompetitionSetupServiceImplTest {
         verifyCommonModelAttributes(viewModel, competition, section);
         assertEquals("section-eligibility", viewModel.getGeneral().getCurrentSectionFragment());
 
-        verify(matchingPopulator).populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class));
-        verify(notMatchingPopulator, never()).populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class));
+        verify(matchingPopulator).populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class));
+        verify(notMatchingPopulator, never()).populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class));
     }
 
     private void verifyCommonModelAttributes(CompetitionSetupViewModel viewModel, CompetitionResource competition,
@@ -381,7 +381,7 @@ public class CompetitionSetupServiceImplTest {
 
         CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
-        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+        when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
                 .thenReturn(new AdditionalModelViewModel(getBasicGeneralSetupView(competitionSetupSection, competition)));
 
         service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
@@ -409,7 +409,7 @@ public class CompetitionSetupServiceImplTest {
 
         CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
-        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+        when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
                 .thenReturn(new AdditionalModelViewModel(getBasicGeneralSetupView(competitionSetupSection, competition)));
 
         service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));

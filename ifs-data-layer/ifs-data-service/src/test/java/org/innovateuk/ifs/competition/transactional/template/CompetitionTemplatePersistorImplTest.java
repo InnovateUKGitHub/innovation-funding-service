@@ -9,6 +9,8 @@ import org.mockito.Mock;
 
 import javax.persistence.EntityManager;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,7 +34,7 @@ public class CompetitionTemplatePersistorImplTest extends BaseServiceUnitTest<Co
     public void cleanByEntityId() {
         Competition competition = newCompetition().build();
 
-        when(competitionRepository.findById(competition.getId())).thenReturn(competition);
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
 
         service.cleanByEntityId(competition.getId());
 

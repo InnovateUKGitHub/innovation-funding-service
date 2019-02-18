@@ -54,7 +54,7 @@ public class MilestonePermissionRules extends BasePermissionRules {
             return false;
         }
 
-        Competition competition = competitionRepository.findById(competitionCompositeId.id());
+        Competition competition = competitionRepository.findById(competitionCompositeId.id()).get();
         return COMPETITION_SETUP.equals(competition.getCompetitionStatus());
     }
 }

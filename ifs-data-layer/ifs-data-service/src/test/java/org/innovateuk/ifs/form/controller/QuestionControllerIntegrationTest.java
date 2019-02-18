@@ -47,7 +47,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Before
     public void setup(){
-        question = questionRepository.findOne(questionId);
+        question = questionRepository.findById(questionId).get();
         questionResource = questionMapper.mapToResource(question);
 
         addBasicSecurityUser();
@@ -71,7 +71,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     @Test
     public void testGetQuestionByIdRemovesInactiveFormInputs() throws Exception {
         //Create an inactive form input for the question.
-        Question question = questionRepository.findOne(questionId);
+        Question question = questionRepository.findById(questionId).get();
         FormInputBuilder baseInput = newFormInput()
                 .with(id(null))
                 .withQuestion(question)

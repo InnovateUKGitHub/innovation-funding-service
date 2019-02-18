@@ -36,7 +36,7 @@ class RegistrationNotificationService {
 
     final JsonNodeFactory factory = JsonNodeFactory.instance;
 
-    private StandardPasswordEncoder encoder = new StandardPasswordEncoder(UUID.randomUUID().toString());
+    private PasswordEncoder passwordEncoder = new PasswordEncoder();
 
     public enum ServiceFailures {
         UNABLE_TO_CREATE_USER
@@ -81,7 +81,7 @@ class RegistrationNotificationService {
     private String getEmailVerificationHash(final UserResource user) {
         final int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
         final String hash = format("%s==%s==%s", user.getId(), user.getEmail(), random);
-        return encoder.encode(hash);
+        return passwordEncoder.encode(hash);
     }
 
     private Notification getEmailVerificationNotification(final UserResource user, final Token token) {
@@ -98,4 +98,14 @@ class RegistrationNotificationService {
         final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), emailVerificationHash, now(), extraInfo);
         return tokenRepository.save(token);
     }
+
+    static class PasswordEncoder {
+        private StandardPasswordEncoder encoder = new StandardPasswordEncoder(UUID.randomUUID().toString());
+
+        public String encode(String hash) {
+            return encoder.encode(hash);
+        }
+    }
 }
+
+

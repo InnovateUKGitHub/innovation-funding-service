@@ -9,8 +9,11 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.documentation.ApplicationDocs;
+import org.innovateuk.ifs.documentation.InnovationAreaResourceDocs;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.documentation.PageResourceDocs;
+import org.innovateuk.ifs.documentation.ResearchCategoryResourceDocs;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.JsonMappingUtil;
@@ -71,6 +74,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                                 parameterWithName("id").description("Id of the application that is being requested")
                         ),
                         responseFields(applicationResourceFields)
+                        .andWithPrefix("researchCategory.", ResearchCategoryResourceDocs.researchCategoryResourceFields)
+                        .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
                 ));
     }
 
@@ -87,8 +92,9 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                         document("application/{method-name}",
                                 responseFields(
                                         fieldWithPath("[]").description("List of applications the user is allowed to see")
-                                )
-                        ));
+                                ).andWithPrefix("[].", applicationResourceFields)
+                                .andWithPrefix("[].researchCategory.", ResearchCategoryResourceDocs.researchCategoryResourceFields)
+                                .andWithPrefix("[].innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)));
     }
 
     @Test
@@ -109,7 +115,9 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of applications linked to the user id used in the request. Only contains applications the requesting user can see")
-                        )));
+                        ).andWithPrefix("[].", applicationResourceFields)
+                         .andWithPrefix("[].researchCategory.", ResearchCategoryResourceDocs.researchCategoryResourceFields)
+                         .andWithPrefix("[].innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)));
     }
 
     @Test
@@ -133,9 +141,10 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                                         parameterWithName("searchString").description("The application id on which wildcard search will be performed"),
                                         parameterWithName("page").description("The page number to be retrieved"),
                                         parameterWithName("size").description("The page size")
-                                )
-                                ,
+                                ),
                                 responseFields(PageResourceDocs.pageResourceFields)
+                                        .andWithPrefix("content[].", ApplicationDocs.applicationResourceFields)
+
                 ));
     }
 
@@ -237,7 +246,9 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of applications")
-                        )
+                        ).andWithPrefix("[].", applicationResourceFields)
+                                .andWithPrefix("[].researchCategory.", ResearchCategoryResourceDocs.researchCategoryResourceFields)
+                                .andWithPrefix("[].innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
                 ));
     }
 
@@ -269,6 +280,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                                 fieldWithPath("name").description("name of the application that will be created")
                         ),
                         responseFields(applicationResourceFields)
+                        .andWithPrefix("researchCategory.", ResearchCategoryResourceDocs.researchCategoryResourceFields)
+                        .andWithPrefix("innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)
                 ));
     }
 
@@ -356,6 +369,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                                 parameterWithName("filter").description("The filter to be applied")
                         ),
                         responseFields(PageResourceDocs.pageResourceFields)
+                        .andWithPrefix("content[].", ApplicationDocs.previousApplicationResourceFields)
                 ));
 
         verify(applicationServiceMock, only()).findPreviousApplications(competitionId, pageIndex, pageSize, sortField, filter);

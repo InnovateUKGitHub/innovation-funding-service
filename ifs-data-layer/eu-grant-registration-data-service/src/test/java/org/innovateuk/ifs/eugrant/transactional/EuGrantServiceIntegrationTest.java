@@ -153,7 +153,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
         assertTrue(result.isSuccess());
 
-        euGrant = euGrantRepository.findOne(euGrant.getId());
+        euGrant = euGrantRepository.findById(euGrant.getId()).get();
         assertEquals(euGrant.getShortCode().length(), 5);
     }
 }

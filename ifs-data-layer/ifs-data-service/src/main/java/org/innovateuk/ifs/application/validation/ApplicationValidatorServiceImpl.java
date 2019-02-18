@@ -70,13 +70,13 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
             results.addAll(responses.stream().map(formInputResponse -> applicationValidationUtil.validateResponse(formInputResponse, false)).collect(Collectors.toList()));
         } else {
             FormInputResponse emptyResponse = new FormInputResponse();
-            emptyResponse.setFormInput(formInputRepository.findOne(formInputId));
+            emptyResponse.setFormInput(formInputRepository.findById(formInputId).orElse(null));
             results.add(applicationValidationUtil.validateResponse(emptyResponse, false));
         }
 
-        FormInput formInput = formInputRepository.findOne(formInputId);
+        FormInput formInput = formInputRepository.findById(formInputId).get();
         if (formInput.getType().equals(FormInputType.APPLICATION_DETAILS)) {
-            Application application = applicationRepository.findOne(applicationId);
+            Application application = applicationRepository.findById(applicationId).orElse(null);
             results.add(applicationValidationUtil.addValidation(application, new ApplicationDetailsMarkAsCompleteValidator()));
         }
 
@@ -117,7 +117,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     }
 
     private ValidationMessages validateFileUploads(Application application, Long formInputId) {
-        FormInput formInput = formInputRepository.findOne(formInputId);
+        FormInput formInput = formInputRepository.findById(formInputId).get();
 
         if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && jesFinances(application)) {
             if (financeFileIsNotPresent(application)) {

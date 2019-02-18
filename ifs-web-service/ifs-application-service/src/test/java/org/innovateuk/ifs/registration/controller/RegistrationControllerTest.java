@@ -24,7 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.validation.Validator;
@@ -50,10 +50,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.*;
@@ -62,7 +62,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class RegistrationControllerTest extends AbstractInviteMockMVCTest<RegistrationController> {
 
@@ -362,7 +362,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.empty());
 
         Error error = Error.fieldError("password", "INVALID_PASSWORD", BAD_REQUEST.getReasonPhrase());
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(serviceFailure(error));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), nullable(String.class), anyString(), anyLong(), anyLong(), nullable(Boolean.class))).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -415,11 +415,11 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 eq(userResource.getLastName()),
                 eq(userResource.getPassword()),
                 eq(userResource.getEmail()),
-                anyString(),
+                nullable(String.class),
                 eq(userResource.getPhoneNumber()),
                 eq(1L),
                 eq(1L),
-                anyBoolean())).thenReturn(serviceSuccess(userResource));
+                nullable(Boolean.class))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail("test@test.test")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
@@ -458,11 +458,11 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 eq(userResource.getLastName()),
                 eq(userResource.getPassword()),
                 eq(userResource.getEmail()),
-                anyString(),
+                nullable(String.class),
                 eq(userResource.getPhoneNumber()),
                 eq(1L),
                 eq(1L),
-                anyBoolean())).thenReturn(serviceSuccess(userResource));
+                nullable(Boolean.class))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(Optional.empty());
         when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong(), anyLong())).thenReturn(restSuccess());
 

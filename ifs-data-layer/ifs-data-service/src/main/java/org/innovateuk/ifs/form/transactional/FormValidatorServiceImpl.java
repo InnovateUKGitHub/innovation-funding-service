@@ -23,6 +23,6 @@ public class FormValidatorServiceImpl extends BaseTransactionalService implement
 
     @Override
     public ServiceResult<FormValidatorResource> findOne(Long id) {
-        return find(repository.findOne(id), notFoundError(FormValidator.class)).andOnSuccessReturn(mapper::mapToResource);
+        return find(repository.findById(id), notFoundError(FormValidator.class)).andOnSuccessReturn(mapper::mapToResource);
     }
 }

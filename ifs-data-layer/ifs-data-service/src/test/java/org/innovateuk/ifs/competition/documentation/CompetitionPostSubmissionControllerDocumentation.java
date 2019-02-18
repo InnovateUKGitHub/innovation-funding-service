@@ -4,8 +4,13 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.competition.controller.CompetitionPostSubmissionController;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.documentation.CompetitionOpenQueryResourceDocs;
+import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
+import org.innovateuk.ifs.documentation.CompetitionSearchResultItemDocs;
+import org.innovateuk.ifs.documentation.SpendProfileStatusResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -67,7 +72,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                         "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of competitions, which have had feedback released, that the authenticated user has access to")
-                        )
+                        ).andWithPrefix("[].", CompetitionSearchResultItemDocs.competitionSearchResultItemFields)
                 ));
     }
 
@@ -102,7 +107,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("list of open queries")
-                        )
+                        ).andWithPrefix("[].", CompetitionOpenQueryResourceDocs.competitionOpenQueryFields)
                 ));
     }
 
@@ -128,7 +133,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                         ,
                         responseFields(
                                 fieldWithPath("[]").description("List of projects for which Spend Profile generation is pending, for a given competition")
-                        )
+                        ).andWithPrefix("[].", SpendProfileStatusResourceDocs.spendProfileStatusFields)
                 ));
 
         verify(competitionService, only()).getPendingSpendProfiles(competitionId);

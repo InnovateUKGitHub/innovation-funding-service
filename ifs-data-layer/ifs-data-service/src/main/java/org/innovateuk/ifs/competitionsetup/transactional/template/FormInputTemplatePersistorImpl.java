@@ -47,7 +47,7 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
 
         formInputs.forEach(formInput -> guidanceRowTemplateService.cleanForParentEntity(formInput));
         formInputs.forEach(formInput -> entityManager.detach(formInput));
-        formInputRepository.delete(formInputs);
+        formInputRepository.deleteAll(formInputs);
     }
 
     private Function<FormInput, FormInput> createFunction(Question question) {

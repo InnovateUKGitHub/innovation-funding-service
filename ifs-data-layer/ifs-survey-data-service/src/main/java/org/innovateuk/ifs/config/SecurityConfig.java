@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         super(true);
     }
 
-    @Value("${management.contextPath}")
+    @Value("${management.endpoints.web.base-path}")
     private String monitoringEndpoint;
 
     @Override

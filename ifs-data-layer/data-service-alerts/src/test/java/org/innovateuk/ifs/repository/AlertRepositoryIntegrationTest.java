@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
@@ -22,6 +24,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @EnableAutoConfiguration
+@ActiveProfiles("integration-test")
 public class AlertRepositoryIntegrationTest {
 
     @Autowired
@@ -87,7 +90,7 @@ public class AlertRepositoryIntegrationTest {
         Alert saved = repository.save(alertResource);
 
         assertNotNull(saved.getId());
-        Assert.assertEquals(alertResource, repository.findOne(saved.getId()));
+        Assert.assertEquals(alertResource, repository.findById(saved.getId()).get());
     }
 
     @Test
@@ -99,14 +102,14 @@ public class AlertRepositoryIntegrationTest {
 
         // check that it can be found
         assertNotNull(saved.getId());
-        Assert.assertEquals(alertResource, repository.findOne(saved.getId()));
+        Assert.assertEquals(alertResource, repository.findById(saved.getId()).get());
 
         // now delete it
-        repository.delete(saved.getId());
+        repository.deleteById(saved.getId());
 
         // make sure it can't be found
-        Alert expectedNotFound = repository.findOne(saved.getId());
-        assertNull(expectedNotFound);
+        Optional<Alert> expectedNotFound = repository.findById(saved.getId());
+        assertFalse(expectedNotFound.isPresent());
     }
 
     @Test

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
@@ -54,7 +55,7 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
         ProcessRole processRole = newProcessRole()
                 .withUser(newUser().with(id(assessorUser.getId())).build())
                 .build();
-        when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
+        when(processRoleRepositoryMock.findById(processRole.getId())).thenReturn(Optional.of(processRole));
 
         assessmentInterviews = EnumSet.allOf(InterviewState.class).stream().collect(toMap(identity(), state -> setupAssessmentInterview(processRole, state)));
     }
@@ -84,7 +85,7 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
                 .withState(state)
                 .build();
 
-        when(interviewRepositoryMock.findOne(interview.getId())).thenReturn(interview);
+        when(interviewRepositoryMock.findById(interview.getId())).thenReturn(Optional.of(interview));
 
         return newInterviewResource()
                 .withId(interview.getId())

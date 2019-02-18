@@ -178,7 +178,7 @@ public class ApplicationFormInputUploadServiceImpl implements ApplicationFormInp
     }
 
     private ServiceResult<FormInputResponse> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(FormInputResponseFileEntryId fileEntry) {
-        return find(formInputRepository.findOne(fileEntry.getFormInputId()), notFoundError(FormInput.class, fileEntry.getFormInputId())).andOnSuccess(
+        return find(formInputRepository.findById(fileEntry.getFormInputId()), notFoundError(FormInput.class, fileEntry.getFormInputId())).andOnSuccess(
                 formInput -> getFormInputResponseFileEntryResource(fileEntry, formInput)
                     .andOnSuccess(formInputResponseFileEntryResource -> {
                         LOG.info("[FileLogging] Deleting already existing FileEntryResource with id " +
@@ -203,7 +203,7 @@ public class ApplicationFormInputUploadServiceImpl implements ApplicationFormInp
 
     @Override
     public ServiceResult<FormInputResponseFileAndContents> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
-        return find(formInputRepository.findOne(fileEntry.getFormInputId()), notFoundError(FormInput.class, fileEntry.getFormInputId())).
+        return find(formInputRepository.findById(fileEntry.getFormInputId()), notFoundError(FormInput.class, fileEntry.getFormInputId())).
                 andOnSuccess(formInput -> getAppropriateFormInputResponse(fileEntry, formInput).
                     andOnSuccess(formInputResponse ->
                         fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
@@ -293,14 +293,14 @@ public class ApplicationFormInputUploadServiceImpl implements ApplicationFormInp
     }
 
     private ServiceResult<Application> findApplicationById(Long applicationId) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId));
     }
 
     private ServiceResult<ProcessRole> findProcessRoleById(Long processRoleId) {
-        return find(processRoleRepository.findOne(processRoleId), notFoundError(ProcessRole.class, processRoleId));
+        return find(processRoleRepository.findById(processRoleId), notFoundError(ProcessRole.class, processRoleId));
     }
 
     private ServiceResult<FormInput> findFormInputById(long formInputId) {
-        return find(formInputRepository.findOne(formInputId), notFoundError(FormInput.class, formInputId));
+        return find(formInputRepository.findById(formInputId), notFoundError(FormInput.class, formInputId));
     }
 }

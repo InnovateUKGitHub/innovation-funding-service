@@ -22,6 +22,9 @@ import org.innovateuk.ifs.user.transactional.UsersRolesService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
+import java.util.Optional;
+
 import static java.util.Collections.EMPTY_LIST;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
@@ -82,9 +85,9 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         Application application = newApplication().withId(applicationId).withCompetition(competition).withResearchCategory(researchCategory).build();
 
         Application expectedApplication = newApplication().withId(applicationId).withResearchCategory(researchCategory).build();
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
-        when(researchCategoryRepositoryMock.findOne(researchCategoryId)).thenReturn(researchCategory);
+        when(researchCategoryRepositoryMock.findById(researchCategoryId)).thenReturn(Optional.of(researchCategory));
 
         ServiceResult<ApplicationResource> result = service.setResearchCategory(applicationId, researchCategoryId);
 
@@ -114,12 +117,12 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
 
         Application expectedApplication = newApplication().withId(application.getId()).withResearchCategory
                 (researchCategory).build();
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         when(organisationService.findById(application.getLeadOrganisationId())).thenReturn(serviceSuccess(organisation));
         when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competition.getId())).thenReturn(serviceSuccess(true));
 
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
-        when(researchCategoryRepositoryMock.findOne(researchCategoryId)).thenReturn(researchCategory);
+        when(researchCategoryRepositoryMock.findById(researchCategoryId)).thenReturn(Optional.of(researchCategory));
         when(questionServiceMock.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FormInputType.FINANCE)).thenReturn(serviceSuccess(financeQuestion));
         when(usersRolesServiceMock.getAssignableProcessRolesByApplicationId(application.getId())).thenReturn(serviceSuccess(EMPTY_LIST));
 
@@ -135,7 +138,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         Long applicationId = 1L;
         Long researchCategoryId = 2L;
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(null);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.empty());
 
         ServiceResult<ApplicationResource> result = service.setResearchCategory(applicationId, researchCategoryId);
 
@@ -154,8 +157,8 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         Application application = newApplication().withId(applicationId).build();
 
         Application expectedApplication = newApplication().withId(applicationId).withResearchCategory(researchCategory).build();
-        when(researchCategoryRepositoryMock.findOne(researchCategoryId)).thenReturn(null);
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(researchCategoryRepositoryMock.findById(researchCategoryId)).thenReturn(Optional.empty());
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
 
         ServiceResult<ApplicationResource> result = service.setResearchCategory(applicationId, researchCategoryId);

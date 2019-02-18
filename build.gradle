@@ -36,7 +36,7 @@ apply from: "gradle-support/openshift-support.gradle"
 buildscript {
 
     ext {
-        springBootVersion = '1.5.11.RELEASE'
+        springBootVersion = '2.0.5.RELEASE'
     }
 
     repositories {
