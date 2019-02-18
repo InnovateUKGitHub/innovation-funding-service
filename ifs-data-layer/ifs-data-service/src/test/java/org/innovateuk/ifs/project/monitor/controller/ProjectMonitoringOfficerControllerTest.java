@@ -8,6 +8,7 @@ import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationRes
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -74,13 +75,17 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         User user = newUser().build();
 
         when(registrationServiceMock.createMonitoringOfficer(hash, registrationResource)).thenReturn(serviceSuccess(user));
+        when(crmServiceMock.syncCrmContact(user.getId())).thenReturn(serviceSuccess());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/competition/setup/monitoring-officer/create/{hash}", hash)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(registrationResource)))
                 .andExpect(status().is2xxSuccessful());
 
-        verify(registrationServiceMock, only()).createMonitoringOfficer(hash, registrationResource);
+        InOrder inOrder = inOrder(registrationServiceMock, crmServiceMock);
+        inOrder.verify(registrationServiceMock).createMonitoringOfficer(hash, registrationResource);
+        inOrder.verify(crmServiceMock).syncCrmContact(user.getId());
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
