@@ -78,7 +78,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     public ServiceResult<Void> informIneligible(long applicationId,
                                                 ApplicationIneligibleSendResource applicationIneligibleSendResource) {
 
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)).
                 andOnSuccess(this::markApplicationAsIneligibleInformed).
                 andOnSuccess(markedApplication -> sendApplicationIneligibleNotification(markedApplication, applicationIneligibleSendResource));
     }
@@ -118,7 +118,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
     private ServiceResult<Void> sendAssessorFeedbackPublishedNotification(ProcessRole processRole) {
 
-        Application application = applicationRepository.findOne(processRole.getApplicationId());
+        Application application = applicationRepository.findById(processRole.getApplicationId()).get();
 
         NotificationTarget recipient =
                 new UserNotificationTarget(processRole.getUser().getName(), processRole.getUser().getEmail());
@@ -139,7 +139,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     @Override
     @Transactional(readOnly = true)
     public ServiceResult<Void> sendNotificationApplicationSubmitted(Long applicationId) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId))
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess(application -> {
                     NotificationSource from = systemNotificationSource;
                     NotificationTarget to = new UserNotificationTarget(
@@ -161,7 +161,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                             notificationArguments
                     );
                     return notificationService.sendNotificationWithFlush(notification, EMAIL);
-        });
+                });
     }
 
     enum Notifications {

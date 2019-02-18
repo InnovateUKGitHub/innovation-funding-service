@@ -13,7 +13,6 @@ import java.util.List;
 public interface FormValidatorRepository extends PagingAndSortingRepository<FormValidator, Long> {
 	@Override
     List<FormValidator> findAll();
-    FormValidator findById(Long id);
 
     FormValidator findByClazzName(String clazz);
 }

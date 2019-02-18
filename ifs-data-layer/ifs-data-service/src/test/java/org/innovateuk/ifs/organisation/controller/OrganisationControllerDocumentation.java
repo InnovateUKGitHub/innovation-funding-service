@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.AddressDocs;
+import org.innovateuk.ifs.documentation.AddressTypeResourceDocs;
+import org.innovateuk.ifs.documentation.OrganisationAddressDocs;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -48,7 +51,10 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of organisations for the selected application")
-                        )
+                        ).andWithPrefix("[].", organisationResourceFields)
+                        .andWithPrefix("[].addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                        .andWithPrefix("[].addresses.[].address.", AddressDocs.addressResourceFields)
+                        .andWithPrefix("[].addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
     }
 
@@ -66,6 +72,9 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("organisationId").description("Identifier of the organisation to find")
                         ),
                         responseFields(organisationResourceFields)
+                        .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                        .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                        .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
     }
 
@@ -86,6 +95,9 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("applicationId").description("Identifier of the application to find the application organisation for")
                         ),
                         responseFields(organisationResourceFields)
+                        .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                        .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                        .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
     }
 
@@ -106,6 +118,9 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("projectId").description("Identifier of the project to find the project organisation for")
                         ),
                         responseFields(organisationResourceFields)
+                        .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                        .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                        .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
     }
 
@@ -121,8 +136,14 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                 .content(objectMapper.writeValueAsBytes(organisationResource)))
                 .andExpect(status().isCreated())
                 .andDo(document("organisation/{method-name}",
-                        requestFields(organisationResourceFields),
+                        requestFields(organisationResourceFields)
+                                .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                                .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                                .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields),
                         responseFields(organisationResourceFields)
+                                .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                                .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                                .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
     }
 
@@ -138,8 +159,14 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                 .content(objectMapper.writeValueAsBytes(organisationResource)))
                 .andExpect(status().isOk())
                 .andDo(document("organisation/{method-name}",
-                        requestFields(organisationResourceFields),
+                        requestFields(organisationResourceFields)
+                                .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                                .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                                .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields),
                         responseFields(organisationResourceFields)
+                                .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                                .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                                .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
     }
 
@@ -160,8 +187,14 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                         requestParameters(
                                 parameterWithName("inviteHash").description("The hash for the invite that the found or created organisation has to be linked to")
                         ),
-                        requestFields(organisationResourceFields),
+                        requestFields(organisationResourceFields)
+                                .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                                .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                                .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields),
                         responseFields(organisationResourceFields)
+                                .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                                .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                                .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
     }
 
@@ -188,6 +221,9 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("registration").description("The companies house number")
                         ),
                         responseFields(organisationResourceFields)
+                                .andWithPrefix("addresses.[].", OrganisationAddressDocs.organisationAddressResourceFields)
+                                .andWithPrefix("addresses.[].address.", AddressDocs.addressResourceFields)
+                                .andWithPrefix("addresses.[].addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
     }
 }

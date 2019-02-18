@@ -74,6 +74,6 @@ public class QuestionPriorityOrderService {
 
         subsequentQuestions.forEach(question -> question.setPriority(question.getPriority() + delta));
 
-        questionRepository.save(subsequentQuestions);
+        questionRepository.saveAll(subsequentQuestions);
     }
 }

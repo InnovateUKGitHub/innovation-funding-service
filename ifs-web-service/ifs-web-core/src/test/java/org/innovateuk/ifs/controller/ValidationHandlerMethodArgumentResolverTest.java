@@ -27,7 +27,7 @@ public class ValidationHandlerMethodArgumentResolverTest {
         mavContainer.addAttribute(BindingResult.MODEL_KEY_PREFIX + "myBindingResult", bindingResult);
 
         ValidationHandler validationHandler = (ValidationHandler)
-                resolver.resolveArgument(new MethodParameter(getClass().getMethod("aMethod"), 0), mavContainer,
+                resolver.resolveArgument(new MethodParameter(getClass().getMethod("aMethod"), -1), mavContainer,
                     new ServletWebRequest(new MockHttpServletRequest()), null);
 
         assertTrue(validationHandler.hasErrors());
@@ -49,7 +49,7 @@ public class ValidationHandlerMethodArgumentResolverTest {
         mavContainer.addAttribute(BindingResult.MODEL_KEY_PREFIX + "myBindingResult", bindingResult);
 
         ValidationHandler validationHandler = (ValidationHandler)
-                resolver.resolveArgument(new MethodParameter(getClass().getMethod("aMethod"), 0), mavContainer,
+                resolver.resolveArgument(new MethodParameter(getClass().getMethod("aMethod"), -1), mavContainer,
                         new ServletWebRequest(new MockHttpServletRequest()), null);
 
         assertTrue(validationHandler.hasErrors());
@@ -64,7 +64,7 @@ public class ValidationHandlerMethodArgumentResolverTest {
         ModelAndViewContainer mavContainer = new ModelAndViewContainer();
         mavContainer.addAttribute("some attribute", "Some value");
 
-        resolver.resolveArgument(new MethodParameter(getClass().getMethod("aMethod"), 0), mavContainer,
+        resolver.resolveArgument(new MethodParameter(getClass().getMethod("aMethod"), -1), mavContainer,
                 new ServletWebRequest(new MockHttpServletRequest()), null);
 
     }

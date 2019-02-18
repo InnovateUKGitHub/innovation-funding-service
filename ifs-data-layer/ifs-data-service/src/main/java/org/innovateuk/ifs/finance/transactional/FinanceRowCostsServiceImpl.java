@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -75,7 +76,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
 
     @Override
     public ServiceResult<FinanceRowMetaField> getCostFieldById(Long id) {
-        return find(financeRowMetaFieldRepository.findOne(id), notFoundError(FinanceRowMetaField.class, id));
+        return find(financeRowMetaFieldRepository.findById(id), notFoundError(FinanceRowMetaField.class, id));
     }
 
     @Override
@@ -87,7 +88,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
 
     @Override
     public ServiceResult<FinanceRowItem> getCostItem(final Long costItemId) {
-        ApplicationFinanceRow cost = financeRowRepository.findOne(costItemId);
+        ApplicationFinanceRow cost = financeRowRepository.findById(costItemId).get();
         ApplicationFinance applicationFinance = cost.getTarget();
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getApplication().getCompetition().getId(), applicationFinance.getOrganisation().getOrganisationType().getId());
 
@@ -136,7 +137,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     @Override
     @Transactional
     public ServiceResult<FinanceRowItem> updateCost(final Long id, final FinanceRowItem newCostItem) {
-        Application application = financeRowRepository.findOne(id).getTarget().getApplication();
+        Application application = financeRowRepository.findById(id).get().getTarget().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 doUpdate(id, newCostItem).andOnSuccessReturn(cost -> {
                     OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(((ApplicationFinanceRow) cost).getTarget().getApplication().getCompetition().getId(), ((ApplicationFinanceRow) cost).getTarget().getOrganisation().getOrganisationType().getId());
@@ -170,7 +171,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     }
 
     private ServiceResult<FinanceRow> doUpdate(Long id, FinanceRowItem newCostItem) {
-        Application application = financeRowRepository.findOne(id).getTarget().getApplication();
+        Application application = financeRowRepository.findById(id).get().getTarget().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 find(cost(id)).andOnSuccessReturn(existingCost -> {
                     ApplicationFinance applicationFinance = existingCost.getTarget();
@@ -196,10 +197,10 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     @Override
     @Transactional
     public ServiceResult<Void> deleteCost(final Long costId) {
-        Application application = financeRowRepository.findOne(costId).getTarget().getApplication();
+        Application application = financeRowRepository.findById(costId).get().getTarget().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app -> {
             financeRowMetaValueRepository.deleteByFinanceRowId(costId);
-            financeRowRepository.delete(costId);
+            financeRowRepository.deleteById(costId);
             return serviceSuccess();
         });
     }
@@ -229,7 +230,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     @Override
     @Transactional
     public ServiceResult<ApplicationFinanceResource> updateApplicationFinance(Long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
-        Application application = applicationRepository.findOne(applicationFinance.getApplication());
+        Application application = applicationRepository.findById(applicationFinance.getApplication()).get();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
                     if (applicationFinance.getOrganisationSize() != null) {
@@ -255,9 +256,9 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         if (fileEntryId == null || fileEntryId == 0L) {
             applicationFinance.setFinanceFileEntry(null);
         } else {
-            FileEntry fileEntry = fileEntryRepository.findOne(fileEntryId);
-            if (fileEntry != null) {
-                applicationFinance.setFinanceFileEntry(fileEntry);
+            Optional<FileEntry> fileEntry = fileEntryRepository.findById(fileEntryId);
+            if (fileEntry.isPresent()) {
+                applicationFinance.setFinanceFileEntry(fileEntry.get());
             }
         }
         return applicationFinance;
@@ -280,7 +281,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         ApplicationFinanceRow persistedCost = financeHandler.addCost(cost.getTarget().getId(), cost.getQuestion().getId(), (ApplicationFinanceRow) cost);
         costValues.stream().forEach(costVal -> costVal.setFinanceRowId(persistedCost.getId()));
         persistedCost.setFinanceRowMetadata(costValues);
-        financeRowMetaValueRepository.save(costValues);
+        financeRowMetaValueRepository.saveAll(costValues);
         return financeHandler.updateCost(persistedCost);
     }
 
@@ -329,8 +330,10 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     }
 
     private void createCostValue(FinanceRowMetaValue newMetaValue, FinanceRow savedCost) {
-        FinanceRowMetaField financeRowMetaField = financeRowMetaFieldRepository.findOne(newMetaValue.getFinanceRowMetaField().getId());
-        newMetaValue.setFinanceRowMetaField(financeRowMetaField);
+        Optional<FinanceRowMetaField> financeRowMetaField = financeRowMetaFieldRepository.findById(newMetaValue.getFinanceRowMetaField().getId());
+        if(financeRowMetaField.isPresent()){
+            newMetaValue.setFinanceRowMetaField(financeRowMetaField.get());
+        }
         newMetaValue = financeRowMetaValueRepository.save(newMetaValue);
         savedCost.addCostValues(newMetaValue);
     }
@@ -340,7 +343,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     }
 
     private ServiceResult<ApplicationFinanceRow> getCost(Long costId) {
-        return find(financeRowRepository.findOne(costId), notFoundError(Question.class));
+        return find(financeRowRepository.findById(costId), notFoundError(Question.class));
     }
 
     private Supplier<ServiceResult<ApplicationFinanceRow>> cost(Long costId) {
@@ -353,7 +356,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     }
 
     private ServiceResult<ApplicationFinance> getApplicationFinance(Long applicationFinanceId) {
-        return find(applicationFinanceRepository.findOne(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
+        return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
     }
 
     /**

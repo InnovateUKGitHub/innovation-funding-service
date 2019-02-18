@@ -60,5 +60,3 @@ public class CompetitionSetupStakeholderController {
         return competitionSetupStakeholderService.findPendingStakeholderInvites(competitionId).toGetResponse();
     }
 }
-
-

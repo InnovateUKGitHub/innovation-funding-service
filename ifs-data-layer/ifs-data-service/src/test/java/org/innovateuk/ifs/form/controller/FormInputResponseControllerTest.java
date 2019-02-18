@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUMMARY;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -121,8 +121,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         when(formInputResponseServiceMock.saveQuestionResponse(argThat(new ArgumentMatcher<FormInputResponseCommand>() {
             @Override
-            public boolean matches(Object argument) {
-                FormInputResponseCommand firArgument = (FormInputResponseCommand) argument;
+            public boolean matches(FormInputResponseCommand firArgument) {
                 assertEquals(appId, firArgument.getApplicationId());
                 assertEquals(userId, firArgument.getUserId());
                 assertEquals(formInputId, firArgument.getFormInputId());

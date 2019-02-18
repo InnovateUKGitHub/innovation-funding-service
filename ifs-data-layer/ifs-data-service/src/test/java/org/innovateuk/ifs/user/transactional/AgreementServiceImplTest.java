@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
 import static org.innovateuk.ifs.user.builder.AgreementResourceBuilder.newAgreementResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.same;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.*;
 
 public class AgreementServiceImplTest extends BaseServiceUnitTest<AgreementServiceImpl> {

@@ -21,7 +21,7 @@ import java.time.ZonedDateTime;
 @EntityListeners(ProcessHistoryEntityListener.class)
 public abstract class Process<ParticipantType, TargetType, StatesType extends ProcessState> {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String event;
 

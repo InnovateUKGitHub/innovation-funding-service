@@ -231,7 +231,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation, User generatedBy, Calendar generatedDate) {
         List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
         List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
-        CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
+        CostCategoryType costCategoryType = costCategoryTypeRepository.findById(spendProfileCostCategorySummaries.getCostCategoryType().getId()).orElse(null);
         SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
         spendProfileRepository.save(spendProfile);
         return serviceSuccess();
@@ -259,7 +259,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private List<Cost> generateEligibleCosts(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries) {
         return simpleMap(spendProfileCostCategorySummaries.getCosts(), cost -> {
-            CostCategory cc = costCategoryRepository.findOne(cost.getCategory().getId());
+            CostCategory cc = costCategoryRepository.findById(cost.getCategory().getId()).orElse(null);
             return new Cost(cost.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(cc);
         });
     }
@@ -267,7 +267,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project) {
 
         List<List<Cost>> spendProfileCostsPerCategory = simpleMap(summaryPerCategory.getCosts(), summary -> {
-            CostCategory cc = costCategoryRepository.findOne(summary.getCategory().getId());
+            CostCategory cc = costCategoryRepository.findById(summary.getCategory().getId()).orElse(null);
 
             return IntStream.range(0, project.getDurationInMonths().intValue()).mapToObj(i -> {
 
@@ -294,7 +294,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
-        User user = userRepository.findOne(userId);
+        User user = userRepository.findById(userId).orElse(null);
 
         return spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(projectId, organisationId).
                 andOnSuccess(spendProfileCostCategorySummaries ->
@@ -304,7 +304,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).orElse(null);
         if (null != project && spendProfileWorkflowHandler.isReadyToApprove(project) &&
                 (APPROVED.equals(approvalType) || REJECTED.equals(approvalType))) {
             updateApprovalOfSpendProfile(projectId, approvalType);
@@ -343,7 +343,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private ApprovalType getSpendProfileStatusBy(Long projectId) {
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).orElse(null);
         if (project != null)
             return spendProfileWorkflowHandler.getApproval(project);
         else
@@ -359,7 +359,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 andOnSuccess((spendProfile, project) -> {
 
                     List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
-                    Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
+                    Organisation organisation = organisationRepository.findById(projectOrganisationCompositeId.getOrganisationId()).get();
                     CostGroup eligibleCosts = spendProfile.getEligibleCosts();
                     CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
@@ -416,7 +416,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private Map<String, List<Map<Long, List<BigDecimal>>>> groupCategories(SpendProfileTableResource spendProfileTableResource) {
         Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap = new HashMap<>();
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
-            CostCategory costCategory = costCategoryRepository.findOne(category);
+            CostCategory costCategory = costCategoryRepository.findById(category).orElse(null);
             if (costCategory.getLabel() == null) {
                 costCategory.setLabel("DEFAULT");
             }
@@ -580,7 +580,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             rejectSpendProfileSubmission(projectId);
         }
 
-        spendProfileRepository.save(spendProfiles);
+        spendProfileRepository.saveAll(spendProfiles);
     }
 
     private void checkTotalForMonthsAndAddToTable(SpendProfileTableResource table) {
@@ -633,7 +633,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         List<BigDecimal> totalForEachMonth = buildTotalForEachMonth(spendProfileTableResource);
         BigDecimal totalOfAllActualTotals = buildTotalOfTotals(categoryToActualTotal);
         BigDecimal totalOfAllEligibleTotals = buildTotalOfTotals(spendProfileTableResource.getEligibleCostPerCategoryMap());
-        Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
+        Organisation organisation = organisationRepository.findById(projectOrganisationCompositeId.getOrganisationId()).get();
 
         StringWriter stringWriter = new StringWriter();
         CSVWriter csvWriter = new CSVWriter(stringWriter);
@@ -651,7 +651,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         final int[] columnSize = new int[1];
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
 
-            CostCategory cc = costCategoryRepository.findOne(category);
+            CostCategory cc = costCategoryRepository.findById(category).get();
             if (cc.getLabel() != null) {
                 byCategory.add(cc.getLabel());
             }

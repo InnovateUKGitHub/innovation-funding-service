@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -111,16 +112,16 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
         ));
 
         expectedTable.setEligibleCostPerCategoryMap(asMap(
-                "Labour", new BigDecimal("100"),
-                "Materials", new BigDecimal("150"),
-                "Other costs", new BigDecimal("55")));
+                1L, new BigDecimal("100"),
+                2L, new BigDecimal("150"),
+                3L, new BigDecimal("55")));
 
         expectedTable.setMonthlyCostsPerCategoryMap(asMap(
-                "Labour", asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
-                "Materials", asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
-                "Other costs", asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
+                1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
 
-        when(spendProfileServiceMock.getSpendProfileTable(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedTable));
+        when(spendProfileServiceMock.getSpendProfileTable(eq(projectOrganisationCompositeId))).thenReturn(serviceSuccess(expectedTable));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
                 .andExpect(status().isOk())

@@ -20,13 +20,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -78,7 +79,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     }
 
     @Test
-    public void thatOnlyProjectFinanceAndFinanceContactUsersCanUploadAttachments() throws Exception {
+    public void thatOnlyProjectFinanceAndFinanceContactUsersCanUploadAttachments() {
         assertTrue(rules.projectFinanceCanUploadAttachments(projectResource, projectFinanceUser));
         when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(projectResource.getId(), PROJECT_PARTNER, projectPartnerUser.getId()))
                 .thenReturn(newProjectUser().withUser(newUser().withId(projectPartnerUser.getId()).build()).build());
@@ -86,52 +87,52 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     }
 
     @Test
-    public void thatANonProjectFinanceOrFinanceContactUserCanNotUploadAttachments() throws Exception {
+    public void thatANonProjectFinanceOrFinanceContactUserCanNotUploadAttachments() {
         when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(projectResource.getId(), PROJECT_PARTNER, intruder.getId()))
                 .thenReturn(null);
         assertFalse(rules.projectPartnersCanUploadAttachments(projectResource, intruder));
     }
 
     @Test
-    public void thatProjectFinanceUsersCanFetchOrphanAttachmentTheyHaveUploaded() throws Exception {
+    public void thatProjectFinanceUsersCanFetchOrphanAttachmentTheyHaveUploaded() {
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
         assertTrue(rules.projectFinanceUsersCanFetchAnyAttachment(attachmentResource, projectFinanceUser));
     }
 
     @Test
-    public void thatProjectFinanceUsersCanFetchAnySavedQueryAttachment() throws Exception {
+    public void thatProjectFinanceUsersCanFetchAnySavedQueryAttachment() {
         when(threadRepository.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(mock(Thread.class)));
         assertTrue(rules.projectFinanceUsersCanFetchAnyAttachment(attachmentResource, projectFinanceUser));
     }
 
     @Test
-    public void thatFinanceContactUsersCanAlwaysFetchTheOrphanAttachmentsTheyHaveUploaded() throws Exception {
+    public void thatFinanceContactUsersCanAlwaysFetchTheOrphanAttachmentsTheyHaveUploaded() {
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectPartnerUser.getId()));
         assertTrue(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, projectPartnerUser));
     }
 
     @Test
-    public void thatFinanceContactUsersCanFetchAttachmentsOfQueriesTheyAreRelatedTo() throws Exception {
+    public void thatFinanceContactUsersCanFetchAttachmentsOfQueriesTheyAreRelatedTo() {
         final Query query = query();
         final QueryResource queryResource = toResource(query);
         when(threadRepository.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(mock(Thread.class)));
         when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query));
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
-        when(projectFinanceRepositoryMock.findOne(query.contextClassPk())).thenReturn(projectFinanceWithUserAsFinanceContact(projectPartnerUser));
+        when(projectFinanceRepositoryMock.findById(query.contextClassPk())).thenReturn(Optional.of(projectFinanceWithUserAsFinanceContact(projectPartnerUser)));
         when(queryPermissionRulesMock.projectFinanceUsersCanViewQueries(queryResource, projectPartnerUser)).thenReturn(true);
         assertTrue(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, projectPartnerUser));
     }
 
     @Test
-    public void thatFinanceContactUsersCannotFetchAttachmentsOfQueriesTheyAreNotRelatedTo() throws Exception {
+    public void thatFinanceContactUsersCannotFetchAttachmentsOfQueriesTheyAreNotRelatedTo() {
         final Query query = query();
         final QueryResource queryResource = toResource(query);
         when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query()));
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
         final UserResource unrelatedFinanceContactUser = newUserResource().withId(projectPartnerUser.getId() * 7).build();
-        when(projectFinanceRepositoryMock.findOne(query.contextClassPk())).thenReturn(projectFinanceWithUserAsFinanceContact(projectPartnerUser));
+        when(projectFinanceRepositoryMock.findById(query.contextClassPk())).thenReturn(Optional.of(projectFinanceWithUserAsFinanceContact(projectPartnerUser)));
         when(queryPermissionRulesMock.projectFinanceUsersCanViewQueries(queryResource, unrelatedFinanceContactUser)).thenReturn(false);
         assertFalse(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, unrelatedFinanceContactUser));
     }

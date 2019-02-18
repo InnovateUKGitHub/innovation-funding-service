@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentApplicationAssessorCountBuilder.newAssessmentApplicationAssessorCount;
@@ -98,10 +99,10 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
                 .withName("Lead Org 1", "Lead Org 2", "Lead Org 3", "Lead Org 4")
                 .build(4);
 
-        when(organisationRepositoryMock.findOne(applications[0].getLeadOrganisationId())).thenReturn(leadOrganisations.get(0));
-        when(organisationRepositoryMock.findOne(applications[1].getLeadOrganisationId())).thenReturn(leadOrganisations.get(1));
-        when(organisationRepositoryMock.findOne(applications[2].getLeadOrganisationId())).thenReturn(leadOrganisations.get(2));
-        when(organisationRepositoryMock.findOne(applications[3].getLeadOrganisationId())).thenReturn(leadOrganisations.get(3));
+        when(organisationRepositoryMock.findById(applications[0].getLeadOrganisationId())).thenReturn(Optional.of(leadOrganisations.get(0)));
+        when(organisationRepositoryMock.findById(applications[1].getLeadOrganisationId())).thenReturn(Optional.of(leadOrganisations.get(1)));
+        when(organisationRepositoryMock.findById(applications[2].getLeadOrganisationId())).thenReturn(Optional.of(leadOrganisations.get(2)));
+        when(organisationRepositoryMock.findById(applications[3].getLeadOrganisationId())).thenReturn(Optional.of(leadOrganisations.get(3)));
 
         ServiceResult<AssessorCompetitionSummaryResource> result = service.getAssessorSummary(assessorId, competitionId);
         assertTrue(result.isSuccess());
@@ -110,10 +111,10 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
         verify(assessorServiceMock).getAssessorProfile(assessorId);
         verify(assessmentRepositoryMock).countByParticipantUserIdAndActivityStateIn(assessorId, VALID_ASSESSMENT_STATES);
         verify(assessmentRepositoryMock).getAssessorApplicationAssessmentCountsForStates(competitionId, assessorId, VALID_ASSESSMENT_STATES, ALL_ASSESSMENT_STATES);
-        verify(organisationRepositoryMock).findOne(applications[0].getLeadOrganisationId());
-        verify(organisationRepositoryMock).findOne(applications[1].getLeadOrganisationId());
-        verify(organisationRepositoryMock).findOne(applications[2].getLeadOrganisationId());
-        verify(organisationRepositoryMock).findOne(applications[3].getLeadOrganisationId());
+        verify(organisationRepositoryMock).findById(applications[0].getLeadOrganisationId());
+        verify(organisationRepositoryMock).findById(applications[1].getLeadOrganisationId());
+        verify(organisationRepositoryMock).findById(applications[2].getLeadOrganisationId());
+        verify(organisationRepositoryMock).findById(applications[3].getLeadOrganisationId());
 
         AssessorCompetitionSummaryResource expected = newAssessorCompetitionSummaryResource()
                 .withCompetitionId(competitionId)

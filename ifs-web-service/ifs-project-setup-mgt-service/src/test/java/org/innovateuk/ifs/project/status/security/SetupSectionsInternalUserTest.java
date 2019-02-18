@@ -313,7 +313,8 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         SectionAccess sectionAccess = internalUser.canAccessDocumentsSection(user);
 
         verifyInteractions(
-                SetupProgressChecker::allDocumentsApproved
+                SetupProgressChecker::allDocumentsApproved,
+                SetupProgressChecker::isOffline
         );
 
         return sectionAccess;

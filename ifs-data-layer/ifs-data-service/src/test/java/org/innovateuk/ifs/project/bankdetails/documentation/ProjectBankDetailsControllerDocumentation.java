@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
+import org.innovateuk.ifs.documentation.BankDetailsStatusResourceDocs;
+import org.innovateuk.ifs.documentation.OrganisationAddressDocs;
 import org.innovateuk.ifs.project.bankdetails.controller.ProjectBankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsStatusResource;
@@ -18,8 +20,10 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.AddressDocs.addressResourceFields;
 import static org.innovateuk.ifs.documentation.BankDetailsDocs.bankDetailsResourceFields;
 import static org.innovateuk.ifs.documentation.BankDetailsDocs.projectBankDetailsStatusSummaryFields;
+import static org.innovateuk.ifs.documentation.ProjectDocumentResourceDocs.projectDocumentResourceFields;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsStatusResourceBuilder.newBankDetailsStatusResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
@@ -73,6 +77,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("projectId").description("Id of the project to be updated with bank details")
                         ),
                         requestFields(bankDetailsResourceFields)
+                        .andWithPrefix("address.", addressResourceFields)
                 ))
                 .andReturn();
     }
@@ -109,6 +114,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("projectId").description("Id of the project to be updated with bank details")
                         ),
                         requestFields(bankDetailsResourceFields)
+                        .andWithPrefix("address.", addressResourceFields)
                 ))
                 .andReturn();
     }
@@ -128,6 +134,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
                         ),
                         responseFields(projectBankDetailsStatusSummaryFields)
+                        .andWithPrefix("bankDetailsStatusResources[].", BankDetailsStatusResourceDocs.bankDetailsStatusResourcesFields)
                 ));
     }
 }

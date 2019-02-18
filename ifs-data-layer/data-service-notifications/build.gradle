@@ -5,9 +5,8 @@ version project.version
 
 apply plugin: 'idea'
 
-bootRepackage {
-    enabled = false
-}
+bootJar.enabled=false
+jar.enabled=true
 
 configurations {
     testArtifacts
@@ -21,7 +20,7 @@ artifacts {
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-freemarker"
+    compile "org.springframework.boot:spring-boot-starter-freemarker:2.0.5.RELEASE"
 
     compile project(":ifs-data-layer:data-service-commons")
     compile project(":ifs-sil-resources")

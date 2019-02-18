@@ -328,9 +328,9 @@ PM can download the annex
 PM can remove the signed grant offer letter
     [Documentation]    INFUND-6780
     [Tags]  HappyPath
-    When the user clicks the button/link                 name = removeSignedGrantOfferLetterClicked
-    Then the user should not see the text in the page    Remove
-    And the user should not see the text in the page     jQuery = .upload-section a:contains("${valid_pdf}")
+    When the user clicks the button/link              name = removeSignedGrantOfferLetterClicked
+    Then the user should not see the element          jQuery = button:contains("Remove")
+    And the user should not see the element           jQuery = .upload-section a:contains("${valid_pdf}")
 
 PM can upload new signed grant offer letter
     [Documentation]    INFUND-6780
@@ -359,8 +359,8 @@ PM can download the signed grant offer letter
 
 PM cannot remove the signed grant offer letter after submission
     [Documentation]    INFUND-6780
-    When the user should not see the element             name = removeSignedGrantOfferLetterClicked
-    Then the user should not see the text in the page    Remove
+    When the user should not see the element    name = removeSignedGrantOfferLetterClicked
+    Then the user should not see the element    jQuery = button:contains("Remove")
 
 PM's status should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
@@ -474,7 +474,7 @@ Non lead cannot see the signed GOL
     [Documentation]    INFUND-7170
     [Tags]
     Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
-    Then the user should not see the text in the page   Signed grant offer letter
+    Then the user should not see the element     jQUery = h2:contains("Signed grant offer letter")
     When the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/signed-grant-offer-letter    ${403_error_message}
 
 PM receives an email when the GOL is approved

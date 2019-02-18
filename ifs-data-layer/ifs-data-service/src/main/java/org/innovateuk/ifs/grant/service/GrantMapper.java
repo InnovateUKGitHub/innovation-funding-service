@@ -12,7 +12,6 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -40,7 +39,8 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTablePopulator.GRANT_CLAIM_IDENTIFIER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -53,8 +53,8 @@ class GrantMapper {
     private static final String ACADEMIC_ORGANISATION_SIZE_VALUE = "ACADEMIC";
 
     private static final Map<Role, String> IFS_ROLES_TO_LIVE_ROLE_NAMES = asMap(
-            ProjectParticipantRole.PROJECT_FINANCE_CONTACT.name(), "Finance contact",
-            ProjectParticipantRole.PROJECT_MANAGER.name(), "Project manager",
+            PROJECT_FINANCE_CONTACT.name(), "Finance contact",
+            PROJECT_MANAGER.name(), "Project manager",
             Role.INNOVATION_LEAD.name(), "Innovation lead"
     );
 

@@ -47,8 +47,8 @@ Already submitted application should not show error when the competition is clos
     [Documentation]    INFUND-3175
     [Tags]  HappyPath
     When the user navigates to the page                  ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link                  link = ${OPEN_COMPETITION_APPLICATION_3_NAME}
-    Then the user should not see the text in the page    Application not submitted
+    And the user clicks the button/link                  link = ${FUNDERS_PANEL_APPLICATION_1_TITLE}
+    Then the user should not see the element             jQuery = .warning-alert:contains("Application not submitted")
 
 *** Keywords ***
 the user should see that the application is not submitted

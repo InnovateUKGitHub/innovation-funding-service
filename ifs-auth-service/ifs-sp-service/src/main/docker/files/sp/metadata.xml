@@ -50,7 +50,7 @@
     </IDPSSODescriptor>
 </EntityDescriptor>
 
-<EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" ID="_5bec37c96575996255dab967c3c21bf6b1400113" entityID="https://ifs.local-dev">
+<EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://ifs.local-dev">
 
   <Extensions xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport">
     <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>

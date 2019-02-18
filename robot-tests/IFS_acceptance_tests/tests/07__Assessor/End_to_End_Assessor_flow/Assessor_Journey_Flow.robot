@@ -25,7 +25,7 @@ Invited User gets an email to assess the competition
     [Documentation]    INFUND-8092
     [Tags]  HappyPath
     Then the user reads his email and clicks the link  ${Assessor_e2e["email"]}  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'  This is custom text  1
-    [Teardown]  Delete the emails from both test mailboxes
+    [Teardown]  Delete the emails from the local test mailbox
 
 Resend the invite to the assessor again
     [Documentation]    IFS-39

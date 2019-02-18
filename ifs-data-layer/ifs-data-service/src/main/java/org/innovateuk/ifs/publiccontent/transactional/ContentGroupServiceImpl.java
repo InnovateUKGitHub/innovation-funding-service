@@ -56,14 +56,14 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
         BasicFileAndContents fileAndContents = new BasicFileAndContents(fileEntryResource, inputStreamSupplier);
 
         return fileService.createFile(fileAndContents.getFileEntry(), fileAndContents.getContentsSupplier())
-                .andOnSuccess(fileEntry -> find(contentGroupRepository.findOne(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
+                .andOnSuccess(fileEntry -> find(contentGroupRepository.findById(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
                         .andOnSuccessReturnVoid(contentGroup -> contentGroup.setFileEntry(fileEntry.getRight())));
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> removeFile(Long contentGroupId) {
-        return find(contentGroupRepository.findOne(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
+        return find(contentGroupRepository.findById(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
                 .andOnSuccess(contentGroup -> {
                     FileEntry fileEntry = contentGroup.getFileEntry();
                     if (fileEntry != null) {
@@ -93,14 +93,14 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<FileEntryResource> getFileDetails(long contentGroupId) {
-        return find(contentGroupRepository.findOne(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
+        return find(contentGroupRepository.findById(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
                 .andOnSuccessReturn(contentGroup -> fileEntryMapper.mapToResource(contentGroup.getFileEntry()));
     }
 
     @Override
     public ServiceResult<FileAndContents> getFileContents(long contentGroupId) {
 
-        return find(contentGroupRepository.findOne(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
+        return find(contentGroupRepository.findById(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
                 .andOnSuccess(contentGroup -> {
                     ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(contentGroup.getFileEntry().getId());
                     return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(contentGroup.getFileEntry()), inputStream));
@@ -128,7 +128,7 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
         for (Long deleteId : toDeleteIds) {
             result = result.andOnSuccessReturnVoid(() -> {
                 removeFile(deleteId);
-                contentGroupRepository.delete(deleteId);
+                contentGroupRepository.deleteById(deleteId);
             });
         }
         return result;

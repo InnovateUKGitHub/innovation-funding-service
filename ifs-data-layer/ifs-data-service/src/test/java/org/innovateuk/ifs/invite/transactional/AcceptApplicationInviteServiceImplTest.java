@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AcceptApplicationInviteServiceImplTest {
 
     @Mock
@@ -64,7 +64,7 @@ public class AcceptApplicationInviteServiceImplTest {
                 .build();
 
         when(applicationInviteRepositoryMock.getByHash(testInviteHash)).thenReturn(invite);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.empty());
 
@@ -184,7 +184,7 @@ public class AcceptApplicationInviteServiceImplTest {
                 .withEmailAddress("james@test.com")
                 .build();
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         return user;
     }
@@ -205,7 +205,7 @@ public class AcceptApplicationInviteServiceImplTest {
         Organisation usersOrganisation = newOrganisation()
                 .withUser(singletonList(user))
                 .build();
-        when(organisationRepositoryMock.findOne(usersOrganisation.getId())).thenReturn(usersOrganisation);
+        when(organisationRepositoryMock.findById(usersOrganisation.getId())).thenReturn(Optional.of(usersOrganisation));
         return usersOrganisation;
     }
 }

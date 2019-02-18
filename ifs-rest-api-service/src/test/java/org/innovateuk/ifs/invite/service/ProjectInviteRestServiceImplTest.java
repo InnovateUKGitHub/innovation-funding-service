@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -40,10 +40,10 @@ public class ProjectInviteRestServiceImplTest extends BaseRestServiceUnitTest<Pr
 
     @Test
     public void testGetInviteByHash() {
-        ProjectInviteResource invite = new ProjectInviteResource();
+        ProjectUserInviteResource invite = new ProjectUserInviteResource();
         invite.setHash("hash");//.build();
-        setupGetWithRestResultAnonymousExpectations(PROJECT_INVITE_BASE_URL + GET_INVITE_BY_HASH + invite.getHash(), ProjectInviteResource.class, invite);
-        RestResult<ProjectInviteResource> returnedResponse = service.getInviteByHash(invite.getHash());
+        setupGetWithRestResultAnonymousExpectations(PROJECT_INVITE_BASE_URL + GET_INVITE_BY_HASH + invite.getHash(), ProjectUserInviteResource.class, invite);
+        RestResult<ProjectUserInviteResource> returnedResponse = service.getInviteByHash(invite.getHash());
         assertTrue(returnedResponse.isSuccess());
         assertEquals(invite, returnedResponse.getSuccess());
     }

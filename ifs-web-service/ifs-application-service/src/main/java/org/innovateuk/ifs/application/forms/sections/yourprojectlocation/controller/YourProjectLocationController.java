@@ -53,7 +53,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     private UserRestService userRestService;
 
     @Autowired
-    YourProjectLocationController(
+    public YourProjectLocationController(
             YourProjectLocationViewModelPopulator viewModelPopulator,
             YourProjectLocationFormPopulator formPopulator,
             ApplicationFinanceRestService applicationFinanceRestService,
@@ -68,7 +68,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     }
 
     // for ByteBuddy
-    YourProjectLocationController() {
+    public YourProjectLocationController() {
         this.viewModelPopulator = null;
         this.formPopulator = null;
         this.applicationFinanceRestService = null;

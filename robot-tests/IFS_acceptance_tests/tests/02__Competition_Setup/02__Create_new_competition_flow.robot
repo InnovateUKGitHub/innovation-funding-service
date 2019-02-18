@@ -88,7 +88,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-4982 Move Funding type selection from front door to Initial details
 Suite Setup       Custom suite setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
@@ -249,7 +249,7 @@ Funding information: can be edited
     And the user enters text to a text field         id = funders[0].funder    testFunder
     And the user moves focus and waits for autosave
     When the user clicks the button/link             jQuery = button:contains("Done")
-    Then the user should see the text in the page    testFunder
+    Then the user should see the element             jQUery = td:contains("testFunder")
 
 Funding information: should have a green check
     [Documentation]    INFUND-3002
@@ -262,7 +262,7 @@ Eligibility: Contain the correct options
     [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225  IFS-3287
     [Tags]  HappyPath
     Given the user clicks the button/link  link = Eligibility
-    And the user should see the text in the page    Please choose the project type.
+    And the user should see the element    jQuery = h2:contains("Please choose the project type.")
     Then the user should see the element   jQuery = label:contains("Single or Collaborative")
     When the user should see the element   jQuery = label:contains("Collaborative")
     And the user should see the element    jQuery = h2:contains("Are research categories applicable?")
@@ -321,21 +321,21 @@ Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
     [Tags]
     When the user clicks the button/link            link = Milestones
-    Then the user should see the text in the page   Select the stage at which the competition is complete for Innovate UK.
-    When The user should see the text in the page   1. Open date
-    And the user should see the text in the page    2. Briefing event
-    And the user should see the text in the page    3. Submission date
-    And the user should see the text in the page    4. Allocate assessors
-    And the user should see the text in the page    5. Assessor briefing
-    And the user should see the text in the page    6. Assessor accepts
-    And the user should see the text in the page    7. Assessor deadline
-    And the user should see the text in the page    8. Line draw
-    And the user should see the text in the page    9. Assessment panel
-    And the user should see the text in the page    10. Panel date
-    And the user should see the text in the page    11. Funders panel
-    And the user should see the text in the page    12. Notifications
-    And the user should see the text in the page    13. Release feedback
-    And the user should see the text in the page    14. Project setup
+    Then the user should see the element            jQuery = p:contains("Select the stage at which the competition is complete for Innovate UK.")
+    When the user should see the element            jQuery = li span:contains("1. Open date")
+    And the user should see the element             jQuery = li span:contains("2. Briefing event")
+    And the user should see the element             jQuery = li span:contains("3. Submission date")
+    And the user should see the element             jQuery = li span:contains("4. Allocate assessors")
+    And the user should see the element             jQuery = li span:contains("5. Assessor briefing")
+    And the user should see the element             jQuery = li span:contains("6. Assessor accepts")
+    And the user should see the element             jQuery = li span:contains("7. Assessor deadline")
+    And the user should see the element             jQuery = li span:contains("8. Line draw")
+    And the user should see the element             jQuery = li span:contains("9. Assessment panel")
+    And the user should see the element             jQuery = li span:contains("10. Panel date")
+    And the user should see the element             jQuery = li span:contains("11. Funders panel")
+    And the user should see the element             jQuery = li span:contains("12. Notifications")
+    And the user should see the element             jQuery = label:contains("13. Release feedback")
+    And the user should see the element             jQuery = label:contains("14. Project setup")
     And the user selects the radio button           selectedCompletionStage  project-setup-completion-stage
     And the user clicks the button/link             jQuery = button:contains("Done")
     And the pre-field date should be correct
@@ -431,7 +431,7 @@ Application: Scope
     [Tags]  HappyPath
     Given the user clicks the button/link         link = Scope
     Then the user should see the element          jQuery = h1:contains("Scope")
-    And the user should see the text in the page  You can edit this question for the applicant as well as the guidance for assessors.
+    And the user should see the element           jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
     When The user fills the empty question fields
     And The user enters text to a text field      id = question.shortTitle  Test heading
     And The user clicks the button/link           css = button[type="submit"]
@@ -461,11 +461,11 @@ Application: Project Summary
     [Tags]  HappyPath
     Given the user clicks the button/link            link = Project summary
     And the user should see the element              jQuery = h1:contains("Project summary")
-    And the user should see the text in the page     You can edit this question for the applicant as well as the guidance for assessors.
+    And the user should see the element             jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
     When The user fills the empty question fields
     And The user clicks the button/link              css = button[type="submit"]
     And the user clicks the button/link              link = Project summary
-    Then The user should see the text in the page    Project summary
+    Then the user should see the element             jQuery = h1:contains("Project summary")
     And the user checks the question fields
     [Teardown]  The user clicks the button/link      link = Application
 
@@ -647,11 +647,11 @@ Assessor: Contain the correct options
     [Setup]  the user clicks the button/link        link = ${competitionTitle}
     Given The user clicks the button/link           link = View and update competition setup
     And the user clicks the button/link             link = Assessors
-    And the user should see the text in the page    How many assessors are required for each application?
+    And the user should see the element             jQuery = h2:contains("How many assessors are required for each application?")
     Then the user should see the element            jQuery = label:contains(1)
     When the user should see the element            jQuery = label:contains(3)
     And the user should see the element             jQuery = label:contains(5)
-    And the user should see the text in the page    How much do assessors receive per application
+    And the user should see the element             jQuery = label:contains("How much do assessors receive per application?")
     And the user should see the element             id = assessorPay
 
 Assessor: Mark as Done then Edit again
@@ -725,7 +725,7 @@ User cannot delete competition with assessors
 The Applicant is able to apply to the competition once is Open
     [Documentation]  IFS-182
     [Tags]  MySQL
-    [Setup]  the competition moves to Open state    ${competitionId}
+    [Setup]  update milestone to yesterday          ${competitionId}  OPEN_DATE
     Given log in as a different user                &{lead_applicant_credentials}
     And logged in user applies to competition       ${competitionTitle}  1
 
@@ -856,13 +856,12 @@ the user fills the scope assessment questions
     The user clicks the button/link         id = remove-guidance-row-1
 
 the user checks the scope assessment questions
-    The user should see the text in the page        New subject
-    The user should see the text in the page        This is a justification
-    The user should not see the text in the page    One or more of the above requirements have not been satisfied.
-    The user should see the text in the page        Written feedback
-    The user should see the text in the page        Guidance for assessing scope section
-    The user should see the text in the page        Scope 'Y/N' question
-    The user should see the text in the page        Research category question
+    The user should see the element                 jQuery = dt:contains("New subject") ~ dd:contains("This is a justification")
+    The user should not see the element             jQuery = dt:contains("NO") ~ dd:contains("One or more of the above requirements have not been satisfied.")
+    The user should see the element                 jQuery = dt:contains("Written feedback")
+    The user should see the element                 jQuery = p:contains("Guidance for assessing scope section")
+    The user should see the element                 jQuery = dt:contains("Scope 'Y/N' question")
+    The user should see the element                 jQuery = dt:contains("Research category question")
 
 the user should not be able to edit the scope feedback
     the user should not see the element    id = question.assessmentGuidanceTitle
@@ -872,9 +871,9 @@ the user should not be able to edit the scope feedback
     the user should not see the element    jQuery = Button:contains("+Add guidance row")
 
 the user should not see the scope feedback
-    the user should not see the text in the page    Guidance for assessing scope
-    the user should not see the text in the page    Your answer should be based upon the following:
-    the user should not see the text in the page    One or more of the above requirements have not been satisfied
+    the user should not see the element            jQuery = dt:contains("Guidance title") ~ dd:contains("Guidance for assessing scope")
+    the user should not see the element            jQuery = p:contains("Your answer should be based upon the following:")
+    the user should not see the element            jQuery = dt:contains("NO") ~ dd:contains("One or more of the above requirements have not been satisfied.")
 
 the user should not be able to edit the assessed question feedback
     the user should not see the element    id = question.assessmentGuidanceTitle
@@ -889,6 +888,7 @@ Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
+    Connect to database  @{database}
 
 the user enters multiple innovation areas
     the user clicks the button/link                        jQuery = .button-clear:contains("+ add another innovation area")
@@ -918,3 +918,7 @@ the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

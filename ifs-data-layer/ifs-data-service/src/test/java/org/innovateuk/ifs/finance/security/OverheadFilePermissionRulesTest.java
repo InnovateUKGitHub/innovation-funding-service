@@ -16,15 +16,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
@@ -87,16 +88,15 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
 
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
-
-            when(applicationFinanceRowRepositoryMock.findOne(overheads.getId())).thenReturn((ApplicationFinanceRow) overheads);
-            when(applicationFinanceRowRepositoryMock.findOne(submittedOverheads.getId())).thenReturn((ApplicationFinanceRow) submittedOverheads);
+            when(applicationFinanceRowRepositoryMock.findById(overheads.getId())).thenReturn(Optional.of((ApplicationFinanceRow) overheads));
+            when(applicationFinanceRowRepositoryMock.findById(submittedOverheads.getId())).thenReturn(Optional.of((ApplicationFinanceRow) submittedOverheads));
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).
                     thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, applicationId, organisationId)).
                     thenReturn(newProcessRole().build());
 
-            when(applicationRepositoryMock.findById(applicationId)).thenReturn(application);
-            when(applicationRepositoryMock.findById(submittedApplicationId)).thenReturn(submittedApplication);
+            when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+            when(applicationRepositoryMock.findById(submittedApplicationId)).thenReturn(Optional.of(submittedApplication));
         }
 
         {

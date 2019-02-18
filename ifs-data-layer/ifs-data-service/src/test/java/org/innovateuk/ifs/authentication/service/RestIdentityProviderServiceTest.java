@@ -3,8 +3,6 @@ package org.innovateuk.ifs.authentication.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.authentication.resource.UpdateEmailResource;
-import org.innovateuk.ifs.authentication.resource.UpdateUserResource;
 import org.innovateuk.ifs.authentication.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
@@ -31,15 +29,14 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorE
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.*;
 
 /**
  * Tests around the RestIdentityProviderService talking to the Shib REST API via the restTemplate
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
 
     @Mock
@@ -146,7 +143,7 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
         UpdateUserResource updateRequest = new UpdateUserResource("newpassword");
         ResponseEntity<String> failureResponseEntity = new ResponseEntity<>(asJson(new IdentityProviderError("Error!", emptyList())), BAD_REQUEST);
 
-        when(mockRestTemplate.exchange("http://idprest/updateuser/existing-uid", PUT, adaptor.jsonEntity(updateRequest), String.class)).thenReturn(failureResponseEntity);
+        lenient().when(mockRestTemplate.exchange("http://idprest/updateuser/existing-uid", PUT, adaptor.jsonEntity(updateRequest), String.class)).thenReturn(failureResponseEntity);
 
         ServiceResult<String> result = service.updateUserPassword("existing-uid", "newpassword");
         assertTrue(result.isFailure());

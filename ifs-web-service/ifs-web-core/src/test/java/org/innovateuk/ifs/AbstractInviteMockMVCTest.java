@@ -15,7 +15,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 public abstract class AbstractInviteMockMVCTest<ControllerType> extends BaseControllerMockMVCTest<ControllerType> {

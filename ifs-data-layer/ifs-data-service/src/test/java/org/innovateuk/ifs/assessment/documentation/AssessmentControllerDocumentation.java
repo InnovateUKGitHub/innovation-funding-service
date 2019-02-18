@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessmentController;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
+import org.innovateuk.ifs.documentation.RejectionReasonResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -54,6 +55,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                                 parameterWithName("id").description("Id of the assessment that is being requested")
                         ),
                         responseFields(assessmentFields)
+                                .andWithPrefix("rejection.", AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields)
+                                .andWithPrefix("fundingDecision.", AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields)
                 ));
     }
 
@@ -72,6 +75,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                                 parameterWithName("id").description("Id of the assessment that is being requested")
                         ),
                         responseFields(assessmentFields)
+                                .andWithPrefix("rejection.", AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields)
+                                .andWithPrefix("fundingDecision.", AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields)
                 ));
     }
 
@@ -90,6 +95,8 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                                 parameterWithName("id").description("Id of the assessment that is being requested")
                         ),
                         responseFields(assessmentFields)
+                                .andWithPrefix("rejection.", AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields)
+                                .andWithPrefix("fundingDecision.", AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields)
                 ));
     }
 
@@ -111,7 +118,9 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of assessments the user is allowed to see")
-                        )
+                        ).andWithPrefix("[].", assessmentFields)
+                                .andWithPrefix("[].rejection.", AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields)
+                                .andWithPrefix("[].fundingDecision.", AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields)
                 ));
     }
 
@@ -133,7 +142,9 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of assessments the user is allowed to see")
-                        )
+                        ).andWithPrefix("[].", assessmentFields)
+                                .andWithPrefix("[].rejection.", AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields)
+                                .andWithPrefix("[].fundingDecision.", AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields)
                 ));
     }
 

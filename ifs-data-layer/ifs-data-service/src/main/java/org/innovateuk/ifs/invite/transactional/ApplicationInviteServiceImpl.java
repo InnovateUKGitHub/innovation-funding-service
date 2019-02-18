@@ -115,7 +115,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Override
     public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
-        return getByHash(hash).andOnSuccessReturn(invite -> inviteOrganisationMapper.mapToResource(inviteOrganisationRepository.findOne(invite.getInviteOrganisation().getId())));
+        return getByHash(hash).andOnSuccessReturn(invite -> inviteOrganisationMapper.mapToResource(inviteOrganisationRepository.findById(invite.getInviteOrganisation().getId()).orElse(null)));
     }
 
     @Override
@@ -133,14 +133,14 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     public ServiceResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources) {
         return validateUniqueEmails(inviteResources, EDIT_EMAIL_FIELD).andOnSuccess(() -> {
             List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
-            applicationInviteRepository.save(invites);
+            applicationInviteRepository.saveAll(invites);
             return applicationInviteNotificationService.inviteCollaborators(invites);
         });
     }
 
     private ApplicationInviteResource mapInviteToInviteResource(ApplicationInvite invite) {
         ApplicationInviteResource inviteResource = applicationInviteMapper.mapToResource(invite);
-        Organisation organisation = organisationRepository.findOne(inviteResource.getLeadOrganisationId());
+        Organisation organisation = organisationRepository.findById(inviteResource.getLeadOrganisationId()).get();
         inviteResource.setLeadOrganisation(organisation.getName());
         return inviteResource;
     }
@@ -183,7 +183,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
                 application.getLeadApplicantProcessRole()
         );
 
-        processRoleRepository.delete(collaboratorProcessRoles);
+        processRoleRepository.deleteAll(collaboratorProcessRoles);
         application.removeProcessRoles(collaboratorProcessRoles);
 
         InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
@@ -252,9 +252,9 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     }
 
     private ApplicationInvite mapInviteResourceToInvite(ApplicationInviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
-        Application application = applicationRepository.findOne(inviteResource.getApplication());
+        Application application = applicationRepository.findById(inviteResource.getApplication()).orElse(null);
         if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
-            newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisation());
+            newInviteOrganisation = inviteOrganisationRepository.findById(inviteResource.getInviteOrganisation()).orElse(null);
         }
         return new ApplicationInvite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
@@ -299,12 +299,12 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     }
 
     private String getLeadApplicantEmail(long applicationId) {
-        Application application = applicationRepository.findOne(applicationId);
+        Application application = applicationRepository.findById(applicationId).get();
         return application.getLeadApplicant() != null ? application.getLeadApplicant().getEmail() : null;
     }
 
     private ServiceResult<Organisation> findOrganisationForInviteOrganisation(InviteOrganisationResource inviteOrganisationResource) {
-        return find(organisationRepository.findOne(inviteOrganisationResource.getOrganisation()), notFoundError(Organisation.class, inviteOrganisationResource.getOrganisation()));
+        return find(organisationRepository.findById(inviteOrganisationResource.getOrganisation()), notFoundError(Organisation.class, inviteOrganisationResource.getOrganisation()));
     }
 
     private ServiceResult<InviteOrganisation> findInviteOrganisationForOrganisationInApplication(InviteOrganisationResource inviteOrganisationResource, Long applicationId) {

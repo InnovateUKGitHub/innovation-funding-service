@@ -10,8 +10,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-7561 Inflight competition dashboards- View milestones
 ...
 ...               INFUND-7560 Inflight competition dashboards- Viewing key statistics for 'Ready to Open', 'Open', 'Closed' and 'In assessment' competition states
-Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
-Suite Teardown    The user closes the browser
+Suite Setup       Custom suite setup
+Suite Teardown    Custom Suite teardown
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
@@ -61,6 +61,10 @@ Notify Assessors
     [Teardown]  Reset competition's milestone
 
 *** Keywords ***
+Custom suite setup
+    The user logs-in in new browser  &{Comp_admin1_credentials}
+    Connect to database  @{database}
+
 Get The expected values from the invite page
     The user clicks the button/link    jQuery=a:contains(Invite assessors)
     ${Invited}=    Get text    css = div:nth-child(1) > div > span
@@ -87,5 +91,8 @@ the counts of the key statistics of the closed competition should be correct
     Should Be Equal As Integers    ${Assessor_without_app}   10
 
 Reset competition's milestone
-    Connect to Database  @{database}
     Execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `competition_id`='${competition_ids['${CLOSED_COMPETITION_NAME}']}' and `type`='ASSESSORS_NOTIFIED';
+
+Custom suite teardown
+    Disconnect from database
+    The user closes the browser

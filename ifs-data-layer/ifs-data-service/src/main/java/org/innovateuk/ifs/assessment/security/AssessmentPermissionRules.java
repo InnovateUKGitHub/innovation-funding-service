@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.security;
 
+import com.google.common.collect.Streams;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -63,7 +64,7 @@ public class AssessmentPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "SUBMIT", description = "Only owners can submit Assessments")
     public boolean userCanSubmitAssessments(AssessmentSubmissionsResource submissions, UserResource user) {
-        return assessmentRepository.findAll(submissions.getAssessmentIds()).stream()
+        return Streams.stream(assessmentRepository.findAllById(submissions.getAssessmentIds()))
                 .allMatch(assessment -> assessment.getParticipant().getUser().getId().equals(user.getId()));
     }
 
@@ -72,12 +73,12 @@ public class AssessmentPermissionRules extends BasePermissionRules {
     }
 
     private boolean isAssessorForAssessment(AssessmentResource assessment, UserResource user) {
-        Long assessmentUser = processRoleRepository.findOne(assessment.getProcessRole()).getUser().getId();
+        Long assessmentUser = processRoleRepository.findById(assessment.getProcessRole()).get().getUser().getId();
         return user.getId().equals(assessmentUser);
     }
 
     private boolean assessmentIsInState(AssessmentResource assessmentResource, Set<AssessmentState> allowedStates) {
-        Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
+        Assessment assessment = assessmentRepository.findById(assessmentResource.getId()).get();
         return allowedStates.contains(assessment.getProcessState());
     }
 }

@@ -31,7 +31,7 @@ public class GenericThreadService<E extends Thread, C> implements ThreadService<
 
     @Override
     public ServiceResult<E> findOne(Long id) {
-        return find(repository.findOne(id), notFoundError(Thread.class));
+        return find(repository.findById(id), notFoundError(Thread.class));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class GenericThreadService<E extends Thread, C> implements ThreadService<
     @Override
     public ServiceResult<Void> close(Long threadId) {
 
-        return find(repository.findOne(threadId), notFoundError(Thread.class))
+        return find(repository.findById(threadId), notFoundError(Thread.class))
                 .andOnSuccessReturnVoid(thread -> authenticationHelper.getCurrentlyLoggedInUser()
                         .andOnSuccess(currentUser -> {
                             thread.closeThread(currentUser);

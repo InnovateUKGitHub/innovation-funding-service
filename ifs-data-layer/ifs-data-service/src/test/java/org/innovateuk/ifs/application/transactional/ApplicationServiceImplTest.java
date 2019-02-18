@@ -47,6 +47,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Collections.*;
@@ -72,8 +73,8 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
 /**
@@ -153,7 +154,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         openApplication = newApplication().withCompetition(openCompetition).build();
 
-        when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);
+        when(applicationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(openApplication));
 
         multiAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.TRUE).withId(123L).build();
         leadAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.FALSE).withId(321L).build();
@@ -168,10 +169,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         comp = newCompetition().withSections(singletonList(section)).withMaxResearchRatio(30).build();
         app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
 
-        when(applicationRepositoryMock.findOne(app.getId())).thenReturn(app);
-        when(organisationRepositoryMock.findOne(234L)).thenReturn(org1);
-        when(organisationRepositoryMock.findOne(345L)).thenReturn(org2);
-        when(organisationRepositoryMock.findOne(456L)).thenReturn(org3);
+        when(applicationRepositoryMock.findById(app.getId())).thenReturn(Optional.of(app));
+        when(organisationRepositoryMock.findById(234L)).thenReturn(Optional.of(org1));
+        when(organisationRepositoryMock.findById(345L)).thenReturn(Optional.of(org2));
+        when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(org3));
     }
 
 
@@ -194,12 +195,12 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);
         when(processRoleRepositoryMock.findByUser(user)).thenReturn(singletonList(processRole));
         when(organisationRepositoryMock.findDistinctByUsers(user)).thenReturn(singletonList(organisation));
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
@@ -254,12 +255,12 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ProcessRole testProcessRole3 = newProcessRole().withId(2L).withUser(testUser2).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId(organisation2.getId()).build();
         ProcessRole testProcessRole4 = newProcessRole().withId(3L).withUser(testUser2).withApplication(testApplication3).withRole(Role.APPLICANT).withOrganisationId(organisation2.getId()).build();
 
-        when(userRepositoryMock.findOne(1L)).thenReturn(testUser1);
-        when(userRepositoryMock.findOne(2L)).thenReturn(testUser2);
+        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(testUser1));
+        when(userRepositoryMock.findById(2L)).thenReturn(Optional.of(testUser2));
 
-        when(applicationRepositoryMock.findOne(testApplication1.getId())).thenReturn(testApplication1);
-        when(applicationRepositoryMock.findOne(testApplication2.getId())).thenReturn(testApplication2);
-        when(applicationRepositoryMock.findOne(testApplication3.getId())).thenReturn(testApplication3);
+        when(applicationRepositoryMock.findById(testApplication1.getId())).thenReturn(Optional.of(testApplication1));
+        when(applicationRepositoryMock.findById(testApplication2.getId())).thenReturn(Optional.of(testApplication2));
+        when(applicationRepositoryMock.findById(testApplication3.getId())).thenReturn(Optional.of(testApplication3));
 
         when(processRoleRepositoryMock.findByUser(testUser1)).thenReturn(new ArrayList<ProcessRole>() {{
             add(testProcessRole1);
@@ -346,7 +347,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         User user = newUser().withId(userResource.getId()).withRoles(singleton(role)).build();
 
         setLoggedInUser(userResource);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         List<Application> applications = ApplicationBuilder.newApplication().build(5);
 
@@ -394,14 +395,14 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         ApplicationResource newApplication = newApplicationResource().build();
 
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
         when(processRoleRepositoryMock.findByUser(user)).thenReturn(singletonList(
                 newProcessRole().withUser(user).withOrganisationId(organisation.getId()).build()
         ));
         when(organisationRepositoryMock.findDistinctByUsers(user)).thenReturn(singletonList(organisation));
         when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(applicationName, created.getName());
@@ -465,7 +466,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .withReason(reason)
                 .build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationWorkflowHandlerMock.markIneligible(application, ineligibleOutcome)).thenReturn(true);
         when(applicationRepositoryMock.save(application)).thenReturn(application);
 
@@ -473,7 +474,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         assertTrue(result.isSuccess());
 
-        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(applicationRepositoryMock).findById(applicationId);
         verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
     }
 
@@ -491,7 +492,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .withReason(reason)
                 .build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(applicationWorkflowHandlerMock.markIneligible(application, ineligibleOutcome)).thenReturn(false);
 
         ServiceResult<Void> result = service.markAsIneligible(applicationId, ineligibleOutcome);
@@ -499,7 +500,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertTrue(result.isFailure());
         assertEquals(APPLICATION_MUST_BE_SUBMITTED.getErrorKey(), result.getErrors().get(0).getErrorKey());
 
-        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(applicationRepositoryMock).findById(applicationId);
         verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
     }
 
@@ -521,16 +522,16 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .build();
         setLoggedInUser(loggedInUser);
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
         when(applicationWorkflowHandlerMock.withdraw(application, user)).thenReturn(true);
 
         ServiceResult<Void> result = service.withdrawApplication(applicationId);
 
         assertTrue(result.isSuccess());
 
-        verify(applicationRepositoryMock).findOne(applicationId);
-        verify(userRepositoryMock).findOne(userId);
+        verify(applicationRepositoryMock).findById(applicationId);
+        verify(userRepositoryMock).findById(userId);
         verify(applicationWorkflowHandlerMock).withdraw(application, user);
     }
 
@@ -552,8 +553,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .withId(userId)
                 .build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
         when(applicationWorkflowHandlerMock.withdraw(application, user)).thenReturn(false);
 
         ServiceResult<Void> result = service.withdrawApplication(applicationId);
@@ -561,15 +562,15 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertTrue(result.isFailure());
         assertEquals(APPLICATION_MUST_BE_APPROVED.getErrorKey(), result.getErrors().get(0).getErrorKey());
 
-        verify(applicationRepositoryMock).findOne(applicationId);
-        verify(userRepositoryMock).findOne(userId);
+        verify(applicationRepositoryMock).findById(applicationId);
+        verify(userRepositoryMock).findById(userId);
         verify(applicationWorkflowHandlerMock).withdraw(application, user);
     }
 
     @Test
     public void showApplicationTeam() {
         User user = newUser().withRoles(singleton(Role.COMP_ADMIN)).build();
-        when(userRepositoryMock.findOne(234L)).thenReturn(user);
+        when(userRepositoryMock.findById(234L)).thenReturn(Optional.of(user));
 
         ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
 
@@ -580,7 +581,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void showApplicationTeamWhenStakeholder() {
         User user = newUser().withRoles(singleton(Role.STAKEHOLDER)).build();
-        when(userRepositoryMock.findOne(234L)).thenReturn(user);
+        when(userRepositoryMock.findById(234L)).thenReturn(Optional.of(user));
 
         ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
 
@@ -591,7 +592,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void showApplicationTeamNoUser() {
 
-        when(userRepositoryMock.findOne(234L)).thenReturn(null);
+        when(userRepositoryMock.findById(234L)).thenReturn(Optional.empty());
         ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
 
         assertTrue(serviceResult.isFailure());
@@ -669,7 +670,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
         when(applicationMapperMock.mapToResource(application1)).thenReturn(applicationResource1);
         when(applicationMapperMock.mapToResource(application2)).thenReturn(applicationResource2);
-        when(organisationRepositoryMock.findOne(leadOrganisationId)).thenReturn(leadOrganisation);
+        when(organisationRepositoryMock.findById(leadOrganisationId)).thenReturn(Optional.of(leadOrganisation));
 
         ServiceResult<PreviousApplicationPageResource> result = service.findPreviousApplications(competitionId, 0, 20, "id", "ALL");
         assertTrue(result.isSuccess());

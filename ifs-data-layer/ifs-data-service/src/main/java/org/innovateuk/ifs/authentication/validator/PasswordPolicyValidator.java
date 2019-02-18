@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -158,8 +159,12 @@ public class PasswordPolicyValidator {
     private List<String> getOrganisationNamesForUser(UserResource user, Long organisationId) {
         if (user.getId() == null) {
             if (organisationId != null) {
-                Organisation organisation = organisationRepository.findOne(organisationId);
-                return asList(organisation.getName());
+                Optional<Organisation> organisation = organisationRepository.findById(organisationId);
+                if (organisation.isPresent()) {
+                    return asList(organisation.get().getName());
+                } else {
+                    return emptyList();
+                }
             } else  {
                 return emptyList();
             }

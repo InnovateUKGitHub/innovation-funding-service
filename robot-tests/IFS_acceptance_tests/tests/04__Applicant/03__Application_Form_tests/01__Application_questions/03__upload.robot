@@ -7,7 +7,7 @@ Documentation     INFUND-832 Acceptance test: Verify that only users with the ri
 ...
 ...               IFS-2564 As an Applicant I am able to see the Appendix guidance, file type and size
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Force Tags        Upload    Applicant
 Resource          ../../../../resources/defaultResources.robot
 # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files
@@ -99,13 +99,13 @@ Collaborators cannot upload a file if not assigned
     [Documentation]    INFUND-3007
     [Tags]
     When the user should see the element               jQuery = h3:contains("Appendix")
-    Then the user should not see the text in the page  Upload
+    Then the user should not see the element           jQuery = label:contains("Upload")
 
 Collaborators cannot remove a file if not assigned
     [Documentation]    INFUND-2720
     [Tags]
     When the user should see the element               link = ${5mb_pdf}
-    Then the user should not see the text in the page  Remove
+    Then the user should not see the element           jQuery = button:contains("Remove")
 
 Questions can be assigned with appendices
     [Documentation]    INFUND-832  INFUND-409
@@ -116,7 +116,7 @@ Questions can be assigned with appendices
     And the user clicks the button/link                     link = 5. Technical approach
     And the user should see the element                     link = ${5mb_pdf}
     When the user assigns the question to the collaborator  Arsene Wenger
-    Then the user should not see the text in the page       Remove
+    Then the user should not see the element                jQuery = button:contains("Remove")
     And the user clicks the button/link                     link = Application overview
     Then the user clicks the button/link                    link = 6. Innovation
     And the user assigns the question to the collaborator   Arsene Wenger
@@ -169,6 +169,7 @@ Quarantined files are not returned to the user and the user is informed
 Custom Suite Setup
     the guest user opens the browser
     Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
+    Connect to database  @{database}
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page
@@ -180,7 +181,7 @@ the user cannot see the option to upload a file on the question
     the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link  link = Academic robot test application
     the user clicks the button/link  ${QUESTION}
-    the user should not see the text in the page  Upload
+    the user should not see the element     jQuery = label:contains("Upload")
 
 the user can see the option to upload a file on the question
     [Arguments]    ${QUESTION}
@@ -207,3 +208,7 @@ User verifies if uploaded document can be viewed
      The user opens the link in new window     ${5mb_pdf}
      the user should not see an error in the page
      the user closes the last opened tab
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

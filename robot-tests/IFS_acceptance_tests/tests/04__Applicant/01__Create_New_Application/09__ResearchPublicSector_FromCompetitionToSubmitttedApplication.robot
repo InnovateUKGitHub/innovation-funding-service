@@ -9,7 +9,7 @@ Documentation     IFS-1012 As a comp exec I am able to set Research and Public s
 ...
 ...               IFS-4046 Person to organisation acceptance test updates
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -36,13 +36,13 @@ Comp Admin Creates Competitions where Research can lead
 The Applicant is able to apply to the competition once is Open and see the correct Questions
     [Documentation]  IFS-182 IFS-2832  IFS-4046
     [Tags]  MySQL  HappyPath
-    [Setup]  Change the open date of the Competition in the database to one day before  ${compResearch}
-    Given log in as a different user              &{collaborator2_credentials}
-    And logged in user applies to competition research     ${compResearch}  2
-    Then the user should see the element          jQuery = li:contains("${customQuestion}")
-    When the user should see the element          jQuery = li:contains("Scope")
-    Then the user should not see the element      jQuery = li:contains("Public description")
-    And the user should not see the element       jQuery = li:contains("Project summary")
+    [Setup]   get competition id and set open date to yesterday  ${compResearch}
+    Given log in as a different user                     &{collaborator2_credentials}
+    When logged in user applies to competition research  ${compResearch}  2
+    Then the user should see the element                 jQuery = li:contains("${customQuestion}")
+    And the user should see the element                  jQuery = li:contains("Scope")
+    And the user should not see the element              jQuery = li:contains("Public description")
+    And the user should not see the element              jQuery = li:contains("Project summary")
 
 Applicant Applies to Research leading Competition
     [Documentation]  IFS-1012  IFS-2879  IFS-4046
@@ -83,6 +83,7 @@ Project Finance is able to see the Overheads costs file
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+    Connect to database  @{database}
 
 The competition admin creates a competition for
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
@@ -162,3 +163,7 @@ the internal user can see that the Generic competition has only one Application 
     the user is able to configure the new question    ${customQuestion}
     the user should be able to see the read only view of question correctly  ${customQuestion}
     the user clicks the button/link                   link = Competition setup
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

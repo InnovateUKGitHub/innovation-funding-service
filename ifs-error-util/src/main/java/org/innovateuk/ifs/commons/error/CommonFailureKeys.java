@@ -69,6 +69,13 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED(BAD_REQUEST),
 
     /**
+     * Monitoring officer
+     */
+    MONITORING_OFFICER_INVITE_INVALID(BAD_REQUEST),
+    MONITORING_OFFICERS_CANNOT_BE_INTERNAL_USERS(BAD_REQUEST),
+    MONITORING_OFFICER_INVITE_TARGET_USER_ALREADY_INVITED(BAD_REQUEST),
+
+    /**
      * Applications
      */
     ASSIGNEE_SHOULD_BE_APPLICANT(BAD_REQUEST),
@@ -295,6 +302,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * Withdrawing a project
      */
     PROJECT_CANNOT_BE_WITHDRAWN(BAD_REQUEST),
+
+    /**
+     * Handling projects offline
+     */
+    PROJECT_CANNOT_BE_HANDLED_OFFLINE(BAD_REQUEST),
+    PROJECT_CANNOT_BE_COMPLETED_OFFLINE(BAD_REQUEST),
 
     /**
      * SIL CRM
