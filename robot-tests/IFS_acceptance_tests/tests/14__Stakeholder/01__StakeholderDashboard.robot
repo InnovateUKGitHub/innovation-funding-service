@@ -84,8 +84,8 @@ Create stakeholders account validations from email
 Invited stakeholder registration flow
     [Documentation]  IFS-4252
     [Tags]
-    When the user enters the details and create account
-    Then the user should see the element                  jQuery = h1:contains("Your account has been created")
+    Given the user enters the details and create account
+    And the user should see the element                  jQuery = h1:contains("Your account has been created")
     When the user clicks the button/link                  jQuery = a:contains("Sign into your account")
     Then Logging in and Error Checking                    ${stakeholderEmail}  ${short_password}
     And the user should see the element                   jQuery = h2:contains("Open") ~ ul a:contains("${openProgrammeCompetitionName}")
@@ -108,7 +108,7 @@ The internal user adds a Stakeholder to the competition
 The Stakeholder can see their dashboard and the competitions they were added to
     [Documentation]  IFS-4189
     [Tags]
-    When log in as a different user         &{stakeholder_user}
+    Given log in as a different user        &{stakeholder_user}
     Then the user should see the element    jQuery = h3:contains("${openProgrammeCompetitionName}")
 
 The Stakeholder can search for a competition
