@@ -16,6 +16,9 @@
                              Location="https://${DOMAIN}/services/auth/sp/saml2/logout"/>
         <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</NameIDFormat>
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-                                  Location="https://${DOMAIN}?so=00D0Q0000000O0N" index="0" isDefault="true"/>
+                                  Location="https://${DOMAIN}?so=00D0Q0000000O0N" index="0" isDefault="false"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="https://${DOMAIN}/auth/success" index="1" isDefault="true"/>
+        https://www-acc-sysint.apps.org-env-0.org.innovateuk.ukri.org
     </SPSSODescriptor>
 </EntityDescriptor>
