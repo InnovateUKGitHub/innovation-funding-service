@@ -13,7 +13,8 @@
                 <div>
                     <a th:href="@{/competition/{competitionId}/download/{contentGroupId}(competitionId=${competitionId}, contentGroupId=${contentGroup.id})}"
                        th:text="${section.fileName(contentGroup.id)}"
-                       class="govuk-link"></a>
+                       class="govuk-link"
+                       target="_blank"></a>
                 </div>
             </th:block>
         </div>
