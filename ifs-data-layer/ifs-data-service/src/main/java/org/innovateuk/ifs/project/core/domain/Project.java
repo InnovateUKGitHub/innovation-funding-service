@@ -90,10 +90,9 @@ public class Project implements ProcessActivity {
 
     public Project() {}
 
-    public Project(Long id, Application application, LocalDate targetStartDate, Address address,
+    public Project(Application application, LocalDate targetStartDate, Address address,
                    Long durationInMonths, String name, ZonedDateTime documentsSubmittedDate, ApprovalType otherDocumentsApproved ) {
 
-        this.id = id;
         this.application = application;
         this.targetStartDate = targetStartDate;
         this.address = address;
