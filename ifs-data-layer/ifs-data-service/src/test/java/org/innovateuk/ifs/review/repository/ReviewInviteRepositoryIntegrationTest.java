@@ -73,7 +73,7 @@ public class ReviewInviteRepositoryIntegrationTest extends BaseRepositoryIntegra
     public void getByCompetitionIdAndStatus() {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newReviewInvite()
+        repository.saveAll(newReviewInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -102,7 +102,7 @@ public class ReviewInviteRepositoryIntegrationTest extends BaseRepositoryIntegra
     public void getByCompetitionIdAndStatus_asList() throws Exception {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newReviewInvite()
+        repository.saveAll(newReviewInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -127,7 +127,7 @@ public class ReviewInviteRepositoryIntegrationTest extends BaseRepositoryIntegra
     public void countByCompetitionIdAndStatus() {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newReviewInvite()
+        repository.saveAll(newReviewInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -150,7 +150,7 @@ public class ReviewInviteRepositoryIntegrationTest extends BaseRepositoryIntegra
 
         long id = invite.getId();
 
-        ReviewInvite retrievedInvite = repository.findOne(id);
+        ReviewInvite retrievedInvite = repository.findById(id).get();
 
         assertEquals("Professor Plum", retrievedInvite.getName());
         assertEquals("paul.plum@gmail.com", retrievedInvite.getEmail());
@@ -175,7 +175,7 @@ public class ReviewInviteRepositoryIntegrationTest extends BaseRepositoryIntegra
 
         HashSet<InviteStatus> inviteStatuses = newHashSet(CREATED);
 
-        repository.save(invites);
+        repository.saveAll(invites);
         flushAndClearSession();
 
         assertEquals(2, repository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));

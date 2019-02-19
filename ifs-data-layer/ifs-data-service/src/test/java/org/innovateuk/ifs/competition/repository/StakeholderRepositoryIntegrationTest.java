@@ -59,7 +59,7 @@ public class StakeholderRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Stakeholder expectedStakeholder = new Stakeholder(competition, expectedUser);
         Stakeholder otherStakeholder = new Stakeholder(competition, otherUser);
 
-        repository.save(asList(expectedStakeholder, otherStakeholder));
+        repository.saveAll(asList(expectedStakeholder, otherStakeholder));
 
         List<Stakeholder> retrievedStakeholders = repository.findByStakeholderId(expectedUser.getId());
 

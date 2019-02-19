@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses
@@ -83,9 +83,9 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     protected boolean isLeadPartner(long projectId, long userId) {
 
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         ProcessRole leadApplicantProcessRole = processRoleRepository.findOneByApplicationIdAndRole(project.getApplication().getId(), Role.LEADAPPLICANT);
-        Organisation leadOrganisation = organisationRepository.findOne(leadApplicantProcessRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadApplicantProcessRole.getOrganisationId()).get();
 
         ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, leadOrganisation.getId(), PROJECT_PARTNER);
         return partnerProjectUser != null;

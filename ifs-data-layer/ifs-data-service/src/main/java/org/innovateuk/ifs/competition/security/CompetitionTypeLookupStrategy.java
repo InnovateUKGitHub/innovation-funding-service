@@ -22,6 +22,6 @@ public class CompetitionTypeLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public CompetitionTypeResource getCompetititionTypeResource(Long competitionTypeId) {
-        return competitionTypeMapper.mapToResource(competitionTypeRepository.findOne(competitionTypeId));
+        return competitionTypeMapper.mapToResource(competitionTypeRepository.findById(competitionTypeId).orElse(null));
     }
 }

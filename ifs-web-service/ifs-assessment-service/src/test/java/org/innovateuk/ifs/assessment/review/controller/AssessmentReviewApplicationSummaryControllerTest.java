@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -64,14 +64,14 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessmentReviewApplicationSummaryControllerTest extends AbstractApplicationMockMVCTest<AssessmentReviewApplicationSummaryController> {
 
@@ -152,7 +152,7 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
     }
 
     @Test
-    public void testApplicationSummary() throws Exception {
+    public void applicationSummary() throws Exception {
         long reviewId = 1L;
         ApplicationResource app = applications.get(0);
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -171,12 +171,12 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
         AssessmentReviewApplicationSummaryViewModel resultModel = (AssessmentReviewApplicationSummaryViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(resultModel.getSummaryViewModel().getCurrentApplication(), app);
-        assertEquals(resultModel.getCompetition(), competitionResource);
+        assertEquals(resultModel.getCurrentCompetition(), competitionResource);
         assertEquals(resultModel.getSummaryViewModel().getFeedbackSummary(), emptyList());
     }
 
     @Test
-    public void testAssessorCanViewOwnFeedbackOnApplicationWhenInPanel() throws Exception {
+    public void assessorCanViewOwnFeedbackOnApplicationWhenInPanel() throws Exception {
         long reviewId = 1L;
         long questionId = 2L;
 

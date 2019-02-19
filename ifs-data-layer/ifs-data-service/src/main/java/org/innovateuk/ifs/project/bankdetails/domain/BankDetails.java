@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTO
 @Entity
 public class BankDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String sortCode;

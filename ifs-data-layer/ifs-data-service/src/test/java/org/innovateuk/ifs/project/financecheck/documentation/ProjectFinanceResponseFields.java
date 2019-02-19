@@ -16,6 +16,7 @@ public class ProjectFinanceResponseFields {
             fieldWithPath("[].organisationSizeValue").description("The organisation size of the owning organisation " +
                     "as recorded against their finances"),
             fieldWithPath("[].financeOrganisationDetails").description("A detailed breakdown of the organisation's finances"),
+            fieldWithPath("[].workPostcode").description("Postcode of where the work takes place"),
     };
 
     public static final FieldDescriptor[] projectFinanceGrantClaimRowFields = {

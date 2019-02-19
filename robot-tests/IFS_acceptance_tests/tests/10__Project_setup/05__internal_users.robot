@@ -75,7 +75,7 @@ Comp Admin user can see the internal project summary page
     [Documentation]    INFUND-4049, INFUND-5899
     [Tags]
     Given the user navigates to the page             ${internal_competition_status}
-    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
+    Then the user should see the element             jQuery = th div:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(4) > a   # Monitoring officer page link
     And the user should not see an error in the page
 

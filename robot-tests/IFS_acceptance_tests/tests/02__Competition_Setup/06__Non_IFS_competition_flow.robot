@@ -8,7 +8,8 @@ Documentation     INFUND-7963: Create Non-IFS tab in 'Competition dashboard' for
 ...               INFUND-8554 As a member of the Competition team I want to be able to publish a "Registration Closes" date in non-IFS public content...
 ...
 ...               IFS-1117 As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
-Suite Teardown    the user closes the browser
+Suite Setup       Connect to Database  @{database}
+Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
@@ -80,12 +81,12 @@ Internal user can see the Non-IFS comp and its brief information
 Guest user can apply to a Non-IFS competition at the FrontDoor
     [Documentation]    INFUND-7965
     [Tags]
-    Given the user navigates to the page         ${frontDoor}
-    When the user enters text to a text field    id = keywords    search
-    And the user clicks the button/link          jQuery = button:contains("Update results")
-    Given the competition is open                Test non-IFS competition
-    When the user clicks the button/link         link = Test non-IFS competition
-    Then The user should see the element         link = Register and apply online
+    Given the user navigates to the page                   ${frontDoor}
+    And the user enters text to a text field               id = keywords    search
+    When the user clicks the button/link                   jQuery = button:contains("Update results")
+    And get competition id and set open date to yesterday  Test non-IFS competition
+    And the user clicks the button/link                    link = Test non-IFS competition
+    Then The user should see the element                   link = Register and apply online
 
 Guest can see the Dates tab
     [Documentation]  INFUND-8554  IFS-1117
@@ -124,4 +125,8 @@ the user navigates to the Non IFS competitions tab
     the user navigates to the page     ${CA_Live}
     the user clicks the button/link    jQuery = a:contains(Non-IFS)
     # We have used the JQuery selector for the link because the title will change according to the competitions number
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database
 

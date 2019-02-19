@@ -16,9 +16,8 @@ import java.util.List;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
-import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.inOrder;
 
 public class SectionTemplatePersistorImplTest extends BaseServiceUnitTest<SectionTemplatePersistorImpl> {

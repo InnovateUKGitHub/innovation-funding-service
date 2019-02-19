@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.user.transactional;
 
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
+import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -44,7 +44,11 @@ public interface RegistrationService {
     @SecuredBySpring(value = "CREATE", securedType = InternalUserRegistrationResource.class, description = "A System Registration User can create new internal Users on behalf of non-logged in users with invite hash")
     ServiceResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource userRegistrationResource);
 
+    @PreAuthorize("hasPermission(#user, 'CREATE')")
+    ServiceResult<Void> createMonitoringOfficer(String hash, MonitoringOfficerRegistrationResource userRegistrationResource);
+
     @PreAuthorize("hasPermission(#userToEdit, 'EDIT_INTERNAL_USER')")
+    @SecuredBySpring(value = "CREATE", securedType = StakeholderRegistrationResource.class, description = "A System Registration User can create new Stakeholders on behalf of non-logged in users with invite hash")
     ServiceResult<Void> editInternalUser(UserResource userToEdit, Role userRoleType);
 
     @PreAuthorize("hasAuthority('system_registrar')")

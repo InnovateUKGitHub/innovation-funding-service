@@ -73,14 +73,14 @@ Project finance user can upload a pdf file
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
     When the user uploads the file        name = attachment  ${valid_pdf}
-    Then the user should see the element  jQuery = h3:contains("Supporting documentation") + ul:contains("testing.pdf") .button-clear:contains("Remove")
+    Then the user should see the element  jQuery = h3:contains("Supporting documentation") + ul:contains("${valid_pdf}") .button-clear:contains("Remove")
 
 Project finance can remove the file
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
     Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/query/new-query
     When the user clicks the button/link  name = removeAttachment
-    Then the user should not see the text in the page    ${valid_pdf}
+    Then the user should not see the element     jQuery = h3:contains("Supporting documentation") + ul:contains("${valid_pdf}") .button-clear:contains("Remove")
     And the user should not see an error in the page
 
 Project finance user can upload more than one file and remove it
@@ -213,9 +213,9 @@ Applicant - Response to query client side validations
     [Tags]
     When the user enters text to a text field          css = .editor  this is some response text
     And Set Focus To Element                           jQuery = .govuk-button:contains("Post response")
-    Then the user should not see the text in the page  ${empty_field_warning_message}
+    Then the user should not see the element           jQUery = .govuk-error-message:contains("${empty_field_warning_message}")
     When the user uploads the file                     name = attachment  ${valid_pdf}
-    Then the user should see the element               jQuery = a:contains("testing.pdf") + button:contains("Remove")
+    Then the user should see the element               jQuery = a:contains("${valid_pdf}") + button:contains("Remove")
 
 Applicant - Word count validations for response
     [Documentation]    INFUND-4843
@@ -433,7 +433,7 @@ New note can be posted
     [Tags]
     When the user clicks the button/link             jQuery = .govuk-button:contains("Save note")
     Then the user should not see the element         jQuery = .govuk-button:contains("Save note")
-    Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
+    Then the user should see the element             jQuery = p:contains("Lee Bowman - Innovate UK (Finance team)")
 
 Note sections are no longer editable
     [Documentation]    INFUND-4845
@@ -444,8 +444,8 @@ Note sections are no longer editable
 Project finance user can comment on the note
     [Documentation]    INFUND-7756
     [Tags]
-    When the user should see the text in the page    an eligibility query's title
-    And the user should see the text in the page     this is some note text
+    When the user should see the element             jQuery = h2:contains("an eligibility query's title")
+    And the user should see the element              jQuery = p:contains("this is some note text")
     And the user should see the element              id = post-new-comment
 
 Large pdf uploads not allowed for note comments
@@ -453,20 +453,20 @@ Large pdf uploads not allowed for note comments
     [Tags]
     Given the user clicks the button/link            id = post-new-comment
     When the user uploads the file                   name = attachment    ${too_large_pdf}
-    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    Then the user should see the element             jQuery = h1:contains("${too_large_pdf_validation_error}")
     [Teardown]    the user goes back to the previous page
 
 Non pdf uploads not allowed for note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user uploads the file                   name = attachment    ${text_file}
-    Then the user should see the text in the page    ${wrong_filetype_validation_error}
+    Then the user should see a field error           ${wrong_filetype_validation_error}
 
 Project finance can upload a pdf file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     Then the user uploads the file                  name = attachment   ${valid_pdf}
-    And the user should see the text in the page    ${valid_pdf}
+    And the user should see the element             link = ${valid_pdf}
 
 Project finance can remove the file from note comments
     [Documentation]    INFUND-7756

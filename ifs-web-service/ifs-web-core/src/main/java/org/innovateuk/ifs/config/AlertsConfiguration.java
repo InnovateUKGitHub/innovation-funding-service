@@ -8,19 +8,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @ConditionalOnProperty(name = "ifs.web.alertMessagesEnabled", havingValue = "true", matchIfMissing = true)
-public class AlertsConfiguration extends WebMvcConfigurerAdapter {
+public class AlertsConfiguration implements WebMvcConfigurer {
 
     @Autowired
     Environment env;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        super.addInterceptors(registry);
-
         registry.addInterceptor(getAlertMessageHandlerInterceptor());
     }
 

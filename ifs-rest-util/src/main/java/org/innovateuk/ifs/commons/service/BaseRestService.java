@@ -88,6 +88,10 @@ public abstract class BaseRestService {
         return adaptor.postWithRestResult(getServiceUrl() + path, objectToSend, returnType);
     }
 
+    protected RestResult<Void> postWithRestResultAnonymous(String path) {
+        return anonymousRestTemplateAdaptor.postWithRestResult(getServiceUrl() + path, Void.class);
+    }
+
     protected <R> RestResult<R> postWithRestResultAnonymous(String path, Object objectToSend, Class<R> returnType) {
         return anonymousRestTemplateAdaptor.postWithRestResult(getServiceUrl() + path, objectToSend, returnType);
     }

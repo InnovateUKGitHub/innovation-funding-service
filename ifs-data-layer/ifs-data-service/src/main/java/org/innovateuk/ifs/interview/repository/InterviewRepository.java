@@ -106,7 +106,7 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
             " JOIN ProcessRole processRole ON processRole.applicationId = interviewAssignment.target.id " +
             " JOIN Organisation organisation ON organisation.id = processRole.organisationId " +
             " LEFT JOIN Interview interviews ON interviews.target.id = interviewAssignment.target.id" +
-            " AND interviews.class = Interview " +
+            " AND type(interviews) = Interview " +
             " WHERE " +
             "   processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT AND " +
             "   processRole.applicationId IN (:applicationIds) AND " +

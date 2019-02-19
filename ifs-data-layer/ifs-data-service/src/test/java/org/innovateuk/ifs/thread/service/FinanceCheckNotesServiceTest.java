@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -42,7 +43,7 @@ public class FinanceCheckNotesServiceTest extends BaseUnitTestMocksTest {
         Long noteId = 1L;
         Note note = new Note(noteId, null, null, null, null, null);
         NoteResource noteResource = new NoteResource(noteId, null, null, null, null);
-        when(noteRepositoryMock.findOne(noteId)).thenReturn(note);
+        when(noteRepositoryMock.findById(noteId)).thenReturn(Optional.of(note));
         when(noteMapper.mapToResource(note)).thenReturn(noteResource);
 
         NoteResource response = service.findOne(noteId).getSuccess();
@@ -97,7 +98,7 @@ public class FinanceCheckNotesServiceTest extends BaseUnitTestMocksTest {
         PostResource post = new PostResource(null, newUserResource().withId(33L).build(), null, null, null);
         Post mappedPost = new Post(null, newUser().withId(33L).build(), null, null, null);
         Note targetedNote = new Note(noteId, null, null, null, null, null);
-        when(noteRepositoryMock.findOne(noteId)).thenReturn(targetedNote);
+        when(noteRepositoryMock.findById(noteId)).thenReturn(Optional.of(targetedNote));
 
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
 

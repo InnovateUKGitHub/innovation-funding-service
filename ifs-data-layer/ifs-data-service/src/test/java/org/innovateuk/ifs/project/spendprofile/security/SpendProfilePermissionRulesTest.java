@@ -25,7 +25,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
@@ -45,10 +47,10 @@ import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<SpendProfilePermissionRules> {
 
     private ProjectResource projectResource1;
@@ -89,9 +91,9 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
                 .withApplication(application1)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectResource1.getId())).thenReturn(project);
+        when(projectRepositoryMock.findById(projectResource1.getId())).thenReturn(Optional.of(project));
         when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcess);
-        when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
+        when(applicationRepositoryMock.findById(application1.getId())).thenReturn(Optional.of(application1));
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList(innovationLead));
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
     }

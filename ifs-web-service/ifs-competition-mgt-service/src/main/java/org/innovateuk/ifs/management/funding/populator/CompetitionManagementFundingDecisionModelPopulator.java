@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.competition.form.FundingDecisionPaginationForm;
 import org.innovateuk.ifs.competition.form.FundingDecisionSelectionForm;
 import org.innovateuk.ifs.management.funding.viewmodel.ManageFundingApplicationsViewModel;
-import org.innovateuk.ifs.management.navigation.NavigationOrigin;
+import org.innovateuk.ifs.management.navigation.ManagementApplicationOrigin;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,7 +41,7 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
                                                        FundingDecisionSelectionForm selectionForm) {
 
         ApplicationSummaryPageResource results = getApplicationsByFilters(competitionId, paginationForm, fundingDecisionFilterForm);
-        String originQuery = buildOriginQueryString(NavigationOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
+        String originQuery = buildOriginQueryString(ManagementApplicationOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
 
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)

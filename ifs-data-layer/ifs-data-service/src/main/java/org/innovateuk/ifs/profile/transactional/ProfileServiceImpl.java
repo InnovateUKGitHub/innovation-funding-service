@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -47,16 +48,16 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
 
     @Override
     public ServiceResult<ProfileSkillsResource> getProfileSkills(long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+        return find(userRepository.findById(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> {
                     ProfileSkillsResource profileSkillsResource = new ProfileSkillsResource();
                     profileSkillsResource.setUser(user.getId());
-                    Profile profile = profileRepository.findOne(user.getProfileId());
-                    if (profile != null) {
-                        profileSkillsResource.setInnovationAreas(simpleMap(profile.getInnovationAreas(),
+                    Optional<Profile> profile = profileRepository.findById(user.getProfileId());
+                    if (profile.isPresent()) {
+                        profileSkillsResource.setInnovationAreas(simpleMap(profile.get().getInnovationAreas(),
                                 innovationArea -> innovationAreaMapper.mapToResource(innovationArea)));
-                        profileSkillsResource.setBusinessType(profile.getBusinessType());
-                        profileSkillsResource.setSkillsAreas(profile.getSkillsAreas());
+                        profileSkillsResource.setBusinessType(profile.get().getBusinessType());
+                        profileSkillsResource.setSkillsAreas(profile.get().getSkillsAreas());
                     }
                     return serviceSuccess(profileSkillsResource);
                 });
@@ -65,7 +66,7 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
     @Override
     @Transactional
     public ServiceResult<Void> updateProfileSkills(long userId, ProfileSkillsEditResource profileSkills) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+        return find(userRepository.findById(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> updateUserProfileSkills(user, profileSkills));
     }
 
@@ -79,10 +80,10 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
 
     @Override
     public ServiceResult<ProfileAgreementResource> getProfileAgreement(long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+        return find(userRepository.findById(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user ->
                         getCurrentAgreement().andOnSuccess(currentAgreement -> {
-                            Profile profile = profileRepository.findOne(user.getProfileId());
+                            Profile profile = profileRepository.findById(user.getProfileId()).orElse(null);
                             boolean hasAgreement = profile != null && profile.getAgreement() != null;
                             boolean hasCurrentAgreement = hasAgreement && currentAgreement.getId().equals(profile.getAgreement().getId());
                             ProfileAgreementResource profileAgreementResource = new ProfileAgreementResource();
@@ -107,7 +108,7 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
     @Override
     @Transactional
     public ServiceResult<Void> updateProfileAgreement(long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+        return find(userRepository.findById(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user ->
                         getCurrentAgreement().andOnSuccess(agreement ->
                                 validateAgreement(agreement, user).andOnSuccess(() -> {
@@ -120,12 +121,12 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
 
     @Override
     public ServiceResult<UserProfileResource> getUserProfile(Long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+        return find(userRepository.findById(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> {
                     UserProfileResource profileDetails = assignUserProfileDetails(user);
 
                     if (user.getProfileId() != null) {
-                        Profile profile = profileRepository.findOne(user.getProfileId());
+                        Profile profile = profileRepository.findById(user.getProfileId()).get();
                         profileDetails.setAddress(addressMapper.mapToResource(profile.getAddress()));
                         profileDetails.setCreatedBy(profile.getCreatedBy().getName());
                         profileDetails.setCreatedOn(profile.getCreatedOn());
@@ -139,7 +140,7 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
     @Override
     @Transactional
     public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource profileDetails) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+        return find(userRepository.findById(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> updateUserProfileDetails(user, profileDetails));
     }
 
@@ -179,7 +180,7 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
     }
 
     private ServiceResult<UserProfileStatusResource> getProfileStatusForUser(User user) {
-        Profile profile = profileRepository.findOne(user.getProfileId());
+        Profile profile = profileRepository.findById(user.getProfileId()).orElse(null);
         return serviceSuccess(
                 new UserProfileStatusResource(
                         user.getId(),
@@ -199,7 +200,7 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
     }
 
     private Profile getOrCreateUserProfile(User user) {
-        Profile profile = user.getProfileId() != null ? profileRepository.findOne(user.getProfileId()) : null;
+        Profile profile = user.getProfileId() != null ? profileRepository.findById(user.getProfileId()).orElse(null) : null;
         if (profile == null) {
             profile = profileRepository.save(new Profile());
             user.setProfileId(profile.getId());

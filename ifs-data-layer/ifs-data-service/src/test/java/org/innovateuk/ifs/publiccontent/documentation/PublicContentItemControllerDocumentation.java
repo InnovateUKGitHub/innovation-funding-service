@@ -3,6 +3,8 @@ package org.innovateuk.ifs.publiccontent.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.documentation.PublicContentItemResourceDocs;
+import org.innovateuk.ifs.documentation.PublicContentResourceDocs;
 import org.innovateuk.ifs.publiccontent.controller.PublicContentItemController;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemService;
 import org.junit.Test;
@@ -16,7 +18,7 @@ import static org.innovateuk.ifs.documentation.PublicContentItemResourceDocs.pub
 import static org.innovateuk.ifs.documentation.PublicContentItemResourceDocs.publicContentItemResourceFields;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -57,6 +59,7 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
                                 parameterWithName("pageSize").description("Page size of the current page requesting")
                         ),
                         responseFields(publicContentItemPageResourceFields)
+                        .andWithPrefix("content[].", PublicContentItemResourceDocs.publicContentItemResourceFields)
                 ));
     }
 
@@ -80,6 +83,7 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
                                 parameterWithName("id").description("The competition id of the required public content item")
                         ),
                         responseFields(publicContentItemResourceFields)
+                        .andWithPrefix("publicContentResource.", PublicContentResourceDocs.publicContentResourceFields)
                 ));
     }
 }

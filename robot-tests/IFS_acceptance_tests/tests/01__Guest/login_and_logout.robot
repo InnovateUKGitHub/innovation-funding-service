@@ -34,7 +34,7 @@ Valid login with Double role as Assessor
     [Documentation]    INFUND-1479
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
     When The guest user clicks the log-in button
-    And the user clicks the button/link                       css = #dashboard-link-ASSESSOR
+    And the user clicks the button/link                       id = dashboard-link-ASSESSOR
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
     And the user should see the element                       jQuery = h1:contains("Assessments")
     [Teardown]    Logout as user
@@ -43,7 +43,7 @@ Valid login with triple role Assessor
     [Documentation]  IFS-4568
     Given the guest user inserts user email and password      &{triple_user_credentials}
     And The guest user clicks the log-in button
-    When the user clicks the button/link                      css = #dashboard-link-APPLICANT
+    When the user clicks the button/link                      id = dashboard-link-APPLICANT
     Then the user should be redirected to the correct page    ${APPLICANT_DASHBOARD_URL}
     And the user should see the element                       jQuery = h1:contains("Applications")
     [Teardown]    Logout as user
@@ -52,7 +52,7 @@ Valid login with triple role Stakeholder
     [Documentation]  IFS-4568
     Given the guest user inserts user email and password      &{triple_user_credentials}
     And The guest user clicks the log-in button
-    When the user clicks the button/link                      css = #dashboard-link-STAKEHOLDER
+    When the user clicks the button/link                      id = dashboard-link-STAKEHOLDER
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     And the user should see the element                       jQuery = h1:contains("All competitions")
     [Teardown]    Logout as user
@@ -61,7 +61,7 @@ Valid login with triple role Applicant
     [Documentation]  IFS-4568
     Given the guest user inserts user email and password      &{triple_user_credentials}
     And The guest user clicks the log-in button
-    And the user clicks the button/link                       css = #dashboard-link-ASSESSOR
+    And the user clicks the button/link                       id = dashboard-link-ASSESSOR
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
     And the user should see the element                       jQuery = h1:contains("Assessments")
     [Teardown]    Logout as user
@@ -82,8 +82,8 @@ Reset password
     When the user clicks the forgot psw link
     And the user enters text to a text field       id = email  ${test_mailbox_one}+changepsw@gmail.com
     And the user clicks the button/link            id = forgotten-password-cta
-    Then the user should see the text in the page  If your email address is recognised and valid, you’ll receive a notification with instructions about how to reset your password. If you do not receive a notification, please check your junk folder or try again.
-    And the user reads his email from the default mailbox and clicks the link  ${test_mailbox_one}+changepsw@gmail.com  Reset your password  If you didn't request this
+    Then the user should see the element           jQuery = p:contains("If your email address is recognised and valid, you’ll receive a notification with instructions about how to reset your password. If you do not receive a notification, please check your junk folder or try again.")
+    And the user reads his email and clicks the link  ${test_mailbox_one}+changepsw@gmail.com  Reset your password  If you didn't request this
     And the user should see the element            jQuery = h1:contains("Password reset")
 
 Reset password user enters new psw
@@ -92,7 +92,7 @@ Reset password user enters new psw
     [Setup]    Clear the login fields
     When the user enters text to a text field              id = password  ${newPassw0rd}
     And the user clicks the button/link                    css = button[type="submit"]
-    Then the user should see the text in the page          Your password is updated, you can now sign in with your new password
+    Then the user should see the element                   jQuery = p:contains("Your password is updated, you can now sign in with your new password")
     And the user clicks the button/link                    link = Sign in
     And the user cannot login with their new details       ${test_mailbox_one}+changepsw@gmail.com    ${short_password}
     When Logging in and Error Checking                     ${test_mailbox_one}+changepsw@gmail.com    ${newPassw0rd}
@@ -115,13 +115,13 @@ the user goes to applicant dashboard
     the user should see the element                      jQuery = h1:contains("Applications")
     the user clicks the button/link                      css = #dashboard-navigation-link
     the user should see the element                      jQuery = h1:contains("Dashboard")
-    the user should see the element                       css = #dashboard-link-APPLICANT
-    the user should see the element                       css = #dashboard-link-ASSESSOR
+    the user should see the element                      id = dashboard-link-APPLICANT
+    the user should see the element                      id = dashboard-link-ASSESSOR
 
 the user should see multiple role dashboard view
     The user should see the element                      jQuery = h1:contains("Dashboard")
-    the user should see the element                       css = #dashboard-link-APPLICANT
-    the user should see the element                       css = #dashboard-link-ASSESSOR
-    the user should not see the element                   css = #dashboard-link-LIVE_PROJECTS_USER
-    the user should not see the element                   css = #dashboard-link-STAKEHOLDER
-    the user should not see the element                   css = #dashboard-link-INNOVATION_LEAD
+    the user should see the element                      id = dashboard-link-APPLICANT
+    the user should see the element                      id = dashboard-link-ASSESSOR
+    the user should not see the element                  id = dashboard-link-LIVE_PROJECTS_USER
+    the user should not see the element                  id = dashboard-link-STAKEHOLDER
+    the user should not see the element                  id = dashboard-link-INNOVATION_LEAD

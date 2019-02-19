@@ -19,8 +19,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -39,11 +40,11 @@ import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.Matchers.anyList;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class OrganisationFinanceHandlerTest {
     @InjectMocks
     private OrganisationFinanceDefaultHandler handler;
@@ -86,7 +87,8 @@ public class OrganisationFinanceHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        when(financeRowRepositoryMock.save(anyList())).then(returnsFirstArg());
+        MockitoAnnotations.initMocks(this);
+        when(financeRowRepositoryMock.saveAll(anyList())).then(returnsFirstArg());
 
         competition = newCompetition().withFundingType(FundingType.GRANT).build();
         application = newApplication().withCompetition(competition).build();

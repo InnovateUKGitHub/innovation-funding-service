@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-544: As an applicant I want the ‘Application summary’ page to show me complete and incomplete sections, so that I can easy judge how much of the application is left to do
-Suite Setup       log in and create new application if there is not one already  Robot test application
-Suite Teardown    the user closes the browser
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -28,3 +28,12 @@ Status is updated after editing a section
     And the applicant edits the "economic benefit" question
     And the user navigates to the summary page of the Robot test application
     Then the user should not see the element    jQuery = button:contains("Economic benefit") *:contains("Complete")
+
+*** Keywords ***
+Custom suite setup
+    log in and create new application if there is not one already  Robot test application
+    Connect to database  @{database}
+
+Custom suite teardown
+    Disconnect from database
+    The user closes the browser

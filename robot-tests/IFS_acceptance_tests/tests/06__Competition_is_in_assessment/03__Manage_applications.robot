@@ -137,9 +137,8 @@ Application number navigates to Overview
     [Documentation]    INFUND-7042
     [Tags]
     When the user clicks the button/link           link = ${Intelligent_water}
-    Then The user should see the text in the page  Intelligent water system
-    And the user should see the text in the page   University of Bath
-    And the user should see the text in the page   Cardiff University
+    Then The user should see the element           jQuery = .govuk-caption-l:contains("Intelligent water system")
+    And the user should see the element            jQuery = h1:contains("Application overview")
     [Teardown]    the user clicks the button/link  link = Back
 
 View application progress page
@@ -214,7 +213,7 @@ Remove and notify an assessor (Notified)
     And the user should not see the element       jQuery = button:contains("Remove assessor")
     And the user clicks the button/link           jQuery = td:contains("Paul Plum") ~ td:contains("Remove")
     And the user clicks the button/link           jQuery = button:contains("Remove assessor")
-    And the user should see the text in the page  Previously assigned (1)
+    And the user should see the element           jQuery = h2:contains("Previously assigned (1)")
     And the previously assigned list is correct
 
 Assessor should not see the removed application
@@ -231,9 +230,9 @@ Reassign and notify an assessor (Notified)
     And the user clicks the button/link            jQuery = a:contains("Manage assessments")
     And the user clicks the button/link            jQuery = a:contains("Manage applications")
     And the user clicks the button/link            jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
-    And the user should see the text in the page   Previously assigned (1)
+    And the user should see the element            jQuery = h2:contains("Previously assigned (1)")
     And the user clicks the button/link            jQuery = tr:contains("Paul Plum") button:contains("Reassign")
-    Then the user should see the text in the page  Assigned (1)
+    Then the user should see the element           jQuery = h2:contains("Assigned (1)")
     And the assigned list is correct before notification
     And the user clicks the button/link            link = Allocate applications
     And the user clicks the button/link            link = Manage assessments

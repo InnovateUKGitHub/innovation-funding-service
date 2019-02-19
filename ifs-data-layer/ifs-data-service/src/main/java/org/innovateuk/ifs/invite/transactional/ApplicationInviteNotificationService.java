@@ -118,7 +118,7 @@ class ApplicationInviteNotificationService {
             notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisationName());
         }
         ProcessRole leadRole = invite.getTarget().getLeadApplicantProcessRole();
-        Organisation organisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        Organisation organisation = organisationRepository.findById(leadRole.getOrganisationId()).get();
         notificationArguments.put("leadOrganisation", organisation.getName());
         notificationArguments.put("leadApplicant", invite.getTarget().getLeadApplicant().getName());
 

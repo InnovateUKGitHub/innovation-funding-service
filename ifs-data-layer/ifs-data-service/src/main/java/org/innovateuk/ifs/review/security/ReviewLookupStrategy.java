@@ -24,11 +24,11 @@ public class ReviewLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public ReviewResource getAssessmentReviewResource(final Long id) {
-        return reviewMapper.mapToResource(reviewRepository.findOne(id));
+        return reviewMapper.mapToResource(reviewRepository.findById(id).orElse(null));
     }
 
     @PermissionEntityLookupStrategy
     public Review getAssessmentReview(final Long id) {
-        return reviewRepository.findOne(id);
+        return reviewRepository.findById(id).orElse(null);
     }
 }

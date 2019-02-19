@@ -8,7 +8,7 @@ Documentation     IFS-2284 Assign new Ts and Cs for APC competition type templat
 ...               IFS-4221  As an applicant I am only able to invite contributors to a single project type competition application
 ...
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -21,30 +21,15 @@ ${apcApplicationTitle}  Advanced Propulsion Centre Application
 Comp Admin creates an APC competition
     [Documentation]  IFS-2284, IFS-2286
     [Tags]
-    Given The user logs-in in new browser          &{Comp_admin1_credentials}
-    And the user navigates to the page             ${CA_UpcomingComp}
-    When the user clicks the button/link           link = Create competition
-    Then the user fills in the CS Initial details  ${apcCompetitionTitle}  ${month}  ${nextyear}  Advanced Propulsion Centre  1
-    And the user selects the Terms and Conditions
-    And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${business_type_id}  1  true  single   # 1 means 30%
-    And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
-    And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
-    And the user fills in the CS Assessors
-    And the user fills in the CS Documents in other projects
-    When the user clicks the button/link           link = Public content
-    Then the user fills in the Public content and publishes  APC
-    When the user clicks the button/link           link = Return to setup overview
-    Then the user should see the element           jQuery = div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link           jQuery = a:contains("Complete")
-    Then the user clicks the button/link           css = button[type = "submit"]
+    Given The user logs-in in new browser           &{Comp_admin1_credentials}
+    Then the competition admin creates competition  ${business_type_id}  ${apcCompetitionTitle}  APC  ${compType_APC}  1  GRANT  project-setup-completion-stage  yes  1  true  single
 
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286  IFS-4221  IFS-4222
     [Tags]  MySQL
-    When the competition is open                  ${apcCompetitionTitle}
-    And Log in as a different user                &{lead_applicant_credentials}
-    Then logged in user applies to competition    ${apccompetitionTitle}  1
+    [Setup]   get competition id and set open date to yesterday  ${apcCompetitionTitle}
+    Given Log in as a different user                        &{lead_applicant_credentials}
+    Then logged in user applies to competition              ${apcCompetitionTitle}  1
     And the applicant cannot add a collaborator to a single comp
     And the applicant sees single comp finance summary
     And the applicant sees state aid information
@@ -63,6 +48,7 @@ Applicant submits his application
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+    Connect to database  @{database}
 
 the lead applicant fills all the questions and marks as complete(APC)
     the user marks the project details as complete
@@ -87,3 +73,7 @@ the applicant sees state aid information
     the user should see the element      link = eligible for state aid
     the user clicks the button/link      link = Your finances
     the user clicks the button/link      link = Application overview
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

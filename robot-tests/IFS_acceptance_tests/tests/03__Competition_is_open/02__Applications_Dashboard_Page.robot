@@ -36,13 +36,13 @@ List of all Applications
     ...    INFUND-3063
     [Tags]
     When the user clicks the button/link             link = All applications
-    Then the user should see the text in the page    All applications
-    And the user should see the text in the page     Application number
-    And the user should see the text in the page     Project title
-    And the user should see the text in the page     Innovation area
-    And the user should see the text in the page     Lead
-    And the user should see the text in the page     Status
-    And the user should see the text in the page     Percentage complete
+    Then the user should see the element             jQuery = h1:contains("All applications")
+    And the user should see the element              jQuery = th:contains("Application number")
+    And the user should see the element              jQuery = th:contains("Project title")
+    And the user should see the element              jQuery = th:contains("Innovation area")
+    And the user should see the element              jQuery = th:contains("Lead")
+    And the user should see the element              jQuery = th:contains("Status")
+    And the user should see the element              jQuery = th:contains("Percentage complete")
 
 All Applications page: calculation in the table header
     [Documentation]    INFUND-7369
@@ -66,10 +66,10 @@ Filter on application number
     [Tags]
     Given the user enters text to a text field          id = filterSearch    ${application_ids["Safeguarding pollinators and their values to human well-being"]}
     When the user clicks the button/link                jQuery = button:contains("Filter")
-    Then the user should see the text in the page       Safeguarding pollinators and their values to human well-being
-    And the user should not see the text in the page    Climate science the history of Greenland's ice
+    Then the user should see the element                jQuery = td:contains("Safeguarding pollinators and their values to human well-being")
+    And the user should not see the element             jQuery = td:contains("Climate science the history of Greenland's ice")
     And the user clicks the button/link                 jQuery = a:contains("Clear all filters")
-    And the user should see the text in the page        Climate science the history of Greenland's ice
+    And the user should see the element                 jQuery = td:contains("Climate science the history of Greenland's ice")
 
 All Applications page: Key Statistics
     [Documentation]    INFUND-2259 INFUND-7369
@@ -81,10 +81,10 @@ Application has team link and team details
     [Tags]
     Given the user clicks the button/link            link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should see the element             link = view contributors and collaborators
-    And the user should see the text in the page     ${OPEN_COMPETITION_APPLICATION_NAME}
+    And the user should see the element              jQuery = h1 span:contains("${OPEN_COMPETITION_APPLICATION_NAME}")
     When the user clicks the button/link             link = view contributors and collaborators
-    Then the user should see the text in the page    Application team
-    And the user should see the text in the page  View contributors for both the lead and collaborating organisations.
+    Then the user should see the element             jQuery = h1:contains("Application team")
+    And the user should see the element    jQuery = p:contains("View contributors for both the lead and collaborating organisations.")
     And the user should see the element    jQuery = h2:nth-of-type(1):contains("${EMPIRE_LTD_NAME} (Lead)")+h3:contains("Organisation type")+p:contains("Business")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("Steve Smith (Lead)")
     And the user should see the element    jQuery = table#applicationTeamOrganisationUser0 tbody tr:nth-of-type(1) td:contains("${lead_applicant}")
@@ -116,8 +116,9 @@ Comp admin can open the view mode of the application
     When the user clicks the button/link                                   link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should be redirected to the correct page                 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the element                                    link = Print application
-    And the user should see the text in the page                           Climate science the history of Greenland's ice
-    And the user should see the text in the page                           ${5mb_pdf}
+    And the user should see the element                                    jQuery = h1 span:contains("Climate science the history of Greenland's ice")
+    And the user should see the element                                    jQuery = h3:contains("Appendix") ~ a:contains("testing_5MB.pdf")
+
     And the user can view this file without any errors
     And the user closes the last opened tab
     #    And the user should see the text in the page    ${quarantine_pdf}
@@ -151,7 +152,7 @@ the user can see the option to upload a file on the page
     [Arguments]    ${url}
     The user navigates to the page              ${url}
     the user clicks the button/link             jQuery = a:contains("Technical approach")
-    the user should see the text in the page    Upload
+    the user should see the element             jQuery = label:contains("Upload")
 
 the user can view this file without any errors
     The user opens the link in new window    ${5mb_pdf}, 4 MB
@@ -178,7 +179,7 @@ the finance Project cost breakdown calculations should be correct
 the applicant edits the Subcontracting costs section
     the user clicks the button/link             link = Your project costs
     the user clicks the button/link             jQuery = button:contains("Subcontracting costs")
-    the user should see the text in the page    Subcontractor name
+    the user should see the element             jQuery = label:contains("Subcontractor name")
     The user enters text to a text field        css = #collapsible-4 .form-row:nth-child(2) input[name$=".cost"]    2000
     The user enters text to a text field        css = .form-row:nth-child(2) [name$=".name"]    Jackson Ltd
     The user enters text to a text field        css = .form-row:nth-child(2) [name$=".country"]    Romania
@@ -247,14 +248,14 @@ check both pages of applications
     ${total_application_count} =     evaluate    ${row_count_first_page}+${row_count_second_page}
     log    ${total_application_count}
     $[apps_string} =     Catenate    ${total_application_count}    applications
-    the user should see the text in the page    ${apps_string}
+    the user should see the element       jQuery = .govuk-body span:contains("${apps_string}")
 
 check applications on one page
     ${total_row_count} =     Get Element Count    //*[td]
     convert to integer    ${total_row_count}
     log    ${total_row_count}
     ${apps_string} =     Catenate    ${total_application_count}    applications
-    the user should see the text in the page    ${apps_string}
+    the user should see the element       jQuery = .govuk-body span:contains("${apps_string}")
 
 The calculation for the submited applications should be correct
     ${submitted_count} =     Get Element Count    //*[text()="submitted"]

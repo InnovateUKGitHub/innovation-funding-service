@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
  * Test for all the abstract view model population in public content.
  * {@link AbstractPublicContentViewModelPopulator} and {@link AbstractPublicContentGroupViewModelPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AbstractViewModelPopulatorTest {
 
     private static final PublicContentSectionType TEST_TYPE = PublicContentSectionType.ELIGIBILITY;

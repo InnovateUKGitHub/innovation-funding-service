@@ -2,6 +2,8 @@ package org.innovateuk.ifs.authentication.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.authentication.resource.UpdateEmailResource;
+import org.innovateuk.ifs.authentication.resource.UpdateUserResource;
 import org.innovateuk.ifs.authentication.resource.*;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -135,6 +137,18 @@ public class RestIdentityProviderService implements IdentityProviderService, App
         return handlingErrors(() -> {
             UpdateUserResource updateUserRequest = new UpdateUserResource(password);
             Either<ResponseEntity<IdentityProviderError[]>, Void> response = restPut(idpBaseURL + idpUserPath + "/" + uid + "/password", updateUserRequest, Void.class, IdentityProviderError[].class, OK);
+            return response.mapLeftOrRight(
+                    failure -> serviceFailure(errors(failure.getStatusCode(), failure.getBody())),
+                    success -> serviceSuccess(uid)
+            );
+        });
+    }
+
+    @Override
+    public ServiceResult<String> updateUserEmail(String uid, String email) {
+        return handlingErrors(() -> {
+            UpdateEmailResource updateEmailRequest = new UpdateEmailResource(email);
+            Either<ResponseEntity<IdentityProviderError[]>, Void> response = restPut(idpBaseURL + idpUserPath + "/" + uid + "/email", updateEmailRequest, Void.class, IdentityProviderError[].class, OK);
             return response.mapLeftOrRight(
                     failure -> serviceFailure(errors(failure.getStatusCode(), failure.getBody())),
                     success -> serviceSuccess(uid)

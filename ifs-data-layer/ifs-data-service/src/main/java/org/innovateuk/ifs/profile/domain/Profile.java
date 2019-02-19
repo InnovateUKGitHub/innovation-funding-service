@@ -27,7 +27,7 @@ public class Profile extends AuditableEntity {
     private static final MonthDay DOI_EXPIRE_DATE = MonthDay.of(APRIL, 6);
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(targetEntity = Address.class, cascade = CascadeType.ALL)

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
@@ -24,7 +25,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
  */
 @Component
 @PermissionRules
-public class FormInputResponseFileUploadRules {
+public class FormInputResponseFileUploadRules extends BasePermissionRules {
 
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(FormInputResponseFileUploadRules.class);
@@ -37,7 +38,7 @@ public class FormInputResponseFileUploadRules {
 
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        Application application = applicationRepository.findOne(fileEntry.getCompoundId().getApplicationId());
+        Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).orElse(null);
         return userIsApplicantOnThisApplication(fileEntry, user) && application.isOpen();
     }
 
@@ -49,6 +50,12 @@ public class FormInputResponseFileUploadRules {
     @PermissionRule(value = "READ", description = "An internal user can download a file for an answer")
     public boolean internalUserCanDownloadFilesInResponses(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         return isInternal(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Stakeholders can can download a file for an answer for applications theyre assigned to")
+    public boolean stakeholdersCanDownloadFilesInResponse(FormInputResponseFileEntryResource fileEntry, UserResource user) {
+        Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).get();
+        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
     private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {

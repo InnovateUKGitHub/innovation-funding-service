@@ -19,7 +19,7 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...
 ...               IFS-4982 Move Funding type selection from front door to Initial details
 Suite Setup       Custom suite setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  MySQL
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
@@ -32,8 +32,8 @@ User can view the public content
     [Documentation]    INFUND-6914
     [Tags]
     Given the internal user navigates to public content  ${public_content_competition_name}
-    Then the user should not see the text in the page   This information will be publicly viewable by prospective applicants.
-    And the user should not see the text in the page    Competition URL
+    Then the user should not see the element            jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
+    And the user should not see the element             jQuery = .message-alert:contains("Competition URL")
     And the user should see the element                 link = Competition information and search
     And the user should see the element                 link = Summary
     And the user should see the element                 link = Eligibility
@@ -105,7 +105,7 @@ Summary: server side validation and autosave
     [Tags]
     # Using Loan as a funding Type in order to check the ticket IFS-1969
     Given the user clicks the button/link         link = Summary
-    And the user should see the text in the page  Text entered into this section will appear in the summary tab
+    And the user should see the element           jQuery = p:contains("Text entered into this section will appear in the summary tab")
     When the user clicks the button/link          jQuery = .govuk-button:contains("Save and review")
     Then the user should see a summary error      Please enter a project size.
     And the user should see a summary error       Please enter a competition description.
@@ -151,7 +151,7 @@ Eligibility: server side validation and autosave
     [Documentation]    INFUND-6916, INFUND-7487
     [Tags]
     When the user clicks the button/link            link = Eligibility
-    And the user should see the text in the page    Text entered into this section will appear within the eligibility tab.
+    And the user should see the element             jQuery = p:contains("Text entered into this section will appear within the eligibility tab.")
     And the user clicks the button/link             jQuery = button:contains("Save and review")
     Then the user should see a summary error        Please enter content.
     And the user should see a summary error         Please enter a heading.
@@ -221,10 +221,10 @@ Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
     [Tags]
     When the user clicks the button/link           link = Dates
-    Then the user should see the text in the page  ${tomorrowMonthWord} ${nextyear}
-    And the user should see the text in the page   Competition opens
-    And the user should see the text in the page   Submission deadline, competition closed.
-    And the user should see the text in the page   Applicants notified
+    Then the user should see the element           jQuery = h2:contains("${tomorrowMonthWord} ${nextyear}")
+    And the user should see the element            jQuery = .govuk-body:contains("Competition opens")
+    And the user should see the element            jQuery = .govuk-body:contains("Submission deadline, competition closed.")
+    And the user should see the element            jQuery = .govuk-body:contains("Applicants notified")
     And the user can add and remove multiple event groups
     And the user should see the element            css = li:nth-child(5) .task-status-complete
 
@@ -233,7 +233,7 @@ How to apply: server side validation and autosave
     [Tags]
     When the user clicks the button/link          link = How to apply
     Then the user should see the element          jQuery = h1:contains("How to apply")
-    And the user should see the text in the page  Text entered into this section will appear within the how to apply tab.
+    And the user should see the element           jQuery = p:contains("Text entered into this section will appear within the how to apply tab.")
     When the user clicks the button/link          jQuery = button:contains("Save and review")
     Then the user should see a summary error      Please enter content.
     And the user should see a summary error       Please enter a heading.
@@ -304,7 +304,7 @@ Supporting information: Add, remove sections and submit
 Publish public content: Publish once all sections are complete
     [Documentation]    INFUND-6914
     [Tags]
-    Given the user should not see the text in the page  Last published
+    Given the user should not see the element           jQuery = small:contains("Last published")
     When the user clicks the button/link                jQuery = button:contains("Publish content")
     Then the user should see the element                jQuery = small:contains("Last published")
     And the user should not see the element             jQuery = button:contains("Publish content")
@@ -317,17 +317,17 @@ Publish public content: Publish once all sections are complete
 User can view the competition url for invite only competitions
     [Documentation]    IFS-262
     [Tags]
-    Given the user should not see the text in the page  This information will be publicly viewable by prospective applicants.
+    Given the user should not see the element           jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
     When the user clicks the button/link                jQuery = a:contains("${server}/competition/${competitionId}/overview")
-    Then the user should see the text in the page       Public content competition
-    And the user should see the text in the page        This is a Summary description
+    Then the user should see the element                jQuery = h1:contains("Public content competition")
+    And the user should see the element                 jQUery = .govuk-body:contains("This is a Summary description")
     Then the internal user navigates to public content  ${public_content_competition_name}
     When the user clicks the button/link                link = Competition information and search
     And the user clicks the button/link                 link = Edit
     Then the user selects the radio button              publishSetting  public
     And the user clicks the button/link                 jQuery = button:contains("Publish and review")
     And the user clicks the button/link                 link = Return to public content
-    Then the user should see the text in the page       This information will be publicly viewable by prospective applicants.
+    Then the user should see the element                jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
     And the user should not see the element             jQuery = p:contains("Competition URL:")
     Then the user clicks the button/link                link = Competition information and search
     And the user clicks the button/link                 link = Edit
@@ -436,6 +436,7 @@ Guest user can see the updated How-to-apply information
 *** Keywords ***
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
+    Connect to database  @{database}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
     ${today} =  get today
@@ -458,7 +459,7 @@ User creates a new competition
     [Arguments]    ${competition_name}
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery = .govuk-button:contains("Create competition")
-    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}  2
+    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
     And the user selects the Terms and Conditions
     And the user fills in the CS Milestones     project-setup-completion-stage   ${month}   ${nextyear}
 
@@ -565,3 +566,7 @@ the user visits
 the user should see all sections completed
     :FOR  ${i}  IN RANGE  1  8
     \    the user should see the element  css = li:nth-child(${i}) .task-status-complete
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

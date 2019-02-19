@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +24,18 @@ public class ProjectInviteController {
     private ProjectInviteService projectInviteService;
 
     @PostMapping(PROJECT_INVITE_SAVE)
-    public RestResult<Void> saveProjectInvites(@RequestBody @Valid ProjectInviteResource projectInviteResource) {
+    public RestResult<Void> saveProjectInvites(@RequestBody @Valid ProjectUserInviteResource projectUserInviteResource) {
 
-        return projectInviteService.saveProjectInvite(projectInviteResource).toPostResponse();
+        return projectInviteService.saveProjectInvite(projectUserInviteResource).toPostResponse();
     }
 
     @GetMapping(GET_INVITE_BY_HASH + "{hash}")
-    public RestResult<ProjectInviteResource> getProjectInviteByHash(@PathVariable("hash") String hash) {
+    public RestResult<ProjectUserInviteResource> getProjectInviteByHash(@PathVariable("hash") String hash) {
         return projectInviteService.getInviteByHash(hash).toGetResponse();
     }
 
     @GetMapping(GET_PROJECT_INVITE_LIST + "{projectId}")
-    public RestResult<List<ProjectInviteResource>> getInvitesByProject(@PathVariable("projectId") Long projectId) {
+    public RestResult<List<ProjectUserInviteResource>> getInvitesByProject(@PathVariable("projectId") Long projectId) {
         return projectInviteService.getInvitesByProject(projectId).toGetResponse();
     }
 

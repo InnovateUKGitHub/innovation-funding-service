@@ -3,10 +3,7 @@ package org.innovateuk.ifs.authentication.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.authentication.resource.CreateUserResource;
-import org.innovateuk.ifs.authentication.resource.CreateUserResponse;
-import org.innovateuk.ifs.authentication.resource.IdentityProviderError;
-import org.innovateuk.ifs.authentication.resource.UpdateUserResource;
+import org.innovateuk.ifs.authentication.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -16,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -33,15 +29,14 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorE
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.*;
 
 /**
  * Tests around the RestIdentityProviderService talking to the Shib REST API via the restTemplate
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
 
     @Mock
@@ -130,12 +125,25 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
     }
 
     @Test
+    public void updateUserRecordWithEmail() {
+
+        UpdateEmailResource updateRequest = new UpdateEmailResource("new@email.com");
+        ResponseEntity<String> successResponseEntity = new ResponseEntity<>(OK);
+
+        when(mockRestTemplate.exchange("http://idprest/user/existing-uid/email", PUT, adaptor.jsonEntity(updateRequest), String.class)).thenReturn(successResponseEntity);
+
+        ServiceResult<String> result = service.updateUserEmail("existing-uid", "new@email.com");
+        assertTrue(result.isSuccess());
+        assertEquals("existing-uid", result.getSuccess());
+    }
+
+    @Test
     public void updateUserRecordWithUidButFailureResponseReturned() throws JsonProcessingException {
 
         UpdateUserResource updateRequest = new UpdateUserResource("newpassword");
         ResponseEntity<String> failureResponseEntity = new ResponseEntity<>(asJson(new IdentityProviderError("Error!", emptyList())), BAD_REQUEST);
 
-        when(mockRestTemplate.exchange("http://idprest/updateuser/existing-uid", PUT, adaptor.jsonEntity(updateRequest), String.class)).thenReturn(failureResponseEntity);
+        lenient().when(mockRestTemplate.exchange("http://idprest/updateuser/existing-uid", PUT, adaptor.jsonEntity(updateRequest), String.class)).thenReturn(failureResponseEntity);
 
         ServiceResult<String> result = service.updateUserPassword("existing-uid", "newpassword");
         assertTrue(result.isFailure());

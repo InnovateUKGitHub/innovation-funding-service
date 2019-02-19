@@ -64,13 +64,13 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         CostCategoryType costCategoryType = new CostCategoryType("CR&D Industrial Cost Categories", costCategoryGroup);
         costCategoryTypeRepository.save(costCategoryType);
 
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
 
         Project project = new Project(null, application, null, null, null, "A name", null, ApprovalType.UNSET);
 
         projectRepository.save(project);
 
-        Organisation organisation = organisationRepository.findOne(1L);
+        Organisation organisation = organisationRepository.findById(1L).get();
 
         List<Cost> eligibleCosts = asList(new Cost("1.20"), new Cost("3.40"));
         List<Cost> spendProfileFigures = asList(new Cost("5.60"), new Cost("7.80"));
@@ -85,7 +85,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         flushAndClearSession();
 
         // and retrieve from the db again - ensure its value is retained
-        SpendProfile retrieved = repository.findOne(saved.getId());
+        SpendProfile retrieved = repository.findById(saved.getId()).get();
         assertNotSame(saved, retrieved);
         assertEquals(costCategoryType.getId(), retrieved.getCostCategoryType().getId());
         assertEquals(project.getId(), retrieved.getProject().getId());
@@ -114,13 +114,13 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         CostCategoryType costCategoryType = new CostCategoryType("CR&D Industrial Cost Categories", costCategoryGroup);
         costCategoryTypeRepository.save(costCategoryType);
 
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
 
         Project project = new Project(null, application, null, null, null, "A name", null, ApprovalType.UNSET);
 
         projectRepository.save(project);
 
-        Organisation organisation = organisationRepository.findOne(1L);
+        Organisation organisation = organisationRepository.findById(1L).get();
 
         List<Cost> eligibleCosts = asList(new Cost("1.20").withCategory(labourCostCategory), new Cost("3.40").withCategory(materialsCostCategory));
 
@@ -138,7 +138,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         flushAndClearSession();
 
         // and retrieve from the db again - ensure its value is retained
-        SpendProfile retrieved = repository.findOne(saved.getId());
+        SpendProfile retrieved = repository.findById(saved.getId()).get();
         CostGroup retrievedFigures = retrieved.getSpendProfileFigures();
         CostGroup retrievedEligibles = retrieved.getEligibleCosts();
 
@@ -189,13 +189,13 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         CostCategoryType costCategoryType = new CostCategoryType("CR&D Industrial Cost Categories", costCategoryGroup);
         costCategoryTypeRepository.save(costCategoryType);
 
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
 
         Project project = new Project(null, application, null, null, null, "A name", null, ApprovalType.UNSET);
 
         projectRepository.save(project);
 
-        Organisation organisation = organisationRepository.findOne(1L);
+        Organisation organisation = organisationRepository.findById(1L).get();
 
         List<Cost> eligibleCosts = singletonList(new Cost("1.20").withCategory(labourCostCategory));
         List<Cost> spendProfileFigures = singletonList(new Cost("5.60").withCategory(labourCostCategory).withTimePeriod(0, DAY, 1, MONTH));
@@ -219,7 +219,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         flushAndClearSession();
 
         // and retrieve from the db again - ensure its value is retained
-        SpendProfile updated = repository.findOne(saved.getId());
+        SpendProfile updated = repository.findById(saved.getId()).get();
         CostGroup retrievedFigures = updated.getSpendProfileFigures();
         CostGroup retrievedEligibles = updated.getEligibleCosts();
 
@@ -260,13 +260,13 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         CostCategoryType costCategoryType = new CostCategoryType("CR&D Industrial Cost Categories", costCategoryGroup);
         costCategoryTypeRepository.save(costCategoryType);
 
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
 
         Project project = new Project(null, application, null, null, null, "A name", null, ApprovalType.UNSET);
 
         projectRepository.save(project);
 
-        Organisation organisation = organisationRepository.findOne(1L);
+        Organisation organisation = organisationRepository.findById(1L).get();
 
         List<Cost> eligibleCosts = asList(new Cost("1.20"), new Cost("3.40"));
         List<Cost> spendProfileFigures = asList(new Cost("5.60"), new Cost("7.80"));

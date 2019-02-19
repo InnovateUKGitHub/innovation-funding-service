@@ -51,7 +51,7 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
                 .withPriority(2, 1, 3)
                 .build(3);
 
-        repository.save(innovationAreas);
+        repository.saveAll(innovationAreas);
         flushAndClearSession();
 
         List<InnovationArea> expectedInnovationAreas = newInnovationArea()
@@ -73,7 +73,7 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
                 .withDescription("aaa description", "bbb description", "ccc description")
                 .build(3);
 
-        repository.save(innovationAreas);
+        repository.saveAll(innovationAreas);
         flushAndClearSession();
 
         List<InnovationArea> actual = repository.findAll();

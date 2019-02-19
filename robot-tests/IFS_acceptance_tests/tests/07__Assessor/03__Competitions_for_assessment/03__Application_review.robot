@@ -16,8 +16,8 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-8065 File download links are broken for assessors
 ...
 ...               IFS-2854 Allow assessors to see full application finances
-Suite Setup       The user logs-in in new browser  &{assessor_credentials}
-Suite Teardown    the user closes the browser
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
@@ -135,9 +135,9 @@ Scope: Autosave
     ...
     ...    INFUND-3780
     [Tags]
-    When the user clicks the button/link          link = Scope
-    And the user should see the text in the page  Feasibility studies
-    And the user should see the text in the page  Testing feedback field when "Yes" is selected.
+    When the user clicks the button/link               link = Scope
+    And the user should see the element                jQuery = .govuk-select:contains("Feasibility studies")
+    And the user should see the text in the element    css = .editor    Testing feedback field when "Yes" is selected.
 
 Scope: Word count
     [Documentation]    INFUND-1483
@@ -145,7 +145,7 @@ Scope: Word count
     ...    INFUND-3400
     [Tags]
     When the user enters multiple strings into a text field  css = .editor  a${SPACE}  100
-    Then the user should see the text in the page            Words remaining: 0
+    Then the user should see the element              jQuery = span:contains("Words remaining: 0")
 
 Scope: Guidance
     [Documentation]    INFUND-4142
@@ -154,8 +154,8 @@ Scope: Guidance
     [Tags]
     When the user clicks the button/link          css = details summary
     Then the user should see the element          css = div[id^="details-content-"]
-    And The user should see the text in the page  One or more of the above requirements have not been satisfied.
-    And The user should see the text in the page  Does it meet the scope of the competition as defined in the competition brief?
+    And The user should see the element           jQuery = td:contains("One or more of the above requirements have not been satisfied.")
+    And The user should see the element           jQuery = td:contains("Does it meet the scope of the competition as defined in the competition brief?")
     And the user clicks the button/link           css = details summary
     And The user should not see the element       css = div[id^="details-content-"]
 
@@ -187,17 +187,17 @@ Economic Benefit: Autosave
     And the user enters text to a text field                  css = .editor    This is to test the feedback entry.
     And the user clicks the button/link                       jQuery = a:contains("Back to your assessment overview")
     And the user clicks the button/link                       link = 4. Economic benefit
-    Then the user should see the text in the page             This is to test the feedback entry.
-    And the user should see the text in the page              9
+    Then the user should see the text in the element          css = .editor    This is to test the feedback entry.
+    And the user should see the element                       jQuery = .govuk-select:contains("9")
 
 Economic Benefit: Guidance
     [Documentation]    INFUND-6281
     When The user clicks the button/link           css = .govuk-details__summary-text
-    Then the user should see the text in the page  The project is damaging to other stakeholders with no realistic mitigation or balance described.
-    And The user should see the text in the page   The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.
-    And The user should see the text in the page   Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.
-    And The user should see the text in the page   Some positive outside benefits are defined and are realistic. Methods of addressing these opportunities are described.
-    And The user should see the text in the page   Inside and outside benefits are well defined, realistic and of significantly positive economic, environmental or social impact. Routes to exploit these benefits are also provided.
+    Then the user should see the element           jQuery = td:contains("The project is damaging to other stakeholders with no realistic mitigation or balance described.")
+    And The user should see the element            jQuery = td:contains("The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.")
+    And The user should see the element            jQuery = td:contains("Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.")
+    And The user should see the element            jQuery = td:contains("Some positive outside benefits are defined and are realistic. Methods of addressing these opportunities are described.")
+    And The user should see the element            jQuery = td:contains("Inside and outside benefits are well defined, realistic and of significantly positive economic, environmental or social impact. Routes to exploit these benefits are also provided.")
     [Teardown]  The user clicks the button/link    link = Back to your assessment overview
 
 Finance overview
@@ -221,29 +221,16 @@ Status of the application should be In Progress
     [Tags]
     [Setup]    The user navigates to the page      ${ASSESSOR_DASHBOARD_URL}
     When The user clicks the button/link           link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    Then The user should see the text in the page  In progress
+    Then The user should see the element           jQuery = .progress-list li:nth-child(6) strong:contains("In progress")
 
 *** Keywords ***
-the user clicks next and goes to the page
-    [Arguments]    ${page_content}
-    the user clicks the button/link           jQuery = span:contains("Next")
-    the user should see the text in the page  ${page_content}
-
 I enter feedback of words
     [Arguments]    ${no_of_words}
     the user enters multiple strings into a text field  css = .editor  a${SPACE}  ${no_of_words}
 
 I should see word count underneath feedback form
     [Arguments]    ${wordCount}
-    the user should see the text in the page  ${wordCount}
-
-I should see validation message above the feedback form text field
-    [Arguments]    ${error_message}
-    the user should see the text in the page  ${error_message}
-
-I should not see validation message above the feedback form text field
-    [Arguments]    ${error_message}
-    the user should not see the text in the page  ${error_message}
+    the user should see the element    jQuery = span:contains("${wordCount}")
 
 I open one of the application questions
     [Arguments]    ${application_question}
@@ -252,7 +239,7 @@ I open one of the application questions
 the user clicks previous and goes to the page
     [Arguments]    ${page_content}
     the user clicks the button/link           jQuery = span:contains("Previous")
-    the user should see the text in the page  ${page_content}
+    the user should see the element           jQuery = h1:contains("${page_content}")
 
 the finance summary total should be correct
     Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
@@ -281,7 +268,6 @@ The status of the appllications should be correct
 
 The user sets the finance option to detailed
     [Arguments]  ${competition}
-    Connect to Database  @{database}
     execute sql string   UPDATE `${database_name}`.`competition` SET `assessor_finance_view` = 'DETAILED' WHERE `name` = '${competition}';
 
 The project costs are correct in the overview
@@ -298,3 +284,11 @@ The academic finances are correct
     The user should see the element       jQuery = .table-overview td:contains("£990")
     The user should see the element       jQuery = .table-overview td:contains("100%")
     The user should see the element       jQuery = .table-overview td:contains("990")
+
+Custom suite setup
+    The user logs-in in new browser  &{assessor_credentials}
+    Connect To Database   @{database}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

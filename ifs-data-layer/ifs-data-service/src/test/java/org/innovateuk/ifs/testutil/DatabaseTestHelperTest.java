@@ -41,7 +41,7 @@ public class DatabaseTestHelperTest extends BaseRepositoryIntegrationTest<Organi
         } catch (AssertionError e) {
 
             // and clean up after ourselves
-            repository.delete(repository.findByNameOrderById(organisationName));
+            repository.deleteAll(repository.findByNameOrderById(organisationName));
         }
     }
 

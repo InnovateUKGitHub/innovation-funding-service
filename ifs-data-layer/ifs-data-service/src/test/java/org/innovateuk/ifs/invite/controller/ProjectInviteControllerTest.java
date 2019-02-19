@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID_PROJECT_ID;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newProjectInviteResource;
+import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,12 +41,12 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
         return new ProjectInviteController();
     }
 
-    private ProjectInviteResource projectInviteResource;
+    private ProjectUserInviteResource projectUserInviteResource;
 
     @Before
     public void setUp() {
 
-        projectInviteResource = newProjectInviteResource().
+        projectUserInviteResource = newProjectUserInviteResource().
                 withId(1L).
                 withEmail("testProject-invite@mail.com").
                 withName("test-project-invitece").
@@ -60,31 +60,31 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
     public void saveProjectInviteWhenErrorWhilstSaving() throws Exception {
 
 
-        when(projectInviteServiceMock.saveProjectInvite(projectInviteResource)).
+        when(projectInviteServiceMock.saveProjectInvite(projectUserInviteResource)).
                 thenReturn(serviceFailure(PROJECT_INVITE_INVALID));
 
 
         mockMvc.perform(post("/projectinvite/saveInvite")
                 .contentType(APPLICATION_JSON)
-                .content(toJson(projectInviteResource)))
+                .content(toJson(projectUserInviteResource)))
                 .andExpect(status().isBadRequest());
 
-        verify(projectInviteServiceMock).saveProjectInvite(projectInviteResource);
+        verify(projectInviteServiceMock).saveProjectInvite(projectUserInviteResource);
         
     }
 
     @Test
     public void saveProjectInviteSuccess() throws Exception {
 
-        when(projectInviteServiceMock.saveProjectInvite(projectInviteResource)).thenReturn(serviceSuccess());
+        when(projectInviteServiceMock.saveProjectInvite(projectUserInviteResource)).thenReturn(serviceSuccess());
 
 
         mockMvc.perform(post("/projectinvite/saveInvite")
                 .contentType(APPLICATION_JSON)
-                .content(toJson(projectInviteResource)))
+                .content(toJson(projectUserInviteResource)))
                 .andExpect(status().isOk());
 
-        verify(projectInviteServiceMock).saveProjectInvite(projectInviteResource);
+        verify(projectInviteServiceMock).saveProjectInvite(projectUserInviteResource);
 
     }
 
@@ -107,7 +107,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
 
         String hash = "has545967h";
 
-        ProjectInviteResource projectInviteResource = newProjectInviteResource().
+        ProjectUserInviteResource projectUserInviteResource = newProjectUserInviteResource().
                 withId(1L).
                 withEmail("testProject-invite@mail.com").
                 withName("test-project-invitece").
@@ -117,11 +117,11 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
                 build();
 
 
-        when(projectInviteServiceMock.getInviteByHash(hash)).thenReturn(serviceSuccess(projectInviteResource));
+        when(projectInviteServiceMock.getInviteByHash(hash)).thenReturn(serviceSuccess(projectUserInviteResource));
 
         mockMvc.perform(get("/projectinvite/getProjectInviteByHash/{hash}", hash)).
                 andExpect(status().isOk()).
-                andExpect(content().json(toJson(projectInviteResource)));
+                andExpect(content().json(toJson(projectUserInviteResource)));
 
         verify(projectInviteServiceMock).getInviteByHash(hash);
 
@@ -146,7 +146,7 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
 
         Long projectId = 123L;
 
-        List<ProjectInviteResource> projectInviteResources = newProjectInviteResource().
+        List<ProjectUserInviteResource> projectUserInviteResources = newProjectUserInviteResource().
                 withId(1L).
                 withEmail("testProject-invite@mail.com").
                 withName("test-project-invitece").
@@ -156,11 +156,11 @@ public class ProjectInviteControllerTest  extends BaseControllerMockMVCTest<Proj
                 build(5);
 
 
-        when(projectInviteServiceMock.getInvitesByProject(projectId)).thenReturn(serviceSuccess(projectInviteResources));
+        when(projectInviteServiceMock.getInvitesByProject(projectId)).thenReturn(serviceSuccess(projectUserInviteResources));
 
         mockMvc.perform(get("/projectinvite/getInvitesByProjectId/{projectId}", projectId)).
                 andExpect(status().isOk()).
-                andExpect(content().json(toJson(projectInviteResources)));
+                andExpect(content().json(toJson(projectUserInviteResources)));
 
         verify(projectInviteServiceMock).getInvitesByProject(projectId);
 

@@ -9,7 +9,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...
 ...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -73,7 +73,7 @@ Academics upload
     When the user navigates to Your-finances page      Academic robot test application
     And the user clicks the button/link                link = Your project costs
     When the academic partner uploads a file           ${5mb_pdf}
-    Then the user should not see the text in the page  No file currently uploaded
+    Then the user should not see the element           jQUery = p:contains("No file currently uploaded.")
     And the user should see the element                link = ${5mb_pdf}
 
 Academic partner can view the file on the finances
@@ -96,7 +96,7 @@ Lead applicant can't view the file on the finances page
     [Setup]    log in as a different user              &{lead_applicant_credentials}
     When the user navigates to Your-finances page      Academic robot test application
     And the user clicks the button/link                link = Your project costs
-    Then the user should not see the text in the page  ${5mb_pdf}
+    Then the user should not see the element           link = ${5mb_pdf}
 
 Academic finances JeS link showing
     [Documentation]    INFUND-2402, INFUND-8347
@@ -138,7 +138,7 @@ File delete should not be allowed when marked as complete
     [Documentation]    INFUND-2437
     [Tags]
     When the user navigates to Your-finances page        Academic robot test application
-    Then the user should not see the text in the page    Remove
+    Then the user should not see the element             jQuery = button:contains("Remove")
 
 Academic finance overview
     [Documentation]  INFUND-917 INFUND-2399
@@ -152,6 +152,7 @@ Academic finance overview
 Custom Suite Setup
     Set predefined date variables
     the guest user opens the browser
+    Connect to database  @{database}
     Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the subtotals should be correctly updated
@@ -217,3 +218,7 @@ The user marks the academic application finances as incomplete
     Set Focus To Element      jQuery = button:contains("Edit")
     the user clicks the button/link    jQuery = button:contains("Edit")
     wait for autosave
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

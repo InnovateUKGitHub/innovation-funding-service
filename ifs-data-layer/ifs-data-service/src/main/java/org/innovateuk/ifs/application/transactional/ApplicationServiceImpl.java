@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
@@ -95,7 +96,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         Application savedApplication = applicationRepository.save(application);
         generateProcessRolesForApplication(user, Role.LEADAPPLICANT, savedApplication, organisationId);
-        savedApplication = applicationRepository.findOne(savedApplication.getId());
+        savedApplication = applicationRepository.findById(savedApplication.getId()).orElse(null);
         return serviceSuccess(applicationMapper.mapToResource(savedApplication));
     }
 
@@ -202,7 +203,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Boolean> showApplicationTeam(Long applicationId,
                                                       Long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+        return find(userRepository.findById(userId), notFoundError(User.class, userId))
                 .andOnSuccessReturn(user -> user.isInternalUser() || user.hasRole(STAKEHOLDER));
     }
 
@@ -216,7 +217,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id) {
         return getProcessRole(id).andOnSuccessReturn(processRole -> {
             Long appId = processRole.getApplicationId();
-            Application application = applicationRepository.findOne(appId);
+            Application application = applicationRepository.findById(appId).orElse(null);
             return applicationMapper.mapToResource(application);
         });
     }
@@ -231,7 +232,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return getUser(userId).andOnSuccessReturn(user -> {
             List<ProcessRole> roles = processRoleRepository.findByUser(user);
             Set<Long> applicationIds = simpleMapSet(roles, ProcessRole::getApplicationId);
-            List<Application> applications = simpleMap(applicationIds, appId -> appId != null ? applicationRepository.findOne(appId) : null);
+            List<Application> applications = simpleMap(applicationIds, appId -> appId != null ? applicationRepository.findById(appId).orElse(null) : null);
             return simpleMap(applications, applicationMapper::mapToResource);
         });
     }
@@ -345,7 +346,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private PreviousApplicationResource convertToPreviousApplicationResource(Application application) {
 
         ApplicationResource applicationResource = applicationMapper.mapToResource(application);
-        Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(application.getLeadOrganisationId()).get();
 
         return new PreviousApplicationResource(
                 applicationResource.getId(),

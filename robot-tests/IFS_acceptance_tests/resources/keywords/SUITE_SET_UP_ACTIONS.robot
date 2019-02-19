@@ -16,22 +16,6 @@ Login new application invite academic
     Run Keyword If  '${status}' == 'FAIL'  Run keywords  Create new application with the same user  Academic robot test application  1
     ...                                            AND   Invite and accept the invitation  ${recipient}  ${subject}  ${pattern}
 
-new account complete all but one
-    the guest user opens the browser
-    we create a new user                              ${openCompetitionBusinessRTO}  sam  business  ${submit_bus_email}  radio-1
-    create new account for submitting                 ${application_bus_name}
-    Logout as user
-    we create a new user                              ${openCompetitionBusinessRTO}  liam  rto  ${submit_rto_email}  radio-3
-    create new account for submitting                 ${application_rto_name}
-
-create new account for submitting
-    [Arguments]  ${application_name}
-    the user clicks the button/link                   link=Untitled application (start here)
-    the user clicks the button/link                   link=Application details
-    the user enters text to a text field              css=[id="application.name"]    ${application_name}
-    the user clicks the button/link                   jQuery=button:contains("Save and return")
-    the user marks every section but one as complete  ${application_name}  Experimental development
-
 the user marks every section but one as complete
     [Arguments]  ${application_name}  ${rescat}
     the user navigates to the page    ${server}
@@ -180,7 +164,7 @@ invite a registered user
     the user enters text to a text field                       css=[id="applicants[0].email"]  ${EMAIL_INVITED}
     the user clicks the button/link                            jQuery=button:contains("Add organisation and invite applicants")
     the user clicks the button/link                            jQuery=button:contains("Save and return to application overview")
-    the user should see the text in the page                   Application overview
+    the user should see the element                            jQUery = h1:contains("Application overview")
     the user closes the browser
     the guest user opens the browser
 
@@ -240,4 +224,4 @@ the user clicks the forgot psw link
 
 Close browser and delete emails
     Close any open browsers
-    Delete the emails from both test mailboxes
+    Delete the emails from the local test mailbox

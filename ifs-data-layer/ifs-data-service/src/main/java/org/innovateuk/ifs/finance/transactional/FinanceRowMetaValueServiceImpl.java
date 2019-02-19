@@ -23,6 +23,6 @@ public class FinanceRowMetaValueServiceImpl extends BaseTransactionalService imp
 
     @Override
     public ServiceResult<FinanceRowMetaValueResource> findOne(Long id) {
-        return find(repository.findOne(id), notFoundError(FinanceRowMetaValue.class)).andOnSuccessReturn(mapper::mapToResource);
+        return find(repository.findById(id), notFoundError(FinanceRowMetaValue.class)).andOnSuccessReturn(mapper::mapToResource);
     }
 }

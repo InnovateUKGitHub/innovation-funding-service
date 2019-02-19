@@ -5,7 +5,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 /**
  * Testing {@link ApplicationOverviewSectionViewModel}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationCompletedViewModelTest {
 
     private ApplicationCompletedViewModel viewModel;

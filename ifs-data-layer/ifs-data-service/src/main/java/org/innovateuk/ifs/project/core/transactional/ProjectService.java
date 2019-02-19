@@ -7,7 +7,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,4 +52,12 @@ public interface ProjectService {
     @PreAuthorize("hasAuthority('ifs_administrator')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to withdraw projects")
     ServiceResult<Void> withdrawProject(long projectId);
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to handle projects offline")
+    ServiceResult<Void> handleProjectOffline(long projectId);
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to complete projects offline")
+    ServiceResult<Void> completeProjectOffline(long projectId);
 }

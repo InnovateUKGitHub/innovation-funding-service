@@ -42,7 +42,7 @@ public abstract class InviteService<T extends Invite> {
     }
 
     protected ServiceResult<T> getById(long id) {
-        return find(getInviteRepository().findOne(id), notFoundError(getInviteClass(), id));
+        return find(getInviteRepository().findById(id), notFoundError(getInviteClass(), id));
     }
 
     protected ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
@@ -60,6 +60,6 @@ public abstract class InviteService<T extends Invite> {
     }
 
     protected ServiceResult<User> getUser(Long id) {
-        return find(userRepository.findOne(id), notFoundError(User.class, id));
+        return find(userRepository.findById(id), notFoundError(User.class, id));
     }
 }

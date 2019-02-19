@@ -10,8 +10,8 @@ import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import javax.persistence.*;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 
 /**

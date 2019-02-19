@@ -70,7 +70,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
         super.setup();
 
         List<CompetitionDocumentResource> configuredProjectDocuments = CompetitionDocumentResourceBuilder
-                .neCompetitionDocumentResource()
+                .newCompetitionDocumentResource()
                 .withId(documentConfigId1, documentConfigId2, collaborationAgreementId)
                 .withTitle(documentConfigTitle1, documentConfigTitle2, collaborationAgreement)
                 .withGuidance(documentConfigGuidance1, documentConfigGuidance2)

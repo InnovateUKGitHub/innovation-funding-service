@@ -21,7 +21,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               IFS-3609 Extend internal view of application finances to other internal roles
 Suite Setup       Custom suite setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
@@ -160,7 +160,7 @@ Support User can see the read only finance summary
     [Tags]  Support  HappyPath
     [Setup]  log in as a different user       &{support_user_credentials}
     Given the user navigates to the finances of the application
-    When the user should see the element      jQuery = .finance-summary tbody tr:nth-of-type(1) th:contains("View finances")
+    When the user should see the element      jQuery = .project-cost-breakdown tbody tr:nth-of-type(1) th:contains("View finances")
     And The user clicks the button/link       link = View finances
     Then The finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
@@ -197,14 +197,14 @@ Innovation lead can see read only summary link for each partner
     When the user navigates to the page     ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link     link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section        Finances summary
-    Then the user should see the element    jQuery = .finance-summary tr:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
-    And the user should see the element     jQuery = .finance-summary tr:contains("Ludlow"):contains("View finances")
-    And the user should see the element     jQuery = .finance-summary tr:contains("EGGS"):contains("View finances")
+    Then the user should see the element    jQuery = .project-cost-breakdown tr:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
+    And the user should see the element     jQuery = .project-cost-breakdown tr:contains("Ludlow"):contains("View finances")
+    And the user should see the element     jQuery = .project-cost-breakdown tr:contains("EGGS"):contains("View finances")
 
 Innovation lead can see read only summary for lead
     [Documentation]  IFS-802
     [Tags]  InnovationLead  HappyPath
-    [Setup]  The user clicks the button/link          css = .finance-summary tbody tr:nth-of-type(1) th a
+    [Setup]  The user clicks the button/link          css = .project-cost-breakdown tbody tr:nth-of-type(1) th a
     When the user should see the element              jQuery = p:contains("Please complete your project finances.")
     Then the finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
@@ -214,7 +214,7 @@ Innovation lead can see read only summary for collaborator
     When the user navigates to the page             ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link             link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section                Finances summary
-    When the user clicks the button/link            jQuery = .finance-summary tbody tr:contains("EGGS") th a
+    When the user clicks the button/link            jQuery = .project-cost-breakdown tbody tr:contains("EGGS") th a
     And the user should see the element             jQuery = p:contains("Please complete your project finances.")
     Then the finance summary table in Your Finances has correct values for collaborator  £990  100  990  0  0
 
@@ -224,7 +224,7 @@ Innovation lead can see read only view of collaborator Your project costs for La
     When the user navigates to the page             ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link             link = ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section                Finances summary
-    When the user clicks the button/link            jQuery = .finance-summary tbody tr:contains("Ludlow") th a
+    When the user clicks the button/link            jQuery = .project-cost-breakdown tbody tr:contains("Ludlow") th a
     Then the user should see the element            jQuery = p:contains("Please complete your project finances.")
     When the user clicks the button/link            jQuery = a:contains("Your project costs")
     And the user should see the element             jQuery = h2:contains("Provide the project costs for 'Ludlow'")
@@ -267,6 +267,7 @@ A user other than an CSS or IFS Admin cannot view the finances of an application
 Custom suite setup
     Set predefined date variables
     The user logs-in in new browser  &{lead_applicant_credentials}
+    Connect to database  @{database}
 
 the finance summary calculations should be correct
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("£328,571")
@@ -415,7 +416,7 @@ The user verifies labour, overhead costs and materials
 
 the user navigates to the finances of the application
     the user navigates to the page   ${allApplicationsForRTOComp}
-    the user clicks the button/link  link = ${application_ids["Networking home IOT devices"]}
+    the user clicks the button/link  link = ${createApplicationOpenCompetitionApplication1Number}
     the user expands the section     Finances summary
 
 the academic user marks finances as complete
@@ -427,3 +428,7 @@ the academic user marks finances as complete
     the user enters the project location
     the user clicks the button/link            link = Your funding
     the user marks your funding section as complete
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

@@ -14,8 +14,8 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...               IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
 ...
 ...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
-Suite Setup       Set predefined date variables
-Suite Teardown    Close browser and delete emails
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant  CompAdmin
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -39,7 +39,7 @@ Comp Admin starts a new Competition
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page           ${CA_UpcomingComp}
     When the user clicks the button/link           jQuery = .govuk-button:contains("Create competition")
-    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2
+    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
@@ -71,13 +71,9 @@ Comp admin completes ths competition setup
     And the user navigates to the page           ${CA_UpcomingComp}
     Then the user should see the element         jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
 
-Competition is Open to Applications
-    [Documentation]    INFUND-6393
-    [Tags]  MySQL  HappyPath
-    The competitions date changes so it is now Open  ${compWithoutGrowth}
-
 Create new Application for this Competition
     [Tags]  HappyPath
+    [Setup]  get competition id and set open date to yesterday  ${compWithoutGrowth}
     Given Log in as a different user              &{lead_applicant_credentials}
     Then logged in user applies to competition    ${compWithoutGrowth}  1
 
@@ -139,11 +135,11 @@ Once the project growth table is selected
     Then the user clicks the button/link                 css = button[type="submit"]
     And the user navigates to the page                   ${CA_UpcomingComp}
     Then the user should see the element                 jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
-    [Teardown]  The competitions date changes so it is now Open  ${compWithGrowth}
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
     [Tags]  HappyPath
+    [Setup]  get competition id and set open date to yesterday   ${compWithGrowth}
     Given Log in as a different user                             &{lead_applicant_credentials}
     And logged in user applies to competition                    ${compWithGrowth}  1
     When the user clicks the button/link                         link = Your finances
@@ -493,3 +489,11 @@ the logged in user should not be able to apply in a competition he has not right
     the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
+
+Custom suite setup
+    Set predefined date variables
+    Connect to database  @{database}
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

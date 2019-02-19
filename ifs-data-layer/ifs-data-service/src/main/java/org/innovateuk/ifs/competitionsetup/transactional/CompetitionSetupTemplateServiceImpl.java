@@ -41,23 +41,25 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Override
     public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
-        CompetitionType competitionType = competitionTypeRepository.findOne(competitionTypeId);
+        Optional<CompetitionType> competitionType = competitionTypeRepository.findById(competitionTypeId);
 
-        if (competitionType == null) {
+        if (!competitionType.isPresent()) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        Competition template = competitionType.getTemplate();
+        Competition template = competitionType.get().getTemplate();
         if (template == null) {
             return serviceFailure(new Error(COMPETITION_NO_TEMPLATE));
         }
 
-        Competition competition = competitionRepository.findById(competitionId);
-        if (competition == null || competitionIsNotInSetupState(competition)) {
+        Optional<Competition> competitionOptional = competitionRepository.findById(competitionId);
+        if (!competitionOptional.isPresent() || competitionIsNotInSetupState(competitionOptional.get())) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        competition.setCompetitionType(competitionType);
+        Competition competition = competitionOptional.get();
+
+        competition.setCompetitionType(competitionType.get());
         competition = setDefaultAssessorPayAndCount(competition);
 
         competitionTemplatePersistor.cleanByEntityId(competitionId);

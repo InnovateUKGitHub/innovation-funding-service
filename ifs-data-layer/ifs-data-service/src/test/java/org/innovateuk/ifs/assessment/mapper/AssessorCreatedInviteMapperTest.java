@@ -12,7 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static freemarker.template.utility.Collections12.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,10 +25,10 @@ import static org.innovateuk.ifs.interview.builder.InterviewInviteBuilder.newInt
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AssessorCreatedInviteMapperTest {
 
     @Mock
@@ -58,7 +60,7 @@ public class AssessorCreatedInviteMapperTest {
                 )
                 .build();
 
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
 
         InnovationAreaResource innovationAreaResource = newInnovationAreaResource().build();
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
@@ -76,7 +78,7 @@ public class AssessorCreatedInviteMapperTest {
                         .build()
         );
 
-        verify(profileRepositoryMock).findOne(profile.getId());
+        verify(profileRepositoryMock).findById(profile.getId());
         verify(innovationAreaMapperMock).mapToResource(innovationArea);
     }
 
@@ -97,7 +99,7 @@ public class AssessorCreatedInviteMapperTest {
                 )
                 .build();
 
-        when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
+        when(profileRepositoryMock.findById(profile.getId())).thenReturn(Optional.of(profile));
 
         InnovationAreaResource innovationAreaResource = newInnovationAreaResource().build();
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
@@ -115,7 +117,7 @@ public class AssessorCreatedInviteMapperTest {
                         .build()
         );
 
-        verify(profileRepositoryMock).findOne(profile.getId());
+        verify(profileRepositoryMock).findById(profile.getId());
         verify(innovationAreaMapperMock).mapToResource(innovationArea);
     }
 
@@ -144,7 +146,7 @@ public class AssessorCreatedInviteMapperTest {
                         .build()
         );
 
-        verify(profileRepositoryMock, never()).findOne(any());
+        verify(profileRepositoryMock, never()).findById(any());
         verify(innovationAreaMapperMock).mapToResource(innovationArea);
     }
 }
