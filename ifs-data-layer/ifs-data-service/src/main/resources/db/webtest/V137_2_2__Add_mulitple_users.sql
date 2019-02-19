@@ -8,7 +8,7 @@ INSERT INTO user_role
 (user_id, role_id)
 VALUES
 ((select id from user where email = 'orville.Gibbs@gmail.com'), @monitoring_officer_role_id);
-carolyn.reed@example.com
+
 INSERT INTO user_role
 (user_id, role_id)
 VALUES

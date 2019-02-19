@@ -117,7 +117,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource) {
 
         Competition existingCompetition = competitionRepository.findById(competitionResource.getId()).orElse(null);
-
         Competition competition = competitionMapper.mapToDomain(competitionResource);
         competition = setCompetitionAuditableFields(competition, existingCompetition);
 

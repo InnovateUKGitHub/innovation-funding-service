@@ -38,6 +38,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.LARGE;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
@@ -215,7 +216,8 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         "CCCC", "16014", 1, BigDecimal.valueOf(100L),
                         false, false, AssessorFinanceView.OVERVIEW,false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
-                        50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP).
+                        50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP,
+                        true, STANDARD, true, true).
                 withApplicationFormFromTemplate().
                 withNewMilestones().
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).

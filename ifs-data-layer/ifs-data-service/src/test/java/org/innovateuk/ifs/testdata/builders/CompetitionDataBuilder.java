@@ -32,6 +32,7 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -110,7 +111,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 Boolean resubmission,
                                                 String nonIfsUrl,
                                                 FundingType fundingType,
-                                                CompetitionCompletionStage completionStage) {
+                                                CompetitionCompletionStage completionStage,
+                                                Boolean includeJesForm,
+                                                ApplicationFinanceType applicationFinanceType,
+                                                Boolean includeProjectGrowth,
+                                                Boolean includeYourOrganisation) {
 
         return asCompAdmin(data -> {
 
@@ -156,7 +161,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setHasInterviewStage(hasInterviewStage);
                 competition.setAssessorFinanceView(assessorFinanceView);
                 competition.setNonIfsUrl(nonIfsUrl);
-                competition.setIncludeJesForm(true); //TODO IFS-4719 web test data needs to be configurable.
+                competition.setIncludeJesForm(includeJesForm);
+                competition.setApplicationFinanceType(applicationFinanceType);
+                competition.setApplicationFinanceType(STANDARD);
+                competition.setIncludeProjectGrowthTable(includeProjectGrowth);
+                competition.setIncludeYourOrganisationSection(includeYourOrganisation);
                 competition.setFundingType(fundingType);
                 competition.setCompletionStage(completionStage);
             });
@@ -443,6 +452,23 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             }
 
         }));
+    }
+
+    public CompetitionDataBuilder withApplicationFinances(Boolean includeJesForm,
+                                                          ApplicationFinanceType applicationFinanceType,
+                                                          Boolean includeProjectGrowth,
+                                                          Boolean includeYourOrganisation) {
+
+        return asCompAdmin(data -> {
+            CompetitionSetupFinanceResource competitionSetupFinanceResource
+                    = new CompetitionSetupFinanceResource();
+            competitionSetupFinanceResource.setCompetitionId(data.getCompetition().getId());
+            competitionSetupFinanceResource.setApplicationFinanceType(applicationFinanceType);
+            competitionSetupFinanceResource.setIncludeGrowthTable(includeProjectGrowth);
+            competitionSetupFinanceResource.setIncludeYourOrganisationSection(includeYourOrganisation);
+            competitionSetupFinanceResource.setIncludeJesForm(includeJesForm);
+            competitionSetupFinanceService.save(competitionSetupFinanceResource);
+        });
     }
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {

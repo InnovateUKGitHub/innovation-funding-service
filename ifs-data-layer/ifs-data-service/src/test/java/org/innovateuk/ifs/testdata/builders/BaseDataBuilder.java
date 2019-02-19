@@ -29,6 +29,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
+import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
@@ -125,6 +126,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected QuestionSetupService questionSetupService;
     protected QuestionSetupTemplateService questionSetupTemplateService;
     protected PublicContentService publicContentService;
+    protected CompetitionSetupFinanceService competitionSetupFinanceService;
     protected PublicContentRepository publicContentRepository;
     protected ContentGroupRepository contentGroupRepository;
     protected ContentGroupService contentGroupService;
@@ -285,6 +287,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         baseUserService = serviceLocator.getBean(BaseUserService.class);
         profileRepository = serviceLocator.getBean(ProfileRepository.class);
         publicContentService = serviceLocator.getBean(PublicContentService.class);
+        competitionSetupFinanceService = serviceLocator.getBean(CompetitionSetupFinanceService.class);
         publicContentRepository = serviceLocator.getBean(PublicContentRepository.class);
         contentEventRepository = serviceLocator.getBean(ContentEventRepository.class);
         contentGroupRepository = serviceLocator.getBean(ContentGroupRepository.class);
