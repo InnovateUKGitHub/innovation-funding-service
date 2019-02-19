@@ -143,6 +143,8 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         assertEquals(5, (int) model.getKeyStatistics().getStatFive());
         assertEquals(true, model.isAssessmentPanelEnabled());
         assertEquals(true, model.isInterviewPanelEnabled());
+        assertEquals(false, model.isFundingDecisionEnabled());
+        assertEquals(false, model.isFundingNotificationDisplayed());
         assertEquals(DETAILED, model.getAssessorFinanceView());
     }
 

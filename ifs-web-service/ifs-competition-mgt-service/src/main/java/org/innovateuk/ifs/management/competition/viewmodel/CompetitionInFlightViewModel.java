@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import java.math.BigInteger;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
 /**
@@ -19,7 +20,7 @@ public class CompetitionInFlightViewModel {
     private Long competitionId;
     private String competitionName;
     private CompetitionStatus competitionStatus;
-    private boolean isH2020;
+    private boolean horizon2020Competition;
     private String competitionType;
     private String innovationSector;
     private String innovationArea;
@@ -43,7 +44,7 @@ public class CompetitionInFlightViewModel {
         this.competitionName = competitionResource.getName();
         this.competitionStatus = competitionResource.getCompetitionStatus();
         this.competitionType = competitionResource.getCompetitionTypeName();
-        this.isH2020 = competitionResource.isH2020();
+        this.horizon2020Competition = competitionResource.isH2020();
         this.innovationSector = competitionResource.getInnovationSectorName();
         this.innovationArea = StringUtils.join(competitionResource.getInnovationAreaNames(), ", ");
         this.executive = competitionResource.getExecutiveName();
@@ -72,10 +73,6 @@ public class CompetitionInFlightViewModel {
 
     public String getCompetitionType() {
         return competitionType;
-    }
-
-    public boolean isH2020() {
-        return isH2020;
     }
 
     public String getInnovationSector() {
@@ -110,6 +107,10 @@ public class CompetitionInFlightViewModel {
         return keyStatistics;
     }
 
+    public boolean isHorizon2020Competition() {
+        return horizon2020Competition;
+    }
+
     public boolean isReadOnly() {
         return readOnly;
     }
@@ -126,5 +127,15 @@ public class CompetitionInFlightViewModel {
 
     public AssessorFinanceView getAssessorFinanceView() {
         return assessorFinanceView;
+    }
+
+    public boolean isFundingDecisionEnabled() {
+        return horizon2020Competition
+                || !asList(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT).contains(competitionStatus);
+    }
+
+    public boolean isFundingNotificationDisplayed() {
+        return horizon2020Competition
+                || asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus);
     }
 }
