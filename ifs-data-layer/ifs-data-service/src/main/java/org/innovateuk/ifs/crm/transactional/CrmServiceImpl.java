@@ -37,7 +37,7 @@ public class CrmServiceImpl implements CrmService {
     public ServiceResult<Void> syncCrmContact(long userId) {
         return userService.getUserById(userId).andOnSuccess(user -> {
             if (user.hasRole(MONITORING_OFFICER)) {
-                SilContact silContact = toSilContactMonitoringOfficer(user);
+                SilContact silContact = monitoringOfficerToSilContact(user);
                 LOG.info(format("Updating CRM contact %s and organisation %s",
                         silContact.getEmail(), silContact.getOrganisation().getName()));
                 return silCrmEndpoint.updateContact(silContact);
@@ -47,7 +47,7 @@ public class CrmServiceImpl implements CrmService {
                         ServiceResult<Void> result = serviceSuccess();
                         for (OrganisationResource organisation : organisations) {
                             result = result.andOnSuccess(() -> {
-                                SilContact silContact = toSilContact(user, organisation);
+                                SilContact silContact = externalUserToSilContact(user, organisation);
                                 LOG.info(format("Updating CRM contact %s and organisation %s",
                                         silContact.getEmail(), silContact.getOrganisation().getName()));
                                 return silCrmEndpoint.updateContact(silContact);
@@ -61,7 +61,7 @@ public class CrmServiceImpl implements CrmService {
         });
     }
 
-    private SilContact toSilContact(UserResource user, OrganisationResource organisation) {
+    private SilContact externalUserToSilContact(UserResource user, OrganisationResource organisation) {
         SilContact silContact = new SilContact();
         silContact.setEmail(user.getEmail());
         silContact.setFirstName(user.getFirstName());
@@ -79,7 +79,7 @@ public class CrmServiceImpl implements CrmService {
         return silContact;
     }
 
-    private SilContact toSilContactMonitoringOfficer(UserResource user) {
+    private SilContact monitoringOfficerToSilContact(UserResource user) {
         SilContact silContact = new SilContact();
         silContact.setEmail(user.getEmail());
         silContact.setFirstName(user.getFirstName());
