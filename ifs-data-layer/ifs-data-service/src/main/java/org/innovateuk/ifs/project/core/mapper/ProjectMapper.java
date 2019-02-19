@@ -66,16 +66,10 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     }
 
     public Long mapProjectMonitoringOfficerUserToId(ProjectMonitoringOfficer object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
+        return object == null ? null : object.getId();
     }
 
     public ProjectMonitoringOfficer mapProjectMonitoringOfficerIdUserToDomain(Long id) {
-        if (id == null) {
-            return null;
-        }
-        return projectMonitoringOfficerRepository.findById(id).get();
+        return id == null ? null : projectMonitoringOfficerRepository.findById(id).get();
     }
 }
