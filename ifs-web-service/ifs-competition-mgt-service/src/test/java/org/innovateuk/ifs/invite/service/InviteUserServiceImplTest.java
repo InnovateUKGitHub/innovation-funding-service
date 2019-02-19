@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.invite;
+package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.InviteUserServiceImpl;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.junit.Test;
