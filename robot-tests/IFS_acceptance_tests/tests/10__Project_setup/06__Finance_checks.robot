@@ -86,6 +86,11 @@ Force Tags        Project Setup
 Resource          PS_Common.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
 
+*** Variables ***
+${PS_FC_Application_Title}    Matter - Planning for Web
+${PS_FC_Project_Id}    ${project_ids["${PS_FC_Application_Title}"]}
+
+
 *** Test Cases ***
 Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016, INFUND-4820, INFUND-7718
@@ -190,7 +195,7 @@ Proj finance can see the maximum research participation level
 Timestamp approval verification for viability and eligibility
     [Documentation]    INFUND-654
     [Tags]  HappyPath
-    [Setup]  the user navigates to the page                  ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/finance-check
+    [Setup]  the user navigates to the page                  ${server}/project-setup-management/project/${PS_FC_Project_Id}/finance-check
     Given the user clicks the button/link                    css = table.table-progress a.viability-0
     And the user selects the checkbox                        project-viable
     And the user selects the option from the drop-down menu  Green  id = rag-rating
@@ -228,7 +233,7 @@ Project finance user can view finance overview for the consortium
     When the user clicks the button/link    link = View finances
     Then the user should see the element    jQuery = h1:contains("Finance overview")
     # the below figures are listed as:    RowNumber    StartDate    Duration    TotalProjectCost    GrantAppliedFor    OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £402,797    116,596    4,936    29%
+    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £356,559    101,735    7,404    29%
 
 Project finance user can view finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -645,7 +650,7 @@ Project finance user can see updated finance overview after lead changes to elig
     [Tags]
     When the user navigates to the page                 ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the text in the element    css = .standard-definition-list dd:nth-child(2)    £379,678  # Total project cost
-    And the user should see the text in the element     css = .standard-definition-list dd:nth-child(4)    109,660   # Grant applied for
+    And the user should see the text in the element     css = .standard-definition-list dd:nth-child(4)    108,670   # Grant applied for
     And the user should see the text in the element     css = .standard-definition-list dd:nth-child(8)    29%       # Total percentage grant
 
 Project finance user can see the Eligibility check page for the partner
@@ -787,7 +792,7 @@ Project finance user can see updated finance overview after partner changes to e
     Given log in as a different user       &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
     Then the user should see the text in the element   css = .standard-definition-list dd:nth-child(2)    £356,559  #Total project cost
-    And the user should see the text in the element    css = .standard-definition-list dd:nth-child(4)    102,725   #Grant applied for
+    And the user should see the text in the element    css = .standard-definition-list dd:nth-child(4)    101,725   #Grant applied for
     And the user should see the text in the element    css = .standard-definition-list dd:nth-child(8)    29%       #Total percentage grant
 
 Project finance can see updated finance breakdown for different categories
@@ -1128,9 +1133,9 @@ Custom suite setup
     Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the table row has expected values
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(2)    £402,797  # Total project cost
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(4)    116,596   # Grant applied for
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(6)    4,936     # Other public sector funding
+    the user sees the text in the element    css = .standard-definition-list dd:nth-child(2)    £402,797   # Total project cost
+    the user sees the text in the element    css = .standard-definition-list dd:nth-child(4)    115,606   # Grant applied for
+    the user sees the text in the element    css = .standard-definition-list dd:nth-child(6)    7,404     # Other public sector funding
     the user sees the text in the element    css = .standard-definition-list dd:nth-child(8)    29%       # Total percentage grant
 
 the user fills in project costs
