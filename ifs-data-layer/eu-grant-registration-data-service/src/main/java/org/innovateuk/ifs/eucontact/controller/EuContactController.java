@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Controller for saving and getting eu grant registrations.
+ * Controller for saving and getting details of eu contacts.
  */
 @RestController
 public class EuContactController {

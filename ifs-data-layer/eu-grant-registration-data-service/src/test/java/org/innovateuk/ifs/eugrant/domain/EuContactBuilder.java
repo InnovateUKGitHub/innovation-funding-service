@@ -42,4 +42,8 @@ public class EuContactBuilder extends BaseBuilder<EuContact, EuContactBuilder> {
     public EuContactBuilder withTelephone(String... telephones) {
         return withArray((telephone, contact) -> contact.setTelephone(telephone), telephones);
     }
+
+    public EuContactBuilder withNotified(Boolean... notifiedFlags) {
+        return withArray((notifiedFlag, contact) -> contact.setNotified(notifiedFlag), notifiedFlags);
+    }
 }
