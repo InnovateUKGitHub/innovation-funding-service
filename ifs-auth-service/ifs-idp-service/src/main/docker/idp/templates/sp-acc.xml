@@ -14,7 +14,7 @@
                              Location="https://${DOMAIN}/services/auth/sp/saml2/logout"/>
         <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
                              Location="https://${DOMAIN}/services/auth/sp/saml2/logout"/>
-        <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:persistent</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
         <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
                                   Location="https://${DOMAIN}/auth/success" index="1" isDefault="true"/>
     </SPSSODescriptor>
