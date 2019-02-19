@@ -24,13 +24,7 @@
                 <ds:X509Data>
                     <ds:X509SubjectName>CN=ifs.local-dev,O=Innovate UK,L=Swindon,ST=Wiltshire,C=GB
                     </ds:X509SubjectName>
-                    <ds:X509Certificate>MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsKxgmjshAg3wxU2SxOtM
-                        gLu+Q8rIsRNfMPoCVRbPRV2Eq7fr8T8h4qBwEK7dUHVKCl0ueGaxt2JsVJo+s7/T
-                        rWqiCE7X44//MJmu7PyUk3xY8+Arnww1pE0txg89ovT7sNbCzUR82jlsvcxF7V+l
-                        ZhrAIAggFDF5cm8DoT8v0P0BLuEfgDxb9jKlP+QD5L5f1AZapfPlWKYuBr47evz4
-                        Yq267QIFdcpB6dkoA33aWs5vNKjb/Nqcsj9iVIcRcqDYaQghfKrHfFV45IUrEaXd
-                        JE6FQfC/eCDnsXo0zYs/9DlV0149crqNqJDLUeGCe9RBzxjbwe9xd36tWjJYapCF
-                        NQIDAQAB==</ds:X509Certificate>
+                    <ds:X509Certificate>${CERTIFICATE}</ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
             <EncryptionMethod Algorithm="http://www.w3.org/2009/xmlenc11#aes128-gcm"/>
