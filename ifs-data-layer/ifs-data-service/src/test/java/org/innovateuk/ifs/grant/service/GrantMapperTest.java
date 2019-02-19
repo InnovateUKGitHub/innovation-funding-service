@@ -160,8 +160,8 @@ public class GrantMapperTest {
         assertThat(grant.getGrantOfferLetterDate(), equalTo(DEFAULT_GOL_DATE));
         assertThat(grant.getSourceSystem(), equalTo("IFS"));
 
-        // expect 1 Project Manager record, one Finance Contact record for each Organisation and 1 innovation lead record and 2 monitoring officers
-        int expectedNumberOfParticipantRecords = 1 + (parameter.partnerOrganisationCount) + 1 + 2;
+        // expect 1 Project Manager record, one Finance Contact record for each Organisation and 1 innovation lead record and 1 monitoring officer
+        int expectedNumberOfParticipantRecords = 1 + (parameter.partnerOrganisationCount) + 1 + 1;
 
         assertThat(grant.getParticipants(), hasSize(expectedNumberOfParticipantRecords));
 
@@ -174,11 +174,10 @@ public class GrantMapperTest {
         Participant innovationLeadParticipant = getOnlyElement(simpleFilter(grant.getParticipants(),
                 participant -> "Innovation lead".equals(participant.getContactRole())));
 
-        List<Participant> monitoringOfficerParticipants = simpleFilter(grant.getParticipants(),
-                participant -> "Monitoring officer".equals(participant.getContactRole()));
+        Participant monitoringOfficerParticipant = getOnlyElement(simpleFilter(grant.getParticipants(),
+                participant -> "Monitoring officer".equals(participant.getContactRole())));
 
-        assertThat( monitoringOfficerParticipants.get(0).getContactEmail(), equalTo("mo1@example.com"));
-        assertThat( monitoringOfficerParticipants.get(1).getContactEmail(), equalTo("mo2@example.com"));
+        assertThat(monitoringOfficerParticipant.getContactEmail(), equalTo("mo@example.com"));
 
         assertThat(projectManagerParticipant.getContactEmail(), equalTo("pm@example.com"));
         assertThat(innovationLeadParticipant.getContactEmail(), equalTo("il1@example.com"));
@@ -398,12 +397,9 @@ public class GrantMapperTest {
 
             List<ProjectUser> projectUsers = combineLists(leadOrganisationProjectUsers, org2ProjectUsers, org3ProjectUsers);
 
-            List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
-                    .withUser(newUser()
-                            .withEmailAddress("mo1@example.com", "mo2@example.com")
-                            .buildArray(2, User.class)
-                    )
-                    .build(2);
+            ProjectMonitoringOfficer projectMonitoringOfficer = newProjectMonitoringOfficer()
+                    .withUser(newUser().withEmailAddress("mo@example.com").build())
+                    .build();
 
             return projectBuilder
                     .withDuration((long) duration)
@@ -418,7 +414,7 @@ public class GrantMapperTest {
                                         newCompetition().withId(competitionId).build())
                                 .build())
                     .withProjectUsers(projectUsers)
-                    .withProjectMonitoringOfficers(projectMonitoringOfficers)
+                    .withProjectMonitoringOfficer(projectMonitoringOfficer)
                     .build();
         }
     }

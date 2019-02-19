@@ -20,8 +20,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class
-ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
+public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     private ProjectBuilder(List<BiConsumer<Integer, Project>> multiActions) {
         super(multiActions);
@@ -105,8 +104,8 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return with (project -> project.setSpendProfileSubmittedDate(date));
     }
 
-    public ProjectBuilder withProjectMonitoringOfficers(List<ProjectMonitoringOfficer>... projectMonitoringOfficersList) {
-        return withArray((projectMonitoringOfficers, project) -> project.setProjectMonitoringOfficers(projectMonitoringOfficers), projectMonitoringOfficersList);
+    public ProjectBuilder withProjectMonitoringOfficer(ProjectMonitoringOfficer... projectMonitoringOfficers) {
+        return withArray((projectMonitoringOfficer, project) -> project.setProjectMonitoringOfficer(projectMonitoringOfficer), projectMonitoringOfficers);
     }
 
     @Override
@@ -117,6 +116,6 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
         project.getPartnerOrganisations().forEach(org -> setField("project", project, org));
 
-        project.getProjectMonitoringOfficers().forEach(mo -> setField("project", project, mo));
+        project.getProjectMonitoringOfficer().ifPresent(mo -> setField("project", project, mo));
     }
 }

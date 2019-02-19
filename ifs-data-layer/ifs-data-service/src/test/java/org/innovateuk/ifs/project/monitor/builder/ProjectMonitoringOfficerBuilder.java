@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.project.monitor.builder;
 
 import org.innovateuk.ifs.project.core.builder.ProjectParticipantBuilder;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -37,16 +36,7 @@ public class ProjectMonitoringOfficerBuilder extends ProjectParticipantBuilder<P
 
     @Override
     public void postProcess(int index, ProjectMonitoringOfficer projectMonitoringOfficer) {
-        Project project = projectMonitoringOfficer.getProcess();
-
-        if (project != null) {
-
-            if (project.getProjectMonitoringOfficers() == null) {
-                project.setProjectMonitoringOfficers(new ArrayList<>());
-            }
-            if (!project.getProjectMonitoringOfficers().contains(projectMonitoringOfficer)) {
-                project.addProjectMonitoringOfficer(projectMonitoringOfficer);
-            }
-        }
+        Optional.ofNullable(projectMonitoringOfficer.getProcess())
+                .ifPresent(p -> p.setProjectMonitoringOfficer(projectMonitoringOfficer));
     }
 }

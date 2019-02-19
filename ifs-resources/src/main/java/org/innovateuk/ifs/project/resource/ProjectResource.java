@@ -24,7 +24,7 @@ public class ProjectResource {
     private ZonedDateTime documentsSubmittedDate;
     private ZonedDateTime offerSubmittedDate;
     private List<Long> projectUsers;
-    private List<Long> projectMonitoringOfficers;
+    private Long projectMonitoringOfficer;
     private Long signedGrantOfferLetter;
     private Long grantOfferLetter;
     private Long additionalContractFile;
@@ -189,12 +189,12 @@ public class ProjectResource {
         this.projectDocuments = projectDocuments;
     }
 
-    public List<Long> getProjectMonitoringOfficers() {
-        return projectMonitoringOfficers;
+    public Long getProjectMonitoringOfficer() {
+        return projectMonitoringOfficer;
     }
 
-    public void setProjectMonitoringOfficers(List<Long> projectMonitoringOfficers) {
-        this.projectMonitoringOfficers = projectMonitoringOfficers;
+    public void setProjectMonitoringOfficer(Long projectMonitoringOfficer) {
+        this.projectMonitoringOfficer = projectMonitoringOfficer;
     }
 
     @Override
@@ -214,7 +214,7 @@ public class ProjectResource {
                 .append(documentsSubmittedDate, that.documentsSubmittedDate)
                 .append(offerSubmittedDate, that.offerSubmittedDate)
                 .append(projectUsers, that.projectUsers)
-                .append(projectMonitoringOfficers, that.projectMonitoringOfficers)
+                .append(projectMonitoringOfficer, that.projectMonitoringOfficer)
                 .append(signedGrantOfferLetter, that.signedGrantOfferLetter)
                 .append(grantOfferLetter, that.grantOfferLetter)
                 .append(additionalContractFile, that.additionalContractFile)
@@ -238,7 +238,7 @@ public class ProjectResource {
                 .append(documentsSubmittedDate)
                 .append(offerSubmittedDate)
                 .append(projectUsers)
-                .append(projectMonitoringOfficers)
+                .append(projectMonitoringOfficer)
                 .append(signedGrantOfferLetter)
                 .append(grantOfferLetter)
                 .append(additionalContractFile)

@@ -34,6 +34,7 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -121,18 +122,14 @@ class GrantMapper {
                 Role.INNOVATION_LEAD,
                 innovationLeadUser.getEmail());
 
-        List<Participant> monitoringOfficerParticipants = simpleMap(
-                project.getProjectMonitoringOfficers(),
-                mo -> toSimpleContactParticipant(
-                        mo.getUser().getId(), Role.MONITORING_OFFICER, mo.getUser().getEmail()
-                )
-        );
+        Optional<Participant> monitoringOfficerParticipant = project.getProjectMonitoringOfficer()
+                .map(mo -> toSimpleContactParticipant(mo.getUser().getId(), Role.MONITORING_OFFICER, mo.getUser().getEmail()));
 
         List<Participant> fullParticipantList = combineLists(
                 financeContactParticipants,
                 singletonList(projectManagerParticipant),
                 singletonList(innovationLeadParticipant),
-                monitoringOfficerParticipants
+                monitoringOfficerParticipant.map(Collections::singletonList).orElse(emptyList())
         );
 
         grant.setParticipants(fullParticipantList);

@@ -19,6 +19,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import static javax.persistence.EnumType.STRING;
@@ -60,8 +61,8 @@ public class Project implements ProcessActivity {
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProjectMonitoringOfficer> projectMonitoringOfficers = new ArrayList<>();
+    @OneToOne(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ProjectMonitoringOfficer projectMonitoringOfficer = null;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
@@ -106,8 +107,8 @@ public class Project implements ProcessActivity {
         projectUsers.add(projectUser);
     }
 
-    public void addProjectMonitoringOfficer(ProjectMonitoringOfficer projectMonitoringOfficer) {
-        projectMonitoringOfficers.add(projectMonitoringOfficer);
+    public void setProjectMonitoringOfficer(ProjectMonitoringOfficer projectMonitoringOfficer) {
+        this.projectMonitoringOfficer = projectMonitoringOfficer;
     }
 
     public void addPartnerOrganisation(PartnerOrganisation partnerOrganisation) {
@@ -205,9 +206,8 @@ public class Project implements ProcessActivity {
         this.projectUsers.addAll(projectUsers);
     }
 
-    public void setProjectMonitoringOfficers(List<ProjectMonitoringOfficer> projectMonitoringOfficers) {
-        this.projectMonitoringOfficers.clear();
-        this.projectMonitoringOfficers.addAll(projectMonitoringOfficers);
+    public void removeProjetMonitoringOfficer() {
+        this.projectMonitoringOfficer = null;
     }
 
     public void setPartnerOrganisations(List<PartnerOrganisation> partnerOrganisations) {
@@ -310,7 +310,7 @@ public class Project implements ProcessActivity {
         return projectUser.getUser().getId().equals(user.getId());
     }
 
-    public List<ProjectMonitoringOfficer> getProjectMonitoringOfficers() {
-        return projectMonitoringOfficers;
+    public Optional<ProjectMonitoringOfficer> getProjectMonitoringOfficer() {
+        return Optional.ofNullable(projectMonitoringOfficer);
     }
 }
