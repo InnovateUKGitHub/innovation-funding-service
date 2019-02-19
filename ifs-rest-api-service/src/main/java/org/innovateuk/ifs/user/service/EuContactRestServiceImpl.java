@@ -36,4 +36,3 @@ public class EuContactRestServiceImpl extends BaseRestService implements EuConta
         return getWithRestResultAnonymous(uriWithParams, EuContactPageResource.class);
     }
 }
-

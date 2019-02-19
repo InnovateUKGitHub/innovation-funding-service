@@ -44,7 +44,6 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
         verify(euContactRestService).getEuContactsByNotified(true, 0, 100);
 
         EuInviteViewModel model = (EuInviteViewModel) result.getModelAndView().getModel().get("model");
-
         assertEquals(euContactResources, model.getContacts());
     }
 
@@ -65,7 +64,6 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
         verify(euContactRestService).getEuContactsByNotified(false, 0, 100);
 
         EuInviteViewModel model = (EuInviteViewModel) result.getModelAndView().getModel().get("model");
-
         assertEquals(euContactResources, model.getContacts());
     }
 

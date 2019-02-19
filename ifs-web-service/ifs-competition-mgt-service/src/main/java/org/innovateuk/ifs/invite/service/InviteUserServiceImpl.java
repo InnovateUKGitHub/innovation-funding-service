@@ -2,8 +2,6 @@ package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
-import org.innovateuk.ifs.invite.service.InviteUserRestService;
-import org.innovateuk.ifs.invite.service.InviteUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
