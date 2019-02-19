@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.eugrant;
-
+package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class EuContactResource {
+
 
     private String name;
 
@@ -25,14 +25,6 @@ public class EuContactResource {
         this.email = email;
         this.telephone = telephone;
         this.notified = notified;
-    }
-
-    public EuContactResource(String name, String jobTitle, String email, String telephone) {
-        this.name = name;
-        this.jobTitle = jobTitle;
-        this.email = email;
-        this.telephone = telephone;
-        this.notified = false;
     }
 
     public String getName() {
@@ -71,7 +63,7 @@ public class EuContactResource {
         return notified;
     }
 
-    public void setNotified(boolean notified) {
+    public void setNotified() {
         this.notified = notified;
     }
 
