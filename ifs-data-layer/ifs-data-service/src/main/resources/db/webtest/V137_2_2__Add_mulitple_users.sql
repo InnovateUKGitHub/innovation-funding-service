@@ -4,6 +4,9 @@ SET @monitoring_officer_role_id =
 SET @stakeholder_role_id =
 (SELECT id FROM role WHERE name = 'stakeholder');
 
+SET @assessor_role_id =
+(SELECT id FROM role WHERE name = 'assessor');
+
 INSERT INTO user_role
 (user_id, role_id)
 VALUES
@@ -43,3 +46,13 @@ INSERT INTO user_role
 (user_id, role_id)
 VALUES
 ((SELECT id FROM user WHERE email = 'Sonal.Dsilva@gmail.com'), @stakeholder_role_id);
+
+INSERT INTO user_role
+(user_id, role_id)
+VALUES
+((SELECT id FROM user WHERE email = 'carolyn.reed@example.com'), @stakeholder_role_id);
+
+INSERT INTO user_role
+(user_id, role_id)
+VALUES
+((SELECT id FROM user WHERE email = 'carolyn.reed@example.com'), @assessor_role_id);
