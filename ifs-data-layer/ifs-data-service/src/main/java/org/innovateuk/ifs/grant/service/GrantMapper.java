@@ -31,13 +31,10 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static freemarker.template.utility.Collections12.singletonList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;

@@ -46,7 +46,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     }
 
     @Test
-    public void sycCrmContactExternal() {
+    public void syncExternalCrmContact() {
         Long userId = 1L;
         UserResource user = newUserResource().withRoleGlobal(APPLICANT).build();
         List<OrganisationResource> organisations = newOrganisationResource().withCompaniesHouseNumber("Something", "Else").build(2);
@@ -57,12 +57,12 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         ServiceResult<Void> result = service.syncCrmContact(userId);
 
         assertThat(result.isSuccess(), equalTo(true));
-        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchSilContactExternal(user, organisations.get(0))));
-        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchSilContactExternal(user, organisations.get(1))));
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchExternalSilContact(user, organisations.get(0))));
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchExternalSilContact(user, organisations.get(1))));
     }
 
     @Test
-    public void sycCrmContactMonitoringOfficer() {
+    public void syncMonitoringOfficerCrmContact() {
         Long userId = 1L;
         UserResource user = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
@@ -71,11 +71,11 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         ServiceResult<Void> result = service.syncCrmContact(userId);
 
         assertThat(result.isSuccess(), equalTo(true));
-        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchSilContactMonitoringOfficer(user)));
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchMonitoringOfficerSilContact(user)));
     }
 
 
-    private Predicate<SilContact> matchSilContactExternal(UserResource user, OrganisationResource organisation) {
+    private Predicate<SilContact> matchExternalSilContact(UserResource user, OrganisationResource organisation) {
         return silContact -> {
             assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf(user.getId())));
             assertThat(silContact.getOrganisation().getRegistrationNumber(), equalTo(organisation.getCompaniesHouseNumber()));
@@ -83,7 +83,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         };
     }
 
-    private Predicate<SilContact> matchSilContactMonitoringOfficer(UserResource user) {
+    private Predicate<SilContact> matchMonitoringOfficerSilContact(UserResource user) {
         return silContact -> {
             assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf(user.getId())));
             assertThat(silContact.getOrganisation().getRegistrationNumber(), equalTo(""));
