@@ -104,9 +104,9 @@ public class MonitoringOfficerRegistrationController {
                 ServiceResult<Void> result = monitoringOfficerService.createMonitoringOfficer(inviteHash, monitoringOfficerRegistrationForm);
                 result.getErrors().forEach(error -> {
                     if (StringUtils.hasText(error.getFieldName())) {
-                        bindingResult.rejectValue(error.getFieldName(), "monitoring-officer." + error.getErrorKey());
+                        bindingResult.rejectValue(error.getFieldName(), "registration." + error.getErrorKey());
                     } else {
-                        bindingResult.reject("monitoring-officer." + error.getErrorKey());
+                        bindingResult.reject("registration." + error.getErrorKey());
                     }
                 });
                 return validationHandler.
