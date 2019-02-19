@@ -109,7 +109,7 @@ createEntitiesFromProperties() {
     else
       entityName="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}"
     fi
-    entityNameHash=`echo -n ${entityName} | openssl sha1 | sed 's/^.* //'`
+    entityNameHash=`echo -n https://www-acc-sysint.apps.org-env-0.org.innovateuk.ukri.org | openssl sha1 | sed 's/^.* //'`
     echo "Creating entity ${entityName} using template ${TEMPLATE} : ${entityNameHash}"
 
     entityFileName=${SHIBBOLETH_CONF_DIR}/metadata/${entityNameHash}.xml
