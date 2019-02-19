@@ -2,9 +2,9 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.EuContactPageResource;
-import org.innovateuk.ifs.invite.service.EuInviteService;
 import org.innovateuk.ifs.invite.viewmodel.EuInviteViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.user.service.EuContactRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -27,12 +27,12 @@ public class EuInviteController {
     private static final int DEFAULT_PAGE_SIZE = 100;
 
     @Autowired
-    private EuInviteService euInviteService;
+    private EuContactRestService euContactRestService;
 
     @GetMapping("/eu-invite-non-notified")
     public String viewNonNotifiedEuRegistrants(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
                                                Model model) {
-        EuContactPageResource euRegistrants = euInviteService.getEuContactsByNotified(false,
+        EuContactPageResource euRegistrants = euContactRestService.getEuContactsByNotified(false,
                                                                                       pageIndex,
                                                                                       DEFAULT_PAGE_SIZE).getSuccess();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
@@ -44,7 +44,7 @@ public class EuInviteController {
     @GetMapping("/eu-invite-notified")
     public String viewNotifiedEuRegistrants(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
                                             Model model) {
-        EuContactPageResource euRegistrants = euInviteService.getEuContactsByNotified(true,
+        EuContactPageResource euRegistrants = euContactRestService.getEuContactsByNotified(true,
                                                                                       pageIndex,
                                                                                       DEFAULT_PAGE_SIZE).getSuccess();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
