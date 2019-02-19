@@ -2,11 +2,6 @@ INSERT INTO competition (name, max_research_ratio, academic_grant_percentage, mu
 VALUES ('Template for the Horizon 2020 competition type', '0', '100', '0', '0', '0', 0, 0, 'OVERVIEW', 1, 1, '1', '36', 0, '6', 0, 1, '0', '0', '15', '1970-01-01 00:00:01', '1970-01-01 00:00:01', '15');
 set @template_id = (SELECT LAST_INSERT_ID());
 
--- TODO
--- Confirm question names
--- Confirm lead only questions
-
-
 -- Sections
 INSERT INTO section (assessor_guidance_description,description,display_in_assessment_application_summary,name,priority,competition_id,parent_section_id,question_group,section_type) VALUES (NULL,'Please provide Innovate UK with information about your project.',1,'Project details',1,@template_id,NULL,0,'GENERAL');
 set @section_project_details_id = (SELECT LAST_INSERT_ID());
