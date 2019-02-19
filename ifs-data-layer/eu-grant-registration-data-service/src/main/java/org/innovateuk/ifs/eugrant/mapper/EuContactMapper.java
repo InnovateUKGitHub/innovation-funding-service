@@ -21,4 +21,7 @@ public abstract class EuContactMapper extends BaseMapper<EuContact, EuContactRes
     @Override
     public abstract EuContact mapToDomain(EuContactResource resource);
 
+    @Override
+    public abstract EuContactResource mapToResource(EuContact euContact);
+
 }
