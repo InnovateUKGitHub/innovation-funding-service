@@ -1,0 +1,2 @@
+ALTER TABLE `eu_contact`
+ADD COLUMN `notified` BOOLEAN DEFAULT FALSE;
