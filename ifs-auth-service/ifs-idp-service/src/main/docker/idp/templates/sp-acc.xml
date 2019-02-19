@@ -2,6 +2,21 @@
                   xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
                   xmlns:mdalg="urn:oasis:names:tc:SAML:metadata:algsupport" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
                   xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <Extensions xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport">
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#sha384"/>
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#sha224"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha224"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+    </Extensions>
+
     <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
         <KeyDescriptor use="encryption">
             <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -9,7 +24,21 @@
                 <ds:X509Data>
                     <ds:X509SubjectName>CN=ifs.local-dev,O=Innovate UK,L=Swindon,ST=Wiltshire,C=GB
                     </ds:X509SubjectName>
-                    <ds:X509Certificate>${CERTIFICATE}</ds:X509Certificate>
+                    <ds:X509Certificate>MIICvjCCAaYCCQDRFSD3YT8taDANBgkqhkiG9w0BAQsFADAhMQswCQYDVQQGEwJF
+                        TjESMBAGA1UEAwwJbG9jYWxob3N0MB4XDTE5MDIxNTA5MjcwMloXDTE5MDMxNzA5
+                        MjcwMlowITELMAkGA1UEBhMCRU4xEjAQBgNVBAMMCWxvY2FsaG9zdDCCASIwDQYJ
+                        KoZIhvcNAQEBBQADggEPADCCAQoCggEBALgPxB356eW3JaBjCo1ObKYPL3Nk4SLN
+                        jGGmT3T7uYV4wdDdi9xPMHj1e5LbpQgS8DZiLWP0IXZHOnEy3yJbNjo2GNGISax1
+                        aMzzlxhEU+CiC3LfmQ2D66LR4WQOCScvSlDUQxVAFNC9dz3jLxID3qb7j2Q71imk
+                        no5fQuggwJWYD4QBTi3dPV8f3CjeezRscdSN7XIo4cSlsBBbBPhLedYNGyFCVjyC
+                        5Hxv5w7uL7eY7WpPpN582Cu5jaKpNx2hM7iRJ6hfxKfHHa0c9ATXgTMycXeoC4Q+
+                        y5wpjeh9Sn6ZiWb6Xu6htzsCZ6N5dgWrM/qTc4x0KEuQ3bP/dJZS3WsCAwEAATAN
+                        BgkqhkiG9w0BAQsFAAOCAQEAD++mfehtrG5MHWe75XRvv2GHH6pENeBD0yCG4KhS
+                        IZ2pikZT2Q7zcPRchBL6z8RzcheF13r1+cglZVNc/4cM9IlWddK9bEfdcau4VDYm
+                        jE4lu/u2gkR0axTzx0eB6PnvkeXuioKksyKmLLdMBTssrYHjlsRz8Qrilw4OSCdT
+                        l7setWw/a1LilaK/j9++hU73I5ctyEFJey5xSF0zyz71S0GtCofdhwPPrMJjyqjN
+                        O6b6cEq+vDpsNdCYScnaD8gdBXfbvD+170HvBtMhYNT3K5B1NzBoZb58igN9dO9c
+                        Q1FAEvBydr5BQqXqWUKDZY+7wf9oZ8wgoaPK0A+IXbCNeQ==</ds:X509Certificate>
                 </ds:X509Data>
             </ds:KeyInfo>
             <EncryptionMethod Algorithm="http://www.w3.org/2009/xmlenc11#aes128-gcm"/>
