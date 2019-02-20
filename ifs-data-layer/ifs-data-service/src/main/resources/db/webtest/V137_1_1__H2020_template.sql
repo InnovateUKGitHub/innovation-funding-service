@@ -143,5 +143,7 @@ INSERT INTO form_input_validator (form_input_id,form_validator_id) VALUES (@fi_f
 
 
 INSERT INTO competition_type (name, active, template_competition_id) VALUES ('Horizon 2020', 1, @template_id);
+set @competition_type_id = (SELECT LAST_INSERT_ID());
 
+INSERT INTO assessor_count_option (competition_type_id, option_name, option_value, default_option) VALUES (@competition_type_id, '0', '1', 1);
 
