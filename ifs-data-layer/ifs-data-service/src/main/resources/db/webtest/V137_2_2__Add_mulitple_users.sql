@@ -35,6 +35,11 @@ VALUES
 INSERT INTO user_role
 (user_id, role_id)
 VALUES
+((SELECT id FROM user WHERE email = 'blake.wood@gmail.com'), @stakeholder_role_id);
+
+INSERT INTO user_role
+(user_id, role_id)
+VALUES
 ((SELECT id FROM user WHERE email = 'Lance.Lemos@gmail.com'), @stakeholder_role_id);
 
 INSERT INTO user_role
