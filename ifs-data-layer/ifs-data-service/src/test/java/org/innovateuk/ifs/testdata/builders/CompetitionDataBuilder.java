@@ -22,9 +22,11 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -92,7 +94,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 List<String> innovationAreaNames,
                                                 String innovationSectorName,
                                                 Boolean stateAidAllowed,
-                                                String researchCategoryName,
+                                                List<String> researchCategoryNames,
                                                 String leadTechnologist,
                                                 String compExecutive,
                                                 String budgetCode,
@@ -131,7 +133,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         Objects::nonNull
                 );
                 Long innovationSector = getInnovationSectorIdOrNull(innovationSectorName);
-                Long researchCategory = getResearchCategoryIdOrNull(researchCategoryName);
+                Set<Long> researchCategories = researchCategoryNames.stream()
+                        .map(this::getResearchCategoryIdOrNull)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet());
 
                 CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
 
@@ -140,7 +145,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setName(name);
                 competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
                 competition.setInnovationSector(innovationSector);
-                competition.setResearchCategories(researchCategory == null ? emptySet() : singleton(researchCategory));
+                competition.setResearchCategories(researchCategories);
                 competition.setStateAid(stateAidAllowed);
                 competition.setMaxResearchRatio(30);
                 competition.setAcademicGrantPercentage(100);

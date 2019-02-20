@@ -427,7 +427,7 @@ public class CsvUtils {
         public String type;
         public List<String> innovationAreas;
         public String innovationSector;
-        public String researchCategory;
+        public List<String> researchCategory;
         public String collaborationLevel;
         public List<OrganisationTypeEnum> leadApplicantTypes;
         public Integer researchRatio;
@@ -471,7 +471,7 @@ public class CsvUtils {
             type = nullable(line.get(i++));
             innovationAreas = nullableSplitOnNewLines(line.get(i++));
             innovationSector = nullable(line.get(i++));
-            researchCategory = nullable(line.get(i++));
+            researchCategory = nullableSplitOnNewLines(line.get(i++));
             collaborationLevel = nullable(line.get(i++));
             leadApplicantTypes = simpleMap(nullableSplitOnNewLines(line.get(i++)), OrganisationTypeEnum::valueOf);
             researchRatio = nullableInteger(line.get(i++));
