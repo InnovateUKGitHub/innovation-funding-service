@@ -28,8 +28,7 @@
             <section class="govuk-tabs__panel">
                 <form method="POST"
                       data-select=""
-                      autocomplete="off"
-                      data-total-checkboxes="3">
+                      autocomplete="off">
                     <div class="govuk-grid-row sorting">
                         <div class="govuk-grid-column-one-half select-all">
                             <div class="govuk-checkboxes">
@@ -71,8 +70,8 @@
                                         <div class="govuk-checkboxes__item">
                                             <input type="checkbox"
                                                    class="govuk-checkboxes__input"
-                                                   id="registrant" />
-                                            <label for="registrant"
+                                                   th:id="|registrant-${index.count}|" />
+                                            <label th:for="|registrant-${index.count}|"
                                                    class="govuk-label govuk-checkboxes__label">
                                                 <span class="govuk-visually-hidden">Add</span>
                                             </label>
