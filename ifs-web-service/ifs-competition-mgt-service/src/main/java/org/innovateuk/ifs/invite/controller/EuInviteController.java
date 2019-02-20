@@ -36,7 +36,9 @@ public class EuInviteController {
                                                                                       pageIndex,
                                                                                       DEFAULT_PAGE_SIZE).getSuccess();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
-                                                            new Pagination(euRegistrants, ""));
+                                                            new Pagination(euRegistrants, ""),
+                                                            1200,
+                                                            2100);
         model.addAttribute("model", viewModel);
         return "eu/non-notified";
     }
@@ -48,7 +50,9 @@ public class EuInviteController {
                                                                                       pageIndex,
                                                                                       DEFAULT_PAGE_SIZE).getSuccess();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
-                                                            new Pagination(euRegistrants, ""));
+                                                            new Pagination(euRegistrants, ""),
+                                                            1200,
+                                                            2100);
         model.addAttribute("model", viewModel);
         return "eu/notified";
     }
