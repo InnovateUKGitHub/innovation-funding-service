@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.core.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.BuilderAmendFunctions;
-import org.innovateuk.ifs.invite.domain.ProjectInvite;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
@@ -13,8 +13,6 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.BiConsumer;
-
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 /**
  * Superclass for {@link org.innovateuk.ifs.project.core.domain.ProjectParticipant} builders.
@@ -49,8 +47,8 @@ public abstract class ProjectParticipantBuilder<T extends ProjectParticipant, B 
         return withArraySetFieldByReflection("organisation", organisations);
     }
 
-    public final <I extends ProjectInvite<I>> ProjectParticipantBuilder withInvite(I... projectInvites) {
-        return withArray((projectInvite, projectUser) -> setField("invite", projectInvite, projectUser), projectInvites);
+    public final B withStatus(ParticipantStatus... statuses) {
+        return withArraySetFieldByReflection("status", statuses);
     }
 
     public final B withUser(User... users) {

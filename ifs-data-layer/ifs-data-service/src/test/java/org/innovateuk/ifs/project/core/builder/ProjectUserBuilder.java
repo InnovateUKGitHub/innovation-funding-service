@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.core.builder;
 
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
@@ -44,9 +45,12 @@ public class ProjectUserBuilder extends ProjectParticipantBuilder<ProjectUser, P
         return super.withOrganisation(organisations);
     }
 
+    public ProjectUserBuilder withInvite(ProjectUserInvite... projectUserInvites) {
+        return withArraySetFieldByReflection("invite", projectUserInvites);
+    }
+
     @Override
     public void postProcess(int index, ProjectUser projectUser) {
-
         Project project = projectUser.getProcess();
 
         if (project != null) {
