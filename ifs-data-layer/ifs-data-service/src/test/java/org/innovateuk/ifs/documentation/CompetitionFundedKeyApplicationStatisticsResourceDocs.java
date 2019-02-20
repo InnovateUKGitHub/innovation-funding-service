@@ -16,8 +16,6 @@ public class CompetitionFundedKeyApplicationStatisticsResourceDocs {
             fieldWithPath("applicationsNotifiedOfDecision").description("The number of applications notified of " +
                     "decision"),
             fieldWithPath("applicationsAwaitingDecision").description("The number of applications awaiting decision"),
-            fieldWithPath("canManageFundingNotifications").description("True if funding notifications can be managed"),
-            fieldWithPath("canReleaseFeedback").description("True if feedback can be released")
     };
 
     public static final CompetitionFundedKeyApplicationStatisticsResourceBuilder

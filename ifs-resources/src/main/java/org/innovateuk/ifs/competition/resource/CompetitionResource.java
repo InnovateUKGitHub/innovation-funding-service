@@ -144,6 +144,11 @@ public class CompetitionResource {
     }
 
     @JsonIgnore
+    public boolean hasAssessmentStage() {
+        return !isH2020();
+    }
+
+    @JsonIgnore
     public boolean isAssessmentClosed() {
         return competitionStatus != null && (competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
     }
