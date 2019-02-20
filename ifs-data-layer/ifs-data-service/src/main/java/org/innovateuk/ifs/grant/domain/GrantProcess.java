@@ -23,13 +23,13 @@ public class GrantProcess {
     private boolean pending;
     private String message;
 
-    public GrantProcess() {
+    GrantProcess() {
         this.applicationId = -1;
     }
 
     public GrantProcess(long applicationId) {
         this.applicationId = applicationId;
-        this.pending = false;
+        this.pending = true;
     }
 
     public long getApplicationId() {
@@ -66,26 +66,19 @@ public class GrantProcess {
 
 
     public GrantProcess requestSend(ZonedDateTime now) {
-        this.pending = true;
+        this.pending = false;
         this.sentRequested = now;
         return this;
     }
 
     public GrantProcess sendSucceeded(ZonedDateTime now) {
-        this.pending = false;
+        this.pending = true;
         this.sentSucceeded = now;
         this.message = null;
         return this;
     }
 
     public GrantProcess sendFailed(ZonedDateTime now, String message) {
-        this.lastProcessed = now;
-        this.message = message;
-        return this;
-    }
-
-    public GrantProcess sendIgnored(ZonedDateTime now, String message) {
-        this.pending = false;
         this.lastProcessed = now;
         this.message = message;
         return this;

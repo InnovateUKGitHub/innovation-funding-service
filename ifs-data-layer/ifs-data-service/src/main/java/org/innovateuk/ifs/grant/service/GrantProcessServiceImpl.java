@@ -35,10 +35,4 @@ public class GrantProcessServiceImpl implements GrantProcessService {
         GrantProcess process = grantProcessRepository.findOneByApplicationId(applicationId);
         grantProcessRepository.save(process.sendFailed(ZonedDateTime.now(), message));
     }
-
-    @Override
-    public void sendIgnored(long applicationId, String message) {
-        GrantProcess process = grantProcessRepository.findOneByApplicationId(applicationId);
-        grantProcessRepository.save(process.sendIgnored(ZonedDateTime.now(), message));
-    }
 }
