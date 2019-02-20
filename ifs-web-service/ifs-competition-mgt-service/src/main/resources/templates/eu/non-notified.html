@@ -19,10 +19,10 @@
                 </h2>
                 <ul class="govuk-tabs__list">
                     <li class="govuk-tabs__list-item">
-                        <a href="/management/eu-invite-non-notified" aria-selected="true" class="govuk-tabs__tab">Unsent (X)</a>
+                        <a href="/management/eu-invite-non-notified" aria-selected="true" class="govuk-tabs__tab">Unsent (<span th:text="${model.totalNonNotified}"></span>)</a>
                     </li>
                     <li class="govuk-tabs__list-item">
-                        <a href="/management/eu-invite-notified" aria-selected="false" class="govuk-tabs__tab">Sent (X)</a>
+                        <a href="/management/eu-invite-notified" aria-selected="false" class="govuk-tabs__tab">Sent (<span th:text="${model.totalNotified}"></span>)</a>
                     </li>
                 </ul>
                 <section class="govuk-tabs__panel">
@@ -65,7 +65,7 @@
                                 </tr>
                                 </thead>
                                 <tbody class="govuk-table__body">
-                                <tr class="govuk-table__row">
+                                <tr class="govuk-table__row"  th:each="contact, index : ${model.contacts}">
                                     <td class="govuk-table__cell">
                                         <div class="govuk-checkboxes">
                                             <div class="govuk-checkboxes__item">
@@ -79,49 +79,15 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="govuk-table__cell">Steve Smith</td>
-                                    <td class="govuk-table__cell govuk-table__cell--numeric">steve.smith@empire.com</td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <div class="govuk-checkboxes">
-                                            <div class="govuk-checkboxes__item">
-                                                <input type="checkbox"
-                                                       class="govuk-checkboxes__input"
-                                                       id="registrant" />
-                                                <label for="registrant"
-                                                       class="govuk-label govuk-checkboxes__label">
-                                                    <span class="govuk-visually-hidden">Add</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="govuk-table__cell">Steve Smith</td>
-                                    <td class="govuk-table__cell govuk-table__cell--numeric">steve.smith@empire.com</td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <div class="govuk-checkboxes">
-                                            <div class="govuk-checkboxes__item">
-                                                <input type="checkbox"
-                                                       class="govuk-checkboxes__input"
-                                                       id="registrant" />
-                                                <label for="registrant"
-                                                       class="govuk-label govuk-checkboxes__label">
-                                                    <span class="govuk-visually-hidden">Add</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="govuk-table__cell">Steve Smith</td>
-                                    <td class="govuk-table__cell govuk-table__cell--numeric">steve.smith@empire.com</td>
+                                    <td class="govuk-table__cell" th:text="${contact.name}">Steve Smith</td>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${contact.email}">steve.smith@empire.com</td>
                                 </tr>
                                 </tbody>
                             </table>
+                            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
                         </div>
                     </form>
                 </section>
-                <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
             </div>
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
 public class EuInviteController {
 
-    private static final int DEFAULT_PAGE_SIZE = 100;
+    private static final int DEFAULT_PAGE_SIZE = 2;
 
     @Autowired
     private EuContactRestService euContactRestService;

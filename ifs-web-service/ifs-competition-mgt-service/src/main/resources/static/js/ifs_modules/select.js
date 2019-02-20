@@ -10,6 +10,7 @@ IFS.competitionManagement.select = (function () {
     },
     init: function () {
       s = this.settings
+      jQuery(s.submitEl).prop('disabled', 'disabled')
       jQuery('body').on('change', s.checkboxEl, function () {
         var checkbox = jQuery(this)
         var isSelectAll = checkbox.is(s.selectAllEl)
