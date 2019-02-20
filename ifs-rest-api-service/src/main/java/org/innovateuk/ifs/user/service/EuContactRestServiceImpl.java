@@ -24,7 +24,7 @@ public class EuContactRestServiceImpl extends BaseRestService implements EuConta
     private static final String baseUrl = "/eu-contacts";
 
     @Override
-    @Value("http://eu-grant-registration-data-service:8080")
+    @Value("${ifs.eu-grant-registration.data.service.baseURL}")
     public void setServiceUrl(String serviceUrl) {
         this.serviceUrl = serviceUrl;
     }
