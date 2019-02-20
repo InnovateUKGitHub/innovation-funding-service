@@ -4,12 +4,9 @@ Suite Setup       Custom setup
 Suite Teardown    Custom teardown
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
-
 *** Variables ***
 ${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
-${compOverview}  ${server}/competition/${competitionId}/overview
 ${competitionTitle}  H2020 Grant Transfer
-
 
 
 *** Test Cases ***
@@ -52,12 +49,14 @@ User can finish setting up the grant transfer
     [Documentation]  IFS-5158
     Given the user completes grant transfer setup
     Then get competitions id and set it as suite variable  ${competitionTitle}
-    And the competition moves to Open state  ${competitionId}
+    And the competition moves to Open state                ${competitionId}
 
-Applicant user can view the open grant transfer
+Applicant user start a grant transfer
     [Documentation]  IFS-5158
-    [Setup]  log in as a different user  &{lead_applicant_credentials}
-    Given the user navigates to the page   ${compOverview}
+    [Setup]  log in as a different user    &{lead_applicant_credentials}
+    Given the user navigates to the page   ${server}/competition/${competitionId}/overview
+    When the user clicks the button/link   jQuery = a:contains("Start new application")
+    Then the user is able to go to Application overview
 
 
 *** Keywords ***
@@ -178,6 +177,14 @@ The user completes grant transfer setup
     the user clicks the button/link             css = button[type="submit"]
     the user navigates to the page              ${CA_UpcomingComp}
     the user should see the element             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competitionTitle}")
+
+The user is able to go to Application overview
+     the user clicks the button/link  jQuery = .govuk-button:contains("Save and continue")
+     the user should see the element  link = Project details
+     the user should see the element  link = Application team
+     the user should see the element  link = Public description
+     the user should see the element  link = Project documents
+     the user should see the element  link = Finances overview
 
 Custom teardown
     the user closes the browser
