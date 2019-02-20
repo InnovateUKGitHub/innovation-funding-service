@@ -1,3 +1,4 @@
+-- IFS-5208 Add webtest data to check eu contacts are showing correctly
 INSERT INTO `eu_contact` (`job_title`, `name`, `email`, `telephone`)
 VALUES
  ("developer", "Helena Johns", "helena@johns.com", "999"),

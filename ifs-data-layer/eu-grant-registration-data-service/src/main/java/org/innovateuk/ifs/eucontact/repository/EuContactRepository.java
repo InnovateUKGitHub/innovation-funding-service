@@ -8,7 +8,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface EuContactRepository extends PagingAndSortingRepository<EuContact, Long> {
 
     Page<EuContact> findByNotifiedTrue(Pageable pageable);
-
     Page<EuContact> findByNotifiedFalse(Pageable pageable);
-
 }
