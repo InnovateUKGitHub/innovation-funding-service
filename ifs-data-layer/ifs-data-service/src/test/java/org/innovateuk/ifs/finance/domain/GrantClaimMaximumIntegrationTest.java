@@ -35,6 +35,8 @@ import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
@@ -96,7 +98,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
         // For speed, all of these tests are combined in the same test method so that we don't have to continually recreate the
         // APC competition
-        CompetitionData competitionData = createApcCompetition("Feasibility studies");
+        CompetitionData competitionData = createApcCompetition(Collections.singletonList("Feasibility studies"));
 
         // test business types
         ApplicationData businessApplicationData = createApplication(competitionData, "steve.smith@empire.com", "Empire Ltd", SMALL_SIZE, false);
@@ -197,7 +199,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         return userService.findByEmail(emailAddress).getSuccess();
     }
 
-    private CompetitionData createApcCompetition(String researchCategory) {
+    private CompetitionData createApcCompetition(List<String> researchCategory) {
 
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR)).build());
 
