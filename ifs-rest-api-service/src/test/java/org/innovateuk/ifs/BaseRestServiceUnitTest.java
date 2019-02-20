@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.service.RootDefaultRestTemplateAdaptor;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -31,7 +31,7 @@ import static org.springframework.http.HttpStatus.OK;
  * this base class also provides a dummy dataServiceUrl and a mock restTemplate for testing and stubbing the routes
  * that the REST services use to exchange data with the "data" layer.
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 
 public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestService> {
 

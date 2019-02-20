@@ -26,6 +26,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
@@ -150,7 +151,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .build();
 
 
-        when(questionRepository.findOne(questionId)).thenReturn(question);
+        when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         when(guidanceRowMapper.mapToResource(guidanceRows)).thenReturn(new ArrayList<>());
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.getByQuestionId(questionId);
@@ -222,14 +223,14 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
-        when(questionRepository.findOne(questionId)).thenReturn(question);
+        when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
 
-        doNothing().when(guidanceRowRepository).delete(writtenFeedbackFormInput.getGuidanceRows());
-        when(guidanceRowRepository.save(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
+        doNothing().when(guidanceRowRepository).deleteAll(writtenFeedbackFormInput.getGuidanceRows());
+        when(guidanceRowRepository.saveAll(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
 
@@ -410,14 +411,14 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
-        when(questionRepository.findOne(questionId)).thenReturn(question);
+        when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
 
-        doNothing().when(guidanceRowRepository).delete(writtenFeedbackFormInput.getGuidanceRows());
-        when(guidanceRowRepository.save(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
+        doNothing().when(guidanceRowRepository).deleteAll(writtenFeedbackFormInput.getGuidanceRows());
+        when(guidanceRowRepository.saveAll(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
 
@@ -444,14 +445,14 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.APPLICATION, FormInputType
                 .TEXTAREA)).thenReturn(questionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
-        when(questionRepository.findOne(question.getId())).thenReturn(question);
+        when(questionRepository.findById(question.getId())).thenReturn(Optional.of(question));
         when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
 
-        doNothing().when(guidanceRowRepository).delete(writtenFeedbackFormInput.getGuidanceRows());
-        when(guidanceRowRepository.save(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
+        doNothing().when(guidanceRowRepository).deleteAll(writtenFeedbackFormInput.getGuidanceRows());
+        when(guidanceRowRepository.saveAll(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
     }
 
     @Test
@@ -466,9 +467,9 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     public void createByCompetitionId() {
         Competition competition = newCompetition().build();
         Question newlyCreatedQuestion = newQuestion().build();
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
-        when(questionRepository.findOne(newlyCreatedQuestion.getId())).thenReturn(newlyCreatedQuestion);
+        when(questionRepository.findById(newlyCreatedQuestion.getId())).thenReturn(Optional.of(newlyCreatedQuestion));
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competition.getId());
         assertTrue(result.isSuccess());
@@ -480,7 +481,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     @Test
     public void createByCompetitionId_withNonExistentCompId() {
         Long competitionId = 22L;
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(null);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.empty());
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
         assertTrue(result.isFailure());
@@ -490,7 +491,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     @Test
     public void createByCompetitionId_whenDefaultCreationFails() {
         Competition competition = newCompetition().build();
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competition.getId());
@@ -504,7 +505,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         Section section = newSection().build();
         Question createdQuestion = newQuestion().build();
 
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS.getName()))
                 .thenReturn(section);
         when(questionRepository.save(createResearchCategoryQuestionExpectations(competition, section)))

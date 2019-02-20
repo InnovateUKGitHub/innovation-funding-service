@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
@@ -55,7 +56,7 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
         ProcessRole processRole = newProcessRole()
                 .withUser(newUser().with(id(assessorUser.getId())).build())
                 .build();
-        when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
+        when(processRoleRepositoryMock.findById(processRole.getId())).thenReturn(Optional.of(processRole));
 
         assessmentReviews = EnumSet.allOf(ReviewState.class).stream().collect(toMap(identity(), state -> setupAssessmentReview(processRole, state)));
     }
@@ -85,7 +86,7 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
                 .withState(state)
                 .build();
 
-        when(reviewRepositoryMock.findOne(review.getId())).thenReturn(review);
+        when(reviewRepositoryMock.findById(review.getId())).thenReturn(Optional.of(review));
 
         return newReviewResource()
                 .withId(review.getId())

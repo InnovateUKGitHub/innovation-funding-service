@@ -46,9 +46,7 @@ Details of the competition are visible
     Then the user should see the element   jQuery = dt:contains("Competition") + dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element    jQuery = dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
     And the user should see the element    jQuery = dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
-    ${date} =  request the date from the database
-    And the user should see the element    jQuery = dt:contains("Submit applications deadline:") + dd:contains("${date}")
-
+    And the user should see the element    jQuery = dt:contains("Submit applications deadline:") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DATE_LONG}")
 
 User can view the competition brief
     [Documentation]    INFUND-5494
@@ -126,7 +124,6 @@ Comp admin can see the application is rejected on manage assessment page
 
 *** Keywords ***
 Custom Suite Setup
-   Connect to database  @{database}
    The user logs-in in new browser  &{assessor2_credentials}
    ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = h1:contains("Select a dashboard")
    Run Keyword If  '${status}' == 'PASS'  Run keywords   the user selects the checkbox   selectedRole1
@@ -157,14 +154,5 @@ The user closes the competition brief
     Close Window
     Select Window
 
-request the date from the database
-    log  ${IN_ASSESSMENT_COMPETITION}
-    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%e %M %Y') FROM `${database_name}`.`milestone` WHERE `competition_id` = '${IN_ASSESSMENT_COMPETITION}' AND type = 'ASSESSOR_DEADLINE';
-    log  ${result}
-    ${result} =  get from list  ${result}  0
-    ${assessorDeadline} =  get from list  ${result}  0
-    [Return]  ${assessorDeadline}
-
 Custom suite teardown
     The user closes the browser
-    Disconnect from database

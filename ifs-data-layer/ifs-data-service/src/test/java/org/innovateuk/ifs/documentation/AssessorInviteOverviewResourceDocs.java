@@ -11,6 +11,9 @@ public class AssessorInviteOverviewResourceDocs {
             fieldWithPath("innovationAreas").description("Innovation areas of the invitee"),
             fieldWithPath("compliant").description("Flag to signify if the invitee is compliant. An invitee who is also an existing assessor is compliant if, and only if they’ve completed their Skills and Business Type, and they’ve completed their DoI, and they’ve signed an Agreement."),
             fieldWithPath("status").description("Status of the invite"),
-            fieldWithPath("details").description("Additional details, for example, the reason why the invite is declined")
+            fieldWithPath("details").description("Additional details, for example, the reason why the invite is declined"),
+            fieldWithPath("id").description("Id of the invite overview"),
+            fieldWithPath("businessType").description("Business type of the invite overview"),
+            fieldWithPath("inviteId").description("Invite id of the invite overview"),
     };
 }

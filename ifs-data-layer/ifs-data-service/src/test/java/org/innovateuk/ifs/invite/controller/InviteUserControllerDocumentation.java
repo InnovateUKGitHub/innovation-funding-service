@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.documentation.InviteUserResourceDocs;
-import org.innovateuk.ifs.documentation.PageResourceDocs;
+import org.innovateuk.ifs.documentation.*;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
@@ -70,6 +69,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andDo(document("inviteUser/saveInvite/{method-name}",
                         requestFields(InviteUserResourceDocs.inviteUserResourceFields)
+                        .andWithPrefix("invitedUser.", UserDocs.userResourceFields)
                 ));
 
         verify(inviteUserServiceMock).saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole());
@@ -126,6 +126,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andDo(document("inviteUser/internal/pending/{method-name}",
                         responseFields(PageResourceDocs.pageResourceFields)
+                        .andWithPrefix("content[].", RoleInviteResourceDocs.roleInviteResourceFields)
                 ));
     }
 
@@ -152,7 +153,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                         ,
                         responseFields(
                                 fieldWithPath("[]").description("List of external pending invites with associated organisations, which contain the search string and match the search category")
-                        )
+                        ).andWithPrefix("[].", ExternalInviteResourceDocs.externalInviteResourceFields)
                 ));
 
         verify(inviteUserServiceMock).findExternalInvites(searchString, searchCategory);

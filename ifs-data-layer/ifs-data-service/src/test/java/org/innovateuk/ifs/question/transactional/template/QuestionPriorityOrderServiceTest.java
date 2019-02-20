@@ -11,13 +11,13 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.*;
 
 
@@ -70,7 +70,7 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
                 .withPriority(5, 5, 6)
                 .build(3);
 
-        verify(questionRepositoryMock).save(refEq(expectedQuestions));
+        verify(questionRepositoryMock).saveAll(refEq(expectedQuestions));
         verify(questionRepositoryMock).save(refEq(newlyCreatedQuestion));
     }
 
@@ -135,7 +135,7 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
                 .withCompetition(competition)
                 .build(3);
 
-        verify(questionRepositoryMock).save(refEq(expectedQuestions));
+        verify(questionRepositoryMock).saveAll(refEq(expectedQuestions));
     }
 
     @Test
@@ -173,7 +173,7 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
                 .withCompetition(competition)
                 .build(3);
 
-        verify(questionRepositoryMock).save(refEq(expectedQuestions));
+        verify(questionRepositoryMock).saveAll(refEq(expectedQuestions));
     }
 
     @Test
@@ -211,6 +211,6 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
                 .withCompetition(competition)
                 .build(3);
 
-        verify(questionRepositoryMock).save(refEq(expectedQuestions));
+        verify(questionRepositoryMock).saveAll(refEq(expectedQuestions));
     }
 }

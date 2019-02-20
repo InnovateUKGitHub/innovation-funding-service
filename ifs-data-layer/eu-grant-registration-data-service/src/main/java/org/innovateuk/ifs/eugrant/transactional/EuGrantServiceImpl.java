@@ -45,7 +45,7 @@ public class EuGrantServiceImpl implements EuGrantService {
 
     @Override
     public ServiceResult<Void> update(UUID id, EuGrantResource euGrantResource) {
-        return find(euGrantRepository.findOne(id), notFoundError(EuGrant.class, id))
+        return find(euGrantRepository.findById(id), notFoundError(EuGrant.class, id))
                 .andOnSuccess(this::onlyAllowInProgress)
                 .andOnSuccessReturn(db ->
                         euGrantRepository.save(
@@ -55,7 +55,7 @@ public class EuGrantServiceImpl implements EuGrantService {
 
     @Override
     public ServiceResult<EuGrantResource> findById(UUID id) {
-        return find(euGrantRepository.findOne(id), notFoundError(EuGrant.class, id))
+        return find(euGrantRepository.findById(id), notFoundError(EuGrant.class, id))
                 .andOnSuccess(this::onlyAllowInProgress)
                 .andOnSuccessReturn(euGrantMapper::mapToResource);
     }
@@ -68,7 +68,7 @@ public class EuGrantServiceImpl implements EuGrantService {
     @Override
     @Transactional
     public ServiceResult<EuGrantResource> submit(UUID id, boolean sendEmail) {
-        return find(euGrantRepository.findOne(id), notFoundError(EuGrant.class, id))
+        return find(euGrantRepository.findById(id), notFoundError(EuGrant.class, id))
                 .andOnSuccess(this::onlyAllowInProgress)
                 .andOnSuccess(grant -> submit(grant, sendEmail));
     }

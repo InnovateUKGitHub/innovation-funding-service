@@ -101,7 +101,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Override
     public ServiceResult<BankDetailsResource> getById(Long id) {
-        return find(bankDetailsRepository.findOne(id), notFoundError(BankDetails.class, id)).
+        return find(bankDetailsRepository.findById(id), notFoundError(BankDetails.class, id)).
                 andOnSuccessReturn(bankDetailsMapper::mapToResource);
     }
 
@@ -133,9 +133,9 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Override
     public ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(Long projectId) {
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId()).get();
         List<Organisation> sortedOrganisations = new PrioritySorting<>(projectUsersHelper.getPartnerOrganisations(projectId), leadOrganisation, Organisation::getName).unwrap();
         final List<BankDetailsStatusResource> bankDetailsStatusResources = simpleMap(sortedOrganisations, org -> getBankDetailsStatusForOrg(project, org));
 
@@ -193,7 +193,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     }
 
     private void updateAddressForExistingBankDetails(AddressResource addressResource, BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
-        AddressType addressType = addressTypeRepository.findOne(BANK_DETAILS.getOrdinal());
+        AddressType addressType = addressTypeRepository.findById(BANK_DETAILS.getOrdinal()).get();
         List<OrganisationAddress> bankOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(bankDetailsResource.getOrganisation(), addressType);
 
         OrganisationAddress newOrganisationAddress;

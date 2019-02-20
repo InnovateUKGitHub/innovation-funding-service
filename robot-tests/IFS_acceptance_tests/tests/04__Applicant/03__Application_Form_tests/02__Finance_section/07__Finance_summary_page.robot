@@ -416,7 +416,7 @@ The user verifies labour, overhead costs and materials
 
 the user navigates to the finances of the application
     the user navigates to the page   ${allApplicationsForRTOComp}
-    the user clicks the button/link  link = ${application_ids["Networking home IOT devices"]}
+    the user clicks the button/link  link = ${createApplicationOpenCompetitionApplication1Number}
     the user expands the section     Finances summary
 
 the academic user marks finances as complete

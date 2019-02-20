@@ -142,7 +142,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     }
 
     private ServiceResult<Application> getApplication(long applicationId) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId));
     }
 
     private AvailableApplicationResource mapToAvailableApplicationResource(Application application) {
@@ -189,7 +189,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     }
 
     private ServiceResult<Organisation> getOrganisation(long organisationId) {
-        return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
+        return find(organisationRepository.findById(organisationId), notFoundError(Organisation.class, organisationId));
     }
 
     private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application) {

@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
@@ -104,7 +105,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
                 withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).
                 build();
 
-        when(competitionRepository.findById(competitionId)).thenReturn(competitionInSetup);
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competitionInSetup));
 
         allGlobalRoleUsers.forEach(user -> {
             if (compAdminAndProjectFinance.contains(user)) {
@@ -126,7 +127,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
                     withCompetitionStatus(status).
                     build();
 
-            when(competitionRepository.findById(competitionId)).thenReturn(competitionInSetup);
+            when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competitionInSetup));
 
             compAdminAndProjectFinance.forEach(user -> {
                 if (CompetitionStatus.COMPETITION_SETUP.equals(status)) {

@@ -33,7 +33,7 @@ public class CategoryRepositoryIntegrationTest extends BaseRepositoryIntegration
 
         flushAndClearSession();
 
-        List<Category> found = repository.findAll(categories.stream().map(Category::getId).collect(Collectors.toList()));
+        Iterable<Category> found = repository.findAllById(categories.stream().map(Category::getId).collect(Collectors.toList()));
 
         assertEquals(categories, found);
     }

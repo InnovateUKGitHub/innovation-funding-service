@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -50,7 +51,7 @@ public class ContentGroupServiceImplTest extends BaseServiceUnitTest<ContentGrou
         ContentGroup group = mock(ContentGroup.class);
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(new ImmutablePair<>(null, fileEntry)));
-        when(contentGroupRepository.findOne(contentGroupId)).thenReturn(group);
+        when(contentGroupRepository.findById(contentGroupId)).thenReturn(Optional.of(group));
 
         service.uploadFile(contentGroupId, fileEntryResource, inputStreamSupplier);
 
@@ -66,7 +67,7 @@ public class ContentGroupServiceImplTest extends BaseServiceUnitTest<ContentGrou
         ContentGroup group = mock(ContentGroup.class);
         long fileEntryId = 2L;
 
-        when(contentGroupRepository.findOne(contentGroupId)).thenReturn(group);
+        when(contentGroupRepository.findById(contentGroupId)).thenReturn(Optional.of(group));
         when(group.getFileEntry()).thenReturn(fileEntry);
         when(fileEntry.getId()).thenReturn(fileEntryId);
         when(fileServiceMock.deleteFileIgnoreNotFound(fileEntryId)).thenReturn(serviceSuccess(fileEntry));
@@ -83,7 +84,7 @@ public class ContentGroupServiceImplTest extends BaseServiceUnitTest<ContentGrou
         FileEntryResource fileEntryResource = mock(FileEntryResource.class);
         ContentGroup group = mock(ContentGroup.class);
 
-        when(contentGroupRepository.findOne(contentGroupId)).thenReturn(group);
+        when(contentGroupRepository.findById(contentGroupId)).thenReturn(Optional.of(group));
         when(group.getFileEntry()).thenReturn(fileEntry);
         when(fileEntryMapperMock.mapToResource(fileEntry)).thenReturn(fileEntryResource);
 
@@ -101,7 +102,7 @@ public class ContentGroupServiceImplTest extends BaseServiceUnitTest<ContentGrou
         ContentGroup group = mock(ContentGroup.class);
         Supplier<InputStream> inputStreamSupplier = mock(Supplier.class);
 
-        when(contentGroupRepository.findOne(contentGroupId)).thenReturn(group);
+        when(contentGroupRepository.findById(contentGroupId)).thenReturn(Optional.of(group));
         when(group.getFileEntry()).thenReturn(fileEntry);
         when(fileEntryMapperMock.mapToResource(fileEntry)).thenReturn(fileEntryResource);
         when(fileEntry.getId()).thenReturn(fileEntryId);
@@ -140,13 +141,13 @@ public class ContentGroupServiceImplTest extends BaseServiceUnitTest<ContentGrou
                                 asList(toUpdateContentGroup, toDeleteContentGroup)
                         ).build(1)).build();
 
-        when(contentGroupRepository.findOne(toDeleteContentGroup.getId())).thenReturn(toDeleteContentGroup);
+        when(contentGroupRepository.findById(toDeleteContentGroup.getId())).thenReturn(Optional.of(toDeleteContentGroup));
         when(fileServiceMock.deleteFileIgnoreNotFound(fileEntryId)).thenReturn(serviceSuccess(toDelete));
 
         service.saveContentGroups(publicContentResource, publicContent, type).getSuccess();
 
         verify(fileServiceMock).deleteFileIgnoreNotFound(fileEntryId);
-        verify(contentGroupRepository).delete(toDeleteContentGroup.getId());
+        verify(contentGroupRepository).deleteById(toDeleteContentGroup.getId());
         verify(contentGroupRepository).save(contentGroupMatcher(newContentGroupResource.getHeading(), newContentGroupResource.getContent()));
 
         assertThat(toUpdateContentGroup.getContent(), equalTo(toUpdateContentGroupResource.getContent()));

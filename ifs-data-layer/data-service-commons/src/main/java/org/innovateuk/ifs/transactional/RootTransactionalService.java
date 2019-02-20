@@ -36,7 +36,7 @@ public abstract class RootTransactionalService {
     }
 
     protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
-        return find(processRoleRepository.findOne(processRoleId), notFoundError(ProcessRole.class, processRoleId));
+        return find(processRoleRepository.findById(processRoleId), notFoundError(ProcessRole.class, processRoleId));
     }
 
     protected ServiceResult<List<ProcessRole>> getProcessRoles(Long applicationId, Role roleType) {
@@ -48,7 +48,7 @@ public abstract class RootTransactionalService {
     }
 
     protected ServiceResult<User> getUser(final Long id) {
-        return find(userRepository.findOne(id), notFoundError(User.class, id));
+        return find(userRepository.findById(id), notFoundError(User.class, id));
     }
 
     protected ServiceResult<User> getCurrentlyLoggedInUser() {

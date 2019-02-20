@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 /**
  * Tests {@link ApplicationQuestionApplicationDetailsSaver}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationQuestionApplicationDetailsSaverTest {
 
     @InjectMocks

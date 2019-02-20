@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Testing {@link SummaryViewModel} and the parts of {@link AbstractPublicContentGroupViewModel}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class SummaryViewModelTest {
 
     @InjectMocks

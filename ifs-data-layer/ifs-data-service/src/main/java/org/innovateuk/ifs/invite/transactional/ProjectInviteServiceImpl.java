@@ -114,7 +114,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
 
     private ProjectUserInviteResource mapInviteToInviteResource(ProjectUserInvite invite) {
         ProjectUserInviteResource inviteResource = inviteMapper.mapToResource(invite);
-        Organisation organisation = organisationRepository.findOne(inviteResource.getLeadOrganisationId());
+        Organisation organisation = organisationRepository.findById(inviteResource.getLeadOrganisationId()).get();
         inviteResource.setLeadOrganisation(organisation.getName());
         ProjectResource project = projectService.getProjectById(inviteResource.getProject()).getSuccess();
         inviteResource.setApplicationId(project.getApplication());

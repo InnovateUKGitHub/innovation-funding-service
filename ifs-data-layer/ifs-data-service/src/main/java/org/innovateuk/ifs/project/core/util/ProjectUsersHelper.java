@@ -54,7 +54,7 @@ public class ProjectUsersHelper {
 
         SortedSet<Organisation> organisationSet = projectRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(PROJECT_PARTNER.getName()))
-                .map(uar -> organisationRepository.findOne(uar.getOrganisation()))
+                .map(uar -> organisationRepository.findById(uar.getOrganisation()).orElse(null))
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);

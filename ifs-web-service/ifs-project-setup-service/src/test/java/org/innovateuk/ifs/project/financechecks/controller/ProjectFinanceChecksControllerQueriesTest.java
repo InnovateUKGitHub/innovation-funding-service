@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financechecks;
+package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -70,8 +70,9 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -117,7 +118,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     List<QueryResource> queries;
 
     @Captor
-    ArgumentCaptor<PostResource> savePostArgumentCaptor;
+    private ArgumentCaptor<PostResource> savePostArgumentCaptor;
 
     @Mock
     private CookieUtil cookieUtil;
@@ -155,16 +156,16 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Mock
     private CompetitionRestService competitionRestService;
 
-    @Spy
-    @InjectMocks
-    @SuppressWarnings("unused")
-    private ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
-
+    private ThreadViewModelPopulator threadViewModelPopulator;
 
     @Before
     public void setupCommonExpectations() {
 
         setupCookieUtil(cookieUtil);
+
+        threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
+        spy(threadViewModelPopulator);
+        controller.setThreadViewModelPopulator(threadViewModelPopulator);
 
         when(userRestService.retrieveUserById(financeTeamUser.getId())).thenReturn(restSuccess(financeTeamUser));
         when(organisationRestService.getByUserAndProjectId(financeTeamUser.getId(), projectId)).thenReturn(restSuccess(innovateOrganisationResource));

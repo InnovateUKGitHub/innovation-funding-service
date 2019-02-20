@@ -182,10 +182,10 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         when(stakeholderRepositoryMock.existsByCompetitionIdAndStakeholderEmail(competitionId, stakeholderUser.getEmail())).thenReturn(false);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(user));
         when(userRepositoryMock.save(any(User.class))).thenReturn(stakeholderUser);
-        when(userRepositoryMock.findOne(stakeholderUserId)).thenReturn(stakeholderUser);
+        when(userRepositoryMock.findById(stakeholderUserId)).thenReturn(Optional.of(stakeholderUser));
         when(stakeholderRepositoryMock.save(any(Stakeholder.class))).thenReturn(savedStakeholderInDB);
         when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), eq(EMAIL))).thenReturn(serviceSuccess());
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
 
         ServiceResult<Void> result = service.inviteStakeholder(invitedUser, 1L);
 
@@ -208,7 +208,7 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
         when(stakeholderInviteRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.emptyList());
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
 
         StakeholderInvite savedStakeholderInvite = new StakeholderInvite(competition,
                 invitedUser.getFirstName() + " " + invitedUser.getLastName(),
@@ -316,8 +316,8 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
                 .build();
 
         Stakeholder savedStakeholderInDB = new Stakeholder(competition, stakeholderUser);
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
-        when(userRepositoryMock.findOne(stakeholderUserId)).thenReturn(stakeholderUser);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(userRepositoryMock.findById(stakeholderUserId)).thenReturn(Optional.of(stakeholderUser));
         when(stakeholderRepositoryMock.save(any(Stakeholder.class))).thenReturn(savedStakeholderInDB);
         when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), eq(EMAIL))).thenReturn(serviceSuccess());
 

@@ -159,6 +159,6 @@ public class InviteOrganisationPermissionRules extends BasePermissionRules {
     }
 
     private Application getApplication(long applicationId){
-        return applicationRepository.findOne(applicationId);
+        return applicationRepository.findById(applicationId).get();
     }
 }

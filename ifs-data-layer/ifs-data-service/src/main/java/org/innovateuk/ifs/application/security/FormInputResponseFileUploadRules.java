@@ -38,7 +38,7 @@ public class FormInputResponseFileUploadRules extends BasePermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        Application application = applicationRepository.findOne(fileEntry.getCompoundId().getApplicationId());
+        Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).orElse(null);
         return userIsApplicantOnThisApplication(fileEntry, user) && application.isOpen();
     }
 
@@ -54,7 +54,7 @@ public class FormInputResponseFileUploadRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Stakeholders can can download a file for an answer for applications theyre assigned to")
     public boolean stakeholdersCanDownloadFilesInResponse(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId());
+        Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).get();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 

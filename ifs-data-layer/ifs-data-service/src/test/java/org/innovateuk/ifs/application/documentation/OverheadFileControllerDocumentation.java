@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.OverheadFileController;
+import org.innovateuk.ifs.documentation.FileEntryDocs;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
@@ -20,7 +21,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.FileEntryDocs.fileAndContentsFields;
 import static org.innovateuk.ifs.documentation.FileEntryDocs.fileEntryResourceFields;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -84,6 +85,6 @@ public class OverheadFileControllerDocumentation extends BaseControllerMockMVCTe
                         requestParameters(
                                 parameterWithName("overheadId").description("Id of overhead cost in project finances")
                         ),
-                        responseFields(fileAndContentsFields)));
+                        responseFields(fileAndContentsFields).andWithPrefix("fileEntry.", FileEntryDocs.fileEntryResourceFields)));
     }
 }

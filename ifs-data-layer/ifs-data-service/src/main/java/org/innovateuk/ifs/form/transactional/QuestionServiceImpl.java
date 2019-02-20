@@ -93,7 +93,8 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                 if (previousSection.isPresent()) {
                     Optional<Question> lastQuestionInSection = previousSection.get().getQuestions()
                             .stream()
-                            .map(questionRepository::findOne)
+                            .map(questionRepository::findById)
+                            .map(Optional::get)
                             .max(comparing(Question::getPriority));
                     if(lastQuestionInSection.isPresent()){
                         return serviceSuccess(questionMapper.mapToResource(lastQuestionInSection.get()));
@@ -115,7 +116,8 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                         if (nextSection.isPresent()) {
                             Optional<Question> firstQuestionInSection = nextSection.get().getQuestions()
                                     .stream()
-                                    .map(questionRepository::findOne)
+                                    .map(questionRepository::findById)
+                                    .map(Optional::get)
                                     .min(comparing(Question::getPriority));
 
                             if (firstQuestionInSection.isPresent()) {
@@ -190,7 +192,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     public ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(Long assessmentId) {
         return find(getAssessment(assessmentId)).andOnSuccess(assessment ->
              sectionService.getByCompetitionIdVisibleForAssessment(
-                    applicationRepository.findOne(assessment.getParticipant().getApplicationId()).getCompetition().getId())
+                    applicationRepository.findById(assessment.getParticipant().getApplicationId()).get().getCompetition().getId())
                     .andOnSuccessReturn(sections -> sections.stream().map(sectionMapper::mapToDomain)
                             .flatMap(section -> section.getQuestions().stream()).map(questionMapper::mapToResource)
                             .collect(toList())));
@@ -235,15 +237,15 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Supplier<ServiceResult<Assessment>> getAssessment(Long assessmentId) {
-        return () -> find(assessmentRepository.findOne(assessmentId), notFoundError(Assessment.class, assessmentId));
+        return () -> find(assessmentRepository.findById(assessmentId), notFoundError(Assessment.class, assessmentId));
     }
 
     private Supplier<ServiceResult<Question>> getQuestionSupplier(Long questionId) {
-        return () -> find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
+        return () -> find(questionRepository.findById(questionId), notFoundError(Question.class, questionId));
     }
 
     private ServiceResult<QuestionResource> getQuestionResource(Long questionId) {
-        return find(questionRepository.findOne(questionId), notFoundError(QuestionResource.class, questionId)).andOnSuccessReturn(questionMapper::mapToResource);
+        return find(questionRepository.findById(questionId), notFoundError(QuestionResource.class, questionId)).andOnSuccessReturn(questionMapper::mapToResource);
     }
 
     private List<QuestionResource> questionsToResources(List<Question> filtered) {

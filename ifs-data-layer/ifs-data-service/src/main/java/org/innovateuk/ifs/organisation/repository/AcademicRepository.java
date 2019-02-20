@@ -12,6 +12,5 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface AcademicRepository extends PagingAndSortingRepository<Academic, Long> {
-    Academic findById(Long id);
     List<Academic> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

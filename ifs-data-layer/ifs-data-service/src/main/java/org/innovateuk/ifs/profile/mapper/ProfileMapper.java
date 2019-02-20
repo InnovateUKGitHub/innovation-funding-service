@@ -26,7 +26,7 @@ public abstract class ProfileMapper {
         if (id == null) {
             return null;
         }
-        return repository.findOne(id);
+        return repository.findById(id).orElse(null);
     }
 
     public Long mapProfileToId(Profile object) {

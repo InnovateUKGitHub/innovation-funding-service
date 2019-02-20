@@ -17,7 +17,7 @@ import javax.persistence.*;
 public abstract class CategoryLink<T, C extends Category> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(targetEntity = Category.class)

@@ -5,9 +5,12 @@ import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
+
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<EuGrantRepository> {
 
@@ -19,7 +22,7 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
 
     @Test
     public void findAll() {
-        repository.save(asList(new EuGrant(), new EuGrant()));
+        repository.saveAll(asList(new EuGrant(), new EuGrant()));
         flushAndClearSession();
 
         assertEquals(2, repository.count());
@@ -31,9 +34,9 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
         repository.save(grant);
         flushAndClearSession();
 
-        EuGrant savedGrant = repository.findOne(grant.getId());
-        assertNotNull(savedGrant);
-        assertNotNull(savedGrant.getCreatedOn());
-        assertNotNull(savedGrant.getModifiedOn());
+        Optional<EuGrant> savedGrant = repository.findById(grant.getId());
+        assertTrue(savedGrant.isPresent());
+        assertNotNull(savedGrant.get().getCreatedOn());
+        assertNotNull(savedGrant.get().getModifiedOn());
     }
 }

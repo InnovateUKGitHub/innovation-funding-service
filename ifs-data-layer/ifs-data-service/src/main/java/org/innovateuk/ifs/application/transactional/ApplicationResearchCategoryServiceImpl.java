@@ -85,11 +85,11 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     }
 
     private ServiceResult<ResearchCategory> findResearchCategory(Long researchCategoryId) {
-        return find(researchCategoryRepository.findOne(researchCategoryId), notFoundError(ResearchCategory.class));
+        return find(researchCategoryRepository.findById(researchCategoryId), notFoundError(ResearchCategory.class));
     }
 
     private ServiceResult<Application> saveApplicationWithResearchCategory(Application application, ResearchCategory researchCategory) {
-        Application origApplication = applicationRepository.findOne(application.getId());
+        Application origApplication = applicationRepository.findById(application.getId()).get();
 
         if (origApplication.getResearchCategory() == null || !origApplication.getResearchCategory().getId().equals(researchCategory.getId())) {
 
