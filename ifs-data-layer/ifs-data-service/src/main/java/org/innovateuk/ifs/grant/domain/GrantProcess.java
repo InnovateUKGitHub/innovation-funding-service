@@ -15,7 +15,7 @@ public class GrantProcess {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private long applicationId;
+    private final long applicationId;
 
     private ZonedDateTime sentRequested;
     private ZonedDateTime sentSucceeded;
@@ -23,32 +23,25 @@ public class GrantProcess {
     private boolean pending;
     private String message;
 
-    public long getApplicationId() {
-        return applicationId;
+    public GrantProcess() {
+        this.applicationId = -1;
     }
 
-    public void setApplicationId(long applicationId) {
+    public GrantProcess(long applicationId) {
         this.applicationId = applicationId;
+        this.pending = false;
+    }
+
+    public long getApplicationId() {
+        return applicationId;
     }
 
     public ZonedDateTime getSentRequested() {
         return sentRequested;
     }
 
-    public void setSentRequested(ZonedDateTime sentRequested) {
-        this.sentRequested = sentRequested;
-    }
-
     public ZonedDateTime getSentSucceeded() {
         return sentSucceeded;
-    }
-
-    public void setSentSucceeded(ZonedDateTime sentSucceeded) {
-        this.sentSucceeded = sentSucceeded;
-    }
-
-    public void setPending(boolean pending) {
-        this.pending = pending;
     }
 
     public boolean isPending() {
@@ -67,15 +60,34 @@ public class GrantProcess {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public ZonedDateTime getLastProcessed() {
         return lastProcessed;
     }
 
-    public void setLastProcessed(ZonedDateTime lastProcessed) {
-        this.lastProcessed = lastProcessed;
+
+    public GrantProcess requestSend(ZonedDateTime now) {
+        this.pending = true;
+        this.sentRequested = now;
+        return this;
+    }
+
+    public GrantProcess sendSucceeded(ZonedDateTime now) {
+        this.pending = false;
+        this.sentSucceeded = now;
+        this.message = null;
+        return this;
+    }
+
+    public GrantProcess sendFailed(ZonedDateTime now, String message) {
+        this.lastProcessed = now;
+        this.message = message;
+        return this;
+    }
+
+    public GrantProcess sendIgnored(ZonedDateTime now, String message) {
+        this.pending = false;
+        this.lastProcessed = now;
+        this.message = message;
+        return this;
     }
 }
