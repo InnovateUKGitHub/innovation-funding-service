@@ -52,7 +52,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Override
     public ServiceResult<Boolean> allPublicDatesComplete(Long competitionId) {
-        boolean isNonIfs = competitionRepository.findById(competitionId).isNonIfs();
+        boolean isNonIfs = competitionRepository.findById(competitionId).get().isNonIfs();
         List<MilestoneType> milestonesRequired = PUBLIC_MILESTONES.stream()
                 .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
                 .collect(toList());
@@ -102,7 +102,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             return serviceFailure(messages.getErrors());
         }
 
-        milestoneRepository.save(milestoneMapper.mapToDomain(milestones));
+        milestoneRepository.saveAll(milestoneMapper.mapToDomain(milestones));
         return serviceSuccess();
     }
 
@@ -116,7 +116,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     @Override
     @Transactional
     public ServiceResult<MilestoneResource> create(MilestoneType type, Long id) {
-        Competition competition = competitionRepository.findById(id);
+        Competition competition = competitionRepository.findById(id).orElse(null);
 
         Milestone milestone = new Milestone(type, competition);
         return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
@@ -142,7 +142,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     private ValidationMessages validateDates(List<MilestoneResource> milestones) {
         ValidationMessages vm = new ValidationMessages();
-        Competition competition = competitionRepository.findById(milestones.get(0).getCompetitionId());
+        Competition competition = competitionRepository.findById(milestones.get(0).getCompetitionId()).get();
 
         vm.addAll(validateDateNotNull(milestones));
 

@@ -54,7 +54,7 @@ public class QuestionTemplatePersistorImpl implements BaseChainedTemplatePersist
 
     @Transactional
     public void deleteEntityById(Long questionId) {
-        deleteQuestion(questionRepository.findOne(questionId));
+        deleteQuestion(questionRepository.findById(questionId).get());
     }
 
     public void deleteQuestion(Question question) {
@@ -63,7 +63,7 @@ public class QuestionTemplatePersistorImpl implements BaseChainedTemplatePersist
         entityManager.detach(question);
 
         setupStatusRepository.deleteByClassNameAndClassPk(Question.class.getName(), question.getId());
-        questionRepository.delete(question.getId());
+        questionRepository.deleteById(question.getId());
     }
 
     @Transactional

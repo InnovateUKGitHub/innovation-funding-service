@@ -226,7 +226,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
     public ServiceResult<Void> addStakeholder(long competitionId, long stakeholderUserId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturnVoid(competition ->
-                        find(userRepository.findOne(stakeholderUserId),
+                        find(userRepository.findById(stakeholderUserId),
                                 notFoundError(User.class, stakeholderUserId))
                                 .andOnSuccess(stakeholderUser -> {
                                     Stakeholder savedStakeholder = stakeholderRepository.save(new Stakeholder(competition, stakeholderUser));

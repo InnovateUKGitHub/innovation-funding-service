@@ -49,7 +49,7 @@ public class TermsAndConditionsServiceImpl implements TermsAndConditionsService 
 
     @Override
     public ServiceResult<GrantTermsAndConditionsResource> getById(Long id) {
-        return find(grantTermsAndConditionsRepository.findOne(id), notFoundError(GrantTermsAndConditionsResource.class, id))
+        return find(grantTermsAndConditionsRepository.findById(id), notFoundError(GrantTermsAndConditionsResource.class, id))
                 .andOnSuccessReturn(grantTermsAndConditionsMapper::mapToResource);
     }
 

@@ -27,8 +27,10 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJ
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         BaseWorkflowHandlerIntegrationTest<GrantOfferLetterWorkflowHandler, GrantOfferLetterProcessRepository, TestableTransitionWorkflowAction> {

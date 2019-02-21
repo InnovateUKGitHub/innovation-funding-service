@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.overview.viewmodel;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationOverviewSectionViewModelTest {
 
     @Test

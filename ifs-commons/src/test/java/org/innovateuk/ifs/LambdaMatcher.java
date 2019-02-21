@@ -3,19 +3,20 @@ package org.innovateuk.ifs;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.mockito.ArgumentMatcher;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.argThat;
 
 /**
  * Custom Mockito matcher to leverage Java 8 lambdas
  *
  * @param <T>
  */
-public class LambdaMatcher<T> extends BaseMatcher<T> {
+public class LambdaMatcher<T> extends BaseMatcher<T> implements ArgumentMatcher<T> {
 
     private final Predicate<T> matcher;
     private final Optional<String> description;
@@ -69,7 +70,7 @@ public class LambdaMatcher<T> extends BaseMatcher<T> {
      * @return
      */
     public static <T> T createLambdaMatcher(Consumer<T> consumer) {
-        return argThat(lambdaMatches(argument -> {
+        return argThat(lambdaMatches((T argument) -> {
             consumer.accept(argument);
             return true;
         }));

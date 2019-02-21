@@ -19,6 +19,7 @@ import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -66,7 +67,7 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
 
         BigDecimal limit = new BigDecimal(50L);
 
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
         when(applicationRepositoryMock
                 .countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(competitionId,
                         CREATED_AND_OPEN_STATUSES, limit)).thenReturn(keyStatisticsResource.getApplicationsStarted());
@@ -109,7 +110,7 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
                 .withAssessments(assessments, assessmentList, emptyList())
                 .build(3);
 
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
         when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateIn(competitionId,
                 SUBMITTED_STATES)).thenReturn(applicationStatistics);
 

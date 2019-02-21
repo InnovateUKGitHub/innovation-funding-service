@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.EMPTY;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceImpl> {

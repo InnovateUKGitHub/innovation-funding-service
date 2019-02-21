@@ -8,15 +8,14 @@ Resource          ../defaultResources.robot
 the assessment start period changes in the db in the past
     [Arguments]   ${competition_id}
     ${yesterday} =    get yesterday
-    When execute sql string     INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id) VALUES('${yesterday}', 'OPEN_DATE', '${competition_id}'), ('${yesterday}', 'SUBMISSION_DATE', '${competition_id}'), ('${yesterday}', 'ASSESSORS_NOTIFIED', '${competition_id}');
-    And execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
-    And reload page
+    execute sql string     INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id) VALUES('${yesterday}', 'OPEN_DATE', '${competition_id}'), ('${yesterday}', 'SUBMISSION_DATE', '${competition_id}'), ('${yesterday}', 'ASSESSORS_NOTIFIED', '${competition_id}');
+    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
+    reload page
 
-the submission date changes in the db in the past
-    [Arguments]   ${competition_id}
+update milestone to yesterday
+    [Arguments]  ${competition_id}  ${milestone}
     ${yesterday} =    get yesterday
-    execute sql string  INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id) VALUES('${yesterday}', 'OPEN_DATE', '${competition_id}'), ('${yesterday}', 'SUBMISSION_DATE', '${competition_id}');
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE');
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('${milestone}');
     reload page
 
 the calculation of the remaining days should be correct
@@ -38,11 +37,6 @@ the total calculation in dashboard should be correct
     [Documentation]    This keyword uses 2 arguments. The first one is about the page's text (competition or application) and the second is about the Xpath selector.
     ${NO_OF_COMP_OR_APPL}=    Get Element Count    ${Section_Xpath}
     Page Should Contain    ${TEXT} (${NO_OF_COMP_OR_APPL})
-
-The assessment deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the past
-    ${yesterday} =   get yesterday
-    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type = 'ASSESSOR_DEADLINE';
-    And reload page
 
 the days remaining should be correct (Top of the page)
     [Arguments]    ${END_DATE}
@@ -76,38 +70,23 @@ the days remaining should be correct (Applicant's dashboard)
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    jQuery=.in-progress li:contains("${applicationName}") .days-remaining
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
+Get competition id and set open date to yesterday
+     [Arguments]  ${competitionTitle}
+     Get competitions id and set it as suite variable  ${competitionTitle}
+     update milestone to yesterday                     ${competitionId}  OPEN_DATE
+
 Get competitions id and set it as suite variable
     [Arguments]  ${competitionTitle}
     ${competitionId} =  get comp id from comp title  ${competitionTitle}
     Set suite variable  ${competitionId}
-
-Save competition's current dates
-    [Arguments]  ${competitionId}
-    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='OPEN_DATE';
-    ${result} =  get from list  ${result}  0
-    ${openDate} =  get from list  ${result}  0
-    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='SUBMISSION_DATE';
-    ${result} =  get from list  ${result}  0
-    ${submissionDate} =  get from list  ${result}  0
-    [Return]  ${openDate}  ${submissionDate}
 
 Return the competition's milestones to their initial values
     [Arguments]  ${competitionId}  ${openDate}  ${submissionDate}
     Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
     Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
 
-the competition moves to Open state
-    [Arguments]  ${competitionId}
-    ${yesterday} =  get yesterday
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `date` = '${yesterday}' WHERE `competition_id` = '${competitionId}' AND `type` = 'OPEN_DATE';
-
-Change the open date of the Competition in the database to one day before
-    [Arguments]  ${competitionName}
-    ${competitionId} =  get comp id from comp title  ${competitionName}
-    the competition moves to Open state  ${competitionId}
-
-Change the close date of the Competition in the database to tomorrow
-    [Arguments]  ${competition}
+Change the milestone in the database to tomorrow
+    [Arguments]  ${competition}  ${milestone}
     ${tomorrow} =  get tomorrow
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
 
@@ -120,11 +99,6 @@ Change the close date of the Competition in the database to thirteen days
     [Arguments]  ${competition}
     ${thirteen} =  get thirteen days
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${thirteen}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
-
-Change the open date of the Competition in the database to tomorrow
-    [Arguments]  ${competition}
-    ${tomorrow} =  get tomorrow
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
 
 get yesterday
     ${today} =    Get Time

@@ -42,7 +42,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mapstruct.factory.Mappers.getMapper;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
@@ -87,7 +87,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(projectUserInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(projectUserInviteRepositoryMock.save(projectInvite)).thenReturn(projectInvite);
         when(projectServiceMock.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId())).thenReturn(serviceSuccess(projectUser));
 
@@ -106,7 +106,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(projectUserInviteRepositoryMock.getByHash(hash)).thenReturn(null);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         ServiceResult<Void> result = projectInviteService.acceptProjectInvite(hash, user.getId());
 
@@ -125,7 +125,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(projectUserInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
-        when(userRepositoryMock.findOne(userId)).thenReturn(null);
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = projectInviteService.acceptProjectInvite(projectInvite.getHash(), userId);
 
@@ -311,7 +311,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
         when(projectUserInviteRepositoryMock.findByProjectId(projectResource.getId())).thenReturn(singletonList(projectInvite));
         when(projectInviteMapperMock.mapToResource(projectInvite)).thenReturn(projectUserInviteResource);
-        when(organisationRepositoryMock.findOne(projectUserInviteResource.getLeadOrganisationId())).thenReturn(organisation);
+        when(organisationRepositoryMock.findById(projectUserInviteResource.getLeadOrganisationId())).thenReturn(Optional.of(organisation));
         when(projectServiceMock.getProjectById(projectResource.getId())).thenReturn(serviceSuccess(projectResource));
 
         ServiceResult<List<ProjectUserInviteResource>> invitesByProject = projectInviteService.getInvitesByProject(projectResource.getId());

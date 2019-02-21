@@ -41,7 +41,7 @@ Resource          PS_Common.robot
 Project Finance should not be able to access bank details page
     [Documentation]    INFUND-7090, INFUND-7109
     [Tags]  HappyPath
-    Given the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${Grade_Crossing_Project_No}/review-all-bank-details    ${403_error_message}
+    Given the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/review-all-bank-details    ${403_error_message}
     When the user navigates to the page        ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the user should not see the element   css = #table-project-status tr:nth-of-type(4) td:nth-of-type(4).status.action
     And the user should not see the element    css = #table-project-status tr:nth-of-type(4) td:nth-of-type(4).status.waiting
@@ -54,7 +54,7 @@ Bank details page
     When the user clicks the button/link    link = ${Grade_Crossing_Applicaiton_Titile}
     Then the user should see the element    css = ul li.require-action:nth-child(4)
     When the user clicks the button/link    link = View the status of partners
-    Then the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_No}/team-status
+    Then the user navigates to the page     ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     And the user should see the element     jQuery = h1:contains("Project team status")
     And the user should see the element     css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4)
     And the user clicks the button/link     link = Set up your project
@@ -136,10 +136,10 @@ Bank details submission
     When the user clicks the button/link              jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link               id = submit-bank-details
     Then the user should see the element              jQuery = p:contains("The bank account details below are being")
-    Then the user navigates to the page               ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    Then the user navigates to the page               ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user should see the element               jQuery = ul li.waiting:nth-child(4)
     When the user clicks the button/link              link = View the status of partners
-    Then the user navigates to the page               ${server}/project-setup/project/${Grade_Crossing_Project_No}/team-status
+    Then the user navigates to the page               ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     And the user should see the element               jQuery = h1:contains("Project team status")
     And the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(4)
     When log in as a different user                   &{internal_finance_credentials}
@@ -154,12 +154,12 @@ Submission of bank details for academic user
     When the user clicks the button/link           jQuery = .projects-in-setup a:contains("${Grade_Crossing_Applicaiton_Titile}")
     Then the user should see the element           jQuery = li.require-action:contains("Bank details")
     When the user clicks the button/link           link = View the status of partners
-    Then the user should be redirected to the correct page  ${server}/project-setup/project/${Grade_Crossing_Project_No}/team-status
+    Then the user should be redirected to the correct page  ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     And the user should see the element            jQuery = h1:contains("Project team status")
     And the user should see the element            css = #table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(4)
     And the user clicks the button/link            link = Set up your project
     And the user clicks the button/link            link = Bank details
-    When partner fills in his bank details         ${Grade_Crossing_Academic_Email}  ${Grade_Crossing_Project_No}  00000123  000004
+    When partner fills in his bank details         ${Grade_Crossing_Academic_Email}  ${Grade_Crossing_Project_Id}  00000123  000004
     Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery = .govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
     When the user enters text to a text field      name = accountNumber   ${Account_One}
     And the user enters text to a text field       name = sortCode  ${Sortcode_One}
@@ -169,10 +169,10 @@ Submission of bank details for academic user
     When the user clicks the button/link           jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link            id = submit-bank-details
     And the user should see the element            jQuery = p:contains("The bank account details below are being")
-    Then the user navigates to the page            ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    Then the user navigates to the page            ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user should see the element            jQuery = ul li.complete:nth-child(1)
     When the user clicks the button/link           link = View the status of partners
-    Then the user navigates to the page            ${server}/project-setup/project/${Grade_Crossing_Project_No}/team-status
+    Then the user navigates to the page            ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     And the user should see the element            jQuery = h1:contains("Project team status")
     And the user should see the element            css = #table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(4)
 
@@ -195,7 +195,7 @@ User sees error response for invalid bank details for non-lead partner
     Given log in as a different user               &{collaborator1_credentials_bd}
     When the user clicks the button/link           jQuery = .projects-in-setup a:contains("${Grade_Crossing_Applicaiton_Titile}")
     Then the user clicks the button/link           link = Bank details
-    When partner fills in his bank details         ${Grade_Crossing_Partner_Email}   ${Grade_Crossing_Project_No}  00000123  000004
+    When partner fills in his bank details         ${Grade_Crossing_Partner_Email}   ${Grade_Crossing_Project_Id}  00000123  000004
     # Stub is configured to return error response for these values
     Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery = .govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
     # Added this wait so to give extra execution time
@@ -212,10 +212,10 @@ Non lead partner submits bank details
     When the user clicks the button/link           jQuery = .govuk-button:contains("Submit bank account details")
     And the user clicks the button/link            id = submit-bank-details
     And the user should see the element            jQuery = p:contains("The bank account details below are being")
-    Then the user navigates to the page            ${server}/project-setup/project/${Grade_Crossing_Project_No}
+    Then the user navigates to the page            ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     And the user should see the element            css = ul li.complete:nth-child(1)
     When the user clicks the button/link           link = View the status of partners
-    Then the user navigates to the page            ${server}/project-setup/project/${Grade_Crossing_Project_No}/team-status
+    Then the user navigates to the page            ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     And the user should see the element            jQuery = h1:contains("Project team status")
     And the user should see the element            css = #table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(4)
 
@@ -224,7 +224,7 @@ Bank details verified by Experian require no action by the Project Finance
     [Tags]  MySQL  HappyPath
     [Setup]  log in as a different user       &{internal_finance_credentials}
     Given the bank details have been verified by the Experian  ${Vitruvius_Id}
-    When the user navigates to the page       ${server}/project-setup-management/project/${Grade_Crossing_Project_No}/organisation/${Vitruvius_Id}/review-bank-details
+    When the user navigates to the page       ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/organisation/${Vitruvius_Id}/review-bank-details
     Then the user should see the element      jQuery = .success-alert:contains("The bank details provided have been approved.")
     And the user should not see the element   css = button[data-js-modal = "modal-partner-approve-bank-details"]
     When the user navigates to the page       ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
@@ -235,7 +235,7 @@ Project Finance can see the progress of partners bank details
     [Tags]
     Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     And the user clicks the button/link             css = #table-project-status tr:nth-child(4) td:nth-child(5) a
-    Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${Grade_Crossing_Project_No}/review-all-bank-details
+    Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/review-all-bank-details
     And the user should see the element             jQuery = p:contains("This overview shows whether each partner has submitted their bank details")
     Then the user should see the element            jQuery = li:contains("${Vitruvius_Name}") .task-status-complete
     And the user should see the element             jQuery = li:contains("${A_B_Cad_Services_Name}") .action-required
@@ -259,7 +259,7 @@ IFS Admin can see Bank Details
     Then the user should see the element          link = All projects
     And the user should see the element           css = #table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(4)
     When the user clicks the button/link          css = #table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(4) a
-    Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${Grade_Crossing_Project_No}/review-all-bank-details
+    Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/review-all-bank-details
     And the user should see the element           jQuery = p:contains("each partner has submitted their bank details")
     Then the user should see the element          jQuery = li:contains("${Vitruvius_Name}") .task-status-complete
     And the user should see the element           jQuery = li:contains("${A_B_Cad_Services_Name}") .action-required
@@ -288,7 +288,7 @@ Project Finance approves Bank Details through the Bank Details list
     Given log in as a different user        &{internal_finance_credentials}
     When the user navigates to the page     ${server}/management/dashboard/project-setup
     Then the user clicks the button/link    jQuery = a:contains("Review bank details")
-    When the user clicks the button/link    jQuery = a:contains("Dreambit")
+    When the user clicks the button/link    jQuery = a:contains("${A_B_Cad_Services_Name}")
     And the user clicks the button/link     jQuery = button:contains("Approve bank account details")
     And the user clicks the button/link     jQuery = button:contains("Approve account")
     Then the user should see the element    jQuery = h2:contains("The bank details provided have been approved.")

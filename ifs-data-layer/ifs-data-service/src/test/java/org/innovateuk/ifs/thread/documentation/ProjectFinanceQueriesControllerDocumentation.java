@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.thread.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.PostResourceDocs;
+import org.innovateuk.ifs.documentation.UserDocs;
 import org.innovateuk.ifs.project.queries.controller.ProjectFinanceQueriesController;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
@@ -48,7 +50,9 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .andExpect(content().string(objectMapper.writeValueAsString(query)))
                 .andDo(document("project/finance/queries/{method-name}",
                         pathParameters(parameterWithName("queryId").description("Id of the Query to be fetched")),
-                        responseFields(queryResourceFields())));
+                        responseFields(queryResourceFields())
+                                .andWithPrefix("posts[].", PostResourceDocs.postResourceFields)
+                                .andWithPrefix("posts[].author.", UserDocs.userResourceFields)));
     }
 
     @Test
@@ -63,7 +67,10 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(asList(query))))
                 .andDo(document("project/finance/queries/{method-name}",
-                        responseFields(fieldWithPath("[]").description("List of Queries the authenticated user has access to")),
+                        responseFields(fieldWithPath("[]").description("List of Queries the authenticated user has access to"))
+                        .andWithPrefix("[].", queryResourceFields())
+                        .andWithPrefix("[].posts[].", PostResourceDocs.postResourceFields)
+                        .andWithPrefix("[].posts[].author.", UserDocs.userResourceFields),
                         pathParameters(parameterWithName("projectFinanceId").description("The id of the project finance under which the expected queries live."))));
     }
 
@@ -97,7 +104,9 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .andExpect(content().string(objectMapper.writeValueAsString(55L)))
                 .andExpect(status().isCreated())
                 .andDo(document("project/finance/queries/{method-name}",
-                        requestFields(queryResourceFields())));
+                        requestFields(queryResourceFields())
+                                .andWithPrefix("posts[].", PostResourceDocs.postResourceFields)
+                                .andWithPrefix("posts[].author.", UserDocs.userResourceFields)));
     }
 
     @Test

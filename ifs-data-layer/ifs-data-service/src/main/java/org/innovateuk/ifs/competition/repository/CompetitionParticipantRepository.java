@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

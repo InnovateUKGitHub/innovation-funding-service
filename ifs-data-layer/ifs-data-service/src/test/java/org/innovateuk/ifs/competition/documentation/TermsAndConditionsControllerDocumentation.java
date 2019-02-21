@@ -62,7 +62,7 @@ public class TermsAndConditionsControllerDocumentation extends BaseControllerMoc
                         responseFields(
                                 fieldWithPath("[]").description("List of latest versions for all terms and conditions" +
                                         " the authenticated user has access to")
-                        )
+                        ).andWithPrefix("[].", termsAndConditionsResourceFields)
                 ));
     }
 

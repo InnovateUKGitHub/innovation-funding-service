@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newP
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.transactional.PublicContentItemServiceImpl.MAX_ALLOWED_KEYWORDS;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<PublicContentItemServiceImpl> {
@@ -102,7 +102,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
                 .withId(COMPETITION_ID)
                 .build(1);
 
-        when(innovationAreaRepository.findOne(INNOVATION_AREA_ID)).thenReturn(innovationArea);
+        when(innovationAreaRepository.findById(INNOVATION_AREA_ID)).thenReturn(Optional.of(innovationArea));
         when(competitionRepository.findByInnovationSectorCategoryId(2L)).thenReturn(competitions);
 
         ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.empty(), Optional.empty(), 10);
@@ -166,7 +166,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
         when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(expectedPublicContentIds, expectedCompetitionIds, new PageRequest(1, 10))).thenReturn(competitionPage);
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
-        when(innovationAreaRepository.findOne(INNOVATION_AREA_ID)).thenReturn(innovationArea);
+        when(innovationAreaRepository.findById(INNOVATION_AREA_ID)).thenReturn(Optional.of(innovationArea));
         when(competitionRepository.findByInnovationSectorCategoryId(innovationSectorId)).thenReturn(competitions);
 
         ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.of("Big data"), Optional.of(1), 10);
@@ -219,7 +219,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
-        when(innovationAreaRepository.findOne(INNOVATION_AREA_ID)).thenReturn(innovationArea);
+        when(innovationAreaRepository.findById(INNOVATION_AREA_ID)).thenReturn(Optional.of(innovationArea));
         when(competitionRepository.findByInnovationSectorCategoryId(innovationSectorId)).thenReturn(null);
 
         ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.of("Big data"), Optional.of(1), 10);
@@ -241,7 +241,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
-        when(innovationAreaRepository.findOne(INNOVATION_AREA_ID)).thenReturn(innovationArea);
+        when(innovationAreaRepository.findById(INNOVATION_AREA_ID)).thenReturn(Optional.of(innovationArea));
         when(competitionRepository.findByInnovationSectorCategoryId(innovationSectorId)).thenReturn(null);
 
         ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.empty(), Optional.of(1), 10);
@@ -264,7 +264,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         ).build();
         PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
         PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();
-        when(competitionRepository.findById(competitionId)).thenReturn(competition);
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(publicContent);
         when(publicContentMapper.mapToResource(publicContent)).thenReturn(publicContentResource);
 
@@ -297,7 +297,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         ).build();
         PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
         PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();
-        when(competitionRepository.findById(competitionId)).thenReturn(competition);
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(publicContent);
         when(publicContentMapper.mapToResource(publicContent)).thenReturn(publicContentResource);
 
@@ -321,7 +321,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
     public void testByCompetitionIdFailure() {
         Long competitionId = 4L;
 
-        when(competitionRepository.findById(competitionId)).thenReturn(null);
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.empty());
         when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(null);
 
         ServiceResult<PublicContentItemResource> result = service.byCompetitionId(competitionId);

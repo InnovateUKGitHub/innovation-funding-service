@@ -63,7 +63,7 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
 
         assertTrue(result.isSuccess());
         verify(contentEventRepository, times(1)).deleteByPublicContentId(publicContentId);
-        verify(contentEventRepository, times(1)).save(domains);
+        verify(contentEventRepository, times(1)).saveAll(domains);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
         assertTrue(result.isFailure());
         assertEquals(asList(new Error(PUBLIC_CONTENT_IDS_INCONSISTENT)), result.getFailure().getErrors());
         verify(contentEventRepository, never()).deleteByPublicContentId(publicContentId);
-        verify(contentEventRepository, never()).save(domains);
+        verify(contentEventRepository, never()).saveAll(domains);
     }
 
     @Test
@@ -109,6 +109,6 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
 
         assertTrue(result.isSuccess());
         verify(contentEventRepository, times(1)).deleteByPublicContentId(publicContentId);
-        verify(contentEventRepository, times(1)).save(domains);
+        verify(contentEventRepository, times(1)).saveAll(domains);
     }
 }

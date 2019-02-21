@@ -82,7 +82,7 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
                 if (!organisationId.isPresent()) {
                     return serviceFailure(notFoundError(Organisation.class));
                 }
-                assignOrganisationToInvite(invite, organisationRepository.findOne(organisationId.get()));
+                assignOrganisationToInvite(invite, organisationRepository.findById(organisationId.get()).orElse(null));
             }
 
             initializeInvitee(invite, user);

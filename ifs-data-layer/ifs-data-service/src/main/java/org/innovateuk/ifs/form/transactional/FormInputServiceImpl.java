@@ -70,6 +70,6 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     }
 
     private ServiceResult<FormInput> findFormInputEntity(long id) {
-        return find(formInputRepository.findOne(id), notFoundError(FormInput.class, id));
+        return find(formInputRepository.findById(id), notFoundError(FormInput.class, id));
     }
 }

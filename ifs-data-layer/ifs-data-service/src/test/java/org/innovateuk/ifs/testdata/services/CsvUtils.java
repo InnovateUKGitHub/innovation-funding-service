@@ -11,6 +11,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -426,7 +427,7 @@ public class CsvUtils {
         public String type;
         public List<String> innovationAreas;
         public String innovationSector;
-        public String researchCategory;
+        public List<String> researchCategory;
         public String collaborationLevel;
         public List<OrganisationTypeEnum> leadApplicantTypes;
         public Integer researchRatio;
@@ -457,6 +458,10 @@ public class CsvUtils {
         public boolean nonIfs;
         public String nonIfsUrl;
         public CompetitionCompletionStage competitionCompletionStage;
+        public Boolean includeJesForm;
+        public ApplicationFinanceType applicationFinanceType;
+        public Boolean includeProjectGrowth;
+        public Boolean includeYourOrganisation;
 
         private CompetitionLine(List<String> line, int lineNumber) {
 
@@ -466,7 +471,7 @@ public class CsvUtils {
             type = nullable(line.get(i++));
             innovationAreas = nullableSplitOnNewLines(line.get(i++));
             innovationSector = nullable(line.get(i++));
-            researchCategory = nullable(line.get(i++));
+            researchCategory = nullableSplitOnNewLines(line.get(i++));
             collaborationLevel = nullable(line.get(i++));
             leadApplicantTypes = simpleMap(nullableSplitOnNewLines(line.get(i++)), OrganisationTypeEnum::valueOf);
             researchRatio = nullableInteger(line.get(i++));
@@ -497,6 +502,10 @@ public class CsvUtils {
             nonIfs = nullableBoolean(line.get(i++));
             nonIfsUrl = nullable(line.get(i++));
             competitionCompletionStage = CompetitionCompletionStage.valueOf(line.get(i++));
+            includeJesForm = nullableBoolean(line.get(i++));
+            applicationFinanceType = ApplicationFinanceType.valueOf(line.get(i++));
+            includeProjectGrowth = nullableBoolean(line.get(i++));
+            includeYourOrganisation = nullableBoolean(line.get(i++));
         }
     }
 

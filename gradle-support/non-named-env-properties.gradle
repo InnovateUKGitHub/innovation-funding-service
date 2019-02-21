@@ -16,7 +16,6 @@ ext.SHIBBOLETH_SP_MEMORY_LIMIT="600Mi"
 // For shib and idp
 ext.SHIBBOLETH_MEMCACHE_ENDPOINT=""
 
-
 ext.LDAP_URL="ldaps://ldap:389"
 ext.LDAP_PASSWORD="default"
 

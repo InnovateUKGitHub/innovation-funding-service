@@ -19,7 +19,7 @@ SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 function upgradeServices {
-    # Deploying finance-data-service before data-service as latter submits updates to former.
+  # Deploying finance-data-service before data-service as latter submits updates to former.
     # rolloutStatus checks ensure that service has been deployed successfully before proceeding further.
     oc apply -f $(getBuildLocation)/ifs-services/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "finance-data-service"

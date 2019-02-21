@@ -1,6 +1,6 @@
 Project name,Start date,Project manager,Project address added?,Finance contacts,Monitoring Officer first name,Monitoring Officer last name,Monitoring Officer email,Monitoring Officer phone number,Bank details,Bank details approved,Finance checks approved,Status,Project Documents Uploaded,Generate Spend Profile,Upload Spend Profile,Approve Spend Profile,Grant offer letter published to team
 High-speed rail and its effects on water quality,2020-02-01,heather.ross@example.com,Yes,University of Bath: heather.ross@example.com,Thomas,Filton,thomas.filton@isee.example.com,01675 342514,University of Bath: 51406795 / 404745,Yes,Yes,SETUP,Yes,Yes,Yes,Yes,Yes
-High-speed rail and its effects on soil compaction,2020-03-01,becky.mason@gmail.com,Yes,Dreambit: becky.mason@gmail.com,Thomas,Filton,thomas.filton@isee.example.com,01675 342514,Dreambit: 51406795 / 404745,Yes,Yes,SETUP,No,Yes,Yes,Yes,No
+High-speed rail and its effects on soil compaction,2020-03-01,becky.mason@gmail.com,Yes,Dreambit: becky.mason@gmail.com,Thomas,Filton,thomas.filton@isee.example.com,01675 342514,Dreambit: 51406795 / 404745,Yes,No,SETUP,No,No,No,No,No
 Grade crossing manufacture and supply,2020-03-01,diane.scott@vitruvius.example.com,Yes,"Vitruvius Stonework Limited: diane.scott@vitruvius.example.com
 A B Cad Services: phil.mcguire@abcad.example.com
 Armstrong & Butler Ltd: darren.richards@armstrong.example.com",,,,,,,No,SETUP,No,Yes,Yes,No,No
@@ -40,6 +40,7 @@ Jabbertype: myrtle.barton@jabbertype.example.com
 Zummacity: edward.morris@gmail.com",Thomas,Filton,thomas.filton@isee.example.com,01675 342514,"Crystalrover: 51406795 / 404745
 Jabbertype: 51406795 / 404745
 Zummacity: 51406795 / 404745",Yes,Yes,SETUP,Yes,Yes,Yes,Yes,No
+Magic material,2020-01-01,,,,,,,,,,,SETUP,,,,,
 Energy saver- nano tech,2020-02-01,troy.ward@gmail.com,Yes,"Ward Ltd: sian.ward@gmail.com
 SmithZone: eve.smith@gmail.com
 Red Planet: jake.reddy@gmail.com",Thomas,Filton,thomas.filton@isee.example.com,01676 342514,"Ward Ltd: 51406795 / 404745

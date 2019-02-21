@@ -57,7 +57,7 @@ Resource          PS_Common.robot
 
 *** Variables ***
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
-${pmEmailId}  ${user_ids['${PS_SP_APPLICATION_PM_EMAIL}']}
+${pmEmailId}  ${user_ids['phillip.ramos@katz.example.com']}
 
 *** Test Cases ***
 Internal finance can see Project details not yet completed

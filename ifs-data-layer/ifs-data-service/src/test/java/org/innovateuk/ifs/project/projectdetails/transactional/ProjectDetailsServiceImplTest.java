@@ -64,6 +64,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -71,6 +72,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.PROJECT;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -96,8 +98,8 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
 public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDetailsService> {
@@ -225,9 +227,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         o = organisation;
         o.setOrganisationType(businessOrganisationType);
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
+        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
     }
 
@@ -265,7 +267,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         assertTrue(existingProject.getProjectUsers().isEmpty());
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(existingProject));
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.COMPLETE)
                 .build()));
@@ -348,13 +350,13 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         Project existingProject = newProject().build();
         assertNull(existingProject.getTargetStartDate());
 
-        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(existingProject));
 
         ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, dateNotOnFirstDayOfMonth);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH));
 
-        verify(projectRepositoryMock, never()).findOne(123L);
+        verify(projectRepositoryMock, never()).findById(123L);
         assertNull(existingProject.getTargetStartDate());
     }
 
@@ -367,13 +369,13 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         Project existingProject = newProject().build();
         assertNull(existingProject.getTargetStartDate());
 
-        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(existingProject));
 
         ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, pastDate);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE));
 
-        verify(projectRepositoryMock, never()).findOne(123L);
+        verify(projectRepositoryMock, never()).findById(123L);
         assertNull(existingProject.getTargetStartDate());
     }
 
@@ -388,14 +390,14 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
 
-        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(existingProject));
         when(spendProfileRepositoryMock.findByProjectId(123L)).thenReturn(spendProfiles);
 
         ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED));
 
-        verify(projectRepositoryMock, never()).findOne(123L);
+        verify(projectRepositoryMock, never()).findById(123L);
         verify(spendProfileRepositoryMock).findByProjectId(123L);
         assertNull(existingProject.getTargetStartDate());
     }
@@ -406,7 +408,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
 
-        when(projectRepositoryMock.findOne(123L)).thenReturn(null);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.empty());
 
         ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
         assertTrue(updateResult.isFailure());
@@ -422,12 +424,12 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         Project existingProject = newProject().build();
         assertNull(existingProject.getTargetStartDate());
 
-        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(existingProject));
 
         ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
         assertTrue(updateResult.isSuccess());
 
-        verify(projectRepositoryMock).findOne(123L);
+        verify(projectRepositoryMock).findById(123L);
         assertEquals(validDate, existingProject.getTargetStartDate());
     }
 
@@ -448,7 +450,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     public void updateProjectDurationWhenProjectDoesNotExist() {
 
         long projectId = 123L;
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
 
         ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
         assertTrue(updateResult.isFailure());
@@ -473,7 +475,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 123L;
         Project existingProject = newProject().build();
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(existingProject));
         when(projectWorkflowHandlerMock.getState(existingProject)).thenReturn(WITHDRAWN);
 
         ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
@@ -487,7 +489,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         long projectId = 123L;
         long durationInMonths = 36L;
         Project existingProject = newProject().build();
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(existingProject));
 
         ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, durationInMonths);
         assertTrue(updateResult.isSuccess());
@@ -503,9 +505,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_PARTNER).build();
 
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
-        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
+        when(organisationRepositoryMock.findById(5L)).thenReturn(Optional.of(organisation));
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -532,7 +534,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withGrantOfferLetter(golFileEntry)
                 .build();
 
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 5L), 7L);
 
@@ -550,9 +552,9 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         User user = newUser().withId(7L).build();
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_MANAGER).build();
 
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
-        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
+        when(organisationRepositoryMock.findById(5L)).thenReturn(Optional.of(organisation));
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 5L), 7L);
 
@@ -570,11 +572,11 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         Project existingProject = newProject().withId(123L).build();
         Project anotherProject = newProject().withId(9999L).build();
 
-        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(existingProject));
         when(projectWorkflowHandlerMock.getState(existingProject)).thenReturn(ProjectState.SETUP);
 
         Organisation organisation = newOrganisation().withId(5L).build();
-        when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
+        when(organisationRepositoryMock.findById(5L)).thenReturn(Optional.of(organisation));
 
         User user = newUser().withId(7L).build();
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(anotherProject).withRole(PROJECT_PARTNER).build();
@@ -590,11 +592,11 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         User anotherUser = newUser().build();
         Project existingProject = newProject().build();
-        when(projectRepositoryMock.findOne(existingProject.getId())).thenReturn(existingProject);
+        when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
         when(projectWorkflowHandlerMock.getState(existingProject)).thenReturn(ProjectState.SETUP);
 
         Organisation organisation = newOrganisation().build();
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
 
         newProjectUser().
                 withOrganisation(organisation).
@@ -735,7 +737,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectInviteMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectUserInvite().withEmail("a@b.com").withName("A B").build());
 
-        when(projectRepositoryMock.findOne(projectId)).thenThrow(new IllegalArgumentException());
+        when(projectRepositoryMock.findById(projectId)).thenThrow(new IllegalArgumentException());
 
         ServiceResult<Void> result = null;
 
@@ -772,7 +774,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withGrantOfferLetter(golFile)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()));
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
@@ -799,7 +801,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withApplication(application)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
@@ -852,7 +854,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withApplication(application)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
@@ -904,7 +906,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withGrantOfferLetter(golFileEntry)
                 .build();
 
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(projectInDB));
 
         ServiceResult<Void> result = service.inviteFinanceContact(projectId, inviteResource);
 
@@ -932,7 +934,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
-        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
+        when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
 
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", projectInDB.getName());
@@ -961,6 +963,48 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
+    public void updateProjectAddressToBeRegisteredAddress() {
+        AddressResource existingRegisteredAddressResource = newAddressResource().build();
+        Address registeredAddress = newAddress().build();
+
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(addressRepositoryMock.existsById(existingRegisteredAddressResource.getId())).thenReturn(true);
+        when(addressRepositoryMock.findById(existingRegisteredAddressResource.getId())).thenReturn(Optional.of(registeredAddress));
+
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        assertNull(project.getAddress());
+        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), existingRegisteredAddressResource);
+        assertTrue(result.isSuccess());
+        assertEquals(registeredAddress, project.getAddress());
+    }
+
+    @Test
+    public void updateProjectAddressToBeOperatingAddress() {
+        AddressResource existingOperatingAddressResource = newAddressResource().build();
+        Address operatingAddress = newAddress().build();
+
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(addressRepositoryMock.existsById(existingOperatingAddressResource.getId())).thenReturn(true);
+        when(addressRepositoryMock.findById(existingOperatingAddressResource.getId())).thenReturn(Optional.of(operatingAddress));
+
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        assertNull(project.getAddress());
+        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), existingOperatingAddressResource);
+        assertTrue(result.isSuccess());
+        assertEquals(operatingAddress, project.getAddress());
+    }
+
+    @Test
     public void updateProjectAddressToNewProjectAddress() {
 
         Organisation leadOrganisation = newOrganisation()
@@ -981,12 +1025,12 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withAddress(newAddress).withAddressType(projectAddressType)
                 .build();
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
-        when(addressRepositoryMock.exists(newAddressResource.getId())).thenReturn(false);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(addressRepositoryMock.existsById(newAddressResource.getId())).thenReturn(false);
         when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
-        when(addressTypeRepositoryMock.findOne(PROJECT.getOrdinal())).thenReturn(projectAddressType);
+        when(addressTypeRepositoryMock.findById(PROJECT.getOrdinal())).thenReturn(Optional.of(projectAddressType));
         when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(emptyList());
         when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
@@ -1010,12 +1054,12 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
         OrganisationAddress organisationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
-        when(addressRepositoryMock.exists(newAddressResource.getId())).thenReturn(false);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(addressRepositoryMock.existsById(newAddressResource.getId())).thenReturn(false);
         when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
-        when(addressTypeRepositoryMock.findOne(PROJECT.getOrdinal())).thenReturn(projectAddressType);
+        when(addressTypeRepositoryMock.findById(PROJECT.getOrdinal())).thenReturn(Optional.of(projectAddressType));
         when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(singletonList(organisationAddress));
         when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
@@ -1057,8 +1101,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withApplication(a)
                 .build();
 
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
-        when(projectRepositoryMock.findOne(projectInDB.getId())).thenReturn(projectInDB);
+        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(projectRepositoryMock.findById(projectInDB.getId())).thenReturn(Optional.of(projectInDB));
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
