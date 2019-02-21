@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.grant.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -82,5 +85,37 @@ public class GrantProcess {
         this.lastProcessed = now;
         this.message = message;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GrantProcess that = (GrantProcess) o;
+
+        return new EqualsBuilder()
+                .append(applicationId, that.applicationId)
+                .append(pending, that.pending)
+                .append(id, that.id)
+                .append(sentRequested, that.sentRequested)
+                .append(sentSucceeded, that.sentSucceeded)
+                .append(lastProcessed, that.lastProcessed)
+                .append(message, that.message)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(applicationId)
+                .append(sentRequested)
+                .append(sentSucceeded)
+                .append(lastProcessed)
+                .append(pending)
+                .append(message)
+                .toHashCode();
     }
 }
