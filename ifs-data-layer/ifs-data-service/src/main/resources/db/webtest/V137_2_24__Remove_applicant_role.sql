@@ -11,4 +11,3 @@ DELETE FROM user_role WHERE user_id = (SELECT id FROM user WHERE email = 'blake.
 DELETE FROM user_role WHERE user_id = (SELECT id FROM user WHERE email = 'Lance.Lemos@gmail.com') AND role_id = @applicant_role_id;
 DELETE FROM user_role WHERE user_id = (SELECT id FROM user WHERE email = 'Kingsley.Roy@gmail.com') AND role_id = @applicant_role_id;
 DELETE FROM user_role WHERE user_id = (SELECT id FROM user WHERE email = 'Sonal.Dsilva@gmail.com') AND role_id = @applicant_role_id;
-DELETE FROM user_role WHERE user_id = (SELECT id FROM user WHERE email = 'carolyn.reed@example.com') AND role_id = @applicant_role_id;
