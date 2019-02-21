@@ -47,9 +47,11 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
     @Test
     public void syncExternalCrmContact() {
-        Long userId = 1L;
+        long userId = 1L;
         UserResource user = newUserResource().withRoleGlobal(APPLICANT).build();
+
         List<OrganisationResource> organisations = newOrganisationResource().withCompaniesHouseNumber("Something", "Else").build(2);
+
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
         when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(organisations));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
@@ -57,14 +59,16 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         ServiceResult<Void> result = service.syncCrmContact(userId);
 
         assertThat(result.isSuccess(), equalTo(true));
+
         verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchExternalSilContact(user, organisations.get(0))));
         verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchExternalSilContact(user, organisations.get(1))));
     }
 
     @Test
     public void syncMonitoringOfficerCrmContact() {
-        Long userId = 1L;
+        long userId = 1L;
         UserResource user = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
+
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
 
