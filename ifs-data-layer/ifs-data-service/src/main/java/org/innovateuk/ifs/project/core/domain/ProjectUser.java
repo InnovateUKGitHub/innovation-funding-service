@@ -17,32 +17,41 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
  * ProjectUser defines a User's role on a Project and in relation to a particular Organisation.
  */
 @Entity
-@Table(name = "project_user")
+@DiscriminatorValue("PROJECT_USER")
 public class ProjectUser extends ProjectParticipant implements InvitedParticipant<Project, ProjectUserInvite, ProjectParticipantRole> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invite_id", referencedColumnName = "id")
     private ProjectUserInvite invite;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "projectId", referencedColumnName = "id")
+    private Project project;
+
     public ProjectUser() {
+    }
+
+    public ProjectUser(User user, Project project, ProjectParticipantRole role, Organisation organisation) {
+        super(user, role);
+        if (!ProjectParticipantRole.PROJECT_USER_ROLES.contains(role)) {
+            throw new IllegalArgumentException("ProjectUser cannot have role " + role);
+        }
+        this.organisation = organisation;
+        this.project = project;
+    }
+
+    @Override
+    public Project getProcess() {
+        return project;
     }
 
     @Override
     public ProjectUserInvite getInvite() {
         return invite;
-    }
-
-    public ProjectUser(User user, Project project, ProjectParticipantRole role, Organisation organisation) {
-        super(user, project, role);
-        if (!ProjectParticipantRole.PROJECT_USER_ROLES.contains(role)) {
-            throw new IllegalArgumentException("ProjectUser cannot have role " + role);
-        }
-        this.organisation = organisation;
     }
 
     public ProjectUser accept() {
@@ -101,6 +110,7 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
                 .appendSuper(super.equals(o))
                 .append(organisation, that.organisation)
                 .append(invite, that.invite)
+                .append(project, that.project)
                 .isEquals();
     }
 
@@ -110,6 +120,7 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
                 .appendSuper(super.hashCode())
                 .append(organisation)
                 .append(invite)
+                .append(project)
                 .toHashCode();
     }
 }

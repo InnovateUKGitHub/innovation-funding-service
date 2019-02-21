@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.DiscriminatorOptions;
 import org.innovateuk.ifs.invite.domain.Participant;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -10,7 +11,20 @@ import javax.persistence.*;
 /**
  * A defines a User's role on a Project
  */
-@MappedSuperclass
+@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorOptions(force = true)
+//@MappedSuperclass
+@Entity
+@Table(name = "project_user")
+
+/*
+@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Entity
+@DiscriminatorOptions(force = true)
+ */
+
 public abstract class ProjectParticipant extends Participant<Project, ProjectParticipantRole> {
 
     @Id
@@ -21,30 +35,20 @@ public abstract class ProjectParticipant extends Participant<Project, ProjectPar
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "projectId", referencedColumnName = "id")
-    private Project project;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "project_role")
     private ProjectParticipantRole role;
 
-    public ProjectParticipant() {
+    protected ProjectParticipant() {
     }
 
-    public ProjectParticipant(User user, Project project, ProjectParticipantRole role) {
+    public ProjectParticipant(User user, ProjectParticipantRole role) {
         this.user = user;
-        this.project = project;
         this.role = role;
     }
 
     public User getUser() {
         return user;
-    }
-
-    @Override
-    public Project getProcess() {
-        return project;
     }
 
     public Long getId() {
@@ -59,13 +63,13 @@ public abstract class ProjectParticipant extends Participant<Project, ProjectPar
         return this.user.hasId(userId);
     }
 
-    public Project getProject() {
-        return project;
-    }
-
     @Override
     public ProjectParticipantRole getRole() {
         return role;
+    }
+
+    public Project getProject() {
+        return getProcess();
     }
 
     @Override
@@ -79,7 +83,6 @@ public abstract class ProjectParticipant extends Participant<Project, ProjectPar
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(user, that.user)
-                .append(project, that.project)
                 .append(role, that.role)
                 .isEquals();
     }
@@ -89,7 +92,6 @@ public abstract class ProjectParticipant extends Participant<Project, ProjectPar
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(user)
-                .append(project)
                 .append(role)
                 .toHashCode();
     }

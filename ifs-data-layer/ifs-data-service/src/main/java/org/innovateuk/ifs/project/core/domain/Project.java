@@ -58,10 +58,10 @@ public class Project implements ProcessActivity {
 
     private ZonedDateTime spendProfileSubmittedDate;
 
-    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = ProjectUser.class)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    @OneToOne(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = ProjectMonitoringOfficer.class, mappedBy = "project")
     private ProjectMonitoringOfficer projectMonitoringOfficer = null;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)

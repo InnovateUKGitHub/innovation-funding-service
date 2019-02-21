@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.project.monitor.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
 import org.innovateuk.ifs.user.domain.User;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER;
 
@@ -13,13 +14,45 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONI
  * A monitoring officer on a project.
  */
 @Entity
-@Table(name = "project_user")
+@DiscriminatorValue("PROJECT_MONITORING_OFFICER")
 public class ProjectMonitoringOfficer extends ProjectParticipant {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "projectId", referencedColumnName = "id")
+    private Project project;
 
     public ProjectMonitoringOfficer() {
     }
 
     public ProjectMonitoringOfficer(User user, Project project) {
-        super(user, project, MONITORING_OFFICER);
+        super(user, MONITORING_OFFICER);
+        this.project = project;
+    }
+
+    @Override
+    public Project getProcess() {
+        return project;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectMonitoringOfficer that = (ProjectMonitoringOfficer) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(project, that.project)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(project)
+                .toHashCode();
     }
 }
