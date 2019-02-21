@@ -2,6 +2,8 @@ package org.innovateuk.ifs.crm.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
+import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -38,9 +40,7 @@ public class CrmServiceImpl implements CrmService {
         return userService.getUserById(userId).andOnSuccess(user -> {
             if (user.hasRole(MONITORING_OFFICER)) {
                 SilContact silContact = monitoringOfficerToSilContact(user);
-                LOG.info(format("Updating CRM contact %s and organisation %s",
-                        silContact.getEmail(), silContact.getOrganisation().getName()));
-                return silCrmEndpoint.updateContact(silContact);
+                return getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
             } else {
                 if (!user.isInternalUser()) {
                     return organisationService.getAllByUserId(userId).andOnSuccess(organisations -> {
@@ -48,9 +48,7 @@ public class CrmServiceImpl implements CrmService {
                         for (OrganisationResource organisation : organisations) {
                             result = result.andOnSuccess(() -> {
                                 SilContact silContact = externalUserToSilContact(user, organisation);
-                                LOG.info(format("Updating CRM contact %s and organisation %s",
-                                        silContact.getEmail(), silContact.getOrganisation().getName()));
-                                return silCrmEndpoint.updateContact(silContact);
+                                return getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
                             });
                         }
                         return result;
@@ -61,13 +59,15 @@ public class CrmServiceImpl implements CrmService {
         });
     }
 
+    private FailingOrSucceedingResult<Void, ServiceFailure> getSilContactEmailAndOrganisationNameAndUpdateContact(SilContact silContact) {
+        LOG.info(format("Updating CRM contact %s and organisation %s",
+                silContact.getEmail(), silContact.getOrganisation().getName()));
+        return silCrmEndpoint.updateContact(silContact);
+    }
+
     private SilContact externalUserToSilContact(UserResource user, OrganisationResource organisation) {
-        SilContact silContact = new SilContact();
-        silContact.setEmail(user.getEmail());
-        silContact.setFirstName(user.getFirstName());
-        silContact.setLastName(user.getLastName());
-        silContact.setTitle(Optional.ofNullable(user.getTitle()).map(Title::getDisplayName).orElse(null));
-        silContact.setSrcSysContactId(String.valueOf(user.getId()));
+
+        SilContact silContact = setSilContactDetails(user);
 
         SilOrganisation silOrganisation = new SilOrganisation();
         silOrganisation.setName(organisation.getName());
@@ -79,13 +79,20 @@ public class CrmServiceImpl implements CrmService {
         return silContact;
     }
 
-    private SilContact monitoringOfficerToSilContact(UserResource user) {
+    private SilContact setSilContactDetails(UserResource user) {
+
         SilContact silContact = new SilContact();
         silContact.setEmail(user.getEmail());
         silContact.setFirstName(user.getFirstName());
         silContact.setLastName(user.getLastName());
         silContact.setTitle(Optional.ofNullable(user.getTitle()).map(Title::getDisplayName).orElse(null));
         silContact.setSrcSysContactId(String.valueOf(user.getId()));
+        return silContact;
+    }
+
+    private SilContact monitoringOfficerToSilContact(UserResource user) {
+
+        SilContact silContact = setSilContactDetails(user);
 
         SilOrganisation moSilOrganisation = new SilOrganisation();
         moSilOrganisation.setName("IFS MO Company");
