@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class NavigationUtilsTest {
 
     private static final String landingPageUrl = "https://site/live-projects-landing-page";
@@ -49,15 +49,9 @@ public class NavigationUtilsTest {
     }
 
     @Test
-    public void getRedirectToDashboardUrlForAssessorRole() throws Exception {
+    public void getRedirectToDashboardUrlForNoLandingPageRole() throws Exception {
 
-        assertEquals("redirect:/assessment/assessor/dashboard", navigationUtils.getRedirectToDashboardUrlForRole(ASSESSOR));
-    }
-
-    @Test
-    public void getRedirectToDashboardUrlForStakeholderRole() throws Exception {
-
-        assertEquals("redirect:/management/dashboard", navigationUtils.getRedirectToDashboardUrlForRole(STAKEHOLDER));
+        assertEquals("redirect:/dashboard", navigationUtils.getRedirectToDashboardUrlForRole(COMP_EXEC));
     }
 
     @Test
