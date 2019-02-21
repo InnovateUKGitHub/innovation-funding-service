@@ -53,7 +53,7 @@ User can finish setting up the grant transfer
 
 Applicant user start a grant transfer
     [Documentation]  IFS-5158
-    [Setup]  log in as a different user    &{lead_applicant_credentials}
+    [Setup]  log in as a different user    &{collaborator1_credentials}
     Given the user navigates to the page   ${server}/competition/${competitionId}/overview
     When the user clicks the button/link   jQuery = a:contains("Start new application")
     Then the user is able to go to Application overview
