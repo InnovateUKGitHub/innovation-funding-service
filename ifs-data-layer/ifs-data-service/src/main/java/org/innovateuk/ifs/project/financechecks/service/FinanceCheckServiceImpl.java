@@ -106,7 +106,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(projectId);
@@ -127,7 +127,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     public ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId) {
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
 
@@ -149,7 +149,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         Application application = project.getApplication();
 
         return projectFinanceRowService.financeChecksDetails(projectId, organisationId).andOnSuccess(projectFinance ->
@@ -219,7 +219,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private ServiceResult<Long> getByApplicationAndOrganisationId(Long applicationId, Long organisationId, FormInputType financeType, FormInputType nonFinanceType) {
-        Application app = applicationRepository.findOne(applicationId);
+        Application app = applicationRepository.findById(applicationId).get();
         return competitionSetupTransactionalService.isIncludeGrowthTable(app.getCompetition().getId()).
                 andOnSuccess((isIncludeGrowthTable) -> {
                     if (isIncludeGrowthTable) {

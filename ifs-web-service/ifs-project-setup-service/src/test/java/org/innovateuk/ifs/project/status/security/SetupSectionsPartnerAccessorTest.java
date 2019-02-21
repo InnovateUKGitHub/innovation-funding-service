@@ -28,20 +28,28 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
     public void checkAccessToCompaniesHouseSectionHappyPath() {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessCompaniesHouseSection(organisation));
 
-        verifyInteractions(mock -> mock.isCompaniesHouseSectionRequired(organisation));
+        verifyInteractions(
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isOffline()
+        );
     }
 
     @Test
     public void checkAccessToCompaniesHouseSectionButOrganisationIsNotBusiness() {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_REQUIRED, accessor.canAccessCompaniesHouseSection(organisation));
 
-        verifyInteractions(mock -> mock.isCompaniesHouseSectionRequired(organisation));
+        verifyInteractions(
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isOffline()
+        );
     }
 
     @Test
@@ -49,12 +57,14 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessProjectDetailsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(organisation)
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isOffline()
         );
     }
 
@@ -62,10 +72,14 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
     public void checkAccessToProjectDetailsSectionHappyPathForNonBusinessTypeOrganisation() {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessProjectDetailsSection(organisation));
 
-        verifyInteractions(mock -> mock.isCompaniesHouseSectionRequired(organisation));
+        verifyInteractions(
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isOffline()
+                );
     }
 
     @Test
@@ -73,12 +87,14 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessProjectDetailsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(organisation)
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isOffline()
         );
     }
 
@@ -87,7 +103,9 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation, false));
 
-        verifyInteractions();
+        verifyInteractions(
+                mock -> mock.isOffline()
+        );
     }
 
     @Test
@@ -95,12 +113,14 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation, true));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(organisation)
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isOffline()
         );
     }
 
@@ -110,13 +130,15 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isMonitoringOfficerAssigned()).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation, true));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
-                mock -> mock.isMonitoringOfficerAssigned()
+                mock -> mock.isMonitoringOfficerAssigned(),
+                mock -> mock.isOffline()
         );
     }
 
@@ -126,13 +148,15 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isMonitoringOfficerAssigned()).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation, true));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
-                mock -> mock.isMonitoringOfficerAssigned()
+                mock -> mock.isMonitoringOfficerAssigned(),
+                mock -> mock.isOffline()
         );
     }
 
@@ -183,6 +207,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isAllPartnerProjectLocationsSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessMonitoringOfficerSection(organisation, true));
 
@@ -190,7 +215,8 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isProjectDetailsSubmitted(),
-                mock -> mock.isAllPartnerProjectLocationsSubmitted()
+                mock -> mock.isAllPartnerProjectLocationsSubmitted(),
+                mock -> mock.isOffline()
         );
     }
 
@@ -201,6 +227,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isAllPartnerProjectLocationsSubmitted()).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessMonitoringOfficerSection(organisation, true));
 
@@ -208,7 +235,8 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isProjectDetailsSubmitted(),
-                mock -> mock.isAllPartnerProjectLocationsSubmitted()
+                mock -> mock.isAllPartnerProjectLocationsSubmitted(),
+                mock -> mock.isOffline()
         );
     }
 
@@ -218,13 +246,15 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessMonitoringOfficerSection(organisation, false));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
-                mock -> mock.isProjectDetailsSubmitted()
+                mock -> mock.isProjectDetailsSubmitted(),
+                mock -> mock.isOffline()
         );
     }
 
@@ -241,6 +271,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
 
@@ -248,7 +279,8 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isOrganisationRequiringFunding(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
-                mock -> mock.isFinanceContactSubmitted(organisation)
+                mock -> mock.isFinanceContactSubmitted(organisation),
+                mock -> mock.isOffline()
         );
     }
 
@@ -259,6 +291,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
 
@@ -266,7 +299,8 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isOrganisationRequiringFunding(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
-                mock -> mock.isFinanceContactSubmitted(organisation)
+                mock -> mock.isFinanceContactSubmitted(organisation),
+                mock -> mock.isOffline()
         );
     }
 
@@ -277,13 +311,15 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
-                mock -> mock.isOrganisationRequiringFunding(organisation)
+                mock -> mock.isOrganisationRequiringFunding(organisation),
+                mock -> mock.isOffline()
         );
     }
 
@@ -293,13 +329,15 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
-                mock -> mock.isFinanceContactSubmitted(organisation)
+                mock -> mock.isFinanceContactSubmitted(organisation),
+                mock -> mock.isOffline()
         );
     }
 
@@ -310,13 +348,15 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
-                mock -> mock.isFinanceContactSubmitted(organisation)
+                mock -> mock.isFinanceContactSubmitted(organisation),
+                mock -> mock.isOffline()
         );
     }
 
@@ -326,8 +366,8 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
-
-         when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
+        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessSpendProfileSection(organisation));
@@ -337,7 +377,8 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isProjectDetailsSubmitted(),
                 mock -> mock.isBankDetailsApproved(organisation),
-                mock -> mock.isSpendProfileGenerated()
+                mock -> mock.isSpendProfileGenerated(),
+                mock -> mock.isOffline()
         );
     }
 
@@ -345,10 +386,14 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
     public void checkAccessToDocumentsSectionHappyPathForLeadPartner() {
 
         when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessDocumentsSection(organisation));
 
-        verifyInteractions(mock -> mock.isLeadPartnerOrganisation(organisation));
+        verifyInteractions(
+                mock -> mock.isLeadPartnerOrganisation(organisation),
+                mock -> mock.isOffline()
+        );
 
 
     }
@@ -359,13 +404,15 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessDocumentsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isLeadPartnerOrganisation(organisation),
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(organisation)
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isOffline()
         );
     }
 
@@ -374,12 +421,14 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessDocumentsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isLeadPartnerOrganisation(organisation),
-                mock -> mock.isCompaniesHouseSectionRequired(organisation)
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isOffline()
         );
     }
 
@@ -389,13 +438,15 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessDocumentsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isLeadPartnerOrganisation(organisation),
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
-                mock -> mock.isCompaniesHouseDetailsComplete(organisation)
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isOffline()
         );
     }
 
@@ -406,6 +457,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
 
@@ -413,7 +465,8 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
                 mock -> mock.isSpendProfileApproved(),
                 mock -> mock.isDocumentsApproved(),
                 mock -> mock.isGrantOfferLetterAvailable(),
-                mock -> mock.isGrantOfferLetterSent()
+                mock -> mock.isGrantOfferLetterSent(),
+                mock -> mock.isOffline()
         );
     }
 
@@ -423,13 +476,15 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
                 mock -> mock.isDocumentsApproved(),
-                mock -> mock.isGrantOfferLetterAvailable()
+                mock -> mock.isGrantOfferLetterAvailable(),
+                mock -> mock.isOffline()
         );
     }
 
@@ -438,11 +493,13 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(setupProgressCheckerMock.isDocumentsApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
 
         verifyInteractions(
-                mock -> mock.isSpendProfileApproved()
+                mock -> mock.isSpendProfileApproved(),
+                mock -> mock.isOffline()
         );
     }
 
@@ -451,13 +508,15 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         when(setupProgressCheckerMock.isDocumentsApproved()).thenReturn(false);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
                 mock -> mock.isDocumentsApproved(),
-                mock -> mock.isDocumentsApproved()
+                mock -> mock.isDocumentsApproved(),
+                mock -> mock.isOffline()
         );
     }
 
@@ -468,6 +527,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
         when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(false);
+        when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
         assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
 
@@ -475,7 +535,8 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
                 mock -> mock.isSpendProfileApproved(),
                 mock -> mock.isDocumentsApproved(),
                 mock -> mock.isGrantOfferLetterAvailable(),
-                mock -> mock.isGrantOfferLetterSent()
+                mock -> mock.isGrantOfferLetterSent(),
+                mock -> mock.isOffline()
         );
     }
 

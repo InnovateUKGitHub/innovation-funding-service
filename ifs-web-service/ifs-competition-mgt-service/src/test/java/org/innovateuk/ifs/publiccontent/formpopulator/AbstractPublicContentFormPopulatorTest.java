@@ -5,7 +5,7 @@ import org.innovateuk.ifs.publiccontent.form.AbstractContentGroupForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertThat;
  * Tests for abstract form populators in public content.
  * {@link AbstractPublicContentFormPopulator} {@link AbstractContentGroupFormPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AbstractPublicContentFormPopulatorTest {
 
     private static final PublicContentSectionType TEST_TYPE = PublicContentSectionType.ELIGIBILITY;

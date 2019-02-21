@@ -4,14 +4,14 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class InProgressDashboardRowViewModelTest {
 
     @Test

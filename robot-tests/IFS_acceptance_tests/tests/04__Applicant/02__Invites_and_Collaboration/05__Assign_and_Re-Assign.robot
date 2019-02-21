@@ -159,7 +159,7 @@ Appendices are assigned along with the question
     And the user clicks the button/link   link = 6. Innovation
     And the user should see the element   jQuery = label:contains("Upload")
     And the user clicks the button/link   jQuery = button:contains("Assign to lead for review")
-    And the user should not see the text in the page  Upload
+    And the user should not see the element    jQuery = label:contains("Upload")
 
 RTO Collaborator is not guided that the research area is not selected
     [Documentation]  IFS-4099
@@ -240,7 +240,7 @@ Lead applicant should be able to remove the partner organisation
     When the user clicks the button/link   jQuery = a:contains("Delete organisation"):first
     And the user clicks the button/link    jQuery = .modal-delete-organisation button:contains("Delete organisation")
     Then the user should see the element   jQuery = h1:contains("Application team")
-    And the user should not see the text in the page  Dennis Bergkamp
+    And the user should not see the element  jQuery = td:contains("Dennis Bergkamp")
     #The following steps check if the collaborator should not see the application in the dashboard page
     And log in as a different user  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the user should not see the element  link = Assign test

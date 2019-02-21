@@ -19,7 +19,7 @@ public abstract class CompetitionParticipant<I extends Invite<Competition, I>> e
         implements InvitedParticipant<Competition, I, CompetitionParticipantRole> {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -72,7 +71,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         }
 
         Set<ProcessRole> applicantRoles = new HashSet<>(simpleFilter(roles, ProcessRole::isLeadApplicantOrCollaborator));
-        List<Organisation> organisations = simpleMap(applicantRoles, role -> organisationRepository.findOne(role.getOrganisationId()));
+        List<Organisation> organisations = simpleMap(applicantRoles, role -> organisationRepository.findById(role.getOrganisationId()).orElse(null));
         List<OrganisationResource> organisationResources = new ArrayList<>(simpleMap(organisations, organisationMapper::mapToResource));
         organisationResources.sort(comparator);
         return serviceSuccess(new LinkedHashSet<>(organisationResources));
@@ -80,7 +79,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> findById(final long organisationId) {
-        return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId))
+        return find(organisationRepository.findById(organisationId), notFoundError(Organisation.class, organisationId))
                 .andOnSuccess(organisation -> serviceSuccess(organisationMapper.mapToResource(organisation)));
     }
 
@@ -143,7 +142,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<OrganisationResource> addAddress(final long organisationId, final OrganisationAddressType organisationAddressType, AddressResource addressResource) {
         return find(organisation(organisationId)).andOnSuccessReturn(organisation -> {
             Address address = addressMapper.mapToDomain(addressResource);
-            AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
+            AddressType addressType = addressTypeRepository.findById(organisationAddressType.getOrdinal()).orElse(null);
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
             return organisationMapper.mapToResource(updatedOrganisation);
@@ -170,13 +169,13 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationSearchResult> getSearchOrganisation(final long searchOrganisationId) {
-        Academic academic = academicRepository.findById(searchOrganisationId);
+        Optional<Academic> academic = academicRepository.findById(searchOrganisationId);
 
         ServiceResult<OrganisationSearchResult> organisationResults;
-        if (academic == null) {
+        if (!academic.isPresent()) {
             organisationResults = serviceFailure(notFoundError(Academic.class, searchOrganisationId));
         } else {
-            organisationResults = serviceSuccess(new OrganisationSearchResult(academic.getId().toString(), academic.getName()));
+            organisationResults = serviceSuccess(new OrganisationSearchResult(academic.get().getId().toString(), academic.get().getName()));
         }
         return organisationResults;
     }
@@ -185,7 +184,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         String organisationNameDecoded;
         try {
             organisationNameDecoded = UriUtils.decode(encodedName, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             log.error("Unable to decode company name " + encodedName + ". Saving original encoded value.", e);
             organisationNameDecoded = encodedName;
         }

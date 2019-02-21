@@ -25,5 +25,5 @@ public interface OrganisationRepository extends PagingAndSortingRepository<Organ
             "WHERE pr.user.id = :userId " +
             "AND p.id = :projectId")
     Organisation findByUserAndProjectId(long userId, long projectId);
-    List<Organisation> findAll(Iterable<Long> ids);
+    List<Organisation> findAllById(Iterable<Long> ids);
 }

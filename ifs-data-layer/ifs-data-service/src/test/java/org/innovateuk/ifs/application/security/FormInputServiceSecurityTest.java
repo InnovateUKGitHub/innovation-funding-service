@@ -12,8 +12,8 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUMMARY;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 /**

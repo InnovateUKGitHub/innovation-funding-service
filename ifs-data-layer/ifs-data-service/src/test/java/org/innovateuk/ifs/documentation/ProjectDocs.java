@@ -49,7 +49,8 @@ public class ProjectDocs {
             fieldWithPath("documentsStatus").description("Status of the project documents"),
             fieldWithPath("grantOfferLetterStatus").description("Status of the Grant Offer Letter status"),
             fieldWithPath("roleSpecificGrantOfferLetterState").description("Map of specific user role type to Grant Offer Letter status"),
-            fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent")
+            fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent"),
+            fieldWithPath("projectState").description("State of the project")
     };
 
     public static final FieldDescriptor[] grantOfferLetterStateResourceFields = {

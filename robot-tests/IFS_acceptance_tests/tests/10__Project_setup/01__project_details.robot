@@ -215,19 +215,19 @@ Inviting project manager client side validations
     [Tags]
     When the user enters text to a text field            id = name-project-manager    John Smith
     And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
-    Then the user should not see the text in the page    Please enter a valid name.
+    Then the user should not see the element             jQuery = .govuk-error-message:contains("Please enter a valid name.")
     When the user enters text to a text field            id = email-project-manager    test
     And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
-    Then the user should not see the text in the page    Please enter a valid name.
+    Then the user should not see the element             jQuery = .govuk-error-message:contains("Please enter an email address.")
     And the user should see a field error                ${enter_a_valid_email}
     When the user selects the radio button               projectManager    projectManager1
-    Then the user should not see the text in the page    Please enter an email address.
-    And the user should not see the text in the page     Please enter a valid name.
+    Then the user should not see the element             jQuery = .govuk-error-message:contains("Please enter an email address.")
+    And the user should not see the element              jQuery = .govuk-error-message:contains("Please enter a valid name.")
     When the user selects the radio button               projectManager    new
     And the user enters text to a text field             id = email-project-manager    test@example.com
     And Set Focus To Element                             jQuery = .govuk-button:contains("Save")
-    Then the user should not see the text in the page    Please enter an email address.
-    And the user should not see the text in the page     Please enter a valid name.
+    Then the user should not see the element             jQuery = .govuk-error-message:contains("Please enter an email address.")
+    And the user should not see the element              jQuery = .govuk-error-message:contains("Please enter a valid name.")
     And the user should not see an error in the page
 
 Partner invites a project manager
@@ -281,7 +281,7 @@ Lead partner selects a project manager
     Then the user clicks the button/link             jQuery = .govuk-button:contains("Save")
     And the user should see a validation error       You need to select a Project Manager before you can continue.
     When the user selects the radio button           projectManager    projectManager1
-    And the user should not see the text in the page    You need to select a Project Manager before you can continue.
+    And the user should not see the element          jQuery = .govuk-error-message:contains("You need to select a Project Manager before you can continue.")
     And the user clicks the button/link              jQuery = .govuk-button:contains("Save")
     Then the user should see the element             jQuery = td:contains("Project Manager") ~ td:contains("Steve Smith")
     And the user clicks the button/link              link = Project Manager
@@ -395,15 +395,14 @@ Inviting finance contact client side validations
     [Tags]
     When the user enters text to a text field            id = name-finance-contact    John Smith
     And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
-    Then the user should not see the text in the page    Please enter a valid name.
+    Then the user should not see the element             jQuery = .govuk-error-message:contains("Please enter a valid name.")
     When the user enters text to a text field            id = email-finance-contact    test
     And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
-    Then the user should not see the text in the page    Please enter a valid name.
-    And the user should see a field error                ${enter_a_valid_email}
+    Then the user should see a field error               ${enter_a_valid_email}
     When the user enters text to a text field            id = email-finance-contact    test@example.com
     And Set Focus To Element                             jQuery = .govuk-button:contains("Save finance contact")
-    Then the user should not see the text in the page    Please enter an email address.
-    And the user should not see the text in the page     Please enter a valid name.
+    Then the user should not see the element             jQuery = .govuk-error-message:contains("Please enter a valid email address.")
+    And the user should not see the element              jQuery = .govuk-error-message:contains("Please enter a valid name.")
 
 Partner invites a finance contact
     [Documentation]    INFUND-3579
@@ -442,7 +441,7 @@ Lead partner selects a finance contact
     And the user clicks the button/link                 link = Project details
     And the user clicks the button/link                 jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
     And the user should not see duplicated select options
-    And the user should not see the text in the page    Pending
+    And the user should not see the element             jQuery = label:contains("Pending")
     And the user selects the radio button               financeContact    financeContact2
     And the user clicks the button/link                 jQuery = .govuk-button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}

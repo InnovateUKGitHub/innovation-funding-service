@@ -13,7 +13,7 @@ import static javax.persistence.CascadeType.ALL;
 public class CostCategoryType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

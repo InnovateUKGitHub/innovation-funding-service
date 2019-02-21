@@ -81,7 +81,7 @@ public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryInteg
                 completedQuestionStatus
         );
 
-        repository.save(questionStatusesToSave);
+        repository.saveAll(questionStatusesToSave);
         flushAndClearSession();
 
         List<QuestionStatus> questionStatusesFound = repository.findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById(

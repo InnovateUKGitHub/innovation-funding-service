@@ -35,7 +35,7 @@ public class SiteTermsAndConditionsRepositoryIntegrationTest extends
                         .build())
                 .collect(toList());
 
-        repository.save(siteTermsAndConditions);
+        repository.saveAll(siteTermsAndConditions);
 
         assertThat(repository.findTopByOrderByVersionDesc()).isEqualToComparingOnlyGivenFields(siteTermsAndConditions
                 .get(siteTermsAndConditions.size() - 1), "name", "template", "version");

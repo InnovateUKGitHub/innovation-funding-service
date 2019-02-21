@@ -8,24 +8,22 @@ import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.util.UUID;
 
 import static org.innovateuk.ifs.eugrant.builder.EuGrantResourceBuilder.newEuGrantResource;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({EuGrantHttpServlet.class})
+
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class EuGrantCookieServiceTest extends BaseServiceUnitTest<EuGrantCookieService> {
 
     @Mock
@@ -33,6 +31,9 @@ public class EuGrantCookieServiceTest extends BaseServiceUnitTest<EuGrantCookieS
 
     @Mock
     private EuGrantRestService euGrantRestService;
+
+    @Mock
+    private EuGrantHttpServlet euGrantHttpServlet;
 
     private MockHttpServletResponse response;
     private MockHttpServletRequest request;
@@ -48,10 +49,7 @@ public class EuGrantCookieServiceTest extends BaseServiceUnitTest<EuGrantCookieS
     public void getEuGrantResourceWhenCookieIsPresent() throws Exception {
         UUID euGrantUUID = UUID.fromString("31a05805-c748-492d-a862-c047102516be");
 
-        PowerMockito.mockStatic(EuGrantHttpServlet.class);
-
-        when(EuGrantHttpServlet.request()).thenReturn(request);
-        when(EuGrantHttpServlet.response()).thenReturn(response);
+        when(euGrantHttpServlet.request()).thenReturn(request);
 
         when(cookieUtil.getCookieValue(request, EU_GRANT_ID)).thenReturn(String.valueOf(euGrantUUID));
         when(euGrantRestService.findById(euGrantUUID)).thenReturn(RestResult.restSuccess(new EuGrantResource()));
@@ -65,10 +63,7 @@ public class EuGrantCookieServiceTest extends BaseServiceUnitTest<EuGrantCookieS
     @Test
     public void getEuGrantResourceWhenCookieIsNotPresent() throws Exception {
 
-        PowerMockito.mockStatic(EuGrantHttpServlet.class);
-
-        when(EuGrantHttpServlet.request()).thenReturn(request);
-        when(EuGrantHttpServlet.response()).thenReturn(response);
+        when(euGrantHttpServlet.request()).thenReturn(request);
 
         when(cookieUtil.getCookieValue(request, EU_GRANT_ID)).thenReturn("");
 
@@ -85,10 +80,7 @@ public class EuGrantCookieServiceTest extends BaseServiceUnitTest<EuGrantCookieS
 
         EuGrantResource euGrantResource = newEuGrantResource().build();
 
-        PowerMockito.mockStatic(EuGrantHttpServlet.class);
-
-        when(EuGrantHttpServlet.request()).thenReturn(request);
-        when(EuGrantHttpServlet.response()).thenReturn(response);
+        when(euGrantHttpServlet.request()).thenReturn(request);
 
         when(cookieUtil.getCookieValue(request, EU_GRANT_ID)).thenReturn(String.valueOf(euGrantUUID));
         when(euGrantRestService.update(euGrantResource)).thenReturn(RestResult.restSuccess());
@@ -108,10 +100,8 @@ public class EuGrantCookieServiceTest extends BaseServiceUnitTest<EuGrantCookieS
         EuGrantResource euGrantResource = newEuGrantResource().build();
         euGrantResource.setId(euGrantUUID);
 
-        PowerMockito.mockStatic(EuGrantHttpServlet.class);
-
-        when(EuGrantHttpServlet.request()).thenReturn(request);
-        when(EuGrantHttpServlet.response()).thenReturn(response);
+        when(euGrantHttpServlet.request()).thenReturn(request);
+        when(euGrantHttpServlet.response()).thenReturn(response);
 
         when(cookieUtil.getCookieValue(request, EU_GRANT_ID)).thenReturn("");
         when(euGrantRestService.create()).thenReturn(RestResult.restSuccess(euGrantResource));

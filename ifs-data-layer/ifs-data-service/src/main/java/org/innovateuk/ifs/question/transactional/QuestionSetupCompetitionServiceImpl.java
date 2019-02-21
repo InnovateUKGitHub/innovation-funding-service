@@ -57,7 +57,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
-        return find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId))
+        return find(questionRepository.findById(questionId), notFoundError(Question.class, questionId))
                 .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
     }
 
@@ -151,7 +151,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     @Transactional
     public ServiceResult<CompetitionSetupQuestionResource> update(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         Long questionId = competitionSetupQuestionResource.getQuestionId();
-        Question question = questionRepository.findOne(questionId);
+        Question question = questionRepository.findById(questionId).get();
 
         if (question.getQuestionSetupType() != QuestionSetupType.APPLICATION_DETAILS) {
             question.setShortName(competitionSetupQuestionResource.getShortTitle());

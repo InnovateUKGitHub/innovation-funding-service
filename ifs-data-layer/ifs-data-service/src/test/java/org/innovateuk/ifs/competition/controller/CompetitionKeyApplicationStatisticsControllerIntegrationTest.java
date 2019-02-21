@@ -102,7 +102,7 @@ public class CompetitionKeyApplicationStatisticsControllerIntegrationTest extend
                 .withInAssessmentReviewPanel(false)
                 .withActivityState(ApplicationState.SUBMITTED)
                 .build(2);
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
         List<ProcessRole> processRoles = newProcessRole()
                 .withId()

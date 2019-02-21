@@ -9,7 +9,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import java.util.Optional;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
 
@@ -30,9 +30,9 @@ public class ContentGroupPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "DOWNLOAD_CONTENT_GROUP_FILE", description = "External users can only see published content group files")
     public boolean externalUsersCanViewPublishedContentGroupFiles(ContentGroupCompositeId contentGroupCompositeId, UserResource user) {
-        ContentGroup contentGroup = contentGroupRepository.findOne(contentGroupCompositeId.id());
-        if (contentGroup != null) {
-            return isSystemRegistrationUser(user) && isPublished(contentGroup);
+        Optional<ContentGroup> contentGroup = contentGroupRepository.findById(contentGroupCompositeId.id());
+        if (contentGroup.isPresent()) {
+            return isSystemRegistrationUser(user) && isPublished(contentGroup.get());
         }
         return false;
     }

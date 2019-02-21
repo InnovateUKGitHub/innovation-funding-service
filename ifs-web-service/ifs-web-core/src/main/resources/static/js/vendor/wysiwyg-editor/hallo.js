@@ -599,10 +599,11 @@
             }
             if (widget.lastSelection.startContainer.parentNode.href === void 0) {
               if (widget.lastSelection.collapsed) {
-                linkNode = jQuery("<a href='" + link + "'>" + link + "</a>")[0];
+                linkNode = jQuery("<a href='" + link + "' target=\"_blank\">" + link + "</a>")[0];
                 widget.lastSelection.insertNode(linkNode);
               } else {
                 document.execCommand("createLink", null, link);
+                $(widget.lastSelection.commonAncestorContainer).find('a[href="' + link +'"]').attr("target", "_blank");
               }
             } else {
               widget.lastSelection.startContainer.parentNode.href = link;

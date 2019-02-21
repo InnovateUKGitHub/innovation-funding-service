@@ -6,7 +6,9 @@ import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,12 +19,14 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MARK_SECT
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for {@link YourProjectCostsCompleter}
  */
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationSectionFinanceSaverTest {
 
     private ApplicationSectionFinanceSaver saver = new ApplicationSectionFinanceSaver();

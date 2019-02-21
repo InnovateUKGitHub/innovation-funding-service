@@ -63,7 +63,7 @@ import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
 import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
@@ -133,7 +133,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
-        when(userRepositoryMock.findOne(123L)).thenReturn(user);
+        when(userRepositoryMock.findById(123L)).thenReturn(Optional.of(user));
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
         when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(serviceSuccess());
         when(idpServiceMock.updateUserPassword("myuid", "mypassword")).thenReturn(serviceSuccess("mypassword"));
@@ -151,7 +151,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
-        when(userRepositoryMock.findOne(123L)).thenReturn(user);
+        when(userRepositoryMock.findById(123L)).thenReturn(Optional.of(user));
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
         when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
 
@@ -169,7 +169,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
-        when(userRepositoryMock.findOne(123L)).thenReturn(user);
+        when(userRepositoryMock.findById(123L)).thenReturn(Optional.of(user));
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
 
         when(passwordPolicyValidatorMock.validatePassword(password, userResource)).thenReturn(serviceSuccess());
@@ -668,7 +668,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(
                 serviceSuccess(siteTermsAndConditions.get(2)));
-        when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
+        when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
 
         User userToSave = createUserExpectations(existingUser.getId(), expectedTermsAndConditionsIds);
 
@@ -678,7 +678,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         InOrder inOrder = inOrder(termsAndConditionsServiceMock, userRepositoryMock);
         inOrder.verify(termsAndConditionsServiceMock).getLatestSiteTermsAndConditions();
-        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(userRepositoryMock).findById(existingUser.getId());
         inOrder.verify(userRepositoryMock).save(createUserExpectations(existingUser.getId(),
                 expectedTermsAndConditionsIds));
         inOrder.verifyNoMoreInteractions();
@@ -688,7 +688,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void grantRole() {
         GrantRoleCommand grantRoleCommand = new GrantRoleCommand(1L, APPLICANT);
         User user = newUser().build();
-        when(userRepositoryMock.findOne(grantRoleCommand.getUserId())).thenReturn(user);
+        when(userRepositoryMock.findById(grantRoleCommand.getUserId())).thenReturn(Optional.of(user));
 
         ServiceResult<Void> result = service.grantRole(grantRoleCommand);
 
@@ -698,15 +698,14 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void updateEmail() {
-
-        User user = newUser().build();
         String updateEmail = "new@gmail.com";
+        User user = newUser().withUid("uid").withEmailAddress(updateEmail).build();
 
         List<Invite> invite = singletonList(new RoleInvite("Mister", "mister@email.com", "", APPLICANT, OPENED));
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(invite);
-        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceSuccess("uid"));
+        when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
 
         ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
 
@@ -717,13 +716,13 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void updateEmailForNoInviteUsers() {
 
-        User user = newUser().build();
+        User user = newUser().withUid("uid").build();
         String updateEmail = "new@gmail.com";
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(userInviteRepositoryMock.findByEmail(user.getEmail())).thenReturn(emptyList());
         user.setEmail(updateEmail);
-        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceSuccess("uid"));
+        when(idpServiceMock.updateUserEmail(user.getUid(), user.getEmail())).thenReturn(serviceSuccess(user.getUid()));
 
         ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
 
@@ -734,11 +733,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void updateEmailAndDisplayErrorIfDuplicateEmailHasBeenFound() {
 
-        User user = newUser().withEmailAddress("new@gmail.com").build();
+        User user = newUser().withUid("uid").withEmailAddress("new@gmail.com").build();
         String updateEmail = "new@gmail.com";
 
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(idpServiceMock.updateUserEmail(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(USERS_DUPLICATE_EMAIL_ADDRESS));
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(idpServiceMock.updateUserEmail(user.getUid(),user.getEmail())).thenReturn(ServiceResult.serviceFailure(USERS_DUPLICATE_EMAIL_ADDRESS));
 
         ServiceResult<Void> result = service.updateEmail(user.getId(), updateEmail);
 

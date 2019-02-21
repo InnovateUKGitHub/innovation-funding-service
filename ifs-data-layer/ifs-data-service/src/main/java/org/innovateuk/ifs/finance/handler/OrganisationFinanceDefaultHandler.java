@@ -73,7 +73,7 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
 
     @Override
     public Map<FinanceRowType, List<ChangedFinanceRowPair>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
-        ProjectFinance projectFinance = projectFinanceRepository.findOne(projectFinanceId);
+        ProjectFinance projectFinance = projectFinanceRepository.findById(projectFinanceId).get();
         Long applicationId = projectFinance.getProject().getApplication().getId();
         Long organisationId = projectFinance.getOrganisation().getId();
         List<ProjectFinanceRow> projectCosts = getProjectCosts(projectFinanceId);
@@ -246,9 +246,9 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
         return simpleMap(projectCosts, cost -> {
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
             Optional<ApplicationFinanceRow> applicationFinanceRow;
-            if (cost.getApplicationRowId() != null) {
-                applicationFinanceRow = Optional.ofNullable(applicationFinanceRowRepository.findOne(cost.getApplicationRowId()));
-            } else {
+            if(cost.getApplicationRowId() != null) {
+                applicationFinanceRow = applicationFinanceRowRepository.findById(cost.getApplicationRowId());
+            } else{
                 applicationFinanceRow = Optional.empty();
             }
             return ImmutablePair.of(toFinanceRow(applicationFinanceRow, applicationFinance), toFinanceRow(Optional.of(cost), applicationFinance));
@@ -260,7 +260,7 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
 
         for (ApplicationFinanceRow cost : applicationCosts) {
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-            Optional<ApplicationFinanceRow> applicationFinanceRow = Optional.ofNullable(applicationFinanceRowRepository.findOne(cost.getId()));
+            Optional<ApplicationFinanceRow> applicationFinanceRow = applicationFinanceRowRepository.findById(cost.getId());
             Optional<ProjectFinanceRow> projectFinanceRow = projectFinanceRowRepository.findOneByApplicationRowId(cost.getId());
             if (!projectFinanceRow.isPresent()) {
                 removals.add(ImmutablePair.of(toFinanceRow(applicationFinanceRow, applicationFinance), Optional.empty()));
@@ -269,7 +269,6 @@ public class OrganisationFinanceDefaultHandler extends AbstractOrganisationFinan
 
         return removals;
     }
-
 
     private Optional<ApplicationFinanceRow> toFinanceRow(Optional<? extends FinanceRow> optionalCost,
                                                          ApplicationFinance applicationFinance) {

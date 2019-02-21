@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
@@ -21,13 +21,13 @@ import java.io.IOException;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class OverheadFileSaverTest {
 
     @Mock
@@ -69,7 +69,7 @@ public class OverheadFileSaverTest {
         ValidationMessages result = saver.handleOverheadFileRequest(request);
 
         assertEquals(0, result.getErrors().size());
-        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), anyString(), anyLong(), anyString(), any(byte[].class));
+        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), nullable(String.class), anyLong(), anyString(), any(byte[].class));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class OverheadFileSaverTest {
         assertEquals(1, result.getErrors().size());
         assertEquals("GENERAL_NOT_FOUND", result.getErrors().get(0).getErrorKey());
         assertEquals(NOT_ACCEPTABLE, result.getErrors().get(0).getStatusCode());
-        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), anyString(), anyLong(), anyString(), any(byte[].class));
+        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), nullable(String.class), anyLong(), anyString(), any(byte[].class));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class OverheadFileSaverTest {
 
         assertEquals(1, result.getErrors().size());
         assertEquals("validation.finance.overhead.file.type", result.getErrors().get(0).getErrorKey());
-        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), anyString(), anyLong(), anyString(), any(byte[].class));
+        verify(overheadFileRestService, times(1)).updateOverheadCalculationFile(anyLong(), nullable(String.class), anyLong(), anyString(), any(byte[].class));
     }
 
 

@@ -85,9 +85,9 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
                         FormInputResponse formInputResponse = formInputResponseForUser.orElseGet(() -> {
 
                             ProcessRoleResource processRole = retrieveApplicantByEmail(uploadedBy, data.getApplication().getId());
-                            ProcessRole processRoleEntity = processRoleRepository.findOne(processRole.getId());
-                            Application application = applicationRepository.findOne(data.getApplication().getId());
-                            FormInput formInputEntity = formInputRepository.findOne(input.getId());
+                            ProcessRole processRoleEntity = processRoleRepository.findById(processRole.getId()).orElse(null);
+                            Application application = applicationRepository.findById(data.getApplication().getId()).orElse(null);
+                            FormInput formInputEntity = formInputRepository.findById(input.getId()).orElse(null);
                             return new FormInputResponse(ZonedDateTime.now(), fileEntry, processRoleEntity, formInputEntity, application);
                         });
 

@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
 /**
@@ -182,6 +182,20 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void testWithdrawProject() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.withdrawProject(123L),
+                Role.IFS_ADMINISTRATOR);
+    }
+
+    @Test
+    public void handleProjectOffline() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.handleProjectOffline(123L),
+                Role.IFS_ADMINISTRATOR);
+    }
+
+    @Test
+    public void completeProjectOffline() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.completeProjectOffline(123L),
                 Role.IFS_ADMINISTRATOR);
     }
 

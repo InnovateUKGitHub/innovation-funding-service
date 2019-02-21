@@ -17,8 +17,6 @@ public class AssessorCompetitionSummaryResourceDocs {
 
     public static final FieldDescriptor[] assessorCompetitionSummaryResourceFields = {
             fieldWithPath("assessor").description("The assessor's profile."),
-            fieldWithPath("assessor.user").description("The assessor's user."),
-            fieldWithPath("assessor.profile").description("The assessor's profile."),
             fieldWithPath("competitionId").description("Id of the competition that the summary is refined by."),
             fieldWithPath("competitionName").description("Name of the competition."),
             fieldWithPath("competitionStatus").description("Status of the competition."),

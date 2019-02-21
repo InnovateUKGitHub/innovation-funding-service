@@ -11,15 +11,11 @@ buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
 
 buildscript {
-    ext['thymeleaf.version'] = '3.0.3.RELEASE'
+    ext['thymeleaf.version'] = '3.0.8.RELEASE'
 
     ext {
         thymeleafVersion = ext['thymeleaf.version']
     }
-}
-
-bootRun {
-    addResources = false
 }
 
 group 'innovateuk'
@@ -61,8 +57,6 @@ dependencies {
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-resources:eu-grant-registration-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
-    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
-    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
 
     testCompile "com.opencsv:opencsv:4.3.2"
 }

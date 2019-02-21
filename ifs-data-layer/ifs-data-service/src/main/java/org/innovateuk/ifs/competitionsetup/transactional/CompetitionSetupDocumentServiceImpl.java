@@ -74,7 +74,7 @@ public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalServic
             List<CompetitionDocument> competitionDocuments = simpleMap(competitionDocumentResources,
                     competitionDocumentResource -> competitionDocumentMapper.mapToDomain(competitionDocumentResource));
 
-            List<CompetitionDocument> savedCompetitionDocuments = (List<CompetitionDocument>) competitionDocumentConfigRepository.save(competitionDocuments);
+            List<CompetitionDocument> savedCompetitionDocuments = (List<CompetitionDocument>) competitionDocumentConfigRepository.saveAll(competitionDocuments);
             return serviceSuccess(simpleMap(savedCompetitionDocuments, savedCompeitionDocument -> competitionDocumentMapper.mapToResource(savedCompeitionDocument)));
         });
     }
@@ -99,7 +99,7 @@ public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalServic
     @Override
     @Transactional
     public ServiceResult<CompetitionDocumentResource> findOne(long id) {
-        CompetitionDocument competitionDocument = competitionDocumentConfigRepository.findOne(id);
+        CompetitionDocument competitionDocument = competitionDocumentConfigRepository.findById(id).get();
         return serviceSuccess(competitionDocumentMapper.mapToResource(competitionDocument));
     }
 
@@ -113,7 +113,7 @@ public class CompetitionSetupDocumentServiceImpl extends BaseTransactionalServic
     @Override
     @Transactional
     public ServiceResult<Void> delete(long id) {
-        competitionDocumentConfigRepository.delete(id);
+        competitionDocumentConfigRepository.deleteById(id);
         return serviceSuccess();
     }
 }

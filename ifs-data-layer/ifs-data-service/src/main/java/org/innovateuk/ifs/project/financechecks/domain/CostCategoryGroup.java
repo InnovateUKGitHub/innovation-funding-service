@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.toSortedMapWithList;
 public class CostCategoryGroup {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany(cascade = ALL, mappedBy = "costCategoryGroup", orphanRemoval = true)
