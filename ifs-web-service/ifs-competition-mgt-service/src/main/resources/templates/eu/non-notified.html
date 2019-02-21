@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Notify portal registrants'" />
+</head>
+<body class="govuk-template__body competition-management eu-notified">
+    <th:block th:insert="fragments/layout :: body-start" />
+    <th:block th:insert="fragments/layout :: global-header" />
+
+    <div class="govuk-width-container">
+        <th:block th:insert="fragments/layout :: phase-banner" />
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Notify portal registrants',subTitle='Horizon 2020 grant transfer',size='govuk-heading-l'" />
+
+            <div class="govuk-tabs">
+                <h2 class="govuk-tabs__title">
+                    Registrants
+                </h2>
+                <ul class="govuk-tabs__list">
+                    <li class="govuk-tabs__list-item">
+                        <a href="/management/eu-invite-non-notified" aria-selected="true" class="govuk-tabs__tab">Unsent (<span th:text="${model.totalNonNotified}"></span>)</a>
+                    </li>
+                    <li class="govuk-tabs__list-item">
+                        <a href="/management/eu-invite-notified" aria-selected="false" class="govuk-tabs__tab">Sent (<span th:text="${model.totalNotified}"></span>)</a>
+                    </li>
+                </ul>
+                <section class="govuk-tabs__panel">
+                    <form method="POST"
+                          data-select=""
+                          autocomplete="off">
+                        <div class="govuk-grid-row sorting">
+                            <div class="govuk-grid-column-one-half select-all">
+                                <div class="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item">
+                                        <input type="checkbox"
+                                               class="govuk-checkboxes__input"
+                                               data-select-all=""
+                                               id="select-all-check"/>
+                                        <label for="select-all-check"
+                                               class="govuk-label govuk-checkboxes__label">
+                                            Select all registrants on this page
+                                        </label>
+                                    </div>
+                                </div>
+                                <span class="govuk-hint">
+                                    <span data-count-selected="">0</span> registrants selected
+                                </span>
+                            </div>
+                            <div class="govuk-grid-column-one-half select-all alignright">
+                                <button class="govuk-button govuk-!-margin-bottom-3" name="resendInvites" data-submit-el="">
+                                    Send emails to all selected
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-overflow">
+                            <table class="govuk-table">
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header width-150" scope="col"><span class="visually-hidden">Selected</span></th>
+                                    <th class="govuk-table__header" scope="col">Name</th>
+                                    <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Email</th>
+                                </tr>
+                                </thead>
+                                <tbody class="govuk-table__body">
+                                <tr class="govuk-table__row"  th:each="contact, index : ${model.contacts}">
+                                    <td class="govuk-table__cell">
+                                        <div class="govuk-checkboxes">
+                                            <div class="govuk-checkboxes__item">
+                                                <input type="checkbox"
+                                                       class="govuk-checkboxes__input"
+                                                       th:id="|registrant-${index.count}|" />
+                                                <label th:for="|registrant-${index.count}|"
+                                                       class="govuk-label govuk-checkboxes__label">
+                                                    <span class="govuk-visually-hidden">Add</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="govuk-table__cell" th:text="${contact.name}">Steve Smith</td>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${contact.email}">steve.smith@empire.com</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
+                        </div>
+                    </form>
+                </section>
+            </div>
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+    </div>
+    <th:block th:insert="fragments/layout :: footer" />
+    <th:block th:insert="fragments/layout :: body-end" />
+    <th:block th:insert="fragments/service-layout :: body-end" />
+
+</body>
+</html>
