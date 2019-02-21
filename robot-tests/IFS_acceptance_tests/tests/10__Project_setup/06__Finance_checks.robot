@@ -87,9 +87,6 @@ Resource          PS_Common.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
-${PS_FC_Application_Title}    Matter - Planning for Web
-${PS_FC_Project_Id}    ${project_ids["${PS_FC_Application_Title}"]}
-
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page

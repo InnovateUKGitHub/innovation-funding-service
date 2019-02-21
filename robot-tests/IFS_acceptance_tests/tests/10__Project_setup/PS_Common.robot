@@ -103,6 +103,10 @@ ${Project_Address_Page}                 ${Project_In_Setup_Details_Page}/project
 ${Internal_Competition_Status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${Notified_Application_Competition_Status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
 
+#Finances Checks
+${PS_FC_Application_Title}    Matter - Planning for Web
+${PS_FC_Project_Id}           ${project_ids["${PS_FC_Application_Title}"]}
+
 #Bank details
 ${Account_One}   51406795
 ${Sortcode_One}  404745

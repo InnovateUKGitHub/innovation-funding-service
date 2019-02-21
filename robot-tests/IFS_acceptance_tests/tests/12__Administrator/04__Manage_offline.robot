@@ -39,7 +39,7 @@ Project setup shows project is completed offline
 *** Keywords ***
 the user marks the project as managed offline
     the user navigates to the page    ${server}/project-setup-management/competition/${MARKOFFLINE_COMPETITION}/status/all
-    the user clicks the button/link   jQuery = #table-project-status td:contains("Incomplete") a
+    the user clicks the button/link   jQuery = #table-project-status td:contains("Complete") a
     the user clicks the button/link   link = Manage offline
     the user clicks the button/link   css = .modal-handle-project-offline button[type="submit"]
 
