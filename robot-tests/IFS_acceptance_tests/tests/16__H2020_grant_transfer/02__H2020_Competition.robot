@@ -4,10 +4,10 @@ Suite Setup       Custom setup
 Suite Teardown    Custom teardown
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
+
 *** Variables ***
 ${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
 ${competitionTitle}  H2020 Grant Transfer
-
 
 *** Test Cases ***
 User can select H2020 Competition Template and complete Initial details
@@ -48,8 +48,8 @@ User can complete the Application
 User can finish setting up the grant transfer
     [Documentation]  IFS-5158
     Given the user completes grant transfer setup
-    Then get competitions id and set it as suite variable  ${competitionTitle}
-    And the competition moves to Open state                ${competitionId}
+    Then the user should see the element             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competitionTitle}")
+    [Teardown]  Get competition id and set open date to yesterday  ${competitionTitle}
 
 Applicant user start a grant transfer
     [Documentation]  IFS-5158
@@ -57,7 +57,6 @@ Applicant user start a grant transfer
     Given the user navigates to the page   ${server}/competition/${competitionId}/overview
     When the user clicks the button/link   jQuery = a:contains("Start new application")
     Then the user is able to go to Application overview
-
 
 *** Keywords ***
 Custom setup
@@ -104,8 +103,17 @@ The user completes funding information
      the user clicks the button/link         jQuery = button:contains("Done")
 
 The user completes Public content for H2020 registration and publishes
-    [Arguments]
-    # Fill in the Competition information and search
+    the user fills in the public content competition inforation and search
+    the user fills in the public content summary
+    the user fills in public content eligibility
+    the user fills in public content scope
+    the user fills in public content save the dates
+    the user fills in public content how to apply section
+    the user fills in public content supporting information section
+    # Publish and return
+    the user clicks the button/link         jQuery = button:contains("Publish content")
+
+The user fills in the public content competition inforation and search
     the user clicks the button/link         link = Competition information and search
     the user enters text to a text field    id = shortDescription  Horizon 2020 competition
     the user enters text to a text field    id = projectFundingRange  Up to £5million
@@ -115,48 +123,52 @@ The user completes Public content for H2020 registration and publishes
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
     the user should see the element         jQuery = div:contains("Competition information and search") ~ .task-status-complete
-    # Fill in the Summary
+
+The user fills in the public content summary
     the user clicks the button/link         link = Summary
     the user enters text to a text field    css = .editor  This is a Summary description
     the user enters text to a text field    id = projectSize   10 millions
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
     the user should see the element         jQuery = div:contains("Summary") ~ .task-status-complete
-    # Fill in the Eligibility
+
+The user fills in public content eligibility
     the user clicks the button/link         link = Eligibility
     the user enters text to a text field    id = contentGroups[0].heading  Heading 1
     the user enters text to a text field    jQuery = div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
     the user should see the element         jQuery = div:contains("Eligibility") ~ .task-status-complete
-    # Fill in the Scope
+
+The user fills in public content scope
     the user clicks the button/link         link = Scope
     the user enters text to a text field    id = contentGroups[0].heading  Heading 1
     the user enters text to a text field    jQuery = div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
     the user should see the element         jQuery = div:contains("Scope") ~ .task-status-complete
-    # Save the dates
+
+The user fills in public content save the dates
     the user clicks the button/link         link = Dates
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
     the user should see the element         jQuery = div:contains("Dates") ~ .task-status-complete
-    # Fill in the How to apply
+
+The user fills in public content how to apply section
     the user clicks the button/link         link = How to apply
     the user enters text to a text field    id = contentGroups[0].heading    Heading 1
     the user enters text to a text field    css = div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
     the user should see the element         jQuery = div:contains("How to apply") ~ .task-status-complete
-    # Fill in the Supporting information
+
+The user fills in public content supporting information section
     the user clicks the button/link         link = Supporting information
     the user enters text to a text field    id = contentGroups[0].heading    Heading 1
     the user enters text to a text field    css = div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
     the user should see the element         jQuery = div:contains("Supporting information") ~ .task-status-complete
-    # Publish and return
-    the user clicks the button/link         jQuery = button:contains("Publish content")
 
 The user completes the application proccess details
     the user clicks the button/link         link = Application details
@@ -176,7 +188,6 @@ The user completes grant transfer setup
     the user clicks the button/link             jQuery = a:contains("Complete")
     the user clicks the button/link             css = button[type="submit"]
     the user navigates to the page              ${CA_UpcomingComp}
-    the user should see the element             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competitionTitle}")
 
 The user is able to go to Application overview
      the user clicks the button/link  jQuery = .govuk-button:contains("Save and continue")
