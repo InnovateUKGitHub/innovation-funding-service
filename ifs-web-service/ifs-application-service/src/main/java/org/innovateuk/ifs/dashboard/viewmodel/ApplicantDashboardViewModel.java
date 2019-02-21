@@ -8,18 +8,21 @@ import java.util.List;
 public class ApplicantDashboardViewModel {
 
     private final List<ProjectDashboardRowViewModel> projects;
+    private final List<EuGrantTransferDashboardRowViewModel> euGrantTransfers;
     private final List<InProgressDashboardRowViewModel> inProgress;
     private final List<PreviousDashboardRowViewModel> previous;
     private final String originQuery;
     private final boolean monitoringOfficer;
 
     public ApplicantDashboardViewModel(List<ProjectDashboardRowViewModel> projects,
+                                       List<EuGrantTransferDashboardRowViewModel> euGrantTransfers,
                                        List<InProgressDashboardRowViewModel> inProgress,
                                        List<PreviousDashboardRowViewModel> previous,
                                        String originQuery,
                                        boolean monitoringOfficer) {
         this.projects = projects;
         this.inProgress = inProgress;
+        this.euGrantTransfers = euGrantTransfers;
         this.previous = previous;
         this.originQuery = originQuery;
         this.monitoringOfficer = monitoringOfficer;
@@ -31,6 +34,10 @@ public class ApplicantDashboardViewModel {
 
     public List<InProgressDashboardRowViewModel> getInProgress() {
         return inProgress;
+    }
+
+    public List<EuGrantTransferDashboardRowViewModel> getEuGrantTransfers() {
+        return euGrantTransfers;
     }
 
     public List<PreviousDashboardRowViewModel> getPrevious() {
