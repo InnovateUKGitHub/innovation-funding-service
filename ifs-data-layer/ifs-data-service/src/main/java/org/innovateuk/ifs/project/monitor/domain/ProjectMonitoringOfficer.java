@@ -22,6 +22,7 @@ public class ProjectMonitoringOfficer extends ProjectParticipant {
     private Project project;
 
     public ProjectMonitoringOfficer() {
+        super(null, MONITORING_OFFICER);
     }
 
     public ProjectMonitoringOfficer(User user, Project project) {
