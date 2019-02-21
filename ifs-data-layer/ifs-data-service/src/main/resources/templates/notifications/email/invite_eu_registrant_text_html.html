@@ -1,0 +1,30 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+    <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+    <p style="margin: 0 0 1em 0;">You have been invited to register for a transfer of your funding from Horizon 2020. To do this you need to apply through the Innovation Funding Service. You will need to create a separate application for every project you have registered through Horizon 2020.</p>
+    <p style="margin: 0 0 1em 0;">Once you have signed in to the Innovation Funding Service you may find the terminology is more suited to applications for competitions. This is because we are using the same service applicants use to apply for competitions. You will be asked about your Horizon 2020 project. If you are eligible for the funding transfer, you will set up your project with us using our service. This second step requires information about the project you are receiving funding for.</p>
+    <p style="margin: 0 0 1em 0;">You will need to upload your grant agreement during your application. Your EU reconciliation report will need approval from the EU. Once you have received this you will be asked to upload it as part of your project setup.</p>
+    <p style="margin: 0 0 1em 0;"><a href="${inviteUrl}" class="govuk-button">Accept invitation</a></p>
+    <p style="margin: 0 0 1em 0;">The details you previously provided are listed below. You may find this useful when completing your application. If you spot any errors, please ring 0300 321 4357 or email EUGrantsFunding@ukri.org.</p>
+    <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+    <@layout.euSenderHTML />
+    <p style="margin: 0 0 1em 0;"><strong>Reference code</strong><br/>${referenceCode}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Organisation type</strong><br/>${organisationType}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Registered name</strong><br/>${registeredName}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Registration number</strong><br/>${registrationNumber}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Full name</strong><br/>${fullName}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Job title</strong><br/>${jobTitle}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Email</strong><br/>${email}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Telephone</strong><br/>${telephone}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Grant agreement number</strong><br/>${grantAgreementNumber}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Type of action</strong><br/>${actionType}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Participant identification code</strong><br/>${participationIdentificationCode}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Project name</strong><br/>${projectName}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Project start date</strong><br/>${startDate}</p>
+    <p style="margin: 0 0 1em 0;"><strong>Project end date</strong><br/>${endDate}</p>
+    <p style="margin: 0 0 1em 0;"><strong>EU funding contribution for above project (EUR)</strong><br/>${fundingAmount}</p>
+</@layout.default>
+
+
+
