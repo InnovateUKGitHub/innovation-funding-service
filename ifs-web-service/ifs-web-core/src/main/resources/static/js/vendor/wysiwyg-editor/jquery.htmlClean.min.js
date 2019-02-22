@@ -548,7 +548,7 @@ Use and distibution http://www.opensource.org/licenses/bsd-license.php
             ["class"],  // default, for all tags not mentioned
             "?xml", [],
             "!doctype", [],
-            "a", ["accesskey", "class", "href", "name", "title", "rel", "rev", "type", "tabindex"],
+            "a", ["accesskey", "class", "href", "name", "title", "rel", "rev", "type", "tabindex", "target"],
             "abbr", ["class", "title"],
             "acronym", ["class", "title"],
             "blockquote", ["cite", "class"],
