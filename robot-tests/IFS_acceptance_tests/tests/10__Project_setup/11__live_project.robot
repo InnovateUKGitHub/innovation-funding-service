@@ -8,7 +8,7 @@ Suite Teardown    Close browser and delete emails
 Project dashboard shows message that the project is live
     [Documentation]    INFUND-6376
     [Tags]  HappyPath
-    Given log in as a different user                 ${PS_LP_Application_Lead_PM_Email}  ${short_password}
+    Given the lead partner logs in and navigate to applications dashboard
     When the user navigates to the page              ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
     When log in as a different user                  ${PS_LP_Application_Lead_PM_Email}  ${short_password}
@@ -80,7 +80,7 @@ Project dashboard shows message that the project is live for industrial partner
     Given log in as a different user                 ${PS_LP_Application_Partner_Email}  ${short_password}
     When the user navigates to the page              ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
-    When log in as a different user                  ${PS_LP_Application_Lead_PM_Email}  ${short_password}
+    When the lead partner logs in and navigate to applications dashboard
     And the user navigates to the page               ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
 
@@ -149,7 +149,7 @@ Project dashboard shows message that the project is live for academic partner
     Given log in as a different user                 ${PS_LP_Application_Academic_Email}  ${short_password}
     When the user navigates to the page              ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
-    When log in as a different user                  ${PS_LP_Application_Lead_PM_Email}  ${short_password}
+    When the lead partner logs in and navigate to applications dashboard
     And the user navigates to the page               ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
 
@@ -220,7 +220,7 @@ grant offer letter is sent to users
     the user clicks the button/link    jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
 
 users upload signed grant offer letter and submit
-    log in as a different user         ${PS_LP_Application_Lead_PM_Email}  ${short_password}
+    the lead partner logs in and navigate to applications dashboard
     the user clicks the button/link    link = ${PS_LP_Application_Title}
     the user clicks the button/link    link = Grant offer letter
     choose file                        signedGrantOfferLetter    ${upload_folder}/${valid_pdf}
@@ -247,3 +247,8 @@ the use can see the mandatory documents
     the user clicks the button/link        link = ${valid_pdf}
     the user closes the last opened tab
     the user clicks the button/link        link = Return to documents
+
+the lead partner logs in and navigate to applications dashboard
+    log in as a different user      ${PS_LP_Application_Lead_PM_Email}  ${short_password}
+    ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  id = dashboard-link-APPLICANT
+    Run Keyword If  '${status}' == 'PASS'  Run keyword   the user clicks the button/link    id = dashboard-link-APPLICANT
