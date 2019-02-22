@@ -47,51 +47,32 @@
                 </div>
             </section>
 
-            <section class="in-progress" th:unless="${model.inProgress.empty}">
+            <section class="h2020" th:unless="${model.euGrantTransfers.empty}">
                 <div class="progress-list">
-                    <h2 class="govuk-heading-m" th:text="${model.applicationInProgressText}"/>
+                    <h2 class="govuk-heading-m">Horizon 2020 grant transfers</h2>
                     <ul>
-                        <li class="status-2-col" th:each="inProgressView : ${model.inProgress}" th:classappend="${inProgressView.assignedToMe ? 'assigned-to-me' : '' }">
+                        <li class="status-2-col" th:each="euGrantTransfer : ${model.euGrantTransfers}">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
-                                    <a th:href="${inProgressView.linkUrl}" th:text="${inProgressView.title}" class="govuk-link" />
+                                    <a th:href="${euGrantTransfer.linkUrl}" th:text="${euGrantTransfer.title}" class="govuk-link" />
                                 </h3>
                                 <ul class="application-details">
-                                    <li>Application number: <span th:text="${inProgressView.applicationNumber}"></span></li>
-                                    <li>Competition: <span th:text="${inProgressView.competitionTitle}">COMPETITION NAME</span></li>
+                                    <li>Application number: <span th:text="${euGrantTransfer.applicationNumber}"></span></li>
+                                    <li>Competition: <span th:text="${euGrantTransfer.competitionTitle}">COMPETITION NAME</span></li>
                                 </ul>
-                                <th:block th:if="${inProgressView.assignedToMe}">
-                                    <div class="action-required">
-                                        <strong>Sections are assigned to you</strong>
-                                    </div>
-                                </th:block>
                             </div>
                             <div class="status">
-                                <th:block th:unless="${inProgressView.submitted}">
-                                    <div class="status-msg msg-deadline" th:unless="${inProgressView.within24Hours}">
-                                        <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining" th:text="${inProgressView.daysLeft}">DAYS LEFT</strong> <br />
-                                        days left <br />
-                                        Deadline
-                                        <span class="day" th:text="${#temporals.day(inProgressView.endDate)}">END DAY</span>
-                                        <span class="month" th:text="${#temporals.monthName(inProgressView.endDate)}">END MONTH</span>
-                                    </div>
-                                    <div class="status-msg msg-deadline-today" th:if="${inProgressView.within24Hours}">
-                                        <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold" th:text="${inProgressView.hoursLeftBeforeSubmit}"></strong><br/>
-                                        hours left<br/>
-                                        Deadline <th:block th:text="${#temporals.format(inProgressView.endDate, 'hh:mm a')}"/>
-                                        <th:block th:text="${inProgressView.closingToday ? 'today' : 'tomorrow'}"/>
-                                    </div>
-                                    <span class="status-msg msg-progress" th:text="${inProgressView.applicationProgress}+'% complete'">PERCENTAGE COMPLETE</span>
+                                <th:block th:if="${euGrantTransfer.inProgress}">
+                                    <span class="status-msg msg-progress" th:text="${euGrantTransfer.applicationProgress}+'% complete'">PERCENTAGE COMPLETE</span>
                                 </th:block>
-                                <th:block th:if="${inProgressView.submitted}">
-                                    <th:block th:if="${inProgressView.assignedToInterview}">
-                                        <span class="status-msg msg-progress">Feedback available</span>
-                                        <span class="status-msg msg-progress">Invited to interview</span>
-                                    </th:block>
-                                    <th:block th:unless="${inProgressView.assignedToInterview}">
-                                        <span class="status-msg msg-deadline-waiting">Awaiting assessment</span>
-                                        <span class="status-msg msg-progress">Application submitted</span>
-                                    </th:block>
+                                <th:block th:if="${euGrantTransfer.submitted}">
+                                    <span class="status-msg msg-progress">Application submitted</span>
+                                </th:block>
+                                <th:block th:if="${euGrantTransfer.successful}">
+                                    <span class="status-msg msg-progress">Project in setup</span>
+                                </th:block>
+                                <th:block th:if="${euGrantTransfer.ineligible}">
+                                    <span class="status-msg msg-progress">Ineligible</span>
                                 </th:block>
                             </div>
                         </li>

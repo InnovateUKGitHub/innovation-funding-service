@@ -70,6 +70,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     private final static Long PROJECT_ID_IN_PROJECT_WITHDRAWN = 6L;
     private final static Long APPLICATION_ID_IN_PROJECT = 15L;
     private final static Long APPLICATION_ID_IN_PROJECT_WITHDRAWN = 150L;
+    private final static Long APPLICATION_ID_HORIZON_2020 = 50L;
 
     @Mock
     private ApplicationRestService applicationRestService;
@@ -104,15 +105,19 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         CompetitionResource compInProjectSetup = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)
                 .build();
+        CompetitionResource horizon2020Competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withCompetitionTypeName("Horizon 2020")
+                .build();
 
 
         List<ApplicationResource> allApplications = newApplicationResource()
-                .withId(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED, APPLICATION_ID_IN_PROJECT_WITHDRAWN, APPLICATION_ID_IN_PROJECT)
-                .withCompetition(competitionResource.getId(), competitionResource.getId(), compInProjectSetup.getId(), compInProjectSetup.getId(), compInProjectSetup.getId())
-                .withApplicationState(ApplicationState.OPEN, ApplicationState.REJECTED, ApplicationState.SUBMITTED, ApplicationState.APPROVED, ApplicationState.APPROVED)
-                .withCompetitionStatus(CompetitionStatus.OPEN, CompetitionStatus.CLOSED, CompetitionStatus.PROJECT_SETUP, CompetitionStatus.PROJECT_SETUP, CompetitionStatus.PROJECT_SETUP)
+                .withId(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED, APPLICATION_ID_IN_PROJECT_WITHDRAWN, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_HORIZON_2020)
+                .withCompetition(competitionResource.getId(), competitionResource.getId(), compInProjectSetup.getId(), compInProjectSetup.getId(), compInProjectSetup.getId(), horizon2020Competition.getId())
+                .withApplicationState(ApplicationState.OPEN, ApplicationState.REJECTED, ApplicationState.SUBMITTED, ApplicationState.APPROVED, ApplicationState.APPROVED, ApplicationState.OPEN)
+                .withCompetitionStatus(CompetitionStatus.OPEN, CompetitionStatus.CLOSED, CompetitionStatus.PROJECT_SETUP, CompetitionStatus.PROJECT_SETUP, CompetitionStatus.PROJECT_SETUP, CompetitionStatus.OPEN)
                 .withCompletion(BigDecimal.valueOf(50))
-                .build(5);
+                .build(6);
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(allApplications));
 
@@ -134,13 +139,14 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
         when(competitionRestService.getCompetitionById(compInProjectSetup.getId())).thenReturn(restSuccess(compInProjectSetup));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(competitionRestService.getCompetitionById(horizon2020Competition.getId())).thenReturn(restSuccess(horizon2020Competition));
 
         when(applicationRestService.getAssignedQuestionsCount(anyLong(), anyLong())).thenReturn(restSuccess(2));
 
         when(userRestService.findProcessRoleByUserId(loggedInUser.getId())).thenReturn(restSuccess(newProcessRoleResource()
-                .withApplication(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_PROJECT_WITHDRAWN, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED)
-                .withRole(LEADAPPLICANT, LEADAPPLICANT, APPLICANT, APPLICANT, APPLICANT)
-                .build(4)));
+                .withApplication(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_PROJECT_WITHDRAWN, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED, APPLICATION_ID_HORIZON_2020)
+                .withRole(LEADAPPLICANT, LEADAPPLICANT, APPLICANT, APPLICANT, APPLICANT, APPLICANT)
+                .build(6)));
 
         UserResource user = UserResourceBuilder.newUserResource().withId(loggedInUser.getId()).withRolesGlobal(singletonList(Role.APPLICANT)).build();
         when(userRestService.retrieveUserById(loggedInUser.getId())).thenReturn(restSuccess(user));
@@ -157,6 +163,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         ApplicantDashboardViewModel viewModel = populator.populate(loggedInUser.getId(), "originQuery");
 
         assertFalse(viewModel.getInProgress().isEmpty());
+        assertFalse(viewModel.getEuGrantTransfers().isEmpty());
         assertFalse(viewModel.getPrevious().isEmpty());
         assertFalse(viewModel.getProjects().isEmpty());
 

@@ -16,9 +16,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -53,18 +51,23 @@ public class ApplicantDashboardPopulator {
     public ApplicantDashboardViewModel populate(Long userId, String originQuery) {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
-        Map<Long, CompetitionResource> competitionsById = getAllCompetitionsForUser(userId);
         List<ApplicationResource> allApplications = applicationRestService.getApplicationsByUserId(userId).getSuccess();
+        Map<Long, CompetitionResource> competitionsById = getAllCompetitionsForUser(allApplications);
         List<ApplicationResource> applications = applications(allApplications, usersProcessRoles, competitionsById);
         List<ApplicationResource> grantTransfers = grantTransfers(allApplications, usersProcessRoles, competitionsById);
         List<ProjectResource> allProjects = projectRestService.findByUserId(userId).getSuccess();
         List<ProjectResource> projectsInSetup = getNonWithdrawnProjects(allProjects);
+        Map<Long, ProjectResource> euGrantTransferProjects = new HashMap<>();
 
         List<ProjectDashboardRowViewModel> projectViews = projectsInSetup.stream().map(project -> {
             ApplicationResource application = applicationRestService.getApplicationById(project.getApplication()).getSuccess();
             CompetitionResource competition = competitionsById.get(application.getCompetition());
+            if (competition.isH2020()) {
+                euGrantTransferProjects.put(application.getId(), project);
+                return null;
+            }
             return new ProjectDashboardRowViewModel(project.getName(), project.getApplication(), competition.getName(), project.getId(), project.getName());
-        }).sorted().collect(toList());
+        }).filter(Objects::nonNull).sorted().collect(toList());
 
         List<InProgressDashboardRowViewModel> inProgressViews = applications.stream()
                 .filter(this::applicationInProgress)
@@ -91,11 +94,11 @@ public class ApplicantDashboardPopulator {
                         .collect(toList());
 
         List<EuGrantTransferDashboardRowViewModel> grantTransferViews = grantTransfers.stream()
-                .filter(this::applicationInProgress)
                 .map(application -> {
                     CompetitionResource competition = competitionsById.get(application.getCompetition());
                     return new EuGrantTransferDashboardRowViewModel(application.getName(), application.getId(), competition.getName(),
-                            application.getApplicationState(), application.getCompletion().intValue());
+                            application.getApplicationState(), application.getCompletion().intValue(),
+                            Optional.ofNullable(euGrantTransferProjects.get(application.getId())).map(ProjectResource::getId).orElse(null));
                 }).sorted().collect(toList());
 
         return new ApplicantDashboardViewModel(projectViews, grantTransferViews, inProgressViews, previousViews, originQuery, user.hasRole(MONITORING_OFFICER));
@@ -199,8 +202,7 @@ public class ApplicantDashboardPopulator {
         return CompetitionStatus.fundingCompleteStatuses.contains(application.getCompetitionStatus());
     }
 
-    private Map<Long, CompetitionResource> getAllCompetitionsForUser(Long userId) {
-        List<ApplicationResource> userApplications = applicationRestService.getApplicationsByUserId(userId).getSuccess();
+    private Map<Long, CompetitionResource> getAllCompetitionsForUser(List<ApplicationResource> userApplications) {
         List<Long> competitionIdsForUser = userApplications.stream()
                 .map(ApplicationResource::getCompetition)
                 .distinct()
