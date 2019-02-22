@@ -16,48 +16,33 @@ The details you previously provided are listed below. You may find this useful w
 
 <@layout.euSenderPlainText />
 
-Reference code
-${referenceCode}
+Reference code: ${referenceCode}
 
-Organisation type
-${organisationType}
+Organisation type: ${organisationType}
 
-Registered name
-${registeredName}
+Registered name: ${registeredName}
 
-Registration number
-${registrationNumber}
+Registration number: ${registrationNumber}
 
-Full name
-${fullName}
+Full name: ${fullName}
 
-Job title
-${jobTitle}
+Job title: ${jobTitle}
 
-Email
-${email}
+Email: ${email}
 
-Telephone
-${telephone}
+Telephone: ${telephone}
 
-Grant agreement number
-${grantAgreementNumber}
+Grant agreement number: ${grantAgreementNumber}
 
-Type of action
-${actionType}
+Type of action: ${actionType}
 
-Participant identification code
-${participationIdentificationCode}
+Participant identification code: ${participationIdentificationCode}
 
-Project name
-${projectName}
+Project name: ${projectName}
 
-Project start date
-${startDate}
+Project start date: ${startDate}
 
-Project end date
-${endDate}
+Project end date: ${endDate}
 
-EU funding contribution for above project (EUR)
-${fundingAmount}
+EU funding contribution for above project (EUR): ${fundingAmount}
 </@layout.defaultPlainText>
