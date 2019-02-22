@@ -34,16 +34,13 @@ Administrator can see the read only view of internal user profile
     [Documentation]  INFUND-606
     [Tags]
     When the user clicks the button/link  link = John Doe
-    Then the user should see the element  jQuery = h1:contains("View internal user details")
-    And the user should see the element   jQuery = dt:contains("Email address") + dd:contains("${Comp_admin1_credentials["email"]}")
-    And the user should see the element   jQuery = dt:contains("Role") + dd:contains("Competition Administrator")
-    And the user should see the element   jQuery = .form-footer__info:contains("Created by IFS Web System User")
+    Then the user should see the internal user details
 
 Project finance user cannot navigate to manage users page
     [Documentation]  INFUND-604
     [Tags]  HappyPath
-    User cannot see manage users page   &{Comp_admin1_credentials}
-    User cannot see manage users page   &{internal_finance_credentials}
+    Given User cannot see manage users page   &{Comp_admin1_credentials}
+    And User cannot see manage users page     &{internal_finance_credentials}
 
 Server side validation for invite new internal user
     [Documentation]  IFS-27
@@ -52,9 +49,7 @@ Server side validation for invite new internal user
     Given the user navigates to the page                ${server}/management/admin/users/active
     And the user clicks the button/link                 link = Invite a new internal user
     And the user clicks the button/link                 jQuery = button:contains("Send invite")
-    Then The user should see a field and summary error  ${enter_a_first_name}
-    And The user should see a field and summary error   ${enter_a_last_name}
-    And The user should see a field and summary error   Please enter an email address.
+    Then
 
 The user must use an Innovate UK email
     [Documentation]  IFS-1944
@@ -320,3 +315,14 @@ the user resends the invite
     the user clicks the button/link    css = .button-secondary[type = "submit"]     #Resend invite
     the user clicks the button/link    jQuery = button:contains("Resend")
     the user reads his email           ${localEmailInvtedUser}  Invitation to Innovation Funding  Your Innovation Funding Service
+
+the user should see the internal user details
+    the user should see the element   jQuery = h1:contains("View internal user details")
+    the user should see the element   jQuery = dt:contains("Email address") + dd:contains("${Comp_admin1_credentials["email"]}")
+    the user should see the element   jQuery = dt:contains("Role") + dd:contains("Competition Administrator")
+    the user should see the element   jQuery = .form-footer__info:contains("Created by IFS Web System User")
+
+the use should see the validation error summary
+    The user should see a field and summary error  ${enter_a_first_name}
+    The user should see a field and summary error   ${enter_a_last_name}
+    The user should see a field and summary error   Please enter an email address.
