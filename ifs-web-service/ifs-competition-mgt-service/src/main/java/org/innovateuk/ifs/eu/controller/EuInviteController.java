@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.invite.controller;
+package org.innovateuk.ifs.eu.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 
 import org.innovateuk.ifs.eu.invite.EuInviteRestService;
 import org.innovateuk.ifs.eugrant.EuContactPageResource;
-import org.innovateuk.ifs.invite.viewmodel.EuInviteViewModel;
+import org.innovateuk.ifs.eu.viewmodel.EuInviteViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

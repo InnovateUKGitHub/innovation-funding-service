@@ -1,10 +1,11 @@
-package org.innovateuk.ifs.invite.controller;
+package org.innovateuk.ifs.eu.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.eu.controller.EuInviteController;
 import org.innovateuk.ifs.eu.invite.EuInviteRestService;
 import org.innovateuk.ifs.eugrant.EuContactPageResource;
 import org.innovateuk.ifs.eugrant.EuContactResource;
-import org.innovateuk.ifs.invite.viewmodel.EuInviteViewModel;
+import org.innovateuk.ifs.eu.viewmodel.EuInviteViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
