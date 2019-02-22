@@ -57,7 +57,8 @@ Resource          PS_Common.robot
 
 *** Variables ***
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
-${pmEmailId}  ${user_ids['phillip.ramos@katz.example.com']}
+${user_email}  phillip.ramos@katz.example.com
+${pmEmailId}  ${user_ids['${user_email}']}
 
 *** Test Cases ***
 Internal finance can see Project details not yet completed
@@ -340,7 +341,7 @@ Invited Fin Contact for non lead partner
     When log in as a different user       &{collaborator1_credentials}
     Then the user navigates to the page   ${Project_In_Setup_Page}/details
     And the user should see the element   link = Ludlow's FinContact
-    And select the project location       Ludlow
+    And the user update the peoject location in project setup       Ludlow
     When the user clicks the button/link  link = View the status of partners
     Then the user should see the element  css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
@@ -471,7 +472,7 @@ Academic Partner nominates Finance contact
     And the user clicks the button/link         jQuery = .govuk-button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${Project_In_Setup_Page}
     And the user should see the element         jQuery = td:contains("${organisationEggsName}")
-    And select the project location             EGGS
+    And the user update the peoject location in project setup     EGGS
     When the user navigates to the page         ${Project_In_Setup_Page}
     Then the user should see the element        jQuery = li.complete:nth-of-type(1)
     And the user should see the element         jQuery = li.require-action:nth-child(4)
@@ -482,8 +483,8 @@ Validation for project location
     [Documentation]   IFS-2920
     [Setup]  log in as a different user                 &{lead_applicant_credentials}
     Given the user navigates to the page                ${Project_In_Setup_Details_Page}
-    Given the user clicks the button/link               jQuery = #project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
-    And Set Focus To Element                            id = postcode
+    Given the user clicks the button/link               jQuery = #project-details-finance td:contains("Empire") ~ td a:contains("AB12 3CD")
+    And the user enters text to a text field            css = #postcode  ${empty}
     And Set Focus To Element                            link = Contact us
     And the user should see a field error               ${empty_field_warning_message}
     When the user clicks the button/link                css = button[type = "submit"]
@@ -494,7 +495,7 @@ Project details submission flow
     [Tags]  HappyPath
     [Setup]    log in as a different user  &{lead_applicant_credentials}
     Given the user navigates to the page   ${Project_In_Setup_Details_Page}
-    And select the project location       Empire
+    And the user update the peoject location in project setup    Empire
     And the user clicks the button/link   link = Project details
     When all the fields are completed
     And the user navigates to the page    ${Project_In_Setup_Page}
@@ -580,7 +581,7 @@ User is able to accept new site terms and conditions
     [Documentation]  IFS-3093
     [Tags]  MySQL
     [Setup]  Delete user from terms and conditions database   ${pmEmailId}
-    Log in as a different user             ${PS_SP_APPLICATION_PM_EMAIL}   ${short_password}
+    Log in as a different user             ${user_email}   ${short_password}
     When the user selects the checkbox     agree
     And the user clicks the button/link    css = button[type = "submit"]
     Then the user should see the element   jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
@@ -665,10 +666,10 @@ The user resends and clicks the button
     The user should see the element    jQuery = h2:contains("Resend invite to team member")
     The user clicks the button/link    jQuery = button:contains("${Resend_OR_Cancel}")
 
-Select the project location
+the user update the peoject location in project setup
     [Arguments]  ${org}
     the user navigates to the page        ${Project_In_Setup_Details_Page}
-    the user clicks the button/link       jQuery = #project-details-finance td:contains("${org}") ~ td a:contains("Select project location")
+    the user clicks the button/link       jQuery = #project-details-finance td:contains("${org}") ~ td a:contains("AB12 3CD")
     the user enters text to a text field  css = #postcode  ${Postcode}
     the user clicks the button/link       css = button[type = "submit"]
     the user clicks the button/link       link = Set up your project

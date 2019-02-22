@@ -195,7 +195,6 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Setup]    Log in as a different user      &{collaborator1_credentials_bd}
     When the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     Then the user should see the element       link = Monitoring Officer
-    #And the user should see the element        link = Finance checks
     And the user should not see the element    link = Spend profile
     And the user should not see the element    link = Grant offer letter
 
