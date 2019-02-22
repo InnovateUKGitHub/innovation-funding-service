@@ -47,6 +47,8 @@ prepareDockerBaseInput {
 
 ext.serverContext = '/management'
 
+ext.EUGrantDataServiceRestBaseURL="http://eu-grant-registration-data-service:8080"
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
     compile project(':ifs-web-service:ifs-application-commons')
@@ -75,6 +77,7 @@ processResources {
         exclude '**/application.properties'
     }
 }
+
 
 jar.dependsOn ":ifs-web-service:gulp_default"
 processResources.dependsOn ":ifs-web-service:applyProfiles"
