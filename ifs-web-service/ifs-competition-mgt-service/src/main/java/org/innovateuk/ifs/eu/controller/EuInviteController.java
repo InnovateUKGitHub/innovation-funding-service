@@ -1,10 +1,11 @@
-package org.innovateuk.ifs.invite.controller;
+package org.innovateuk.ifs.eu.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.invite.resource.EuContactPageResource;
-import org.innovateuk.ifs.invite.viewmodel.EuInviteViewModel;
+
+import org.innovateuk.ifs.eu.invite.EuInviteRestService;
+import org.innovateuk.ifs.eugrant.EuContactPageResource;
+import org.innovateuk.ifs.eu.viewmodel.EuInviteViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
-import org.innovateuk.ifs.user.service.EuContactRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -27,14 +28,14 @@ public class EuInviteController {
     private static final int DEFAULT_PAGE_SIZE = 100;
 
     @Autowired
-    private EuContactRestService euContactRestService;
+    private EuInviteRestService euInviteRestService;
 
     @GetMapping("/eu-invite-non-notified")
     public String viewNonNotifiedEuRegistrants(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
                                                Model model) {
-        EuContactPageResource euRegistrants = euContactRestService.getEuContactsByNotified(false,
-                                                                                      pageIndex,
-                                                                                      DEFAULT_PAGE_SIZE).getSuccess();
+        EuContactPageResource euRegistrants = euInviteRestService.getEuContactsByNotified(false,
+                                                                                          pageIndex,
+                                                                                          DEFAULT_PAGE_SIZE).getSuccess();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
                                                             new Pagination(euRegistrants, ""),
                                                             1200,
@@ -46,7 +47,7 @@ public class EuInviteController {
     @GetMapping("/eu-invite-notified")
     public String viewNotifiedEuRegistrants(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
                                             Model model) {
-        EuContactPageResource euRegistrants = euContactRestService.getEuContactsByNotified(true,
+        EuContactPageResource euRegistrants = euInviteRestService.getEuContactsByNotified(true,
                                                                                       pageIndex,
                                                                                       DEFAULT_PAGE_SIZE).getSuccess();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),

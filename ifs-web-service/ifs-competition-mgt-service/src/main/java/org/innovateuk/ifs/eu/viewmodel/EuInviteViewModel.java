@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.invite.viewmodel;
+package org.innovateuk.ifs.eu.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.invite.resource.EuContactResource;
+import org.innovateuk.ifs.eugrant.EuContactResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;

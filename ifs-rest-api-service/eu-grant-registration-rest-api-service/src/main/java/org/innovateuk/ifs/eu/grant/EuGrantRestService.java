@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.eugrant;
+package org.innovateuk.ifs.eu.grant;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.eugrant.EuGrantResource;
 
 import java.util.UUID;
 
