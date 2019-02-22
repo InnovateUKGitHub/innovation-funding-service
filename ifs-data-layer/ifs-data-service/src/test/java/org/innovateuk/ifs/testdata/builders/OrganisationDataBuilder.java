@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.testdata.builders;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.OrganisationData;
@@ -12,7 +10,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 
 /**
@@ -38,29 +35,6 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                         build()).getSuccess();
 
                 data.setOrganisation(created);
-            });
-        });
-    }
-
-    public OrganisationDataBuilder withAddress(OrganisationAddressType addressType, String addressLine1,
-                                               String addressLine2, String addressLine3, String town,
-                                               String postcode, String county) {
-
-        return with(data -> {
-
-            doAs(systemRegistrar(), () -> {
-
-                AddressResource address = newAddressResource().
-                        withId().
-                        withAddressLine1(addressLine1).
-                        withAddressLine2(addressLine2).
-                        withAddressLine3(addressLine3).
-                        withTown(town).
-                        withPostcode(postcode).
-                        withCounty(county).
-                        build();
-
-                organisationService.addAddress(data.getOrganisation().getId(), addressType, address);
             });
         });
     }
