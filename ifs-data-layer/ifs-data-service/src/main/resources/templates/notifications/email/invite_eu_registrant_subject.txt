@@ -1,1 +1,1 @@
-Invitation to register for a transfer of your funding from Horizon 2020
+Invite to register Horizon 2020 grant transfer of ${projectName}
