@@ -104,7 +104,7 @@ ${Internal_Competition_Status}          ${server}/project-setup-management/compe
 ${Notified_Application_Competition_Status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
 
 #Finances Checks
-${PS_FC_Application_Title}    Matter - Planning for Web
+${PS_FC_Application_Title}    Office Chair for Life
 ${PS_FC_Project_Id}           ${project_ids["${PS_FC_Application_Title}"]}
 
 #Bank details
