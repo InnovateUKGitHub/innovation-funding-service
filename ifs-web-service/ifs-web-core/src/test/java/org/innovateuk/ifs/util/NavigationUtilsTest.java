@@ -27,7 +27,6 @@ public class NavigationUtilsTest {
 
     @Before
     public void setup() {
-
         ReflectionTestUtils.setField(navigationUtils, "liveProjectsLandingPageUrl", landingPageUrl);
 
         when(request.getScheme()).thenReturn("https");
@@ -37,38 +36,32 @@ public class NavigationUtilsTest {
 
     @Test
     public void getRedirectToDashboardUrlForLiveProjectUser() throws Exception {
-
         assertEquals("redirect:https://site/live-projects-landing-page",
                 navigationUtils.getRedirectToDashboardUrlForRole(LIVE_PROJECTS_USER));
     }
 
     @Test
     public void getRedirectToDashboardUrlForApplicantRole() throws Exception {
-
         assertEquals("redirect:/applicant/dashboard", navigationUtils.getRedirectToDashboardUrlForRole(APPLICANT));
     }
 
     @Test
     public void getRedirectToDashboardUrlForNoLandingPageRole() throws Exception {
-
         assertEquals("redirect:/dashboard", navigationUtils.getRedirectToDashboardUrlForRole(COMP_EXEC));
     }
 
     @Test
     public void getDirectDashboardUrlForApplicantRole() throws Exception {
-
         assertEquals("https://site:8080/applicant/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, APPLICANT));
     }
 
     @Test
     public void getRedirectToLandingPageUrl() throws Exception {
-
         assertEquals("redirect:https://site:8080", navigationUtils.getRedirectToLandingPageUrl(request));
     }
 
     @Test
     public void getDirectLandingPageUrl() throws Exception {
-
         assertEquals("https://site:8080", navigationUtils.getDirectLandingPageUrl(request));
     }
 
