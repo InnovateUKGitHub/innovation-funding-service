@@ -7,7 +7,7 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 
 /**
- * View model for each application row in the 'In progress' section of the applicant dashboard.
+ * View model for each application row in the 'Grant transfer' section of the applicant dashboard.
  */
 public class EuGrantTransferDashboardRowViewModel extends
         AbstractApplicantDashboardRowViewModel<EuGrantTransferDashboardRowViewModel> {
