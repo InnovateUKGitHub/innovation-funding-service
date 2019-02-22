@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import java.math.BigInteger;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
 /**
@@ -19,6 +20,7 @@ public class CompetitionInFlightViewModel {
     private Long competitionId;
     private String competitionName;
     private CompetitionStatus competitionStatus;
+    private boolean fundingDecisionAllowedBeforeAssessment;
     private String competitionType;
     private String innovationSector;
     private String innovationArea;
@@ -42,6 +44,7 @@ public class CompetitionInFlightViewModel {
         this.competitionName = competitionResource.getName();
         this.competitionStatus = competitionResource.getCompetitionStatus();
         this.competitionType = competitionResource.getCompetitionTypeName();
+        this.fundingDecisionAllowedBeforeAssessment = !competitionResource.hasAssessmentStage();
         this.innovationSector = competitionResource.getInnovationSectorName();
         this.innovationArea = StringUtils.join(competitionResource.getInnovationAreaNames(), ", ");
         this.executive = competitionResource.getExecutiveName();
@@ -104,6 +107,10 @@ public class CompetitionInFlightViewModel {
         return keyStatistics;
     }
 
+    public boolean isFundingDecisionAllowedBeforeAssessment() {
+        return fundingDecisionAllowedBeforeAssessment;
+    }
+
     public boolean isReadOnly() {
         return readOnly;
     }
@@ -120,5 +127,15 @@ public class CompetitionInFlightViewModel {
 
     public AssessorFinanceView getAssessorFinanceView() {
         return assessorFinanceView;
+    }
+
+    public boolean isFundingDecisionEnabled() {
+        return fundingDecisionAllowedBeforeAssessment
+                || !asList(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT).contains(competitionStatus);
+    }
+
+    public boolean isFundingNotificationDisplayed() {
+        return fundingDecisionAllowedBeforeAssessment
+                || asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus);
     }
 }
