@@ -51,6 +51,7 @@ dependencies {
     compile project(':ifs-web-service:ifs-web-core')
     compile project(':ifs-web-service:ifs-application-commons')
     compile project(':ifs-web-service:ifs-assessment-commons')
+    compile project(':ifs-rest-api-service:eu-grant-registration-rest-api-service')
 
     compile 'org.apache.commons:commons-collections4:4.1'
 

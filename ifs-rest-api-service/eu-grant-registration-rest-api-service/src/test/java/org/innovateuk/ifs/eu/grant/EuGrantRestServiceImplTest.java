@@ -1,7 +1,8 @@
-package org.innovateuk.ifs.eugrant;
+package org.innovateuk.ifs.eu.grant;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.RootAnonymousUserRestTemplateAdaptor;
+import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
