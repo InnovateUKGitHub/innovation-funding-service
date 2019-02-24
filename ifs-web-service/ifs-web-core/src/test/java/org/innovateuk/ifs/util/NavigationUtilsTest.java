@@ -51,6 +51,11 @@ public class NavigationUtilsTest {
     }
 
     @Test
+    public void getRedirectToDashboardUrlForNullRole() throws Exception {
+        assertEquals("redirect:/dashboard", navigationUtils.getRedirectToDashboardUrlForRole(null));
+    }
+
+    @Test
     public void getDirectDashboardUrlForApplicantRole() throws Exception {
         assertEquals("https://site:8080/applicant/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, APPLICANT));
     }
