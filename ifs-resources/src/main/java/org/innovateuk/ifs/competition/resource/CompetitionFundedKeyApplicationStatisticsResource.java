@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -63,10 +64,12 @@ public class CompetitionFundedKeyApplicationStatisticsResource {
         this.applicationsAwaitingDecision = applicationsAwaitingDecision;
     }
 
+    @JsonIgnore
     public boolean isCanManageFundingNotifications() {
         return applicationsFunded > 0 || applicationsNotFunded > 0 || applicationsOnHold > 0;
     }
 
+    @JsonIgnore
     public boolean isCanReleaseFeedback() {
         return applicationsAwaitingDecision == 0 && applicationsSubmitted == applicationsNotifiedOfDecision;
     }

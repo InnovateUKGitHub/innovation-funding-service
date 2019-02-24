@@ -153,6 +153,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
         assertEquals(competitions.get(INNOVATION_AREA_NAME_ONE), viewModel.getCompetitions().get(PROJECT_SETUP));
         assertEquals(counts, viewModel.getCounts());
+        assertEquals(viewModel.getNonPrioritisedCompetitions().size(), 1);
         assertEquals(countBankDetails, viewModel.getCountBankDetails());
         assertFalse(viewModel.isProjectFinanceUser());
 

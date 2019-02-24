@@ -84,7 +84,7 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes()).getRequest();
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        if (!user.isInternalUser()) {
+        if (user != null && !user.isInternalUser()) {
             if (!overheadFileService.getFileEntryDetails(overhead.getId()).getOptionalSuccessObject().isPresent()) {
                 bindingResult.reject(Overhead.FINANCE_OVERHEAD_FILE_REQUIRED);
             }
