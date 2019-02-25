@@ -37,14 +37,14 @@ Administrator can navigate to manage users page
     [Documentation]    INFUND-604
     [Tags]  HappyPath
     [Setup]  The user logs-in in new browser  &{ifs_admin_user_credentials}
-    When the user clicks the button/link      link = Manage users
+    Given the user clicks the button/link     link = Manage users
     Then the user should see the element      jQuery = h1:contains("Manage users")
     And the user should see the element       jQuery = a[aria-selected]:contains("Active")
 
 Administrator can see the read only view of internal user profile
     [Documentation]  INFUND-606
     [Tags]
-    When the user clicks the button/link  link = John Doe
+    Given the user clicks the button/link  link = John Doe
     Then the user should see the internal user details
 
 Project finance user cannot navigate to manage users page
@@ -74,7 +74,7 @@ The user must use an Innovate UK email
 Client side validations for invite new internal user
     [Documentation]  IFS-27
     [Tags]
-    When the user navigates to the page       ${server}/management/admin/invite-user
+    Given the user navigates to the page       ${server}/management/admin/invite-user
     Then the user enters the text and checks for validation message   firstName  A  ${enter_a_first_name}  Your first name should have at least 2 characters.
     And the user enters the text and checks for validation message    lastName  D  ${enter_a_last_name}  Your last name should have at least 2 characters.
     And the user enters the text and checks for validation message    emailAddress  astle  Please enter an email address.  ${enter_a_valid_email}
@@ -82,11 +82,11 @@ Client side validations for invite new internal user
 Administrator can successfully invite a new user
     [Documentation]  IFS-27 IFS-983
     [Tags]  HappyPath
-    When the IFS admin send invite to internal user          Support  User  IFS Administrator
+    Given the IFS admin send invite to internal user         Support  User  IFS Administrator
     Then the user cannot see a validation error in the page
     And the user should see the element                     jQuery = h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
-    And the user should see the element                      jQuery = a[aria-selected]:contains("Pending")
+    And the user should see the element                     jQuery = a[aria-selected]:contains("Pending")
 
 Administrator can successfully finish the rest of the invitation
     [Documentation]  IFS-27  IFS-983  IFS-2412  IFS-2842
@@ -99,14 +99,14 @@ Administrator can successfully finish the rest of the invitation
 Invited user can receive the invitation
     [Documentation]  IFS-642
     [Tags]  HappyPath
-    [Setup]  the guest user opens the browser
-    The invitee reads his email and clicks the link  Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
+    Given the guest user opens the browser
+    Then The invitee reads his email and clicks the link     Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
 
 Account creation validation checks - Blank
     [Documentation]  IFS-643
     [Tags]
-    When the user clicks the button/link   jQuery = .govuk-button:contains("Create account")
-    Then the use should see the validation error summary   Password must be at least 8 characters
+    Given the user clicks the button/link                 jQuery = .govuk-button:contains("Create account")
+    And the use should see the validation error summary   Password must be at least 8 characters
     When the internal user enters the details to create account
     Set Focus To Element                                        css = #lastName
     Then the user cannot see a validation error in the page
@@ -137,13 +137,13 @@ Inviting the same user for the same role again should give an error
 Inviting the same user for the different role again should also give an error
     [Documentation]  IFS-27
     [Tags]
-    When the IFS admin send invite to internal user   Project  Finance  Project Finance
+    Given the IFS admin send invite to internal user   Project  Finance  Project Finance
     Then the user should see a summary error          This email address is already in use.
 
 Administrator can navigate to edit page to edit the internal user details
     [Documentation]  IFS-18
     [Tags]
-    [Setup]  the user navigates to the View internal user details  New Administrator  active
+    Given the user navigates to the View internal user details  New Administrator  active
     When the user clicks the button/link         link = Edit
     Then the IFS admin should see the user details
 
@@ -185,7 +185,7 @@ The internal user can login with his new role and sees no competitions assigned
 Administrator is able to disable internal users
     [Documentation]  IFS-644
     [Tags]
-    [Setup]  log in as a different user   &{ifs_admin_user_credentials}
+    Given log in as a different user     &{ifs_admin_user_credentials}
     When the user navigates to the View internal user details  Innovation Lead  active
     Then the IFS admin deactivate the internal user
     When the user navigates to the page   ${server}/management/admin/users/inactive
