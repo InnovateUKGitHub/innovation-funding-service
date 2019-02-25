@@ -2,165 +2,132 @@
 Resource    ../../resources/defaultResources.robot
 
 *** Variables ***
+
+${PS_Competition_Name}     Rolling stock future developments
+${PS_Competition_Id}       ${competition_ids["${PS_Competition_Name}"]}
+
 #Project: London underground – enhancements to existing stock and logistics
-# GOL = Grant Offer Letter
+# EF = Experian feedback
 ${Gabtype_Name}   Gabtype
 ${Gabtype_Id}     ${organisation_ids["${Gabtype_Name}"]}
 ${Kazio_Name}     Kazio
 ${Kazio_Id}       ${organisation_ids["${Kazio_Name}"]}
 ${Cogilith_Name}  Cogilith
 ${Cogilith_Id}    ${organisation_ids["${Cogilith_Name}"]}
-${PS_GOL_COMPETITION_NAME}       Rolling stock future developments
-${PS_GOL_Competition_Id}         ${competition_ids["${PS_GOL_COMPETITION_NAME}"]}
-${PS_GOL_APPLICATION_TITLE}      London underground - enhancements to existing stock and logistics
-${PS_GOL_APPLICATION_NO}         ${application_ids["${PS_GOL_APPLICATION_TITLE}"]}
-${PS_GOL_APPLICATION_NUMBER}     ${PS_GOL_APPLICATION_NO}
-${PS_GOL_APPLICATION_HEADER}     ${PS_GOL_APPLICATION_TITLE}
-${PS_GOL_APPLICATION_PROJECT}    ${project_ids["${PS_GOL_APPLICATION_TITLE}"]}
-${PS_GOL_APPLICATION_LEAD_ORGANISATION_ID}      ${Gabtype_ID}
-${PS_GOL_APPLICATION_LEAD_ORGANISATION_NAME}    ${Gabtype_NAME}
-${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}        ${test_mailbox_one}+amy@gmail.com
-${PS_GOL_APPLICATION_PM_EMAIL}                  ${test_mailbox_one}+amy@gmail.com
-${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}     ${test_mailbox_one}+marian@gmail.com
-${PS_GOL_APPLICATION_PARTNER_EMAIL}             ${test_mailbox_one}+karen@gmail.com
-${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            ${test_mailbox_one}+juan@gmail.com
+${PS_EF_Application_Title}         London underground - enhancements to existing stock and logistics
+${PS_EF_Application_No}            ${application_ids["${PS_EF_Application_Title}"]}
+${PS_EF_Application_Project_No}    ${project_ids["${PS_EF_Application_Title}"]}
+${PS_EF_Application_Lead_Partner_Email}        ${test_mailbox_one}+amy@gmail.com
+${PS_EF_Application_PM_Email}                  ${test_mailbox_one}+amy@gmail.com
+${PS_EF_Application_Partner_Email}             ${test_mailbox_one}+karen@gmail.com
+${PS_EF_Application_Academic_Email}            ${test_mailbox_one}+juan@gmail.com
 
+#Project: Elbow grease - GOL
+${Big_Riffs_Name}        Big Riffs And Insane Solos Ltd
+${Big_Riffs_Id}          ${organisation_ids["${Big_Riffs_Name}"]}
+${Aberystwyth_Name}      Aberystwyth University
+${Aberystwyth_Id}        ${organisation_ids["${Aberystwyth_Name}"]}
+${Listen_To_Name}        Listen To Metal Ltd
+${Listen_To_Id}          ${organisation_ids["${Listen_To_Name}"]}
+${Elbow_Grease_Title}               Elbow grease
+${Elbow_Grease_Application_No}      ${application_ids["${Elbow_Grease_Title}"]}
+${Elbow_Grease_Project_Id}          ${project_ids["${Elbow_Grease_Title}"]}
+${Elbow_Grease_Lead_PM_Email}       louis.morgan@example.com
+${Elbow_Grease_Partner_Email}       howard.white@example.com
+${Elbow_Grease_Academic_Email}      deborah.moore@example.com
 
+#Project: High-speed rail and its effects on soil compaction - Queries and notes
 ${Dreambit_Name}    Dreambit
 ${Dreambit_Id}      ${organisation_ids["${Dreambit_Name}"]}
-${Queries_Competition_Name}    Rolling stock future developments
-${Queries_Competition_Id}      ${competition_ids["${Queries_Competition_Name}"]}
 ${Queries_Application_Title}   High-speed rail and its effects on soil compaction
 ${Queries_Application_No}      ${application_ids["${Queries_Application_Title}"]}
 ${Queries_Application_Project}  ${project_ids["${Queries_Application_Title}"]}
 
-
 #Project: High-speed rail and its effects on air quality
-# MD = Mandatory Documents
-${Ooba_Name}        Ooba
-${Ooba_Id}          ${organisation_ids["${Ooba_Name}"]}
-${Wordpedia_Name}   Wordpedia
-${Wordpedia_Id}     ${organisation_ids["${Wordpedia_Name}"]}
-${Jabbertype_Name}  Jabbertype
-${Jabbertype_Id}    ${organisation_ids["${Jabbertype_Name}"]}
-${PS_MD_Competition_Name}       Rolling stock future developments
-${PS_MD_Competition_Id}         ${competition_ids["${PS_MD_Competition_Name}"]}
-${PS_MD_APPLICATION_TITLE}      High-speed rail and its effects on air quality
-${PS_MD_APPLICATION_NO}         ${application_ids["${PS_MD_APPLICATION_TITLE}"]}
-${PS_MD_APPLICATION_NUMBER}     ${PS_MD_APPLICATION_NO}
-${PS_MD_APPLICATION_HEADER}     ${PS_MD_APPLICATION_TITLE}
-${PS_MD_APPLICATION_PROJECT}    ${project_ids["${PS_MD_APPLICATION_TITLE}"]}
-${PS_MD_APPLICATION_LEAD_ORGANISATION_ID}    ${Ooba_ID}
-${PS_MD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Ooba_Name}
-${PS_MD_APPLICATION_LEAD_PARTNER_EMAIL}      ralph.young@ooba.example.com
-${PS_MD_APPLICATION_PM_EMAIL}                ralph.young@ooba.example.com
-${PS_MD_APPLICATION_PARTNER_EMAIL}           tina.taylor@wordpedia.example.com
-${PS_MD_APPLICATION_ACADEMIC_EMAIL}          antonio.jenkins@jabbertype.example.com
-
-#Project: Point control and automated monitoring
 # SP = Spend Profile
-${Katz_Name}     Katz
-${Katz_Id}       ${organisation_ids["${Katz_Name}"]}
-${Meembee_Name}  Meembee
-${Meembee_Id}    ${organisation_ids["${Meembee_Name}"]}
-${Zooveo_Name}   Zooveo
-${Zooveo_Id}     ${organisation_ids["${Zooveo_Name}"]}
-${PS_SP_Competition_Name}       Rolling stock future developments
-${PS_SP_Competition_Id}         ${competition_ids["${PS_SP_Competition_Name}"]}
-${PS_SP_APPLICATION_TITLE}      Point control and automated monitoring
-${PS_SP_APPLICATION_NO}         ${application_ids["${PS_SP_APPLICATION_TITLE}"]}
-${PS_SP_APPLICATION_NUMBER}     ${PS_SP_APPLICATION_NO}
-${PS_SP_APPLICATION_HEADER}     ${PS_SP_APPLICATION_TITLE}
-${PS_SP_APPLICATION_PROJECT}    ${project_ids["${PS_SP_APPLICATION_TITLE}"]}
-${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}  ${Katz_Name}
-${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}      theo.simpson@katz.example.com
-${PS_SP_APPLICATION_PM_EMAIL}                phillip.ramos@katz.example.com
-${PS_SP_APPLICATION_PARTNER_EMAIL}           kimberly.fowler@meembee.example.com
-${PS_SP_APPLICATION_ACADEMIC_EMAIL}          craig.ortiz@zooveo.example.com
+${Ooba_Lead_Org_Name}           Ooba
+${Ooba_Lead_Org_Id}             ${organisation_ids["${Ooba_Lead_Org_Name}"]}
+${Wordpedia_Partner_Org_Name}   Wordpedia
+${Wordpedia_Partner_Org_Id}     ${organisation_ids["${Wordpedia_Partner_Org_Name}"]}
+${Jabbertype_Partner_Org_Name}  Jabbertype
+${Jabbertype_Partner_Org_Id}    ${organisation_ids["${Jabbertype_Partner_Org_Name}"]}
+${PS_SP_Application_Title}         High-speed rail and its effects on air quality
+${PS_SP_Application_No}            ${application_ids["${PS_SP_Application_Title}"]}
+${PS_SP_Project_Id}                ${project_ids["${PS_SP_Application_Title}"]}
+${PS_SP_Lead_PM_Email}             ralph.young@ooba.example.com
+${PS_SP_Partner_Email}             tina.taylor@wordpedia.example.com
+${PS_SP_Academic_Partner_Email}    antonio.jenkins@jabbertype.example.com
 
 #Project: Grade crossing manufacture and supply
 # BD = Bank Details
-${Vitruvius_Name}  Vitruvius Stonework Limited
-${Vitruvius_Id}    ${organisation_ids["${Vitruvius_Name}"]}
+${Vitruvius_Name}         Vitruvius Stonework Limited
+${Vitruvius_Id}           ${organisation_ids["${Vitruvius_Name}"]}
 ${A_B_Cad_Services_Name}  A B Cad Services
 ${A_B_Cad_Services_Id}    ${organisation_ids["${A_B_Cad_Services_Name}"]}
 ${Armstrong_Butler_Name}  Armstrong & Butler Ltd
 ${Armstrong_Butler_Id}    ${organisation_ids["${Armstrong_Butler_Name}"]}
-${PS_BD_Competition_Name}       Rolling stock future developments
-${PS_BD_Competition_Id}         ${competition_ids["${PS_BD_Competition_Name}"]}
-${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
-${PS_BD_APPLICATION_NUMBER}     ${application_ids["${PS_BD_APPLICATION_TITLE}"]}
-${PS_BD_APPLICATION_PROJECT}    ${project_ids["${PS_BD_APPLICATION_TITLE}"]}
-${PS_BD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Vitruvius_Name}
-${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}      diane.scott@vitruvius.example.com
-${PS_BD_APPLICATION_PM_EMAIL}                diane.scott@vitruvius.example.com
-${PS_BD_APPLICATION_LEAD_FINANCE}            Diane Scott
-${PS_BD_APPLICATION_LEAD_TELEPHONE}          49692921151
-${PS_BD_APPLICATION_PARTNER_EMAIL}           ryan.welch@abcad.example.com
-${PS_BD_APPLICATION_PARTNER_FINANCE}         Ryan Welch
-${PS_BD_APPLICATION_ACADEMIC_EMAIL}          sara.armstrong@armstrong.example.com
-${PS_BD_APPLICATION_ACADEMIC_FINANCE}        Sara Armstrong
+${Grade_Crossing_Applicaiton_Titile}      Grade crossing manufacture and supply
+${Grade_Crossing_Applicaiton_No}          ${application_ids["${Grade_Crossing_Applicaiton_Titile}"]}
+${Grade_Crossing_Project_Id}              ${project_ids["${Grade_Crossing_Applicaiton_Titile}"]}
+${Grade_Crossing_Lead_Partner_Email}      diane.scott@vitruvius.example.com
+${Grade_Crossing_Partner_Email}           phil.mcguire@abcad.example.com
+${Grade_Crossing_Partner_Finance}         Phil Mcguire
+${Grade_Crossing_Academic_Email}          darren.richards@armstrong.example.com
+${Grade_Crossing_Academic_Finance}        Darren Richards
+
+&{lead_applicant_credentials_bd}  email=${Grade_Crossing_Lead_Partner_Email}  password=${short_password}
+&{collaborator1_credentials_bd}   email=${Grade_Crossing_Partner_Email}   password=${short_password}
+&{collaborator2_credentials_bd}   email=${Grade_Crossing_Academic_Email}  password=${short_password}
 
 #Project: New materials for lighter stock
-# EF = Experian feedback
-${Ntag_Id}        41
+# IU - Intenal user
 ${Ntag_Name}      Ntag
-${Ntag_No}        18451018
-${Ntag_Street}    39357 Fisk Drive
-${Jetpulse_Id}    42
 ${Jetpulse_Name}  Jetpulse
-${Wikivu_Id}      43
 ${Wikivu_Name}    Wikivu
-${PS_EF_Competition_Name}       Rolling stock future developments
-${PS_EF_Competition_Id}         ${competition_ids["${PS_EF_Competition_Name}"]}
-${PS_EF_APPLICATION_TITLE}      New materials for lighter stock
-${PS_EF_APPLICATION_NO}         ${application_ids["${PS_EF_APPLICATION_TITLE}"]}
-${PS_EF_APPLICATION_NUMBER}     ${PS_EF_APPLICATION_NO}
-${PS_EF_APPLICATION_HEADER}     ${PS_EF_APPLICATION_TITLE}
-${PS_EF_APPLICATION_PROJECT}    ${project_ids["${PS_EF_APPLICATION_TITLE}"]}
-${PS_EF_APPLICATION_LEAD_ORGANISATION_ID}    ${Ntag_Id}
-${PS_EF_APPLICATION_LEAD_ORGANISATION_NAME}  ${Ntag_Name}
-${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}      steven.hicks@ntag.example.com
-${PS_EF_APPLICATION_PARTNER_EMAIL}           robert.perez@jetpulse.example.com
-${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
+${PS_IU_Application_Title}      New materials for lighter stock
+${PS_IU_Application_No}         ${application_ids["${PS_IU_Application_Title}"]}
+${PS_IU_Application_Project}    ${project_ids["${PS_IU_Application_Title}"]}
 
 #Project: Magic material
-${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy
-${PROJECT_SETUP_COMPETITION}          ${competition_ids["${PROJECT_SETUP_COMPETITION_NAME}"]}
-${PROJECT_SETUP_APPLICATION_1_TITLE}  Magic material
-${PROJECT_SETUP_APPLICATION_1}        ${application_ids["${PROJECT_SETUP_APPLICATION_1_TITLE}"]}
-${PROJECT_SETUP_APPLICATION_1_NUMBER}    ${PROJECT_SETUP_APPLICATION_1}
-${PROJECT_SETUP_APPLICATION_1_HEADER}    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-${PROJECT_SETUP_APPLICATION_1_PROJECT}   ${project_ids["${PROJECT_SETUP_APPLICATION_1_TITLE}"]}
-${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
-${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}    60674010
-${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}    4560000
-${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}    1230
-${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${lead_applicant_credentials["email"]}
-${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${test_mailbox_one}+projectsetuppm@gmail.com
-${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}    53532322
-${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}    1230000
-${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}    4560
-${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}            ${collaborator1_credentials["email"]}
-${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}   ${collaborator2_credentials["email"]}
-${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}    HIVE IT LIMITED
-${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}   ewan+1@hiveit.co.uk
+#PD- Project Details
+${PS_PD_Application_Title}     Magic material
+${PS_PD_Application_Id}        ${application_ids["${PS_PD_Application_Title}"]}
+${PS_PD_Project_Id}            ${project_ids["${PS_PD_Application_Title}"]}
+${PS_PD_Lead_Partner_Email}    ${lead_applicant_credentials["email"]}
 
-${project_in_setup_page}                ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
-${project_in_setup_details_page}        ${project_in_setup_page}/details
-${project_in_setup_team_status_page}    ${project_in_setup_page}/team-status
-${project_start_date_page}              ${project_in_setup_details_page}/start-date
-${project_address_page}                 ${project_in_setup_details_page}/project-address
-${internal_competition_status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
-${notified_application_competition_status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
+${Project_In_Setup_Page}                ${server}/project-setup/project/${PS_PD_Project_Id}
+${Project_In_Setup_Details_Page}        ${Project_In_Setup_Page}/details
+${Project_In_Setup_Team_Status_Page}    ${Project_In_Setup_Page}/team-status
+${Project_Start_Date_Page}              ${Project_In_Setup_Details_Page}/start-date
+${Project_Address_Page}                 ${Project_In_Setup_Details_Page}/project-address
+${Internal_Competition_Status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
+${Notified_Application_Competition_Status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
+
+#Finances Checks
+${PS_FC_Application_Title}    Office Chair for Life
+${PS_FC_Project_Id}           ${project_ids["${PS_FC_Application_Title}"]}
 
 #Bank details
-${account_one}   51406795
-${sortCode_one}  404745
-${account_two}   12345677
-${sortCode_two}  000004
+${Account_One}   51406795
+${Sortcode_One}  404745
+${Account_Two}   12345677
+${Sortcode_two}  000004
+${Postcode}      BS14NT
 
-${postcode}  BS14NT
+#Project: Super-EFFY - Super Efficient Forecasting of Freight Yields
+#LP: Live Project
+${Crystalrover_Name}   Crystalrover
+${Crystalrover_Id}     ${organisation_ids["${Crystalrover_Name}"]}
+${Jabbertype_Name}     Jabbertype
+${Jabbertype_Id}       ${organisation_ids["${Jabbertype_Name}"]}
+${Zummacity_Name}      Zummacity
+${Zummacity_Id}        ${organisation_ids["${Zummacity_Name}"]}
+${PS_LP_Application_Title}         Super-EFFY - Super Efficient Forecasting of Freight Yields
+${PS_LP_Application_No}            ${application_ids["${PS_LP_Application_Title}"]}
+${PS_LP_Application_Project_Id}    ${project_ids["${PS_LP_Application_Title}"]}
+${PS_LP_Application_Lead_PM_Email}        dave.adams@gmail.com
+${PS_LP_Application_Partner_Email}        edward.morris@gmail.com
+${PS_LP_Application_Academic_Email}       myrtle.barton@jabbertype.example.com
 
 *** Keywords ***
 project finance submits monitoring officer
@@ -277,7 +244,7 @@ navigate to external finance contact page, choose finance contact and save
 Select project location
     [Arguments]  ${org_id}  ${projectId}
     the user navigates to the page        ${server}/project-setup/project/${projectId}/organisation/${org_id}/partner-project-location
-    the user enters text to a text field  css = #postcode  ${postcode}
+    the user enters text to a text field  css = #postcode  ${Postcode}
     the user clicks the button/link       css = button[type = "submit"]
     the user clicks the button/link       link = Set up your project
 
@@ -286,13 +253,13 @@ bank details are approved for all businesses
     the project finance user has approved bank details
 
 partners submit bank details
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PS_PD_Lead_Partner_Email}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${Account_One}  ${Sortcode_One}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${Account_One}  ${Sortcode_One}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${Account_One}  ${Sortcode_One}
 
 the project finance user has approved bank details
     log in as a different user                          &{internal_finance_credentials}
-    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    the project finance user approves bank details for  ${EMPIRE_LTD_NAME}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
     the project finance user approves bank details for  ${organisationLudlowName}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
     the project finance user approves bank details for  ${organisationEggsName}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
 
@@ -372,9 +339,9 @@ proj finance approves the spend profiles
     the user clicks the button/link  jQuery = .modal-accept-profile button:contains("Approve")
 
 all partners submit their Spend Profile
-    Login and submit partners spend profile  ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${Kazio_Id}  ${PS_GOL_APPLICATION_PROJECT}
-    Login and submit partners spend profile  ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${Cogilith_Id}  ${PS_GOL_APPLICATION_PROJECT}
-    Login and submit leads spend profile     ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  ${Gabtype_Id}  ${Gabtype_Name}  ${PS_GOL_APPLICATION_PROJECT}
+    Login and submit partners spend profile  ${PS_EF_Application_Partner_Email}  ${Kazio_Id}  ${PS_EF_Application_Project_No}
+    Login and submit partners spend profile  ${PS_EF_Application_Academic_Email}  ${Cogilith_Id}  ${PS_EF_Application_Project_No}
+    Login and submit leads spend profile     ${PS_EF_Application_Lead_Partner_Email}  ${Gabtype_Id}  ${Gabtype_Name}  ${PS_EF_Application_Project_No}
 
 Login and submit partners spend profile
     [Arguments]  ${email}  ${org_id}  ${project}
@@ -394,11 +361,11 @@ Login and submit leads spend profile
     the user clicks the button/link  link = Send project spend profile
     the user clicks the button/link  id = submit-send-all-spend-profiles
 
-project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
+project finance approves bank details for ${PS_EF_Application_Title}
     log in as a different user                          &{internal_finance_credentials}
-    the project finance user approves bank details for  ${Gabtype_Name}  ${PS_GOL_APPLICATION_PROJECT}
-    the project finance user approves bank details for  ${Kazio_Name}  ${PS_GOL_APPLICATION_PROJECT}
-    the project finance user approves bank details for  ${Cogilith_Name}  ${PS_GOL_APPLICATION_PROJECT}
+    the project finance user approves bank details for  ${Gabtype_Name}  ${PS_EF_Application_Project_No}
+    the project finance user approves bank details for  ${Kazio_Name}  ${PS_EF_Application_Project_No}
+    the project finance user approves bank details for  ${Cogilith_Name}  ${PS_EF_Application_Project_No}
 
 the user changes the start date
     [Arguments]  ${year}

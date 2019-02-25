@@ -221,7 +221,7 @@ Status of the application should be In Progress
     [Tags]
     [Setup]    The user navigates to the page      ${ASSESSOR_DASHBOARD_URL}
     When The user clicks the button/link           link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    Then The user should see the element           jQuery = .progress-list li:nth-child(6) strong:contains("In progress")
+    Then The user should see the element           jQuery = .progress-list li:contains("Intelligent water system") strong:contains("In progress")
 
 *** Keywords ***
 I enter feedback of words
@@ -248,8 +248,8 @@ the finance summary total should be correct
     Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
     Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
     Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    990
-    Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    990
-    Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    0
+    Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    0
+    Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    2,468
     Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    0
 
 the project cost breakdown total should be correct

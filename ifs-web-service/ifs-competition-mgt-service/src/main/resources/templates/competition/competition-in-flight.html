@@ -129,16 +129,10 @@
                         </li>
                         <li th:unless="${model.readOnly}">
                             <a class="disabled govuk-link" aria-disabled="true"
-                               th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
+                               th:unless="${model.fundingDecisionEnabled}">
                                 Input and review funding decision
                             </a>
-                            <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
+                            <a th:if="${model.fundingDecisionEnabled}"
                                th:href="@{/competition/{competitionId}/funding(competitionId=${model.competitionId})}"
                                class="govuk-link">
                                 Input and review funding decision
@@ -174,7 +168,7 @@
                                 </button>
                                 <th:block th:unless="${model.readOnly}"
                                           th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).FUNDERS_PANEL}"
-                                          th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK}">
+                                          th:if="${model.fundingNotificationDisplayed}">
                                     <a class="govuk-button" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
                                         th:if="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
                                     <a class="govuk-button--disabled govuk-button" aria-disabled="true"

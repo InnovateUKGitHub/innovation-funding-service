@@ -2,7 +2,7 @@
 
 #
 # This file contains shell functions that assist with the generation of shibboleth configuration files
-# such as IDP/SP entity descriptor XML files with place holder replacement.
+# such as IDP/SP entity descriptor XML files with placeholder replacement.
 #
 
 #
@@ -104,11 +104,7 @@ createEntitiesFromProperties() {
     PORT_POSTFIX=$(createPortPostfix ${PORT} ${PROTOCOL})
     TEMPLATE=$(property TEMPLATE ${properties})
 
-    if [ "${PORT_POSTFIX}" = "__EMPTY__" ] ; then
-      entityName="${PROTOCOL}://${DOMAIN}"
-    else
-      entityName="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}"
-    fi
+    entityName="https://${DOMAIN}"
     entityNameHash=`echo -n ${entityName} | openssl sha1 | sed 's/^.* //'`
     echo "Creating entity ${entityName} using template ${TEMPLATE} : ${entityNameHash}"
 
