@@ -180,15 +180,17 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
     public ProjectDataBuilder withSignedGrantOfferLetter() {
         return with(data -> doAs(data.getProjectManager(), () -> {
-            /*
-            *
-            *
-            * Here do the logic to upload a grant offer letter
-            * something like service.upload signed offer letter
-            *
-            *
-            * */
-//            grantOfferLetterService.submitGrantOfferLetter(data.getProject().getId())
+
+            try {
+                File file = new File(ProjectDataBuilder.class.getResource("/webtest.pdf").toURI());
+                InputStream inputStream = new FileInputStream(file);
+                Supplier<InputStream> inputStreamSupplier = () -> inputStream;
+                grantOfferLetterService.createSignedGrantOfferLetterFileEntry(data.getProject().getId(), new FileEntryResource(null, "SGOL.pdf", "application/pdf", file.length()), inputStreamSupplier);
+            } catch (Exception e) {
+                LOG.error("Unable to upload signed grant offer letter", e);
+                throw new RuntimeException(e);
+            }
+            grantOfferLetterService.submitGrantOfferLetter(data.getProject().getId());
         }));
     }
 
