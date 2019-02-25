@@ -137,7 +137,6 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
 
     private ApplicationFinanceDataBuilder(List<BiConsumer<Integer, ApplicationFinanceData>> multiActions,
                                           ServiceLocator serviceLocator) {
-
         super(multiActions, serviceLocator);
     }
 

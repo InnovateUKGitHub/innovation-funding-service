@@ -7,6 +7,7 @@ import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -34,9 +35,12 @@ import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.LARGE;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
@@ -94,7 +98,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
         // For speed, all of these tests are combined in the same test method so that we don't have to continually recreate the
         // APC competition
-        CompetitionData competitionData = createApcCompetition("Feasibility studies");
+        CompetitionData competitionData = createApcCompetition(Collections.singletonList("Feasibility studies"));
 
         // test business types
         ApplicationData businessApplicationData = createApplication(competitionData, "steve.smith@empire.com", "Empire Ltd", SMALL_SIZE, false);
@@ -195,7 +199,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         return userService.findByEmail(emailAddress).getSuccess();
     }
 
-    private CompetitionData createApcCompetition(String researchCategory) {
+    private CompetitionData createApcCompetition(List<String> researchCategory) {
 
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR)).build());
 
@@ -214,7 +218,8 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         "CCCC", "16014", 1, BigDecimal.valueOf(100L),
                         false, false, AssessorFinanceView.OVERVIEW,false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
-                        50, false, "", FundingType.GRANT).
+                        50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP,
+                        true, STANDARD, true, true).
                 withApplicationFormFromTemplate().
                 withNewMilestones().
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).

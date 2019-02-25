@@ -40,6 +40,23 @@ public class CompetitionInFlightStatsViewModel {
                                                      competitionOpenKeyApplicationStatisticsResource,
                                              CompetitionOpenKeyAssessmentStatisticsResource
                                                      competitionOpenKeyAssessmentStatisticsResource,
+                                             CompetitionStatus competitionStatus,
+                                             CompetitionFundedKeyApplicationStatisticsResource fundedKeyApplicationStatisticsResource) {
+        this.statOne = competitionOpenKeyAssessmentStatisticsResource.getAssessorsInvited();
+        this.statTwo = competitionOpenKeyAssessmentStatisticsResource.getAssessorsAccepted();
+        this.statThree = competitionOpenKeyApplicationStatisticsResource.getApplicationsPerAssessor();
+        this.statFour = competitionOpenKeyApplicationStatisticsResource.getApplicationsStarted();
+        this.statFive = competitionOpenKeyApplicationStatisticsResource.getApplicationsPastHalf();
+        this.statSix = competitionOpenKeyApplicationStatisticsResource.getApplicationsSubmitted();
+        this.canManageFundingNotifications = fundedKeyApplicationStatisticsResource.isCanManageFundingNotifications();
+        this.status = competitionStatus;
+        this.canReleaseFeedback = false;
+    }
+
+    public CompetitionInFlightStatsViewModel(CompetitionOpenKeyApplicationStatisticsResource
+                                                     competitionOpenKeyApplicationStatisticsResource,
+                                             CompetitionOpenKeyAssessmentStatisticsResource
+                                                     competitionOpenKeyAssessmentStatisticsResource,
                                              CompetitionStatus competitionStatus) {
         this.statOne = competitionOpenKeyAssessmentStatisticsResource.getAssessorsInvited();
         this.statTwo = competitionOpenKeyAssessmentStatisticsResource.getAssessorsAccepted();
@@ -91,7 +108,6 @@ public class CompetitionInFlightStatsViewModel {
         this.statSix = keyStatisticsResource.getApplicationsAwaitingDecision();
         this.canManageFundingNotifications = keyStatisticsResource.isCanManageFundingNotifications();
         this.canReleaseFeedback = keyStatisticsResource.isCanReleaseFeedback();
-        this.canManageFundingNotifications = statTwo > 0 || statThree > 0 || statFour > 0;
         this.status = competitionStatus;
     }
 
