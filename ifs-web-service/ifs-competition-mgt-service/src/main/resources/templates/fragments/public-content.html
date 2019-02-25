@@ -439,7 +439,7 @@
                 <th:block th:if="${model.hasAttachment(contentGroup.id)}">
                     <p class="govuk-body"><a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
                           th:text="${model.fileName(contentGroup.id)}"
-                          class="govuk-link">Filename.pdf</a></p>
+                          class="govuk-link" target="_blank">Filename.pdf</a> (opens in a new window)</p>
                 </th:block>
             </div>
         </div>
