@@ -1,0 +1,42 @@
+<EntityDescriptor entityID="https://${DOMAIN}" validUntil="2028-09-05T14:54:23.360Z"
+                  xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                  xmlns:mdalg="urn:oasis:names:tc:SAML:metadata:algsupport" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
+                  xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <Extensions xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport">
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#sha384"/>
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#sha224"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha224"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"/>
+        <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+    </Extensions>
+
+    <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <KeyDescriptor use="encryption">
+            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                <ds:KeyName>ifs.local-dev</ds:KeyName>
+                <ds:X509Data>
+                    <ds:X509SubjectName>CN=ifs.local-dev,O=Innovate UK,L=Swindon,ST=Wiltshire,C=GB
+                    </ds:X509SubjectName>
+                    <ds:X509Certificate>${CERTIFICATE}</ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+            <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes128-cbc"/>
+            <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes192-cbc"/>
+            <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/>
+        </KeyDescriptor>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                             Location="https://${DOMAIN}/services/auth/sp/saml2/logout"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                             Location="https://${DOMAIN}/services/auth/sp/saml2/logout"/>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="https://${DOMAIN}/auth/success" index="1" isDefault="true"/>
+    </SPSSODescriptor>
+</EntityDescriptor>

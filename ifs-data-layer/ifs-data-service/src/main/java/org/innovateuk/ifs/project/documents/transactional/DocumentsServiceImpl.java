@@ -217,7 +217,6 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     @Override
     @Transactional
     public ServiceResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision) {
-
         return validateProjectDocumentDecision(decision)
                 .andOnSuccess(() -> find(getProject(projectId), getCompetitionDocumentConfig(documentConfigId)).
                         andOnSuccess((project, projectDocumentConfig) -> validateProjectIsInSetup(project)
@@ -227,7 +226,6 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
     }
 
     private ServiceResult<Void> validateProjectDocumentDecision(ProjectDocumentDecision decision) {
-
         if (null == decision.getApproved() || (!decision.getApproved() && StringUtils.isBlank(decision.getRejectionReason()))) {
             return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_INVALID_DECISION);
         }
@@ -237,7 +235,6 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     private ServiceResult<Void> applyDocumentDecision(Project project, long documentConfigId, ProjectDocumentDecision decision) {
         ProjectDocument projectDocument = getProjectDocument(project, documentConfigId);
-
         if (SUBMITTED.equals(projectDocument.getStatus())) {
             projectDocument.setStatus(decision.getApproved() ? APPROVED : REJECTED);
             projectDocument.setStatusComments(!decision.getApproved() ? decision.getRejectionReason() : null);
