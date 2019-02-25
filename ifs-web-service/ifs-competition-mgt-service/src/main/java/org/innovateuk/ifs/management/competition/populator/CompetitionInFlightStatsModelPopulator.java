@@ -38,12 +38,24 @@ public class CompetitionInFlightStatsModelPopulator {
                                 competitionResource.getId()).getSuccess(),
                         status);
             case OPEN:
-                return new CompetitionInFlightStatsViewModel(
-                        competitionKeyApplicationStatisticsRestService.getOpenKeyStatisticsByCompetition(
-                                competitionResource.getId()).getSuccess(),
-                        competitionKeyAssessmentStatisticsRestService.getOpenKeyStatisticsByCompetition(
-                                competitionResource.getId()).getSuccess(),
-                        status);
+                if (competitionResource.hasAssessmentStage()) {
+                    return new CompetitionInFlightStatsViewModel(
+                            competitionKeyApplicationStatisticsRestService.getOpenKeyStatisticsByCompetition(
+                                    competitionResource.getId()).getSuccess(),
+                            competitionKeyAssessmentStatisticsRestService.getOpenKeyStatisticsByCompetition(
+                                    competitionResource.getId()).getSuccess(),
+                            status);
+
+                } else {
+                    return new CompetitionInFlightStatsViewModel(
+                            competitionKeyApplicationStatisticsRestService.getOpenKeyStatisticsByCompetition(
+                                    competitionResource.getId()).getSuccess(),
+                            competitionKeyAssessmentStatisticsRestService.getOpenKeyStatisticsByCompetition(
+                                    competitionResource.getId()).getSuccess(),
+                            status,
+                            competitionKeyApplicationStatisticsRestService.getFundedKeyStatisticsByCompetition(
+                                    competitionResource.getId()).getSuccess());
+                }
             case CLOSED:
                 return new CompetitionInFlightStatsViewModel(
                         competitionKeyApplicationStatisticsRestService.getClosedKeyStatisticsByCompetition(
