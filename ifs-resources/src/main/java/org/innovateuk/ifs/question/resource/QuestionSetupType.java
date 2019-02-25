@@ -12,7 +12,10 @@ public enum QuestionSetupType {
     PUBLIC_DESCRIPTION("Public description"),
     APPLICATION_DETAILS("Application details"),
     RESEARCH_CATEGORY("Research category"),
-    APPLICATION_TEAM("Application team");
+    APPLICATION_TEAM("Application team"),
+    /* h2020 */
+    PROJECT_DETAILS("Project details"),
+    PROJECT_DOCUMENTS("Project documents");
 
     private String shortName;
 
