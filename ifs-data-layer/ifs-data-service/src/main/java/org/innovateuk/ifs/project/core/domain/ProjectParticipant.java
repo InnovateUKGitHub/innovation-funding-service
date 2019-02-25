@@ -14,17 +14,8 @@ import javax.persistence.*;
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorOptions(force = true)
-//@MappedSuperclass
 @Entity
 @Table(name = "project_user")
-
-/*
-@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@Entity
-@DiscriminatorOptions(force = true)
- */
-
 public abstract class ProjectParticipant extends Participant<Project, ProjectParticipantRole> {
 
     @Id
