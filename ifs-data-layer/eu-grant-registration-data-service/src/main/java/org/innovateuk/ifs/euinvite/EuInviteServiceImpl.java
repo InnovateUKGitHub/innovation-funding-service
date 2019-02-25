@@ -45,14 +45,10 @@ public class EuInviteServiceImpl implements EuInviteService {
     public ServiceResult<Void> sendInvites(List<Long> euContactIds) {
         euContactIds
                 .forEach(id -> sendInvite(id)
-                        .andOnSuccessReturnVoid(this::setNotified)
+                        .andOnSuccessReturnVoid(euContact -> euContact.setNotified(true))
                 );
 
         return serviceSuccess();
-    }
-
-    private void setNotified(EuContact euContact) {
-        euContact.setNotified(true);
     }
 
     private ServiceResult<EuContact> sendInvite(long euContactId) {

@@ -13,7 +13,7 @@ VALUES
 ('Riddle Walk', 'abc789', 'BUSINESS'),
 ('Shadow Navigations', 'def123', 'BUSINESS'),
 ('Alpine Corp', 'ghi456', 'BUSINESS');
---
+
 INSERT INTO `eu_funding` (`grant_agreement_number`, `participant_id`, `eu_action_type_id`, `project_name`, `project_start_date`, `project_end_date`, `funding_contribution`, `project_coordinator`)
 VALUES
 ("123", "1", 1 ,"project", now(), now(), 20, 0),
@@ -26,8 +26,7 @@ VALUES
 ("mno", "1", 1 ,"project", now(), now(), 20, 0),
 ("pqr", "1", 1 ,"project", now(), now(), 20, 0),
 ("stv", "1", 1 ,"project", now(), now(), 20, 0);
---
---
+
 INSERT INTO `eu_grant` (`id`, `eu_organisation_id`, `eu_contact_id`, `eu_funding_id`, `submitted`, `short_code`, `created_on`, `modified_on`)
 VALUES
 (1,1,1,1,1, "ABC123", now(), now()),
