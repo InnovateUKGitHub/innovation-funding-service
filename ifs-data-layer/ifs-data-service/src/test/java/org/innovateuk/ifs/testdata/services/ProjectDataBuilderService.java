@@ -82,7 +82,10 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
                 builder -> line.projectDocumentsUploaded ? builder.withProjectDocuments() : builder;
 
         UnaryOperator<ProjectDataBuilder> publishGrantOffLetterIfNecessary =
-                builder -> line.publishGrantOffLetter ? builder.withPublishGrantoffletter() : builder;
+                builder -> line.publishGrantOffLetter ? builder.withPublishGrantOfferLetter() : builder;
+
+        UnaryOperator<ProjectDataBuilder> uploadSignedGrantOffLetterIfNecessary =
+                builder -> line.uploadSignedGrantOffLetter ? builder.withSignedGrantOfferLetter() : builder;
 
         UnaryOperator<ProjectDataBuilder> setMonitoringOfficerIfNecessary =
                 builder -> !isBlank(line.moFirstName) ?
@@ -137,6 +140,7 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
                                 andThen(approveSpendProfileIfNecessary).
                                 andThen(setProjectDocumentsIfNecessary).
                                 andThen(publishGrantOffLetterIfNecessary).
+                                andThen(uploadSignedGrantOffLetterIfNecessary).
                                 apply(baseBuilder).
                                 build())
         );

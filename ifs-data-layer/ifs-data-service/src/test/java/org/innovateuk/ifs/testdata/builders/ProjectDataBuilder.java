@@ -167,17 +167,28 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
             competitionDocuments.stream()
                     .forEach(competitionDocument -> uploadProjectDocument(data, competitionDocument.getId()));
-            LOG.error("Uploaded competition documents");
             submitProjectDocuments(data, competitionDocuments);
-            LOG.error("Submitted competition documents");
             approveProjectDocument(data, competitionDocuments);
         }));
     }
 
-    public ProjectDataBuilder withPublishGrantoffletter() {
+    public ProjectDataBuilder withPublishGrantOfferLetter() {
         return with(data -> doAs(anyProjectFinanceUser(), () -> {
-            LOG.error("sending grant offer letter");
             grantOfferLetterService.sendGrantOfferLetter(data.getProject().getId());
+        }));
+    }
+
+    public ProjectDataBuilder withSignedGrantOfferLetter() {
+        return with(data -> doAs(data.getProjectManager(), () -> {
+            /*
+            *
+            *
+            * Here do the logic to upload a grant offer letter
+            * something like service.upload signed offer letter
+            *
+            *
+            * */
+//            grantOfferLetterService.submitGrantOfferLetter(data.getProject().getId())
         }));
     }
 
