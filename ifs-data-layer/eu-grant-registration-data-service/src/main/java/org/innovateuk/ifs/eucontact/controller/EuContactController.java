@@ -3,11 +3,9 @@ package org.innovateuk.ifs.eucontact.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.eucontact.transactional.EuContactService;
 import org.innovateuk.ifs.eugrant.EuContactPageResource;
-import org.innovateuk.ifs.eugrant.EuContactResource;
-import org.innovateuk.ifs.eugrant.EuGrantResource;
+import org.innovateuk.ifs.euinvite.EuInviteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,11 +24,19 @@ public class EuContactController {
     @Autowired
     EuContactService euContactService;
 
+    @Autowired
+    EuInviteService euInviteService;
+
     @GetMapping("/eu-contacts/notified/{notified}")
     public RestResult<EuContactPageResource> getEuContactsByNotified(@PathVariable("notified") boolean notified,
                                                                      @RequestParam(value = "page",defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                      @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
 
         return euContactService.getEuContactsByNotified(notified, new PageRequest(pageIndex, pageSize, sort)).toGetResponse();
+    }
+
+    @PostMapping("/eu-contacts/send-invites")
+    public RestResult<Void> sendInvites(@RequestBody List<Long> ids) {
+        return euInviteService.sendInvites(ids).toPostResponse();
     }
 }
