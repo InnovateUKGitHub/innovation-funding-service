@@ -14,7 +14,7 @@ The details you previously provided are listed below. You may find this useful w
 
   Yours sincerely,
 
-<@layout.euSenderPlainText />
+<@layout.senderPlainText />
 
 Reference code: ${referenceCode}
 
