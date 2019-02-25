@@ -625,9 +625,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         UserResource userResource = newUserResource().withId(userId).build();
 
-        ProjectMonitoringOfficer projectMonitoringOfficer = newProjectMonitoringOfficer().withUser(newUser().withId(userId).build()).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build();
+        List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer().withUser(newUser().withId(userId).build()).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build(1);
 
-        when(projectMonitoringOfficerRepository.findByUserId(userId)).thenReturn(projectMonitoringOfficer);
+        when(projectMonitoringOfficerRepository.findByUserId(userId)).thenReturn(projectMonitoringOfficers);
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withApplication(applicationId).build();
 
