@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface GrantProcessRepository extends PagingAndSortingRepository<GrantProcess, Long> {
 
-    List<GrantProcess> findByPendingIsTrue();
-
     GrantProcess findOneByApplicationId(long applicationId);
+
+    List<GrantProcess> findByPendingIsFalse();
 }

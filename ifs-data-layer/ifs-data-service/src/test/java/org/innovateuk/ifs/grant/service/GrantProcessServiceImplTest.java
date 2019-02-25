@@ -32,11 +32,11 @@ public class GrantProcessServiceImplTest extends BaseServiceUnitTest<GrantProces
         GrantProcess grantProcessTwo = new GrantProcess(2);
         List<GrantProcess> readyToSend = asList(grantProcessOne, grantProcessTwo);
 
-        when(grantProcessRepository.findByPendingIsTrue()).thenReturn(readyToSend);
+        when(grantProcessRepository.findByPendingIsFalse()).thenReturn(readyToSend);
 
         assertThat(service.findReadyToSend(), is(readyToSend));
 
-        verify(grantProcessRepository, only()).findByPendingIsTrue();
+        verify(grantProcessRepository, only()).findByPendingIsFalse();
     }
 
     @Test
