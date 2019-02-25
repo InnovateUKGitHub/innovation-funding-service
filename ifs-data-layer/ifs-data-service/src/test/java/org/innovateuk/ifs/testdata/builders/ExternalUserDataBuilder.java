@@ -18,8 +18,8 @@ public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserDat
 
     private static final Logger LOG = LoggerFactory.getLogger(ExternalUserDataBuilder.class);
 
-    public ExternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
-        return with(data -> registerUser(firstName, lastName, emailAddress, organisationName, phoneNumber, singletonList(APPLICANT), data));
+    public ExternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String phoneNumber) {
+        return with(data -> registerUser(firstName, lastName, emailAddress, phoneNumber, singletonList(APPLICANT), data));
     }
 
     public static ExternalUserDataBuilder newExternalUserData(ServiceLocator serviceLocator) {

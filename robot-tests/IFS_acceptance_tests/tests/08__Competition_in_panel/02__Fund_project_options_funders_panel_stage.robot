@@ -141,7 +141,7 @@ Internal user can see the comp in Project Setup once applicant is notified
     When the user clicks the button/link                   jQuery = a:contains("Project setup")
     And the user should see the element                    jQuery = h2:not(".govuk-tabs__title"):contains("Project setup")
     Then the user clicks the button/link                   link = ${FUNDERS_PANEL_COMPETITION_NAME}
-    And the user should be redirected to the correct page  ${notified_application_competition_status}
+    And the user should be redirected to the correct page  ${Notified_Application_Competition_Status}
 
 Once all final decisions have been made and emails are sent Comp moves to Inform status
     [Documentation]  INFUND-8854

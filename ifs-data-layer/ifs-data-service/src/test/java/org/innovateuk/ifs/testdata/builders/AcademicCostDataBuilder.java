@@ -5,9 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.testdata.builders.data.AcademicCostData;
@@ -15,11 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * Generates Academic Finances for an Organisation on an Application
@@ -76,6 +79,26 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
         return addCostItem("Other costs", () -> new AcademicCost(null, "exceptions_other_costs", value, null, FinanceRowType.OTHER_COSTS));
     }
 
+    public AcademicCostDataBuilder withOtherFunding(String fundingSource, LocalDate dateSecured, BigDecimal fundingAmount) {
+        return updateCostItem(OtherFunding.class, "Other funding", existingCost -> {
+            existingCost.setOtherPublicFunding("Yes");
+            financeRowCostsService.updateCost(existingCost.getId(), existingCost);
+        }).addCostItem("Other funding", () -> {
+            OtherFunding otherFunding = new OtherFunding();
+            otherFunding.setFundingAmount(fundingAmount);
+            otherFunding.setFundingSource(fundingSource);
+            otherFunding.setSecuredDate(dateSecured.format(DateTimeFormatter.ofPattern("MM-yyyy")));
+            return otherFunding;
+        });
+    }
+
+    public AcademicCostDataBuilder withGrantClaim(Integer grantClaim) {
+        return updateCostItem(GrantClaim.class, "Funding level", existingCost -> {
+            existingCost.setGrantClaimPercentage(grantClaim);
+            financeRowCostsService.updateCost(existingCost.getId(), existingCost);
+        });
+    }
+
     public AcademicCostDataBuilder withUploadedJesForm() {
         return with(data -> {
             FileEntry fileEntry = fileEntryRepository.save(
@@ -110,6 +133,20 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
 
             financeRowCostsService.addCost(data.getApplicationFinance().getId(), question.getId(), newCostItem).
                     getSuccess();
+        });
+    }
+
+    private <T extends FinanceRowItem> AcademicCostDataBuilder updateCostItem(Class<T> clazz, String financeRowName, Consumer<T> updateFn) {
+        return updateCostItem(clazz, financeRowName, c -> true, updateFn);
+    }
+
+    private <T extends FinanceRowItem> AcademicCostDataBuilder updateCostItem(Class<T> clazz, String financeRowName, Predicate<T> filterFn, Consumer<T> updateFn) {
+        return with(data -> {
+
+            QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition().getId());
+
+            List<FinanceRowItem> existingItems = financeRowCostsService.getCostItems(data.getApplicationFinance().getId(), question.getId()).getSuccess();
+            simpleFilter(existingItems, item -> filterFn.test((T) item)).forEach(item -> updateFn.accept((T) item));
         });
     }
 
