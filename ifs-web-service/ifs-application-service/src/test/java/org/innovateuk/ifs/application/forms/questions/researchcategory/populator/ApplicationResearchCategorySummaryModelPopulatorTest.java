@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.researchcategory.populator;
+package org.innovateuk.ifs.application.forms.questions.researchcategory.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder;
@@ -23,7 +23,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;

@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.application.forms.researchcategory.populator;
+package org.innovateuk.ifs.application.forms.questions.researchcategory.populator;
 
-import org.innovateuk.ifs.application.forms.researchcategory.form.ResearchCategoryForm;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.springframework.stereotype.Component;
 

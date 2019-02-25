@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.researchcategory.viewmodel;
+package org.innovateuk.ifs.application.forms.questions.researchcategory.viewmodel;
 
 import org.innovateuk.ifs.application.viewmodel.AbstractLeadOnlyViewModel;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;

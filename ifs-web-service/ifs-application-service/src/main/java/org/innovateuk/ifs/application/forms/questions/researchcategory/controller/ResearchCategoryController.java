@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.application.forms.researchcategory.controller;
+package org.innovateuk.ifs.application.forms.questions.researchcategory.controller;
 
-import org.innovateuk.ifs.application.forms.researchcategory.form.ResearchCategoryForm;
-import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
-import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.form.ResearchCategoryForm;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.validator.ResearchCategoryEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
@@ -97,7 +97,7 @@ public class ResearchCategoryController {
             }
         });
 
-        return "application/research-categories";
+        return "application/questions/research-categories";
     }
 
     @PostMapping(params = {"mark_as_incomplete"})
