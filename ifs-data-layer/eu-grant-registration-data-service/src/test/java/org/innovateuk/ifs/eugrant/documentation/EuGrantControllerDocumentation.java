@@ -167,6 +167,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 fieldWithPath("organisation.organisationType").description("The type of the the organisation e.g. BUSINESS."),
                 fieldWithPath("organisation.companiesHouseNumber").description("Companies House number."),
                 fieldWithPath("contact").description("Contact details for the eu grant."),
+                fieldWithPath("contact.id").description("Unique id of the contact."),
                 fieldWithPath("contact.name").description("Full name of the contact."),
                 fieldWithPath("contact.jobTitle").description("Job title of the contact."),
                 fieldWithPath("contact.email").description("Email address of the contact."),

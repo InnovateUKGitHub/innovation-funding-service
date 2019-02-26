@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.List;
+
 import static java.lang.String.format;
 
 /**
@@ -34,5 +36,10 @@ public class EuInviteRestServiceImpl extends BaseRestService implements EuInvite
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         String uriWithParams = buildPaginationUri(format("%s/notified/%s", baseUrl, notified), pageIndex, pageSize, null, params);
         return getWithRestResultAnonymous(uriWithParams, EuContactPageResource.class);
+    }
+
+    @Override
+    public RestResult<Void> sendInvites(List<Long> ids) {
+        return postWithRestResultAnonymous(baseUrl + "/send-invites", ids, Void.class);
     }
 }

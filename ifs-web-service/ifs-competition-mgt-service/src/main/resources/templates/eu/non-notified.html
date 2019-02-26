@@ -27,6 +27,8 @@
                 </ul>
                 <section class="govuk-tabs__panel">
                     <form method="POST"
+                          th:action="@{/eu-send-invites}"
+                          th:object="${euContactSelectionForm}"
                           data-select=""
                           autocomplete="off">
                         <div class="govuk-grid-row sorting">
@@ -73,7 +75,9 @@
                                             <div class="govuk-checkboxes__item">
                                                 <input type="checkbox"
                                                        class="govuk-checkboxes__input"
-                                                       th:id="|registrant-${index.count}|" />
+                                                       th:id="|registrant-${index.count}|"
+                                                       th:field="*{euContactIds}"
+                                                       th:value="${contact.id}"/>
                                                 <label th:for="|registrant-${index.count}|"
                                                        class="govuk-label govuk-checkboxes__label">
                                                     <span class="govuk-visually-hidden">Add</span>
