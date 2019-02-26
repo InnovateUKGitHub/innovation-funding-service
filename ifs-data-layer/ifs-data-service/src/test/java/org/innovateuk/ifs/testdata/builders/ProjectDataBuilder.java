@@ -167,17 +167,30 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
             competitionDocuments.stream()
                     .forEach(competitionDocument -> uploadProjectDocument(data, competitionDocument.getId()));
-            LOG.error("Uploaded competition documents");
             submitProjectDocuments(data, competitionDocuments);
-            LOG.error("Submitted competition documents");
             approveProjectDocument(data, competitionDocuments);
         }));
     }
 
-    public ProjectDataBuilder withPublishGrantoffletter() {
+    public ProjectDataBuilder withPublishGrantOfferLetter() {
         return with(data -> doAs(anyProjectFinanceUser(), () -> {
-            LOG.error("sending grant offer letter");
             grantOfferLetterService.sendGrantOfferLetter(data.getProject().getId());
+        }));
+    }
+
+    public ProjectDataBuilder withSignedGrantOfferLetter() {
+        return with(data -> doAs(data.getProjectManager(), () -> {
+
+            try {
+                File file = new File(ProjectDataBuilder.class.getResource("/webtest.pdf").toURI());
+                InputStream inputStream = new FileInputStream(file);
+                Supplier<InputStream> inputStreamSupplier = () -> inputStream;
+                grantOfferLetterService.createSignedGrantOfferLetterFileEntry(data.getProject().getId(), new FileEntryResource(null, "SGOL.pdf", "application/pdf", file.length()), inputStreamSupplier);
+            } catch (Exception e) {
+                LOG.error("Unable to upload signed grant offer letter", e);
+                throw new RuntimeException(e);
+            }
+            grantOfferLetterService.submitGrantOfferLetter(data.getProject().getId());
         }));
     }
 
