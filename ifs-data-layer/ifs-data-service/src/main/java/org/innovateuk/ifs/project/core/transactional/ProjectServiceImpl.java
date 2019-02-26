@@ -107,15 +107,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<List<ProjectResource>> findByUserId(final Long userId) {
         List<ProjectUser> projectUsers = projectUserRepository.findByUserId(userId);
         List<ProjectMonitoringOfficer> monitoringOfficers = projectMonitoringOfficerRepository.findByUserId(userId);
 
-        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProcess); //.parallelStream().distinct().collect(toList());     //Users may have multiple roles (e.g. partner and finance contact, in which case there will be multiple project_user entries, so this is flatting it).
-        List<Project> monitoringOfficerProjects = simpleMap(monitoringOfficers, ProjectMonitoringOfficer::getProcess); //.parallelStream().distinct().collect(toList());
+        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProcess);
+        List<Project> monitoringOfficerProjects = simpleMap(monitoringOfficers, ProjectMonitoringOfficer::getProcess);
 
         return serviceSuccess(
-                concat(projects.parallelStream(), monitoringOfficerProjects.parallelStream())
+                concat(projects.stream(), monitoringOfficerProjects.stream())
                         .distinct()
                         .map(projectMapper::mapToResource)
                         .collect(toList())
