@@ -42,7 +42,7 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
         adaptor = factory.silAdaptor();
         ReflectionTestUtils.setField(service, "adaptor", adaptor);
         ReflectionTestUtils.setField(service, "silRestServiceUrl", "http://sil.com");
-        ReflectionTestUtils.setField(service, "path", "/silstub/sendproject");
+        ReflectionTestUtils.setField(service, "path", "/silstub/accprojects");
         adaptor.setAsyncRestTemplate(mockAsyncRestTemplate);
         adaptor.setRestTemplate(mockRestTemplate);
     }
@@ -50,7 +50,7 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
     @Test
     public void send() {
         Grant grant = new Grant();
-        String expectedUrl = "http://sil.com/silstub/sendproject";
+        String expectedUrl = "http://sil.com/silstub/accprojects";
         ResponseEntity<String> returnedEntity = new ResponseEntity<>(ACCEPTED);
 
         when(mockRestTemplate.postForEntity(expectedUrl, adaptor.jsonEntity(singletonList(grant)), String.class))
@@ -64,7 +64,7 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
     @Test
     public void send_failure() {
         Grant grant = new Grant();
-        String expectedUrl = "http://sil.com/silstub/sendproject";
+        String expectedUrl = "http://sil.com/silstub/accprojects";
         ResponseEntity<String> returnedEntity = new ResponseEntity<>(INTERNAL_SERVER_ERROR);
 
         when(mockRestTemplate.postForEntity(expectedUrl, adaptor.jsonEntity(singletonList(grant)), String.class))

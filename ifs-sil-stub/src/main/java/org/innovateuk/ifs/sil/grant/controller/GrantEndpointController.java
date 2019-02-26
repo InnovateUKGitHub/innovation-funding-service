@@ -20,8 +20,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * a memory buffer can be retrieved via the HTTP endpoints.
  *
  * <code>
- * curl localhost:8080/silstub/sendproject/events
- * curl localhost:8080/silstub/sendproject/event/108
+ * curl localhost:8080/silstub/accprojects/events
+ * curl localhost:8080/silstub/accprojects/event/108
  * </code>
  */
 @RestController
@@ -30,7 +30,7 @@ public class GrantEndpointController {
     private static final Log LOG = LogFactory.getLog(GrantEndpointController.class);
     private static final EvictingQueue<Event> history = EvictingQueue.create(100);
 
-    @PostMapping("/sendproject")
+    @PostMapping("/accprojects")
     public RestResult<Void> sendProject(@RequestBody List<Grant> grantAsList) {
 
         Grant grant = grantAsList.get(0);
@@ -42,13 +42,13 @@ public class GrantEndpointController {
         return restSuccess(HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/sendproject/events")
+    @GetMapping("/accprojects/events")
     public RestResult<List<Event>> getAllEvents() {
         return serviceSuccess((List<Event>) new ArrayList<>(history))
                 .toGetResponse();
     }
 
-    @GetMapping("/sendproject/event/{applicationId}")
+    @GetMapping("/accprojects/event/{applicationId}")
     public RestResult<Event> getEvent(@PathVariable("applicationId") long applicationId) {
         return serviceSuccess(history.stream()
                     .filter(event -> applicationId == event.getGrant().getId())

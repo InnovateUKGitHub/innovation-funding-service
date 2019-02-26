@@ -38,12 +38,12 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
         String requestBody = objectMapper.writeValueAsString(singletonList(parameter.grant()));
         mockMvc.
                 perform(
-                        post("/silstub/sendproject").
+                        post("/silstub/accprojects").
                                 header("Content-Type", "application/json").
                                 content(requestBody)
                 ).
                 andExpect(status().isAccepted()).
-                andDo(document("silstub/sendproject",
+                andDo(document("silstub/accprojects",
                         requestHeaders(
                                 headerWithName("Content-Type").description("Needs to be application/json")
                         )

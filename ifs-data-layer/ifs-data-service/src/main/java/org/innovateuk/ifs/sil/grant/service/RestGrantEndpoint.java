@@ -32,7 +32,7 @@ public class RestGrantEndpoint implements GrantEndpoint {
     @Value("${sil.rest.baseURL}")
     private String silRestServiceUrl;
 
-    @Value("${sil.rest.grantSend:/sendproject}")
+    @Value("${sil.rest.grantSend:/accprojects}")
     private String path;
 
     @Override
