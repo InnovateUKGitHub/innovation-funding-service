@@ -25,6 +25,7 @@ import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 @Transactional(readOnly = true)
@@ -54,7 +55,7 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
     @Override
     @Transactional
     public ServiceResult<Void> uploadGrantAgreement(String contentType, String contentLength, String originalFilename, long applicationId, HttpServletRequest request) {
-        return findGrantTransferByApplicationId(applicationId).andOnSuccess(grantTransfer ->
+        return findGrantTransferByApplicationIdCreateIfNotExists(applicationId).andOnSuccess(grantTransfer ->
                 fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
                         (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                                 .andOnSuccessReturnVoid(created ->
@@ -94,7 +95,7 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
                 .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntry, inputStream));
     }
 
-    private ServiceResult<EuGrantTransfer> findGrantTransferByApplicationId(long applicationId) {
+    private ServiceResult<EuGrantTransfer> findGrantTransferByApplicationIdCreateIfNotExists(long applicationId) {
         EuGrantTransfer grantTransfer = euGrantTransferRepository.findByApplicationId(applicationId);
         if (grantTransfer == null) {
             grantTransfer = new EuGrantTransfer();
@@ -104,5 +105,9 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
             euGrantTransferRepository.save(grantTransfer);
         }
         return serviceSuccess(grantTransfer);
+
+    }
+    private ServiceResult<EuGrantTransfer> findGrantTransferByApplicationId(long applicationId) {
+        return find(euGrantTransferRepository.findByApplicationId(applicationId), notFoundError(EuGrantTransfer.class, applicationId));
     }
 }

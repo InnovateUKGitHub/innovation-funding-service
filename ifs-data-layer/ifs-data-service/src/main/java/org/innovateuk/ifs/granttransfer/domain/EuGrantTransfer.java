@@ -1,12 +1,9 @@
 package org.innovateuk.ifs.granttransfer.domain;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -20,31 +17,29 @@ public class EuGrantTransfer {
     @JoinColumn(name="application_id", referencedColumnName="id")
     private Application application;
 
-    @NotBlank
     private String grantAgreementNumber;
 
-    @NotNull
-    @Pattern(regexp="[\\d]{9}")
     private String participantId;
 
-    @NotNull
     private LocalDate projectStartDate;
 
-    @NotNull
     private LocalDate projectEndDate;
 
-    @NotNull
     private BigDecimal fundingContribution;
 
     private boolean projectCoordinator;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eu_action_type_id")
     private EuActionType actionType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="grant_agreement_id", referencedColumnName="id")
     private FileEntry grantAgreement;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="calculation_spreadsheet_id", referencedColumnName="id")
+    private FileEntry calculationSpreadsheet;
 
     public Long getId() {
         return id;
@@ -124,5 +119,13 @@ public class EuGrantTransfer {
 
     public void setApplication(Application application) {
         this.application = application;
+    }
+
+    public FileEntry getCalculationSpreadsheet() {
+        return calculationSpreadsheet;
+    }
+
+    public void setCalculationSpreadsheet(FileEntry calculationSpreadsheet) {
+        this.calculationSpreadsheet = calculationSpreadsheet;
     }
 }

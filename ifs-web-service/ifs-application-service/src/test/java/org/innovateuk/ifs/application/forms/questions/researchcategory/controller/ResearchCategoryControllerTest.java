@@ -93,7 +93,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
                 applicationResource.getId(), questionId))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
-                .andExpect(view().name("application/research-categories"))
+                .andExpect(view().name("application/questions/research-categories"))
                 .andExpect(status().isOk());
 
         InOrder inOrder = inOrder(applicationService, researchCategoryEditableValidator,
@@ -177,7 +177,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 applicationResource.getId(), questionId)
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
-                .andExpect(view().name("application/research-categories"))
+                .andExpect(view().name("application/questions/research-categories"))
                 .andExpect(status().isOk());
 
         InOrder inOrder = inOrder(applicationService, researchCategoryEditableValidator,
@@ -316,7 +316,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 applicationResource.getId(), questionId)
                 .param("mark_as_complete", ""))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
-                .andExpect(view().name("application/research-categories"))
+                .andExpect(view().name("application/questions/research-categories"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "researchCategory"));
@@ -365,7 +365,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 applicationResource.getId(), questionId)
                 .param("mark_as_incomplete", ""))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
-                .andExpect(view().name("application/research-categories"))
+                .andExpect(view().name("application/questions/research-categories"))
                 .andExpect(status().isOk());
 
         InOrder inOrder = inOrder(userRestService, questionService, applicationService, researchCategoryEditableValidator,

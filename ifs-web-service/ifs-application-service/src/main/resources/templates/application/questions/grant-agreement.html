@@ -27,34 +27,45 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Horizon 2020 grant agreement',subTitle=${model.applicationName},size='govuk-heading-xl'" />
 
-        <form method="post" novalidate="novalidate">
+        <form th:action="@{/application/{applicationId}/form/question/{questionId}/grant-agreement(applicationId=${model.applicationId},questionId=${model.questionId})}" method="post" enctype="multipart/form-data" novalidate="novalidate" th:object="${form}">
             <div class="upload-section"
                  th:with="uploaded=false">
                 <h2 class="govuk-heading-m">Upload your grant agreement</h2>
                 <p class="govuk-body">Upload a PDF copy of your Horizon 2020 grant agreement letter. This was issued to you as confirmation of funding after your initial application.</p>
                 <p class="govuk-body">Your EU reconciliation report will need approval from the EU. Once you have received this you will be asked to upload it as part of your project setup, which will be the second stage of this application process.</p>
-                <div th:unless="${uploaded}">
-                    <!--<th:block th:if="${#fields.hasErrors('grantAgreement')}">-->
-                        <!--<span class="govuk-error-message" th:each="err : ${#fields.errors('grantAgreement')}" th:text="${err}" />-->
-                    <!--</th:block>-->
+                <div th:unless="${model.uploaded}">
+                    <th:block th:if="${#fields.hasErrors('grantAgreement')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('grantAgreement')}" th:text="${err}" />
+                    </th:block>
                     <p class="govuk-body uploaded-file">No file currently uploaded.</p>
                     <input type="file" id="grant-agreement" name="grantAgreement" class="inputfile">
                     <label for="grant-agreement" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
-                    <button name="uploadGrantAgreement" class="button-secondary" data-for-file-upload="grantAgreement"></button>
+                    <button th:unless="${model.readonly}" name="uploadGrantAgreement" class="button-secondary" data-for-file-upload="grant-agreement"></button>
                 </div>
-                <div th:if="${uploaded}">
+                <div th:if="${model.uploaded}">
                     <p class="govuk-body uploaded-file">
-                        <a th:href="@{/application/{applicationId}/grant-agreement/download-grant-agreement(applicationId=${model.applicationId})}"
-                           th:text="test.pdf"
+                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/grant-agreement/download(applicationId=${model.applicationId},questionId=${model.questionId})}"
+                           th:text="${model.filename}"
                            target="_blank"
                            class="govuk-link">File</a>
                         (opens in a new window).</p>
-                    <button name="removeResponse" class="button-secondary">Remove</button>
+                    <button th:unless="${model.readonly}" name="removeGrantAgreement" class="button-secondary">Remove</button>
                 </div>
             </div>
-            <button type="submit"
-                    class="govuk-button">Save and return to registration overview
-            </button>
+
+            <div th:if="${model.open}" class="form-footer">
+                <button th:unless="${model.complete}" id="mark-as-complete" type="submit" name="complete" class="button-clear">Mark as complete</button>
+                <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear">Edit</button>
+            </div>
+
+            <div class="govuk-!-margin-top-6">
+                <button th:if="${model.readonly}" type="submit"
+                        class="govuk-button">Return to application overview
+                </button>
+                <button th:unless="${model.readonly}" type="submit"
+                        class="govuk-button">Save and return to application overview
+                </button>
+            </div>
         </form>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

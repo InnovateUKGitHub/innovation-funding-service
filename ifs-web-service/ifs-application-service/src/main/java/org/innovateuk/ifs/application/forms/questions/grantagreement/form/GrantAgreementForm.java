@@ -4,5 +4,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class GrantAgreementForm {
 
-    private MultipartFile file;
+    private MultipartFile grantAgreement;
+
+    public MultipartFile getGrantAgreement() {
+        return grantAgreement;
+    }
+
+    public void setGrantAgreement(MultipartFile grantAgreement) {
+        this.grantAgreement = grantAgreement;
+    }
 }
