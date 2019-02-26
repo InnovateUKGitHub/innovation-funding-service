@@ -2,9 +2,15 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name}
 
-You have been invited to register for a transfer of your funding from Horizon 2020. To do this you need to apply through the Innovation Funding Service. You will need to create a separate application for every project you have registered through Horizon 2020.
+You have been contacted as a result of your registration on the Horizon 2020 registration portal. You are now invited by Innovate UK to submit your application for continuation of EU Horizon 2020 funding, through the Innovation Funding Service.
 
-Once you have signed in to the Innovation Funding Service you may find the terminology is more suited to applications for competitions. This is because we are using the same service applicants use to apply for competitions. You will be asked about your Horizon 2020 project. If you are eligible for the funding transfer, you will set up your project with us using our service. This second step requires information about the project you are receiving funding for.
+${notificationTarget.name} is the UK beneficiary in receipt of EU grant funding.
+
+You will need to create a separate application for every project you have registered through Horizon 2020.
+
+Once you have signed in to the Innovation Funding Service you may find the terminology is more suited to applications for competitions. This is because we are using the same service applicants use to apply for competitions.
+
+You will be asked about your Horizon 2020 project. If you are eligible for the funding transfer, you will set up your project with us using our service. This second step requires information about the project you are receiving funding for.
 
 You will need to upload your grant agreement during your application. Your EU reconciliation report will need approval from the EU. Once you have received this you will be asked to upload it as part of your project setup.
 
