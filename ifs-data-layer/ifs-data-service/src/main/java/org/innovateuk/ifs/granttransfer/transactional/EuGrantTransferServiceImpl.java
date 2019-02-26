@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -53,11 +55,11 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
     @Transactional
     public ServiceResult<Void> uploadGrantAgreement(String contentType, String contentLength, String originalFilename, long applicationId, HttpServletRequest request) {
         return findGrantTransferByApplicationId(applicationId).andOnSuccess(grantTransfer ->
-        fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
-                (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
-                        .andOnSuccessReturnVoid(created ->
-                            grantTransfer.setGrantAgreement(created.getRight())
-                        )).toServiceResult());
+                fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypes, maxFileSize, request,
+                        (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                                .andOnSuccessReturnVoid(created ->
+                                        grantTransfer.setGrantAgreement(created.getRight())
+                                )).toServiceResult());
     }
 
     @Override
@@ -66,7 +68,7 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
         return findGrantTransferByApplicationId(applicationId).andOnSuccess(grantTransfer -> {
             long fileId = grantTransfer.getGrantAgreement().getId();
             return fileService.deleteFileIgnoreNotFound(fileId).andOnSuccessReturnVoid(() ->
-                grantTransfer.setGrantAgreement(null)
+                    grantTransfer.setGrantAgreement(null)
             );
         });
     }
@@ -84,7 +86,7 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
                 ofNullable(grantTransfer.getGrantAgreement())
                         .map(FileEntry::getId)
                         .map(fileEntryService::findOne)
-                        .orElse(ServiceResult.serviceSuccess(null)));
+                        .orElse(serviceFailure(notFoundError(FileEntryResource.class, applicationId))));
     }
 
     private ServiceResult<FileAndContents> getFileAndContents(FileEntryResource fileEntry) {
