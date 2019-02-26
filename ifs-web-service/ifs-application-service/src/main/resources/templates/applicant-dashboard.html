@@ -51,7 +51,7 @@
                 <div class="progress-list">
                     <h2 class="govuk-heading-m">Horizon 2020 grant transfers</h2>
                     <ul>
-                        <li class="status-2-col" th:each="euGrantTransfer : ${model.euGrantTransfers}">
+                        <li th:each="euGrantTransfer : ${model.euGrantTransfers}">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="${euGrantTransfer.linkUrl}" th:text="${euGrantTransfer.title}" class="govuk-link" />
