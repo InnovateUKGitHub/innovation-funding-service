@@ -9,5 +9,5 @@ public interface EuContactRepository extends PagingAndSortingRepository<EuContac
 
     Page<EuContact> findByNotifiedTrue(Pageable pageable);
     Page<EuContact> findByNotifiedFalse(Pageable pageable);
-    EuContact getById(Long id);
+    EuContact getById(long id);
 }

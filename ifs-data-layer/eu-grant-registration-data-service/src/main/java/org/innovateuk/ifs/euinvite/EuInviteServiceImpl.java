@@ -32,7 +32,7 @@ public class EuInviteServiceImpl implements EuInviteService {
     private EuContactRepository euContactRepository;
 
     @Autowired
-    EuGrantRepository euGrantRepository;
+    private EuGrantRepository euGrantRepository;
 
     @Autowired
     private NotificationService notificationService;

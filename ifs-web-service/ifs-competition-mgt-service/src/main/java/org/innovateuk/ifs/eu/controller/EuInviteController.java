@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-import static com.google.common.primitives.Longs.asList;
-
 /**
  * This controller will handle all requests related to inviting eu registrants onto the main IFS platform
  */
