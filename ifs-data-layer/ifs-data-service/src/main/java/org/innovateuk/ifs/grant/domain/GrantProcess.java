@@ -32,7 +32,7 @@ public class GrantProcess {
 
     public GrantProcess(long applicationId) {
         this.applicationId = applicationId;
-        this.pending = true;
+        this.pending = false;
     }
 
     public long getApplicationId() {
@@ -69,13 +69,13 @@ public class GrantProcess {
 
 
     public GrantProcess requestSend(ZonedDateTime now) {
-        this.pending = false;
+        this.pending = true;
         this.sentRequested = now;
         return this;
     }
 
     public GrantProcess sendSucceeded(ZonedDateTime now) {
-        this.pending = true;
+        this.pending = false;
         this.sentSucceeded = now;
         this.message = null;
         return this;

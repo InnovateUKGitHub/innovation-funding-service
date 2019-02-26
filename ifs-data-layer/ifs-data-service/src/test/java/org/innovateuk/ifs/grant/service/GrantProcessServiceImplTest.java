@@ -32,11 +32,11 @@ public class GrantProcessServiceImplTest extends BaseServiceUnitTest<GrantProces
         GrantProcess grantProcessTwo = new GrantProcess(2);
         List<GrantProcess> readyToSend = asList(grantProcessOne, grantProcessTwo);
 
-        when(grantProcessRepository.findByPendingIsFalse()).thenReturn(readyToSend);
+        when(grantProcessRepository.findByPendingIsTrue()).thenReturn(readyToSend);
 
         assertThat(service.findReadyToSend(), is(readyToSend));
 
-        verify(grantProcessRepository, only()).findByPendingIsFalse();
+        verify(grantProcessRepository, only()).findByPendingIsTrue();
     }
 
     @Test
@@ -52,7 +52,7 @@ public class GrantProcessServiceImplTest extends BaseServiceUnitTest<GrantProces
         verify(grantProcessRepository, only())
                 .save(createLambdaMatcher(g -> {
                     assertEquals(applicationId, g.getApplicationId());
-                    assertFalse(g.isPending());
+                    assertTrue(g.isPending());
                     assertNull(g.getMessage());
                     assertNotNull(g.getSentRequested());
                     assertNull(g.getSentSucceeded());
@@ -74,7 +74,7 @@ public class GrantProcessServiceImplTest extends BaseServiceUnitTest<GrantProces
         verify(grantProcessRepository).findOneByApplicationId(applicationId);
         verify(grantProcessRepository).save(createLambdaMatcher(g -> {
             assertEquals(applicationId, g.getApplicationId());
-            assertTrue(g.isPending());
+            assertFalse(g.isPending());
             assertNull(g.getMessage());
             assertNull(g.getSentRequested());
             assertNotNull(g.getSentSucceeded());
@@ -97,7 +97,7 @@ public class GrantProcessServiceImplTest extends BaseServiceUnitTest<GrantProces
         verify(grantProcessRepository).findOneByApplicationId(applicationId);
         verify(grantProcessRepository).save(createLambdaMatcher(g -> {
             assertEquals(applicationId, g.getApplicationId());
-            assertTrue(g.isPending());
+            assertFalse(g.isPending());
             assertEquals(message, g.getMessage());
             assertNull(g.getSentRequested());
             assertNull(g.getSentSucceeded());

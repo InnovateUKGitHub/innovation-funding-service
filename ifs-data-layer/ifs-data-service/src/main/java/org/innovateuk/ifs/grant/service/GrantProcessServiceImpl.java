@@ -15,7 +15,7 @@ public class GrantProcessServiceImpl implements GrantProcessService {
 
     @Override
     public List<GrantProcess> findReadyToSend() {
-        return grantProcessRepository.findByPendingIsFalse();
+        return grantProcessRepository.findByPendingIsTrue();
     }
 
     @Override

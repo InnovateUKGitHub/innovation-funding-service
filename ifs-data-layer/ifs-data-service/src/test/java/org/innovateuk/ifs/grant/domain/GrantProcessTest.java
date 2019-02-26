@@ -56,10 +56,10 @@ public class GrantProcessTest {
 
     @Test
     public void isPending() {
-        assertTrue(grantProcess.isPending());
-        assertFalse(sendRequestedGrantProcess.isPending());
-        assertTrue(sendSucceededGrantProcess.isPending());
-        assertFalse(sendFailedGrantProcess.isPending());
+        assertFalse(grantProcess.isPending());
+        assertTrue(sendRequestedGrantProcess.isPending());
+        assertFalse(sendSucceededGrantProcess.isPending());
+        assertTrue(sendFailedGrantProcess.isPending());
     }
 
     @Test
