@@ -40,21 +40,21 @@ public class GrantProcessServiceImplTest extends BaseServiceUnitTest<GrantProces
     }
 
     @Test
-    public void sendRequested() {
+    public void createGrantProcess() {
         ZonedDateTime now = ZonedDateTime.now();
         long applicationId = 7L;
         GrantProcess grantProcess = new GrantProcess(applicationId);
 
         when(grantProcessRepository.save(grantProcess)).thenReturn(grantProcess);
 
-        service.sendRequested(applicationId);
+        service.createGrantProcess(applicationId);
 
         verify(grantProcessRepository, only())
                 .save(createLambdaMatcher(g -> {
                     assertEquals(applicationId, g.getApplicationId());
-                    assertTrue(g.isPending());
+                    assertFalse(g.isPending());
                     assertNull(g.getMessage());
-                    assertNotNull(g.getSentRequested());
+                    assertNull(g.getSentRequested());
                     assertNull(g.getSentSucceeded());
                     assertNull(g.getLastProcessed());
                 }));

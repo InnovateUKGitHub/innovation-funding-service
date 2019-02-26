@@ -67,7 +67,6 @@ public class GrantProcess {
         return lastProcessed;
     }
 
-
     public GrantProcess requestSend(ZonedDateTime now) {
         this.pending = true;
         this.sentRequested = now;

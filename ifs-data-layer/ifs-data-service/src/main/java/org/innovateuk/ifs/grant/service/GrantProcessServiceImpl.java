@@ -14,14 +14,13 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     private GrantProcessRepository grantProcessRepository;
 
     @Override
-    public List<GrantProcess> findReadyToSend() {
-        return grantProcessRepository.findByPendingIsTrue();
+    public void createGrantProcess(long applicationId) {
+        grantProcessRepository.save(new GrantProcess(applicationId));
     }
 
     @Override
-    public void sendRequested(long applicationId) {
-        GrantProcess process = new GrantProcess(applicationId);
-        grantProcessRepository.save(process.requestSend(ZonedDateTime.now()));
+    public List<GrantProcess> findReadyToSend() {
+        return grantProcessRepository.findByPendingIsTrue();
     }
 
     @Override

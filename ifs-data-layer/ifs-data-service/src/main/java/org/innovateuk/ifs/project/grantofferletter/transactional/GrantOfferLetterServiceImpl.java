@@ -640,7 +640,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     private ServiceResult<Void> createGrantProcess(Project project) {
-        grantProcessService.sendRequested(project.getApplication().getId());
+        grantProcessService.createGrantProcess(project.getApplication().getId());
         return serviceSuccess();
     }
 

@@ -10,7 +10,7 @@ public interface GrantProcessService {
     List<GrantProcess> findReadyToSend();
 
     @NotSecured(value = "Service is called from other services always")
-    void sendRequested(long applicationId);
+    void createGrantProcess(long id);
 
     @NotSecured(value = "Only called by scheduled process", mustBeSecuredByOtherServices = false)
     void sendSucceeded(long applicationId);
