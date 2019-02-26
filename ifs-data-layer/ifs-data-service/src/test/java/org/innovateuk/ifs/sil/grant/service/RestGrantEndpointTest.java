@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.sil.grant.service;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
@@ -24,6 +26,8 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
+
+    private static final JsonNodeFactory jsonNodeFactory = JsonNodeFactory.instance;
 
     @Mock
     protected RestTemplate mockRestTemplate;
@@ -51,7 +55,8 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
     public void send() {
         Grant grant = new Grant();
         String expectedUrl = "http://sil.com/silstub/accprojects";
-        ResponseEntity<String> returnedEntity = new ResponseEntity<>(ACCEPTED);
+        ResponseEntity<String> returnedEntity = new ResponseEntity<>(
+                new ObjectNode(jsonNodeFactory).put("Success", "Accepted").toString(), ACCEPTED);
 
         when(mockRestTemplate.postForEntity(expectedUrl, adaptor.jsonEntity(singletonList(grant)), String.class))
                 .thenReturn(returnedEntity);
