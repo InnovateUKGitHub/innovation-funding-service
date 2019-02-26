@@ -60,6 +60,9 @@
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header width-150" scope="col"><span class="visually-hidden">Selected</span></th>
                                 <th class="govuk-table__header" scope="col">Name</th>
+                                <th class="govuk-table__header" scope="col">Project name</th>
+                                <th class="govuk-table__header" scope="col">Organisation Type</th>
+                                <th class="govuk-table__header" scope="col">Short code</th>
                                 <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Email</th>
                             </tr>
                             </thead>
@@ -79,6 +82,9 @@
                                     </div>
                                 </td>
                                 <td class="govuk-table__cell" th:text="${contact.name}">Steve Smith</td>
+                                <td class="govuk-table__cell">Project name</td>
+                                <td class="govuk-table__cell">Organisation Type</td>
+                                <td class="govuk-table__cell">Short code</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${contact.email}">steve.smith@empire.com</td>
                             </tr>
                             </tbody>
