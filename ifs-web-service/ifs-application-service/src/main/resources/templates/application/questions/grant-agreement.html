@@ -27,9 +27,12 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Horizon 2020 grant agreement',subTitle=${model.applicationName},size='govuk-heading-xl'" />
 
-        <form th:action="@{/application/{applicationId}/form/question/{questionId}/grant-agreement(applicationId=${model.applicationId},questionId=${model.questionId})}" method="post" enctype="multipart/form-data" novalidate="novalidate" th:object="${form}">
-            <div class="upload-section"
-                 th:with="uploaded=false">
+        <form th:action="@{/application/{applicationId}/form/question/{questionId}/grant-agreement(applicationId=${model.applicationId},questionId=${model.questionId})}"
+              method="post"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              th:object="${form}">
+            <div class="upload-section">
                 <h2 class="govuk-heading-m">Upload your grant agreement</h2>
                 <p class="govuk-body">Upload a PDF copy of your Horizon 2020 grant agreement letter. This was issued to you as confirmation of funding after your initial application.</p>
                 <p class="govuk-body">Your EU reconciliation report will need approval from the EU. Once you have received this you will be asked to upload it as part of your project setup, which will be the second stage of this application process.</p>
