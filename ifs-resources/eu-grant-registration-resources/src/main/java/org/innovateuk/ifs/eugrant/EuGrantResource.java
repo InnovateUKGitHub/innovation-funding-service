@@ -26,6 +26,8 @@ public class EuGrantResource {
 
     private String shortCode;
 
+    private boolean submitted;
+
     public UUID getId() {
         return id;
     }
@@ -90,6 +92,14 @@ public class EuGrantResource {
         this.shortCode = shortCode;
     }
 
+    public boolean isSubmitted() {
+        return submitted;
+    }
+
+    public void setSubmitted(boolean submitted) {
+        this.submitted = submitted;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,6 +117,7 @@ public class EuGrantResource {
                 .append(contact, that.contact)
                 .append(funding, that.funding)
                 .append(shortCode, that.shortCode)
+                .append(submitted, that.submitted)
                 .isEquals();
     }
 
@@ -121,6 +132,7 @@ public class EuGrantResource {
                 .append(contactComplete)
                 .append(fundingComplete)
                 .append(shortCode)
+                .append(submitted)
                 .toHashCode();
     }
 }

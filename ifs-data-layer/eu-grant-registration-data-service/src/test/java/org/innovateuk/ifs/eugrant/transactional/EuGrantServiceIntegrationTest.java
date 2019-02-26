@@ -3,16 +3,18 @@ package org.innovateuk.ifs.eugrant.transactional;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.euactiontype.repository.EuActionTypeRepository;
-import org.innovateuk.ifs.eugrant.EuContactResource;
-import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.innovateuk.ifs.eugrant.EuOrganisationResource;
-import org.innovateuk.ifs.eugrant.EuOrganisationType;
+import org.innovateuk.ifs.eugrant.*;
+import org.innovateuk.ifs.eugrant.domain.EuContact;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
+import org.innovateuk.ifs.eugrant.repository.EuContactRepository;
 import org.innovateuk.ifs.eugrant.repository.EuGrantRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -42,6 +44,9 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private EuActionTypeRepository euActionTypeRepository;
+
+    @Autowired
+    private EuContactRepository euContactRepository;
 
     @Before
     public void cleanRepository() {
@@ -155,5 +160,59 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
         euGrant = euGrantRepository.findById(euGrant.getId()).get();
         assertEquals(euGrant.getShortCode().length(), 5);
+    }
+
+    @Test
+    public void getByNotified() {
+
+        EuContact euContactOne = newEuContact()
+                .withName("Barry Venison")
+                .withEmail("barry@venison.com")
+                .withJobTitle("Rollercoaster operator")
+                .withTelephone("2468")
+                .withNotified(false)
+                .build();
+
+        EuContact euContactTwo = newEuContact()
+                .withName("Garry Owen")
+                .withEmail("garry@owen.com")
+                .withJobTitle("Secretary")
+                .withTelephone("1357")
+                .withNotified(true)
+                .build();
+
+        EuGrant euGrantOne = newEuGrant().withContact(euContactOne).build();
+        EuGrant euGrantTwo = newEuGrant().withContact(euContactTwo).build();
+
+        euContactRepository.save(euContactOne);
+        euContactRepository.save(euContactTwo);
+
+        euGrantRepository.save(euGrantOne);
+        euGrantRepository.save(euGrantTwo);
+
+        Pageable pageable = new PageRequest(0, 100 , new Sort("id"));
+
+        ServiceResult<EuGrantPageResource> resultOne = euGrantService.getEuGrantsByContactNotified(false, pageable);
+        ServiceResult<EuGrantPageResource> resultTwo = euGrantService.getEuGrantsByContactNotified(true, pageable);
+
+        assertTrue(resultOne.isSuccess());
+
+        assertEquals(1, resultOne.getSuccess().getContent().size());
+        EuContactResource resultingResource = resultOne.getSuccess().getContent().get(0).getContact();
+        assertEquals(euContactOne.getEmail(), resultingResource.getEmail());
+        assertEquals(euContactOne.getJobTitle(), resultingResource.getJobTitle());
+        assertEquals(euContactOne.getName(), resultingResource.getName());
+        assertEquals(euContactOne.getTelephone(), resultingResource.getTelephone());
+        assertEquals(euContactOne.getNotified(), resultingResource.getNotified());
+
+        assertTrue(resultTwo.isSuccess());
+
+        assertEquals(1, resultTwo.getSuccess().getContent().size());
+        EuContactResource resultingResourceTwo = resultTwo.getSuccess().getContent().get(0).getContact();
+        assertEquals(euContactTwo.getEmail(), resultingResourceTwo.getEmail());
+        assertEquals(euContactTwo.getJobTitle(), resultingResourceTwo.getJobTitle());
+        assertEquals(euContactTwo.getName(), resultingResourceTwo.getName());
+        assertEquals(euContactTwo.getTelephone(), resultingResourceTwo.getTelephone());
+        assertEquals(euContactTwo.getNotified(), resultingResourceTwo.getNotified());
     }
 }

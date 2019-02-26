@@ -189,7 +189,8 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 fieldWithPath("organisationComplete").description("Status of whether the user has completed their organisation details."),
                 fieldWithPath("contactComplete").description("Status of whether the user has completed their contact details."),
                 fieldWithPath("fundingComplete").description("Status of whether the user has completed their funding."),
-                fieldWithPath("shortCode").description("Short reference number for the grant registration.")
+                fieldWithPath("shortCode").description("Short reference number for the grant registration."),
+                fieldWithPath("submitted").description("Wether the grant has been fully submitted or not")
         };
     }
 }

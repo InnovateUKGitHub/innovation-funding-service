@@ -120,4 +120,8 @@ public class EuGrant {
     public boolean isSubmitted() {
         return submitted;
     }
+
+    public void setSubmitted(boolean submitted) {
+        this.submitted = submitted;
+    }
 }

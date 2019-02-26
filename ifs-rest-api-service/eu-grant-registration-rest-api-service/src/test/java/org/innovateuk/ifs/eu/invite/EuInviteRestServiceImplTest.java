@@ -3,8 +3,6 @@ package org.innovateuk.ifs.eu.invite;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.RootAnonymousUserRestTemplateAdaptor;
 import org.innovateuk.ifs.eugrant.EuContactPageResource;
-import org.innovateuk.ifs.eugrant.EuContactResource;
-import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +17,6 @@ import java.util.List;
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
-import static org.innovateuk.ifs.eugrant.builder.EuContactResourceBuilder.newEuContactResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -52,7 +49,7 @@ public class EuInviteRestServiceImplTest {
         String uriWithParams = buildPaginationUri(format("%s/notified/%s", "/eu-contacts", NOTIFIED), PAGE_INDEX, PAGE_SIZE, null, params);
 
         when(anonymousRestTemplateAdaptor.getWithRestResult(baseUrl + uriWithParams, EuContactPageResource.class)).thenReturn(expected);
-        RestResult<EuContactPageResource> result = euInviteRestService.getEuContactsByNotified(NOTIFIED, PAGE_INDEX, PAGE_SIZE);
+        RestResult<EuContactPageResource> result = euInviteRestService.getEuGrantsByContactNotified(NOTIFIED, PAGE_INDEX, PAGE_SIZE);
         assertEquals(expected, result);
     }
 

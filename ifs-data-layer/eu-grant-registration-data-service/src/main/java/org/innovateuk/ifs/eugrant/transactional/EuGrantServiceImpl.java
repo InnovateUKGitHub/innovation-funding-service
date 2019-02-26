@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.eugrant.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.eugrant.EuGrantPageResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.innovateuk.ifs.eugrant.mapper.EuGrantMapper;
@@ -11,11 +12,14 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,6 +30,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDD
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -63,6 +68,24 @@ public class EuGrantServiceImpl implements EuGrantService {
     @Override
     public ServiceResult<EuGrantResource> create() {
         return serviceSuccess(euGrantMapper.mapToResource(euGrantRepository.save(new EuGrant())));
+    }
+
+    @Override
+    public ServiceResult<EuGrantPageResource> getEuGrantsByContactNotified(boolean notified,
+                                                                           Pageable pageable) {
+        Page<EuGrant> euGrantPage = notified ?
+                euGrantRepository.findBySubmittedTrueAndContactNotifiedTrue(pageable) :
+                euGrantRepository.findBySubmittedTrueAndContactNotifiedFalse(pageable);
+
+        List<EuGrantResource> resources = simpleMap(euGrantPage.getContent(),
+                                                    euGrantMapper::mapToResource);
+        return serviceSuccess(
+                new EuGrantPageResource(euGrantPage.getTotalElements(),
+                                        euGrantPage.getTotalPages(),
+                                        resources,
+                                        euGrantPage.getNumber(),
+                                        euGrantPage.getSize())
+        );
     }
 
     @Override

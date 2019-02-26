@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.eu.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.eu.form.EuContactSelectionForm;
 import org.innovateuk.ifs.eu.invite.EuInviteRestService;
 import org.innovateuk.ifs.eugrant.EuContactPageResource;
 import org.innovateuk.ifs.eugrant.EuContactResource;
@@ -16,7 +15,6 @@ import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -37,7 +35,7 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
         EuContactPageResource pageResource = new EuContactPageResource();
         pageResource.setContent(euContactResources);
 
-        when(euInviteRestService.getEuContactsByNotified(true, 0,100))
+        when(euInviteRestService.getEuGrantsByContactNotified(true, 0, 100))
                 .thenReturn(restSuccess(pageResource));
 
         MvcResult result = mockMvc.perform(get("/eu-invite-notified"))
@@ -45,7 +43,7 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
                 .andExpect(view().name("eu/notified"))
                 .andReturn();
 
-        verify(euInviteRestService).getEuContactsByNotified(true, 0, 100);
+        verify(euInviteRestService).getEuGrantsByContactNotified(true, 0, 100);
 
         EuInviteViewModel model = (EuInviteViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(euContactResources, model.getContacts());
@@ -59,7 +57,7 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
         EuContactPageResource pageResource = new EuContactPageResource();
         pageResource.setContent(euContactResources);
 
-        when(euInviteRestService.getEuContactsByNotified(false, 0,100))
+        when(euInviteRestService.getEuGrantsByContactNotified(false, 0, 100))
                 .thenReturn(restSuccess(pageResource));
 
         MvcResult result = mockMvc.perform(get("/eu-invite-non-notified"))
@@ -67,7 +65,7 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
                 .andExpect(view().name("eu/non-notified"))
                 .andReturn();
 
-        verify(euInviteRestService).getEuContactsByNotified(false, 0, 100);
+        verify(euInviteRestService).getEuGrantsByContactNotified(false, 0, 100);
 
         EuInviteViewModel model = (EuInviteViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(euContactResources, model.getContacts());

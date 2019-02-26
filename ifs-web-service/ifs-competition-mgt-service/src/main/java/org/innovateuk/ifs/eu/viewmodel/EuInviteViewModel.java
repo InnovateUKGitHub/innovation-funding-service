@@ -3,13 +3,14 @@ package org.innovateuk.ifs.eu.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.eugrant.EuContactResource;
+import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
 
 public class EuInviteViewModel {
 
-    private final List<EuContactResource> contacts;
+    private final List<EuGrantResource> grants;
 
     private final Pagination pagination;
 
@@ -17,18 +18,18 @@ public class EuInviteViewModel {
 
     private final long totalNonNotified;
 
-    public EuInviteViewModel(List<EuContactResource> contacts,
+    public EuInviteViewModel(List<EuGrantResource> grants,
                              Pagination pagination,
                              long totalNotified,
                              long totalNonNotified) {
-        this.contacts = contacts;
+        this.grants = grants;
         this.pagination = pagination;
         this.totalNotified = totalNotified;
         this.totalNonNotified = totalNonNotified;
     }
 
-    public List<EuContactResource> getContacts() {
-        return contacts;
+    public List<EuGrantResource> getGrants() {
+        return grants;
     }
 
     public Pagination getPagination() {
@@ -52,7 +53,7 @@ public class EuInviteViewModel {
         EuInviteViewModel viewModel = (EuInviteViewModel) o;
 
         return new EqualsBuilder()
-                .append(contacts, viewModel.contacts)
+                .append(grants, viewModel.grants)
                 .append(pagination, viewModel.pagination)
                 .append(totalNotified, viewModel.totalNotified)
                 .append(totalNonNotified, viewModel.totalNonNotified)
@@ -62,7 +63,7 @@ public class EuInviteViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(contacts)
+                .append(grants)
                 .append(pagination)
                 .append(totalNotified)
                 .append(totalNonNotified)

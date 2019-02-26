@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.euinvite;
+package org.innovateuk.ifs.euinvite.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.eucontact.repository.EuContactRepository;
 import org.innovateuk.ifs.eugrant.domain.EuContact;
 import org.innovateuk.ifs.eugrant.domain.EuFunding;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
@@ -17,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -27,9 +24,6 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 
 @Service
 public class EuInviteServiceImpl implements EuInviteService {
-
-    @Autowired
-    private EuContactRepository euContactRepository;
 
     @Autowired
     private EuGrantRepository euGrantRepository;
@@ -42,8 +36,8 @@ public class EuInviteServiceImpl implements EuInviteService {
 
     @Override
     @Transactional
-    public ServiceResult<Void> sendInvites(List<Long> euContactIds) {
-        euContactIds
+    public ServiceResult<Void> sendInvites(List<UUID> euGrantIds) {
+        euGrantIds
                 .forEach(id -> sendInvite(id)
                         .andOnSuccessReturnVoid(euContact -> euContact.setNotified(true))
                 );
@@ -51,12 +45,16 @@ public class EuInviteServiceImpl implements EuInviteService {
         return serviceSuccess();
     }
 
-    private ServiceResult<EuContact> sendInvite(long euContactId) {
+    private ServiceResult<EuContact> sendInvite(UUID euGrantId) {
 
-        EuContact euContact = euContactRepository.getById(euContactId);
-        EuGrant euGrant = euGrantRepository.getByContact(euContact);
+        Optional<EuGrant> euGrantOpt = euGrantRepository.findById(euGrantId);
+        if(!euGrantOpt.isPresent()) {
+            return serviceSuccess(new EuContact()); // change this to be failure later
+        }
+        EuGrant euGrant = euGrantOpt.get();
         EuFunding euFunding = euGrant.getFunding();
         EuOrganisation euOrganisation = euGrant.getOrganisation();
+        EuContact euContact = euGrant.getContact();
         NotificationTarget recipient = new UserNotificationTarget(
                 euContact.getName(),
                 euContact.getEmail()

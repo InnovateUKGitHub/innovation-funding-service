@@ -1,11 +1,16 @@
 package org.innovateuk.ifs.eugrant.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.eugrant.EuGrantPageResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.transactional.EuGrantService;
+import org.innovateuk.ifs.euinvite.transactional.EuInviteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -13,6 +18,10 @@ import java.util.UUID;
  */
 @RestController
 public class EuGrantController {
+
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+    private static final String DEFAULT_PAGE_SIZE = "100";
+    private static final Sort sort = new Sort("id");
 
     @Autowired
     private EuGrantService euGrantService;
@@ -36,5 +45,13 @@ public class EuGrantController {
     @PostMapping("/eu-grant/{uuid}/submit")
     public RestResult<EuGrantResource> submit(@PathVariable("uuid") UUID uuid) {
         return euGrantService.submit(uuid, true).toPostWithBodyResponse();
+    }
+
+    @GetMapping("/eu-grants/notified/{notified}")
+    public RestResult<EuGrantPageResource> getEuGrantsByContactNotified(@PathVariable("notified") boolean notified,
+                                                                        @RequestParam(value = "page",defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+
+        return euGrantService.getEuGrantsByContactNotified(notified, new PageRequest(pageIndex, pageSize, sort)).toGetResponse();
     }
 }
