@@ -15,6 +15,8 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -23,7 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses
@@ -59,6 +63,9 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     @Autowired
     private ProjectProcessRepository projectProcessRepository;
+
+    @Autowired
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
@@ -108,6 +115,16 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     protected boolean userIsStakeholderInCompetition(long competitionId, long loggedInUserId) {
         List<Stakeholder> competitionParticipants = stakeholderRepository.findStakeholders(competitionId);
         return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
+    }
+
+    protected boolean userIsMonitoringOfficerInCompetition(long competitionId, long loggedInUserId) {
+        List<ProjectMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(loggedInUserId);
+        List<Long> monitoringOfficerCompetitionIds = projectMonitoringOfficers.stream()
+                .map(pmo -> pmo.getProject())
+                .map(project -> project.getApplication().getCompetition().getId())
+                .collect(toList());
+
+        return monitoringOfficerCompetitionIds.contains(competitionId);
     }
 
     protected boolean isProjectInSetup(long projectId) {

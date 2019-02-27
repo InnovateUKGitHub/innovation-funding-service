@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
@@ -45,6 +46,11 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "Stakeholders can see all Organisations")
     public boolean stakeholdersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isStakeholder(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Monitoring officers can see all Organisations")
+    public boolean monitoringOfficersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return user.hasRole(MONITORING_OFFICER);
     }
 
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")

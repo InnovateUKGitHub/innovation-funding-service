@@ -31,6 +31,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 
 /**
  * Populator for creating the {@link SetupStatusViewModel}
@@ -61,7 +62,10 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                                      String originQuery) {
 
         CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
-        CompletableFuture<OrganisationResource> organisationRequest = async(() -> projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
+
+        CompletableFuture<OrganisationResource> organisationRequest =
+                (loggedInUser.hasRole(MONITORING_OFFICER)) ? async(() -> projectService.getLeadOrganisation(projectId)) :
+                        async(() -> projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
 
         CompletableFuture<ApplicationResource> applicationRequest = awaitAll(projectRequest).thenApply(project -> applicationService.getById(project.getApplication()));
         CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application ->

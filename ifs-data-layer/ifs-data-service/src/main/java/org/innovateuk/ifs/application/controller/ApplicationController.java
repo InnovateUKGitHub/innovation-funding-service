@@ -23,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/application")
-public class ApplicationController {
+public class  ApplicationController {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
 
