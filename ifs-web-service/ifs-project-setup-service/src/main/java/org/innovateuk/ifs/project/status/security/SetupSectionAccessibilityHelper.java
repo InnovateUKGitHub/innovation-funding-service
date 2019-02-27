@@ -5,8 +5,14 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
+
+import java.util.Optional;
 
 import static org.innovateuk.ifs.sections.SectionAccess.*;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
@@ -176,7 +182,12 @@ public class SetupSectionAccessibilityHelper {
         return ACCESSIBLE;
     }
 
-    public SectionAccess canAccessBankDetailsSection(OrganisationResource organisation) {
+    public SectionAccess canAccessBankDetailsSection(OrganisationResource organisation, Optional<UserResource> userResource) {
+
+        if (userResource.isPresent() && isMonitoringOfficer(userResource.get())) {
+            return NOT_ACCESSIBLE;
+        }
+
         if (setupProgressChecker.isOffline()) {
             return NOT_ACCESSIBLE;
         }
@@ -199,19 +210,24 @@ public class SetupSectionAccessibilityHelper {
         return ACCESSIBLE;
     }
 
-    public SectionAccess canAccessFinanceChecksSection(OrganisationResource organisation) {
+    public SectionAccess canAccessFinanceChecksSection(OrganisationResource organisation, Optional<UserResource> userResource) {
+
+        if (userResource.isPresent() && isMonitoringOfficer(userResource.get())) {
+            return NOT_ACCESSIBLE;
+        }
+
         if (setupProgressChecker.isOffline()) {
             return NOT_ACCESSIBLE;
         }
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Unable to access Bank Details section until Companies House information is complete")) {
+                "Unable to access Finance Checks section until Companies House information is complete")) {
             return NOT_ACCESSIBLE;
         }
 
         if (!setupProgressChecker.isFinanceContactSubmitted(organisation)) {
 
-            return fail("Unable to access Bank Details section until this Partner Organisation has submitted " +
+            return fail("Unable to access Finance Checks section until this Partner Organisation has submitted " +
                     "its Finance Contact");
         }
 

@@ -46,7 +46,6 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             value = "VIEW_SPEND_PROFILE",
             description = "Partners can view their own Spend Profile data")
     public boolean partnersCanViewTheirOwnSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-
         return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId());
     }
 
@@ -54,7 +53,6 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             value = "VIEW_SPEND_PROFILE",
             description = "Project Finance Users can view their own Spend Profile data")
     public boolean projectFinanceUserCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-
         return isProjectFinanceUser(user);
     }
 
@@ -62,9 +60,16 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             value = "VIEW_SPEND_PROFILE",
             description = "Lead partner view Spend Profile data")
     public boolean leadPartnerCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-
         return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
+
+    @PermissionRule(
+            value = "VIEW_SPEND_PROFILE",
+            description = "Monitoring officer can view Spend Profile data for the projects they are assigned to")
+    public boolean monitoringOfficerCanViewProjectsSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isMonitoringOfficer(projectOrganisationCompositeId.getProjectId(), user.getId());
+    }
+
 
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE_CSV",

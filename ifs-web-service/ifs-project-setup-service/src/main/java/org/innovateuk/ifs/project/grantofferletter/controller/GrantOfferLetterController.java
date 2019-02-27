@@ -43,7 +43,6 @@ public class GrantOfferLetterController {
     @Autowired
     private GrantOfferLetterModelPopulator grantOfferLetterViewModelPopulator;
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping
     public String viewGrantOfferLetterPage(@P("projectId")@PathVariable("projectId") Long projectId, Model model,
                                            UserResource loggedInUser) {

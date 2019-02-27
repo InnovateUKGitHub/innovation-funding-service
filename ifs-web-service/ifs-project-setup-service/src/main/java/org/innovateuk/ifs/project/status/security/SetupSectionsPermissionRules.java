@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.status.StatusService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -121,13 +123,15 @@ public class SetupSectionsPermissionRules {
             "section when their Companies House details are complete or not required, and they have a Finance Contact " +
             "available for their Organisation")
     public boolean partnerCanAccessBankDetailsSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessBankDetailsSection);
+        return doSectionCheck(projectCompositeId.id(), user,
+                (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessBankDetailsSection(organisation, Optional.of(user)));
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL", description = "A partner can access the finance details " +
             " when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessFinanceChecksSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
+        return doSectionCheck(projectCompositeId.id(), user,
+                (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessFinanceChecksSection(organisation, Optional.of(user)));
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A partner can access the Spend Profile " +
@@ -199,9 +203,13 @@ public class SetupSectionsPermissionRules {
                 return false;
             }
 
-            long organisationId = projectService.getOrganisationIdFromUser(projectId, user);
+            long organisationId = user.hasRole(MONITORING_OFFICER) ?
+                    projectService.getLeadOrganisation(projectId).getId() : projectService.getOrganisationIdFromUser(projectId, user);
 
-            ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
+            ProjectUserResource leadProjectUser = projectService.getLeadPartners(projectId).stream().findFirst().get();
+
+            ProjectTeamStatusResource teamStatus = user.hasRole(MONITORING_OFFICER) ?
+                    statusService.getProjectTeamStatus(projectId, Optional.of(leadProjectUser.getUser())) : statusService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
 
             ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(organisationId).get();
 

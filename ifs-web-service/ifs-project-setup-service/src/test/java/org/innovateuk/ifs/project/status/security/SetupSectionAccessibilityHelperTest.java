@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -158,17 +159,17 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     @Test
     public void testCanAccessFinanceChecksSectionWhenCompaniesHouseDetailsNotComplete() {
-        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation, Optional.empty()));
     }
 
     @Test
     public void testCanAccessFinanceChecksSectionWhenFinanceContactNotYetSubmitted() {
-        whenFinanceContactNotSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+        whenFinanceContactNotSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation, Optional.empty()));
     }
 
     @Test
     public void testCanAccessFinanceChecksSectionWhenFinanceContactSubmitted() {
-        whenFinanceContactSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
+        whenFinanceContactSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation, Optional.empty()));
     }
 
     @Test

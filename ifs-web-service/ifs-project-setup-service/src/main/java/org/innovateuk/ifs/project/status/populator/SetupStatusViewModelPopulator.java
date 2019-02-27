@@ -163,7 +163,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SectionStatus projectDetailsStatus = sectionStatus.projectDetailsSectionStatus(isProjectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners, isLeadPartner);
         SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(), requiredProjectDetailsForMonitoringOfficerComplete);
         SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus());
-        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
+        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation, Optional.empty());
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(), financeChecksAccess);
         SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
         SectionStatus documentsStatus = sectionStatus.documentsSectionStatus(isProjectManager, getCompetitionDocuments(competition, collaborationAgreementRequired), project.getProjectDocuments());
@@ -202,8 +202,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SectionAccess companiesHouseAccess = statusAccessor.canAccessCompaniesHouseSection(organisation);
         SectionAccess projectDetailsAccess = statusAccessor.canAccessProjectDetailsSection(organisation);
         SectionAccess monitoringOfficerAccess = statusAccessor.canAccessMonitoringOfficerSection(organisation, partnerProjectLocationRequired);
-        SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(organisation);
-        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
+        SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(organisation, Optional.empty());
+        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation, Optional.empty());
         SectionAccess spendProfileAccess = statusAccessor.canAccessSpendProfileSection(organisation);
         SectionAccess documentsAccess = statusAccessor.canAccessDocumentsSection(organisation);
         SectionAccess grantOfferAccess = statusAccessor.canAccessGrantOfferLetterSection(organisation);
