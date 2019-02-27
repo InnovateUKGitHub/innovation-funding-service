@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.eu.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.eu.controller.EuInviteController;
+import org.innovateuk.ifs.eu.form.EuContactSelectionForm;
 import org.innovateuk.ifs.eu.invite.EuInviteRestService;
 import org.innovateuk.ifs.eugrant.EuContactPageResource;
 import org.innovateuk.ifs.eugrant.EuContactResource;
@@ -12,12 +12,16 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
+import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -67,6 +71,23 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
 
         EuInviteViewModel model = (EuInviteViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(euContactResources, model.getContacts());
+    }
+
+    @Test
+    public void sendInvites() throws Exception {
+        List<Long> euContactIds = asList(123L, 456L, 789L);
+
+        when(euInviteRestService.sendInvites(euContactIds))
+                .thenReturn(restSuccess());
+
+        mockMvc.perform(post("/eu-send-invites")
+                                .contentType(APPLICATION_FORM_URLENCODED)
+                                .param("euContactIds[0]", "123")
+                                .param("euContactIds[1]", "456")
+                                .param("euContactIds[2]", "789"))
+                .andExpect(status().is3xxRedirection());
+
+        verify(euInviteRestService).sendInvites(euContactIds);
     }
 
     @Override
