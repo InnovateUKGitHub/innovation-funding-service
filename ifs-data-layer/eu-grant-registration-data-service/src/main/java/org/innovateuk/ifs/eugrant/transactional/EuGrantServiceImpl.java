@@ -3,6 +3,7 @@ package org.innovateuk.ifs.eugrant.transactional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantPageResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
+import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.innovateuk.ifs.eugrant.mapper.EuGrantMapper;
 import org.innovateuk.ifs.eugrant.repository.EuGrantRepository;
@@ -29,6 +30,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.eugrant.EuOrganisationType.RESEARCH;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -74,8 +76,8 @@ public class EuGrantServiceImpl implements EuGrantService {
     public ServiceResult<EuGrantPageResource> getEuGrantsByContactNotified(boolean notified,
                                                                            Pageable pageable) {
         Page<EuGrant> euGrantPage = notified ?
-                euGrantRepository.findBySubmittedTrueAndContactNotifiedTrue(pageable) :
-                euGrantRepository.findBySubmittedTrueAndContactNotifiedFalse(pageable);
+                euGrantRepository.findBySubmittedTrueAndNotifiedTrueAndOrganisationOrganisationTypeNot(RESEARCH, pageable) :
+                euGrantRepository.findBySubmittedTrueAndNotifiedFalseAndOrganisationOrganisationTypeNot(RESEARCH, pageable);
 
         List<EuGrantResource> resources = simpleMap(euGrantPage.getContent(),
                                                     euGrantMapper::mapToResource);

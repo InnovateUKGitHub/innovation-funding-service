@@ -36,6 +36,8 @@ public class EuGrant {
 
     private boolean submitted;
 
+    private boolean notified;
+
     private String shortCode;
 
     @CreatedDate
@@ -121,7 +123,11 @@ public class EuGrant {
         return submitted;
     }
 
-    public void setSubmitted(boolean submitted) {
-        this.submitted = submitted;
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 }

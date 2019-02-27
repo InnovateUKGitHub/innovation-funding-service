@@ -32,9 +32,6 @@ public class EuContact {
     @NotBlank
     private String telephone;
 
-    @NotNull
-    private boolean notified;
-
     public Long getId() {
         return id;
     }
@@ -69,13 +66,5 @@ public class EuContact {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
-    }
-
-    public boolean getNotified() {
-        return notified;
-    }
-
-    public void setNotified(boolean notified) {
-        this.notified = notified;
     }
 }

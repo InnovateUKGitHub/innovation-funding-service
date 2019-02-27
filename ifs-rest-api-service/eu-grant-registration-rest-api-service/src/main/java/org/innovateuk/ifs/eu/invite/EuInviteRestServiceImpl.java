@@ -33,7 +33,7 @@ public class EuInviteRestServiceImpl extends BaseRestService implements EuInvite
     }
 
     @Override
-    public RestResult<EuGrantPageResource> getEuGrantsByContactNotified(boolean notified, Integer pageIndex, Integer pageSize) {
+    public RestResult<EuGrantPageResource> getEuGrantsByNotified(boolean notified, Integer pageIndex, Integer pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         String uriWithParams = buildPaginationUri(format("%s/notified/%s", baseUrl, notified), pageIndex, pageSize, null, params);
         return getWithRestResultAnonymous(uriWithParams, EuGrantPageResource.class);

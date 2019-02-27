@@ -21,7 +21,7 @@ public class EuGrantController {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
     private static final String DEFAULT_PAGE_SIZE = "100";
-    private static final Sort sort = new Sort("id");
+    private static final Sort sort = new Sort("contact.id");
 
     @Autowired
     private EuGrantService euGrantService;

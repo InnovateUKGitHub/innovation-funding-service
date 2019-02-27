@@ -40,9 +40,9 @@ public class EuInviteController {
     public String viewNonNotifiedEuRegistrants(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
                                                EuGrantSelectionForm form,
                                                Model model) {
-        EuGrantPageResource euRegistrants = euInviteRestService.getEuGrantsByContactNotified(false,
-                                                                                             pageIndex,
-                                                                                             DEFAULT_PAGE_SIZE).getSuccess();
+        EuGrantPageResource euRegistrants = euInviteRestService.getEuGrantsByNotified(false,
+                                                                                      pageIndex,
+                                                                                      DEFAULT_PAGE_SIZE).getSuccess();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
                                                             new Pagination(euRegistrants, ""),
                                                             1200,
@@ -55,9 +55,9 @@ public class EuInviteController {
     public String viewNotifiedEuRegistrants(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
                                             EuGrantSelectionForm form,
                                             Model model) {
-        EuGrantPageResource euRegistrants = euInviteRestService.getEuGrantsByContactNotified(true,
-                                                                                               pageIndex,
-                                                                                               DEFAULT_PAGE_SIZE).getSuccess();
+        EuGrantPageResource euRegistrants = euInviteRestService.getEuGrantsByNotified(true,
+                                                                                      pageIndex,
+                                                                                      DEFAULT_PAGE_SIZE).getSuccess();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
                                                             new Pagination(euRegistrants, ""),
                                                             1200,

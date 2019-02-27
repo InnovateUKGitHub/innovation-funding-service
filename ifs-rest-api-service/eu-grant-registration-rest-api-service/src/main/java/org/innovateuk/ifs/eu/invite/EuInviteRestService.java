@@ -8,6 +8,6 @@ import java.util.UUID;
 
 
 public interface EuInviteRestService {
-    RestResult<EuGrantPageResource> getEuGrantsByContactNotified(boolean notified, Integer pageIndex, Integer pageSize);
+    RestResult<EuGrantPageResource> getEuGrantsByNotified(boolean notified, Integer pageIndex, Integer pageSize);
     RestResult<Void> sendInvites(List<UUID> ids);
 }

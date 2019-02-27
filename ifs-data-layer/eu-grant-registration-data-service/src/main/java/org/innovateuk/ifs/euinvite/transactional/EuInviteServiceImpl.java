@@ -39,17 +39,17 @@ public class EuInviteServiceImpl implements EuInviteService {
     public ServiceResult<Void> sendInvites(List<UUID> euGrantIds) {
         euGrantIds
                 .forEach(id -> sendInvite(id)
-                        .andOnSuccessReturnVoid(euContact -> euContact.setNotified(true))
+                        .andOnSuccessReturnVoid(euGrant -> euGrant.setNotified(true))
                 );
 
         return serviceSuccess();
     }
 
-    private ServiceResult<EuContact> sendInvite(UUID euGrantId) {
+    private ServiceResult<EuGrant> sendInvite(UUID euGrantId) {
 
         Optional<EuGrant> euGrantOpt = euGrantRepository.findById(euGrantId);
         if(!euGrantOpt.isPresent()) {
-            return serviceSuccess(new EuContact()); // change this to be failure later
+            return serviceSuccess(new EuGrant()); // change this to be failure later
         }
         EuGrant euGrant = euGrantOpt.get();
         EuFunding euFunding = euGrant.getFunding();
@@ -88,7 +88,7 @@ public class EuInviteServiceImpl implements EuInviteService {
         );
 
         return notificationService.sendNotificationWithFlush(notification, EMAIL)
-                .andOnSuccessReturn(() -> euContact);
+                .andOnSuccessReturn(() -> euGrant);
     }
 
     private enum Notifications {
