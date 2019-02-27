@@ -35,43 +35,17 @@ public class EuInviteControllerTest extends MockMvcTest<EuInviteController> {
     @Mock
     private EuInviteService euInviteService;
 
-    @Mock
-    private EuGrantService euGrantService;
-
-    final static boolean NOTIFIED = false;
-    final static int PAGE_SIZE = 100;
-    final static int PAGE_INDEX = 0;
-
-    @Test
-    public void getByNotified() throws Exception {
-
-        EuGrantPageResource euGrantPageResource = new EuGrantPageResource();
-        Pageable pageable = new PageRequest(PAGE_INDEX, PAGE_SIZE, new Sort("id"));
-
-
-        when(euGrantService.getEuGrantsByContactNotified(NOTIFIED, pageable))
-                .thenReturn(serviceSuccess(euGrantPageResource));
-
-        mockMvc.perform(
-                get("/eu-contacts/notified/{notified}", NOTIFIED))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(euGrantPageResource)));
-
-        verify(euGrantService).getEuGrantsByContactNotified(NOTIFIED, pageable);
-    }
-
     @Test
     public void sendInvites() throws Exception {
 
-        List<Long> euContactInviteIds = asList(9L, 99L, 999L);
         UUID uuid1 = new UUID(1L, 1L);
         UUID uuid2 = new UUID(1L, 1L);
         UUID uuid3 = new UUID(1L, 1L);
         List<UUID> euGrantUuids = asList(uuid1, uuid2, uuid3);
         when(euInviteService.sendInvites(euGrantUuids)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/eu-contacts/send-invites")
-                .content(json(euContactInviteIds))
+        mockMvc.perform(post("/eu-grants/send-invites")
+                .content(json(euGrantUuids))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

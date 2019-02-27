@@ -35,7 +35,7 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
         EuContactPageResource pageResource = new EuContactPageResource();
         pageResource.setContent(euContactResources);
 
-        when(euInviteRestService.getEuGrantsByContactNotified(true, 0, 100))
+        when(euInviteRestService.getEuGrantsByNotified(true, 0, 100))
                 .thenReturn(restSuccess(pageResource));
 
         MvcResult result = mockMvc.perform(get("/eu-invite-notified"))
@@ -43,7 +43,7 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
                 .andExpect(view().name("eu/notified"))
                 .andReturn();
 
-        verify(euInviteRestService).getEuGrantsByContactNotified(true, 0, 100);
+        verify(euInviteRestService).getEuGrantsByNotified(true, 0, 100);
 
         EuInviteViewModel model = (EuInviteViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(euContactResources, model.getContacts());
@@ -57,7 +57,7 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
         EuContactPageResource pageResource = new EuContactPageResource();
         pageResource.setContent(euContactResources);
 
-        when(euInviteRestService.getEuGrantsByContactNotified(false, 0, 100))
+        when(euInviteRestService.getEuGrantsByNotified(false, 0, 100))
                 .thenReturn(restSuccess(pageResource));
 
         MvcResult result = mockMvc.perform(get("/eu-invite-non-notified"))
@@ -65,7 +65,7 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
                 .andExpect(view().name("eu/non-notified"))
                 .andReturn();
 
-        verify(euInviteRestService).getEuGrantsByContactNotified(false, 0, 100);
+        verify(euInviteRestService).getEuGrantsByNotified(false, 0, 100);
 
         EuInviteViewModel model = (EuInviteViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(euContactResources, model.getContacts());

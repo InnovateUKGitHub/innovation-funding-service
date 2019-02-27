@@ -81,11 +81,12 @@ public class EuInviteServiceIntegrationTest extends BaseIntegrationTest {
 
         euGrant = euGrantRepository.save(euGrant);
         euGrantService.submit(euGrant.getId(), true);
-        long euContactId = euGrant.getContact().getId();
 
         ServiceResult<Void> result = euInviteService.sendInvites(singletonList(euGrant.getId()));
+
         assertTrue(result.isSuccess());
-        EuContact euContact = euContactRepository.findById(euContactId).get();
-        assertTrue(euContact.getNotified());
+
+        EuGrant savedEuGrant = euGrantRepository.findById(euGrant.getId()).get();
+        assertTrue(savedEuGrant.isNotified());
     }
 }

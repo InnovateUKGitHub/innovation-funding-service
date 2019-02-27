@@ -5,7 +5,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.euactiontype.repository.EuActionTypeRepository;
 import org.innovateuk.ifs.eugrant.*;
 import org.innovateuk.ifs.eugrant.domain.EuContact;
+import org.innovateuk.ifs.eugrant.domain.EuFunding;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
+import org.innovateuk.ifs.eugrant.domain.EuOrganisation;
 import org.innovateuk.ifs.eugrant.repository.EuContactRepository;
 import org.innovateuk.ifs.eugrant.repository.EuGrantRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -170,27 +172,67 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
                 .withEmail("barry@venison.com")
                 .withJobTitle("Rollercoaster operator")
                 .withTelephone("2468")
+                .build();
+
+        EuFunding euFundingOne = newEuFunding()
+                .withFundingContribution(BigDecimal.TEN)
+                .withGrantAgreementNumber("456")
+                .withParticipantId("123456789")
+                .withProjectName("projectName")
+                .withProjectStartDate(LocalDate.now())
+                .withProjectEndDate(LocalDate.now())
+                .withActionType(euActionTypeRepository.findAllByOrderByPriorityAsc().get(0))
+                .build();
+
+        EuOrganisation euOrganisationOne = newEuOrganisation()
+                .withName("orgName")
+                .withOrganisationType(EuOrganisationType.BUSINESS)
+                .build();
+
+        EuGrant euGrantOne = newEuGrant()
+                .withContact(euContactOne)
+                .withOrganisation(euOrganisationOne)
+                .withFunding(euFundingOne)
                 .withNotified(false)
                 .build();
+
 
         EuContact euContactTwo = newEuContact()
                 .withName("Garry Owen")
                 .withEmail("garry@owen.com")
                 .withJobTitle("Secretary")
                 .withTelephone("1357")
+                .build();
+
+
+        EuFunding euFundingTwo = newEuFunding()
+                .withFundingContribution(BigDecimal.TEN)
+                .withGrantAgreementNumber("456")
+                .withParticipantId("123456789")
+                .withProjectName("projectName")
+                .withProjectStartDate(LocalDate.now())
+                .withProjectEndDate(LocalDate.now())
+                .withActionType(euActionTypeRepository.findAllByOrderByPriorityAsc().get(0))
+                .build();
+
+        EuOrganisation euOrganisationTwo = newEuOrganisation()
+                .withName("orgName")
+                .withOrganisationType(EuOrganisationType.BUSINESS)
+                .build();
+
+        EuGrant euGrantTwo = newEuGrant()
+                .withContact(euContactTwo)
+                .withOrganisation(euOrganisationTwo)
+                .withFunding(euFundingTwo)
                 .withNotified(true)
                 .build();
 
-        EuGrant euGrantOne = newEuGrant().withContact(euContactOne).build();
-        EuGrant euGrantTwo = newEuGrant().withContact(euContactTwo).build();
-
-        euContactRepository.save(euContactOne);
-        euContactRepository.save(euContactTwo);
-
+        euGrantOne.submit("asdf");
+        euGrantTwo.submit("hjkl");
         euGrantRepository.save(euGrantOne);
         euGrantRepository.save(euGrantTwo);
 
-        Pageable pageable = new PageRequest(0, 100 , new Sort("id"));
+        Pageable pageable = new PageRequest(0, 100 , new Sort("contact.id"));
 
         ServiceResult<EuGrantPageResource> resultOne = euGrantService.getEuGrantsByContactNotified(false, pageable);
         ServiceResult<EuGrantPageResource> resultTwo = euGrantService.getEuGrantsByContactNotified(true, pageable);
@@ -203,7 +245,6 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
         assertEquals(euContactOne.getJobTitle(), resultingResource.getJobTitle());
         assertEquals(euContactOne.getName(), resultingResource.getName());
         assertEquals(euContactOne.getTelephone(), resultingResource.getTelephone());
-        assertEquals(euContactOne.getNotified(), resultingResource.getNotified());
 
         assertTrue(resultTwo.isSuccess());
 
@@ -213,6 +254,5 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
         assertEquals(euContactTwo.getJobTitle(), resultingResourceTwo.getJobTitle());
         assertEquals(euContactTwo.getName(), resultingResourceTwo.getName());
         assertEquals(euContactTwo.getTelephone(), resultingResourceTwo.getTelephone());
-        assertEquals(euContactTwo.getNotified(), resultingResourceTwo.getNotified());
     }
 }
