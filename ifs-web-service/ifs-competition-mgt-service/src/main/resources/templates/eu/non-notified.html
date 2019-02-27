@@ -86,9 +86,9 @@
                                         </div>
                                     </td>
                                     <td class="govuk-table__cell" th:text="${grant.contact.name}">Steve Smith</td>
-                                    <td class="govuk-table__cell">Project name</td>
-                                    <td class="govuk-table__cell">Organisation Type</td>
-                                    <td class="govuk-table__cell">Short code</td>
+                                    <td class="govuk-table__cell" th:text="${grant.funding.projectName}">Project name</td>
+                                    <td class="govuk-table__cell" th:text="${grant.organisation.organisationType}">Organisation Type</td>
+                                    <td class="govuk-table__cell" th:text="${grant.shortCode}">Short code</td>
                                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${grant.contact.email}">steve.smith@empire.com</td>
                                 </tr>
                                 </tbody>
