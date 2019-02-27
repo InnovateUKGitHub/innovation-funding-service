@@ -125,6 +125,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withId(PROJECT_ID_IN_PROJECT, PROJECT_ID_IN_PROJECT_WITHDRAWN)
                 .withApplication(APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_PROJECT_WITHDRAWN)
                 .withProjectState(ProjectState.SETUP, ProjectState.WITHDRAWN)
+                .withCompetition(1L, 2L)
                 .build(2)));
 
         when(applicationRestService.getApplicationById(APPLICATION_ID_IN_PROJECT)).thenReturn(restSuccess(newApplicationResource()

@@ -60,10 +60,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = classUnderTest.findAll();
         assertEquals(0, results.getSuccess().size());
 
-        verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
-        verify(rules, times(2)).internalUserCanViewAllCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
-        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), isNull(UserResource.class));
-        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), eq(null));
+        verify(rules, times(2)).internalUserCanViewAllCompetitions(isA(CompetitionResource.class), eq(null));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), eq(null));
+        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), eq(null));
+        verify(rules, times(2)).monitoringOfficersCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), eq(null));
         verifyNoMoreInteractions(rules);
     }
 
@@ -75,10 +76,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
                 .thenReturn(serviceSuccess(newCompetitionResource().build()));
 
         assertAccessDenied(() -> classUnderTest.getCompetitionById(1L), () -> {
-            verify(rules).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
-            verify(rules).internalUserCanViewAllCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
-            verify(rules).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), isNull(UserResource.class));
-            verify(rules).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), isNull(UserResource.class));
+            verify(rules).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), eq(null));
+            verify(rules).internalUserCanViewAllCompetitions(isA(CompetitionResource.class), eq(null));
+            verify(rules).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionResource.class),  eq(null));
+            verify(rules).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), eq(null));
+            verify(rules).monitoringOfficersCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), eq(null));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -146,9 +148,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findLiveCompetitions();
         assertEquals(0, results.getSuccess().size());
 
-        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
-        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
-        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(null));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(null));
+        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(null));
         verifyNoMoreInteractions(rules);
     }
 
@@ -162,9 +164,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findProjectSetupCompetitions();
         assertEquals(0, results.getSuccess().size());
 
-        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
-        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
-        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(null));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(null));
+        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(null));
         verifyNoMoreInteractions(rules);
     }
 
@@ -177,9 +179,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findUpcomingCompetitions();
         assertEquals(0, results.getSuccess().size());
 
-        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
-        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
-        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(null));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(null));
+        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(null));
         verifyNoMoreInteractions(rules);
     }
 
@@ -227,9 +229,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findFeedbackReleasedCompetitions();
         assertEquals(0, results.getSuccess().size());
 
-        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
-        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
-        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(null));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(null));
+        verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(null));
         verifyNoMoreInteractions(rules);
     }
 
