@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class EuContactResource {
 
+    private Long id;
+
     private String name;
 
     private String jobTitle;
@@ -19,7 +21,8 @@ public class EuContactResource {
     public EuContactResource() {
     }
 
-    public EuContactResource(String name, String jobTitle, String email, String telephone, boolean notified) {
+    public EuContactResource(Long id, String name, String jobTitle, String email, String telephone, boolean notified) {
+        this.id = id;
         this.name = name;
         this.jobTitle = jobTitle;
         this.email = email;
@@ -33,6 +36,14 @@ public class EuContactResource {
         this.email = email;
         this.telephone = telephone;
         this.notified = false;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -84,6 +95,7 @@ public class EuContactResource {
         EuContactResource that = (EuContactResource) o;
 
         return new EqualsBuilder()
+                .append(id, that.id)
                 .append(name, that.name)
                 .append(email, that.email)
                 .append(jobTitle, that.jobTitle)
@@ -95,6 +107,7 @@ public class EuContactResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(id)
                 .append(name)
                 .append(email)
                 .append(jobTitle)

@@ -16,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
+import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.eugrant.builder.EuContactResourceBuilder.newEuContactResource;
@@ -53,5 +54,17 @@ public class EuInviteRestServiceImplTest {
         when(anonymousRestTemplateAdaptor.getWithRestResult(baseUrl + uriWithParams, EuContactPageResource.class)).thenReturn(expected);
         RestResult<EuContactPageResource> result = euInviteRestService.getEuContactsByNotified(NOTIFIED, PAGE_INDEX, PAGE_SIZE);
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void sendInvites() {
+        RestResult<Void> expected = mock(RestResult.class);
+
+        List<Long> euContactIds = asList(1L, 11L, 111L);
+        when(anonymousRestTemplateAdaptor.postWithRestResult(baseUrl + "/eu-contacts/send-invites", euContactIds, Void.class)).thenReturn(expected);
+
+        RestResult<Void> result = euInviteRestService.sendInvites(euContactIds);
+
+        assertEquals(result, expected);
     }
 }
