@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.grant.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -10,20 +9,18 @@ import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.service.GrantEndpoint;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Spy;
 
 import java.util.function.Predicate;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests around the {@link GrantServiceImpl}.
@@ -43,10 +40,6 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
     @Mock
     protected GrantMapper grantMapper;
 
-    @Spy
-    protected GrantProcessApplicationFilter grantProcessApplicationFilter =
-            new GrantProcessApplicationFilterImpl(null);
-
     @Override
     protected GrantServiceImpl supplyServiceUnderTest() {
         return new GrantServiceImpl();
@@ -63,19 +56,22 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
                                 .withCompetition(
                                         newCompetition().withId(2L).build())
                                 .build()).build();
-        long applicationId = project.getApplication().getId();
-        when(projectRepository.findOneByApplicationId(applicationId)).thenReturn(project);
-        when(grantMapper.mapToGrant(any())).thenReturn(new Grant().id(APPLICATION_ID));
-        when(grantEndpoint.send(any())).thenReturn(serviceSuccess());
-        GrantProcess process = new GrantProcess();
-        process.setApplicationId(APPLICATION_ID);
-        when(grantProcessService.findReadyToSend()).thenReturn(asList(process));
+        GrantProcess process = new GrantProcess(APPLICATION_ID);
+        Grant grant = new Grant().id(APPLICATION_ID);
+
+        when(projectRepository.findOneByApplicationId(APPLICATION_ID)).thenReturn(project);
+        when(grantMapper.mapToGrant(project)).thenReturn(grant);
+        when(grantEndpoint.send(grant)).thenReturn(serviceSuccess());
+        when(grantProcessService.findReadyToSend()).thenReturn(singletonList(process));
+
         ServiceResult<Void> result = service.sendReadyProjects();
+
         assertThat(result.isSuccess(), equalTo(true));
-        verify(grantEndpoint).send(LambdaMatcher.createLambdaMatcher(matchGrant(project)));
+
+        verify(grantEndpoint, only()).send(createLambdaMatcher(matchGrant(project)));
     }
 
-    private Predicate<Grant> matchGrant(Project project) {
+    private static Predicate<Grant> matchGrant(Project project) {
         return grant -> {
             assertThat(grant.getId(), equalTo(project.getApplication().getId()));
             return true;
