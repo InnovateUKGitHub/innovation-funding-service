@@ -4,8 +4,10 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumSet;
@@ -20,6 +22,9 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 @Component
 @PermissionRules
 public class CompetitionPermissionRules extends BasePermissionRules {
+
+    @Autowired
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @PermissionRule(value = "READ", description = "External users cannot view competitions in setup")
     public boolean externalUsersCannotViewCompetitionsInSetup(CompetitionResource competition, UserResource user) {
@@ -40,6 +45,13 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     public boolean stakeholderCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
         return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
+
+    // TODO test
+    @PermissionRule(value = "READ", description = "Monitoring officers can view competitions that are assigned to them")
+    public boolean monitoringOfficersCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
+        return projectMonitoringOfficerRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
+    }
+
 
     @PermissionRule(value = "READ", description = "Internal users other than innovation leads and stakeholders can see all competition search results")
     public boolean internalUserCanViewAllCompetitionSearchResults(CompetitionSearchResultItem competition, UserResource user) {

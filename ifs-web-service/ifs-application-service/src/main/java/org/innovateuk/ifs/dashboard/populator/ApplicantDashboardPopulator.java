@@ -26,6 +26,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -177,10 +178,14 @@ public class ApplicantDashboardPopulator {
         return CompetitionStatus.fundingCompleteStatuses.contains(application.getCompetitionStatus());
     }
 
-    private Map<Long, CompetitionResource> getAllCompetitionsForUser(Long userId) {
+    private Map<Long, CompetitionResource> getAllCompetitionsForUser(long userId) {
         List<ApplicationResource> userApplications = applicationRestService.getApplicationsByUserId(userId).getSuccess();
-        List<Long> competitionIdsForUser = userApplications.stream()
-                .map(ApplicationResource::getCompetition)
+        List<ProjectResource> userProjects = projectRestService.findByUserId(userId).getSuccess();
+
+        List<Long> competitionIdsForUser = concat(
+                userApplications.stream().map(ApplicationResource::getCompetition),
+                userProjects.stream().map(ProjectResource::getCompetition)
+        )
                 .distinct()
                 .collect(Collectors.toList());
 

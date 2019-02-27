@@ -10,4 +10,8 @@ public interface ProjectMonitoringOfficerRepository extends PagingAndSortingRepo
     List<ProjectMonitoringOfficer> findByUserId(long userId);
 
     boolean existsByProjectIdAndUserId(long projectId, long userId);
+
+    boolean existsByProjectApplicationIdAndUserId(long applicationId, long userId);
+
+    boolean existsByProjectApplicationCompetitionIdAndUserId(long competitionId, long userId);
 }

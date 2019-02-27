@@ -89,7 +89,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         Long competitionId = 1L;
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
 
-        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+        when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competitionResource);
 
         assertAccessDenied(
                 () -> classUnderTest.findInnovationLeads(1L),
@@ -105,7 +105,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         Long innovationLeadUserId = 2L;
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
 
-        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+        when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competitionResource);
 
         assertAccessDenied(() -> classUnderTest.addInnovationLead(competitionId, innovationLeadUserId), () -> {
             verify(rules).internalAdminCanManageInnovationLeadsForCompetition(any(CompetitionResource.class), any(UserResource.class));
@@ -119,7 +119,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         Long innovationLeadUserId = 2L;
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
 
-        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+        when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competitionResource);
 
         assertAccessDenied(() -> classUnderTest.removeInnovationLead(competitionId, innovationLeadUserId), () -> {
             verify(rules).internalAdminCanManageInnovationLeadsForCompetition(any(CompetitionResource.class), any(UserResource.class));
