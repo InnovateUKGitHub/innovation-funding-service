@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.sil.grant.controller;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.EvictingQueue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.util.JsonMappingUtil;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
@@ -29,9 +29,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class GrantEndpointController {
     private static final Log LOG = LogFactory.getLog(GrantEndpointController.class);
     private static final EvictingQueue<Event> history = EvictingQueue.create(100);
+    private static final JsonNodeFactory jsonNodeFactory = JsonNodeFactory.instance;
 
     @PostMapping("/accprojects")
-    public RestResult<Void> sendProject(@RequestBody List<Grant> grantAsList) {
+    public RestResult<String> sendProject(@RequestBody List<Grant> grantAsList) {
 
         Grant grant = grantAsList.get(0);
 
@@ -39,7 +40,7 @@ public class GrantEndpointController {
         history.add(new Event(grant));
 
         LOG.info("Grant data sent to stub : Summary = " + getSummary(grant));
-        return restSuccess(HttpStatus.ACCEPTED);
+        return serviceSuccess(new ObjectNode(jsonNodeFactory).put("Success", "Accepted").toString()).toPostWithBodyResponse();
     }
 
     @GetMapping("/accprojects/events")
