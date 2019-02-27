@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Controller for saving and getting details of eu contacts.
+ * Controller for sending invites to eu registrants
  */
 @RestController
 public class EuInviteController {

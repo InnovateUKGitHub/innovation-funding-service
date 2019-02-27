@@ -3,7 +3,6 @@ package org.innovateuk.ifs.eugrant.transactional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantPageResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.innovateuk.ifs.eugrant.mapper.EuGrantMapper;
 import org.innovateuk.ifs.eugrant.repository.EuGrantRepository;

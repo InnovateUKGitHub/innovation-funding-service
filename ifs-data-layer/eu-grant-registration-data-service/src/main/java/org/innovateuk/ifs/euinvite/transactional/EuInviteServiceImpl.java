@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.euinvite.transactional;
 
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.domain.EuContact;
 import org.innovateuk.ifs.eugrant.domain.EuFunding;
@@ -12,6 +13,7 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 
@@ -48,9 +52,11 @@ public class EuInviteServiceImpl implements EuInviteService {
     private ServiceResult<EuGrant> sendInvite(UUID euGrantId) {
 
         Optional<EuGrant> euGrantOpt = euGrantRepository.findById(euGrantId);
+
         if(!euGrantOpt.isPresent()) {
-            return serviceSuccess(new EuGrant()); // change this to be failure later
+            return serviceFailure(new Error(GENERAL_NOT_FOUND));
         }
+        
         EuGrant euGrant = euGrantOpt.get();
         EuFunding euFunding = euGrant.getFunding();
         EuOrganisation euOrganisation = euGrant.getOrganisation();

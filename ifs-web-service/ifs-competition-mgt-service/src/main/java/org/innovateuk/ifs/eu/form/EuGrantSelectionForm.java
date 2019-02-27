@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Form for the selection of eu contacts to invite onto the IFS platform
+ * Form for the selection of eu grant registrants to invite onto the IFS platform
  */
 public class EuGrantSelectionForm {
 

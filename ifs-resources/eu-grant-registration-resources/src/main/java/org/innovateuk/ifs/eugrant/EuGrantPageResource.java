@@ -7,7 +7,6 @@ import java.util.List;
 public class EuGrantPageResource extends PageResource<EuGrantResource> {
 
     public EuGrantPageResource() {
-
     }
 
     public EuGrantPageResource(long totalElements,
@@ -17,5 +16,4 @@ public class EuGrantPageResource extends PageResource<EuGrantResource> {
                                  int size) {
         super(totalElements, totalPages, content, number, size);
     }
-
 }

@@ -8,7 +8,6 @@ import org.innovateuk.ifs.eugrant.domain.EuContact;
 import org.innovateuk.ifs.eugrant.domain.EuFunding;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.innovateuk.ifs.eugrant.domain.EuOrganisation;
-import org.innovateuk.ifs.eugrant.repository.EuContactRepository;
 import org.innovateuk.ifs.eugrant.repository.EuGrantRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -46,9 +45,6 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private EuActionTypeRepository euActionTypeRepository;
-
-    @Autowired
-    private EuContactRepository euContactRepository;
 
     @Before
     public void cleanRepository() {
