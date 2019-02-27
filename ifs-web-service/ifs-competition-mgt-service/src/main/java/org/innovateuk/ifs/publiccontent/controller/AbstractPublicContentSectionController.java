@@ -31,7 +31,9 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
 
     protected static final String TEMPLATE_FOLDER = "competition/";
     protected static final String FORM_ATTR_NAME = "form";
-    private static final String COMPETITION_SETUP = "/competition/setup/";
+    private static final String COMPETITION_SETUP_PATH = "/competition/setup/";
+    private static final String COMPETITION_SETUP_PUBLIC_CONTENT_DATES_PATH = COMPETITION_SETUP_PATH + "public-content/dates/";
+    private static final String REDIRECT = "redirect:";
 
     @Autowired
     protected PublicContentService publicContentService;
@@ -67,7 +69,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
 
     protected String getPage(long competitionId, Model model, Optional<F> form, boolean readOnly) {
         if (isIFSAndCompetitionNotSetup(competitionId)) {
-            return redirectString(COMPETITION_SETUP, competitionId);
+            return redirectTo(COMPETITION_SETUP_PATH + competitionId);
         }
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         model.addAttribute("model", modelPopulator().populate(publicContent, readOnly));
@@ -90,16 +92,16 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
 
     private String markAsComplete(long competitionId, Model model, F form, ValidationHandler validationHandler) {
         if (isIFSAndCompetitionNotSetup(competitionId)) {
-            return redirectString(COMPETITION_SETUP, competitionId);
+            return redirectTo(COMPETITION_SETUP_PATH + competitionId);
         }
-        Supplier<String> successView = () -> getPage(competitionId, model, Optional.of(form), true);
+        Supplier<String> successView = () -> redirectTo(COMPETITION_SETUP_PUBLIC_CONTENT_DATES_PATH + competitionId);
         Supplier<String> failureView = () -> getPage(competitionId, model, Optional.of(form), false);
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().markAsComplete(form, publicContent));
     }
 
-    private String redirectString(String path, long competitionId) {
-        return "redirect:" + path + competitionId;
+    private String redirectTo(String path) {
+        return REDIRECT + path;
     }
 
 }
