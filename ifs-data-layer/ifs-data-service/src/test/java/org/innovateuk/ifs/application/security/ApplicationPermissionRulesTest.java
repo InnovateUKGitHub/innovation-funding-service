@@ -63,6 +63,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource leadOnApplication1;
     private UserResource innovationLeadOnApplication1;
     private UserResource stakeholderUserResourceOnCompetition;
+    private UserResource monitoringOfficerOnProjectForApplication1;
     private UserResource user2;
     private UserResource user3;
     private UserResource assessor;
@@ -96,6 +97,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         User stakeholderUserOnCompetition = newUser().build();
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(Role.STAKEHOLDER).build();
         Stakeholder stakeholder = StakeholderBuilder.newStakeholder().withUser(stakeholderUserOnCompetition).build();
+
+        monitoringOfficerOnProjectForApplication1 = newUserResource().build();
 
         leadOnApplication1 = newUserResource().build();
         user2 = newUserResource().build();
@@ -145,6 +148,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList
                 (innovationLead));
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
+        when(projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application1.getId(), monitoringOfficerOnProjectForApplication1.getId()))
+                .thenReturn(true);
     }
 
     @Test
@@ -181,7 +186,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void onlyStakeholdersAssignedToCompetitionForApplicationCanAccessApplication() {
         assertTrue(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, stakeholderUserResourceOnCompetition));
-        assertFalse(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, stakeholderUser()));
+        assertFalse(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, monitoringOfficerUser()));
+    }
+
+    @Test
+    public void monitoringOfficerAssignedToProjectCanViewApplications() {
+        assertTrue(rules.monitoringOfficerAssignedToProjectCanViewApplications(applicationResource1, monitoringOfficerOnProjectForApplication1));
+        assertFalse(rules.monitoringOfficerAssignedToProjectCanViewApplications(applicationResource1, stakeholderUser()));
     }
 
     @Test

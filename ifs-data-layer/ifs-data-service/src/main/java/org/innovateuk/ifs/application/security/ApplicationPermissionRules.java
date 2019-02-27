@@ -122,7 +122,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return application != null && application.getCompetition() != null && userIsStakeholderInCompetition(application.getCompetition(), user.getId());
     }
 
-    // TODO test
     @PermissionRule(value = "READ", description = "Monitoring officers can see application resources for projects assigned to them.")
     public boolean monitoringOfficerAssignedToProjectCanViewApplications(final ApplicationResource application, final UserResource user) {
         return application != null && application.getCompetition() != null && projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application.getId(), user.getId());
