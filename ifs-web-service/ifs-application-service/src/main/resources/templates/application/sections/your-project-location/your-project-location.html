@@ -39,7 +39,7 @@
             <th:block th:unless="${model.complete}" >
                 <div class="govuk-!-margin-top-6">
                     <th:block th:unless="${model.readOnly}">
-                        <p class="govuk-body">Where will most of the project work take place?</p>
+                        <p class="govuk-body">Provide us with the postcode of the primary project location.</p>
                         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'govuk-form-group--error'">
                             <label class="govuk-label govuk-label--s" for="postcode">
                                 Postcode
