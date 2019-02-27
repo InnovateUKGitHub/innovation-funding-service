@@ -2,7 +2,7 @@ package org.innovateuk.ifs.eugrant.funding.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.eugrant.EuActionTypeRestService;
+import org.innovateuk.ifs.eu.grant.EuActionTypeRestService;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.funding.form.EuFundingForm;
 import org.innovateuk.ifs.eugrant.funding.populator.EuFundingFormPopulator;

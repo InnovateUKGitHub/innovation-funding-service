@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.eugrant.EuActionTypeResource;
-import org.innovateuk.ifs.eugrant.EuActionTypeRestService;
+import org.innovateuk.ifs.eu.grant.EuActionTypeRestService;
 import org.innovateuk.ifs.eugrant.EuFundingResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.eugrant.funding.form.EuFundingForm;

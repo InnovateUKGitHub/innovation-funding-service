@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.eugrant;
+package org.innovateuk.ifs.eu.grant;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.eugrant.EuActionTypeResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
