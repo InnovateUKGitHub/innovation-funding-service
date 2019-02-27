@@ -32,9 +32,6 @@ public class GrantServiceImpl implements GrantService {
     @Autowired
     private GrantMapper grantMapper;
 
-    @Autowired
-    private GrantProcessApplicationFilter grantProcessApplicationFilter;
-
     @Override
     @Transactional
     public ServiceResult<Void> sendReadyProjects() {
@@ -51,14 +48,12 @@ public class GrantServiceImpl implements GrantService {
         Grant grant = grantMapper.mapToGrant(
                 projectRepository.findOneByApplicationId(applicationId)
         );
-        if (grantProcessApplicationFilter.shouldSend(grant)) {
-            grantEndpoint.send(grant)
-                    .andOnSuccess(() -> grantProcessService.sendSucceeded(applicationId))
-                    .andOnFailure((ServiceFailure serviceFailure) ->
-                            grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString()));
-        } else {
-            grantProcessService.sendIgnored(applicationId, grantProcessApplicationFilter.generateFilterReason(grant));
-        }
+
+        grantEndpoint.send(grant)
+                .andOnSuccess(() -> grantProcessService.sendSucceeded(applicationId))
+                .andOnFailure((ServiceFailure serviceFailure) ->
+                        grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString()));
+
         return serviceSuccess();
     }
 }

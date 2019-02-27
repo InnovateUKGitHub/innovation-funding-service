@@ -3,7 +3,7 @@ package org.innovateuk.ifs.eugrant.overview.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.innovateuk.ifs.eugrant.EuGrantRestService;
+import org.innovateuk.ifs.eu.grant.EuGrantRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;

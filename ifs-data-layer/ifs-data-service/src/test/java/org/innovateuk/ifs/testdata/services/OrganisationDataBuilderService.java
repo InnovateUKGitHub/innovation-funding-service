@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.testdata.services;
 
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
@@ -40,13 +39,6 @@ public class OrganisationDataBuilderService {
     public void createOrganisation(CsvUtils.OrganisationLine line) {
         OrganisationDataBuilder organisation =
                 organisationDataBuilder.createOrganisation(line.name, line.companyRegistrationNumber, lookupOrganisationType(line.organisationType));
-
-        for (OrganisationAddressType organisationType : line.addressType) {
-            organisation = organisation.withAddress(organisationType,
-                    line.addressLine1, line.addressLine2,
-                    line.addressLine3, line.town,
-                    line.postcode, line.county);
-        }
 
         organisation.build();
     }

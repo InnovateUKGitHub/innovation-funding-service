@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * A contact for the organisation receiving EU grant funding.
@@ -30,6 +31,9 @@ public class EuContact {
 
     @NotBlank
     private String telephone;
+
+    @NotNull
+    private boolean notified;
 
     public Long getId() {
         return id;
@@ -65,5 +69,13 @@ public class EuContact {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public boolean getNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 }

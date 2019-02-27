@@ -58,6 +58,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 .withEmail("Worth@gmail.com")
                 .withJobTitle("worth employee")
                 .withTelephone("0123456789")
+                .withNotified(Boolean.FALSE)
                 .build();
 
         euActionTypeResource = newEuActionTypeResource()
@@ -166,10 +167,12 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 fieldWithPath("organisation.organisationType").description("The type of the the organisation e.g. BUSINESS."),
                 fieldWithPath("organisation.companiesHouseNumber").description("Companies House number."),
                 fieldWithPath("contact").description("Contact details for the eu grant."),
+                fieldWithPath("contact.id").description("Unique id of the contact."),
                 fieldWithPath("contact.name").description("Full name of the contact."),
                 fieldWithPath("contact.jobTitle").description("Job title of the contact."),
                 fieldWithPath("contact.email").description("Email address of the contact."),
                 fieldWithPath("contact.telephone").description("Telephone number of the contact."),
+                fieldWithPath("contact.notified").description("Whether the contact has been notified about our new service"),
                 fieldWithPath("funding").description("Contact details for the eu grant."),
                 fieldWithPath("funding.grantAgreementNumber").description("This might also be referred to as your project ID."),
                 fieldWithPath("funding.participantId").description("The 9-digit number unique to your organisation."),
