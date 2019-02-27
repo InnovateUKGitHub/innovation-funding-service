@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.sil.grant.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.EvictingQueue;
@@ -32,7 +33,7 @@ public class GrantEndpointController {
     private static final JsonNodeFactory jsonNodeFactory = JsonNodeFactory.instance;
 
     @PostMapping("/accprojects")
-    public RestResult<String> sendProject(@RequestBody List<Grant> grantAsList) {
+    public RestResult<JsonNode> sendProject(@RequestBody List<Grant> grantAsList) {
 
         Grant grant = grantAsList.get(0);
 
@@ -40,7 +41,9 @@ public class GrantEndpointController {
         history.add(new Event(grant));
 
         LOG.info("Grant data sent to stub : Summary = " + getSummary(grant));
-        return serviceSuccess(new ObjectNode(jsonNodeFactory).put("Success", "Accepted").toString()).toPostWithBodyResponse();
+        JsonNode jsonNode = new ObjectNode(jsonNodeFactory);
+        ((ObjectNode) jsonNode).put("Success", "Accepted");
+        return serviceSuccess(jsonNode).toPostWithBodyResponse();
     }
 
     @GetMapping("/accprojects/events")
