@@ -45,6 +45,11 @@ IFS.competitionManagement.loadOrder = {
     init: function () {
       IFS.competitionManagement.resendApplicantInvite.init()
     }
+  },
+  'eu-notified': {
+    init: function () {
+      IFS.competitionManagement.select.init()
+    }
   }
 
 }

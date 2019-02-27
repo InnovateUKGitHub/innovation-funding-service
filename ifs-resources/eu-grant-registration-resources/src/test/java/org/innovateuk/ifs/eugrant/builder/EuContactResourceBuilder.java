@@ -43,4 +43,8 @@ public class EuContactResourceBuilder extends BaseBuilder<EuContactResource, EuC
     public EuContactResourceBuilder withTelephone(String... telephones) {
         return withArray((telephone, contact) -> contact.setTelephone(telephone), telephones);
     }
+
+    public EuContactResourceBuilder withNotified(Boolean... notifiedFlags) {
+        return withArray((notifiedFlag, contact) -> contact.setNotified(notifiedFlag), notifiedFlags);
+    }
 }

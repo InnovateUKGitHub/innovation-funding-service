@@ -2,7 +2,7 @@ package org.innovateuk.ifs.eugrant.overview.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.innovateuk.ifs.eugrant.EuGrantRestService;
+import org.innovateuk.ifs.eu.grant.EuGrantRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;

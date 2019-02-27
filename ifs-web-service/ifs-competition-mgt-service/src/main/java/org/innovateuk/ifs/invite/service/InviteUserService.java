@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.invite;
+package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
