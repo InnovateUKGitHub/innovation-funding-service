@@ -52,7 +52,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(fileEntryResource)))
                 .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the Attachment to be fetched")),
+                        pathParameters(parameterWithName("applicationId").description("Id of the application the grant agreement is attached to.")),
                         responseFields(fileEntryResourceFields)));
 
         verify(euGrantTransferService).findGrantAgreement(applicationId);
@@ -80,7 +80,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isNoContent())
                 .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("Id of the application to have attachment deleted")))
+                        pathParameters(parameterWithName("applicationId").description("Id of the application to have grant agreement deleted")))
                 );
 
         verify(euGrantTransferService).deleteGrantAgreement(applicationId);
@@ -98,7 +98,7 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
                 .headers(createFileUploadHeader("application/pdf", 1234)))
                 .andExpect(status().isCreated())
                 .andDo(document("eu-grant-transfer/{method-name}",
-                        pathParameters(parameterWithName("applicationId").description("The application in which the grant-agreement will be attached.")),
+                        pathParameters(parameterWithName("applicationId").description("The application in which the grant agreement will be attached.")),
                         requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
                         requestHeaders(
                                 headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")

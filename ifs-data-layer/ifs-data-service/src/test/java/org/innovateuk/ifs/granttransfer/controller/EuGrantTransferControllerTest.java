@@ -29,14 +29,13 @@ public class EuGrantTransferControllerTest extends BaseFileControllerMockMVCTest
     @Mock
     private EuGrantTransferService euGrantTransferService;
 
-
     @Override
     protected EuGrantTransferController supplyControllerUnderTest() {
         return new EuGrantTransferController();
     }
 
     @Test
-    public void testUploadGrantAgreement() throws Exception {
+    public void uploadGrantAgreement() throws Exception {
         final long applicationId = 77L;
         when(euGrantTransferService.uploadGrantAgreement(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class))).thenReturn(serviceSuccess());
@@ -51,7 +50,7 @@ public class EuGrantTransferControllerTest extends BaseFileControllerMockMVCTest
     }
 
     @Test
-    public void testDeleteGrantAgreement() throws Exception {
+    public void deleteGrantAgreement() throws Exception {
         final long applicationId = 22L;
         when(euGrantTransferService.deleteGrantAgreement(applicationId)).thenReturn(serviceSuccess());
 
@@ -62,7 +61,7 @@ public class EuGrantTransferControllerTest extends BaseFileControllerMockMVCTest
     }
 
     @Test
-    public void testDownloadGrantAgreement() throws Exception {
+    public void downloadGrantAgreement() throws Exception {
         final long applicationId = 22L;
 
         Function<EuGrantTransferService, ServiceResult<FileAndContents>> serviceCallToDownload =
@@ -73,7 +72,7 @@ public class EuGrantTransferControllerTest extends BaseFileControllerMockMVCTest
     }
 
     @Test
-    public void testFindGrantAgreement() throws Exception {
+    public void findGrantAgreement() throws Exception {
         final long applicationId = 22L;
         FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "application/pdf", 1234);
         when(euGrantTransferService.findGrantAgreement(applicationId)).thenReturn(serviceSuccess(fileEntryResource));

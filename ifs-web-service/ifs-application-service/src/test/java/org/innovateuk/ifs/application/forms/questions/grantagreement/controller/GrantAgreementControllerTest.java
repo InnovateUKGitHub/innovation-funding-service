@@ -39,7 +39,7 @@ public class GrantAgreementControllerTest extends BaseControllerMockMVCTest<Gran
 
     @Override
     protected GrantAgreementController supplyControllerUnderTest() {
-        return new GrantAgreementController();
+        return new GrantAgreementController(grantAgreementViewModelPopulator, euGrantTransferRestService, questionStatusRestService, userRestService);
     }
 
     @Test

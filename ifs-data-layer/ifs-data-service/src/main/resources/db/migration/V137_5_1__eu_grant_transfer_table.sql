@@ -1,3 +1,4 @@
+-- IFS-5250
 
 CREATE TABLE eu_action_type (
   id BIGINT(20) PRIMARY KEY,

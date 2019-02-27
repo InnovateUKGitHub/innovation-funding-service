@@ -7,6 +7,9 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Entity to capture data for a Horizon 2020 Grant Transfer.
+ */
 @Entity
 public class EuGrantTransfer {
     @Id

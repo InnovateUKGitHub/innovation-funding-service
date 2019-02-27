@@ -11,7 +11,6 @@ import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,21 +32,24 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/grant-agreement")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = GrantAgreementController.class)
+@SecuredBySpring(value = "Controller", description = "Only applicants can upload and remove grant agreements", securedType = GrantAgreementController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class GrantAgreementController {
 
-    @Autowired
     private GrantAgreementViewModelPopulator grantAgreementViewModelPopulator;
 
-    @Autowired
     private EuGrantTransferRestService euGrantTransferRestService;
 
-    @Autowired
     private QuestionStatusRestService questionStatusRestService;
 
-    @Autowired
     private UserRestService userRestService;
+
+    public GrantAgreementController(GrantAgreementViewModelPopulator grantAgreementViewModelPopulator, EuGrantTransferRestService euGrantTransferRestService, QuestionStatusRestService questionStatusRestService, UserRestService userRestService) {
+        this.grantAgreementViewModelPopulator = grantAgreementViewModelPopulator;
+        this.euGrantTransferRestService = euGrantTransferRestService;
+        this.questionStatusRestService = questionStatusRestService;
+        this.userRestService = userRestService;
+    }
 
     @GetMapping
     public String viewGrantAgreement(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) GrantAgreementForm form,

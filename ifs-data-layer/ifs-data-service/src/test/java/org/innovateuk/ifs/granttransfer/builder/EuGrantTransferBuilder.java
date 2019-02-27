@@ -71,6 +71,10 @@ public class EuGrantTransferBuilder extends BaseBuilder<EuGrantTransfer, EuGrant
         return withArray((file, funding) -> funding.setGrantAgreement(file), fileEntries);
     }
 
+    public EuGrantTransferBuilder withCalculationSpreadsheet(FileEntry... fileEntries) {
+        return withArray((file, funding) -> funding.setCalculationSpreadsheet(file), fileEntries);
+    }
+
     public EuGrantTransferBuilder withApplication(Application... applications) {
         return withArray((application, funding) -> funding.setApplication(application), applications);
     }
