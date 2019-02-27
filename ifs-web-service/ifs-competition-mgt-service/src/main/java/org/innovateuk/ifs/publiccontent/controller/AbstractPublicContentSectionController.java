@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -32,6 +31,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
 
     protected static final String TEMPLATE_FOLDER = "competition/";
     protected static final String FORM_ATTR_NAME = "form";
+    private static final String COMPETITION_SETUP = "/competition/setup/";
 
     @Autowired
     protected PublicContentService publicContentService;
@@ -65,6 +65,16 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         return markAsComplete(competitionId, model, form, validationHandler);
     }
 
+    protected String getPage(long competitionId, Model model, Optional<F> form, boolean readOnly) {
+        if (isIFSAndCompetitionNotSetup(competitionId)) {
+            return redirectString(COMPETITION_SETUP, competitionId);
+        }
+        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
+        model.addAttribute("model", modelPopulator().populate(publicContent, readOnly));
+        model.addAttribute("form", form.orElseGet(() -> formPopulator().populate(publicContent)));
+        return TEMPLATE_FOLDER + "public-content-form";
+    }
+
     private String readOnly(long competitionId, Model model, Optional<F> form) {
         return getPage(competitionId, model, form, true);
     }
@@ -73,37 +83,23 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         return getPage(competitionId, model, form, false);
     }
 
-    protected String getPage(long competitionId, Model model, Optional<F> form, boolean readOnly) {
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-
-        if (!competition.isNonIfs() && !competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())) {
-            return "redirect:/competition/setup/" + competition.getId();
-        }
-
-        model.addAttribute("model", modelPopulator().populate(publicContent, readOnly));
-        if(form.isPresent()) {
-            model.addAttribute("form", form.get());
-        } else {
-            model.addAttribute("form", formPopulator().populate(publicContent));
-        }
-        return TEMPLATE_FOLDER + "public-content-form";
+    private boolean isIFSAndCompetitionNotSetup(long competitionId) {
+        return !competitionRestService.getCompetitionById(competitionId).getSuccess().isNonIfs() &&
+                !competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId);
     }
 
     private String markAsComplete(long competitionId, Model model, F form, ValidationHandler validationHandler) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
-                .getSuccess();
-
-        if (!competition.isNonIfs() && !competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
-            return "redirect:/competition/setup/" + competition.getId();
+        if (isIFSAndCompetitionNotSetup(competitionId)) {
+            return redirectString(COMPETITION_SETUP, competitionId);
         }
-
         Supplier<String> successView = () -> getPage(competitionId, model, Optional.of(form), true);
         Supplier<String> failureView = () -> getPage(competitionId, model, Optional.of(form), false);
-
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().markAsComplete(form, publicContent));
+    }
+
+    private String redirectString(String path, long competitionId) {
+        return "redirect:" + path + competitionId;
     }
 
 }
