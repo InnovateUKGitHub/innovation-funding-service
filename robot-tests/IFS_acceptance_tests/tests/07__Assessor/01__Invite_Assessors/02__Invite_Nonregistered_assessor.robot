@@ -27,9 +27,7 @@ ${openCompetitionAPC}                  Low-cost propulsion mechanisms for subson
 
 *** Test Cases ***
 Non-registered assessor: Accept invitation
-    [Documentation]    INFUND-228
-    ...
-    ...    INFUND-4145
+    [Documentation]    INFUND-228  INFUND-4145
     [Tags]
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     When the user selects the radio button  acceptInvitation  true
@@ -39,24 +37,17 @@ Non-registered assessor: Accept invitation
 User can navigate back to Become an Assessor page
     [Documentation]    INFUND-4145
     [Tags]
-    When the user clicks the button/link           jQuery = .govuk-button:contains("Create account")
-    Then the user should see the element           jQuery = .govuk-heading-s:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
-    And the user clicks the button/link            jQuery = .govuk-back-link:contains("Back")
-    And the user should see the element            jQuery = h1:contains("Become an assessor for Innovate UK")
+    Given the user clicks the button/link    jQuery = .govuk-button:contains("Create account")
+    And the user should see the element      jQuery = .govuk-heading-s:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
+    When the user clicks the button/link     jQuery = .govuk-back-link:contains("Back")
+    Then the user should see the element     jQuery = h1:contains("Become an assessor for Innovate UK")
 
 Create assessor account: server-side validations
     [Documentation]    INFUND-1478
     [Tags]
     Given the user clicks the button/link                   jQuery = .govuk-button:contains("Create account")
     When the user clicks the button/link                    jQuery = button:contains("Continue")
-    Then the user should see a field and summary error      ${enter_a_first_name}
-    And the user should see a field and summary error       ${enter_a_last_name}
-    And the user should see a field and summary error       ${enter_a_phone_number}
-    And the user should see a field and summary error       Please enter your password.
-    And the user should see a field and summary error       ${enter_a_phone_number_between_8_and_20_digits}
-    And the user should see a field and summary error       Your last name should have at least 2 characters.
-    And the user should see a field and summary error       Your first name should have at least 2 characters.
-    And the user should see a field and summary error       Password must be at least 8 characters.
+    Then the user should see the validation error in the create assessor form
 
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
@@ -77,22 +68,19 @@ Create assessor account: client-side validations
 Create assessor account: Postcode lookup and save
     [Documentation]    INFUND-1478
     [Tags]
-    When The user enters text to a text field               id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link                     id = postcode-lookup
-    And the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
-    And The user enters text to a text field                id = password    ${correct_password}
-    And the user clicks the button/link                     jQuery = button:contains("Continue")
-    Then the user should see the element                    jQuery = h1:contains("Your account has been created")
-    And the user clicks the button/link                     jQuery = a:contains("Sign into your account")
-    Then the user should be redirected to the correct page  ${LOGGED_OUT_URL_FRAGMENT}
+    Given the user enters the postcode and password to create account
+    When the user clicks the button/link                      jQuery = button:contains("Continue")
+    Then the user should see the element                      jQuery = h1:contains("Your account has been created")
+    When the user clicks the button/link                      jQuery = a:contains("Sign into your account")
+    Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4919
     [Tags]
-    When logging in and error checking                &{nonregistered_assessor3_credentials}
-    Then the user should see the element              link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link               link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user should see the element               jQuery = p:contains("There are currently no assessments for you to review.")
+    Given logging in and error checking               &{nonregistered_assessor3_credentials}
+    And the user should see the element               link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    When the user clicks the button/link              link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Then the user should see the element              jQuery = p:contains("There are currently no assessments for you to review.")
     And the user reads his email and clicks the link  ${test_mailbox_one}+thomas.fister@gmail.com    Innovate UK assessor questionnaire    diversity survey
     [Teardown]    the user navigates to the page      ${LOGIN_URL}
 
@@ -175,3 +163,19 @@ the assessor shouldn't be able to accept the rejected competition
 The assessor is unable to see the invitation
     the user should see the element   jQuery = h1:contains("This invitation is now closed")
     The user should see the element   jQuery = p:contains("You have already accepted or rejected this invitation.")
+
+the user should see the validation error in the create assessor form
+    the user should see a field and summary error      ${enter_a_first_name}
+    the user should see a field and summary error      ${enter_a_last_name}
+    the user should see a field and summary error      ${enter_a_phone_number}
+    the user should see a field and summary error      Please enter your password.
+    the user should see a field and summary error      ${enter_a_phone_number_between_8_and_20_digits}
+    the user should see a field and summary error      Your last name should have at least 2 characters.
+    the user should see a field and summary error      Your first name should have at least 2 characters.
+    the user should see a field and summary error      Password must be at least 8 characters.
+
+the user enters the postcode and password to create account
+    The user enters text to a text field                  id = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                       id = postcode-lookup
+    the user selects the index from the drop-down menu    1  id=addressForm.selectedPostcodeIndex
+    the user enters text to a text field                  id = password    ${correct_password}
