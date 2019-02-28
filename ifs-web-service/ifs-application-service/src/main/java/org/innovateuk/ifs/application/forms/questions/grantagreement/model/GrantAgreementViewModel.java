@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.forms.questions.grantagreement.model;
 
+/**
+ * View model for horizon 2020 grant agreement upload.
+ */
 public class GrantAgreementViewModel {
 
     private final long applicationId;
