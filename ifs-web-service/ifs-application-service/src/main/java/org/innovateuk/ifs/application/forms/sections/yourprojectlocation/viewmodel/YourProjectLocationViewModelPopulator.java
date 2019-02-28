@@ -37,11 +37,13 @@ public class YourProjectLocationViewModelPopulator {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
         boolean sectionMarkedAsComplete = completedSectionIds.contains(sectionId);
 
-        boolean open = !internalUser && isOpen(application);
+        boolean open = !internalUser && application.isOpen() && competition.isOpen();
 
         return new YourProjectLocationViewModel(
                 sectionMarkedAsComplete,
@@ -49,12 +51,8 @@ public class YourProjectLocationViewModelPopulator {
                 application.getName(),
                 applicationId,
                 sectionId,
-                open);
-    }
-
-    private boolean isOpen(ApplicationResource application) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        return competition.isOpen() && application.isOpen();
+                open,
+                competition.isH2020());
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {

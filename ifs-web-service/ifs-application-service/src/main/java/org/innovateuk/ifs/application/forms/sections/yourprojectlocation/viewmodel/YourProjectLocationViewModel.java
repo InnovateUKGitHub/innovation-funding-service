@@ -11,6 +11,7 @@ public class YourProjectLocationViewModel {
     private final long sectionId;
     private final boolean open;
     private final boolean complete;
+    private final boolean h2020;
 
     public YourProjectLocationViewModel(
             boolean complete,
@@ -18,7 +19,8 @@ public class YourProjectLocationViewModel {
             String applicationName,
             long applicationId,
             long sectionId,
-            boolean open) {
+            boolean open,
+            boolean h2020) {
 
         this.complete = complete;
         this.financesUrl = financesUrl;
@@ -26,6 +28,7 @@ public class YourProjectLocationViewModel {
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.open = open;
+        this.h2020 = h2020;
     }
 
     public boolean isComplete() {
@@ -54,5 +57,9 @@ public class YourProjectLocationViewModel {
 
     public boolean isOpen() {
         return open;
+    }
+
+    public boolean isH2020() {
+        return h2020;
     }
 }
