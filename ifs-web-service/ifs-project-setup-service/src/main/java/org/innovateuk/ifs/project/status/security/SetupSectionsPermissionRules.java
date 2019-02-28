@@ -206,10 +206,8 @@ public class SetupSectionsPermissionRules {
             long organisationId = user.hasRole(MONITORING_OFFICER) ?
                     projectService.getLeadOrganisation(projectId).getId() : projectService.getOrganisationIdFromUser(projectId, user);
 
-            ProjectUserResource leadProjectUser = projectService.getLeadPartners(projectId).stream().findFirst().get();
-
             ProjectTeamStatusResource teamStatus = user.hasRole(MONITORING_OFFICER) ?
-                    statusService.getProjectTeamStatus(projectId, Optional.of(leadProjectUser.getUser())) : statusService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
+                    getProjectTeamStatusForMonitoringOfficer(projectId) : statusService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
 
             ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(organisationId).get();
 
@@ -223,6 +221,11 @@ public class SetupSectionsPermissionRules {
             LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup", e);
             return false;
         }
+    }
+
+    private ProjectTeamStatusResource getProjectTeamStatusForMonitoringOfficer(long projectId) {
+        ProjectUserResource leadProjectUser = projectService.getLeadPartners(projectId).stream().findFirst().get();
+        return statusService.getProjectTeamStatus(projectId, Optional.of(leadProjectUser.getUser()));
     }
 
     private boolean isProjectInViewableState(long projectId) {
