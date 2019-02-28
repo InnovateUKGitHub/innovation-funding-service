@@ -184,7 +184,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:Biosciences round three: plastic recovery in the industrial sector}")
+//    @Value("${ifs.generate.test.data.competition.filter.name:Biosciences round three: plastic recovery in the industrial sector}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
         BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
@@ -353,7 +353,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 taskExecutor);
 
         CompletableFuture<List<ApplicationFinanceData>> applicationFinances = CompletableFuture.supplyAsync(() ->
-                applicationDataBuilderService.createApplicationFinances(applicationData, applicationLine, applicationFinanceLines),
+                applicationDataBuilderService.createApplicationFinances(applicationData, applicationLine, applicationFinanceLines, externalUserLines),
                 taskExecutor);
 
         CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances);
@@ -405,7 +405,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         competitionDataBuilderService.moveCompetitionIntoOpenStatus(competition);
 
         return simpleMap(applicationsForCompetition, applicationLine -> CompletableFuture.supplyAsync(() ->
-                applicationDataBuilderService.createApplication(competition, applicationLine, inviteLines), taskExecutor));
+                applicationDataBuilderService.createApplication(competition, applicationLine, inviteLines, externalUserLines), taskExecutor));
     }
 
     private CompletableFuture<Void> waitForFutureList(List<? extends CompletableFuture<?>> createApplicationsFutures) {

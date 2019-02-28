@@ -58,6 +58,13 @@
                                 innovationAreas=competition.innovationAreaNames,
                                 cell4=${competition.projectsCount + ' projects'}"/>
                         </li>
+                        <li class="govuk-grid-row" th:each="competition : ${model.nonPrioritisedCompetitions}">
+                            <th:block
+                                th:insert="competition/dashboard :: dashboard-row(projectSetup=${true})"
+                                th:with="competition=${competition},
+                                innovationAreas=competition.innovationAreaNames,
+                                cell4=${competition.projectsCount + ' projects'}"/>
+                        </li>
                     </ul>
                 </th:block>
             </section>

@@ -15,7 +15,7 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 ...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
 ...
 ...               IFS-1881 Project Setup internal project dashboard navigation
-Suite Setup       the project is completed if it is not already complete
+Suite Setup       the user logs-in in new browser    &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          PS_Common.robot
@@ -25,37 +25,36 @@ Resource          PS_Common.robot
 Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300, IFS-1881
     [Tags]  HappyPath
-    [Setup]  Log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    When the user clicks the button/link    link = ${PROJECT_SETUP_COMPETITION_NAME}
+    When the user clicks the button/link    link = ${PS_Competition_Name}
     Then the user should see the element    link = All projects
-    And the user should see the element     jQuery = tr:nth-child(2) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    And the user should see the element     jQuery = tr:nth-child(2) th a:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
-    And the user should see the element     jQuery = tr:nth-child(2) th:contains("3 partners")
-    And the user should see the element     jQuery = tr:nth-child(2) th:contains("Lead: ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
-    And the user should see the element     jQuery = tr:nth-child(3) th:contains("Office Chair for Life")
-    And the user should see the element     jQuery = tr:nth-child(1) th:contains("Elbow grease")
-    When the user clicks the button/link    link = ${PROJECT_SETUP_APPLICATION_1_NUMBER}
-    Then the user should be redirected to the correct page     ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/application/${PROJECT_SETUP_APPLICATION_1}
+    And the user should see the element     jQuery = tr:nth-child(3) th:contains("${PS_IU_Application_Title}")
+    And the user should see the element     jQuery = tr:nth-child(3) th a:contains("${PS_IU_Application_No}")
+    And the user should see the element     jQuery = tr:nth-child(3) th:contains("3 partners")
+    And the user should see the element     jQuery = tr:nth-child(3) th:contains("Lead: ${Ntag_Name}")
+    And the user should see the element     jQuery = tr:nth-child(4) th:contains("${Grade_Crossing_Applicaiton_Titile}")
+    And the user should see the element     jQuery = tr:nth-child(5) th:contains("Point control and automated monitoring")
+    When the user clicks the button/link    link = ${PS_IU_Application_No}
+    Then the user should be redirected to the correct page     ${server}/management/competition/${PS_Competition_Id}/application/${PS_IU_Application_No}
     And the user should not see an error in the page
 
 Pr Finance can visit an application and navigate back
     [Documentation]  IFS-544
     [Tags]  HappyPath
-    Given the user navigates to the page  ${internal_competition_status}
-    When the user clicks the button/link  link = ${PROJECT_SETUP_APPLICATION_1}
+    Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    When the user clicks the button/link  link = ${PS_IU_Application_No}
     Then the user should see the element  jQuery = h1:contains("Application overview")
     When the user clicks the button/link  link = Back
-    Then the user should be redirected to the correct page  ${internal_competition_status}
+    Then the user should be redirected to the correct page  ${server}/project-setup-management/competition/${PS_Competition_Id}/status
 
 Project Finance can see the status of projects in PS
     [Documentation]  INFUND-5300, INFUND-7109
     [Tags]
-    Given the user navigates to the page    ${internal_competition_status}
-    Then the user should see the element    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok
-    And the user should see the element     css = #table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.waiting
-    And the user should not see the element  css = #table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.waiting
-    And the user should see the element     css = #table-project-status tr:nth-of-type(2) td:nth-of-type(5).status.action
+    Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    Then the user should see the element     css = #table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok
+    And the user should see the element      css = #table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok
+    And the user should see the element      css = #table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok
+    And the user should see the element      css = #table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action
 
 # Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
 Other internal users cannot see Bank details or Finance checks
@@ -64,50 +63,20 @@ Other internal users cannot see Bank details or Finance checks
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     # This is added to HappyPath because CompAdmin should NOT have access to Bank details
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link           link = ${PROJECT_SETUP_COMPETITION_NAME}
+    And the user clicks the button/link           link = ${PS_Competition_Name}
     Then the user should see the element          link = All projects
-    And the user should not see the element       css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3) a
-    And the user should not see the element       css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4) a
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details    ${403_error_message}
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    ${403_error_message}
+    And the user should not see the element       css = #table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(4) a
+    And the user should not see the element       css = #table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5) a
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_IU_Application_Project}/review-all-bank-details    ${403_error_message}
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_IU_Application_Project}/finance-check    ${403_error_message}
 
 Comp Admin user can see the internal project summary page
     [Documentation]    INFUND-4049, INFUND-5899
     [Tags]
-    Given the user navigates to the page             ${internal_competition_status}
-    Then the user should see the element             jQuery = th div:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    And the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(4) > a   # Monitoring officer page link
+    Given the user navigates to the page             ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    Then the user should see the element             jQuery = th div:contains("${PS_EF_APPLICATION_TITLE}")
+    And the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(3) > td:nth-child(4) > a   # Monitoring officer page link
     And the user should not see an error in the page
-
-*** Keywords ***
-the project is completed if it is not already complete
-    The user logs-in in new browser  &{lead_applicant_credentials}
-    the user navigates to the page    ${project_in_setup_page}/details
-    ${project_manager_not_set}    ${value} =    run keyword and ignore error without screenshots    The user should not see the element    css = #project-manager-status.yes
-    run keyword if  '${project_manager_not_set}' == 'PASS'  all previous sections of the project are completed
-    run keyword if  '${project_manager_not_set}' == 'FAIL'  login as a different user  &{internal_finance_credentials}
-
-all previous sections of the project are completed
-    project lead submits project details        ${PROJECT_SETUP_APPLICATION_1_PROJECT}
-    partners submit finance contacts
-    all partners submit their bank details
-    project finance approves bank details
-    project finance submits monitoring officer  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  Grace  Harper  ${test_mailbox_two}+monitoringofficer@gmail.com  08549731414
-
-partners submit finance contacts
-    the partner submits their finance contact  ${EMPIRE_LTD_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
-    the partner submits their finance contact  ${organisationLudlowId}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator1_credentials}
-    the partner submits their finance contact  ${organisationEggsId}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator2_credentials}
-
-all partners submit their bank details
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
-
-project finance approves bank details
-    log in as a different user                          &{internal_finance_credentials}
-    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}
-    the project finance user approves bank details for  ${organisationEggsName}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}
-
 
 
 

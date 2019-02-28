@@ -1,22 +1,52 @@
-Project name,Start date,Project manager,Project address added?,Finance contacts,Monitoring Officer first name,Monitoring Officer last name,Monitoring Officer email,Monitoring Officer phone number,Bank details,Finance checks submitted?,Status
-High-speed rail and its effects on water quality,2020-02-01,heather.ross@example.com,Yes,University of Bath: heather.ross@example.com,Thomas,Filton,thomas.filton@isee.example.com,01675 342514,University of Bath: 51406795 / 404745,University of Bath,SETUP
-High-speed rail and its effects on soil compaction,2020-03-01,becky.mason@gmail.com,Yes,Dreambit: becky.mason@gmail.com,Thomas,Filton,thomas.filton@isee.example.com,01675 342514,Dreambit: 51406795 / 404745,Dreambit,SETUP
-New materials for lighter stock,2020-10-01,,,,,,,,,,SETUP
-Grade crossing manufacture and supply,2020-03-01,diane.scott@vitruvius.example.com,Yes,,,,,,,,SETUP
-Point control and automated monitoring,2020-06-01,phillip.ramos@katz.example.com,Yes,,Rachel,Henning,rachel.henning@umon.example.com,01476 987654,,,SETUP
+Project name,Start date,Project manager,Project address added?,Finance contacts,Monitoring Officer first name,Monitoring Officer last name,Monitoring Officer email,Monitoring Officer phone number,Bank details,Bank details approved,Finance checks approved,Status,Project Documents Uploaded,Generate Spend Profile,Upload Spend Profile,Approve Spend Profile,Grant offer letter published to team,Signed Grant Offer Letter submitted
+High-speed rail and its effects on water quality,2020-02-01,heather.ross@example.com,Yes,University of Bath: heather.ross@example.com,Thomas,Filton,thomas.filton@isee.example.com,01675 342514,University of Bath: 51406795 / 404745,Yes,Yes,SETUP,Yes,Yes,Yes,Yes,Yes,No
+High-speed rail and its effects on soil compaction,2020-03-01,becky.mason@gmail.com,Yes,Dreambit: becky.mason@gmail.com,Thomas,Filton,thomas.filton@isee.example.com,01675 342514,Dreambit: 51406795 / 404745,Yes,No,SETUP,No,No,No,No,No,No
+Grade crossing manufacture and supply,2020-03-01,diane.scott@vitruvius.example.com,Yes,"Vitruvius Stonework Limited: diane.scott@vitruvius.example.com
+A B Cad Services: phil.mcguire@abcad.example.com
+Armstrong & Butler Ltd: darren.richards@armstrong.example.com",,,,,,,No,SETUP,No,Yes,Yes,No,No,No
+Point control and automated monitoring,2020-06-01,phillip.ramos@katz.example.com,Yes,,Rachel,Henning,rachel.henning@umon.example.com,01476 987654,,,No,SETUP,No,No,No,No,No,No
 High-speed rail and its effects on air quality,2020-01-01,ralph.young@ooba.example.com,Yes,"Ooba: ralph.young@ooba.example.com
 Wordpedia: tina.taylor@wordpedia.example.com
 Jabbertype: antonio.jenkins@jabbertype.example.com",Thomas,Filton,thomas.filton@isee.example.com,01675 342514,"Ooba: 51406795 / 404745
 Wordpedia: 51406795 / 404745
-Jabbertype: 51406795 / 404745",,SETUP
+Jabbertype: 51406795 / 404745",Yes,Yes,SETUP,Yes,No,No,No,No,No
 London underground - enhancements to existing stock and logistics,2020-04-01,worth.email.test+amy@gmail.com,Yes,"Gabtype: worth.email.test+marian@gmail.com
 Kazio: worth.email.test+karen@gmail.com
 Cogilith: worth.email.test+juan@gmail.com",Andrew,Chan,andrew.chan@optimo.example.com,03527 283647,"Gabtype: 51406795 / 404745
 Kazio: 51406795 / 404745
-Cogilith: 51406795 / 404745","Gabtype
-Kazio
-Cogilith",SETUP
+Cogilith: 51406795 / 404745",No,No,SETUP,No,No,No,No,No,No
 Nano-ROAD: Nanocoating for Reduction Of Air Drag,2020-04-01,ruby.stewart@gmail.com,Yes,"Tanzone: ruby.stewart@gmail.com
 Zummacity: edward.morris@gmail.com",Nadia,Smith,n.smith@operandi.example.com,01524 384635,"Tanzone: 51406795 / 404745
-Zummacity: 51406795 / 404745","Tanzone
-Zummacity",WITHDRAWN
+Zummacity: 51406795 / 404745",Yes,No,WITHDRAWN,No,No,No,No,No,No
+High Performance Gasoline Stratified,2020-01-01,worth.email.test.two+releasefeedback@gmail.com,Yes,Electric Sounds Ltd: worth.email.test.two+releasefeedback@gmail.com,Thomas,Filton,thomas.filton@isee.example.com,01675 342514,Electric Sounds Ltd: 51406795 / 404745,Yes,No,SETUP,No,Yes,Yes,Yes,No,No
+New materials for lighter stock,2020-10-01,steven.hicks@ntag.example.com,Yes,"Ntag: steven.hicks@ntag.example.com
+Jetpulse: gene.bowman@jetpulse.example.com
+Wikivu: bruce.perez@wikivu.example.com",Thomas,Filton,thomas.filton@isee.example.com,01675 342514,"Ntag: 51406795 / 404745
+Jetpulse: 51406795 / 404745
+Wikivu: 51406795 / 404745",Yes,No,SETUP,Yes,No,No,No,No,No
+Elbow grease,2020-10-01,louis.morgan@example.com,Yes,"Big Riffs And Insane Solos Ltd: louis.morgan@example.com
+Aberystwyth University: deborah.moore@example.com
+Listen To Metal Ltd: howard.white@example.com",Thomas,Filton,thomas.filton@isee.example.com,01675 342514,"Big Riffs And Insane Solos Ltd: 51406795 / 404745
+Aberystwyth University: 51406795 / 404745
+Listen To Metal Ltd: 51406795 / 404745",Yes,Yes,SETUP,Yes,Yes,Yes,No,No,No
+Smart skips for plastic storage and retrieval,2020-10-01,dave.adams@gmail.com,Yes,"Crystalrover: dave.adams@gmail.com
+Empire Ltd: steve.smith@empire.com
+Ludlow: jessica.doe@ludlow.co.uk",,,,,,,No,SETUP,No,Yes,Yes,No,No,No
+Correlation of maintenance data of corroded knuckles (CorMaCK),2020-10-01,myrtle.barton@jabbertype.example.com,Yes,"Jabbertype: myrtle.barton@jabbertype.example.com
+Aberystwyth University: deborah.moore@example.com
+Wikivu: bruce.perez@wikivu.example.com",,,,,,,No,SETUP,No,No,No,No,No,No
+Super-EFFY - Super Efficient Forecasting of Freight Yields,2020-01-01,dave.adams@gmail.com,Yes,"Crystalrover: dave.adams@gmail.com
+Jabbertype: myrtle.barton@jabbertype.example.com
+Zummacity: edward.morris@gmail.com",Thomas,Filton,thomas.filton@isee.example.com,01675 342514,"Crystalrover: 51406795 / 404745
+Jabbertype: 51406795 / 404745
+Zummacity: 51406795 / 404745",Yes,Yes,SETUP,Yes,Yes,Yes,Yes,No,No
+Magic material,2020-01-01,,,,,,,,,,,SETUP,,,,,,No
+Energy saver- nano tech,2020-02-01,troy.ward@gmail.com,Yes,"Ward Ltd: sian.ward@gmail.com
+SmithZone: eve.smith@gmail.com
+Red Planet: jake.reddy@gmail.com",Thomas,Filton,thomas.filton@isee.example.com,01676 342514,"Ward Ltd: 51406795 / 404745
+SmithZone: 51406795 / 404745
+Red Planet: 51406795 / 404745",Yes,Yes,SETUP,Yes,Yes,Yes,Yes,Yes,Yes
+Energy efficient home device,2020-03-01,ron.spencer@gmail.com,Yes,Ice Valley Ltd: jim.brand@gmail.com,Thomas,Filton,thomas.filton@isee.example.com,01675 342514,Ice Valley Ltd: 51406795 / 404745,Yes,Yes,SETUP,Yes,Yes,Yes,Yes,Yes,Yes
+Self-sustaining generator system,2020-04-01,kaye.lopez@gmail.com,Yes,"Green Hat Ltd: victor.cox@gmail.com
+Golden Valley Research Ltd: daniel.tan@example.com",Thomas,Filton,thomas.filton@isee.example.com,01675 342514,"Green Hat Ltd: 51406795 / 404745
+Golden Valley Research Ltd: 51406795 / 404745",Yes,Yes,SETUP,Yes,Yes,Yes,Yes,Yes,Yes

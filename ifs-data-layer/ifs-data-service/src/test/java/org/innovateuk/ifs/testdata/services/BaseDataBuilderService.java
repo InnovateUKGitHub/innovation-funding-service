@@ -64,15 +64,19 @@ public abstract class BaseDataBuilderService {
         return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccess());
     }
 
-    OrganisationResource retrieveOrganisationByUserId(Long id) {
-        return doAs(systemRegistrar(), () -> organisationService.getAllByUserId(id).getSuccess().get(0));
+    OrganisationResource organisationByName(String organisationName) {
+        return doAs(compAdmin(), () -> organisationService.findById(organisationRepository.findByNameOrderById(organisationName).get(0).getId()).getSuccess());
     }
 
     protected UserResource systemRegistrar() {
         return newUserResource().withRolesGlobal(asList(Role.SYSTEM_REGISTRATION_USER)).build();
     }
 
-    private <T> T doAs(UserResource user, Supplier<T> action) {
+    protected UserResource compAdmin() {
+        return newUserResource().withRolesGlobal(asList(Role.COMP_ADMIN)).build();
+    }
+
+    public <T> T doAs(UserResource user, Supplier<T> action) {
         UserResource currentUser = setLoggedInUser(user);
         try {
             return action.get();
