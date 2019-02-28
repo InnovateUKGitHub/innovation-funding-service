@@ -22,11 +22,10 @@ public class EuGrantTransferController {
 
     @PostMapping(value = "/grant-agreement/{applicationId}", produces = "application/json")
     public RestResult<Void> uploadGrantAgreement(@RequestHeader(value = "Content-Type", required = false) String contentType,
-                                           @RequestHeader(value = "Content-Length", required = false) String contentLength,
-                                           @RequestParam(value = "filename", required = false) String originalFilename,
-                                           @PathVariable("applicationId") long applicationId,
-                                           HttpServletRequest request)
-    {
+                                                 @RequestHeader(value = "Content-Length", required = false) String contentLength,
+                                                 @RequestParam(value = "filename", required = false) String originalFilename,
+                                                 @PathVariable("applicationId") long applicationId,
+                                                 HttpServletRequest request) {
         return euGrantTransferService.uploadGrantAgreement(contentType, contentLength, originalFilename, applicationId, request).toPostCreateResponse();
     }
 
