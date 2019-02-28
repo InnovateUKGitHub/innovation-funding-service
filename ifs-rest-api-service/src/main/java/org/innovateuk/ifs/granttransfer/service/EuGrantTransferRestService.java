@@ -20,4 +20,5 @@ public interface EuGrantTransferRestService {
 
     RestResult<EuGrantTransferResource> findDetailsByApplicationId(long applicationId);
 
+    RestResult<Void> updateGrantTransferDetails(EuGrantTransferResource euGrantResource, long applicationId);
 }

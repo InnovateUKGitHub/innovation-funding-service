@@ -33,74 +33,8 @@
               novalidate="novalidate"
               th:object="${form}">
 
-
-
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('grantAgreementNumber')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="grantAgreementNumber">Grant agreement number
-                    <span id="grant-agreement-number-hint" class="govuk-hint">
-                            This 6-digit number might also be referred to as your project ID, agreement number or proposal ID.
-                        </span>
-                </label>
-                <th:block th:if="${#fields.hasErrors('grantAgreementNumber')}">
-                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('grantAgreementNumber')}" th:text="${err}"></span>
-                </th:block>
-                <input class="govuk-input govuk-input--width-10"
-                       id="grantAgreementNumber"
-                       type="text"
-                       required="required"
-                       th:field="*{grantAgreementNumber}"
-                       pattern="[0-9]{6}"
-                       th:attr="
-                           data-required-errormessage=#{validation.fundingForm.grant.agreement.number},
-                           data-pattern-errormessage=#{validation.fundingForm.grant.agreement.format.invalid}">
-            </div>
-
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('participantId')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="participantId">Participant identification code (PIC)
-                    <span id="pic-number-hint" class="govuk-hint govuk-!-width-two-thirds">
-                            The 9-digit number unique to your organisation that you can find in the Horizon 2020 <a
-                        href="http://ec.europa.eu/research/participants/portal/desktop/en/organisations/register_sec.html"
-                        target="_blank" class="govuk-link">participant portal</a> (opens in a new window).
-                        </span>
-                </label>
-                <th:block th:if="${#fields.hasErrors('participantId')}">
-                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('participantId')}" th:text="${err}"></span>
-                </th:block>
-                <input class="govuk-input govuk-input--width-10"
-                       id="participantId"
-                       type="text"
-                       required="required"
-                       th:field="*{participantId}"
-                       pattern="[0-9]{9}"
-                       th:attr="data-required-errormessage=#{validation.fundingForm.participant.identification.code},
-                           data-pattern-errormessage=#{validation.fundingForm.participant.identification.code.format.invalid}">
-            </div>
-
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('actionType')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="actionType">
-                    Type of action
-                    <span id="grant-action-type-hint" class="govuk-hint">
-                            The funding scheme you applied for.
-                        </span>
-                </label>
-                <th:block th:if="${#fields.hasErrors('actionType')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('actionType')}"
-                              th:text="${err}"></span>
-                </th:block>
-                <select name="actionType"
-                        class="govuk-select govuk-!-width-three-quarters"
-                        id="actionType"
-                        th:field="*{actionType}"
-                        required="required"
-                        th:attr="data-required-errormessage=#{validation.fundingForm.action.type}">
-                    <option value="">Select...</option>
-                    <option th:each="actionType : ${actionTypes}" th:value="${actionType.id}"
-                            th:text="${'(' + actionType.name + ') ' + actionType.description}"></option>
-                </select>
-            </div>
+            <p class="govuk-body govuk-!-margin-bottom-6">Make sure you have your grant agreement to hand before you
+                start.</p>
 
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('projectName')} ? 'govuk-form-group--error'">
@@ -250,14 +184,81 @@
             </div>
 
             <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('grantAgreementNumber')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="grantAgreementNumber">Grant agreement number
+                    <span id="grant-agreement-number-hint" class="govuk-hint">
+                            This 6-digit number might also be referred to as your project ID, agreement number or proposal ID.
+                        </span>
+                </label>
+                <th:block th:if="${#fields.hasErrors('grantAgreementNumber')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('grantAgreementNumber')}" th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input govuk-input--width-10"
+                       id="grantAgreementNumber"
+                       type="text"
+                       required="required"
+                       th:field="*{grantAgreementNumber}"
+                       pattern="[0-9]{6}"
+                       th:attr="
+                           data-required-errormessage=#{validation.fundingForm.grant.agreement.number},
+                           data-pattern-errormessage=#{validation.fundingForm.grant.agreement.format.invalid}">
+            </div>
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('participantId')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="participantId">Participant identification code (PIC)
+                    <span id="pic-number-hint" class="govuk-hint govuk-!-width-two-thirds">
+                            The 9-digit number unique to your organisation that you can find in the Horizon 2020 <a
+                        href="http://ec.europa.eu/research/participants/portal/desktop/en/organisations/register_sec.html"
+                        target="_blank" class="govuk-link">participant portal</a> (opens in a new window).
+                        </span>
+                </label>
+                <th:block th:if="${#fields.hasErrors('participantId')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('participantId')}" th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input govuk-input--width-10"
+                       id="participantId"
+                       type="text"
+                       required="required"
+                       th:field="*{participantId}"
+                       pattern="[0-9]{9}"
+                       th:attr="data-required-errormessage=#{validation.fundingForm.participant.identification.code},
+                           data-pattern-errormessage=#{validation.fundingForm.participant.identification.code.format.invalid}">
+            </div>
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('actionType')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="actionType">
+                    Type of action
+                    <span id="grant-action-type-hint" class="govuk-hint">
+                            The funding scheme you applied for.
+                        </span>
+                </label>
+                <th:block th:if="${#fields.hasErrors('actionType')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('actionType')}"
+                              th:text="${err}"></span>
+                </th:block>
+                <select name="actionType"
+                        class="govuk-select govuk-!-width-three-quarters"
+                        id="actionType"
+                        th:field="*{actionType}"
+                        required="required"
+                        th:attr="data-required-errormessage=#{validation.fundingForm.action.type}">
+                    <option value="">Select...</option>
+                    <option th:each="actionType : ${actionTypes}" th:value="${actionType.id}"
+                            th:text="${'(' + actionType.name + ') ' + actionType.description}"></option>
+                </select>
+            </div>
+
+            <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('fundingContribution')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="projectName">
+                <label class="govuk-label govuk-label--s" for="fundingContribution">
                     EU funding contribution for above project (EUR)
                     <span id="funding-committed-hint" class="govuk-hint">
                             The total amount in euros granted to your organisation at the point of the award for your project.
                         </span>
                 </label>
-                <th:block th:if="${#fields.hasErrors('projectName')}">
+                <th:block th:if="${#fields.hasErrors('fundingContribution')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('fundingContribution')}" th:text="${err}"></span>
                 </th:block>
                 <span class="govuk-body govuk-!-padding-right-1">€</span>

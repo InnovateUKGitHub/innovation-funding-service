@@ -16,7 +16,7 @@ public class EuGrantTransfer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="application_id", referencedColumnName="id")
     private Application application;
 

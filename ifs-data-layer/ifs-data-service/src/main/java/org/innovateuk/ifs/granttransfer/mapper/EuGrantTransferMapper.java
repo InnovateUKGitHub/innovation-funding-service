@@ -24,7 +24,9 @@ public abstract class EuGrantTransferMapper extends BaseMapper<EuGrantTransfer, 
 
     @Mappings({
             @Mapping(target = "calculationSpreadsheet", ignore = true),
-            @Mapping(target = "grantAgreement", ignore = true)
+            @Mapping(target = "grantAgreement", ignore = true),
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "application", ignore = true),
     })
     @Override
     public abstract EuGrantTransfer mapToDomain(EuGrantTransferResource projectResource);

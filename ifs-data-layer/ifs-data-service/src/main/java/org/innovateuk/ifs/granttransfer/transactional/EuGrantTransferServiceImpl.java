@@ -100,6 +100,23 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
         return findGrantTransferByApplicationId(applicationId).andOnSuccessReturn(mapper::mapToResource);
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateGrantTransferByApplicationId(EuGrantTransferResource euGrantTransferResource, long applicationId) {
+        return findGrantTransferByApplicationIdCreateIfNotExists(applicationId).andOnSuccessReturnVoid(domain -> {
+            domain.setGrantAgreementNumber(euGrantTransferResource.getGrantAgreementNumber());
+            domain.setParticipantId(euGrantTransferResource.getParticipantId());
+            domain.setProjectStartDate(euGrantTransferResource.getProjectStartDate());
+            domain.setProjectEndDate(euGrantTransferResource.getProjectEndDate());
+            domain.setFundingContribution(euGrantTransferResource.getFundingContribution());
+            domain.setProjectCoordinator(euGrantTransferResource.isProjectCoordinator());
+
+            //TODO action type
+
+            domain.getApplication().setName(euGrantTransferResource.getProjectName());
+        });
+    }
+
     private ServiceResult<FileAndContents> getFileAndContents(FileEntryResource fileEntry) {
         return fileService.getFileByFileEntryId(fileEntry.getId())
                 .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntry, inputStream));
@@ -112,11 +129,12 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
             Application application = new Application();
             application.setId(applicationId);
             grantTransfer.setApplication(application);
-            euGrantTransferRepository.save(grantTransfer);
+            grantTransfer = euGrantTransferRepository.save(grantTransfer);
         }
         return serviceSuccess(grantTransfer);
 
     }
+
     private ServiceResult<EuGrantTransfer> findGrantTransferByApplicationId(long applicationId) {
         return find(euGrantTransferRepository.findByApplicationId(applicationId), notFoundError(EuGrantTransfer.class, applicationId));
     }

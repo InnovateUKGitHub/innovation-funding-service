@@ -5,6 +5,8 @@ import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestServiceImpl;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class GrantTransferDetailsFormPopulator {
 
@@ -16,18 +18,27 @@ public class GrantTransferDetailsFormPopulator {
 
     public GrantTransferDetailsForm populate(GrantTransferDetailsForm fundingForm, long applicationId) {
 
-        EuGrantTransferResource euGrantResource = euGrantTransferRestService.findDetailsByApplicationId(applicationId).getSuccess();
+        Optional<EuGrantTransferResource> maybeEuGrantResource = euGrantTransferRestService.findDetailsByApplicationId(applicationId).getOptionalSuccessObject();
 
-        fundingForm.setFundingContribution(euGrantResource.getFundingContribution());
-        fundingForm.setGrantAgreementNumber(euGrantResource.getGrantAgreementNumber());
-        fundingForm.setParticipantId(euGrantResource.getParticipantId());
-        fundingForm.setProjectCoordinator(euGrantResource.isProjectCoordinator());
-        fundingForm.setProjectName(euGrantResource.getProjectName());
-        fundingForm.setStartDateMonth(euGrantResource.getProjectStartDate().getMonthValue());
-        fundingForm.setStartDateYear(euGrantResource.getProjectStartDate().getYear());
-        fundingForm.setEndDateMonth(euGrantResource.getProjectEndDate().getMonthValue());
-        fundingForm.setEndDateYear(euGrantResource.getProjectEndDate().getYear());
-        fundingForm.setActionType(euGrantResource.getActionType().getId());
+        if (maybeEuGrantResource.isPresent()) {
+            EuGrantTransferResource euGrantResource = maybeEuGrantResource.get();
+            fundingForm.setFundingContribution(euGrantResource.getFundingContribution());
+            fundingForm.setGrantAgreementNumber(euGrantResource.getGrantAgreementNumber());
+            fundingForm.setParticipantId(euGrantResource.getParticipantId());
+            fundingForm.setProjectCoordinator(euGrantResource.isProjectCoordinator());
+            fundingForm.setProjectName(euGrantResource.getProjectName());
+            if (euGrantResource.getProjectStartDate() != null) {
+                fundingForm.setStartDateMonth(euGrantResource.getProjectStartDate().getMonthValue());
+                fundingForm.setStartDateYear(euGrantResource.getProjectStartDate().getYear());
+            }
+            if (euGrantResource.getProjectEndDate() != null) {
+                fundingForm.setEndDateMonth(euGrantResource.getProjectEndDate().getMonthValue());
+                fundingForm.setEndDateYear(euGrantResource.getProjectEndDate().getYear());
+            }
+            if (euGrantResource.getActionType() != null) {
+                fundingForm.setActionType(euGrantResource.getActionType().getId());
+            }
+        }
 
         return fundingForm;
 

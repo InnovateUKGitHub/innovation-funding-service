@@ -26,6 +26,12 @@ public class EuGrantTransferController {
         return euGrantTransferService.getGrantTransferByApplicationId(applicationId).toGetResponse();
     }
 
+    @PostMapping(value = "{applicationId}", produces = "application/json")
+    public RestResult<Void> getGrantTransferByApplicationId(@PathVariable("applicationId") long applicationId,
+                                                                               @RequestBody EuGrantTransferResource euGrantTransferResource) {
+        return euGrantTransferService.updateGrantTransferByApplicationId(euGrantTransferResource, applicationId).toPostAcceptResponse();
+    }
+
     @PostMapping(value = "/grant-agreement/{applicationId}", produces = "application/json")
     public RestResult<Void> uploadGrantAgreement(@RequestHeader(value = "Content-Type", required = false) String contentType,
                                            @RequestHeader(value = "Content-Length", required = false) String contentLength,

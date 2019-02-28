@@ -47,4 +47,9 @@ public class EuGrantTransferRestServiceImpl extends BaseRestService implements E
         return getWithRestResult(url, EuGrantTransferResource.class);
     }
 
+    @Override
+    public RestResult<Void> updateGrantTransferDetails(EuGrantTransferResource euGrantResource, long applicationId) {
+        String url = format("%s/%d", REST_URL, applicationId);
+        return postWithRestResult(url, euGrantResource, Void.class);
+    }
 }

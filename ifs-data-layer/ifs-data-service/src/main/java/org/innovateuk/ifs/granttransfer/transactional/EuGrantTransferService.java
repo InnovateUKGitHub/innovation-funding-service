@@ -32,4 +32,7 @@ public interface EuGrantTransferService {
     @SecuredBySpring(value = "GET_GRANT_TRANSFER_DETAILS",
             description = "Competition Admins, Project Finance users and applicants can view grant transfer details")
     ServiceResult<EuGrantTransferResource> getGrantTransferByApplicationId(long applicationId);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
+    ServiceResult<Void> updateGrantTransferByApplicationId(EuGrantTransferResource euGrantTransferResource, long applicationId);
 }
