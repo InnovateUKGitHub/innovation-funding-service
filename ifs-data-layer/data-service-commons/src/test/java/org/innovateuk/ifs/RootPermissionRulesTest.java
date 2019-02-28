@@ -56,6 +56,10 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(STAKEHOLDER);
     }
 
+    protected UserResource monitoringOfficerUser() {
+        return getUserWithRole(MONITORING_OFFICER);
+    }
+
     protected UserResource assessorUser() {
         return getUserWithRole(ASSESSOR);
     }

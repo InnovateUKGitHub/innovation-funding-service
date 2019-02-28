@@ -52,7 +52,7 @@ public class StatusServiceSecurityTest extends BaseServiceSecurityTest<StatusSer
         Long competitionId = 1L;
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
 
-        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competition);
+        when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competition);
 
         assertAccessDenied(() -> classUnderTest.getCompetitionStatus(competitionId, "12"), () -> {
             verify(statusPermissionRules).internalAdminTeamCanViewCompetitionStatus(competition, getLoggedInUser());
@@ -68,5 +68,3 @@ public class StatusServiceSecurityTest extends BaseServiceSecurityTest<StatusSer
         return StatusServiceImpl.class;
     }
 }
-
-
