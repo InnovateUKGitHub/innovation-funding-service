@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import static java.lang.String.format;
 
 /**
- * REST service for managing interview panel invites.
+ * REST service for Horizon 2020 grant transfer information.
  */
 @Service
 public class EuGrantTransferRestServiceImpl extends BaseRestService implements EuGrantTransferRestService {

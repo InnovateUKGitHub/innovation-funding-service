@@ -55,15 +55,15 @@ public class GrantAgreementController {
     public String viewGrantAgreement(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) GrantAgreementForm form,
                                      @SuppressWarnings("unused") BindingResult bindingResult,
                                      Model model,
-                                     @PathVariable(APPLICATION_ID) final Long applicationId,
-                                     @PathVariable(QUESTION_ID) final Long questionId,
+                                     @PathVariable long applicationId,
+                                     @PathVariable long questionId,
                                      UserResource userResource) {
         model.addAttribute("model", grantAgreementViewModelPopulator.populate(applicationId, questionId, userResource.getId()));
         return "application/questions/grant-agreement";
     }
 
     @PostMapping
-    public String saveAndReturn(@PathVariable(APPLICATION_ID) final Long applicationId) {
+    public String saveAndReturn(@PathVariable long applicationId) {
         return String.format("redirect:/application/%d", applicationId);
     }
 
@@ -71,8 +71,8 @@ public class GrantAgreementController {
     public String markAsComplete(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) GrantAgreementForm form,
                                  @SuppressWarnings("unused") BindingResult bindingResult,
                                  Model model,
-                                 @PathVariable(APPLICATION_ID) final Long applicationId,
-                                 @PathVariable(QUESTION_ID) final Long questionId,
+                                 @PathVariable long applicationId,
+                                 @PathVariable long questionId,
                                  UserResource user) {
         if (euGrantTransferRestService.findGrantAgreement(applicationId).isFailure()) {
             bindingResult.rejectValue("grantAgreement", "validation.field.must.not.be.blank");
@@ -87,8 +87,8 @@ public class GrantAgreementController {
     public String edit(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM) GrantAgreementForm form,
                                  @SuppressWarnings("unused") BindingResult bindingResult,
                                  Model model,
-                                 @PathVariable(APPLICATION_ID) final Long applicationId,
-                                 @PathVariable(QUESTION_ID) final Long questionId,
+                                 @PathVariable long applicationId,
+                                 @PathVariable long questionId,
                                  UserResource user) {
         ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId()).getSuccess();
@@ -100,8 +100,8 @@ public class GrantAgreementController {
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler,
                                        Model model,
-                                       @PathVariable(APPLICATION_ID) final Long applicationId,
-                                       @PathVariable(QUESTION_ID) final Long questionId,
+                                       @PathVariable long applicationId,
+                                       @PathVariable long questionId,
                                        UserResource user) {
 
         MultipartFile file = form.getGrantAgreement();
@@ -119,8 +119,8 @@ public class GrantAgreementController {
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler,
                                        Model model,
-                                       @PathVariable(APPLICATION_ID) final Long applicationId,
-                                       @PathVariable(QUESTION_ID) final Long questionId,
+                                       @PathVariable long applicationId,
+                                       @PathVariable long questionId,
                                        UserResource user) {
 
         RestResult<Void> sendResult = euGrantTransferRestService
@@ -134,7 +134,7 @@ public class GrantAgreementController {
 
     @GetMapping("/download")
     public @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadGrantAgreement(@PathVariable(APPLICATION_ID) final Long applicationId) {
+    ResponseEntity<ByteArrayResource> downloadGrantAgreement(@PathVariable long applicationId) {
         return getFileResponseEntity(euGrantTransferRestService.downloadGrantAgreement(applicationId).getSuccess(),
                 euGrantTransferRestService.findGrantAgreement(applicationId).getSuccess());
     }
