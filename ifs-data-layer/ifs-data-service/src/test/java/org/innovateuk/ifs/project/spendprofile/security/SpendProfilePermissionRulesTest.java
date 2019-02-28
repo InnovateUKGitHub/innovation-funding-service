@@ -99,7 +99,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testInternalAdminTeamCanViewCompetitionStatus(){
+    public void internalAdminTeamCanViewCompetitionStatus(){
         allGlobalRoleUsers.forEach(user -> {
             if (isInternalAdmin(user)) {
                 assertTrue(rules.internalAdminTeamCanViewCompetitionStatus(newProjectResource().build(), user));
@@ -110,7 +110,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testSupportCanViewCompetitionStatus(){
+    public void supportCanViewCompetitionStatus(){
         allGlobalRoleUsers.forEach(user -> {
             if (isSupport(user)) {
                 assertTrue(rules.supportCanViewCompetitionStatus(newProjectResource().build(), user));
@@ -121,7 +121,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testAssignedInnovationLeadCanViewProjectStatus(){
+    public void assignedInnovationLeadCanViewProjectStatus(){
         assertTrue(rules.assignedInnovationLeadCanViewSPStatus(projectResource1, innovationLeadUserResourceOnProject1));
         assertFalse(rules.assignedInnovationLeadCanViewSPStatus(projectResource1, innovationLeadUser()));
     }
@@ -133,7 +133,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testProjectManagerCanCompleteSpendProfile() throws Exception {
+    public void projectManagerCanCompleteSpendProfile() throws Exception {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
@@ -143,7 +143,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testLeadPartnerCanIncompleteAnySpendProfile() throws Exception {
+    public void leadPartnerCanIncompleteAnySpendProfile() throws Exception {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
@@ -155,7 +155,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testNonLeadPartnerCannotIncompleteSpendProfile() throws Exception {
+    public void nonLeadPartnerCannotIncompleteSpendProfile() throws Exception {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
@@ -167,7 +167,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testLeadPartnerCanViewAnySpendProfileData() throws Exception {
+    public void leadPartnerCanViewAnySpendProfileData() throws Exception {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -178,8 +178,22 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
 
         assertTrue(rules.leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
     }
+
     @Test
-    public void testUserNotLeadPartnerCannotViewSpendProfile() throws Exception {
+    public void monitoringOfficerCanViewAnySpendProfileData() throws Exception {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        setupUserAsMonitoringOfficer(project, user);
+
+        assertTrue(rules.monitoringOfficerCanViewProjectsSpendProfileData(projectOrganisationCompositeId, user));
+    }
+
+    @Test
+    public void userNotLeadPartnerCannotViewSpendProfile() throws Exception {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
@@ -191,7 +205,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testPartnersCanViewTheirOwnSpendProfileData(){
+    public void partnersCanViewTheirOwnSpendProfileData(){
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         OrganisationResource org = newOrganisationResource().build();
@@ -206,7 +220,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testProjectFinanceUserCanViewAnySpendProfileData(){
+    public void projectFinanceUserCanViewAnySpendProfileData(){
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
                 new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
 
@@ -220,7 +234,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testPartnersCanViewTheirOwnSpendProfileCsv(){
+    public void partnersCanViewTheirOwnSpendProfileCsv(){
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         OrganisationResource org = newOrganisationResource().build();
@@ -235,7 +249,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testInternalAdminUsersCanSeeSpendProfileCsv(){
+    public void internalAdminUsersCanSeeSpendProfileCsv(){
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
                 new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
 
@@ -249,7 +263,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testSupportUsersCanSeeSpendProfileCsv(){
+    public void supportUsersCanSeeSpendProfileCsv(){
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
                 new ProjectOrganisationCompositeId(1L, newOrganisation().build().getId());
 
@@ -270,7 +284,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testLeadPartnerCanViewAnySpendProfileCsv(){
+    public void leadPartnerCanViewAnySpendProfileCsv(){
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
@@ -284,7 +298,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testPartnersCanEditTheirOwnSpendProfileData(){
+    public void partnersCanEditTheirOwnSpendProfileData(){
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         OrganisationResource org = newOrganisationResource().build();
@@ -299,7 +313,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     }
 
     @Test
-    public void testPartnersCanMarkSpendProfileAsComplete(){
+    public void partnersCanMarkSpendProfileAsComplete(){
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         OrganisationResource org = newOrganisationResource().build();

@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJ
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertFalse;
@@ -74,6 +75,17 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
                 assertTrue(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
                 assertFalse(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void monitoringOfficersCanSeeAllOrganisations() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(MONITORING_OFFICER)) {
+                assertTrue(rules.monitoringOfficersCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            } else {
+                assertFalse(rules.monitoringOfficersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             }
         });
     }

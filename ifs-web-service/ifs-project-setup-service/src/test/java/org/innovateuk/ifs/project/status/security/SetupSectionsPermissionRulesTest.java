@@ -41,8 +41,7 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -71,6 +70,8 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     private StatusService statusServiceMock;
 
     private UserResource user = newUserResource().build();
+
+    private UserResource monitoringOfficer = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
 
     private CompetitionResource competition = newCompetitionResource().build();
 
@@ -149,12 +150,25 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void bankDetailsSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
-                setupSectionAccessibilityHelper.canAccessBankDetailsSection(organisation, Optional.empty()), () -> rules.partnerCanAccessBankDetailsSection(ProjectCompositeId.id(activeProject.getId()), user));
+                setupSectionAccessibilityHelper.canAccessBankDetailsSection(organisation, Optional.of(user)),
+                () -> rules.partnerCanAccessBankDetailsSection(ProjectCompositeId.id(activeProject.getId()), user));
+    }
+
+    @Test
+    public void bankDetailsSectionAccessMonitoringOfficer() {
+        assertMonitoringOfficerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
+                        setupSectionAccessibilityHelper.canAccessBankDetailsSection(organisation, Optional.of(monitoringOfficer)),
+                () -> rules.partnerCanAccessBankDetailsSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
     }
 
     @Test
     public void spendProfileSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), user));
+    }
+
+    @Test
+    public void spendProfileSectionAccessMonitoringOfficer() {
+        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
     }
 
     @Test
@@ -167,6 +181,11 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void documentsSectionAccessLead() {
         assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessDocumentsSection, () -> rules.canAccessDocumentsSection(ProjectCompositeId.id(activeProject.getId()), user));
+    }
+
+    @Test
+    public void documentsSectionAccessMonitoringOfficer() {
+        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessDocumentsSection, () -> rules.canAccessDocumentsSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
     }
 
     @Test
@@ -255,6 +274,12 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     public void grantOfferLetterSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
                 () -> rules.partnerCanAccessGrantOfferLetterSection(ProjectCompositeId.id(activeProject.getId()), user));
+    }
+
+    @Test
+    public void grantOfferLetterSectionAccessMonitoringOfficer() {
+        assertMonitoringOfficerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection,
+                () -> rules.partnerCanAccessGrantOfferLetterSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
     }
 
     @Test
@@ -476,6 +501,59 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         accessorCheck.apply(verify(accessorMock), expectedOrganisation);
     }
+
+    private void assertMonitoringOfficerSuccessfulAccess(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,
+                                                         Supplier<Boolean> ruleCheck) {
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
+                        withOrganisationId(456L).
+                        withOrganisationType(BUSINESS).
+                        withIsLeadPartner(true).
+                        build()).
+                withPartnerStatuses(newProjectPartnerStatusResource().
+                        withOrganisationId(789L).
+                        withOrganisationType(BUSINESS).
+                        build(1)).
+                build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(user.getId()).
+                withOrganisation(789L).
+                withRole(PARTNER).
+                build(1);
+
+        when(projectServiceMock.getById(activeProject.getId())).thenReturn(activeProject);
+
+        when(projectServiceMock.getProjectUsersForProject(activeProject.getId())).thenReturn(projectUsers);
+
+        when(statusServiceMock.getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()))).thenReturn(teamStatus);
+
+        List<ProjectUserResource> leadPartners = newProjectUserResource().
+                withUser(user.getId()).
+                withOrganisation(789L).
+                withRole(PROJECT_MANAGER).
+                build(1);
+
+        when(projectServiceMock.getLeadOrganisation(activeProject.getId())).thenReturn(newOrganisationResource().withId(789L).build());
+
+        when(projectServiceMock.getLeadPartners(activeProject.getId())).thenReturn(leadPartners);
+
+        OrganisationResource expectedOrganisation = new OrganisationResource();
+        expectedOrganisation.setId(789L);
+        expectedOrganisation.setOrganisationType(
+                teamStatus.getPartnerStatusForOrganisation(789L).get().getOrganisationType().getId());
+
+        when(accessorCheck.apply(accessorMock, expectedOrganisation)).thenReturn(ACCESSIBLE);
+
+        assertTrue(ruleCheck.get());
+
+        verify(projectServiceMock, atLeastOnce()).getById(activeProject.getId());
+        verify(statusServiceMock).getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()));
+        verify(projectServiceMock).getLeadPartners(activeProject.getId());
+
+        accessorCheck.apply(verify(accessorMock), expectedOrganisation);
+    }
+
 
     private void assertNonLeadPartnerUnsuccessfulAccess(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,
                                                       Supplier<Boolean> ruleCheck) {

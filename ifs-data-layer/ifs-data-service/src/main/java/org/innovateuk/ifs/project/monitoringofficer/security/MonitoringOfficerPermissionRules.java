@@ -31,7 +31,7 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             value = "VIEW_MONITORING_OFFICER",
             description = "Monitoring Officers can view themselves on any Project")
     public boolean monitoringOfficersCanViewThemselves(ProjectResource project, UserResource user) {
-        return userIsMonitoringOfficerInCompetition(project.getCompetition(), user.getId());
+        return isMonitoringOfficer(project.getId(), user.getId());
     }
 
     @PermissionRule(

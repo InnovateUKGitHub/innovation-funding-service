@@ -137,7 +137,7 @@
                         <h2 class="govuk-heading-s">Bank details</h2>
                         <p class="govuk-body govuk-!-margin-0">We need bank details for those partners eligible for funding.</p>
                     </div>
-                    <th:block th:if="${model.monitoringOfficer}" th:insert="project/fragments :: project-setup-status-indicator(${model.bankDetailsStatus.getSectionStatus()})"/>
+                    <th:block th:if="${model.monitoringOfficer && !model.bankDetailsSection.notAccessible}" th:insert="project/fragments :: project-setup-status-indicator(${model.bankDetailsStatus.getSectionStatus()})"/>
                 </li>
 
                 <li th:if="${model.bankDetailsSection.accessibleOrNotRequired && !model.monitoringOfficer}"
