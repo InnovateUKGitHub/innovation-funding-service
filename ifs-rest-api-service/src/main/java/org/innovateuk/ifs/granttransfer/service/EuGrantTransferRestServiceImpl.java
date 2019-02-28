@@ -3,6 +3,7 @@ package org.innovateuk.ifs.granttransfer.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,12 @@ public class EuGrantTransferRestServiceImpl extends BaseRestService implements E
     public RestResult<FileEntryResource> findGrantAgreement(long applicationId) {
         String url = format("%s/%s/%s", REST_URL, "grant-agreement-details", applicationId);
         return getWithRestResult(url, FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<EuGrantTransferResource> findDetailsByApplicationId(long applicationId) {
+        String url = format("%s/%d", REST_URL, applicationId);
+        return getWithRestResult(url, EuGrantTransferResource.class);
     }
 
 }

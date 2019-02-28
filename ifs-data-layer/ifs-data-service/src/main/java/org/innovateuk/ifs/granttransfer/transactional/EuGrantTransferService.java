@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,4 +27,9 @@ public interface EuGrantTransferService {
     @SecuredBySpring(value = "FIND_GRANT_AGREEMENT",
             description = "Competition Admins, Project Finance users and applicants can download grant agreement")
     ServiceResult<FileEntryResource> findGrantAgreement(long applicationId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant')")
+    @SecuredBySpring(value = "GET_GRANT_TRANSFER_DETAILS",
+            description = "Competition Admins, Project Finance users and applicants can view grant transfer details")
+    ServiceResult<EuGrantTransferResource> getGrantTransferByApplicationId(long applicationId);
 }

@@ -11,7 +11,9 @@ import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
+import org.innovateuk.ifs.granttransfer.mapper.EuGrantTransferMapper;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
+import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +51,9 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
     @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
+
+    @Autowired
+    private EuGrantTransferMapper mapper;
 
     private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
@@ -88,6 +93,11 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
                         .map(FileEntry::getId)
                         .map(fileEntryService::findOne)
                         .orElse(serviceFailure(notFoundError(FileEntryResource.class, applicationId))));
+    }
+
+    @Override
+    public ServiceResult<EuGrantTransferResource> getGrantTransferByApplicationId(long applicationId) {
+        return findGrantTransferByApplicationId(applicationId).andOnSuccessReturn(mapper::mapToResource);
     }
 
     private ServiceResult<FileAndContents> getFileAndContents(FileEntryResource fileEntry) {
