@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.invite.domain.ParticipantRole;
 
+import java.util.EnumSet;
 import java.util.Map;
 
 import static java.util.Arrays.stream;
@@ -16,6 +17,11 @@ public enum ProjectParticipantRole implements ParticipantRole {
     PROJECT_MANAGER(11, "project_manager"),
     PROJECT_FINANCE_CONTACT(9, "finance_contact"),
     MONITORING_OFFICER(19, "monitoring_officer");
+
+    public static final EnumSet<ProjectParticipantRole> PROJECT_USER_ROLES =
+            EnumSet.of(PROJECT_PARTNER, PROJECT_MANAGER, PROJECT_FINANCE_CONTACT);
+    public static final EnumSet<ProjectParticipantRole> PROJECT_MONITORING_OFFICER_ROLES =
+            EnumSet.of(MONITORING_OFFICER);
 
     private final long id;
     private final String name;

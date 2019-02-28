@@ -6,12 +6,17 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.documents.mapper.ProjectDocumentsMapper;
+import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
 
 @Mapper(
         config = GlobalMapperConfig.class,
@@ -27,6 +32,9 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
 
     @Autowired
     private ProjectProcessRepository projectProcessRepository;
+
+    @Autowired
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @Mappings({
             @Mapping(target = "projectState", ignore = true),
@@ -59,4 +67,14 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
         }
         return object.getId();
     }
+
+    public Long mapProjectMonitoringOfficerUserToId(Optional<ProjectMonitoringOfficer> object) {
+        return object == null ? null : object.map(ProjectParticipant::getId).orElse(null);
+    }
+
+    public ProjectMonitoringOfficer mapProjectMonitoringOfficerIdUserToDomain(Long id) {
+        return id == null ? null : projectMonitoringOfficerRepository.findById(id).get();
+    }
+
+
 }
