@@ -1089,9 +1089,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
     @Test
     public void approveOrRejectSignedGrantOfferLetterApprovalSuccess() {
-
-        ReflectionTestUtils.setField(service, "allocateLiveProjectsRole", true);
-
         User user = newUser()
                 .withFirstName("A")
                 .withLastName("B")
@@ -1117,26 +1114,14 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withOrganisation(organisation1)
                 .build();
 
-        ProjectUser normalPartnerOrg1 = newProjectUser()
-                .withRole(PROJECT_PARTNER)
-                .withUser(newUser().build())
-                .withOrganisation(organisation1)
-                .build();
-
         ProjectUser financeContactOrg2 = newProjectUser()
                 .withRole(PROJECT_FINANCE_CONTACT)
                 .withUser(newUser().build())
                 .withOrganisation(organisation2)
                 .build();
 
-        ProjectUser normalPartnerOrg2 = newProjectUser()
-                .withRole(PROJECT_PARTNER)
-                .withUser(newUser().build())
-                .withOrganisation(organisation2)
-                .build();
-
         List<ProjectUser> projectUsers =
-                asList(projectManager, financeContactOrg1, normalPartnerOrg1, financeContactOrg2, normalPartnerOrg2);
+                asList(projectManager, financeContactOrg1, financeContactOrg2);
 
         Competition competition = newCompetition()
                 .withName("Competition 1")
@@ -1181,16 +1166,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
         assertTrue(result.isSuccess());
-
-        // assert that the Project Manager and the Finance Contacts for each Partner Organisation are granted access to
-        // Live Projects
-        assertTrue(projectManager.getUser().hasRole(Role.LIVE_PROJECTS_USER));
-        assertTrue(financeContactOrg1.getUser().hasRole(Role.LIVE_PROJECTS_USER));
-        assertTrue(financeContactOrg2.getUser().hasRole(Role.LIVE_PROJECTS_USER));
-
-        // assert that "normal" Partner users are NOT granted access to Live Projects
-        assertFalse(normalPartnerOrg1.getUser().hasRole(Role.LIVE_PROJECTS_USER));
-        assertFalse(normalPartnerOrg2.getUser().hasRole(Role.LIVE_PROJECTS_USER));
 
         verify(projectRepositoryMock, atLeast(2)).findById(projectId);
         verify(golWorkflowHandlerMock).isReadyToApprove(project);
