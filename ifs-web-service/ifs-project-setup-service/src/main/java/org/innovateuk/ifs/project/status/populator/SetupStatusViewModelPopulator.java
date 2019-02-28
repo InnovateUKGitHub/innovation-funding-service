@@ -92,7 +92,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                     monitoringOfficer,
                     isProjectManager,
                     partnerOrganisations,
-                    originQuery);
+                    originQuery,
+                    loggedInUser.hasRole(MONITORING_OFFICER));
         });
     }
 
@@ -101,7 +102,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                          Optional<MonitoringOfficerResource> monitoringOfficer,
                                                          boolean isProjectManager,
                                                          List<OrganisationResource> partnerOrganisations,
-                                                         String originQuery) {
+                                                         String originQuery,
+                                                         boolean isMonitoringOfficer) {
 
         boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
 
@@ -125,7 +127,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 projectDocuments,
                 isProjectManager,
                 pendingQueries,
-                originQuery);
+                originQuery,
+                isMonitoringOfficer);
     }
 
     private SectionStatusList getSectionStatuses(BasicDetails basicDetails,

@@ -43,6 +43,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_C
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
  * This controller will handle all requests that are related to spend profile.
@@ -87,7 +88,7 @@ public class ProjectSpendProfileController {
                                    @PathVariable("organisationId") final Long organisationId,
                                    UserResource loggedInUser) {
 
-        if (isUserPartOfLeadOrganisation(projectId, loggedInUser)) {
+        if (isMonitoringOfficer(loggedInUser) || isUserPartOfLeadOrganisation(projectId, loggedInUser)) {
             return viewProjectManagerSpendProfile(model, projectId, loggedInUser);
         }
         return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
