@@ -50,7 +50,7 @@ public class GrantClaimMaximumServiceSecurityTest extends BaseServiceSecurityTes
     @Test
     public void isMaximumFundingLevelOverridden() {
         CompetitionResource competition = newCompetitionResource().build();
-        when(competitionLookupStrategy.getCompetititionResource(competition.getId())).thenReturn(competition);
+        when(competitionLookupStrategy.getCompetitionResource(competition.getId())).thenReturn(competition);
 
         assertAccessDenied(
                 () -> classUnderTest.isMaximumFundingLevelOverridden(competition.getId()),

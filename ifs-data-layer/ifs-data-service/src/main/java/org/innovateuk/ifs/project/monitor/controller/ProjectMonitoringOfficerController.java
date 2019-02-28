@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.monitor.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.project.monitor.transactional.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
@@ -16,10 +17,14 @@ public class ProjectMonitoringOfficerController {
 
     private ProjectMonitoringOfficerService projectMonitoringOfficerService;
     private RegistrationService registrationService;
+    private CrmService crmService;
 
-    public ProjectMonitoringOfficerController(ProjectMonitoringOfficerService projectMonitoringOfficerService, RegistrationService registrationService) {
+    public ProjectMonitoringOfficerController(ProjectMonitoringOfficerService projectMonitoringOfficerService,
+                                              RegistrationService registrationService,
+                                              CrmService crmService) {
         this.projectMonitoringOfficerService = projectMonitoringOfficerService;
         this.registrationService = registrationService;
+        this.crmService = crmService;
     }
 
     @GetMapping("/get-monitoring-officer-invite/{inviteHash}")
@@ -35,7 +40,10 @@ public class ProjectMonitoringOfficerController {
 
     @PostMapping("/monitoring-officer/create/{inviteHash}")
     public RestResult<Void> createMonitoringOfficer(@PathVariable("inviteHash") String inviteHash, @RequestBody MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource) {
-        return registrationService.createMonitoringOfficer(inviteHash, monitoringOfficerRegistrationResource).toPostResponse();
+        return registrationService
+                .createMonitoringOfficer(inviteHash, monitoringOfficerRegistrationResource)
+                .andOnSuccess(user -> crmService.syncCrmContact(user.getId()))
+                .toPostResponse();
     }
 
     @GetMapping("/monitoring-officer/check-existing-user/{inviteHash}")

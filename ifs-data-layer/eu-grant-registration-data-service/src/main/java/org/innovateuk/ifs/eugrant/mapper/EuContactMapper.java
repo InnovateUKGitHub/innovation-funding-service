@@ -15,9 +15,6 @@ import org.mapstruct.NullValueMappingStrategy;
 )
 public abstract class EuContactMapper extends BaseMapper<EuContact, EuContactResource, Long> {
 
-    @Mappings({
-            @Mapping(target = "id", ignore = true),
-    })
     @Override
     public abstract EuContact mapToDomain(EuContactResource resource);
 
