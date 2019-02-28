@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.monitor.repository;
 
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -10,5 +9,9 @@ public interface ProjectMonitoringOfficerRepository extends PagingAndSortingRepo
 
     List<ProjectMonitoringOfficer> findByUserId(long userId);
 
-    boolean existsByUserEmailAndRole(String email, ProjectParticipantRole role);
+    boolean existsByProjectIdAndUserId(long projectId, long userId);
+
+    boolean existsByProjectApplicationIdAndUserId(long applicationId, long userId);
+
+    boolean existsByProjectApplicationCompetitionIdAndUserId(long competitionId, long userId);
 }

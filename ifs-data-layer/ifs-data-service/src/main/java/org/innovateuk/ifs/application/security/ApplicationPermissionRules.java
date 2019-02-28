@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
 import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
@@ -126,14 +127,8 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "Monitoring officers can see application resources for projects assigned to them.")
-    public boolean monitoringOfficersAssignedToProjectsCanViewApplications(final ApplicationResource application, final UserResource user) {
-
-        Project project = projectRepository.findOneByApplicationId(application.getId());
-
-        List<ProjectMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
-        List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, ProjectMonitoringOfficer::getProject);
-
-        return monitoringOfficerProjects.contains(project);
+    public boolean monitoringOfficerAssignedToProjectCanViewApplications(final ApplicationResource application, final UserResource user) {
+        return application != null && application.getCompetition() != null && projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application.getId(), user.getId());
     }
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")

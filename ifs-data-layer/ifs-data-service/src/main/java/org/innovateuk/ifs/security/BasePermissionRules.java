@@ -27,7 +27,6 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses
@@ -65,7 +64,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private ProjectProcessRepository projectProcessRepository;
 
     @Autowired
-    protected ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
@@ -73,8 +72,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean isMonitoringOfficer(long projectId, long userId) {
-        List<ProjectUser> monitoringOfficerForProject = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, MONITORING_OFFICER);
-        return !monitoringOfficerForProject.isEmpty();
+        return projectMonitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId);
     }
 
     protected boolean isSpecificProjectPartnerByProjectId(long projectId, long organisationId, long userId) {

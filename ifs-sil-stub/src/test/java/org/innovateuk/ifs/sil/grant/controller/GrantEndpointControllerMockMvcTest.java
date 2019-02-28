@@ -16,6 +16,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -38,12 +39,13 @@ public class GrantEndpointControllerMockMvcTest extends AbstractEndpointControll
         String requestBody = objectMapper.writeValueAsString(singletonList(parameter.grant()));
         mockMvc.
                 perform(
-                        post("/silstub/sendproject").
+                        post("/silstub/accprojects").
                                 header("Content-Type", "application/json").
                                 content(requestBody)
                 ).
-                andExpect(status().isAccepted()).
-                andDo(document("silstub/sendproject",
+                andExpect(status().isOk()).
+                andExpect(content().string("{\"Success\":\"Accepted\"}")).
+                andDo(document("silstub/accprojects",
                         requestHeaders(
                                 headerWithName("Content-Type").description("Needs to be application/json")
                         )

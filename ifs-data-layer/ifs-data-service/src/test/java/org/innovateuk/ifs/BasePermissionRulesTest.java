@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -24,7 +25,6 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -43,6 +43,9 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     protected ProjectUserRepository projectUserRepositoryMock;
 
     @Mock
+    protected ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+
+    @Mock
     protected ProjectRepository projectRepositoryMock;
 
     @Mock
@@ -50,8 +53,6 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
 
     @Mock
     protected OrganisationRepository organisationRepositoryMock;
-
-
 
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
@@ -123,10 +124,8 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     }
 
     private void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
-        List<ProjectUser> monitoringOfficerForProject = newProjectUser().build(1);
-
-    when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), MONITORING_OFFICER))
-            .thenReturn(userIsMonitoringOfficer ? monitoringOfficerForProject : emptyList());
+        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId()))
+            .thenReturn(userIsMonitoringOfficer);
 }
 
     protected void setupUserAsLeadPartner(ProjectResource project, UserResource user) {

@@ -30,7 +30,7 @@ public class CompetitionLookupStrategy {
     }
 
     @PermissionEntityLookupStrategy
-    public CompetitionResource getCompetititionResource(Long competitionId) {
+    public CompetitionResource getCompetitionResource(Long competitionId) {
         return competitionMapper.mapToResource(competitionRepository.findById(competitionId).orElse(null));
     }
 

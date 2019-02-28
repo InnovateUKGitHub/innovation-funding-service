@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.security;
 
+import freemarker.template.utility.Collections12;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -9,6 +10,8 @@ import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
@@ -18,19 +21,18 @@ import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.monitor.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -59,6 +61,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Mock
     private StakeholderRepository stakeholderRepositoryMock;
+
+    @Mock
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @Test
     public void anyoneCanViewThemselves() {
@@ -222,13 +227,13 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
 
         when(processRoleRepositoryMock.findByUserId(application1Lead1.getId())).
-                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
+                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(0)));
         when(processRoleRepositoryMock.findByUserId(application1Lead2.getId())).
-                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
+                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(1)));
         when(processRoleRepositoryMock.findByUserId(application1Collaborator1.getId())).
-                thenReturn(singletonList(application1ConsortiumRoles.get(3)));
+                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(3)));
         when(processRoleRepositoryMock.findByUserId(application1Collaborator2.getId())).
-                thenReturn(singletonList(application1ConsortiumRoles.get(4)));
+                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(4)));
 
         Application application2 = newApplication().build();
         when(applicationRepositoryMock.findById(application2.getId())).thenReturn(Optional.of(application2));
@@ -245,9 +250,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         List<UserResource> application2ConsortiumResources = simpleMap(application2Consortium, userResourceForUser());
 
         when(processRoleRepositoryMock.findByUserId(application2Lead.getId())).
-                thenReturn(singletonList(application2ConsortiumRoles.get(0)));
+                thenReturn(Collections12.singletonList(application2ConsortiumRoles.get(0)));
         when(processRoleRepositoryMock.findByUserId(application2Collaborator1.getId())).
-                thenReturn(singletonList(application2ConsortiumRoles.get(1)));
+                thenReturn(Collections12.singletonList(application2ConsortiumRoles.get(1)));
 
         // user common to both applications
         when(processRoleRepositoryMock.findByUserId(application1Lead3AndApplication2Collaborator2.getId())).
@@ -359,11 +364,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 .build(1);
 
         when(processRoleRepositoryMock.findByUserId(application1Lead.getId())).
-                thenReturn(singletonList(application1LeadProcessRole));
+                thenReturn(Collections12.singletonList(application1LeadProcessRole));
         when(processRoleRepositoryMock.findByUserId(application2Collaborator.getId())).
-                thenReturn(singletonList(application2CollaboratorProcessRole));
+                thenReturn(Collections12.singletonList(application2CollaboratorProcessRole));
         when(processRoleRepositoryMock.findByUserId(application3Lead.getId())).
-                thenReturn(singletonList(application3LeadProcessRole));
+                thenReturn(Collections12.singletonList(application3LeadProcessRole));
         when(processRoleRepositoryMock.findByUserId(assessorForApplications1And2.getId())).
                 thenReturn(assessorProcessRoles);
         when(processRoleRepositoryMock.findByUserId(panelAssessorForApplication1.getId())).
@@ -406,9 +411,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
 
         when(processRoleRepositoryMock.findByUserId(application1Lead1.getId())).
-                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
+                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(0)));
         when(processRoleRepositoryMock.findByUserId(application1Lead2.getId())).
-                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
+                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(1)));
 
         ProcessRoleResource validResource = newProcessRoleResource().withApplication(application1.getId()).build();
         ProcessRoleResource invalidResource = newProcessRoleResource().withApplication(10L).build();
@@ -434,9 +439,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
 
         when(processRoleRepositoryMock.findByUserId(application1Assessor1.getId())).
-                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
+                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(0)));
         when(processRoleRepositoryMock.findByUserId(application1Assessor2.getId())).
-                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
+                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(1)));
 
         ProcessRoleResource validResource = newProcessRoleResource().withApplication(application1.getId()).build();
         ProcessRoleResource invalidResource = newProcessRoleResource().withApplication(10L).build();
@@ -594,43 +599,54 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void allUsersWithProjectRolesExceptMonitoringOfficersCanAccessProcessRolesWithinConsortium() {
-        final Long userId = 11L;
-        final Long applicationId = 1L;
+    public void allUsersWithProjectUserRolesCanAccessProcessRolesWithinConsortium() {
+        final long userId = 11L;
+        final long applicationId = 1L;
 
+        ProjectParticipantRole.PROJECT_USER_ROLES.stream()
+            .forEach(roleType -> {
 
-        Arrays.stream(ProjectParticipantRole.values())
-                .forEach(roleType -> {
+                UserResource userResource = newUserResource().withId(userId).build();
 
-                    UserResource userResource = newUserResource().withId(userId).build();
+                ProjectUser projectUser = newProjectUser().withUser(newUser().withId(userId).build()).withRole(roleType).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build();
 
-                    ProjectUser projectUser = newProjectUser().withUser(newUser().withId(userId).build()).withRole(roleType).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build();
+                when(projectUserRepositoryMock.findByUserId(userId)).thenReturn(singletonList(projectUser));
 
-                    when(projectUserRepositoryMock.findByUserId(userId)).thenReturn(Collections.singletonList(projectUser));
+                ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withApplication(applicationId).build();
 
-                    ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withApplication(applicationId).build();
+                assertTrue(rules.projectPartnersCanViewTheProcessRolesWithinSameApplication(processRoleResource, userResource));
+            });
+    }
 
-                    if (!roleType.isMonitoringOfficer()) {
-                        assertTrue(rules.projectPartnersCanViewTheProcessRolesWithinSameApplication(processRoleResource, userResource));
-                    } else {
-                        assertFalse(rules.projectPartnersCanViewTheProcessRolesWithinSameApplication(processRoleResource, userResource));
-                    }
-                });
+    @Test
+    public void allUsersWithMonitoringOfficersCannotAccessProcessRolesWithinConsortium() {
+        final long userId = 11L;
+        final long applicationId = 1L;
+
+        UserResource userResource = newUserResource().withId(userId).build();
+
+        List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer().withUser(newUser().withId(userId).build()).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build(1);
+
+        when(projectMonitoringOfficerRepository.findByUserId(userId)).thenReturn(projectMonitoringOfficers);
+
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withApplication(applicationId).build();
+
+        assertFalse(rules.projectPartnersCanViewTheProcessRolesWithinSameApplication(processRoleResource, userResource));
     }
 
     @Test
     public void allUsersWithProjectRolesCanNotAccessProcessRolesWhenNotInConsortium() {
-        final Long userId = 11L;
-        final Long applicationId = 1L;
+        final long userId = 11L;
+        final long applicationId = 1L;
 
-        Arrays.stream(ProjectParticipantRole.values())
+       ProjectParticipantRole.PROJECT_USER_ROLES.stream()
                 .forEach(roleType -> {
 
                     UserResource userResource = newUserResource().withId(userId).build();
 
                     ProjectUser projectUser = newProjectUser().withUser(newUser().withId(userId).build()).withRole(roleType).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build();
 
-                    when(projectUserRepositoryMock.findByUserId(userId)).thenReturn(Collections.singletonList(projectUser));
+                    when(projectUserRepositoryMock.findByUserId(userId)).thenReturn(singletonList(projectUser));
 
                     ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withApplication(123L).build();
 
