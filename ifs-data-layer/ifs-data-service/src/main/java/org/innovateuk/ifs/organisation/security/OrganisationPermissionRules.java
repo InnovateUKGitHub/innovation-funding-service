@@ -8,13 +8,17 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
@@ -38,6 +42,9 @@ public class OrganisationPermissionRules {
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
 
+    @Autowired
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+
     @PermissionRule(value = "READ", description = "Internal Users can see all Organisations")
     public boolean internalUsersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isInternal(user);
@@ -48,9 +55,17 @@ public class OrganisationPermissionRules {
         return isStakeholder(user);
     }
 
-    @PermissionRule(value = "READ", description = "Monitoring officers can see all Organisations")
+    @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations on their projects")
     public boolean monitoringOfficersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        return user.hasRole(MONITORING_OFFICER);
+        List<ProjectMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
+        List<Long> monitoringOfficersOrganisationIds = new ArrayList<>();
+        projectMonitoringOfficers.stream().forEach(pmo -> {
+                    pmo.getProject()
+                            .getPartnerOrganisations()
+                            .forEach(partnerOrganisation -> monitoringOfficersOrganisationIds.add(partnerOrganisation.getOrganisation().getId()));
+                });
+
+        return monitoringOfficersOrganisationIds.contains(organisation.getId());
     }
 
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")
