@@ -21,6 +21,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -52,7 +53,7 @@ public class ApplicantDashboardPopulator {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
         List<ApplicationResource> allApplications = applicationRestService.getApplicationsByUserId(userId).getSuccess();
-        Map<Long, CompetitionResource> competitionsById = getAllCompetitionsForUser(allApplications);
+        Map<Long, CompetitionResource> competitionsById = getAllCompetitionsForUser(userId, allApplications);
         List<ApplicationResource> applications = applications(allApplications, usersProcessRoles, competitionsById);
         List<ApplicationResource> grantTransfers = grantTransfers(allApplications, usersProcessRoles, competitionsById);
         List<ProjectResource> allProjects = projectRestService.findByUserId(userId).getSuccess();
@@ -202,9 +203,13 @@ public class ApplicantDashboardPopulator {
         return CompetitionStatus.fundingCompleteStatuses.contains(application.getCompetitionStatus());
     }
 
-    private Map<Long, CompetitionResource> getAllCompetitionsForUser(List<ApplicationResource> userApplications) {
-        List<Long> competitionIdsForUser = userApplications.stream()
-                .map(ApplicationResource::getCompetition)
+    private Map<Long, CompetitionResource> getAllCompetitionsForUser(long userId, List<ApplicationResource> userApplications) {
+        List<ProjectResource> userProjects = projectRestService.findByUserId(userId).getSuccess();
+
+        List<Long> competitionIdsForUser = concat(
+                userApplications.stream().map(ApplicationResource::getCompetition),
+                userProjects.stream().map(ProjectResource::getCompetition)
+        )
                 .distinct()
                 .collect(Collectors.toList());
 

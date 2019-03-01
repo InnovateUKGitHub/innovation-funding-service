@@ -1,18 +1,19 @@
 package org.innovateuk.ifs.sil.grant.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.EvictingQueue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.util.JsonMappingUtil;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
@@ -20,8 +21,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * a memory buffer can be retrieved via the HTTP endpoints.
  *
  * <code>
- * curl localhost:8080/silstub/sendproject/events
- * curl localhost:8080/silstub/sendproject/event/108
+ * curl localhost:8080/silstub/accprojects/events
+ * curl localhost:8080/silstub/accprojects/event/108
  * </code>
  */
 @RestController
@@ -29,9 +30,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class GrantEndpointController {
     private static final Log LOG = LogFactory.getLog(GrantEndpointController.class);
     private static final EvictingQueue<Event> history = EvictingQueue.create(100);
+    private static final JsonNodeFactory jsonNodeFactory = JsonNodeFactory.instance;
 
-    @PostMapping("/sendproject")
-    public RestResult<Void> sendProject(@RequestBody List<Grant> grantAsList) {
+    @PostMapping("/accprojects")
+    public RestResult<JsonNode> sendProject(@RequestBody List<Grant> grantAsList) {
 
         Grant grant = grantAsList.get(0);
 
@@ -39,16 +41,18 @@ public class GrantEndpointController {
         history.add(new Event(grant));
 
         LOG.info("Grant data sent to stub : Summary = " + getSummary(grant));
-        return restSuccess(HttpStatus.ACCEPTED);
+        JsonNode jsonNode = new ObjectNode(jsonNodeFactory);
+        ((ObjectNode) jsonNode).put("Success", "Accepted");
+        return serviceSuccess(jsonNode).toPostWithBodyResponse();
     }
 
-    @GetMapping("/sendproject/events")
+    @GetMapping("/accprojects/events")
     public RestResult<List<Event>> getAllEvents() {
         return serviceSuccess((List<Event>) new ArrayList<>(history))
                 .toGetResponse();
     }
 
-    @GetMapping("/sendproject/event/{applicationId}")
+    @GetMapping("/accprojects/event/{applicationId}")
     public RestResult<Event> getEvent(@PathVariable("applicationId") long applicationId) {
         return serviceSuccess(history.stream()
                     .filter(event -> applicationId == event.getGrant().getId())

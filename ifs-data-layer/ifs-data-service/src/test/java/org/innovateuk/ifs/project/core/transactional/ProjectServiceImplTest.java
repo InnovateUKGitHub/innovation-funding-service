@@ -29,6 +29,8 @@ import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGener
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
@@ -42,6 +44,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -73,6 +76,7 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJ
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
+import static org.innovateuk.ifs.project.monitor.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -130,9 +134,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Mock
     private ProjectUserInviteRepository projectUserInviteRepositoryMock;
 
-
     @Mock
     private SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
+
+    @Mock
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepositoryMock;
 
     private Long applicationId = 456L;
     private Long userId = 7L;
@@ -290,7 +296,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void createProjectFromApplicationAlreadyExists() {
+    public void createProjectFromApplication_alreadyExists() {
 
         ProjectResource existingProjectResource = newProjectResource().build();
         Project existingProject = newProject().withApplication(application).build();
@@ -339,7 +345,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void withdrawProjectFails() {
+    public void withdrawProject_fails() {
         Long projectId = 321L;
         Long userId = 987L;
         Project project = newProject().withId(projectId).build();
@@ -364,7 +370,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void withdrawProjectCannotFindIdFails() {
+    public void withdrawProject_cannotFindIdFails() {
         Long projectId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource user = newUserResource()
@@ -431,32 +437,37 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void findByUserIdReturnsOnlyDistinctProjects() {
+    public void findByUserId_returnsOnlyDistinctProjects() {
+        Project project = newProject().build();
+        User user = newUser().build();
+        List<ProjectUser> projectUserRecords = newProjectUser()
+                .withProject(project)
+                .withRole(PROJECT_PARTNER, PROJECT_FINANCE_CONTACT)
+                .build(2);
 
-        Project project = newProject().withId(123L).build();
-        Organisation organisation = newOrganisation().withId(5L).build();
-        User user = newUser().withId(7L).build();
+        List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
+                .withProject(project)
+                .build(1);
 
-        ProjectUser projectUserWithPartnerRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_PARTNER).build();
-        ProjectUser projectUserWithFinanceRole = newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_FINANCE_CONTACT).build();
-
-        List<ProjectUser> projectUserRecords = asList(projectUserWithPartnerRole, projectUserWithFinanceRole);
-
-        ProjectResource projectResource = newProjectResource().withId(project.getId()).build();
+        ProjectResource projectResource = newProjectResource().build();
 
         when(projectUserRepositoryMock.findByUserId(user.getId())).thenReturn(projectUserRecords);
-
+        when(projectMonitoringOfficerRepositoryMock.findByUserId(user.getId())).thenReturn(projectMonitoringOfficers);
         when(projectMapperMock.mapToResource(project)).thenReturn(projectResource);
 
-        ServiceResult<List<ProjectResource>> result = service.findByUserId(user.getId());
+        List<ProjectResource> result = service.findByUserId(user.getId()).getSuccess();
 
-        assertTrue(result.isSuccess());
+        assertEquals(1L, result.size());
 
-        assertEquals(result.getSuccess().size(), 1L);
+        InOrder inOrder = inOrder(projectUserRepositoryMock, projectMonitoringOfficerRepositoryMock, projectMapperMock);
+        inOrder.verify(projectUserRepositoryMock).findByUserId(user.getId());
+        inOrder.verify(projectMonitoringOfficerRepositoryMock).findByUserId(user.getId());
+        inOrder.verify(projectMapperMock).mapToResource(project);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void addPartnerOrganisationNotOnProject(){
+    public void addPartner_organisationNotOnProject(){
         Organisation organisationNotOnProject = newOrganisation().build();
         when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
@@ -471,7 +482,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void addPartnerPartnerAlreadyExists(){
+    public void addPartner_partnerAlreadyExists(){
         when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
         when(organisationRepositoryMock.findById(o.getId())).thenReturn(Optional.of(o));
         when(userRepositoryMock.findById(u.getId())).thenReturn(Optional.of(u));
@@ -561,7 +572,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void createProjectsFromFundingDecisionsSaveFails() throws Exception {
+    public void createProjectsFromFundingDecisions_saveFails() throws Exception {
 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenThrow(new DataIntegrityViolationException("dummy constraint violation"));

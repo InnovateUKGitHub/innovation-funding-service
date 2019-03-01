@@ -11,7 +11,6 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
-import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
 import org.junit.Test;
@@ -48,9 +47,6 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
 
     @Mock
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
-
-    @Mock
-    private FileService fileService;
 
     @Override
     protected EuGrantTransferServiceImpl supplyServiceUnderTest() {
@@ -148,7 +144,7 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
         ArgumentCaptor<BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<Void>>> argument = ArgumentCaptor.forClass(BiFunction.class);
         verify(fileControllerUtils).handleFileUpload(eq(contentType), eq(contentLength), eq(originalFilename), eq(fileValidator), eq(validMediaTypes), eq(maxFileSize), eq(request), argument.capture());
 
-        when(fileService.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(result));
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(result));
         argument.getValue().apply(attributes, inputStreamSupplier);
 
         assertEquals(created, grantTransfer.getGrantAgreement());

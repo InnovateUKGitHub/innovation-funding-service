@@ -280,11 +280,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> createMonitoringOfficer(String hash, MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource) {
+    public ServiceResult<User> createMonitoringOfficer(String hash, MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource) {
         return getMonitoringOfficerInviteByHash(hash)
                 .andOnSuccess(invite -> createMonitoringOfficerUser(monitoringOfficerRegistrationResource, invite)
-                        .andOnSuccess(() -> updateMonitoringOfficerInvite(invite))
-                        .andOnSuccessReturnVoid());
+                        .andOnSuccess(user ->  updateMonitoringOfficerInvite(invite)
+                                .andOnSuccessReturn(() -> user)
+                        )
+                );
     }
 
     private ServiceResult<Void> associateUserWithCompetition(Competition competition, User user) {

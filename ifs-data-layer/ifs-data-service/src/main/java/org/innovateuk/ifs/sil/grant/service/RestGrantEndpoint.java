@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.sil.grant.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
@@ -32,7 +33,7 @@ public class RestGrantEndpoint implements GrantEndpoint {
     @Value("${sil.rest.baseURL}")
     private String silRestServiceUrl;
 
-    @Value("${sil.rest.grantSend:/sendproject}")
+    @Value("${sil.rest.grantSend:/accprojects}")
     private String path;
 
     @Override
@@ -40,9 +41,9 @@ public class RestGrantEndpoint implements GrantEndpoint {
 
         List<Grant> grantAsList = singletonList(grant);
 
-        Either<ResponseEntity<Void>, ResponseEntity<Void>> response =
+        Either<ResponseEntity<Void>, ResponseEntity<JsonNode>> response =
                 adaptor.restPostWithEntity(silRestServiceUrl + path, grantAsList,
-                        Void.class, Void.class, HttpStatus.OK, HttpStatus.ACCEPTED);
+                        JsonNode.class, Void.class, HttpStatus.OK, HttpStatus.ACCEPTED);
 
         return response.mapLeftOrRight(
                 failure -> {

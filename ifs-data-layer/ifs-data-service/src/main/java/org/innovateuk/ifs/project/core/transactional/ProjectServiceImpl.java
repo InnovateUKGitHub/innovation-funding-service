@@ -18,6 +18,8 @@ import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGener
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -35,6 +37,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -74,6 +77,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
 
+    @Autowired
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+
     @Override
     public ServiceResult<ProjectResource> getProjectById(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
@@ -101,10 +107,20 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<List<ProjectResource>> findByUserId(final Long userId) {
         List<ProjectUser> projectUsers = projectUserRepository.findByUserId(userId);
-        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProcess).parallelStream().distinct().collect(toList());     //Users may have multiple roles (e.g. partner and finance contact, in which case there will be multiple project_user entries, so this is flatting it).
-        return serviceSuccess(simpleMap(projects, projectMapper::mapToResource));
+        List<ProjectMonitoringOfficer> monitoringOfficers = projectMonitoringOfficerRepository.findByUserId(userId);
+
+        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProcess);
+        List<Project> monitoringOfficerProjects = simpleMap(monitoringOfficers, ProjectMonitoringOfficer::getProcess);
+
+        return serviceSuccess(
+                concat(projects.stream(), monitoringOfficerProjects.stream())
+                        .distinct()
+                        .map(projectMapper::mapToResource)
+                        .collect(toList())
+        );
     }
 
     @Override
