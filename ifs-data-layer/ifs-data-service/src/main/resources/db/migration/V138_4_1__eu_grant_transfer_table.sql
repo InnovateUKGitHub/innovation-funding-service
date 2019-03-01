@@ -11,7 +11,7 @@ CREATE TABLE eu_grant_transfer (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
   application_id bigint(20) NOT NULL,
   grant_agreement_number VARCHAR(255),
-  participant_id VARCHAR(6),
+  participant_id VARCHAR(9),
   eu_action_type_id BIGINT(20),
   project_start_date DATE,
   project_end_date DATE,
