@@ -47,6 +47,7 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -61,9 +62,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Mock
     private StakeholderRepository stakeholderRepositoryMock;
-
-    @Mock
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @Test
     public void anyoneCanViewThemselves() {
@@ -116,6 +114,31 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         allInternalUsers.forEach(internalUser -> {
             assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser));
+        });
+    }
+
+    @Test
+    public void monitoringOfficersCanViewUsersInProjectsTheyAreAssignedTo() {
+        Project project = newProject().build();
+        UserResource userResource = newUserResource().withRoleGlobal(LEADAPPLICANT).build();
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withProject(project)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build(2);
+
+        List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
+                .withProject(project)
+                .build(1);
+
+        when(projectUserRepositoryMock.findByUserId(userResource.getId())).thenReturn(projectUsers);
+        when(projectMonitoringOfficerRepository.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isMonitoringOfficer(user)) {
+                assertTrue(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, monitoringOfficerUser()));
+            } else {
+                assertFalse(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, user));
+            }
         });
     }
 
@@ -227,13 +250,13 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
 
         when(processRoleRepositoryMock.findByUserId(application1Lead1.getId())).
-                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(0)));
+                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
         when(processRoleRepositoryMock.findByUserId(application1Lead2.getId())).
-                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(1)));
+                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
         when(processRoleRepositoryMock.findByUserId(application1Collaborator1.getId())).
-                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(3)));
+                thenReturn(singletonList(application1ConsortiumRoles.get(3)));
         when(processRoleRepositoryMock.findByUserId(application1Collaborator2.getId())).
-                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(4)));
+                thenReturn(singletonList(application1ConsortiumRoles.get(4)));
 
         Application application2 = newApplication().build();
         when(applicationRepositoryMock.findById(application2.getId())).thenReturn(Optional.of(application2));
@@ -250,9 +273,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         List<UserResource> application2ConsortiumResources = simpleMap(application2Consortium, userResourceForUser());
 
         when(processRoleRepositoryMock.findByUserId(application2Lead.getId())).
-                thenReturn(Collections12.singletonList(application2ConsortiumRoles.get(0)));
+                thenReturn(singletonList(application2ConsortiumRoles.get(0)));
         when(processRoleRepositoryMock.findByUserId(application2Collaborator1.getId())).
-                thenReturn(Collections12.singletonList(application2ConsortiumRoles.get(1)));
+                thenReturn(singletonList(application2ConsortiumRoles.get(1)));
 
         // user common to both applications
         when(processRoleRepositoryMock.findByUserId(application1Lead3AndApplication2Collaborator2.getId())).
@@ -364,11 +387,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 .build(1);
 
         when(processRoleRepositoryMock.findByUserId(application1Lead.getId())).
-                thenReturn(Collections12.singletonList(application1LeadProcessRole));
+                thenReturn(singletonList(application1LeadProcessRole));
         when(processRoleRepositoryMock.findByUserId(application2Collaborator.getId())).
-                thenReturn(Collections12.singletonList(application2CollaboratorProcessRole));
+                thenReturn(singletonList(application2CollaboratorProcessRole));
         when(processRoleRepositoryMock.findByUserId(application3Lead.getId())).
-                thenReturn(Collections12.singletonList(application3LeadProcessRole));
+                thenReturn(singletonList(application3LeadProcessRole));
         when(processRoleRepositoryMock.findByUserId(assessorForApplications1And2.getId())).
                 thenReturn(assessorProcessRoles);
         when(processRoleRepositoryMock.findByUserId(panelAssessorForApplication1.getId())).
@@ -411,9 +434,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
 
         when(processRoleRepositoryMock.findByUserId(application1Lead1.getId())).
-                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(0)));
+                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
         when(processRoleRepositoryMock.findByUserId(application1Lead2.getId())).
-                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(1)));
+                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
 
         ProcessRoleResource validResource = newProcessRoleResource().withApplication(application1.getId()).build();
         ProcessRoleResource invalidResource = newProcessRoleResource().withApplication(10L).build();
@@ -439,9 +462,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
 
         when(processRoleRepositoryMock.findByUserId(application1Assessor1.getId())).
-                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(0)));
+                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
         when(processRoleRepositoryMock.findByUserId(application1Assessor2.getId())).
-                thenReturn(Collections12.singletonList(application1ConsortiumRoles.get(1)));
+                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
 
         ProcessRoleResource validResource = newProcessRoleResource().withApplication(application1.getId()).build();
         ProcessRoleResource invalidResource = newProcessRoleResource().withApplication(10L).build();
