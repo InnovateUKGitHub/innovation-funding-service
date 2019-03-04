@@ -27,7 +27,7 @@ public interface FormInputResponseRepository extends PagingAndSortingRepository<
     @Override
     List<FormInputResponse> findAll();
 
-    Optional<FormInputResponse> findByApplicationIdAndFormInputQuestionIdAndUpdatedByOrganisationIdAndFormInputType(long applicationId, long questionId, long organisationId, FormInputType formInputTypeId);
+    Optional<FormInputResponse> findByApplicationIdAndFormInputQuestionIdAndUpdatedByOrganisationIdAndFormInputType(long applicationId, long questionId, long organisationId, FormInputType formInputType);
 
     Optional<FormInputResponse> findByApplicationIdAndFormInputQuestionIdAndUpdatedByOrganisationIdAndFormInputTypeAndFormInputDescription(long applicationId, long questionId, long organisationId, FormInputType formInputType, String description);
 }

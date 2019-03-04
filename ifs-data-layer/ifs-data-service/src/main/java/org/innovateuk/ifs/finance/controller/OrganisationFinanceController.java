@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.controller;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -37,11 +36,11 @@ import org.springframework.web.bind.annotation.*;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.lang.Boolean.TRUE;
+import static org.apache.commons.lang3.math.NumberUtils.isDigits;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputType.ORGANISATION_TURNOVER;
@@ -274,7 +273,7 @@ public class OrganisationFinanceController {
     private ServiceResult<Void> updateOrganisationSize(long applicationId, long competitionId, long organisationId, OrganisationSize organisationSize) {
         return financeService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).
                 andOnSuccess(finance -> {
-                    if (!Objects.equals(finance.getOrganisationSize(), organisationSize)) {
+                    if (finance.getOrganisationSize() != organisationSize) {
 
                         finance.setOrganisationSize(organisationSize);
                         ServiceResult<ApplicationFinanceResource> updateSizeResult = financeRowCostsService.updateApplicationFinance(finance.getId(), finance);
@@ -472,7 +471,7 @@ public class OrganisationFinanceController {
     private Long getLongValueFromFormInputResponses(Optional<FormInputResponseResource> formInputResponse) {
 
         return formInputResponse.
-                map(response -> NumberUtils.isDigits(response.getValue()) ? Long.valueOf(response.getValue()) : null).
+                map(response -> isDigits(response.getValue()) ? Long.valueOf(response.getValue()) : null).
                 orElse(null);
     }
 
