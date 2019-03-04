@@ -13,9 +13,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Client-side validations
-    [Documentation]    INFUND-5182
-    ...
-    ...    INFUND-5432
+    [Documentation]  INFUND-5182  INFUND-5432
     [Tags]
     Given The user should see the element    jQuery = h2:contains("Complete your assessor account")
     And The user should see the element      jQuery = .message-alert a:contains("your skills")    #this checks the alert message on the top od the page
@@ -53,11 +51,7 @@ Server-side validations
     Then the user should see a field and summary error         This field cannot contain more than 5,000 characters.
 
 Save Skills should redirect to the read-only view
-    [Documentation]    INFUND-5182  IFS-3942
-    ...
-    ...    INFUND-5432
-    ...
-    ...    INFUND-7059
+    [Documentation]    INFUND-5182  IFS-3942  INFUND-5432  INFUND-7059
     [Tags]
     Given the user clicks the button/link        jQuery = label:contains("Business")
     When the user enters text to a text field    id = skillAreas    assessor skill areas text
