@@ -212,13 +212,13 @@ Existing Monitoring Officer can sign in and see projects that they are assigned 
 Monitoring officer see the project setup veiw for assigned project
     [Documentation]  IFS-4209
     [Tags]
-    [Setup]  the user clicks the button/link    link = Magic material
-    Given the user should see the project set view
+    Given the user clicks the button/link    link = Magic material
+    Then the user should see the project set view
 
 Monitoring Officer cannot see projects if they are not assigned to them
     [Documentation]    IFS-3978
     [Tags]
-    When log in as a different user             &{monitoring_officer_two_credentials}
+    Given log in as a different user            &{monitoring_officer_two_credentials}
     Then the user should not see the element    .projects-in-setup
 
 *** Keywords ***
