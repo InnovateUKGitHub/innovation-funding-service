@@ -50,7 +50,7 @@ INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multi
 INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (0,'Description not used',1,1,'Project location question','Project location question',2,NULL,@template_id,@section_project_location_id,NULL,'GENERAL',NULL);
 
 -- Your organisation
-INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (0,'To determine the level of funding you are eligible to receive please provide your business size using the <a href=\"http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm\" target=\"_blank\" rel=\"external\">EU Definition</a> for guidance.',1,1,'Size','Business size',20,NULL,@template_id,@section_your_organisation_id,NULL,'GENERAL',NULL);
+INSERT INTO question (assign_enabled,description,mark_as_completed_enabled,multiple_statuses,name,short_name,priority,question_number,competition_id,section_id,assessor_maximum_score,question_type,question_setup_type) VALUES (0,'Please provide your business size using the <a href=\"http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm\" target=\"_blank\" rel=\"external\">EU Definition</a> for guidance.',1,1,'Size','Business size',20,NULL,@template_id,@section_your_organisation_id,NULL,'GENERAL',NULL);
 set @question_organisation_size_id = (SELECT LAST_INSERT_ID());
 
 -- Your funding
