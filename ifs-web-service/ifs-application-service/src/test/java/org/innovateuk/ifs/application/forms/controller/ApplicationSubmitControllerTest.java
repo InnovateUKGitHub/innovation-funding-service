@@ -73,14 +73,6 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     @Spy
     @InjectMocks
     private ApplicationModelPopulator applicationModelPopulator;
-//
-//    @Spy
-//    @InjectMocks
-//    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
-//
-    @Spy
-    @InjectMocks
-    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Mock
     private ApplicantRestService applicantRestService;
