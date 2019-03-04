@@ -376,7 +376,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().withPartnerStatuses(singletonList(partnerStatus)).build();
         when(projectServiceMock.getProjectUsersForProject(activeProject.getId())).thenReturn(pu);
         when(statusServiceMock.getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()))).thenReturn(teamStatus);
-        when(accessorMock.canAccessFinanceChecksSection(any(), any())).thenReturn(NOT_ACCESSIBLE);
+        when(accessorMock.canAccessFinanceChecksSection(any())).thenReturn(NOT_ACCESSIBLE);
         when(projectServiceMock.getOrganisationIdFromUser(activeProject.getId(), user)).thenReturn(organisationId);
 
         assertFalse(rules.partnerCanAccessFinanceChecksSection(ProjectCompositeId.id(activeProject.getId()), user));
@@ -403,7 +403,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         when(projectServiceMock.getById(activeProject.getId())).thenReturn(activeProject);
         when(projectServiceMock.getOrganisationIdFromUser(activeProject.getId(), user)).thenReturn(organisationId);
         when(statusServiceMock.getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()))).thenReturn(teamStatus);
-        when(accessorMock.canAccessFinanceChecksSection(any(), any())).thenReturn(ACCESSIBLE);
+        when(accessorMock.canAccessFinanceChecksSection(any())).thenReturn(ACCESSIBLE);
 
         assertTrue(rules.partnerCanAccessFinanceChecksSection(ProjectCompositeId.id(activeProject.getId()), user));
 

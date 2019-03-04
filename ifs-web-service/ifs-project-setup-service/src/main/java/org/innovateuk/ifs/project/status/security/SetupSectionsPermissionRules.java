@@ -138,6 +138,13 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
+    @PermissionRule(value = "ACCESS_TOTAL_SPEND_PROFILE_SECTION", description = "Only the project manager can access the Spend Profile " +
+            "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
+            "and the Organisation's Bank Details have been approved or queried")
+    public boolean leadCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isProjectManager(projectCompositeId.id(), user) && doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
+    }
+
     @PermissionRule(value = "SUBMIT_SPEND_PROFILE_SECTION", description = "A partner can attempt to submit the Spend Profile " +
             "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
             "and the Organisation's Bank Details have been approved or queried")
