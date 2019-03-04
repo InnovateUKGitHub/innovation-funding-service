@@ -14,6 +14,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.InviteService;
@@ -49,6 +50,7 @@ import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -224,7 +226,33 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
 
         assertFalse(submitForm.isAgreeTerms());
         assertEquals("validation.application.procurement.terms.required", bindingResult.getFieldError("agreeTerms").getCode());
+    }
 
+    @Test
+    public void applicationSummaryH2020SubmitAgreeToTerms() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionTypeName("Horizon 2020")
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        MvcResult result = mockMvc.perform(post("/application/" + application.getId() + "/summary")
+                                                   .param("agreeTerms", "false")
+                                                   .param("submit-application", ""))
+                .andExpect(redirectedUrl("/application/" + application.getId() + "/summary"))
+                .andReturn();
+
+        BindingResult bindingResult = (BindingResult) result.getFlashMap().get(BindingResult.class.getCanonicalName() + "." + APPLICATION_SUBMIT_FROM_ATTR_NAME);
+        ApplicationSubmitForm submitForm = (ApplicationSubmitForm) result.getFlashMap().get(APPLICATION_SUBMIT_FROM_ATTR_NAME);
+
+        assertFalse(submitForm.isAgreeTerms());
+        assertEquals("validation.application.h2020.terms.required", bindingResult.getFieldError("agreeTerms").getCode());
     }
 
     @Test

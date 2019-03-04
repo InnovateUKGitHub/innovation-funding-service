@@ -131,11 +131,15 @@ public class ApplicationSubmitController {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         if (competition.isFullyFunded()) {
             if (!applicationSubmitForm.isAgreeTerms()) {
-                bindingResult.rejectValue("agreeTerms","validation.application.procurement.terms.required");
+                String errorCode = competition.isH2020()?
+                        "validation.application.h2020.terms.required" :
+                        "validation.application.procurement.terms.required";
+                bindingResult.rejectValue("agreeTerms",errorCode);
                 redirectAttributes.addFlashAttribute(BindingResult.class.getCanonicalName() + "." + APPLICATION_SUBMIT_FROM_ATTR_NAME, bindingResult);
                 redirectAttributes.addFlashAttribute(APPLICATION_SUBMIT_FROM_ATTR_NAME, applicationSubmitForm);
                 return String.format("redirect:/application/%d/summary", applicationId);
             }
+
         }
         redirectAttributes.addFlashAttribute("termsAgreed", true);
         return String.format("redirect:/application/%d/confirm-submit", applicationId);
