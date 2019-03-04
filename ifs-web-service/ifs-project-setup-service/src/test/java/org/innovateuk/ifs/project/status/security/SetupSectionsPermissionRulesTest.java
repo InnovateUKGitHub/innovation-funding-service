@@ -18,7 +18,6 @@ import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -156,7 +155,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     @Test
     public void bankDetailsSectionAccessMonitoringOfficer() {
-        assertMonitoringOfficerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
+        assertMonitoringOfficerUnSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
                         setupSectionAccessibilityHelper.canAccessBankDetailsSection(organisation),
                 () -> rules.partnerCanAccessBankDetailsSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
     }
@@ -164,6 +163,16 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void spendProfileSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), user));
+    }
+
+    @Test
+    public void projectManagerTotalSpendProfileSectionAccess() {
+        assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.projectManagerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), user));
+    }
+
+    @Test
+    public void partnerTotalSpendProfileSectionNoAccess() {
+        assertNonLeadPartnerAndNotMOUnsuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.projectManagerCanAccessSpendProfileSection(ProjectCompositeId.id(activeProject.getId()), user));
     }
 
     @Test
@@ -431,6 +440,8 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         when(projectServiceMock.isUserLeadPartner(activeProject.getId(), user.getId())).thenReturn(true);
 
+        when(projectServiceMock.isProjectManager(user.getId(), activeProject.getId())).thenReturn(true);
+
         OrganisationResource expectedOrganisation = new OrganisationResource();
         expectedOrganisation.setId(456L);
         expectedOrganisation.setOrganisationType(
@@ -548,12 +559,17 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         assertTrue(ruleCheck.get());
 
         verify(projectServiceMock, atLeastOnce()).getById(activeProject.getId());
+//        verify(projectServiceMock.isProjectManager(user.getId(), activeProject.getId()));
         verify(statusServiceMock).getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()));
         verify(projectServiceMock).getLeadPartners(activeProject.getId());
 
         accessorCheck.apply(verify(accessorMock), expectedOrganisation);
     }
 
+    private void assertMonitoringOfficerUnSuccessfulAccess(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,
+                                                           Supplier<Boolean> ruleCheck) {
+        assertFalse(ruleCheck.get());
+    }
 
     private void assertNonLeadPartnerUnsuccessfulAccess(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,
                                                       Supplier<Boolean> ruleCheck) {
@@ -583,6 +599,8 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         when(projectServiceMock.getOrganisationIdFromUser(activeProject.getId(), user)).thenReturn(789L);
 
+        when(projectServiceMock.isProjectManager(user.getId(), activeProject.getId())).thenReturn(false);
+
         when(projectServiceMock.isUserLeadPartner(activeProject.getId(), user.getId())).thenReturn(false);
 
         OrganisationResource expectedOrganisation = new OrganisationResource();
@@ -599,6 +617,11 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         verify(statusServiceMock).getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()));
 
         accessorCheck.apply(verify(accessorMock), expectedOrganisation);
+    }
+
+    private void assertNonLeadPartnerAndNotMOUnsuccessfulAccess(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,
+                                                        Supplier<Boolean> ruleCheck) {
+        assertFalse(ruleCheck.get());
     }
 
 
