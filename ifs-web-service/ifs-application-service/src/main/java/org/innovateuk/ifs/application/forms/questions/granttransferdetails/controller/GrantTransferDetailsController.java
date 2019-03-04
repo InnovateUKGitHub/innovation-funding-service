@@ -11,7 +11,6 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -31,20 +29,23 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.MODEL_ATT
 @PreAuthorize("hasAuthority('applicant')")
 public class GrantTransferDetailsController {
 
-    @Autowired
     private GrantTransferDetailsFormPopulator grantTransferDetailsFormPopulator;
 
-    @Autowired
     private GrantTransferDetailsViewModelPopulator grantTransferDetailsViewModelPopulator;
 
-    @Autowired
     private GrantTransferDetailsSaver grantTransferDetailsSaver;
 
-    @Autowired
     private UserRestService userRestService;
 
-    @Autowired
     private QuestionStatusRestService questionStatusRestService;
+
+    public GrantTransferDetailsController(GrantTransferDetailsFormPopulator grantTransferDetailsFormPopulator, GrantTransferDetailsViewModelPopulator grantTransferDetailsViewModelPopulator, GrantTransferDetailsSaver grantTransferDetailsSaver, UserRestService userRestService, QuestionStatusRestService questionStatusRestService) {
+        this.grantTransferDetailsFormPopulator = grantTransferDetailsFormPopulator;
+        this.grantTransferDetailsViewModelPopulator = grantTransferDetailsViewModelPopulator;
+        this.grantTransferDetailsSaver = grantTransferDetailsSaver;
+        this.userRestService = userRestService;
+        this.questionStatusRestService = questionStatusRestService;
+    }
 
     @GetMapping
     public String viewGrantTransferDetails(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) GrantTransferDetailsForm form,

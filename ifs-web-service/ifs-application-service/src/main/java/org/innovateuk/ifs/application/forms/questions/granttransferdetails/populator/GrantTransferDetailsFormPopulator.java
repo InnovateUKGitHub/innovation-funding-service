@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.questions.granttransferdetails.popu
 
 import org.innovateuk.ifs.application.forms.questions.granttransferdetails.form.GrantTransferDetailsForm;
 import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
-import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestServiceImpl;
+import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -10,9 +10,9 @@ import java.util.Optional;
 @Component
 public class GrantTransferDetailsFormPopulator {
 
-    private final EuGrantTransferRestServiceImpl euGrantTransferRestService;
+    private final EuGrantTransferRestService euGrantTransferRestService;
 
-    public GrantTransferDetailsFormPopulator(EuGrantTransferRestServiceImpl euGrantTransferRestService) {
+    public GrantTransferDetailsFormPopulator(EuGrantTransferRestService euGrantTransferRestService) {
         this.euGrantTransferRestService = euGrantTransferRestService;
     }
 

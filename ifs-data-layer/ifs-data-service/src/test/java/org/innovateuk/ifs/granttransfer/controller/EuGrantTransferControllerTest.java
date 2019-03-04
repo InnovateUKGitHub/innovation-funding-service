@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseFileControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.innovateuk.ifs.granttransfer.transactional.EuGrantTransferService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,8 +17,10 @@ import java.util.function.Function;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResourceBuilder.newEuGrantTransferResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -82,6 +85,33 @@ public class EuGrantTransferControllerTest extends BaseFileControllerMockMVCTest
                 .andExpect(content().json(toJson(fileEntryResource)));
 
         verify(euGrantTransferService).findGrantAgreement(applicationId);
+    }
+
+    @Test
+    public void getGrantTransferByApplicationId() throws Exception {
+        final long applicationId = 22L;
+        EuGrantTransferResource grantTransferResource = newEuGrantTransferResource().build();
+        when(euGrantTransferService.getGrantTransferByApplicationId(applicationId)).thenReturn(serviceSuccess(grantTransferResource));
+
+        mockMvc.perform(get("/eu-grant-transfer/{applicationId}", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(grantTransferResource)));
+
+        verify(euGrantTransferService).getGrantTransferByApplicationId(applicationId);
+    }
+
+    @Test
+    public void updateGrantTransferByApplicationId() throws Exception {
+        final long applicationId = 22L;
+        EuGrantTransferResource grantTransferResource = newEuGrantTransferResource().build();
+        when(euGrantTransferService.updateGrantTransferByApplicationId(grantTransferResource, applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/eu-grant-transfer/{applicationId}", applicationId)
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(grantTransferResource)))
+                .andExpect(status().isOk());
+
+        verify(euGrantTransferService).updateGrantTransferByApplicationId(grantTransferResource, applicationId);
     }
 
     protected HttpHeaders createFileUploadHeader(String contentType, long contentLength) {

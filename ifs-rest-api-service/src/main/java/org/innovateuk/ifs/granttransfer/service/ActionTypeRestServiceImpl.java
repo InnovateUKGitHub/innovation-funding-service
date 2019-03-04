@@ -14,12 +14,12 @@ public class ActionTypeRestServiceImpl extends BaseRestService implements Action
 
     @Override
     public RestResult<List<EuActionTypeResource>> findAll() {
-        return getWithRestResultAnonymous(baseURL + "/find-all", euActionTypeResourceListType());
+        return getWithRestResult(baseURL + "/find-all", euActionTypeResourceListType());
     }
 
     @Override
     public RestResult<EuActionTypeResource> getById(long id) {
-        return getWithRestResultAnonymous(baseURL + "/get-by-id/" + id, EuActionTypeResource.class);
+        return getWithRestResult(baseURL + "/get-by-id/" + id, EuActionTypeResource.class);
     }
 
     public static ParameterizedTypeReference<List<EuActionTypeResource>> euActionTypeResourceListType() {
