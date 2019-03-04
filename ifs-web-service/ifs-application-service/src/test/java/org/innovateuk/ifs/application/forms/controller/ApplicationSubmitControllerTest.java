@@ -14,7 +14,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.InviteService;
@@ -50,7 +49,6 @@ import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -75,11 +73,11 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     @Spy
     @InjectMocks
     private ApplicationModelPopulator applicationModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
-
+//
+//    @Spy
+//    @InjectMocks
+//    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+//
     @Spy
     @InjectMocks
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
