@@ -1,6 +1,5 @@
 package org.innovateuk.ifs;
 
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -8,6 +7,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -17,15 +17,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.MONITORING_OFFICER;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.mockito.Mockito.when;
@@ -42,6 +43,9 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     protected ProjectUserRepository projectUserRepositoryMock;
 
     @Mock
+    protected ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+
+    @Mock
     protected ProjectRepository projectRepositoryMock;
 
     @Mock
@@ -50,13 +54,11 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     @Mock
     protected OrganisationRepository organisationRepositoryMock;
 
-
-
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
         List<ProjectUser> projectManagerUser = newProjectUser().build(1);
 
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), ProjectParticipantRole.PROJECT_MANAGER ))
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(projectResource.getId(), user.getId(), PROJECT_MANAGER ))
                 .thenReturn(projectManagerUser);
     }
 
@@ -122,11 +124,9 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     }
 
     private void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
-        List<ProjectUser> monitoringOfficerForProject = newProjectUser().build(1);
-
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), MONITORING_OFFICER))
-                .thenReturn(userIsMonitoringOfficer ? monitoringOfficerForProject : emptyList());
-    }
+        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId()))
+            .thenReturn(userIsMonitoringOfficer);
+}
 
     protected void setupUserAsLeadPartner(ProjectResource project, UserResource user) {
         setupLeadPartnerExpectations(project, user, true);
@@ -144,11 +144,11 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisationId(leadOrganisation.getId()).build();
 
         // find the lead organisation
-        when(projectRepositoryMock.findOne(project.getId())).thenReturn(projectEntity);
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(projectEntity));
         when(processRoleRepositoryMock.findOneByApplicationIdAndRole(projectEntity.getApplication().getId(), Role.LEADAPPLICANT)).thenReturn(leadApplicantProcessRole);
 
         // see if the user is a partner on the lead organisation
-        when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(organisationRepositoryMock.findById(leadOrganisation.getId())).thenReturn(Optional.of(leadOrganisation));
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
                 project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(userIsLeadPartner ? newProjectUser().build() : null);
     }

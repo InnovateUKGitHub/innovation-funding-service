@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Mapper(config = GlobalMapperConfig.class)
@@ -55,9 +56,9 @@ public abstract class ApplicationSummaryMapper {
         }
 
         ProcessRole leadProcessRole = source.getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
-        if (leadOrganisation != null) {
-            result.setLead(leadOrganisation.getName());
+        Optional<Organisation> leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId());
+        if (leadOrganisation.isPresent()) {
+            result.setLead(leadOrganisation.get().getName());
         }
 
         if (source.getFundingDecision() != null) {

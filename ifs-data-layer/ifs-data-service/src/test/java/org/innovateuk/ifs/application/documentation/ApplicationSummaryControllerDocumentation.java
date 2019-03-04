@@ -186,6 +186,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         responseFields(
                                 fieldWithPath("leadOrganisation").description("Lead organisation"),
                                 fieldWithPath("leadOrganisation.organisationName").description("Organisation name"),
+                                fieldWithPath("leadOrganisation.organisationTypeName").description("Organisation type name"),
                                 fieldWithPath("leadOrganisation.users[]").description("Users in lead organisation"),
                                 fieldWithPath("leadOrganisation.users[].name").description("User's name"),
                                 fieldWithPath("leadOrganisation.users[].email").description("User's email"),
@@ -193,6 +194,7 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                                 fieldWithPath("leadOrganisation.users[].lead").description("Is user the lead applicant"),
                                 fieldWithPath("partnerOrganisations[]").description("Collaborating organisations"),
                                 fieldWithPath("partnerOrganisations[].organisationName").description("Organisation name"),
+                                fieldWithPath("partnerOrganisations[].organisationTypeName").description("Organisation type name"),
                                 fieldWithPath("partnerOrganisations[].users[]").description("Users in partner organisation"),
                                 fieldWithPath("partnerOrganisations[].users[].name").description("User's name"),
                                 fieldWithPath("partnerOrganisations[].users[].email").description("User's email"),

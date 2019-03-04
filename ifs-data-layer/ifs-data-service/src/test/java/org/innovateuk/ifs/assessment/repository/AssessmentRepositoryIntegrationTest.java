@@ -73,7 +73,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     public void findAll() {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
 
         ProcessRole participant1 = processRoleRepository.save(newProcessRole()
                 .with(id(null))
@@ -105,7 +105,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     public void findOneByParticipantId() {
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
 
         ProcessRole participant1 = processRoleRepository.save(newProcessRole()
                 .with(id(null))
@@ -120,7 +120,6 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .withUser(user)
                 .withRole(Role.ASSESSOR)
                 .build());
-
 
         List<Assessment> assessments = newAssessment()
                 .with(id(null))
@@ -143,7 +142,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
-        Application application = applicationRepository.findOne(applicationId);
+        Application application = applicationRepository.findById(applicationId).get();
         int numOfAssessmentsForEachState = 2;
 
         List<Assessment> assessments = setUpAssessments(user, application, numOfAssessmentsForEachState);
@@ -163,7 +162,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         int numOfAssessmentsForEachState = 2;
 
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
         List<Assessment> assessments = setUpAssessments(user, application, numOfAssessmentsForEachState);
 
         Set<AssessmentState> statesNotToCount = asLinkedSet(CREATED, PENDING);
@@ -179,7 +178,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         int numOfAssessmentsForEachState = 2;
 
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
         setUpAssessments(user, application, numOfAssessmentsForEachState);
         Set<AssessmentState> states = asLinkedSet(CREATED, PENDING);
 
@@ -197,7 +196,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         int numOfAssessmentsForEachState = 2;
 
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
         setUpAssessments(user, application, numOfAssessmentsForEachState);
 
         Set<AssessmentState> statesToCount = asLinkedSet(CREATED, PENDING);
@@ -212,7 +211,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
         int numOfAssessmentsForEachState = 2;
 
         setUpShuffledAssessments(user, application, numOfAssessmentsForEachState);
@@ -239,7 +238,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     public void findByActivityStateStateAndTargetCompetitionId() {
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
 
         List<Assessment> found = repository
                 .findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, application.getCompetition().getId());
@@ -257,8 +256,8 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         User felixWilson = userRepository.findByEmail("felix.wilson@gmail.com").orElse(null);
         User paulPlum = userRepository.findByEmail("paul.plum@gmail.com").orElse(null);
 
-        Application application1 = applicationRepository.findOne(1L);
-        Application application2 = applicationRepository.findOne(2L);
+        Application application1 = applicationRepository.findById(1L).get();
+        Application application2 = applicationRepository.findById(2L).get();
 
         ProcessRole participant1 = newProcessRole()
                 .withId()
@@ -279,8 +278,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .withRole(Role.ASSESSOR)
                 .build();
 
-        processRoleRepository.save(asList(participant1, participant2, participant3));
-
+        processRoleRepository.saveAll(asList(participant1, participant2, participant3));
 
         List<Assessment> assessments = newAssessment()
                 .withId()
@@ -298,7 +296,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                         .build()
         );
 
-        repository.save(assessments);
+        repository.saveAll(assessments);
 
         List<AssessmentApplicationAssessorCount> counts = repository.getAssessorApplicationAssessmentCountsForStates(
                 application1.getCompetition().getId(),
@@ -318,7 +316,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     public void countByActivityStateStateAndTargetCompetitionId() {
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
 
         long found = repository
                 .countByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, application.getCompetition().getId());
@@ -330,7 +328,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     public void countByActivityStateStateInAndTargetCompetitionId() {
         Set<AssessmentState> states = EnumSet.of(AssessmentState.CREATED, AssessmentState.OPEN);
 
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
 
         long found = repository
                 .countByActivityStateInAndTargetCompetitionId(states, application.getCompetition().getId());
@@ -340,7 +338,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     public void isFeedbackComplete() {
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
         Competition competition = application.getCompetition();
 
         // Feedback should be incomplete for a new assessment with no responses
@@ -353,7 +351,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assertFalse(repository.isFeedbackComplete(assessment.getId()));
 
         // Create form input responses for each of the assessment form inputs. Feedback should now be complete
-        assessorFormInputResponseRepository.save(competition.getQuestions().stream()
+        assessorFormInputResponseRepository.saveAll(competition.getQuestions().stream()
                 .flatMap(question -> question.getFormInputs().stream()
                         .filter(formInput -> ASSESSMENT == formInput.getScope())
                         .map(formInput -> newAssessorFormInputResponse()
@@ -374,7 +372,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     public void getTotalScore() {
-        Application application = applicationRepository.findOne(1L);
+        Application application = applicationRepository.findById(1L).get();
         Competition competition = application.getCompetition();
 
         int expectedTotalScorePossible = competition.getQuestions().stream()
@@ -394,7 +392,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         // Create form input responses for each of the score form inputs, tracking the total score given
         LongAccumulator scoreGivenAccumulator = new LongAccumulator((x, y) -> x + y, 0);
-        assessorFormInputResponseRepository.save(
+        assessorFormInputResponseRepository.saveAll(
                 competition.getQuestions().stream().flatMap(question ->
                         question.getFormInputs().stream().filter(formInput ->
                                 formInput.getActive() && ASSESSOR_SCORE == formInput.getType()
@@ -419,7 +417,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     private List<Assessment> setUpAssessments(User user, Application application, int numOfAssessmentsForEachState) {
         List<Assessment> result = new ArrayList<>();
-        repository.save(buildAssessments(user, application, numOfAssessmentsForEachState)).forEach(result::add);
+        repository.saveAll(buildAssessments(user, application, numOfAssessmentsForEachState)).forEach(result::add);
         return result;
     }
 
@@ -427,7 +425,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         List<Assessment> result = new ArrayList<>();
         List<Assessment> assessments = buildAssessments(user, application, numOfAssessmentsForEachState);
         Collections.shuffle(assessments);
-        repository.save(assessments).forEach(result::add);
+        repository.saveAll(assessments).forEach(result::add);
         return result;
     }
 
@@ -445,7 +443,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     private ProcessRole[] setUpParticipants(User user, Application application, int count) {
         List<ProcessRole> result = new ArrayList<>();
-        processRoleRepository.save(newProcessRole()
+        processRoleRepository.saveAll(newProcessRole()
                 .with(id(null))
                 .withUser(user)
                 .withRole(Role.ASSESSOR)

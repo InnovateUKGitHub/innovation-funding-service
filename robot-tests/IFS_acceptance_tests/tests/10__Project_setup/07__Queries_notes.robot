@@ -25,9 +25,6 @@ Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
-# This suite is using Competition: Internet of Things
-# and Application: Sensing & Control network using the lighting infrastructure
-
 *** Test Cases ***
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
@@ -73,14 +70,14 @@ Project finance user can upload a pdf file
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
     When the user uploads the file        name = attachment  ${valid_pdf}
-    Then the user should see the element  jQuery = h3:contains("Supporting documentation") + ul:contains("testing.pdf") .button-clear:contains("Remove")
+    Then the user should see the element  jQuery = h3:contains("Supporting documentation") + ul:contains("${valid_pdf}") .button-clear:contains("Remove")
 
 Project finance can remove the file
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
     Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/query/new-query
     When the user clicks the button/link  name = removeAttachment
-    Then the user should not see the text in the page    ${valid_pdf}
+    Then the user should not see the element     jQuery = h3:contains("Supporting documentation") + ul:contains("${valid_pdf}") .button-clear:contains("Remove")
     And the user should not see an error in the page
 
 Project finance user can upload more than one file and remove it
@@ -153,7 +150,7 @@ Finance contact receives an email when new query is posted and can see a pending
     [Documentation]  INFUND-4841 IFS-2746 IFS-3559
     [Tags]  HappyPath
     [Setup]  log in as a different user     &{PublicSector_lead_applicant_credentials}
-    Given the user reads his email          ${PublicSector_lead_applicant_credentials["email"]}  ${PS_EF_Competition_Name}: Query regarding your finances for project ${Queries_Application_No}  We have raised a query around your project finances.
+    Given the user reads his email          ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: Query regarding your finances for project ${Queries_Application_No}  We have raised a query around your project finances.
     When the user navigates to the page     ${server}/project-setup/project/${Queries_Application_Project}
     Then the user should see the element    css = .status-warning  #Pending query
     And the user clicks the button/link     link = Finance checks
@@ -213,9 +210,9 @@ Applicant - Response to query client side validations
     [Tags]
     When the user enters text to a text field          css = .editor  this is some response text
     And Set Focus To Element                           jQuery = .govuk-button:contains("Post response")
-    Then the user should not see the text in the page  ${empty_field_warning_message}
+    Then the user should not see the element           jQUery = .govuk-error-message:contains("${empty_field_warning_message}")
     When the user uploads the file                     name = attachment  ${valid_pdf}
-    Then the user should see the element               jQuery = a:contains("testing.pdf") + button:contains("Remove")
+    Then the user should see the element               jQuery = a:contains("${valid_pdf}") + button:contains("Remove")
 
 Applicant - Word count validations for response
     [Documentation]    INFUND-4843
@@ -263,7 +260,7 @@ IFS Admin can see applicant's response flagged in Query responses tab and mark d
     [Documentation]  IFS-1882 IFS-1987
     [Tags]
     # Query responses tab
-    Given the user navigates to the page  ${server}/project-setup-management/competition/${Queries_Competition_Id}/status/queries
+    Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_Competition_Id}/status/queries
     When the user clicks the button/link  link = Queries (1)
     Then the user should see the element  jQuery = td:contains("${Queries_Application_Title}") + td:contains("${Dreambit_Name}")
     When the user clicks the button/link  link = ${Dreambit_Name}
@@ -295,7 +292,7 @@ Project finance user can continue the conversation
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753 IFS-3559
     [Tags]
-    Given the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}  ${Queries_Competition_Name}: You have a reply to your query for project ${Queries_Application_No}  We have replied to a query regarding your finances
+    Given the user reads his email    ${PublicSector_lead_applicant_credentials["email"]}  ${PS_Competition_Name}: You have a reply to your query for project ${Queries_Application_No}  We have replied to a query regarding your finances
 
 Finance contact can view the new response
     [Documentation]    INFUND-7752

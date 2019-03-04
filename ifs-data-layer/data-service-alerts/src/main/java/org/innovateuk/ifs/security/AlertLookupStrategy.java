@@ -23,7 +23,7 @@ public class AlertLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public AlertResource getAlertResource(final Long id){
-        return alertMapper.mapToResource(alertRepository.findOne(id));
+        return alertMapper.mapToResource(alertRepository.findById(id).orElse(null));
     }
 
 }

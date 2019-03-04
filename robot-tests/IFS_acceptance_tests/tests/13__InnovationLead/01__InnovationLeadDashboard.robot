@@ -15,41 +15,17 @@ Resource        ../10__Project_setup/PS_Common.robot
 Innovation Lead should see Submitted and Ineligible Applications
     [Documentation]  IFS-984
     [Tags]
-    Given the user navigates to the page       ${CA_Live}
-    Then the user should see all live competitions
-    When the user navigates to the page        ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}
-    Then the user should not see the element   jQuery = a:contains("View and update competition setup")
-    When the user clicks the button/link       link = Applications: Submitted, ineligible
-    And the user clicks the button/link        link = Submitted applications
-    Then the user should see the element       jQuery = td:contains("${IN_ASSESSMENT_APPLICATION_4_TITLE}") ~ td:contains("57,803")
-    When the user navigates to the page        ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
-    Then the user should see the element       css = #application-list
-    When the user clicks the button/link       jQuery = a:contains(${application_ids["Ineligible Virtualisation"]})
-    Then the user should not see the element   jQuery = .govuk-button:contains("Reinstate application")
+    Given the user navigates to submitted application page
+    And the user navigates to ineligible application page
     When the user clicks the button/link       jQuery = a:contains("Back")
     Then the user should not see the element   jQuery = .govuk-button:contains("Inform applicant")
 
-Innovation lead cannot access CompSetup, Invite Assessors, Manage assessments, Funding decision, All Applictions
-    [Documentation]  IFS-984, IFS-1414
-    [Tags]
-    The user should see permission error on page  ${server}/management/competition/setup/${openCompetitionRTO}
-    The user should see permission error on page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/assessors/find
-    The user should see permission error on page  ${server}/management/assessment/competition/${CLOSED_COMPETITION}
-    The user should see permission error on page  ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
-    The user should see permission error on page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/all
-
-Innnovation lead can see competitions assigned to him only
-    [Documentation]  IFS-191  IFS-1308
+Innovation lead can see competitions assigned to him only
+    [Documentation]  IFS-191  IFS-1308  IFS-984  IFS-1414
     [Tags]  CompAdmin
-    [Setup]  log in as a different user   &{Comp_admin1_credentials}
-    Given The Competition Admin assigns the Innovation Lead to a competition  ${COMP_MANAGEMENT_UPDATE_COMP}/manage-innovation-leads/find
-    And The Competition Admin assigns the Innovation Lead to a competition    ${server}/management/competition/setup/${PROJECT_SETUP_COMPETITION}/manage-innovation-leads/find
-    When Log in as a different user       &{innovation_lead_two}
-    Then the user should see the element  link = ${openGenericCompetition}
-    And the user should see the element   link = ${openCompetitionRTO_name}
-    And the user should not see the text in the page  ${openCompetitionBusinessRTO_name}
-    When the user clicks the button/link  css = #section-4 a  #Project setup tab
-    Then the user should see the element  link = ${PROJECT_SETUP_COMPETITION_NAME}
+    Given Innovation lead cannot access CompSetup, Invite Assessors, Manage assessments, Funding decision, All Applictions
+    When The Competition Admin assigns the Innovation Lead to a competition
+    Then Innovation lead see the assigned competitions
     [Teardown]  The user clicks the button/link  link = Dashboard
 
 Innovation lead can only search for applications assigned to them
@@ -73,7 +49,42 @@ The user should see permission error on page
     The user navigates to the page and gets a custom error message  ${page}  ${403_error_message}
 
 The Competition Admin assigns the Innovation Lead to a competition
+    log in as a different user            &{Comp_admin1_credentials}
+    comp admin add Innovation lead        ${COMP_MANAGEMENT_UPDATE_COMP}/manage-innovation-leads/find
+    comp admin add Innovation lead        ${server}/management/competition/setup/${PROJECT_SETUP_COMPETITION}/manage-innovation-leads/find
+
+comp admin add Innovation lead
     [Arguments]  ${path}
-    the user navigates to the page       ${path}
-    the user clicks the button/link      jQuery = td:contains("Peter Freeman") button:contains("Add")
-    the user should not see the element  jQuery = td:contains("Peter Freeman")
+    the user navigates to the page          ${path}
+    the user clicks the button/link        jQuery = td:contains("Peter Freeman") button:contains("Add")
+    the user should not see the element    jQuery = td:contains("Peter Freeman")
+
+the user navigates to submitted application page
+    the user navigates to the page             ${CA_Live}
+    the user should see all live competitions
+    the user navigates to the page             ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}
+    the user should not see the element        jQuery = a:contains("View and update competition setup")
+    the user clicks the button/link            link = Applications: Submitted, ineligible
+    the user clicks the button/link            link = Submitted applications
+    the user should see the element            jQuery = td:contains("${IN_ASSESSMENT_APPLICATION_4_TITLE}") ~ td:contains("57,803")
+
+the user navigates to ineligible application page
+    the user navigates to the page        ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
+    the user should see the element       css = #application-list
+    the user clicks the button/link       jQuery = a:contains(${application_ids["Ineligible Virtualisation"]})
+    the user should not see the element   jQuery = .govuk-button:contains("Reinstate application")
+
+Innovation lead cannot access CompSetup, Invite Assessors, Manage assessments, Funding decision, All Applictions
+    The user should see permission error on page  ${server}/management/competition/setup/${openCompetitionRTO}
+    The user should see permission error on page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/assessors/find
+    The user should see permission error on page  ${server}/management/assessment/competition/${CLOSED_COMPETITION}
+    The user should see permission error on page  ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
+    The user should see permission error on page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/all
+
+Innovation lead see the assigned competitions
+    Log in as a different user             &{innovation_lead_two}
+    the user should see the element        link = ${openGenericCompetition}
+    the user should see the element        link = ${openCompetitionRTO_name}
+    the user should not see the element    jQuery = h3:contains("${openCompetitionBusinessRTO_name}")
+    the user clicks the button/link        css = #section-4 a  #Project setup tab
+    the user should see the element        link = ${PROJECT_SETUP_COMPETITION_NAME}

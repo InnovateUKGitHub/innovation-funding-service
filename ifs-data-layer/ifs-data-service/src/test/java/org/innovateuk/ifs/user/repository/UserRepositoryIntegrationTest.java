@@ -57,8 +57,8 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     @Test
     public void findByEmailAndStatus() {
         loginSteveSmith();
-        User creator = repository.findOne(getLoggedInUser().getId());
-        repository.findOne(getLoggedInUser().getId());
+        User creator = repository.findById(getLoggedInUser().getId()).get();
+        repository.findById(getLoggedInUser().getId());
         final User user = newUser()
                 .withUid("my-uid")
                 .withStatus(INACTIVE)
@@ -104,7 +104,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         assertTrue(emailAddresses.containsAll(expectedUsers));
 
         User savedNewUser = repository.findByEmail("new@example.com").get();
-        Profile savedProfile = profileRepository.findOne(savedNewUser.getProfileId());
+        Profile savedProfile = profileRepository.findById(savedNewUser.getProfileId()).get();
         assertEquals("Electric Works", savedProfile.getAddress().getAddressLine1());
         assertEquals(userMapper.mapToDomain(getSteveSmith()), savedProfile.getCreatedBy());
         assertEquals(userMapper.mapToDomain(getSteveSmith()), savedProfile.getModifiedBy());
@@ -117,7 +117,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         User newUser = repository.save(new User("New", "User", "new@example.com", "", "my-uid"));
 
         // and immediately delete them
-        repository.delete(newUser.getId());
+        repository.deleteById(newUser.getId());
 
         // Fetch the list of users and assert that the user doesn't exist in this list
         List<User> users = repository.findAll();

@@ -13,6 +13,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
@@ -48,7 +50,7 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Stakeholders can see application finances for organisations on applications they are assigned to")
     public boolean stakeholdersCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        Application application = applicationRepository.findById(applicationFinanceResource.getApplication());
+        Application application = applicationRepository.findById(applicationFinanceResource.getApplication()).get();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
@@ -64,7 +66,7 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "ADD_COST", description = "Stakeholders can add a cost to the application finances they are assigned to")
     public boolean stakeholdersCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        Application application = applicationRepository.findById(applicationFinanceResource.getApplication());
+        Application application = applicationRepository.findById(applicationFinanceResource.getApplication()).get();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
@@ -136,9 +138,9 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     }
 
     private boolean hasDetailedView(long applicationId) {
-        Application application = applicationRepository.findOne(applicationId);
-        if (application != null){
-            Competition competition = competitionRepository.findById(application.getCompetition().getId());
+        Optional<Application> application = applicationRepository.findById(applicationId);
+        if (application.isPresent()){
+            Competition competition = competitionRepository.findById(application.get().getCompetition().getId()).get();
             return competition.getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
         }
         return false;

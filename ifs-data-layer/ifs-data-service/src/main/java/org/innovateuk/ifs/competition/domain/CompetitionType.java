@@ -12,7 +12,7 @@ public class CompetitionType {
     private static final String SECTOR = "Sector";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Boolean active;

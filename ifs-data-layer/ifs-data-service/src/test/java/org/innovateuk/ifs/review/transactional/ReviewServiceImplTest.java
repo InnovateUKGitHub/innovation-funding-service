@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -100,19 +101,19 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
 
     @Test
     public void assignApplicationsToPanel() {
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
 
         ServiceResult<Void> result = service.assignApplicationToPanel(applicationId);
         assertTrue(result.isSuccess());
         assertTrue(application.isInAssessmentReviewPanel());
 
-        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(applicationRepositoryMock).findById(applicationId);
         verifyNoMoreInteractions(applicationRepositoryMock);
     }
 
     @Test
     public void unAssignApplicationsFromPanel() {
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(reviewRepositoryMock
                 .findByTargetIdAndActivityStateNot(applicationId, ReviewState.WITHDRAWN))
                 .thenReturn(emptyList());
@@ -121,7 +122,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         assertTrue(result.isSuccess());
         assertFalse(application.isInAssessmentReviewPanel());
 
-        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(applicationRepositoryMock).findById(applicationId);
         verify(reviewRepositoryMock).findByTargetIdAndActivityStateNot(applicationId, ReviewState.WITHDRAWN);
         verifyNoMoreInteractions(applicationRepositoryMock, reviewRepositoryMock);
     }
@@ -130,7 +131,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
     public void unAssignApplicationsFromPanel_existingReviews() {
         List<Review> reviews = newReview().withTarget(application).withState(ReviewState.WITHDRAWN).build(2);
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(reviewRepositoryMock
                 .findByTargetIdAndActivityStateNot(applicationId, ReviewState.WITHDRAWN))
                 .thenReturn(reviews);
@@ -141,7 +142,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
 
         reviews.forEach(a -> assertEquals(ReviewState.WITHDRAWN, a.getProcessState()));
 
-        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(applicationRepositoryMock).findById(applicationId);
         verifyNoMoreInteractions(applicationRepositoryMock);
     }
 
@@ -276,13 +277,13 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
     public void acceptAssessmentReview() {
         Review review = newReview().build();
 
-        when(reviewRepositoryMock.findOne(review.getId())).thenReturn(review);
+        when(reviewRepositoryMock.findById(review.getId())).thenReturn(Optional.of(review));
         when(reviewWorkflowHandlerMock.acceptInvitation(review)).thenReturn(true);
 
         service.acceptReview(review.getId()).getSuccess();
 
         InOrder inOrder = inOrder(reviewRepositoryMock, reviewWorkflowHandlerMock);
-        inOrder.verify(reviewRepositoryMock).findOne(review.getId());
+        inOrder.verify(reviewRepositoryMock).findById(review.getId());
         inOrder.verify(reviewWorkflowHandlerMock).acceptInvitation(review);
         inOrder.verifyNoMoreInteractions();
     }
@@ -297,7 +298,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         assertEquals(GENERAL_NOT_FOUND.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
 
         InOrder inOrder = inOrder(reviewRepositoryMock, reviewWorkflowHandlerMock);
-        inOrder.verify(reviewRepositoryMock).findOne(review.getId());
+        inOrder.verify(reviewRepositoryMock).findById(review.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -305,7 +306,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
     public void acceptAssessmentReview_invalidState() {
         Review review = newReview().build();
 
-        when(reviewRepositoryMock.findOne(review.getId())).thenReturn(review);
+        when(reviewRepositoryMock.findById(review.getId())).thenReturn(Optional.of(review));
         when(reviewWorkflowHandlerMock.acceptInvitation(review)).thenReturn(false);
 
         ServiceResult<Void> serviceResult = service.acceptReview(review.getId());
@@ -313,7 +314,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         assertEquals(ASSESSMENT_REVIEW_ACCEPT_FAILED.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
 
         InOrder inOrder = inOrder(reviewRepositoryMock, reviewWorkflowHandlerMock);
-        inOrder.verify(reviewRepositoryMock).findOne(review.getId());
+        inOrder.verify(reviewRepositoryMock).findById(review.getId());
         inOrder.verify(reviewWorkflowHandlerMock).acceptInvitation(review);
         inOrder.verifyNoMoreInteractions();
     }
@@ -325,14 +326,14 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         Review review = newReview().build();
         ReviewRejectOutcome reviewRejectOutcome = newReviewRejectOutcome().build();
 
-        when(reviewRepositoryMock.findOne(review.getId())).thenReturn(review);
+        when(reviewRepositoryMock.findById(review.getId())).thenReturn(Optional.of(review));
         when(reviewWorkflowHandlerMock.rejectInvitation(review, reviewRejectOutcome)).thenReturn(true);
         when(reviewRejectOutcomeMapperMock.mapToDomain(rejectOutcomeResource)).thenReturn(reviewRejectOutcome);
 
         service.rejectReview(review.getId(), rejectOutcomeResource).getSuccess();
 
         InOrder inOrder = inOrder(reviewRepositoryMock, reviewWorkflowHandlerMock, reviewRejectOutcomeMapperMock);
-        inOrder.verify(reviewRepositoryMock).findOne(review.getId());
+        inOrder.verify(reviewRepositoryMock).findById(review.getId());
         inOrder.verify(reviewRejectOutcomeMapperMock).mapToDomain(rejectOutcomeResource);
         inOrder.verify(reviewWorkflowHandlerMock).rejectInvitation(review, reviewRejectOutcome);
         inOrder.verifyNoMoreInteractions();
@@ -345,7 +346,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         Review review = newReview().build();
         ReviewRejectOutcome reviewRejectOutcome = newReviewRejectOutcome().build();
 
-        when(reviewRepositoryMock.findOne(review.getId())).thenReturn(review);
+        when(reviewRepositoryMock.findById(review.getId())).thenReturn(Optional.of(review));
         when(reviewWorkflowHandlerMock.rejectInvitation(review, reviewRejectOutcome)).thenReturn(false);
         when(reviewRejectOutcomeMapperMock.mapToDomain(rejectOutcomeResource)).thenReturn(reviewRejectOutcome);
 
@@ -354,7 +355,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         assertEquals(ASSESSMENT_REVIEW_REJECT_FAILED.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
 
         InOrder inOrder = inOrder(reviewRepositoryMock, reviewWorkflowHandlerMock, reviewRejectOutcomeMapperMock);
-        inOrder.verify(reviewRepositoryMock).findOne(review.getId());
+        inOrder.verify(reviewRepositoryMock).findById(review.getId());
         inOrder.verify(reviewRejectOutcomeMapperMock).mapToDomain(rejectOutcomeResource);
         inOrder.verify(reviewWorkflowHandlerMock).rejectInvitation(review, reviewRejectOutcome);
         inOrder.verifyNoMoreInteractions();
@@ -365,7 +366,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         ReviewResource reviewResource = newReviewResource().build();
         Review review = newReview().build();
 
-        when(reviewRepositoryMock.findOne(reviewResource.getId())).thenReturn(review);
+        when(reviewRepositoryMock.findById(reviewResource.getId())).thenReturn(Optional.of(review));
         when(reviewMapperMock.mapToResource(review)).thenReturn(reviewResource);
 
         ReviewResource result = service.getReview(reviewResource.getId())
@@ -374,7 +375,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         assertEquals(reviewResource, result);
 
         InOrder inOrder = inOrder(reviewRepositoryMock, reviewMapperMock);
-        inOrder.verify(reviewRepositoryMock).findOne(reviewResource.getId());
+        inOrder.verify(reviewRepositoryMock).findById(reviewResource.getId());
         inOrder.verify(reviewMapperMock).mapToResource(review);
         inOrder.verifyNoMoreInteractions();
     }

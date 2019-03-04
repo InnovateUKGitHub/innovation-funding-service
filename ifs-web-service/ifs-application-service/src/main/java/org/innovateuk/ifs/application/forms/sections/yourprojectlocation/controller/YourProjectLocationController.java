@@ -52,6 +52,9 @@ public class YourProjectLocationController extends AsyncAdaptor {
     private SectionService sectionService;
     private UserRestService userRestService;
 
+    public YourProjectLocationController() {
+    }
+
     @Autowired
     YourProjectLocationController(
             CommonYourFinancesViewModelPopulator commonViewModelPopulator,
@@ -65,10 +68,6 @@ public class YourProjectLocationController extends AsyncAdaptor {
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.userRestService = userRestService;
-    }
-
-    // for ByteBuddy
-    YourProjectLocationController() {
     }
 
     @GetMapping

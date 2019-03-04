@@ -48,6 +48,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.time.ZonedDateTime.now;
@@ -85,8 +86,8 @@ import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Matchers.same;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -168,9 +169,9 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
         when(interviewInviteRepositoryMock.save(isA(InterviewInvite.class))).thenReturn(interviewInvite);
         when(interviewInviteMapperMock.mapToResource(same(interviewInvite))).thenReturn(expected);
         when(interviewParticipantRepositoryMock.getByInviteHash(INVITE_HASH)).thenReturn(interviewParticipant);
-        when(rejectionReasonRepositoryMock.findOne(rejectionReason.getId())).thenReturn(rejectionReason);
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
-        when(profileRepositoryMock.findOne(user.getProfileId())).thenReturn(profile);
+        when(rejectionReasonRepositoryMock.findById(rejectionReason.getId())).thenReturn(Optional.of(rejectionReason));
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
+        when(profileRepositoryMock.findById(user.getProfileId())).thenReturn(Optional.of(profile));
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
 
         ReflectionTestUtils.setField(service, "webBaseUrl", "https://ifs-local-dev");
@@ -458,20 +459,20 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
                 .withCompetitionId(competition.getId())
                 .build(2);
 
-        when(userRepositoryMock.findOne(existingUsers.get(0).getId())).thenReturn(existingUsers.get(0));
-        when(userRepositoryMock.findOne(existingUsers.get(1).getId())).thenReturn(existingUsers.get(1));
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(userRepositoryMock.findById(existingUsers.get(0).getId())).thenReturn(Optional.of(existingUsers.get(0)));
+        when(userRepositoryMock.findById(existingUsers.get(1).getId())).thenReturn(Optional.of(existingUsers.get(1)));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(interviewInviteRepositoryMock.save(isA(InterviewInvite.class))).thenReturn(new InterviewInvite());
 
         ServiceResult<Void> serviceResult = service.inviteUsers(existingAssessors);
         assertTrue(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, competitionRepositoryMock, interviewInviteRepositoryMock);
-        inOrder.verify(userRepositoryMock).findOne(existingAssessors.get(0).getUserId());
-        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(userRepositoryMock).findById(existingAssessors.get(0).getUserId());
+        inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(interviewInviteRepositoryMock).save(createInviteExpectations(existingUsers.get(0).getName(), existingUsers.get(0).getEmail(), CREATED, competition));
-        inOrder.verify(userRepositoryMock).findOne(existingAssessors.get(1).getUserId());
-        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(userRepositoryMock).findById(existingAssessors.get(1).getUserId());
+        inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(interviewInviteRepositoryMock).save(createInviteExpectations(existingUsers.get(1).getName(), existingUsers.get(1).getEmail(), CREATED, competition));
         inOrder.verifyNoMoreInteractions();
     }
@@ -507,7 +508,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessors_to_interview_panel_text.txt";
 
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(interviewInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
         when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
                 expectedNotificationArguments)).thenReturn(serviceSuccess("content"));
@@ -523,7 +524,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
         assertEquals(expectedAssessorInviteToSendResource, result);
 
         InOrder inOrder = inOrder(competitionRepositoryMock, interviewInviteRepositoryMock, notificationTemplateRendererMock);
-        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(interviewInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
         inOrder.verify(notificationTemplateRendererMock).renderTemplate(systemNotificationSourceMock, notificationTarget,
                 templatePath, expectedNotificationArguments);
@@ -562,7 +563,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessors_to_interview_panel_text.txt";
 
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(interviewInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
         when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
                 expectedNotificationArguments)).thenReturn(serviceSuccess("content"));
@@ -578,7 +579,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
         assertEquals(expectedAssessorInviteToSendResource, result);
 
         InOrder inOrder = inOrder(competitionRepositoryMock, interviewInviteRepositoryMock, notificationTemplateRendererMock);
-        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(interviewInviteRepositoryMock).getByIdIn(inviteIds);
         inOrder.verify(notificationTemplateRendererMock).renderTemplate(systemNotificationSourceMock, notificationTarget,
                 templatePath, expectedNotificationArguments);
@@ -690,22 +691,22 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
     public void deleteAllInvites() {
         long competitionId = 1L;
 
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(newCompetition().build());
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(newCompetition().build()));
 
         assertTrue(service.deleteAllInvites(competitionId).isSuccess());
 
-        verify(competitionRepositoryMock).findOne(competitionId);
+        verify(competitionRepositoryMock).findById(competitionId);
     }
 
     @Test
     public void deleteAllInvites_noCompetition() {
         long competitionId = 1L;
 
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(null);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.empty());
 
         assertFalse(service.deleteAllInvites(competitionId).isSuccess());
 
-        verify(competitionRepositoryMock).findOne(competitionId);
+        verify(competitionRepositoryMock).findById(competitionId);
     }
 
     @Test

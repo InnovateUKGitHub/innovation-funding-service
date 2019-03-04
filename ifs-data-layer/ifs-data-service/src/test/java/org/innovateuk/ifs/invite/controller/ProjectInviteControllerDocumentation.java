@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -11,7 +11,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProjectInviteDocs.projectInviteFields;
 import static org.innovateuk.ifs.documentation.ProjectInviteDocs.projectInviteFieldsList;
-import static org.innovateuk.ifs.documentation.ProjectInviteDocs.projectInviteResourceBuilder;
+import static org.innovateuk.ifs.documentation.ProjectInviteDocs.PROJECT_USER_INVITE_RESOURCE_BUILDER;
 import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -40,13 +40,13 @@ public class ProjectInviteControllerDocumentation extends BaseControllerMockMVCT
     @Test
     public void saveProjectInvite() throws Exception {
 
-        ProjectInviteResource projectInviteResource = projectInviteResourceBuilder.build();
+        ProjectUserInviteResource projectUserInviteResource = PROJECT_USER_INVITE_RESOURCE_BUILDER.build();
 
-        when(projectInviteServiceMock.saveProjectInvite(projectInviteResource)).thenReturn(serviceSuccess());
+        when(projectInviteServiceMock.saveProjectInvite(projectUserInviteResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/projectinvite/saveInvite")
                 .contentType(APPLICATION_JSON)
-                .content(toJson(projectInviteResource)))
+                .content(toJson(projectUserInviteResource)))
                 .andExpect(status().isOk())
                 .andDo(document("project-invite/{method-name}",
                         requestFields(projectInviteFields)
@@ -57,7 +57,7 @@ public class ProjectInviteControllerDocumentation extends BaseControllerMockMVCT
     @Test
     public void getByHash() throws Exception {
 
-        ProjectInviteResource projectInvite = projectInviteResourceBuilder.build();
+        ProjectUserInviteResource projectInvite = PROJECT_USER_INVITE_RESOURCE_BUILDER.build();
 
         when(projectInviteServiceMock.getInviteByHash(projectInvite.getHash())).thenReturn(serviceSuccess(projectInvite));
 
@@ -77,7 +77,7 @@ public class ProjectInviteControllerDocumentation extends BaseControllerMockMVCT
 
         Long projectId = 123L;
 
-        List<ProjectInviteResource> projectInvites = projectInviteResourceBuilder.build(2);
+        List<ProjectUserInviteResource> projectInvites = PROJECT_USER_INVITE_RESOURCE_BUILDER.build(2);
 
         when(projectInviteServiceMock.getInvitesByProject(projectId)).thenReturn(serviceSuccess(projectInvites));
 

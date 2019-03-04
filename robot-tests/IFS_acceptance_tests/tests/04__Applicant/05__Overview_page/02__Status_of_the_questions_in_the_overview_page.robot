@@ -3,7 +3,7 @@ Documentation     INFUND-39: As an applicant and I am on the application overvie
 ...
 ...               INFUND-1072: As an Applicant I want to see the Application overview page redesigned so that they meet the agreed style
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
@@ -32,6 +32,7 @@ Re-assign is possible from the overview page
 *** Keywords ***
 Custom Suite Setup
     the guest user opens the browser
+    Connect to database  @{database}
     Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the Applicant edits the Project summary
@@ -66,3 +67,7 @@ the blue flag should not be visible
 
 the assign button should say Assigned to you
     Element Should Contain  jQuery = li:contains("Project summary") > .assign-container.secondary-notification button    you
+
+Custom suite teardown
+    Disconnect from database
+    Close browser and delete emails

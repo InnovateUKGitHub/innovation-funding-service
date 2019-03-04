@@ -85,13 +85,13 @@ public class StatusPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Innovation lead users should be able to view current status of project from competition assigned to them")
     public boolean assignedInnovationLeadCanViewProjectStatus(ProjectResource project, UserResource user){
-        Application application = applicationRepository.findOne(project.getApplication());
+        Application application = applicationRepository.findById(project.getApplication()).get();
         return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Stakeholders should be able to view current status of project from competition assigned to them")
     public boolean assignedStakeholderCanViewProjectStatus(ProjectResource project, UserResource user){
-        Application application = applicationRepository.findOne(project.getApplication());
+        Application application = applicationRepository.findById(project.getApplication()).get();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 }

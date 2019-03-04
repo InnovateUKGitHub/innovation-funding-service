@@ -6,7 +6,8 @@ Documentation    INFUND-6923 Create new public Competition listings page for App
 ...              IFS-247 As an applicant I am able to see the competitions in 'Competition listings' in reverse chronological order
 ...
 ...              IFS-1117 As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
-Suite Setup      The guest user opens the browser
+Suite Setup      Custom suite setup
+Suite Teardown   Custom suite teardown
 Force Tags       Applicant
 Resource         ../../../resources/defaultResources.robot
 Resource         ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -42,22 +43,15 @@ Guest user can see Competitions and their information
 Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
     [Tags]    MySQL  HappyPath
-    [Setup]  Connect to Database  @{database}
-    Get competitions id and set it as suite variable  ${READY_TO_OPEN_COMPETITION_NAME}
-    ${openDate}  ${submissionDate} =  Save competition's current dates  ${competitionId}
-
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Opening soon  Opens
-
-    Given Change the open date of the Competition in the database to one day before  ${READY_TO_OPEN_COMPETITION_NAME}
+    Given update milestone to yesterday     ${READY_TO_OPEN_COMPETITION}  OPEN_DATE
     When the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Open now  Opened
-
     Given Change the close date of the Competition in the database to thirteen days  ${READY_TO_OPEN_COMPETITION_NAME}
     When the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Closing soon  Opened
-
-    [Teardown]  Return the competition's milestones to their initial values  ${competitionId}  ${openDate}  ${submissionDate}
+    [Teardown]  Return the competition's milestones to their initial values  ${READY_TO_OPEN_COMPETITION}  ${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}  ${READY_TO_OPEN_COMPETITION_CLOSE_DATE_DB}
 
 Guest user can filter competitions by Innovation area
     [Documentation]    INFUND-6923
@@ -77,7 +71,7 @@ Guest user can see the public information of an unopened competition
     [Setup]    the user navigates to the page           ${frontDoor}
     Given the user clicks the button/link in the paginated list    link = ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element                jQuery = h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
-    And the user should see the element                 jQuery = li:contains("Saturday 7 November 2020")
+    And the user should see the element                 jQuery = li:contains("${READY_TO_OPEN_COMPETITION_OPEN_DATE_DATE_LONG}")
     And the user should see the element                 jQuery = .warning-alert:contains("This competition has not yet opened.")
     And the user should not see the element             jQuery = p:contains("Or sign in to continue an existing application.")
     And the user should see the element                 jQuery = .govuk-button:contains("Start new application")
@@ -85,10 +79,9 @@ Guest user can see the public information of an unopened competition
 Registration is closed on Non-IFS competitition when the Registration date is in the past
     [Documentation]  IFS-38 IFS-1117
     [Tags]    MySQL
-    [Setup]  Connect to Database    @{database}
-    Given Change the close date of the Competition in the database to tomorrow  ${NON_IFS_COMPETITION_NAME}
-    And the registration date of the non-ifs competition belongs to the past    ${competition_ids['${NON_IFS_COMPETITION_NAME}']}
-    When the user navigates to the page     ${server}/competition/${competition_ids['${NON_IFS_COMPETITION_NAME}']}/overview
+    Given Change the milestone in the database to tomorrow  ${NON_IFS_COMPETITION}  SUBMISSION_DATE
+    And update milestone to yesterday    ${NON_IFS_COMPETITION}  REGISTRATION_DATE
+    When the user navigates to the page     ${server}/competition/${NON_IFS_COMPETITION}/overview
     Then the user should see the element    jQuery = .warning-alert:contains("Registration has now closed.")
 
 Guest user can see the public information of a competition
@@ -169,7 +162,10 @@ the user can see the correct date status of the competition
     [Arguments]    ${competition_name}    ${date_status}    ${open_text}
     the user should see the element    jQuery = h2:contains("${competition_name}") ~ h3:contains("${date_status}") ~ dl dt:contains("${open_text}")
 
-the registration date of the non-ifs competition belongs to the past
-    [Arguments]  ${competitionId}
-    ${yesterday} =  get yesterday
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='REGISTRATION_DATE';
+Custom suite setup
+    The guest user opens the browser
+    Connect To Database   @{database}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

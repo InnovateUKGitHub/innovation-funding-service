@@ -58,6 +58,7 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 .withEmail("Worth@gmail.com")
                 .withJobTitle("worth employee")
                 .withTelephone("0123456789")
+                .withNotified(Boolean.FALSE)
                 .build();
 
         euActionTypeResource = newEuActionTypeResource()
@@ -166,10 +167,12 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 fieldWithPath("organisation.organisationType").description("The type of the the organisation e.g. BUSINESS."),
                 fieldWithPath("organisation.companiesHouseNumber").description("Companies House number."),
                 fieldWithPath("contact").description("Contact details for the eu grant."),
+                fieldWithPath("contact.id").description("Unique id of the contact."),
                 fieldWithPath("contact.name").description("Full name of the contact."),
                 fieldWithPath("contact.jobTitle").description("Job title of the contact."),
                 fieldWithPath("contact.email").description("Email address of the contact."),
                 fieldWithPath("contact.telephone").description("Telephone number of the contact."),
+                fieldWithPath("contact.notified").description("Whether the contact has been notified about our new service"),
                 fieldWithPath("funding").description("Contact details for the eu grant."),
                 fieldWithPath("funding.grantAgreementNumber").description("This might also be referred to as your project ID."),
                 fieldWithPath("funding.participantId").description("The 9-digit number unique to your organisation."),
@@ -179,6 +182,10 @@ public class EuGrantControllerDocumentation extends BaseControllerMockMVCTest<Eu
                 fieldWithPath("funding.fundingContribution").description("The total amount in euros granted to your organisation."),
                 fieldWithPath("funding.projectCoordinator").description("Is your organisation the consortium lead on this project."),
                 fieldWithPath("funding.actionType").description("The funding scheme you applied for."),
+                fieldWithPath("funding.actionType.id").description("The id of the funding scheme you applied for."),
+                fieldWithPath("funding.actionType.name").description("The name of the funding scheme you applied for."),
+                fieldWithPath("funding.actionType.description").description("The description of the funding scheme you applied for."),
+                fieldWithPath("funding.actionType.priority").description("The priority of the funding scheme you applied for."),
                 fieldWithPath("organisationComplete").description("Status of whether the user has completed their organisation details."),
                 fieldWithPath("contactComplete").description("Status of whether the user has completed their contact details."),
                 fieldWithPath("fundingComplete").description("Status of whether the user has completed their funding."),

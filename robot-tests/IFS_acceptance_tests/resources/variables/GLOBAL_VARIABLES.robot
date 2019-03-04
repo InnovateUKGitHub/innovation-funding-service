@@ -30,7 +30,9 @@ ${manageExternalUsers}  ${server}/management/admin/external/users
 # Competitions and Applications Variables
 ${openCompetitionRTO_name}       Predicting market trends programme
 ${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
-${openCompetitionRTOCloseDate}       ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
+${openCompetitionRTOCloseDate}   ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
+${openCompetitionRTOApplication1Name}  Hydrology the dynamics of Earth\'s surface water
+${openCompetitionRTOApplication1Id}    ${application_ids["${openCompetitionRTOApplication1Name}"]}
 
 ${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
 ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
@@ -69,6 +71,8 @@ ${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}  ${application_ids['${CLOSED_COMPE
 
 ${createApplicationOpenCompetition}             Home and industrial efficiency programme
 ${createApplicationOpenCompetitionId}           ${competition_ids['${createApplicationOpenCompetition}']}
+${createApplicationOpenCompetitionApplication1Name}  Networking home IOT devices
+${createApplicationOpenCompetitionApplication1Number}  ${application_ids['${createApplicationOpenCompetitionApplication1Name}']}
 ${createApplicationOpenCompetitionOpenDate}     ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "OPEN_DATE")}
 ${createApplicationOpenCompetitionCloseDate}    ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "SUBMISSION_DATE")}
 ${createApplicationOpenCompetitionAssessorAcceptsDayMonth}    ${getPrettyMilestoneDayMonth(${createApplicationOpenCompetitionId}, "ASSESSOR_ACCEPTS")}
@@ -76,7 +80,9 @@ ${createApplicationOpenCompetitionAssessorDeadlineDayMonth}    ${getPrettyMilest
 
 ${READY_TO_OPEN_COMPETITION_NAME}         Photonics for health
 ${READY_TO_OPEN_COMPETITION}              ${competition_ids['${READY_TO_OPEN_COMPETITION_NAME}']}
-${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}    ${getMilestoneDateTimeDb(${READY_TO_OPEN_COMPETITION}, "OPEN_DATE")}
+${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}     ${getMilestoneDateTimeDb(${READY_TO_OPEN_COMPETITION}, "OPEN_DATE")}
+${READY_TO_OPEN_COMPETITION_CLOSE_DATE_DB}    ${getMilestoneDateTimeDb(${READY_TO_OPEN_COMPETITION}, "SUBMISSION_DATE")}
+${READY_TO_OPEN_COMPETITION_OPEN_DATE_DATE_LONG}  ${getPrettyLongMilestoneDate(${READY_TO_OPEN_COMPETITION}, "OPEN_DATE")}
 ${NOT_EDITABLE_COMPETITION_NAME}          Integrated delivery programme - low carbon vehicles
 ${NOT_EDITABLE_COMPETITION}               ${competition_ids['${NOT_EDITABLE_COMPETITION_NAME}']}
 ${FUNDERS_PANEL_COMPETITION_NAME}         Internet of Things
@@ -88,7 +94,10 @@ ${FUNDERS_PANEL_APPLICATION_2_NUMBER}     ${application_ids['${FUNDERS_PANEL_APP
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
 ${IN_ASSESSMENT_COMPETITION_NAME}         Sustainable living models for the future
 ${IN_ASSESSMENT_COMPETITION}              ${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']}
-${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}  ${getPrettyLongMilestoneTimeDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DB}   ${getMilestoneDateTimeDb(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}   ${getPrettyLongMilestoneTimeDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_TIME_DATE_LONG}  ${getPrettyLongMilestoneTimeDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DATE_LONG}  ${getPrettyLongMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
 ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_PRETTY_DATE}  ${getPrettyMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
 ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}  ${getPrettyMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
 ${IN_ASSESSMENT_APPLICATION_1_TITLE}      3D-printed buildings
@@ -115,10 +124,14 @@ ${INELIGIBLE_PROJECT_COMPETITION_NAME_2}    SPAM: Solar power aggregation meshes
 ${INELIGIBLE_PROJECT_COMPETITION_NAME_2_NUMBER}       ${application_ids['${INELIGIBLE_PROJECT_COMPETITION_NAME_2}']}
 ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}     Electricity harvesting from rough terrain driving
 ${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3_NUMBER}       ${application_ids['${UNSUCCESSFUL_PROJECT_COMPETITION_NAME_3}']}
-
+${MARKOFFLINE_COMPETITION_NAME}     Biosciences round three: plastic recovery in the industrial sector
+${MARKOFFLINE_COMPETITION}           ${competition_ids['${MARKOFFLINE_COMPETITION_NAME}']}
+${MARKOFFLINE_APPLICATION_1_TITLE}   Smart skips for plastic storage and retrieval
+${MARKOFFLINE_APPLICATION_1_NUMBER}  ${application_ids['${MARKOFFLINE_APPLICATION_1_TITLE}']}
 
 
 ${NON_IFS_COMPETITION_NAME}     Transforming big data
+${NON_IFS_COMPETITION}          ${competition_ids['${NON_IFS_COMPETITION_NAME}']}
 
 ${DASHBOARD_SELECTION_PAGE_TITLE}  Dashboard
 
@@ -215,6 +228,8 @@ ${CLOSED_COMPETITION_APPLICATION_TITLE}   Neural networks to optimise freight tr
 ${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}  ${competition_ids['${UPCOMING_COMPETITION_TO_ASSESS_NAME}']}
+${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DB}     ${getMilestoneDateTimeDb(${READY_TO_OPEN_COMPETITION}, "OPEN_DATE")}
+${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DB}    ${getMilestoneDateTimeDb(${READY_TO_OPEN_COMPETITION}, "SUBMISSION_DATE")}
 ${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE}  ${getPrettyLongMilestoneDate(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "OPEN_DATE")}
 ${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE_TIME}  ${getPrettyMilestoneDateTime(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "OPEN_DATE")}
 ${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME}  ${getPrettyMilestoneDateTime(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "SUBMISSION_DATE")}
@@ -253,3 +268,17 @@ ${compType_ATI}        Aerospace Technology Institute
 @{EOI_questions}          Business opportunity and potential market  Innovation  Project team  Funding and adding value
 @{APC_questions}          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
 @{project_details}        Project summary  Public description  Scope
+
+#Project Setup
+${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy
+${PROJECT_SETUP_COMPETITION}          ${competition_ids["${PROJECT_SETUP_COMPETITION_NAME}"]}
+${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}    60674010
+${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}       4560000
+${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}      1230
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}      53532322
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}    1230000
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}   4560
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     HIVE IT LIMITED
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}    ewan+1@hiveit.co.uk
+${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}               ${collaborator1_credentials["email"]}
+${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}      ${collaborator2_credentials["email"]}

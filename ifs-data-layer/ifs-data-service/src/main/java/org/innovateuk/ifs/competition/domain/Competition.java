@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 public class Competition extends AuditableEntity implements ProcessActivity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)

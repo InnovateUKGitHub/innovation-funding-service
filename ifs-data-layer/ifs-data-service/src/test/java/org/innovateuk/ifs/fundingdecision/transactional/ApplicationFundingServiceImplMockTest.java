@@ -37,10 +37,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.text.Collator;
 import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
@@ -58,8 +55,8 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<ApplicationFundingService> {
@@ -108,7 +105,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     @Before
     public void setup() {
     	competition = newCompetition().withAssessorFeedbackDate("01/02/2017 17:30:00").withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL).withId(123L).build();
-    	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
+    	when(competitionRepositoryMock.findById(123L)).thenReturn(Optional.of(competition));
     	
     	when(fundingDecisionMapper.mapToDomain(any(FundingDecision.class))).thenAnswer(new Answer<FundingDecisionStatus>(){
 			@Override
@@ -174,7 +171,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         List<Long> applicationIds = asList(application1.getId(), application2.getId(), application3.getId());
         List<Application> applications = asList(application1, application2, application3);
-        when(applicationRepositoryMock.findAll(applicationIds)).thenReturn(applications);
+        when(applicationRepositoryMock.findAllById(applicationIds)).thenReturn(applications);
 
         leadApplicantProcessRoles.forEach(processRole ->
                 when(processRoleRepositoryMock.findByApplicationIdAndRole(processRole.getApplicationId(), processRole.getRole())).thenReturn(singletonList(processRole))
@@ -234,10 +231,10 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         
         List<Long> applicationIds = asList(application1.getId(), application2.getId());
         List<Application> applications = asList(application1, application2);
-        when(applicationRepositoryMock.findAll(applicationIds)).thenReturn(applications);
+        when(applicationRepositoryMock.findAllById(applicationIds)).thenReturn(applications);
 
         asList(application1, application2).forEach(application ->
-                when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
+                when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application))
         );
 
         allProcessRoles.forEach(processRole ->
@@ -363,7 +360,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 .build();
 
         projectSetupCompetition.setReleaseFeedbackDate(ZonedDateTime.now().minusDays(2L));
-        when(competitionRepositoryMock.findOne(projectSetupCompetitionId)).thenReturn(projectSetupCompetition);
+        when(competitionRepositoryMock.findById(projectSetupCompetitionId)).thenReturn(Optional.of(projectSetupCompetition));
 
         Application unsuccessfulApplication = newApplication()
                 .withId(unsuccessfulApplicationId)

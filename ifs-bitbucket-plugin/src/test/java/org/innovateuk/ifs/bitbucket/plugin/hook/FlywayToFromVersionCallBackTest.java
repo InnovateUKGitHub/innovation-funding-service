@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.tuple.Pair.of;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
 public class FlywayToFromVersionCallBackTest {

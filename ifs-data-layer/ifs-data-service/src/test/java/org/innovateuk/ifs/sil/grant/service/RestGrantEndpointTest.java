@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.sil.grant.service;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
@@ -25,6 +27,8 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
 
+    private static final JsonNodeFactory jsonNodeFactory = JsonNodeFactory.instance;
+
     @Mock
     protected RestTemplate mockRestTemplate;
 
@@ -42,7 +46,7 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
         adaptor = factory.silAdaptor();
         ReflectionTestUtils.setField(service, "adaptor", adaptor);
         ReflectionTestUtils.setField(service, "silRestServiceUrl", "http://sil.com");
-        ReflectionTestUtils.setField(service, "path", "/silstub/sendproject");
+        ReflectionTestUtils.setField(service, "path", "/silstub/accprojects");
         adaptor.setAsyncRestTemplate(mockAsyncRestTemplate);
         adaptor.setRestTemplate(mockRestTemplate);
     }
@@ -50,8 +54,9 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
     @Test
     public void send() {
         Grant grant = new Grant();
-        String expectedUrl = "http://sil.com/silstub/sendproject";
-        ResponseEntity<String> returnedEntity = new ResponseEntity<>(ACCEPTED);
+        String expectedUrl = "http://sil.com/silstub/accprojects";
+        ResponseEntity<String> returnedEntity = new ResponseEntity<>(
+                new ObjectNode(jsonNodeFactory).put("Success", "Accepted").toString(), ACCEPTED);
 
         when(mockRestTemplate.postForEntity(expectedUrl, adaptor.jsonEntity(singletonList(grant)), String.class))
                 .thenReturn(returnedEntity);
@@ -64,7 +69,7 @@ public class RestGrantEndpointTest extends BaseUnitTestMocksTest {
     @Test
     public void send_failure() {
         Grant grant = new Grant();
-        String expectedUrl = "http://sil.com/silstub/sendproject";
+        String expectedUrl = "http://sil.com/silstub/accprojects";
         ResponseEntity<String> returnedEntity = new ResponseEntity<>(INTERNAL_SERVER_ERROR);
 
         when(mockRestTemplate.postForEntity(expectedUrl, adaptor.jsonEntity(singletonList(grant)), String.class))

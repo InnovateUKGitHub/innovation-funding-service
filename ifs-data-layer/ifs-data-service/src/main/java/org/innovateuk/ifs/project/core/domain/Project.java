@@ -3,9 +3,9 @@ package org.innovateuk.ifs.project.core.domain;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
+import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
@@ -19,6 +19,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import static javax.persistence.EnumType.STRING;
@@ -31,7 +32,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Entity
 public class Project implements ProcessActivity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -57,8 +58,11 @@ public class Project implements ProcessActivity {
 
     private ZonedDateTime spendProfileSubmittedDate;
 
-    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = ProjectUser.class)
     private List<ProjectUser> projectUsers = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = ProjectMonitoringOfficer.class, mappedBy = "project")
+    private ProjectMonitoringOfficer projectMonitoringOfficer = null;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
@@ -87,10 +91,9 @@ public class Project implements ProcessActivity {
 
     public Project() {}
 
-    public Project(Long id, Application application, LocalDate targetStartDate, Address address,
+    public Project(Application application, LocalDate targetStartDate, Address address,
                    Long durationInMonths, String name, ZonedDateTime documentsSubmittedDate, ApprovalType otherDocumentsApproved ) {
 
-        this.id = id;
         this.application = application;
         this.targetStartDate = targetStartDate;
         this.address = address;
@@ -102,6 +105,10 @@ public class Project implements ProcessActivity {
 
     public void addProjectUser(ProjectUser projectUser) {
         projectUsers.add(projectUser);
+    }
+
+    public void setProjectMonitoringOfficer(ProjectMonitoringOfficer projectMonitoringOfficer) {
+        this.projectMonitoringOfficer = projectMonitoringOfficer;
     }
 
     public void addPartnerOrganisation(PartnerOrganisation partnerOrganisation) {
@@ -197,6 +204,10 @@ public class Project implements ProcessActivity {
     public void setProjectUsers(List<ProjectUser> projectUsers) {
         this.projectUsers.clear();
         this.projectUsers.addAll(projectUsers);
+    }
+
+    public void removeProjetMonitoringOfficer() {
+        this.projectMonitoringOfficer = null;
     }
 
     public void setPartnerOrganisations(List<PartnerOrganisation> partnerOrganisations) {
@@ -297,5 +308,9 @@ public class Project implements ProcessActivity {
 
     private boolean projectUserForUser(User user, ProjectUser projectUser) {
         return projectUser.getUser().getId().equals(user.getId());
+    }
+
+    public Optional<ProjectMonitoringOfficer> getProjectMonitoringOfficer() {
+        return Optional.ofNullable(projectMonitoringOfficer);
     }
 }

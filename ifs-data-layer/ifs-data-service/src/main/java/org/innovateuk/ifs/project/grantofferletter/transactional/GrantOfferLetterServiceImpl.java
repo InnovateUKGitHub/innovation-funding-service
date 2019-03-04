@@ -22,7 +22,6 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -70,17 +69,15 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.io.File.separator;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
-import static org.innovateuk.ifs.user.resource.Role.LIVE_PROJECTS_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
@@ -101,12 +98,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private static final String PROJECT_STATE_ERROR = "Set project status to live failed for project %s";
 
     private static final String GOL_TEMPLATES_PATH = "common" + separator + "grantoffer" + separator + "grant_offer_letter.html";
-
-    private static final List<ProjectParticipantRole> LIVE_PROJECT_ACCESS_ROLES =
-            asList(
-                    ProjectParticipantRole.PROJECT_MANAGER,
-                    ProjectParticipantRole.PROJECT_FINANCE_CONTACT
-            );
 
     @Autowired
     private FileService fileService;
@@ -152,13 +143,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private PartnerOrganisationService partnerOrganisationService;
-
-    /**
-     * Feature flag to allow early release of the new multi-role dashboard without giving access to Live Projects
-     * immediately.
-     */
-    @Value("${ifs.data.service.allocate.live.projects.role}")
-    private boolean allocateLiveProjectsRole;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -280,7 +264,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId()).get();
 
         Map<Organisation, List<Cost>> financesForOrgs = getFinances(project);
         GrantOfferLetterIndustrialFinanceTable industrialFinanceTable = grantOfferLetterIndustrialFinanceTablePopulator.createTable(financesForOrgs);
@@ -582,7 +566,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                     if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
                         return approveGOL(project)
                                 .andOnSuccess(() -> moveProjectToLiveState(project))
-                                .andOnSuccess(() -> addLiveProjectsRoleToUsers(project))
                                 .andOnSuccess(() -> createGrantProcess(project));
                     } else if (ApprovalType.REJECTED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
                         return rejectGOL(project, grantOfferLetterApprovalResource.getRejectionReason());
@@ -590,32 +573,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 }
                 return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
         }));
-    }
-
-    private ServiceResult<Void> addLiveProjectsRoleToUsers(Project project) {
-
-        if (!allocateLiveProjectsRole) {
-            return serviceSuccess();
-        }
-
-        return addLiveProjectsRoleToProjectTeamUsers(project);
-    }
-
-    private ServiceResult<Void> addLiveProjectsRoleToProjectTeamUsers(Project project) {
-        List<ProjectUser> projectUsers = project.getProjectUsers();
-        List<ProjectUser> liveProjectAccessUsers = simpleFilter(projectUsers,
-                projectUser -> LIVE_PROJECT_ACCESS_ROLES.contains(projectUser.getRole()));
-
-        liveProjectAccessUsers.forEach(projectUser -> {
-
-            User user = projectUser.getUser();
-
-            if (!user.hasRole(LIVE_PROJECTS_USER)) {
-                user.addRole(LIVE_PROJECTS_USER);
-            }
-        });
-
-        return serviceSuccess();
     }
 
     private ServiceResult<Void> validateApprovalOrRejection(GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
@@ -640,7 +597,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     private ServiceResult<Void> createGrantProcess(Project project) {
-        grantProcessService.sendRequested(project.getApplication().getId());
+        grantProcessService.createGrantProcess(project.getApplication().getId());
         return serviceSuccess();
     }
 
@@ -715,7 +672,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
 
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         List<NotificationTarget> notificationTargets = getLiveProjectNotificationTargets(project);
 
         Map<String, Object> notificationArguments = new HashMap<>();

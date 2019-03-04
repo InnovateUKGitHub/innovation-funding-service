@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -23,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses
@@ -60,14 +61,16 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     @Autowired
     private ProjectProcessRepository projectProcessRepository;
 
+    @Autowired
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
         return !partnerProjectUser.isEmpty();
     }
 
     protected boolean isMonitoringOfficer(long projectId, long userId) {
-        List<ProjectUser> monitoringOfficerForProject = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, MONITORING_OFFICER);
-        return !monitoringOfficerForProject.isEmpty();
+        return projectMonitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId);
     }
 
     protected boolean isSpecificProjectPartnerByProjectId(long projectId, long organisationId, long userId) {
@@ -83,9 +86,9 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     protected boolean isLeadPartner(long projectId, long userId) {
 
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         ProcessRole leadApplicantProcessRole = processRoleRepository.findOneByApplicationIdAndRole(project.getApplication().getId(), Role.LEADAPPLICANT);
-        Organisation leadOrganisation = organisationRepository.findOne(leadApplicantProcessRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadApplicantProcessRole.getOrganisationId()).get();
 
         ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, leadOrganisation.getId(), PROJECT_PARTNER);
         return partnerProjectUser != null;

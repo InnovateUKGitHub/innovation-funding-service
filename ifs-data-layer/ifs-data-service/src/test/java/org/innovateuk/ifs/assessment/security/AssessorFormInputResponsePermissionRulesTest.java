@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -43,8 +45,8 @@ public class AssessorFormInputResponsePermissionRulesTest extends BasePermission
 
         assessment = newAssessment().withParticipant(processRole).build();
 
-        when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
-        when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
+        when(processRoleRepositoryMock.findById(processRole.getId())).thenReturn(Optional.of(processRole));
+        when(assessmentRepositoryMock.findById(assessment.getId())).thenReturn(Optional.of(assessment));
     }
 
     @Override

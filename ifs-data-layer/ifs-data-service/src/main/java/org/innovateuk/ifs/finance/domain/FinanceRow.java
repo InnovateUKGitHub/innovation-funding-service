@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_LENGTH
 @DiscriminatorColumn(name = "row_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class FinanceRow<FinanceType extends Finance> {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)

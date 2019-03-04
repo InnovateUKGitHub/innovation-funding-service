@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -119,17 +120,14 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 application.setDurationInMonths(durationInMonths)));
     }
 
-    public ApplicationDataBuilder inviteCollaborator(UserResource collaborator) {
+    public ApplicationDataBuilder inviteCollaborator(UserResource collaborator, Organisation organisation) {
 
         return asLeadApplicant(data -> {
-
-            List<Organisation> organisations = organisationRepository.findDistinctByUsersId(collaborator.getId());
-            Organisation organisation = organisations.get(0);
 
             ApplicationInviteResource singleInvite = doInviteCollaborator(data, organisation.getName(),
                     Optional.of(collaborator.getId()), collaborator.getEmail(), collaborator.getName(), Optional.empty());
 
-            doAs(systemRegistrar(), () -> acceptApplicationInviteService.acceptInvite(singleInvite.getHash(), collaborator.getId(), Optional.empty()));
+            doAs(systemRegistrar(), () -> acceptApplicationInviteService.acceptInvite(singleInvite.getHash(), collaborator.getId(), Optional.of(organisation.getId())));
         });
     }
 
@@ -216,7 +214,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
         hash.ifPresent(h -> {
 
-            ApplicationInvite saved = applicationInviteRepository.findOne(usersInvite.getId());
+            ApplicationInvite saved = applicationInviteRepository.findById(usersInvite.getId()).get();
             saved.setHash(h);
             applicationInviteRepository.save(saved);
 

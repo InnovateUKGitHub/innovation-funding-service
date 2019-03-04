@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
+import org.innovateuk.ifs.documentation.MilestoneResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -14,9 +15,9 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.documentation.MilestoneResourceDocs.milestoneResourceFields;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -50,7 +51,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("list of milestones for all users")
-                        )
+                        ).andWithPrefix("[].", MilestoneResourceDocs.milestoneResourceFields)
                 ));
     }
 
@@ -69,7 +70,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("list of milestones for the authenticated user")
-                        )
+                        ).andWithPrefix("[].", MilestoneResourceDocs.milestoneResourceFields)
                 ));
     }
 
@@ -126,7 +127,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
             .andDo(document("milestone/{method-name}",
                 requestFields(
                         fieldWithPath("[]").description("list of milestones that should be saved")
-                )
+                ).andWithPrefix("[].", MilestoneResourceDocs.milestoneResourceFields)
             ));
     }
 

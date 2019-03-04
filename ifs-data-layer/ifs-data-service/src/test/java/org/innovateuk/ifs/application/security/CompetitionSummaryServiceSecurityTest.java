@@ -35,7 +35,7 @@ public class CompetitionSummaryServiceSecurityTest extends BaseServiceSecurityTe
     public void getCompetitionSummaryByCompetitionId() {
         setLoggedInUser(null);
         CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
-        when(competitionLookupStrategy.getCompetititionResource(1L)).thenReturn(competitionResource);
+        when(competitionLookupStrategy.getCompetitionResource(1L)).thenReturn(competitionResource);
         assertAccessDenied(() -> classUnderTest.getCompetitionSummaryByCompetitionId(1L), () -> {
             verify(rules).allInternalUsersCanViewCompetitionSummaryOtherThanInnovationLeadsAndStakeholders(any(CompetitionResource.class), isNull(UserResource.class));
             verify(rules).innovationLeadsCanViewCompetitionSummaryOnAssignedComps(any(CompetitionResource.class),

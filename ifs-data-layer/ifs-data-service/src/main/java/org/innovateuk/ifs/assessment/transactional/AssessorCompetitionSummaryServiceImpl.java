@@ -109,9 +109,9 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                 comment = count.getAssessment().getRejection().getRejectComment();
             }
 
-            Organisation leadOrganisation = organisationRepository.findOne(
+            Organisation leadOrganisation = organisationRepository.findById(
                     count.getApplication().getLeadOrganisationId()
-            );
+            ).get();
 
             return new AssessorAssessmentResource(
                     count.getApplication().getId(),

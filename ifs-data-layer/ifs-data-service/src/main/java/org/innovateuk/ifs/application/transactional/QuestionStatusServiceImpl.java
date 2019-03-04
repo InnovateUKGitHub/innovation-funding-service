@@ -133,7 +133,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<Void> updateNotification(final long questionStatusId,
                                                   final boolean notify) {
 
-        return find(questionStatusRepository.findOne(questionStatusId), notFoundError(QuestionStatus.class, questionStatusId)).andOnSuccessReturnVoid(questionStatus -> {
+        return find(questionStatusRepository.findById(questionStatusId), notFoundError(QuestionStatus.class, questionStatusId)).andOnSuccessReturnVoid(questionStatus -> {
             questionStatus.setNotified(notify);
             questionStatusRepository.save(questionStatus);
         });
@@ -175,7 +175,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
 
     @Override
     public ServiceResult<QuestionStatusResource> getQuestionStatusResourceById(long id) {
-        return find(questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id)).andOnSuccessReturn(questionStatusMapper::mapToResource);
+        return find(questionStatusRepository.findById(id), notFoundError(QuestionStatus.class, id)).andOnSuccessReturn(questionStatusMapper::mapToResource);
     }
 
     @Override
@@ -281,7 +281,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     private Supplier<ServiceResult<Question>> getQuestionSupplier(Long questionId) {
-        return () -> find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
+        return () -> find(questionRepository.findById(questionId), notFoundError(Question.class, questionId));
     }
 
 }

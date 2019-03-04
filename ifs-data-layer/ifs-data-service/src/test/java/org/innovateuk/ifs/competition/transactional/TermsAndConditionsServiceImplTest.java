@@ -15,6 +15,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsBuilder.newGrantTermsAndConditions;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
@@ -53,7 +54,7 @@ public class TermsAndConditionsServiceImplTest extends BaseServiceUnitTest<Terms
         GrantTermsAndConditionsResource termsAndConditionsResource = newGrantTermsAndConditionsResource().withName(name)
                 .build();
 
-        when(grantTermsAndConditionsRepository.findOne(termsAndConditions.getId())).thenReturn(termsAndConditions);
+        when(grantTermsAndConditionsRepository.findById(termsAndConditions.getId())).thenReturn(Optional.of(termsAndConditions));
         when(grantTermsAndConditionsMapper.mapToResource(termsAndConditions)).thenReturn(termsAndConditionsResource);
 
         ServiceResult<GrantTermsAndConditionsResource> result = service.getById(termsAndConditions.getId());

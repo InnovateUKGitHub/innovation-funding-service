@@ -182,7 +182,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         long id = savedParticipant.getId();
 
-        AssessmentParticipant retrievedParticipant = repository.findOne(id);
+        AssessmentParticipant retrievedParticipant = repository.findById(id).get();
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
@@ -204,7 +204,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         long id = savedParticipant.getId();
 
-        AssessmentParticipant retrievedParticipant = repository.findOne(id);
+        AssessmentParticipant retrievedParticipant = repository.findById(id).get();
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
@@ -227,7 +227,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         long id = savedParticipant.getId();
 
-        AssessmentParticipant retrievedParticipant = repository.findOne(id);
+        AssessmentParticipant retrievedParticipant = repository.findById(id).get();
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
@@ -433,7 +433,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
         List<Competition> competitions = newCompetition()
                 .with(id(null))
                 .build(2);
-        competitionRepository.save(competitions);
+        competitionRepository.saveAll(competitions);
 
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newAssessmentInviteWithoutId()
@@ -557,7 +557,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
         competitionParticipants.get(3).getInvite().open();
         competitionParticipants.get(3).acceptAndAssignUser(acceptedUser);
 
-        repository.save(competitionParticipants);
+        repository.saveAll(competitionParticipants);
         flushAndClearSession();
 
         assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
@@ -585,8 +585,8 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_allFilters() throws Exception {
         loginCompAdmin();
 
-        Agreement agreement = agreementRepository.findOne(1L);
-        InnovationArea otherInnovationArea = innovationAreaRepository.findOne(5L);
+        Agreement agreement = agreementRepository.findById(1L).get();
+        InnovationArea otherInnovationArea = innovationAreaRepository.findById(5L).get();
 
         List<Profile> profiles = newProfile()
                 .withId()
@@ -595,7 +595,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 .withSkillsAreas("Skill area 1", "Skill area 2", "Skill area 3", "Skill area 4")
                 .build(4);
 
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         List<User> users = newUser()
                 .withId()
@@ -610,7 +610,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 )
                 .build(4);
 
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         users.get(0).setAffiliations(
                 newAffiliation()
@@ -640,7 +640,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                         .build(1)
         );
 
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
@@ -656,7 +656,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
         competitionParticipants.get(1).getInvite().open();
         competitionParticipants.get(1).acceptAndAssignUser(users.get(1));
 
-        repository.save(competitionParticipants);
+        repository.saveAll(competitionParticipants);
         flushAndClearSession();
 
         assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
@@ -684,7 +684,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
     @Test
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_innovationArea() throws Exception {
-        InnovationArea otherInnovationArea = innovationAreaRepository.findOne(5L);
+        InnovationArea otherInnovationArea = innovationAreaRepository.findById(5L).get();
 
         List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
@@ -747,7 +747,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
         competitionParticipants.get(3).getInvite().open();
         competitionParticipants.get(3).acceptAndAssignUser(acceptedUser);
 
-        repository.save(competitionParticipants);
+        repository.saveAll(competitionParticipants);
         flushAndClearSession();
 
         assertEquals(12, repository.count());  // includes 8 pre-existing Innovation Leads added via patches
@@ -777,7 +777,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_isCompliant() throws Exception {
         loginCompAdmin();
 
-        Agreement agreement = agreementRepository.findOne(1L);
+        Agreement agreement = agreementRepository.findById(1L).get();
 
         List<Profile> profiles = newProfile()
                 .withId()
@@ -786,7 +786,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 .withSkillsAreas("Skill area 1", "Skill area 2", "Skill area 3", "Skill area 4")
                 .build(4);
 
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         List<User> users = newUser()
                 .withId()
@@ -801,7 +801,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 )
                 .build(4);
 
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         users.get(0).setAffiliations(
                 newAffiliation()
@@ -813,7 +813,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                         .build(1)
         );
 
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
@@ -854,7 +854,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_isNotCompliant() throws Exception {
         loginCompAdmin();
 
-        Agreement agreement = agreementRepository.findOne(1L);
+        Agreement agreement = agreementRepository.findById(1L).get();
 
         List<Profile> profiles = newProfile()
                 .withId()
@@ -863,7 +863,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 .withSkillsAreas("Skill area 1", "Skill area 2", "Skill area 3", "Skill area 4")
                 .build(4);
 
-        profileRepository.save(profiles);
+        profileRepository.saveAll(profiles);
 
         List<User> users = newUser()
                 .withId()
@@ -878,7 +878,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 )
                 .build(4);
 
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         users.get(0).setAffiliations(
                 newAffiliation()
@@ -890,7 +890,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                         .build(1)
         );
 
-        userRepository.save(users);
+        userRepository.saveAll(users);
 
         List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")

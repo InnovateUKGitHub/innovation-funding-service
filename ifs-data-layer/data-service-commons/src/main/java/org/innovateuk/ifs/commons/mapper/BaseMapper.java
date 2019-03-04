@@ -20,7 +20,7 @@ public abstract class BaseMapper<D, R, I extends Serializable> {
         if(id == null){
             return null;
         }
-        return repository.findOne(id);
+        return repository.findById(id).orElse(null);
     }
 
     public R mapIdToResource(I id) {

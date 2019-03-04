@@ -62,7 +62,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBu
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 public abstract class AbstractApplicationMockMVCTest<ControllerType> extends AbstractInviteMockMVCTest<ControllerType> {

@@ -157,8 +157,8 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         FormInputResponse formInputResponse = new FormInputResponse();
 
         formInputResponse.setValue(response.getValue());
-        formInputResponse.setApplication(assessmentRepository.findOne(response.getAssessment()).getTarget());
-        formInputResponse.setFormInput(formInputRepository.findOne(response.getFormInput()));
+        formInputResponse.setApplication(assessmentRepository.findById(response.getAssessment()).get().getTarget());
+        formInputResponse.setFormInput(formInputRepository.findById(response.getFormInput()).orElse(null));
         formInputResponse.setUpdateDate(response.getUpdatedDate());
 
         return formInputResponse;
@@ -166,7 +166,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Override
     public ServiceResult<AssessmentDetailsResource> getAssessmentDetails(long assessmentId) {
-        final Assessment assessment = assessmentRepository.findOne(assessmentId);
+        final Assessment assessment = assessmentRepository.findById(assessmentId).get();
         final Map<Long, List<FormInputResource>> assessmentFormInputs = getAssessmentFormInputs(assessment.getTarget().getCompetition().getId());
         final Map<Long, List<AssessorFormInputResponseResource>> assessorFormInputResponses = getAssessorResponses(assessmentId);
         final List<QuestionResource> questions = simpleFilter(
@@ -178,7 +178,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Override
     public ServiceResult<AssessmentDetailsResource> getAssessmentDetailsForPanel(long assessmentId) {
-        final Assessment assessment = assessmentRepository.findOne(assessmentId);
+        final Assessment assessment = assessmentRepository.findById(assessmentId).get();
         final Map<Long, List<FormInputResource>> assessmentFormInputs = getAssessmentFormInputs(assessment.getTarget().getCompetition().getId());
         final Map<Long, List<AssessorFormInputResponseResource>> assessorFormInputResponses = getAssessorResponsesForPanel(assessmentId);
         final List<QuestionResource> questions = simpleFilter(

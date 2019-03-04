@@ -200,6 +200,12 @@ public class UserController {
         return userService.updateDetails(userResource).andOnSuccessReturnVoid(() -> crmService.syncCrmContact(userResource.getId())).toPutResponse();
     }
 
+    @PutMapping("{id}/update-email/{email:.+}")
+    public RestResult<Void> updateEmail(@PathVariable("id") final long id,
+                                        @PathVariable("email") final String email) {
+        return userService.updateEmail(id, email).toPutResponse();
+    }
+
     @GetMapping("/id/{id}/deactivate")
     public RestResult<Void> deactivateUser(@PathVariable("id") final Long id) {
         return registrationService.deactivateUser(id).toGetResponse();

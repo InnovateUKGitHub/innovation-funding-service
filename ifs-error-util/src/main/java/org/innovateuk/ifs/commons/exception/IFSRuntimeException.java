@@ -33,6 +33,10 @@ public class IFSRuntimeException extends RuntimeException {
         this.arguments = arguments;
     }
 
+    public IFSRuntimeException(Throwable cause) {
+        this(cause, emptyList());
+    }
+
     public IFSRuntimeException(Throwable cause, List<Object> arguments) {
         super(cause);
         this.arguments = arguments;

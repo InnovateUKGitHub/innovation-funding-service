@@ -3,7 +3,6 @@ package org.innovateuk.ifs.finance.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -19,15 +18,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -104,8 +103,8 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationId, Role.ASSESSOR)).thenReturn(true);
             when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(compAdmin.getId(), applicantProcessRoles(), applicationId)).thenReturn(compAdminProcessRole);
 
-            when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-            when(competitionRepositoryMock.findById(application.getCompetition().getId())).thenReturn(competition);
+            when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
+            when(competitionRepositoryMock.findById(application.getCompetition().getId())).thenReturn(Optional.of(competition));
         }
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions
@@ -156,7 +155,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
                 .withApplication(application.getId())
                 .build();
 
-        when(applicationRepositoryMock.findById(applicationFinanceResource.getApplication())).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationFinanceResource.getApplication())).thenReturn(Optional.of(application));
         when(stakeholderRepositoryMock.findStakeholders(application.getCompetition().getId())).thenReturn(asList(stakeholder));
 
         assertTrue(rules.stakeholdersCanSeeApplicationFinancesForOrganisations(applicationFinanceResource, stakeholderResource));
@@ -200,7 +199,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
                 .withApplication(application.getId())
                 .build();
 
-        when(applicationRepositoryMock.findById(applicationFinanceResource.getApplication())).thenReturn(application);
+        when(applicationRepositoryMock.findById(applicationFinanceResource.getApplication())).thenReturn(Optional.of(application));
         when(stakeholderRepositoryMock.findStakeholders(application.getCompetition().getId())).thenReturn(asList(stakeholder));
 
         assertTrue(rules.stakeholdersCanAddACostToApplicationFinance(applicationFinanceResource, stakeholderResource));

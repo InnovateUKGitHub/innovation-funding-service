@@ -28,6 +28,7 @@ import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -49,8 +50,8 @@ import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionR
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.same;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.*;
 
 public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
@@ -88,7 +89,7 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
         Question nextQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 2).build();
         QuestionResource nextQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(newCompetitionResource().build(), newSectionResource().build(), 2).build();
 
-        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
+        when(questionRepositoryMock.findById(question.getId())).thenReturn(Optional.of(question));
         when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
                 question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
                 .thenReturn(nextQuestion);
@@ -104,7 +105,7 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
         Question previousQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 1).build();
         QuestionResource previousQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(newCompetitionResource().build(), newSectionResource().build(), 1).build();
 
-        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
+        when(questionRepositoryMock.findById(question.getId())).thenReturn(Optional.of(question));
         when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
                 question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
                 .thenReturn(previousQuestion);
@@ -122,7 +123,7 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
         Question nextQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), nextSection, 2).build();
         QuestionResource nextQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(newCompetitionResource().build(), nextSectionResource, 2).build();
 
-        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
+        when(questionRepositoryMock.findById(question.getId())).thenReturn(Optional.of(question));
         when(sectionService.getNextSection(any(SectionResource.class))).thenReturn(serviceSuccess(nextSectionResource));
         when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
                 question.getCompetition().getId(), question.getSection().getId(), question.getPriority())).thenReturn(nextQuestion);
@@ -142,7 +143,7 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
         Question previousQuestion = newQuestion().withCompetitionAndSectionAndPriority(competition, previousSection, 1).build();
         QuestionResource previousQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(competitionResource, previousSectionResource, 1).build();
 
-        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
+        when(questionRepositoryMock.findById(question.getId())).thenReturn(Optional.of(question));
         when(sectionService.getPreviousSection(any(SectionResource.class)))
                 .thenReturn(serviceSuccess(previousSectionResource));
         when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(
@@ -167,7 +168,7 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
         SectionResource previousSectionResource = newSectionResource().withQuestions(Arrays.asList(previousSectionQuestion.getId())).build();
         when(sectionService.getById(currentSection.getId())).thenReturn(serviceSuccess(currentSectionResource));
         when(sectionService.getPreviousSection(currentSectionResource)).thenReturn(serviceSuccess(previousSectionResource));
-        when(questionRepositoryMock.findOne(anyLong())).thenReturn(previousSectionQuestion);
+        when(questionRepositoryMock.findById(anyLong())).thenReturn(Optional.of(previousSectionQuestion));
         // Method under test
         when(questionMapperMock.mapToResource(previousSectionQuestion)).thenReturn(previousSectionQuestionResource);
 
@@ -193,7 +194,7 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
                 .withChildSections(asList(childSection1, childSection2))
                 .build();
 
-        when(sectionRepositoryMock.findOne(1L)).thenReturn(parentSection);
+        when(sectionRepositoryMock.findById(1L)).thenReturn(Optional.of(parentSection));
 
         QuestionResource questionResource1 = newQuestionResource().build();
         QuestionResource questionResource2 = newQuestionResource().build();
@@ -250,8 +251,8 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
 
         QuestionResource questionResource = newQuestionResource().build();
 
-        when(questionRepositoryMock.findOne(questionId)).thenReturn(question);
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(questionRepositoryMock.findById(questionId)).thenReturn(Optional.of(question));
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
         when(questionMapperMock.mapToResource(question)).thenReturn(questionResource);
 
         ServiceResult<QuestionResource> result = questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId);
@@ -260,8 +261,8 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(questionResource, result.getSuccess());
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, questionRepositoryMock, questionMapperMock);
-        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-        inOrder.verify(questionRepositoryMock).findOne(questionId);
+        inOrder.verify(assessmentRepositoryMock).findById(assessmentId);
+        inOrder.verify(questionRepositoryMock).findById(questionId);
         inOrder.verify(questionMapperMock).mapToResource(question);
         inOrder.verifyNoMoreInteractions();
     }
@@ -275,7 +276,7 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(result.getFailure().is(notFoundError(Assessment.class, assessmentId)));
 
         InOrder inOrder = inOrder(assessmentRepositoryMock);
-        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentRepositoryMock).findById(assessmentId);
         inOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(questionRepositoryMock);
@@ -298,14 +299,14 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
                 .withApplication(application)
                 .build();
 
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
 
         ServiceResult<QuestionResource> result = questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId);
         assertTrue(result.getFailure().is(notFoundError(Question.class, questionId)));
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, questionRepositoryMock);
-        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-        inOrder.verify(questionRepositoryMock).findOne(questionId);
+        inOrder.verify(assessmentRepositoryMock).findById(assessmentId);
+        inOrder.verify(questionRepositoryMock).findById(questionId);
         inOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(questionMapperMock);
@@ -334,15 +335,15 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
                 .withCompetition(otherCompetition)
                 .build();
 
-        when(questionRepositoryMock.findOne(questionId)).thenReturn(question);
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(questionRepositoryMock.findById(questionId)).thenReturn(Optional.of(question));
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
 
         ServiceResult<QuestionResource> result = questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId);
         assertTrue(result.getFailure().is(notFoundError(Question.class, questionId, assessmentId)));
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, questionRepositoryMock);
-        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-        inOrder.verify(questionRepositoryMock).findOne(questionId);
+        inOrder.verify(assessmentRepositoryMock).findById(assessmentId);
+        inOrder.verify(questionRepositoryMock).findById(questionId);
         inOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(questionMapperMock);
@@ -383,8 +384,8 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
 
         List<SectionResource> sectionsResources = newSectionResource().build(2);
 
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
         when(sectionService.getByCompetitionIdVisibleForAssessment(competitionId)).thenReturn(serviceSuccess(sectionsResources));
         when(sectionMapperMock.mapToDomain(same(sectionsResources.get(0)))).thenReturn(sections.get(0));
         when(sectionMapperMock.mapToDomain(same(sectionsResources.get(1)))).thenReturn(sections.get(1));

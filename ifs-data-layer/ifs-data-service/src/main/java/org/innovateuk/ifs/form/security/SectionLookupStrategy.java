@@ -20,11 +20,11 @@ public class SectionLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public Section findById(Long id){
-        return sectionRepository.findOne(id);
+        return sectionRepository.findById(id).orElse(null);
     }
 
     @PermissionEntityLookupStrategy
     public SectionResource findResourceById(Long id){
-        return sectionMapper.mapToResource(sectionRepository.findOne(id));
+        return sectionMapper.mapToResource(sectionRepository.findById(id).orElse(null));
     }
 }

@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -36,12 +36,12 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
@@ -63,7 +63,7 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
     private FormInputRestService formInputRestService;
 
     @Test
-    public void testPopulateModel() {
+    public void populateModel() {
 
         UserResource userResource = newUserResource()
                 .withId(1L)
@@ -102,8 +102,8 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
         when(competitionRestService.getCompetitionById(applicationResource.getCompetition())).thenReturn(restSuccess(competitionResource));
         when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(userApplicationRoles));
         when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(applicationResource.getId())).thenReturn(restSuccess(assessorFormInputResponseResources));
-        when(formInputRestService.getById(anyLong())).thenReturn(restSuccess(formInputResources.get(0)));
-        when(formInputRestService.getById(anyLong())).thenReturn(restSuccess(formInputResources.get(1)));
+        when(formInputRestService.getById(nullable(Long.class))).thenReturn(restSuccess(formInputResources.get(0)));
+        when(formInputRestService.getById(nullable(Long.class))).thenReturn(restSuccess(formInputResources.get(1)));
         when(summaryViewModelPopulator.populate(applicationResource.getId(), userResource, applicationForm)).thenReturn(summary);
         when(summary.getCurrentApplication()).thenReturn(applicationResource);
         when(summary.getFeedbackSummary()).thenReturn(assessmentResources);
@@ -112,7 +112,7 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
 
         assertEquals(viewModel.getFeedbackViewModel().getFeedback(), emptyList());
         assertEquals(viewModel.getFeedbackViewModel().getScore(), emptyList());
-        assertEquals(viewModel.getCompetition(), competitionResource);
+        assertEquals(viewModel.getCurrentCompetition(), competitionResource);
         assertEquals(viewModel.getSummaryViewModel(), summary);
     }
 }

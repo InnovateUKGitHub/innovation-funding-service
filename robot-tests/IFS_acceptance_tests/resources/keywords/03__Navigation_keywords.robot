@@ -27,11 +27,6 @@ the user should be redirected to the correct page without the usual headers
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    Location Should Contain    ${URL}
     the user should not see an error in the page
 
-The user should see the text in the page
-    [Arguments]    ${VISIBLE_TEXT}
-    Wait Until Page Contains Without Screenshots    ${VISIBLE_TEXT}
-    the user should not see an error in the page
-
 The user goes back to the previous page
     Wait for autosave
     Go Back

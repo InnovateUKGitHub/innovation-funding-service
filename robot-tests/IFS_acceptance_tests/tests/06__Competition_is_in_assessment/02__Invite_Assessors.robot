@@ -83,7 +83,7 @@ The User can Add and Remove Assessors
     And the user should see the element    jQuery = td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
     When The user clicks the button/link               link = Invite
     And The user clicks the button/link                jQuery = td:contains("Will Smith") ~ td .button-clear:contains("Remove")
-    Then The user should not see the text in the page  Will Smith
+    Then The user should not see the element           link = Will Smith
     [Teardown]    The user clicks the button/link      link = Find
 
 The user can remove all people from the list
@@ -151,9 +151,9 @@ Invite multiple assessors
     And The user enters text to a text field           css = #subject  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}' @
     And the user clicks the button/link                jQuery = .govuk-button:contains("Send invite")
     And the user clicks the button/link                link = Invite
-    Then The user should not see the text in the page  ${assessor_to_add}
+    Then The user should not see the element           link = ${assessor_to_add}
     And The user clicks the button/link                link = Find
-    And the user should not see the text in the page   ${assessor_to_add}
+    And the user should not see the element            link = ${assessor_to_add}
 
 Invite non-registered assessors server side validations
     [Documentation]    INFUND-6411

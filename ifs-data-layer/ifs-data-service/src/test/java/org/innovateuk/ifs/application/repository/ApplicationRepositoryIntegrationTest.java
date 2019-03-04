@@ -87,7 +87,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         long initial = repository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates).count();
 
-        repository.save(applicationList);
+        repository.saveAll(applicationList);
 
         Stream<Application> applications = repository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates);
 
@@ -105,7 +105,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .build(2);
 
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
         Pageable pageable = new PageRequest(0, 20);
 
@@ -139,7 +139,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .build(2);
 
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
         InterviewAssignment interviewPanel = newInterviewAssignment()
                 .with(id(null))
@@ -168,7 +168,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withActivityState(SUBMITTED)
                 .build(2);
 
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
         InterviewAssignment interviewAssignment = newInterviewAssignment()
                 .with(id(null))
@@ -222,7 +222,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         loginCompAdmin();
 
         List<Competition> competitions = stream(
-                competitionRepository.save(newCompetition()
+                competitionRepository.saveAll(newCompetition()
                         .with(id(null))
                         .build(2)).spliterator(), false).collect(toList());
 
@@ -239,7 +239,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .withManageFundingEmailDate(zonedDateTimes)
                 .build(6);
 
-        List<Application> saved = stream(repository.save(applications).spliterator(), false).collect(toList());
+        List<Application> saved = stream(repository.saveAll(applications).spliterator(), false).collect(toList());
 
         Application expectedApplicationComp2WithMaxDate = saved.get(5);
 
@@ -275,8 +275,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Pageable pageable = new PageRequest(1, 40);
 
         userRepository.save(user);
-        competitionRepository.save(competitions);
-        applicationRepository.save(applications);
+        competitionRepository.saveAll(competitions);
+        applicationRepository.saveAll(applications);
         innovationLeadRepository.save(innovationLead);
 
         Page<Application> foundApplication = repository.searchApplicationsByUserIdAndInnovationLeadRole(user.getId(), applications.get(0).getId().toString(), pageable);
@@ -306,9 +306,9 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Pageable pageable = new PageRequest(1, 40);
 
         userRepository.save(user);
-        competitionRepository.save(competitions);
+        competitionRepository.saveAll(competitions);
         stakeholderRepository.save(stakeholder);
-        applicationRepository.save(applications);
+        applicationRepository.saveAll(applications);
 
 
         Page<Application> foundApplication = repository.searchApplicationsByUserIdAndStakeholderRole(user.getId(), applications.get(0).getId().toString(), pageable);

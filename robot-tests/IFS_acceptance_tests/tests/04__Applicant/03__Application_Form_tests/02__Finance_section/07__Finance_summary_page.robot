@@ -21,7 +21,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               IFS-3609 Extend internal view of application finances to other internal roles
 Suite Setup       Custom suite setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
@@ -79,7 +79,7 @@ Your Finance includes Finance summary table for collaborator
     [Tags]
     [Setup]  log in as a different user            &{collaborator2_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the finance summary table in Your Finances has correct values for collaborator  £990  0  0  0  990
+    Then the finance summary table in Your Finances has correct values for collaborator  £990  0%  0  2,468  0
     And The user clicks the button/link            link = Return to application overview
 
 Red warning should show when the finances are incomplete
@@ -216,7 +216,7 @@ Innovation lead can see read only summary for collaborator
     And the user expands the section                Finances summary
     When the user clicks the button/link            jQuery = .project-cost-breakdown tbody tr:contains("EGGS") th a
     And the user should see the element             jQuery = p:contains("Please complete your project finances.")
-    Then the finance summary table in Your Finances has correct values for collaborator  £990  100  990  0  0
+    Then the finance summary table in Your Finances has correct values for collaborator  £990  100  0  2,468  0
 
 Innovation lead can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-802
@@ -267,11 +267,12 @@ A user other than an CSS or IFS Admin cannot view the finances of an application
 Custom suite setup
     Set predefined date variables
     The user logs-in in new browser  &{lead_applicant_credentials}
+    Connect to database  @{database}
 
 the finance summary calculations should be correct
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("£328,571")
-    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("58,793")
-    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("502,468")
+    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("57,803")
+    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("504,936")
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("140,632")
 
 the finance Funding breakdown calculations should be correct
@@ -415,7 +416,7 @@ The user verifies labour, overhead costs and materials
 
 the user navigates to the finances of the application
     the user navigates to the page   ${allApplicationsForRTOComp}
-    the user clicks the button/link  link = ${application_ids["Networking home IOT devices"]}
+    the user clicks the button/link  link = ${createApplicationOpenCompetitionApplication1Number}
     the user expands the section     Finances summary
 
 the academic user marks finances as complete
@@ -427,3 +428,7 @@ the academic user marks finances as complete
     the user enters the project location
     the user clicks the button/link            link = Your funding
     the user marks your funding section as complete
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

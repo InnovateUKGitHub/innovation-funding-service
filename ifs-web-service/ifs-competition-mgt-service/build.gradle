@@ -11,7 +11,7 @@ buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
 
 buildscript {
-    ext['thymeleaf.version'] = '3.0.3.RELEASE'
+    ext['thymeleaf.version'] = '3.0.8.RELEASE'
 
     ext {
         thymeleafVersion = ext['thymeleaf.version']
@@ -47,10 +47,13 @@ prepareDockerBaseInput {
 
 ext.serverContext = '/management'
 
+ext.EUGrantDataServiceRestBaseURL="http://eu-grant-registration-data-service:8080"
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
     compile project(':ifs-web-service:ifs-application-commons')
     compile project(':ifs-web-service:ifs-assessment-commons')
+    compile project(':ifs-rest-api-service:eu-grant-registration-rest-api-service')
 
     compile 'org.apache.commons:commons-collections4:4.1'
 
@@ -74,6 +77,7 @@ processResources {
         exclude '**/application.properties'
     }
 }
+
 
 jar.dependsOn ":ifs-web-service:gulp_default"
 processResources.dependsOn ":ifs-web-service:applyProfiles"

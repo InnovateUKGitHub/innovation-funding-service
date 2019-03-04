@@ -38,13 +38,13 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id) {
-        return find(grantClaimMaximumRepository.findOne(id), notFoundError(GrantClaimMaximum.class, id)).andOnSuccess(
+        return find(grantClaimMaximumRepository.findById(id), notFoundError(GrantClaimMaximum.class, id)).andOnSuccess(
                 maximum -> serviceSuccess(grantClaimMaximumMapper.mapToResource(maximum)));
     }
 
     @Override
     public ServiceResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(long competitionTypeId) {
-        return find(competitionTypeRepository.findOne(competitionTypeId), notFoundError(CompetitionTypeResource.class, competitionTypeId))
+        return find(competitionTypeRepository.findById(competitionTypeId), notFoundError(CompetitionTypeResource.class, competitionTypeId))
                 .andOnSuccessReturn(competitionType -> competitionType.getTemplate().getGrantClaimMaximums().stream().map
                         (GrantClaimMaximum::getId).collect(toSet()));
     }

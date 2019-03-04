@@ -16,8 +16,8 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-8065 File download links are broken for assessors
 ...
 ...               IFS-2854 Allow assessors to see full application finances
-Suite Setup       The user logs-in in new browser  &{assessor_credentials}
-Suite Teardown    the user closes the browser
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
@@ -221,7 +221,7 @@ Status of the application should be In Progress
     [Tags]
     [Setup]    The user navigates to the page      ${ASSESSOR_DASHBOARD_URL}
     When The user clicks the button/link           link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    Then The user should see the element           jQuery = .progress-list li:nth-child(6) strong:contains("In progress")
+    Then The user should see the element           jQuery = .progress-list li:contains("Intelligent water system") strong:contains("In progress")
 
 *** Keywords ***
 I enter feedback of words
@@ -231,10 +231,6 @@ I enter feedback of words
 I should see word count underneath feedback form
     [Arguments]    ${wordCount}
     the user should see the element    jQuery = span:contains("${wordCount}")
-
-I should not see validation message above the feedback form text field
-    [Arguments]    ${error_message}
-    the user should not see the text in the page  ${error_message}
 
 I open one of the application questions
     [Arguments]    ${application_question}
@@ -252,8 +248,8 @@ the finance summary total should be correct
     Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
     Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
     Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    990
-    Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    990
-    Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    0
+    Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    0
+    Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    2,468
     Element Should Contain    css = .govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    0
 
 the project cost breakdown total should be correct
@@ -272,7 +268,6 @@ The status of the appllications should be correct
 
 The user sets the finance option to detailed
     [Arguments]  ${competition}
-    Connect to Database  @{database}
     execute sql string   UPDATE `${database_name}`.`competition` SET `assessor_finance_view` = 'DETAILED' WHERE `name` = '${competition}';
 
 The project costs are correct in the overview
@@ -289,3 +284,11 @@ The academic finances are correct
     The user should see the element       jQuery = .table-overview td:contains("£990")
     The user should see the element       jQuery = .table-overview td:contains("100%")
     The user should see the element       jQuery = .table-overview td:contains("990")
+
+Custom suite setup
+    The user logs-in in new browser  &{assessor_credentials}
+    Connect To Database   @{database}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -61,7 +62,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         Competition c = newCompetition().with(id(competitionId))
                 .withApplicationFinanceType(NO_FINANCES)
                 .build();
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(c);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(c));
         // Turnover and count - these should be active in sync with each other.
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(isIncludeGrowthTable).build();
         FormInput organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(isIncludeGrowthTable).build();
@@ -99,7 +100,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
                 .withIncludeProjectGrowthTable(true)
                 .withIncludeYourOrganisationSection(true)
                 .build();
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
 
         CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 
@@ -115,7 +116,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
                 .withIncludeProjectGrowthTable(false)
                 .withIncludeYourOrganisationSection(false)
                 .build();
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
 
         CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 
@@ -127,7 +128,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
     @Test
     public void getForCompetition_nullFields() {
         Competition competition = newCompetition().build();
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
 
         CompetitionSetupFinanceResource result = service.getForCompetition(competition.getId()).getSuccess();
 
