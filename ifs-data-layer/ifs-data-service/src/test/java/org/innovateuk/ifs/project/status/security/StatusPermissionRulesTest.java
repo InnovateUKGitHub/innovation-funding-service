@@ -10,9 +10,6 @@ import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -22,12 +19,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -35,15 +30,12 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.monitor.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPermissionRules> {
@@ -65,9 +57,6 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
 
     @Mock
     private StakeholderRepository stakeholderRepository;
-
-    @Mock
-    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @Before
     public void setup() {

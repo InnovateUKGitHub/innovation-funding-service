@@ -18,7 +18,8 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
  */
 @PermissionRules
 @Component
-public class SpendProfilePermissionRules extends BasePermissionRules {
+public class
+SpendProfilePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Internal admin team (comp admin and project finance) users can get the approved status of a Spend Profile for any Project")
     public boolean internalAdminTeamCanViewCompetitionStatus(ProjectResource project, UserResource user){
@@ -69,7 +70,6 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
     public boolean monitoringOfficerCanViewProjectsSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return isMonitoringOfficer(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
-
 
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE_CSV",

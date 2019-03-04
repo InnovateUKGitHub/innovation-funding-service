@@ -15,7 +15,6 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.status.StatusService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
-import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
  * Permission checker around the access to various sections within the Project Setup process
@@ -203,10 +202,12 @@ public class SetupSectionsPermissionRules {
                 return false;
             }
 
-            long organisationId = user.hasRole(MONITORING_OFFICER) ?
+            boolean isMonitoringOfficer = isMonitoringOfficer(user);
+
+            long organisationId = isMonitoringOfficer ?
                     projectService.getLeadOrganisation(projectId).getId() : projectService.getOrganisationIdFromUser(projectId, user);
 
-            ProjectTeamStatusResource teamStatus = user.hasRole(MONITORING_OFFICER) ?
+            ProjectTeamStatusResource teamStatus = isMonitoringOfficer ?
                     getProjectTeamStatusForMonitoringOfficer(projectId) : statusService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
 
             ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(organisationId).get();

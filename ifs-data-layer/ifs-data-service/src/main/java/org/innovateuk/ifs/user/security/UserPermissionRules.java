@@ -282,7 +282,6 @@ public class UserPermissionRules {
         List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, ProjectMonitoringOfficer::getProject);
 
         return !disjoint(monitoringOfficerProjects, projectsThisUserIsAMemberOf);
-
     }
 
     private List<Competition> getUserCompetitions(List<Application> userApplications, List<Project> userProjects) {
