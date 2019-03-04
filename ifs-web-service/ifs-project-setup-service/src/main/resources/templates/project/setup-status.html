@@ -172,7 +172,7 @@
                         <p class="govuk-body govuk-!-margin-0">We will review your financial information.</p>
                     </div>
                     <th:block th:if="${!model.showFinanceChecksPendingQueryWarning || model.monitoringOfficer}" th:insert="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
-                    <div class="status" th:if="${model.showFinanceChecksPendingQueryWarning}">
+                    <div class="status" th:if="${model.showFinanceChecksPendingQueryWarning && !model.monitoringOfficer}">
                         <div class="status-msg msg-progress">
                             <span class="status-warning">Pending query</span>
                         </div>
