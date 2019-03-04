@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.application.forms.questions.granttransferdetails.viewmodel;
 
+import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
+
+import java.util.List;
+
 public class GrantTransferDetailsViewModel {
 
     private final long applicationId;
@@ -7,13 +11,15 @@ public class GrantTransferDetailsViewModel {
     private final long questionId;
     private final boolean open;
     private final boolean complete;
+    private final List<EuActionTypeResource> actionTypes;
 
-    public GrantTransferDetailsViewModel(long applicationId, String applicationName, long questionId, boolean open, boolean complete) {
+    public GrantTransferDetailsViewModel(long applicationId, String applicationName, long questionId, boolean open, boolean complete, List<EuActionTypeResource> actionTypes) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.questionId = questionId;
         this.open = open;
         this.complete = complete;
+        this.actionTypes = actionTypes;
     }
 
     public long getApplicationId() {
@@ -34,6 +40,10 @@ public class GrantTransferDetailsViewModel {
 
     public boolean isComplete() {
         return complete;
+    }
+
+    public List<EuActionTypeResource> getActionTypes() {
+        return actionTypes;
     }
 
     /* view logic */

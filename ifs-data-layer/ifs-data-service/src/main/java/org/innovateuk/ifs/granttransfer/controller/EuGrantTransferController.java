@@ -29,7 +29,7 @@ public class EuGrantTransferController {
     @PostMapping(value = "{applicationId}", produces = "application/json")
     public RestResult<Void> getGrantTransferByApplicationId(@PathVariable("applicationId") long applicationId,
                                                                                @RequestBody EuGrantTransferResource euGrantTransferResource) {
-        return euGrantTransferService.updateGrantTransferByApplicationId(euGrantTransferResource, applicationId).toPostAcceptResponse();
+        return euGrantTransferService.updateGrantTransferByApplicationId(euGrantTransferResource, applicationId).toPostResponse();
     }
 
     @PostMapping(value = "/grant-agreement/{applicationId}", produces = "application/json")

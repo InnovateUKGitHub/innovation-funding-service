@@ -10,6 +10,7 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.granttransfer.domain.EuActionType;
 import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
 import org.innovateuk.ifs.granttransfer.mapper.EuGrantTransferMapper;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
@@ -110,8 +111,10 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
             domain.setProjectEndDate(euGrantTransferResource.getProjectEndDate());
             domain.setFundingContribution(euGrantTransferResource.getFundingContribution());
             domain.setProjectCoordinator(euGrantTransferResource.isProjectCoordinator());
-
-            //TODO action type
+            
+            EuActionType type = new EuActionType();
+            type.setId(euGrantTransferResource.getActionType().getId());
+            domain.setActionType(type);
 
             domain.getApplication().setName(euGrantTransferResource.getProjectName());
         });
