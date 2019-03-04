@@ -159,17 +159,17 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     @Test
     public void testCanAccessFinanceChecksSectionWhenCompaniesHouseDetailsNotComplete() {
-        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation, Optional.empty()));
+        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
     }
 
     @Test
     public void testCanAccessFinanceChecksSectionWhenFinanceContactNotYetSubmitted() {
-        whenFinanceContactNotSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation, Optional.empty()));
+        whenFinanceContactNotSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
     }
 
     @Test
     public void testCanAccessFinanceChecksSectionWhenFinanceContactSubmitted() {
-        whenFinanceContactSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation, Optional.empty()));
+        whenFinanceContactSubmitted((helper, organisation) -> helper.canAccessFinanceChecksSection(organisation));
     }
 
     @Test

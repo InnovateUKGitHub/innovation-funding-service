@@ -150,14 +150,14 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Test
     public void bankDetailsSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
-                setupSectionAccessibilityHelper.canAccessBankDetailsSection(organisation, Optional.of(user)),
+                setupSectionAccessibilityHelper.canAccessBankDetailsSection(organisation),
                 () -> rules.partnerCanAccessBankDetailsSection(ProjectCompositeId.id(activeProject.getId()), user));
     }
 
     @Test
     public void bankDetailsSectionAccessMonitoringOfficer() {
         assertMonitoringOfficerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
-                        setupSectionAccessibilityHelper.canAccessBankDetailsSection(organisation, Optional.of(monitoringOfficer)),
+                        setupSectionAccessibilityHelper.canAccessBankDetailsSection(organisation),
                 () -> rules.partnerCanAccessBankDetailsSection(ProjectCompositeId.id(activeProject.getId()), monitoringOfficer));
     }
 
@@ -349,11 +349,11 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         when(projectServiceMock.getById(activeProject.getId())).thenReturn(activeProject);
         when(projectServiceMock.getOrganisationIdFromUser(activeProject.getId(), user)).thenReturn(organisationId);
         when(statusServiceMock.getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()))).thenReturn(teamStatus);
-        when(accessorMock.canAccessFinanceChecksSection(any(), any())).thenReturn(ACCESSIBLE);
+        when(accessorMock.canAccessFinanceChecksSection(any())).thenReturn(ACCESSIBLE);
 
         assertTrue(rules.partnerCanAccessFinanceChecksSection(ProjectCompositeId.id(activeProject.getId()), user));
 
-        verify(accessorMock).canAccessFinanceChecksSection(any(), any());
+        verify(accessorMock).canAccessFinanceChecksSection(any());
     }
 
     @Test

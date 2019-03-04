@@ -182,11 +182,7 @@ public class SetupSectionAccessibilityHelper {
         return ACCESSIBLE;
     }
 
-    public SectionAccess canAccessBankDetailsSection(OrganisationResource organisation, Optional<UserResource> userResource) {
-
-        if (userResource.isPresent() && isMonitoringOfficer(userResource.get())) {
-            return NOT_ACCESSIBLE;
-        }
+    public SectionAccess canAccessBankDetailsSection(OrganisationResource organisation) {
 
         if (setupProgressChecker.isOffline()) {
             return NOT_ACCESSIBLE;
@@ -210,11 +206,7 @@ public class SetupSectionAccessibilityHelper {
         return ACCESSIBLE;
     }
 
-    public SectionAccess canAccessFinanceChecksSection(OrganisationResource organisation, Optional<UserResource> userResource) {
-
-        if (userResource.isPresent() && isMonitoringOfficer(userResource.get())) {
-            return NOT_ACCESSIBLE;
-        }
+    public SectionAccess canAccessFinanceChecksSection(OrganisationResource organisation) {
 
         if (setupProgressChecker.isOffline()) {
             return NOT_ACCESSIBLE;

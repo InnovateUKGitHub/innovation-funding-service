@@ -58,14 +58,7 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations on their projects")
     public boolean monitoringOfficersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         List<ProjectMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
-        List<Long> monitoringOfficersOrganisationIds = new ArrayList<>();
-        projectMonitoringOfficers.stream().forEach(pmo -> {
-                    pmo.getProject()
-                            .getPartnerOrganisations()
-                            .forEach(partnerOrganisation -> monitoringOfficersOrganisationIds.add(partnerOrganisation.getOrganisation().getId()));
-                });
-
-        return monitoringOfficersOrganisationIds.contains(organisation.getId());
+        return getMonitoringOfficersOrganisationIds(projectMonitoringOfficers).contains(organisation.getId());
     }
 
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")
@@ -150,5 +143,16 @@ public class OrganisationPermissionRules {
 
     private boolean organisationNotYetLinkedToAnyUsers(OrganisationResource organisation) {
         return organisation.getUsers().isEmpty();
+    }
+
+    private List<Long> getMonitoringOfficersOrganisationIds(List<ProjectMonitoringOfficer> projectMonitoringOfficers) {
+        List<Long> monitoringOfficersOrganisationIds = new ArrayList<>();
+        projectMonitoringOfficers.forEach(pmo -> {
+            pmo.getProject()
+                    .getPartnerOrganisations()
+                    .forEach(partnerOrganisation -> monitoringOfficersOrganisationIds.add(partnerOrganisation.getOrganisation().getId()));
+        });
+
+        return monitoringOfficersOrganisationIds;
     }
 }

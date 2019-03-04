@@ -274,7 +274,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
-        assertEquals(ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation, Optional.empty()));
+        assertEquals(ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
@@ -294,7 +294,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(false);
         when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
-        assertEquals(NOT_ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation, Optional.empty()));
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
@@ -314,7 +314,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
-        assertEquals(NOT_ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation, Optional.empty()));
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
@@ -332,7 +332,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
-        assertEquals(ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation, Optional.empty()));
+        assertEquals(ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
@@ -351,7 +351,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(false);
         when(setupProgressCheckerMock.isOffline()).thenReturn(false);
 
-        assertEquals(NOT_ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation, Optional.empty()));
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
