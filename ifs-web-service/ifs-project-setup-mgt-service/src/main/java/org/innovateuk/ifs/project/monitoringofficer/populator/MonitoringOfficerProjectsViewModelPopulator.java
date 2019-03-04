@@ -19,6 +19,8 @@ public class MonitoringOfficerProjectsViewModelPopulator {
                 1,
                 singletonList(new MonitoringOfficerAssignedProjectViewModel(
                         119,
+                        2,
+                        5,
                         "Grade crossing manufacture and supply",
                         "Vitruvius, Stonework Limited"
                 )),

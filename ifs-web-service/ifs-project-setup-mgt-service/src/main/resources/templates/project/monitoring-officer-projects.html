@@ -22,13 +22,13 @@
                       method="POST">
                     <div class="govuk-form-group">
                         <label class="govuk-label" th:for="${form.projectNumber}">
-                            Sort by
+                            Select a project to assign
                         </label>
                         <select th:field="${form.projectNumber}"
                                 class="govuk-select">
                             <option th:each="project : ${model.unassignedProjects}"
                                     th:value="${project.projectNumber}"
-                                    th:text="${project.projectName}"></option>
+                                    th:text="|${project.projectNumber} - ${project.projectName}|"></option>
                         </select>
                     </div>
                     <div class="govuk-form-group">
@@ -62,7 +62,7 @@
                     th:each="project : ${model.assignedProjects}">
                     <td class="govuk-table__cell">
                         <a class="govuk-link"
-                           th:href="@{/management/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId}applicationId=${model.applicationId})}"
+                           th:href="@{/management/competition/{competitionId}/application/{applicationId}(competitionId=${project.competitionId},applicationId=${project.applicationId})}"
                            th:text="${project.projectNumber}"></a>
                     </td>
                     <td class="govuk-table__cell" th:text="${project.projectName}"></td>
