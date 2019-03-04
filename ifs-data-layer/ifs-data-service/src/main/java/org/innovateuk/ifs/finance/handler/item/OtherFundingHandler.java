@@ -93,7 +93,7 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
 
         Long id = null;
         String otherPublicFunding;
-        if (applicationFinance.getApplication().getCompetition().getFundingType() == FundingType.PROCUREMENT) {
+        if (applicationFinance.getApplication().getCompetition().isFullyFunded()) {
             otherPublicFunding = "No";
         } else {
             otherPublicFunding = "";

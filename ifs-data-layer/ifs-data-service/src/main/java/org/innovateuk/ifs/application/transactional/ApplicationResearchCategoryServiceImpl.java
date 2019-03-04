@@ -150,7 +150,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
         boolean maximumFundingLevelOverridden = grantClaimMaximumService.isMaximumFundingLevelOverridden(
                 application.getCompetition().getId()).getSuccess();
 
-        return application.getCompetition().getFundingType() != FundingType.PROCUREMENT
+        return !application.getCompetition().isFullyFunded()
                 && organisation.getOrganisationType().equals(BUSINESS.getId())
                 && !maximumFundingLevelOverridden;
     }

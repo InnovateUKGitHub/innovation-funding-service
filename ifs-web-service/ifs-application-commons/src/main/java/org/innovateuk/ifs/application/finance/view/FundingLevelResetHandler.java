@@ -45,7 +45,7 @@ public class FundingLevelResetHandler {
 
     public void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        if (competition.getFundingType() != FundingType.PROCUREMENT) {
+        if (!competition.isFullyFunded()) {
 
             final Optional<ProcessRoleResource> processRole;
             try {

@@ -70,7 +70,7 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
 
     private ApplicationFinanceRow initializeFundingLevel(Competition competition) {
         GrantClaim costItem = new GrantClaim();
-        if (competition.getFundingType() == FundingType.PROCUREMENT) {
+        if (competition.isFullyFunded()) {
             costItem.setGrantClaimPercentage(100);
         } else {
             costItem.setGrantClaimPercentage(null);

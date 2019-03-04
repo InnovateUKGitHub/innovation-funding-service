@@ -164,6 +164,11 @@ public class CompetitionResource {
                 ZonedDateTime.now()));
     }
 
+    @JsonIgnore
+    public boolean isFullyFunded() {
+        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+    }
+
     public CompetitionStatus getCompetitionStatus() {
         return competitionStatus;
     }

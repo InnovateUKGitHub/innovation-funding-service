@@ -129,7 +129,7 @@ public class ApplicationSubmitController {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        if (competition.getFundingType() == FundingType.PROCUREMENT) {
+        if (competition.isFullyFunded()) {
             if (!applicationSubmitForm.isAgreeTerms()) {
                 bindingResult.rejectValue("agreeTerms","validation.application.procurement.terms.required");
                 redirectAttributes.addFlashAttribute(BindingResult.class.getCanonicalName() + "." + APPLICATION_SUBMIT_FROM_ATTR_NAME, bindingResult);
