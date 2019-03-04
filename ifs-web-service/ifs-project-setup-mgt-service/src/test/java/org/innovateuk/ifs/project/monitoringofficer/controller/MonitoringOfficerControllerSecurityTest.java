@@ -14,7 +14,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
-public class MonitoringOfficerControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<MonitoringOfficerController> {
+public class MonitoringOfficerControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<LegacyMonitoringOfficerController> {
 
 
     private ProjectLookupStrategy projectLookupStrategy;
@@ -30,8 +30,8 @@ public class MonitoringOfficerControllerSecurityTest extends BaseProjectSetupCon
     }
 
     @Override
-    protected Class<? extends MonitoringOfficerController> getClassUnderTest() {
-        return MonitoringOfficerController.class;
+    protected Class<? extends LegacyMonitoringOfficerController> getClassUnderTest() {
+        return LegacyMonitoringOfficerController.class;
     }
 
     @Test
