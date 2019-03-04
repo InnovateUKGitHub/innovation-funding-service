@@ -8,7 +8,7 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
-import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 
 import java.time.LocalDate;

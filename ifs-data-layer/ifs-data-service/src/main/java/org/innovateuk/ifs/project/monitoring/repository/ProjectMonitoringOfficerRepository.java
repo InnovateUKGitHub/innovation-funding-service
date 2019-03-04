@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.project.monitor.repository;
+package org.innovateuk.ifs.project.monitoring.repository;
 
-import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;

@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.project.monitor.repository;
+package org.innovateuk.ifs.project.monitoring.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.monitor.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoring.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
 import static org.junit.Assert.assertEquals;
 
 public class ProjectMonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ProjectMonitoringOfficerRepository> {

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.monitor.domain;
+package org.innovateuk.ifs.project.monitoring.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

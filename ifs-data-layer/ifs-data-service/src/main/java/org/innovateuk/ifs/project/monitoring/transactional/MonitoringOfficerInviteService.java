@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.monitor.transactional;
+package org.innovateuk.ifs.project.monitoring.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 /**
  * Transactional and secured service providing operations around monitoring officers.
  */
-public interface ProjectMonitoringOfficerService {
+public interface MonitoringOfficerInviteService {
 
     @SecuredBySpring(value = "SAVE_MONITORING_OFFICER_INVITE", description = "Only comp admin, project finance or IFS admin can save a monitoring officer invite")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")

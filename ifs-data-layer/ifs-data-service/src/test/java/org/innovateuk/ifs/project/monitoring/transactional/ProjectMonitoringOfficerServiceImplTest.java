@@ -1,12 +1,12 @@
-package org.innovateuk.ifs.project.monitor.transactional;
+package org.innovateuk.ifs.project.monitoring.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.mapper.MonitoringOfficerInviteMapper;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
-import org.innovateuk.ifs.project.monitor.domain.MonitoringOfficerInvite;
-import org.innovateuk.ifs.project.monitor.repository.MonitoringOfficerInviteRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest<ProjectMonitoringOfficerServiceImpl> {
+public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest<MonitoringOfficerInviteServiceImpl> {
 
     @Mock
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepositoryMock;
@@ -25,8 +25,8 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
     private MonitoringOfficerInviteMapper monitoringOfficerInviteMapperMock;
 
     @Override
-    protected ProjectMonitoringOfficerServiceImpl supplyServiceUnderTest() {
-        return new ProjectMonitoringOfficerServiceImpl();
+    protected MonitoringOfficerInviteServiceImpl supplyServiceUnderTest() {
+        return new MonitoringOfficerInviteServiceImpl();
     }
 
     @Test

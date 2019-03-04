@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.project.monitor.controller;
+package org.innovateuk.ifs.project.monitoring.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
-import org.innovateuk.ifs.project.monitor.transactional.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerInviteService;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
@@ -21,10 +21,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
+public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerInviteController> {
 
     @Mock
-    private ProjectMonitoringOfficerService projectMonitoringOfficerServiceMock;
+    private MonitoringOfficerInviteService projectMonitoringOfficerServiceMock;
 
     @Mock
     private RegistrationService registrationServiceMock;
@@ -33,8 +33,8 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     private CrmService crmServiceMock;
 
     @Override
-    protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
-        return new ProjectMonitoringOfficerController(projectMonitoringOfficerServiceMock, registrationServiceMock, crmServiceMock);
+    protected MonitoringOfficerInviteController supplyControllerUnderTest() {
+        return new MonitoringOfficerInviteController(projectMonitoringOfficerServiceMock, registrationServiceMock, crmServiceMock);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         when(projectMonitoringOfficerServiceMock.openInvite(hash)).thenReturn(serviceSuccess(invite));
 
-        mockMvc.perform(get("/competition/setup/open-monitoring-officer-invite/{hash}", hash))
+        mockMvc.perform(get("/monitoring-officer-registration/open-monitoring-officer-invite/{hash}", hash))
                 .andExpect(status().isOk());
 
         verify(projectMonitoringOfficerServiceMock, only()).openInvite(hash);
@@ -61,7 +61,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         when(projectMonitoringOfficerServiceMock.getInviteByHash(hash)).thenReturn(serviceSuccess(invite));
 
-        mockMvc.perform(get("/competition/setup/get-monitoring-officer-invite/{hash}", hash))
+        mockMvc.perform(get("/monitoring-officer-registration/get-monitoring-officer-invite/{hash}", hash))
                 .andExpect(status().isOk());
 
         verify(projectMonitoringOfficerServiceMock, only()).getInviteByHash(hash);
@@ -77,7 +77,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         when(registrationServiceMock.createMonitoringOfficer(hash, registrationResource)).thenReturn(serviceSuccess(user));
         when(crmServiceMock.syncCrmContact(user.getId())).thenReturn(serviceSuccess());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/competition/setup/monitoring-officer/create/{hash}", hash)
+        mockMvc.perform(MockMvcRequestBuilders.post("/monitoring-officer-registration/monitoring-officer/create/{hash}", hash)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(registrationResource)))
                 .andExpect(status().is2xxSuccessful());
@@ -94,7 +94,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         when(projectMonitoringOfficerServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/competition/setup/monitoring-officer/check-existing-user/{hash}", hash))
+        mockMvc.perform(get("/monitoring-officer-registration/monitoring-officer/check-existing-user/{hash}", hash))
                 .andExpect(status().isOk());
 
         verify(projectMonitoringOfficerServiceMock, only()).checkUserExistsForInvite(hash);
@@ -106,7 +106,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         when(projectMonitoringOfficerServiceMock.addMonitoringOfficerRole(hash)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/competition/setup/monitoring-officer/add-monitoring-officer-role/{hash}", hash))
+        mockMvc.perform(MockMvcRequestBuilders.post("/monitoring-officer-registration/monitoring-officer/add-monitoring-officer-role/{hash}", hash))
                 .andExpect(status().is2xxSuccessful());
 
         verify(projectMonitoringOfficerServiceMock, only()).addMonitoringOfficerRole(hash);

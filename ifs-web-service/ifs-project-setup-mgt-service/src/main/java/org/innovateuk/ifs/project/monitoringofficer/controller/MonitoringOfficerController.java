@@ -24,6 +24,8 @@ import static java.lang.String.format;
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class MonitoringOfficerController {
 
+    // TODO rename to ProjectMonitoringOfficerController?
+
     private static final String FORM_ATTR_NAME = "form";
 
     private final MonitoringOfficerProjectsViewModelPopulator modelPopulator;

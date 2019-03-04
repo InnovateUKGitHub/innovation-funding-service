@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.monitor.domain;
+package org.innovateuk.ifs.project.monitoring.domain;
 
 import org.innovateuk.ifs.competition.domain.ResendableInvite;
 import org.innovateuk.ifs.invite.constant.InviteStatus;

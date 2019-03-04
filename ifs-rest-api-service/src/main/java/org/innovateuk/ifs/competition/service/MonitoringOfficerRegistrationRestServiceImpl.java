@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import static java.lang.String.format;
 
 @Service
-public class CompetitionSetupMonitoringOfficerRestServiceImpl extends BaseRestService implements CompetitionSetupMonitoringOfficerRestService {
+public class MonitoringOfficerRegistrationRestServiceImpl extends BaseRestService implements MonitoringOfficerRegistrationRestService {
 
-    private static final String BASE_URL = "/competition/setup";
+    private static final String BASE_URL = "/monitoring-officer";
 
     @Override
     public RestResult<MonitoringOfficerInviteResource> getMonitoringOfficerInvite(String inviteHash) {
