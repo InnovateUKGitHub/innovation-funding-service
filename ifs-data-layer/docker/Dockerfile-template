@@ -15,9 +15,10 @@ RUN useradd -p @glusterUserPassword@ -u @glusterUID@ -g @glusterGID@ gluster
 ADD newrelic.jar /
 ADD newrelic.yml /
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
+ADD set-umask0002-and-run-jar.sh entrypoint.sh
 ADD @app_name@-@version@.jar app.jar
 
 HEALTHCHECK --interval=15s --timeout=8s \
   CMD curl -f http://localhost:8080/monitoring/health || exit 1
 USER gluster
-ENTRYPOINT exec java -Dfile.encoding=UTF8 $JAVA_OPTS $JMX_OPTS -jar app.jar
+ENTRYPOINT ["./entrypoint.sh"]
