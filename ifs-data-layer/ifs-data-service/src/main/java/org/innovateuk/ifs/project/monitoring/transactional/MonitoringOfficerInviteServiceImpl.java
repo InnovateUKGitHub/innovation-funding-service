@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.monitor.transactional;
+package org.innovateuk.ifs.project.monitoring.transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -16,8 +16,8 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.project.monitor.domain.MonitoringOfficerInvite;
-import org.innovateuk.ifs.project.monitor.repository.MonitoringOfficerInviteRepository;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -39,16 +39,16 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.monitor.transactional.ProjectMonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_INVITE;
+import static org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerInviteServiceImpl.Notifications.MONITORING_OFFICER_INVITE;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 
 /**
- * Transactional and secured service implementation providing operations around monitoring officers.
+ * Transactional and secured service implementation providing operations around inviting monitoring officers.
  */
 @Service
-public class ProjectMonitoringOfficerServiceImpl extends InviteService<MonitoringOfficerInvite> implements ProjectMonitoringOfficerService {
+public class MonitoringOfficerInviteServiceImpl extends InviteService<MonitoringOfficerInvite> implements MonitoringOfficerInviteService {
 
-    private static final Log LOG = LogFactory.getLog(ProjectMonitoringOfficerServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteServiceImpl.class);
 
     private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.ukri.org";
     private static final String WEB_CONTEXT = "/management/monitoring-officer";

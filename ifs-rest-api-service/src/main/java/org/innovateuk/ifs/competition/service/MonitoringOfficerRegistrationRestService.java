@@ -7,7 +7,7 @@ import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationRes
 /**
  * Interface for CRUD operations on Monitoring officer related data.
  */
-public interface CompetitionSetupMonitoringOfficerRestService {
+public interface MonitoringOfficerRegistrationRestService {
 
     RestResult<MonitoringOfficerInviteResource> getMonitoringOfficerInvite(String inviteHash);
 

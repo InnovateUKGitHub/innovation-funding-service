@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.project.monitor.repository;
+package org.innovateuk.ifs.project.monitoring.repository;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
-import org.innovateuk.ifs.project.monitor.domain.MonitoringOfficerInvite;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
 
 public interface MonitoringOfficerInviteRepository extends InviteRepository<MonitoringOfficerInvite> {
 
