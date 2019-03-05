@@ -665,7 +665,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     }
 
     public boolean isH2020() {
-        return "Horizon 2020".equals(competitionType.getName());
+        return CompetitionResource.H2020_TYPE_NAME.equals(competitionType.getName());
     }
 
     public boolean isFullyFunded() {
