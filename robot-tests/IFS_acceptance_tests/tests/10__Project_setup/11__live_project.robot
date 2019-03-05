@@ -217,7 +217,7 @@ PM should see project tab on dashboard once GOL is approved
     Given the user clicks the button/link    link = Dashboard
     And the user should not see the element  id = dashboard-link-LIVE_PROJECTS_USER
     When the project is sent to acc
-    And the user clicks the button/link      link = Dashboard
+    And log in as a different user           ${PS_LP_Application_Academic_Email}  ${short_password}
     Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
     And the user should see the element      jQuery = h2:contains("Projects")
 
