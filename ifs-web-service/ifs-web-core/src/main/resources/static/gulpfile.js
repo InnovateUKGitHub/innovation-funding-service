@@ -30,6 +30,7 @@ var vendorJsFiles = [
   nodeModulesPath + 'jquery-ui/ui/focusable.js',
   nodeModulesPath + 'jquery-ui/ui/tabbable.js',
   nodeModulesPath + 'jquery-ui/ui/widget.js',
+  nodeModulesPath + 'accessible-autocomplete/dist/accessible-autocomplete.min.js',
 	govukFrontendPath + 'all.js',
   __dirname + '/js/vendor/govuk/application.js',
   __dirname + '/js/vendor/govuk/govuk-cookies.js',
@@ -37,6 +38,11 @@ var vendorJsFiles = [
   '!' + __dirname + '/js/vendor/wysiwyg-editor/hallo-src/*.js'
 ]
 
+// copy over the css from accessible autocomplete css folder
+gulp.task('web-core:copy-css-autocomplete', function () {
+  return gulp.src(filesExist(nodeModulesPath + 'accessible-autocomplete/dist/accessible-autocomplete.min.css'))
+  .pipe(gulp.dest(__dirname + '/css'))
+})
 // copy over the fonts from GDS node-modules to css/fonts folder
 gulp.task('web-core:copy-fonts-govuk', function () {
   return gulp.src(filesExist(govukFrontendPath + 'assets/fonts/*'))
@@ -84,7 +90,7 @@ gulp.task('web-core:vendor', function () {
 // build all js
 gulp.task('web-core:js', gulp.parallel('web-core:vendor', 'web-core:ifs-js', 'web-core:copy-html5shiv'))
 
-gulp.task('web-core:css', gulp.parallel('web-core:copy-images-govuk', 'web-core:copy-fonts-govuk', function () {
+gulp.task('web-core:css', gulp.parallel('web-core:copy-css-autocomplete', 'web-core:copy-images-govuk', 'web-core:copy-fonts-govuk', function () {
   return gulp.src(filesExist(sassFiles))
     .pipe(sassLint({
       files: {
