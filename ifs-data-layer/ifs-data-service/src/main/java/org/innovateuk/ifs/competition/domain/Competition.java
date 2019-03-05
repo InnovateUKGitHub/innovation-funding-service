@@ -669,6 +669,11 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     }
 
     public boolean isFullyFunded() {
+        // Competitions which always have 100% funding level
+        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+    }
+
+    public boolean onlyOneOrgAllowedPerApplication() {
         return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
     }
 
