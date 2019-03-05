@@ -90,7 +90,6 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-//        Mockito.reset(competitionService, questionService, formInputService, formInputResponseService, applicationService, financeService, financeRowCostsService);
     }
 
     @Override
@@ -206,10 +205,8 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
         Organisation organisation = newOrganisation().build();
         OrganisationFinancesWithGrowthTableResource organisationFinancesWithGrowthTableResource = new OrganisationFinancesWithGrowthTableResource();
-//        organisationFinancesWithGrowthTableResource.setOrganisationSize(OrganisationSize.MEDIUM); // new values
         User loggedInUser = newUser().build();
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
-//        applicationFinanceResource.setOrganisationSize(OrganisationSize.SMALL); // existing values
 
         when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
         when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
@@ -237,9 +234,6 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
                 .contentType(APPLICATION_JSON)
                 .content(toJson(organisationFinancesWithGrowthTableResource)))
                 .andExpect(status().isOk());
-
-        // need to verify that the updates are called
-//        verify(financeRowCostsService).updateApplicationFinance(eq(applicationFinanceResource.getId()), any(ApplicationFinanceResource.class));
     }
 
     private void foo(long competitionId, FormInputType formInputType, String description) {
@@ -255,20 +249,6 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
         List<FormInputResource> formInputResponses = newFormInputResource().withType(formInputType).build(1);
         when(formInputService.findByQuestionId(question.getId())).thenReturn(serviceSuccess(formInputResponses));
     }
-
-
-    @Test
-    public void updateOrganisationWithoutGrowthTable() {
-    }
-
-    @Test
-    public void isShowStateAidAgreement() {
-    }
-
-    @Test
-    public void resetFundingAndMarkAsIncomplete() {
-    }
-
 
     private void setupFormInputResponse(long competitionId, Application application, Organisation organisation, FormInputType formInputType, String value) {
         Question question = newQuestion().build();
@@ -287,6 +267,4 @@ public class OrganisationFinanceControllerTest extends BaseControllerMockMVCTest
                 application.getId(), financeOverviewQuestion.getId(), organisation.getId(), FINANCIAL_OVERVIEW_ROW, description)
         ).thenReturn(serviceSuccess(formInputResponse));
     }
-
-
 }
