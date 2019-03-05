@@ -33,8 +33,6 @@ import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 @Entity
 public class Competition extends AuditableEntity implements ProcessActivity {
 
-    private static final String HORIZON_2020 = "Horizon 2020";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -667,7 +665,7 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     }
 
     public boolean isH2020() {
-        return HORIZON_2020.equals(competitionType.getName());
+        return CompetitionResource.H2020_TYPE_NAME.equals(competitionType.getName());
     }
 
     public boolean isFullyFunded() {

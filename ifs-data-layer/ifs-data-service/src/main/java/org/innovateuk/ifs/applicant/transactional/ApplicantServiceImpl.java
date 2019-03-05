@@ -200,8 +200,9 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
             boolean excludeYourOrganisationSectionForResearchOrgs =
                     Boolean.FALSE.equals(competition.getIncludeYourOrganisationSection());
             return isResearchOrganisation && excludeYourOrganisationSectionForResearchOrgs;
-        } else
-            return section.getType() == SectionType.FUNDING_FINANCES && competition.isFullyFunded();
+        }
+
+        return section.getType() == SectionType.FUNDING_FINANCES && competition.isFullyFunded();
     }
 
     private class ServiceResults {

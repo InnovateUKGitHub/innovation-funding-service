@@ -26,7 +26,7 @@ public class CompetitionResource {
     private static final int CLOSING_SOON_AMOUNT = 3;
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
-    private static final String H2020_TYPE_NAME = "Horizon 2020";
+    public static final String H2020_TYPE_NAME = "Horizon 2020";
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
 
     private Long id;

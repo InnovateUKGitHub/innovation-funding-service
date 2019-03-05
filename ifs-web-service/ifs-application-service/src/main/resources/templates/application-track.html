@@ -38,8 +38,8 @@
         </div>
         <h2 class="govuk-heading-l">What happens next?</h2>
 
-        <th:block th:with="fullyFundedCompetition=${currentCompetition.fullyFunded}">
-            <th:block th:unless="${fullyFundedCompetition}">
+        <th:block th:with="procurementCompetition=${currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+            <th:block th:unless="${procurementCompetition}">
                 <h3 class="govuk-heading-m">Assessment process</h3>
                 <p class="govuk-body">Once the competition submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>
                 <ul class="govuk-list govuk-list--bullet">
@@ -80,7 +80,7 @@
                     <br />We will email you when this becomes available.
                 </p>
             </th:block>
-            <th:block th:if="${fullyFundedCompetition}">
+            <th:block th:if="${procurementCompetition}">
                 <h3 class="govuk-heading-m">Assessment process</h3>
                 <p class="govuk-body">Once the competition submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>
                 <ul class="govuk-list govuk-list--bullet">
