@@ -68,7 +68,7 @@
 
                         <form class="govuk-!-margin-top-6" th:object="${applicationSubmitForm}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
 
-                            <th:block th:if="${(model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT or model.currentCompetition.isH2020()) and model.applicationReadyForSubmit}">
+                            <th:block th:if="${model.currentCompetition.isFullyFunded() and model.applicationReadyForSubmit}">
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('agreeTerms')} ? 'govuk-form-group--error'">
                                     <fieldset class="govuk-fieldset">
                                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
@@ -88,7 +88,7 @@
                                                        data-autosave-disabled />
                                                 <label for="agreeTerms"
                                                        class="govuk-label govuk-checkboxes__label">
-                                                    <th:block th:if="${model.currentCompetition.isH2020()}">By ticking this box you are accepting that the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link" target="_blank">terms and conditions</a> (opens in a new window).</th:block>
+                                                    <th:block th:if="${model.currentCompetition.isH2020()}">By ticking this box you are accepting the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link" target="_blank">terms and conditions</a> (opens in a new window).</th:block>
                                                     <th:block th:unless="${model.currentCompetition.isH2020()}">I agree to the standard terms set out in the <a href="/files/draft-procurement-contract.pdf" class="govuk-link" target="_blank">draft contract</a> (opens in a new window). I understand that I will receive the final contract, which will include the full terms and conditions, if my application is successful.</th:block>
                                                 </label>
                                             </div>
