@@ -272,7 +272,9 @@ task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
 // Remote tasks
 
 task deleteProject(type: Exec) {
+    def token
     doFirst {
+        token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
         executable 'oc'
         args 'delete', 'project', openshiftEnv, "--token=${System.env.bamboo_openshift_svc_account_token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
     }
@@ -299,14 +301,20 @@ task deleteProject(type: Exec) {
 }
 
 task createProject(dependsOn: deleteProject) {
+    def token
     doFirst {
+        token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
         exec {
             executable 'oc'
             args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${System.env.bamboo_openshift_svc_account_token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
         }
         
-        if (openshiftEnv.startsWith("at-")) {
+        if (openshiftEnv.startsWith("ifs-zp-")) {
             exec {
+
+                ext.ifsFileStorageLocation="/tmp"
+                prepareDockerfileForAt
+
                 executable 'oc'
                 args 'patch', 'namespace', "${openshiftEnv}", "-p", '{\"metadata\":{\"annotations\":{\"openshift.io/node-selector\":\"purpose=perftesting\"}}}', "--token=${System.env.bamboo_openshift_svc_account_token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
             }
@@ -319,6 +327,10 @@ task createProject(dependsOn: deleteProject) {
             }
         }
     }
+}
+
+task prepareDockerfileForAt(type: Exec){
+    executable = 'setup-files/scripts/openshift/prep-dockerfile-for-at.sh'
 }
 
 task osDeployFractalRemote(type: Exec, dependsOn: prepareDeployment) {
