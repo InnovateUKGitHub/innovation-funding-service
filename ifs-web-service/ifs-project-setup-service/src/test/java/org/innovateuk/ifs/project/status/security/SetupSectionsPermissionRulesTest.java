@@ -559,7 +559,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         assertTrue(ruleCheck.get());
 
         verify(projectServiceMock, atLeastOnce()).getById(activeProject.getId());
-//        verify(projectServiceMock.isProjectManager(user.getId(), activeProject.getId()));
         verify(statusServiceMock).getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()));
         verify(projectServiceMock).getLeadPartners(activeProject.getId());
 

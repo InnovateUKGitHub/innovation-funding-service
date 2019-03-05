@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
