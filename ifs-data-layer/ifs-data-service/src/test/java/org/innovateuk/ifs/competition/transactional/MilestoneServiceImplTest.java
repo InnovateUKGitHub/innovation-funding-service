@@ -9,7 +9,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -25,6 +24,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
@@ -164,13 +164,13 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     public void updateMilestone() {
         ZonedDateTime milestoneDate = ZonedDateTime.now();
 
-        ServiceResult<Void> result = service.updateMilestone(newMilestoneResource().withType(MilestoneType.BRIEFING_EVENT).withDate(milestoneDate.plusMonths(1)).build());
+        ServiceResult<Void> result = service.updateMilestone(newMilestoneResource().withType(BRIEFING_EVENT).withDate(milestoneDate.plusMonths(1)).build());
         assertTrue(result.isSuccess());
     }
 
     @Test
     public void getAllMilestones() {
-        List<Milestone> milestones = newMilestone().withType(MilestoneType.BRIEFING_EVENT, MilestoneType.LINE_DRAW, MilestoneType.NOTIFICATIONS).build(3);
+        List<Milestone> milestones = newMilestone().withType(BRIEFING_EVENT, LINE_DRAW, NOTIFICATIONS).build(3);
         when(milestoneRepository.findAllByCompetitionId(1L)).thenReturn(milestones);
 
         ServiceResult<List<MilestoneResource>> result = service.getAllMilestonesByCompetitionId(1L);
@@ -182,11 +182,28 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Test
     public void getAllPublicMilestones() {
-        List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE).build(3);
-        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE)))
+        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName("Competition Type").build()).build();
+        List<Milestone> milestones = newMilestone().withType(OPEN_DATE, REGISTRATION_DATE, NOTIFICATIONS, SUBMISSION_DATE).build(4);
+        when(milestoneRepository.findByCompetitionIdAndTypeIn(competition.getId(), asList(OPEN_DATE, REGISTRATION_DATE, SUBMISSION_DATE, NOTIFICATIONS)))
                 .thenReturn(milestones);
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
 
-        ServiceResult<List<MilestoneResource>> result = service.getAllPublicMilestonesByCompetitionId(1L);
+        ServiceResult<List<MilestoneResource>> result = service.getAllPublicMilestonesByCompetitionId(competition.getId());
+
+        assertTrue(result.isSuccess());
+        assertNotNull(result);
+        assertEquals(4, milestones.size());
+    }
+
+    @Test
+    public void getAllPublicMilestones_horizon2020() {
+        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName("Horizon 2020").build()).build();
+        List<Milestone> milestones = newMilestone().withType(OPEN_DATE, REGISTRATION_DATE, SUBMISSION_DATE).build(3);
+        when(milestoneRepository.findByCompetitionIdAndTypeIn(competition.getId(), asList(OPEN_DATE, REGISTRATION_DATE, SUBMISSION_DATE)))
+                .thenReturn(milestones);
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+
+        ServiceResult<List<MilestoneResource>> result = service.getAllPublicMilestonesByCompetitionId(competition.getId());
 
         assertTrue(result.isSuccess());
         assertNotNull(result);
@@ -195,8 +212,8 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Test
     public void allPublicDatesCompleteSuccess() {
-        List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS).withDate(ZonedDateTime.now()).build(4);
-        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS)))
+        List<Milestone> milestones = newMilestone().withType(OPEN_DATE, SUBMISSION_DATE, NOTIFICATIONS).withDate(ZonedDateTime.now()).build(4);
+        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(OPEN_DATE, SUBMISSION_DATE, NOTIFICATIONS)))
                 .thenReturn(milestones);
 
         ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
@@ -214,8 +231,8 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                         .withNonIfs(true)
                         .build()));
 
-        List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE).withDate(ZonedDateTime.now()).build(4);
-        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.SUBMISSION_DATE)))
+        List<Milestone> milestones = newMilestone().withType(OPEN_DATE, REGISTRATION_DATE, NOTIFICATIONS, SUBMISSION_DATE).withDate(ZonedDateTime.now()).build(4);
+        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(OPEN_DATE, REGISTRATION_DATE, SUBMISSION_DATE)))
                 .thenReturn(milestones);
 
         ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
@@ -226,8 +243,8 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Test
     public void allPublicDatesCompleteFailure() {
-        List<Milestone> milestones = newMilestone().withType(MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE).build(2);
-        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS)))
+        List<Milestone> milestones = newMilestone().withType(RELEASE_FEEDBACK, SUBMISSION_DATE).build(2);
+        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(OPEN_DATE, SUBMISSION_DATE, NOTIFICATIONS)))
                 .thenReturn(milestones);
 
         ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
@@ -242,9 +259,9 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         when(milestoneRepository.findByTypeAndCompetitionId(NOTIFICATIONS, 1L)).thenReturn(Optional.ofNullable(milestone));
         when(milestoneMapper.mapToResource(milestone)).thenReturn(newMilestoneResource().withType(NOTIFICATIONS).build());
 
-        ServiceResult<MilestoneResource> result = service.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, 1L);
+        ServiceResult<MilestoneResource> result = service.getMilestoneByTypeAndCompetitionId(NOTIFICATIONS, 1L);
         assertTrue(result.isSuccess());
-        assertEquals(MilestoneType.NOTIFICATIONS, milestone.getType());
+        assertEquals(NOTIFICATIONS, milestone.getType());
         assertNull(milestone.getDate());
     }
 
@@ -252,7 +269,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     public void getMilestoneByTypeAndCompetitionReturnsNotFoundErrorWhenNotPresent() {
         when(milestoneRepository.findByTypeAndCompetitionId(NOTIFICATIONS, 1L)).thenReturn(Optional.empty());
 
-        ServiceResult<MilestoneResource> result = service.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, 1L);
+        ServiceResult<MilestoneResource> result = service.getMilestoneByTypeAndCompetitionId(NOTIFICATIONS, 1L);
         assertTrue(result.isFailure());
         assertEquals(result.getErrors().size(),1);
         assertEquals(result.getErrors().get(0).getStatusCode(), HttpStatus.NOT_FOUND);
