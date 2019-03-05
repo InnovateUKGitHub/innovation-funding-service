@@ -166,6 +166,13 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isFullyFunded() {
+        // Competitions which always have 100% funding level
+        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+    }
+
+    @JsonIgnore
+
+    public boolean onlyOneOrgAllowedPerApplication() {
         return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
     }
 

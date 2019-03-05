@@ -673,10 +673,6 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
     }
 
-    public boolean onlyOneOrgAllowedPerApplication() {
-        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
-    }
-
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
