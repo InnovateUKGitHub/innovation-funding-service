@@ -68,7 +68,7 @@
 
                         <form class="govuk-!-margin-top-6" th:object="${applicationSubmitForm}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
 
-                            <th:block th:if="${model.currentCompetition.isFullyFunded() and model.applicationReadyForSubmit}">
+                            <th:block th:if="${model.currentCompetition.onlyOneOrgAllowedPerApplication() and model.applicationReadyForSubmit}">
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('agreeTerms')} ? 'govuk-form-group--error'">
                                     <fieldset class="govuk-fieldset">
                                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
