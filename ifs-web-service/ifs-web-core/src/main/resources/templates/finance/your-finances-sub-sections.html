@@ -17,7 +17,7 @@
         </ul>
     </div>
 
-    <th:block th:unless="${model.competition.onlyOneOrgAllowedPerApplication()}">
+    <th:block th:unless="${model.competition.isFullyFunded()}">
         <h2 class="govuk-heading-m">Finance summary</h2>
         <p class="govuk-body">This is a breakdown of your project costs and sources of funding for this project.</p>
 
