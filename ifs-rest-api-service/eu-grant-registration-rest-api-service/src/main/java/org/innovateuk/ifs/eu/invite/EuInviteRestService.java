@@ -10,4 +10,5 @@ import java.util.UUID;
 public interface EuInviteRestService {
     RestResult<EuGrantPageResource> getEuGrantsByNotified(boolean notified, Integer pageIndex, Integer pageSize);
     RestResult<Void> sendInvites(List<UUID> ids);
+    RestResult<Long> getTotalSubmittedEuGrants();
 }

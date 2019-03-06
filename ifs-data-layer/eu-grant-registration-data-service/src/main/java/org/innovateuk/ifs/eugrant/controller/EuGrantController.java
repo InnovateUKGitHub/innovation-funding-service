@@ -52,4 +52,9 @@ public class EuGrantController {
 
         return euGrantService.getEuGrantsByContactNotified(notified, new PageRequest(pageIndex, pageSize, sort)).toGetResponse();
     }
+
+    @GetMapping("/eu-grants/total-submitted")
+    public RestResult<Long> getTotalSubmitted() {
+        return euGrantService.getTotalSubmitted().toGetResponse();
+    }
 }

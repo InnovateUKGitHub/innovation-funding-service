@@ -43,10 +43,12 @@ public class EuInviteController {
         EuGrantPageResource euRegistrants = euInviteRestService.getEuGrantsByNotified(false,
                                                                                       pageIndex,
                                                                                       DEFAULT_PAGE_SIZE).getSuccess();
+        long totalSubmitted = euInviteRestService.getTotalSubmittedEuGrants().getSuccess();
+        long totalNonNotified = euRegistrants.getTotalElements();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
                                                             new Pagination(euRegistrants, ""),
-                                                            1200,
-                                                            2100);
+                                                            totalSubmitted - totalNonNotified,
+                                                            totalNonNotified);
         model.addAttribute("model", viewModel);
         return "eu/non-notified";
     }
@@ -58,10 +60,12 @@ public class EuInviteController {
         EuGrantPageResource euRegistrants = euInviteRestService.getEuGrantsByNotified(true,
                                                                                       pageIndex,
                                                                                       DEFAULT_PAGE_SIZE).getSuccess();
+        long totalSubmitted = euInviteRestService.getTotalSubmittedEuGrants().getSuccess();
+        long totalNotified = euRegistrants.getTotalElements();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
                                                             new Pagination(euRegistrants, ""),
-                                                            1200,
-                                                            2100);
+                                                            totalNotified,
+                                                            totalSubmitted - totalNotified);
         model.addAttribute("model", viewModel);
         return "eu/notified";
     }

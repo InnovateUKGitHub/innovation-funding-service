@@ -72,6 +72,11 @@ public class EuGrantServiceImpl implements EuGrantService {
     }
 
     @Override
+    public ServiceResult<Long> getTotalSubmitted() {
+        return serviceSuccess(euGrantRepository.countBySubmittedTrue());
+    }
+
+    @Override
     public ServiceResult<EuGrantPageResource> getEuGrantsByContactNotified(boolean notified,
                                                                            Pageable pageable) {
         Page<EuGrant> euGrantPage = notified ?

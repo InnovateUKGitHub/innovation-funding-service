@@ -43,4 +43,9 @@ public class EuInviteRestServiceImpl extends BaseRestService implements EuInvite
     public RestResult<Void> sendInvites(List<UUID> ids) {
         return postWithRestResultAnonymous(baseUrl + "/send-invites", ids, Void.class);
     }
+
+    @Override
+    public RestResult<Long> getTotalSubmittedEuGrants() {
+        return getWithRestResultAnonymous(baseUrl + "/total-submitted", Long.class);
+    }
 }
