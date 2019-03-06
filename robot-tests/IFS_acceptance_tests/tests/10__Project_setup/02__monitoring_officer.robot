@@ -12,6 +12,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               INFUND-6706 Mismatch in MO status between dashboard and consortium table
 ...
 ...               IFS-3553 Email subject for Monitoring Officer to include competition name and application ID
+...
+...               IFS-4209 MO view of project
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -201,22 +203,22 @@ Links to other sections in Project setup dependent on project details (applicabl
 # Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
 # When adding new test cases here please make sure that anything unneccessary is removed from above.
 
-Existing Monitoring Officer can sign in
-    [Documentation]    IFS-3977
+Existing Monitoring Officer can sign in and see projects that they are assigned to
+    [Documentation]    IFS-3977  IFS-3978
     [Tags]  HappyPath
-    When log in as a different user                     &{monitoring_officer_one_credentials}
-    Then the user should see the element                jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
+    Given log in as a different user          &{monitoring_officer_one_credentials}
+    Then the user should see the element      jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("Magic material")
 
-Monitoring Officer can see projects that they are assigned to
-    [Documentation]    IFS-3978
-    [Tags]  HappyPath
-    When the user should see the text in the element    css = .projects-in-setup    Magic material
-    And the user should see the element                 link = Magic material
+Monitoring officer see the project setup veiw for assigned project
+    [Documentation]  IFS-4209
+    [Tags]
+    Given the user clicks the button/link    link = Magic material
+    Then the user should see the project set view
 
 Monitoring Officer cannot see projects if they are not assigned to them
     [Documentation]    IFS-3978
     [Tags]
-    When log in as a different user             &{monitoring_officer_two_credentials}
+    Given log in as a different user            &{monitoring_officer_two_credentials}
     Then the user should not see the element    .projects-in-setup
 
 *** Keywords ***
@@ -263,3 +265,11 @@ the user should see the correct address
     the user should see the element       jQuery = p:contains("London")
     the user should see the element       jQuery = p:contains("London")
     the user should see the element       jQuery = p:contains("E17 5LR")
+
+the user should see the project set view
+    the user should see the element    jQuery = a:contains("Project details")
+    the user should see the element    jQuery = a:contains("Documents")
+    the user should see the element    jQuery = .progress-list .read-only h2:contains("Bank details")
+    the user should see the element    jQuery = .progress-list .read-only h2:contains("Finance checks")
+    the user should see the element    jQuery = .progress-list .read-only h2:contains("Spend profile")
+    the user should see the element    jQuery = .progress-list .read-only h2:contains("Grant offer letter")

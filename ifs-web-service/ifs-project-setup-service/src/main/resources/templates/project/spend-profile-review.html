@@ -62,7 +62,7 @@
             </li>
         </ul>
 
-        <th:block th:if="${model.markAsComplete and !model.submitted}">
+        <th:block th:if="${model.markAsComplete and !model.submitted and !model.monitoringOfficer}">
             <p class="govuk-body govuk-!-margin-top-6">Please review each partner's spend profile once they are marked as complete.</p>
             <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="govuk-button">Review and send total project spend profile</a>
         </th:block>

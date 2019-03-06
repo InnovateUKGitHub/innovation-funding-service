@@ -441,13 +441,6 @@ Project manager's status should be updated
     Then the user should see the element     jQuery = .success-alert:contains("The project is live, you can review progress at")
     And the user should see the element      link = _connect
 
-PM should see project tab on dashboard once GOL is approved
-    [Documentation]  IFS-4959
-    [Tags]
-    When the user clicks the button/link     link = Dashboard
-    Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
-    And the user should see the element      jQuery = h2:contains("Projects")
-
 Non lead's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377
     [Tags]

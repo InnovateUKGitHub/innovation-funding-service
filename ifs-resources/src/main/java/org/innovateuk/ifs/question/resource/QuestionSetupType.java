@@ -15,7 +15,7 @@ public enum QuestionSetupType {
     APPLICATION_TEAM("Application team"),
     /* h2020 */
     PROJECT_DETAILS("Project details"),
-    PROJECT_DOCUMENTS("Project documents");
+    GRANT_AGREEMENT("Horizon 2020 grant agreement");
 
     private String shortName;
 
