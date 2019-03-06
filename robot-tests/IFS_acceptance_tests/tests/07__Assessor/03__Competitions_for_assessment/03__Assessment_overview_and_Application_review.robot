@@ -3,6 +3,10 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...
 ...               INFUND-3303: As an Assessor I want the ability to reject the application after I have been given access to the full details so I can make Innovate UK aware.
 ...
+...               INFUND-3720 As an Assessor I can see deadlines for the assessment of applications currently in assessment on my dashboard, so that I am reminded to deliver my work on time
+...
+...               INFUND-1188 As an assessor I want to be able to review my assessments from one place so that I can work in my favoured style when reviewing
+...
 ...               INFUND-4203: Prevent navigation options appearing for questions that are not part of an assessment
 ...
 ...               INFUND-1483: As an Assessor I want to be asked to confirm whether the application is in the correct research category and scope so that Innovate UK know that the application aligns with the competition
@@ -22,82 +26,65 @@ Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
+Assessment overview should show all the questions
+    [Documentation]    INFUND-3400  INFUND-1188
+    [Tags]
+    Given The user clicks the button/link    link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    When the user clicks the button/link     link = ${IN_ASSESSMENT_APPLICATION_5_TITLE}
+    Then the uesr should see assessment overview details
+
+Number of days remaining until assessment submission
+    [Documentation]    INFUND-3720
+    [Tags]  MySQL
+    Given the user should see the element  jQuery = .sub-header:contains("days left to submit")
+    #Then the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
+    # TODO IFS-3176
+
+Reject application (Unable to assess this application)
+    [Documentation]    INFUND-3540  INFUND-5379
+    [Tags]
+    Given the user clicks the button/link                      jQuery = .govuk-details__summary-text:contains("Unable to assess this application")
+    When the user fills in rejection details
+    And the user clicks the button/link                       jquery = button:contains("Reject")
+    Then The user should be redirected to the correct page    ${Assessor_application_dashboard}
+    And The user should not see the element                   link = ${IN_ASSESSMENT_APPLICATION_5_TITLE}
+
+Assessor should not be able to access the rejected application
+    [Documentation]    INFUND-5188
+    [Tags]
+    Given the user navigates to the page and gets a custom error message    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    ${403_error_message}
+
 Navigation using previous button
     [Documentation]    INFUND-4264
     [Tags]
-    Given the user clicks the button/link              link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Given the user navigates to the page               ${Assessor_application_dashboard}
     And The user clicks the button/link                link = Intelligent water system
     When the user clicks the button/link               link = 4. Economic benefit
     Then the user should see the element               jQuery = h1:contains("Economic benefit")
-    And the user clicks previous and goes to the page  Project exploitation
-    And the user clicks previous and goes to the page  Potential market
-    And the user clicks previous and goes to the page  Business opportunity
-    And the user clicks previous and goes to the page  Scope
-    And the user clicks previous and goes to the page  Public description
-    And the user clicks previous and goes to the page  Project summary
-    And the user clicks previous and goes to the page  Application details
-    And the user should not see the element            jQuery = span:contains("Previous")
+    And the user navigate to previous pages
 
 Project details sections should not be scorable
     [Documentation]    INFUND-3400 INFUND-4264
     [Tags]
-    When the user clicks the button/link       link = Back to your assessment overview
-    And the user clicks the button/link        link = Application details
-    And the user should see the element        jQuery = h3:contains("Project title")
-    Then the user should not see the element   jQuery = label:contains("Question score")
-    When the user clicks the button/link       jQuery = span:contains("Next")
-    And the user should see the element        jQuery = p:contains("This is the applicant response for project summary.")
-    Then the user should not see the element   jQuery = label:contains("Question score")
-    When the user clicks the button/link       jQuery = span:contains("Next")
-    And the user should see the element        jQuery = p:contains("This is the applicant response for public description.")
-    Then the user should not see the element   jQuery = label:contains("Question score")
-    And the user clicks the button/link        jQuery = span:contains("Next")
-    And the user should see the element        jQuery = p:contains("This is the applicant response for how does your project align with the scope of this competition?.")
-    Then the user should not see the element   jQuery = label:contains("Question score")
+    Given the user clicks the button/link       link = Back to your assessment overview
+    And Application detail section should not be scorable
+    Then Project summary section should not be scorable
+    And Public description section should not be scorable
+    And Scope section should not be scorable
 
 Application questions should be scorable
     [Documentation]    INFUND-3400 INFUND-4264
     [Tags]
-    When the user clicks the button/link          jQuery = span:contains("Next")
-    And The user should see the element           jQuery = h2:contains("What is the business opportunity that your project addresses?")
-    And the user should see the element           jQuery = p:contains("This is the applicant response for what is the business opportunity that your project addresses?.")
-    Then The user should see the element          jQuery = label:contains("Question score")
-    When the user clicks the button/link          jQuery = span:contains("Next")
-    And The user should see the element           jQuery = h2:contains("What is the size of the potential market for your project")
-    And the user should see the element           jQuery = p:contains("This is the applicant response for what is the size of the potential market for your project?.")
-    Then The user should see the element          jQuery = label:contains("Question score")
-    When the user clicks the button/link          jQuery = span:contains("Next")
-    And The user should see the element           jQuery = h2:contains("How will you exploit and market your project?")
-    And the user should see the element           jQuery = p:contains("This is the applicant response for how will you exploit and market your project?.")
-    Then The user should see the element          jQuery = label:contains("Question score")
-    When the user clicks the button/link          jQuery = span:contains("Next")
-    And The user should see the element           jQuery = h2:contains("What economic, social and environmental benefits do you expect your project to deliver and when?")
-    And the user should see the element           jQuery = p:contains("This is the applicant response for what economic, social and environmental benefits do you expect your project to deliver and when?.")
-    Then The user should see the element          jQuery = label:contains("Question score")
-    When the user clicks the button/link          jQuery = span:contains("Next")
-    And The user should see the element           jQuery = h2:contains("What technical approach will you use and how will you manage your project?")
-    And the user should see the element           jQuery = p:contains("This is the applicant response for what technical approach will you use and how will you manage your project?.")
-    Then The user should see the element          jQuery = label:contains("Question score")
-    When the user clicks the button/link          jQuery = span:contains("Next")
-    And The user should see the element           jQuery = h2:contains("What is innovative about your project")
-    And the user should see the element           jQuery = p:contains("This is the applicant response for what is innovative about your project?.")
-    Then The user should see the element          jQuery = label:contains("Question score")
-    When the user clicks the button/link          jQuery = span:contains("Next")
-    And The user should see the element           jQuery = h2:contains("What are the risks")
-    And the user should see the element           jQuery = p:contains("This is the applicant response for what are the risks (technical, commercial and environmental) to your project's success? what is your risk management strategy?.")
-    Then The user should see the element          jQuery = label:contains("Question score")
-    When the user clicks the button/link          jQuery = span:contains("Next")
-    And The user should see the element           jQuery = h2:contains("Does your project team have the skills,")
-    And the user should see the element           jQuery = p:contains("This is the applicant response for does your project team have the skills, experience and facilities to deliver this project?.")
-    Then The user should see the element          jQuery = label:contains("Question score")
-    When the user clicks the button/link          jQuery = span:contains("Next")
-    And The user should see the element           jQuery = h2:contains("What will your project cost")
-    And the user should see the element           jQuery = p:contains("This is the applicant response for what will your project cost?.")
-    Then The user should see the element          jQuery = label:contains("Question score")
-    When the user clicks the button/link          jQuery = span:contains("Next")
-    And The user should see the element           jQuery = h2:contains("How does financial support from Innovate UK")
-    And the user should see the element           jQuery = p:contains("This is the applicant response for how does financial support from innovate uk and its funding partners add value?.")
-    Then The user should see the element          jQuery = label:contains("Question score")
+    When the user should see question details    What is the business opportunity that your project addresses?  This is the applicant response for what is the business opportunity that your project addresses?.
+    When the user should see question details    What is the size of the potential market for your project   This is the applicant response for what is the size of the potential market for your project?.
+    Then the user should see question details    How will you exploit and market your project?   This is the applicant response for how will you exploit and market your project?.
+    Then the user should see question details    What economic, social and environmental benefits do you expect your project to deliver and when   This is the applicant response for what economic, social and environmental benefits do you expect your project to deliver and when?.
+    Then the user should see question details    What technical approach will you use and how will you manage your project?  This is the applicant response for what technical approach will you use and how will you manage your project?.
+    Then the user should see question details    What is innovative about your project  This is the applicant response for what is innovative about your project?.
+    Then the user should see question details    What are the risks  This is the applicant response for what are the risks (technical, commercial and environmental) to your project's success? what is your risk management strategy?.
+    Then the user should see question details    Does your project team have the skills  This is the applicant response for does your project team have the skills, experience and facilities to deliver this project?.
+    Then the user should see question details    What will your project cost  This is the applicant response for what will your project cost?.
+    Then the user should see question details    How does financial support from Innovate UK  This is the applicant response for how does financial support from innovate uk and its funding partners add value?.
     [Teardown]  the user clicks the button/link   link = Back to your assessment overview
 
 Appendix can be opened on the question view
@@ -292,3 +279,56 @@ Custom suite setup
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+the user fills in rejection details
+    And the user should see the element                    id = rejectReason
+    the user selects the option from the drop-down menu    Select a reason    id = rejectReason    # Note that using this empty option will actually select the 'Select a reason' option at the top of the dropdown menu
+    the user clicks the button/link                        jquery = button:contains("Reject")
+    the user should see a field error                      Please enter a reason.
+    Select From List By Index                              id = rejectReason    1
+    the user should not see an error in the page
+    The user enters text to a text field                   id = rejectComment    Have conflicts with the area of expertise.
+
+the uesr should see assessment overview details
+    the user should see the element     jQuery = dt:contains("Application number")~ dd:contains("${IN_ASSESSMENT_APPLICATION_5_NUMBER}")
+    And the user should see the element      jQuery = dt:contains("Competition") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    And The user should see the element      jQuery = h2:contains("Project details")
+    And The user should see the element      jQuery = h2:contains("Application questions")
+    And The user should see the element      jQuery = h2:contains("Finances")
+
+the user navigate to previous pages
+    the user clicks previous and goes to the page   Project exploitation
+    the user clicks previous and goes to the page   Potential market
+    the user clicks previous and goes to the page   Business opportunity
+    the user clicks previous and goes to the page   Scope
+    the user clicks previous and goes to the page   Public description
+    the user clicks previous and goes to the page   Project summary
+    the user clicks previous and goes to the page   Application details
+    the user should not see the element             jQuery = span:contains("Previous")
+
+Application detail section should not be scorable
+    the user clicks the button/link        link = Application details
+    the user should see the element        jQuery = h3:contains("Project title")
+    the user should not see the element    jQuery = label:contains("Question score")
+    the user clicks the button/link        jQuery = span:contains("Next")
+
+Project summary section should not be scorable
+    the user should see the element        jQuery = p:contains("This is the applicant response for project summary.")
+    the user should not see the element    jQuery = label:contains("Question score")
+    the user clicks the button/link        jQuery = span:contains("Next")
+
+Public description section should not be scorable
+    the user should see the element        jQuery = p:contains("This is the applicant response for public description.")
+    the user should not see the element    jQuery = label:contains("Question score")
+    the user clicks the button/link        jQuery = span:contains("Next")
+
+Scope section should not be scorable
+    the user should see the element        jQuery = p:contains("This is the applicant response for how does your project align with the scope of this competition?.")
+    the user should not see the element   jQuery = label:contains("Question score")
+
+the user should see question details
+    [Arguments]  ${question}  ${description}
+    the user clicks the button/link      jQuery = span:contains("Next")
+    the user should see the element      jQuery = h2:contains("${question}")
+    the user should see the element      jQuery = p:contains("${description}")
+    The user should see the element      jQuery = label:contains("Question score")

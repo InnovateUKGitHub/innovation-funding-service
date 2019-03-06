@@ -15,14 +15,9 @@ Resource          ../../../resources/defaultResources.robot
 Client-side validations
     [Documentation]  INFUND-5182  INFUND-5432
     [Tags]
-    Given The user should see the element    jQuery = h2:contains("Complete your assessor account")
-    And The user should see the element      jQuery = .message-alert a:contains("your skills")    #this checks the alert message on the top od the page
+    Given The user should see the element    jQuery = .message-alert a:contains("your skills")    #this checks the alert message on the top od the page
     When the user clicks the button/link     jQuery = a:contains("your skills")
-    And the user should see the element      jQuery = h2:contains("Innovation areas")
-    And the user enters multiple strings into a text field    id = skillAreas    w${SPACE}    101
-    And the user clicks the button/link      jQuery = button:contains("Save and return to your skills")
-    Then the user should see a field and summary error        Please select an assessor type.
-    And the user should see a field and summary error         Maximum word count exceeded. Please reduce your word count to 100.
+    Then the user checks for client side validations
 
 Cancel button redirects to the read-only view without changes
     [Documentation]    INFUND-8009  IFS-3942
@@ -41,25 +36,15 @@ Back button from edit page redirects to read only view
 Server-side validations
     [Documentation]    INFUND-5182
     [Tags]
-    Given the user clicks the button/link                      jQuery = label:contains("Business")
-    When the user enters multiple strings into a text field    id = skillAreas    w${SPACE}    102
-    And the user clicks the button/link                        jQuery = button:contains("Save and return to your skills")
-    Then the user should see a field and summary error         Maximum word count exceeded. Please reduce your word count to 100.
-    And browser validations have been disabled
-    And the user enters multiple strings into a text field     id = skillAreas    e    5001
-    And the user clicks the button/link                        jQuery = button:contains("Save and return to your skills")
-    Then the user should see a field and summary error         This field cannot contain more than 5,000 characters.
+    Given the user clicks the button/link             jQuery = label:contains("Business")
+    Then the user checks for serve side validations
 
 Save Skills should redirect to the read-only view
     [Documentation]    INFUND-5182  IFS-3942  INFUND-5432  INFUND-7059
     [Tags]
-    Given the user clicks the button/link        jQuery = label:contains("Business")
-    When the user enters text to a text field    id = skillAreas    assessor skill areas text
-    And the user clicks the button/link          jQuery = button:contains("Save and return to your skills")
-    Then the user should be redirected to the correct page    ${assessment_skills_url}
-    And the user should see the element          jQuery = h3:contains("Skill areas")~ p:contains("assessor skill areas text")
-    And the user should see the element          jQuery = dt:contains("Assessor type")~dd:contains("Business")
-    And the user should see the element          jQuery = td:contains("Materials, process and manufacturing design technologies")
+    Given the user enter and save the 'Your skills' details
+    When the user should be redirected to the correct page    ${assessment_skills_url}
+    Then the user should see the correct details
 
 Your skills does not appear in dashboard alert
     [Documentation]    INFUND-5182
@@ -77,3 +62,29 @@ Return to assessor dashboard from skills page
 *** Keywords ***
 The correct radio button should be selected
     radio button should be set to    assessorType    BUSINESS
+
+the user checks for client side validations
+    the user should see the element                       jQuery = h2:contains("Innovation areas")
+    the user enters multiple strings into a text field    id = skillAreas    w${SPACE}    101
+    the user clicks the button/link                       jQuery = button:contains("Save and return to your skills")
+    the user should see a field and summary error         Please select an assessor type.
+    the user should see a field and summary error         Maximum word count exceeded. Please reduce your word count to 100.
+
+the user checks for serve side validations
+    the user enters multiple strings into a text field    id = skillAreas    w${SPACE}    102
+    the user clicks the button/link                       jQuery = button:contains("Save and return to your skills")
+    the user should see a field and summary error         Maximum word count exceeded. Please reduce your word count to 100.
+    browser validations have been disabled
+    the user enters multiple strings into a text field    id = skillAreas    e    5001
+    the user clicks the button/link                       jQuery = button:contains("Save and return to your skills")
+    the user should see a field and summary error         This field cannot contain more than 5,000 characters.
+
+the user enter and save the 'Your skills' details
+    the user clicks the button/link         jQuery = label:contains("Business")
+    the user enters text to a text field    id = skillAreas    assessor skill areas text
+    the user clicks the button/link         jQuery = button:contains("Save and return to your skills")
+
+the user should see the correct details
+    the user should see the element          jQuery = h3:contains("Skill areas")~ p:contains("assessor skill areas text")
+    the user should see the element          jQuery = dt:contains("Assessor type") ~ dd:contains("Business")
+    the user should see the element          jQuery = td:contains("Materials, process and manufacturing design technologies")
