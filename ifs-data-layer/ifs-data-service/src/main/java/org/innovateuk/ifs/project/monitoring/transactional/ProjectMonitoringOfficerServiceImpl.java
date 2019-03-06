@@ -64,7 +64,7 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
     @Override
     @Transactional
     public ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId) {
-       return getUser(userId)
+        return getUser(userId)
                .andOnSuccess(user -> getProject(projectId)
                        .andOnSuccessReturnVoid(project ->
                                projectMonitoringOfficerRepository.save(new ProjectMonitoringOfficer(user, project))
