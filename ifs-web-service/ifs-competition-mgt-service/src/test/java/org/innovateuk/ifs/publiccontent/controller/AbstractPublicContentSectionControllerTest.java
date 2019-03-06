@@ -2,6 +2,8 @@ package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
@@ -18,6 +20,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -89,15 +92,22 @@ public class AbstractPublicContentSectionControllerTest extends
     }
 
     @Test
-    public void markAsComplete() throws Exception {
+    public void markAsCompleteForDatesSection() throws Exception {
         CompetitionResource competition = newCompetitionResource().build();
         PublicContentResource publicContent = newPublicContentResource().build();
 
         TestPublicContentForm expectedFormToSave = new TestPublicContentForm();
+        TestPublicContentViewModel expectedViewModel = new TestPublicContentViewModel();
+
+        PublicContentSectionResource publicContentSectionResource = newPublicContentSectionResource()
+                .withType(PublicContentSectionType.DATES)
+                .build();
+        expectedViewModel.setSection(publicContentSectionResource);
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
         when(publicContentService.getCompetitionById(competition.getId())).thenReturn(publicContent);
+        when(modelPopulator.populate(publicContent, true)).thenReturn(expectedViewModel);
         when(formSaver.markAsComplete(expectedFormToSave, publicContent)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/setup/public-content/test-content-section/{competitionId}/edit", competition
@@ -105,6 +115,35 @@ public class AbstractPublicContentSectionControllerTest extends
                 .andExpect(status().isFound())
                 .andExpect(model().attribute("form", expectedFormToSave))
                 .andExpect(view().name("redirect:/competition/setup/public-content/dates/" + competition.getId()));
+
+        verify(formSaver, only()).markAsComplete(expectedFormToSave, publicContent);
+    }
+
+    @Test
+    public void markAsCompleteForSectionsOtherThanDateSection() throws Exception {
+        CompetitionResource competition = newCompetitionResource().build();
+        PublicContentResource publicContent = newPublicContentResource().build();
+
+        TestPublicContentForm expectedFormToSave = new TestPublicContentForm();
+        TestPublicContentViewModel expectedViewModel = new TestPublicContentViewModel();
+
+        PublicContentSectionResource publicContentSectionResource = newPublicContentSectionResource()
+                .withType(PublicContentSectionType.SUMMARY)
+                .build();
+        expectedViewModel.setSection(publicContentSectionResource);
+
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
+        when(publicContentService.getCompetitionById(competition.getId())).thenReturn(publicContent);
+        when(modelPopulator.populate(publicContent, true)).thenReturn(expectedViewModel);
+        when(formSaver.markAsComplete(expectedFormToSave, publicContent)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/setup/public-content/test-content-section/{competitionId}/edit", competition
+                .getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedFormToSave))
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("competition/public-content-form"));
 
         verify(formSaver, only()).markAsComplete(expectedFormToSave, publicContent);
     }
