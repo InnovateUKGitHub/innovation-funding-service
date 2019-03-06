@@ -75,16 +75,7 @@ Project details sections should not be scorable
 Application questions should be scorable
     [Documentation]    INFUND-3400 INFUND-4264
     [Tags]
-    When the user should see question details    What is the business opportunity that your project addresses?  This is the applicant response for what is the business opportunity that your project addresses?.
-    When the user should see question details    What is the size of the potential market for your project   This is the applicant response for what is the size of the potential market for your project?.
-    Then the user should see question details    How will you exploit and market your project?   This is the applicant response for how will you exploit and market your project?.
-    Then the user should see question details    What economic, social and environmental benefits do you expect your project to deliver and when   This is the applicant response for what economic, social and environmental benefits do you expect your project to deliver and when?.
-    Then the user should see question details    What technical approach will you use and how will you manage your project?  This is the applicant response for what technical approach will you use and how will you manage your project?.
-    Then the user should see question details    What is innovative about your project  This is the applicant response for what is innovative about your project?.
-    Then the user should see question details    What are the risks  This is the applicant response for what are the risks (technical, commercial and environmental) to your project's success? what is your risk management strategy?.
-    Then the user should see question details    Does your project team have the skills  This is the applicant response for does your project team have the skills, experience and facilities to deliver this project?.
-    Then the user should see question details    What will your project cost  This is the applicant response for what will your project cost?.
-    Then the user should see question details    How does financial support from Innovate UK  This is the applicant response for how does financial support from innovate uk and its funding partners add value?.
+    Given the user should see assessment question details
     [Teardown]  the user clicks the button/link   link = Back to your assessment overview
 
 Appendix can be opened on the question view
@@ -108,43 +99,34 @@ Scope: Validations
 Scope: Status in the overview is updated
     [Documentation]    INFUND-1483
     [Tags]
-    Given the user clicks the button/link                    link = Back to your assessment overview
-    And the user clicks the button/link                      link = Scope
     When the user selects the index from the drop-down menu  1    css = .research-category
     And the user clicks the button/link                      jQuery = label:contains("Yes")
     And The user enters text to a text field                 css = .editor    Testing feedback field when "Yes" is selected.
-    And the user clicks the button/link                      jquery = button:contains("Save and return to assessment overview")
-    And the user should see the element                      jQuery = li:nth-child(4) span:contains("In scope")
-    And the user should see the element                      css = .task-status-complete
+    Then the user clicks the button/link                     jquery = button:contains("Save and return to assessment overview")
+    And the user should see the element                      jQuery = li:nth-child(4) span:contains("In scope") ~ .task-status-complete
 
 Scope: Autosave
-    [Documentation]    INFUND-1483
-    ...
-    ...    INFUND-3780
+    [Documentation]    INFUND-1483  INFUND-3780
     [Tags]
-    When the user clicks the button/link               link = Scope
-    And the user should see the element                jQuery = .govuk-select:contains("Feasibility studies")
+    Given the user clicks the button/link               link = Scope
+    Then the user should see the element                jQuery = .govuk-select:contains("Feasibility studies")
     And the user should see the text in the element    css = .editor    Testing feedback field when "Yes" is selected.
 
 Scope: Word count
-    [Documentation]    INFUND-1483
-    ...
-    ...    INFUND-3400
+    [Documentation]    INFUND-1483  INFUND-3400
     [Tags]
-    When the user enters multiple strings into a text field  css = .editor  a${SPACE}  100
+    Given the user enters multiple strings into a text field  css = .editor  a${SPACE}  100
     Then the user should see the element              jQuery = span:contains("Words remaining: 0")
 
 Scope: Guidance
-    [Documentation]    INFUND-4142
-    ...
-    ...    INFUND-6281
+    [Documentation]    INFUND-4142  INFUND-6281
     [Tags]
     When the user clicks the button/link          css = details summary
     Then the user should see the element          css = div[id^="details-content-"]
     And The user should see the element           jQuery = td:contains("One or more of the above requirements have not been satisfied.")
     And The user should see the element           jQuery = td:contains("Does it meet the scope of the competition as defined in the competition brief?")
-    And the user clicks the button/link           css = details summary
-    And The user should not see the element       css = div[id^="details-content-"]
+    When the user clicks the button/link           css = details summary
+    Then The user should not see the element       css = div[id^="details-content-"]
 
 Economic Benefit: validations
     [Documentation]  IFS-508
@@ -179,34 +161,22 @@ Economic Benefit: Autosave
 
 Economic Benefit: Guidance
     [Documentation]    INFUND-6281
-    When The user clicks the button/link           css = .govuk-details__summary-text
-    Then the user should see the element           jQuery = td:contains("The project is damaging to other stakeholders with no realistic mitigation or balance described.")
-    And The user should see the element            jQuery = td:contains("The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.")
-    And The user should see the element            jQuery = td:contains("Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.")
-    And The user should see the element            jQuery = td:contains("Some positive outside benefits are defined and are realistic. Methods of addressing these opportunities are described.")
-    And The user should see the element            jQuery = td:contains("Inside and outside benefits are well defined, realistic and of significantly positive economic, environmental or social impact. Routes to exploit these benefits are also provided.")
+    Given The user clicks the button/link          css = .govuk-details__summary-text
+    Then the user should see the guidance for assessing economic benefits
     [Teardown]  The user clicks the button/link    link = Back to your assessment overview
 
 Finance overview
     [Documentation]    INFUND-3394  IFS-2854
     [Tags]  MySQL
-    When the user clicks the button/link        link = Finances overview
-    Then the user should see the element        jQuery = h2:contains("Finances summary")
-    And the finance summary total should be correct
-    And the project cost breakdown total should be correct
+    Given the user should see finance overview
     When the user sets the finance option to detailed   ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user reloads the page
-    And The user clicks the button/link          jQuery = th:contains("Mo Juggling Mo Problems Ltd") a:contains("View finances")
-    Then the user should see the element         jQuery = h2:contains("Detailed finances")
-    And the project costs are correct in the overview
-    When The user clicks the button/link         link = Back to funding
-    And The user clicks the button/link          jQuery = th:contains("University of Bath") a:contains("View finances")
-    Then the academic finances are correct
+    Then the users should see detailed finance overview
 
 Status of the application should be In Progress
     [Documentation]    INFUND-6358
     [Tags]
-    [Setup]    The user navigates to the page      ${ASSESSOR_DASHBOARD_URL}
+    Given The user navigates to the page           ${ASSESSOR_DASHBOARD_URL}
     When The user clicks the button/link           link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element           jQuery = .progress-list li:contains("Intelligent water system") strong:contains("In progress")
 
@@ -332,3 +302,36 @@ the user should see question details
     the user should see the element      jQuery = h2:contains("${question}")
     the user should see the element      jQuery = p:contains("${description}")
     The user should see the element      jQuery = label:contains("Question score")
+
+the user should see assessment question details
+    the user should see question details    What is the business opportunity that your project addresses?  This is the applicant response for what is the business opportunity that your project addresses?.
+    the user should see question details    What is the size of the potential market for your project   This is the applicant response for what is the size of the potential market for your project?.
+    the user should see question details    How will you exploit and market your project?   This is the applicant response for how will you exploit and market your project?.
+    the user should see question details    What economic, social and environmental benefits do you expect your project to deliver and when   This is the applicant response for what economic, social and environmental benefits do you expect your project to deliver and when?.
+    the user should see question details    What technical approach will you use and how will you manage your project?  This is the applicant response for what technical approach will you use and how will you manage your project?.
+    the user should see question details    What is innovative about your project  This is the applicant response for what is innovative about your project?.
+    the user should see question details    What are the risks  This is the applicant response for what are the risks (technical, commercial and environmental) to your project's success? what is your risk management strategy?.
+    the user should see question details    Does your project team have the skills  This is the applicant response for does your project team have the skills, experience and facilities to deliver this project?.
+    the user should see question details    What will your project cost  This is the applicant response for what will your project cost?.
+    the user should see question details    How does financial support from Innovate UK  This is the applicant response for how does financial support from innovate uk and its funding partners add value?.
+
+the user should see the guidance for assessing economic benefits
+    the user should see the element     jQuery = td:contains("The project is damaging to other stakeholders with no realistic mitigation or balance described.")
+    the user should see the element     jQuery = td:contains("The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.")
+    the user should see the element     jQuery = td:contains("Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.")
+    the user should see the element     jQuery = td:contains("Some positive outside benefits are defined and are realistic. Methods of addressing these opportunities are described.")
+    the user should see the element     jQuery = td:contains("Inside and outside benefits are well defined, realistic and of significantly positive economic, environmental or social impact. Routes to exploit these benefits are also provided.")
+
+the user should see finance overview
+    the user clicks the button/link        link = Finances overview
+    the user should see the element        jQuery = h2:contains("Finances summary")
+    the finance summary total should be correct
+    the project cost breakdown total should be correct
+
+the users should see detailed finance overview
+    The user clicks the button/link         jQuery = th:contains("Mo Juggling Mo Problems Ltd") a:contains("View finances")
+    the user should see the element         jQuery = h2:contains("Detailed finances")
+    the project costs are correct in the overview
+    the user clicks the button/link         link = Back to funding
+    the user clicks the button/link         jQuery = th:contains("University of Bath") a:contains("View finances")
+    the academic finances are correct

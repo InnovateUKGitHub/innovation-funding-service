@@ -32,9 +32,9 @@ Resource          ../../07__Assessor/Assessor_Commons.robot
 Summary:All the sections are present
     [Documentation]    INFUND-4648
     [Tags]  HappyPath
-    When The user clicks the button/link                    link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Given The user clicks the button/link                    link = ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see that the element is disabled    id = submit-assessment-button
-    And the user clicks the button/link                     link = Intelligent Building
+    When the user clicks the button/link                     link = Intelligent Building
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Review and complete your assessment")
     Then the user should see the element                    jQuery = h2:contains("Review assessment")
     And the user should see the element                     jQuery = legend:contains("Do you believe that this application is suitable for funding?")
@@ -44,14 +44,14 @@ Summary:All the sections are present
 Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]
-    Then The user should see the element    jQuery = .deadline:contains("days left to submit")
+    Given The user should see the element    jQuery = .deadline:contains("days left to submit")
     # And the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
     # TODO IFS-3176
 
 Summary shows questions as incomplete
     [Documentation]    INFUND-550
     [Tags]  HappyPath
-    Then the user should see the text in the element    jQuery = button:contains("Scope")    Incomplete
+    Given the user should see the text in the element    jQuery = button:contains("Scope")    Incomplete
     :FOR  ${ELEMENT}    IN   @{programme_questions}
      \    the user should see the text in the element   jQuery = button:contains("${ELEMENT}")    Incomplete
 
@@ -104,14 +104,9 @@ Summary:Assessor can return to each question
 Summary:Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
     [Tags]  HappyPath
-    When The user clicks the button/link                        jQuery = #collapsible-1 a:contains("Return to this question")
+    Given The user clicks the button/link                        jQuery = #collapsible-1 a:contains("Return to this question")
     And The user should see the element                         jQuery = h2:contains("What is the business opportunity that your project addresses?")
-    When the user selects the option from the drop-down menu    8    css = .assessor-question-score
-    And the user enters text to a text field                    css = .editor    This is a new feedback entry.
-    And the user clicks the button/link                         jQuery = a:contains("Back to your assessment overview")
-    And the user clicks the button/link                         jQuery = a:contains("Review and complete your assessment")
-    Then the user should see the element                        jQuery = p:contains("This is a new feedback entry.")
-    And the user should see the element                         jQuery = span:contains("1. Business opportunity") ~ .section-score:contains("8")
+    Then the user edit the score and description for an assessed question
 
 Summary:Funding Decision Validations
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5228
@@ -128,26 +123,16 @@ Summary:Word count check(Your feedback)
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5178  INFUND-5179
     [Tags]
     [Setup]    browser validations have been disabled
-    When the user enters multiple strings into a text field      id = feedback  t  5001
-    And the user clicks the button/link                          jQuery = .govuk-button:contains("Save assessment")
+    Given the user enters multiple strings into a text field     id = feedback  t  5001
+    When the user clicks the button/link                         jQuery = .govuk-button:contains("Save assessment")
     Then the user should see a field and summary error           This field cannot contain more than 5,000 characters.
-    When the user enters multiple strings into a text field      id = feedback  w${SPACE}  102
-    And the user clicks the button/link                          jQuery = .govuk-button:contains("Save assessment")
-    Then the user should see a field and summary error           Maximum word count exceeded. Please reduce your word count to 100.
-    And the word count should be correct                         Words remaining: -2
-    When the user enters text to a text field                    id = feedback    Testing the feedback word count.
-    Then the user should not see the element                     jQuery = .govuk-error-message:contains("Maximum word count exceeded. Please reduce your word count to 100.")
-    And the word count should be correct                         Words remaining: 95
+    And the user enter text more than maximum word count limit   feedback
+    And the user enter correct word count                        feedback
 
 Summary:Word count check(Comments for InnovateUK)
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5178  INFUND-5179
-    When the user enters multiple strings into a text field     id = comment  a${SPACE}  102
-    And the user clicks the button/link                         jQuery = .govuk-button:contains("Save assessment")
-    Then the user should see a field and summary error          Maximum word count exceeded. Please reduce your word count to 100.
-    And the word count should be correct                        Words remaining: -2
-    When the user enters text to a text field                   id = comment    Testing the comments word count.
-    Then the user should not see the element                    jQuery = .govuk-error-message:contains("Maximum word count exceeded. Please reduce your word count to 100.")
-    And the word count should be correct                        Words remaining: 95
+    Given the user enter text more than maximum word count limit  comment
+    And the user enter correct word count                        comment
 
 User Saves the Assessment as Recommended
     [Documentation]    INFUND-4996  INFUND-5765  INFUND-3726  INFUND-6040  INFUND-3724
@@ -155,11 +140,7 @@ User Saves the Assessment as Recommended
     Given the user enters text to a text field               id = feedback  ${EMPTY}
     And the user selects the radio button                    fundingConfirmation    true
     When The user clicks the button/link                     jQuery = .govuk-button:contains("Save assessment")
-    Then the user should not see the element                 jQuery = .govuk-error-message:contains("Please enter your feedback")
-    And The user should see the element                      jQuery = .status-msg:contains("Assessed")
-    And the user should see the element                      css = li:nth-child(7) .positive
-    And the user should see the element                      css = li:nth-child(7) input[type = "checkbox"] ~ label
-    And the application should have the correct status       css = .progress-list li:nth-child(7)    Assessed
+    Then the user should see correct details
 
 User Saves the Assessment as Not Recommended
     [Documentation]    INFUND-5712  INFUND-3726  INFUND-6040  INFUND-3724
@@ -170,30 +151,15 @@ User Saves the Assessment as Not Recommended
     When the user selects the radio button                   fundingConfirmation    false
     And the user enters text to a text field                 id = feedback    Negative feedback
     And The user clicks the button/link                      jQuery = .govuk-button:contains("Save assessment")
-    And The user should see the element                      css = li:nth-child(6) .negative
-    And The user should see the element                      css = li:nth-child(6) input[type = "checkbox"] ~ label
-    And the application should have the correct status       css = .progress-list li:nth-child(6)    Assessed
-    And the application should have the correct status       css = .progress-list li:nth-child(7)    Assessed
+    Then the user should see assessment as not recommended details
 
 Submit Assessments
-    [Documentation]    INFUND-5739
-    ...
-    ...    INFUND-3743
-    ...
-    ...    INFUND-6358
+    [Documentation]    INFUND-5739  INFUND-3743  INFUND-6358
     [Tags]  HappyPath
     Given the user should see the element          jQuery = .in-progress li:nth-child(7):contains("Intelligent Building")
     And the user should see that the element is disabled    id = submit-assessment-button
-    When the user clicks the button/link           css = .in-progress li:nth-child(7) input[type = "checkbox"] ~ label
-    And the user clicks the button/link            jQuery = button:contains("Submit assessments")
-    And The user clicks the button/link            jQuery = button:contains("Cancel")
-    And The user clicks the button/link            jQuery = button:contains("Submit assessments")
-    And The user clicks the button/link            jQuery = button:contains("Yes I want to submit the assessments")
-    Then the application should have the correct status    css = div.submitted    Submitted assessment
-    And the user should see the element             css = li:nth-child(6) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
-    And The user should see the element             jQuery = h4:contains("Intelligent Building")
-    And The user should see the element             jQuery = strong:contains("98")
-    And The user should not see the element         link = Intelligent Building
+    When the user submits the assessment
+    Then the user should see correct details after assessment submitted
 
 Progress of the applications in Dashboard
     [Documentation]    INFUND-3719, INFUND-9007
@@ -233,3 +199,51 @@ the progress of the applications should be correct
     Should Be Equal As Integers    ${TOTAL_PENDING}    ${EXPECTED_TOTAL_PENDING}
     ${TOTAL_ACCEPTED} =     Get text    css = .action-required .accepted-applications    #gets the total number
     Should Be Equal As Integers    ${TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_ACCEPTED}
+
+the user edit the score and description for an assessed question
+    the user selects the option from the drop-down menu    8    css = .assessor-question-score
+    the user enters text to a text field                   css = .editor    This is a new feedback entry.
+    the user clicks the button/link                        jQuery = a:contains("Back to your assessment overview")
+    the user clicks the button/link                        jQuery = a:contains("Review and complete your assessment")
+    the user should see the element                        jQuery = p:contains("This is a new feedback entry.")
+    the user should see the element                        jQuery = span:contains("1. Business opportunity") ~ .section-score:contains("8")
+
+the user enter correct word count
+    [Arguments]  ${element}
+    the user enters text to a text field            id = ${element}    Testing the feedback word count.
+    Then the user should not see the element        jQuery = .govuk-error-message:contains("Maximum word count exceeded. Please reduce your word count to 100.")
+    And the word count should be correct            Words remaining: 95
+
+the user enter text more than maximum word count limit
+    [Arguments]  ${element}
+    the user enters multiple strings into a text field     id = ${element}  w${SPACE}  102
+    the user clicks the button/link                        jQuery = .govuk-button:contains("Save assessment")
+    the user should see a field and summary error          Maximum word count exceeded. Please reduce your word count to 100.
+    the word count should be correct                       Words remaining: -2
+
+the user should see correct details
+    the user should not see the element                 jQuery = .govuk-error-message:contains("Please enter your feedback")
+    the user should see the element                     jQuery = .status-msg:contains("Assessed")
+    the user should see the element                     css = li:nth-child(7) .positive
+    the user should see the element                     css = li:nth-child(7) input[type = "checkbox"] ~ label
+    the application should have the correct status      css = .progress-list li:nth-child(7)    Assessed
+
+the user should see assessment as not recommended details
+    The user should see the element                      css = li:nth-child(6) .negative
+    the user should see the element                      css = li:nth-child(6) input[type = "checkbox"] ~ label
+    the application should have the correct status       css = .progress-list li:nth-child(6)    Assessed
+    the application should have the correct status       css = .progress-list li:nth-child(7)    Assessed
+
+the user should see correct details after assessment submitted
+    the application should have the correct status    css = div.submitted    Submitted assessment
+    the user should see the element                   css = li:nth-child(6) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
+    the user should see the element                   jQuery = h4:contains("Intelligent Building")
+    the user should see the element                   jQuery = strong:contains("98")
+    the user should not see the element               link = Intelligent Building
+
+the user submits the assessment
+    the user clicks the button/link            css = .in-progress li:nth-child(7) input[type = "checkbox"] ~ label
+    the user clicks the button/link            jQuery = button:contains("Submit assessments")
+    the user clicks the button/link            jQuery = button:contains("Cancel")
+    the user clicks the button/link            jQuery = button:contains("Submit assessments")
+    the user clicks the button/link            jQuery = button:contains("Yes I want to submit the assessments")
