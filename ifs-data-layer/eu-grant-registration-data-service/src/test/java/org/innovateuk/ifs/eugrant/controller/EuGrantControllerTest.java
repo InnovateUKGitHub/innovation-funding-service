@@ -87,4 +87,20 @@ public class EuGrantControllerTest extends MockMvcTest<EuGrantController> {
 
         verify(euGrantService).getEuGrantsByContactNotified(NOTIFIED, pageable);
     }
+
+    @Test
+    public void getTotalSubmitted() throws Exception {
+
+        long totalSubmitted = 987L;
+
+        when(euGrantService.getTotalSubmitted())
+                .thenReturn(serviceSuccess(totalSubmitted));
+
+        mockMvc.perform(
+                get("/eu-grants/total-submitted"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(totalSubmitted)));
+
+        verify(euGrantService).getTotalSubmitted();
+    }
 }

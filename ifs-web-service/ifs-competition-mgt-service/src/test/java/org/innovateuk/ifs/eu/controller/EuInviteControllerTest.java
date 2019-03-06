@@ -35,9 +35,12 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
         List<EuGrantResource> euGrantResources = singletonList(new EuGrantResource());
         EuGrantPageResource pageResource = new EuGrantPageResource();
         pageResource.setContent(euGrantResources);
+        pageResource.setTotalElements(1L);
 
         when(euInviteRestService.getEuGrantsByNotified(true, 0, 100))
                 .thenReturn(restSuccess(pageResource));
+        when(euInviteRestService.getTotalSubmittedEuGrants())
+                .thenReturn(restSuccess(5L));
 
         MvcResult result = mockMvc.perform(get("/eu-invite-notified"))
                 .andExpect(status().isOk())
@@ -45,9 +48,12 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
                 .andReturn();
 
         verify(euInviteRestService).getEuGrantsByNotified(true, 0, 100);
+        verify(euInviteRestService).getTotalSubmittedEuGrants();
 
         EuInviteViewModel model = (EuInviteViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(euGrantResources, model.getGrants());
+        assertEquals(1L, model.getTotalNotified());
+        assertEquals(4L, model.getTotalNonNotified());
     }
 
     @Test
@@ -57,9 +63,12 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
 
         EuGrantPageResource pageResource = new EuGrantPageResource();
         pageResource.setContent(euGrantResources);
+        pageResource.setTotalElements(1L);
 
         when(euInviteRestService.getEuGrantsByNotified(false, 0, 100))
                 .thenReturn(restSuccess(pageResource));
+        when(euInviteRestService.getTotalSubmittedEuGrants())
+                .thenReturn(restSuccess(10L));
 
         MvcResult result = mockMvc.perform(get("/eu-invite-non-notified"))
                 .andExpect(status().isOk())
@@ -67,9 +76,12 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
                 .andReturn();
 
         verify(euInviteRestService).getEuGrantsByNotified(false, 0, 100);
+        verify(euInviteRestService).getTotalSubmittedEuGrants();
 
         EuInviteViewModel model = (EuInviteViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(euGrantResources, model.getGrants());
+        assertEquals(9L, model.getTotalNotified());
+        assertEquals(1L, model.getTotalNonNotified());
     }
 
     @Test
