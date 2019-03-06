@@ -21,7 +21,7 @@ IFS.core.loadOrder = {
   common: {
     init: function () {
       IFS.core.collapsible.init()
-      // IFS.core.editor.init()
+      IFS.core.editor.init()
       IFS.core.autoSave.init()
       IFS.core.formValidation.init()
       IFS.core.conditionalForms.init()
@@ -33,7 +33,7 @@ IFS.core.loadOrder = {
       IFS.core.submitNotification.init()
       IFS.core.passwordToggle.init()
       IFS.core.preventInputRegex.init()
-      // IFS.core.autoComplete.init()
+      IFS.core.autoComplete.init()
     },
     finalize: function () {
       IFS.core.modal.init()

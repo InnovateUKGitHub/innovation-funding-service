@@ -7,14 +7,11 @@ IFS.core.autoComplete = (function () {
     },
     init: function () {
       // s = this.settings
-      // const countries = [
+      // var countries = [
       //   'France',
       //   'Germany',
       //   'United Kingdom'
       // ]
-      // accessibleAutocomplete.enhanceSelectElement({
-      //   selectElement: jQuery(s.autoCompleteElement)
-      // })
       // accessibleAutocomplete({
       //   element: jQuery(s.autoCompleteElement),
       //   id: jQuery(s.autoCompleteElement).attr('id'), // To match it to the existing <label>.
@@ -23,3 +20,6 @@ IFS.core.autoComplete = (function () {
     }
   }
 })()
+// accessibleAutocomplete.enhanceSelectElement({
+//   selectElement: jQuery('#test')
+// })
