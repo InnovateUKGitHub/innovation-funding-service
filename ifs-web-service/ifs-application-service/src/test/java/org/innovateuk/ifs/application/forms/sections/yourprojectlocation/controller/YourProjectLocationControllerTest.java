@@ -75,7 +75,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     private void assertViewPageSuccessful(boolean internalUser) throws Exception {
 
         YourProjectLocationViewModel viewModel =
-                new YourProjectLocationViewModel(false, "", "", applicationId, sectionId, true);
+                new YourProjectLocationViewModel(false, "", "", applicationId, sectionId, true, false);
 
         YourProjectLocationForm form = new YourProjectLocationForm("S2 5AB");
 
@@ -252,7 +252,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     private void assertPostcodeValidationErrorsWhenMarkingAsComplete(String invalidPostcode) throws Exception {
 
         YourProjectLocationViewModel viewModel =
-                new YourProjectLocationViewModel(false, "", "", applicationId, sectionId, true);
+                new YourProjectLocationViewModel(false, "", "", applicationId, sectionId, true, false);
 
         YourProjectLocationForm form = new YourProjectLocationForm(invalidPostcode.trim());
 

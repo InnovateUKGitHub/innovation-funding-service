@@ -16,16 +16,16 @@ VALUES
 
 INSERT INTO `eu_funding` (`grant_agreement_number`, `participant_id`, `eu_action_type_id`, `project_name`, `project_start_date`, `project_end_date`, `funding_contribution`, `project_coordinator`)
 VALUES
-("123", "1", 1 ,"project", now(), now(), 20, 0),
-("456", "1", 1 ,"project", now(), now(), 20, 0),
-("789", "1", 1 ,"project", now(), now(), 20, 0),
-("abc", "1", 1 ,"project", now(), now(), 20, 0),
-("def", "1", 1 ,"project", now(), now(), 20, 0),
-("ghi", "1", 1 ,"project", now(), now(), 20, 0),
-("jkl", "1", 1 ,"project", now(), now(), 20, 0),
-("mno", "1", 1 ,"project", now(), now(), 20, 0),
-("pqr", "1", 1 ,"project", now(), now(), 20, 0),
-("stv", "1", 1 ,"project", now(), now(), 20, 0);
+("123", "1", 1 ,"project", date(now()), date(now()), 20, 0),
+("456", "1", 1 ,"project", date(now()), date(now()), 20, 0),
+("789", "1", 1 ,"project", date(now()), date(now()), 20, 0),
+("abc", "1", 1 ,"project", date(now()), date(now()), 20, 0),
+("def", "1", 1 ,"project", date(now()), date(now()), 20, 0),
+("ghi", "1", 1 ,"project", date(now()), date(now()), 20, 0),
+("jkl", "1", 1 ,"project", date(now()), date(now()), 20, 0),
+("mno", "1", 1 ,"project", date(now()), date(now()), 20, 0),
+("pqr", "1", 1 ,"project", date(now()), date(now()), 20, 0),
+("stv", "1", 1 ,"project", date(now()), date(now()), 20, 0);
 
 INSERT INTO `eu_grant` (`id`, `eu_organisation_id`, `eu_contact_id`, `eu_funding_id`, `submitted`, `short_code`, `created_on`, `modified_on`)
 VALUES

@@ -28,7 +28,7 @@
             <section class="govuk-tabs__panel">
                 <form method="POST"
                       th:action="@{/eu-send-invites}"
-                      th:object="${euContactSelectionForm}"
+                      th:object="${euGrantSelectionForm}"
                       data-select=""
                       autocomplete="off">
                     <div class="govuk-grid-row sorting">
@@ -62,19 +62,22 @@
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header width-150" scope="col"><span class="visually-hidden">Selected</span></th>
                                 <th class="govuk-table__header" scope="col">Name</th>
+                                <th class="govuk-table__header" scope="col">Project name</th>
+                                <th class="govuk-table__header" scope="col">Organisation Type</th>
+                                <th class="govuk-table__header" scope="col">Reference code</th>
                                 <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Email</th>
                             </tr>
                             </thead>
                             <tbody class="govuk-table__body">
-                            <tr class="govuk-table__row"  th:each="contact, index : ${model.contacts}">
+                            <tr class="govuk-table__row"  th:each="grant, index : ${model.grants}">
                                 <td class="govuk-table__cell">
                                     <div class="govuk-checkboxes">
                                         <div class="govuk-checkboxes__item">
                                             <input type="checkbox"
                                                    class="govuk-checkboxes__input"
                                                    th:id="|registrant-${index.count}|"
-                                                   th:field="*{euContactIds}"
-                                                   th:value="${contact.id}"/>
+                                                   th:field="*{euGrantIds}"
+                                                   th:value="${grant.id}"/>
                                             <label th:for="|registrant-${index.count}|"
                                                    class="govuk-label govuk-checkboxes__label">
                                                 <span class="govuk-visually-hidden">Add</span>
@@ -82,8 +85,11 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="govuk-table__cell" th:text="${contact.name}">Steve Smith</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${contact.email}">steve.smith@empire.com</td>
+                                <td class="govuk-table__cell" th:text="${grant.contact.name}">Steve Smith</td>
+                                <td class="govuk-table__cell" th:text="${grant.funding.projectName}">Project name</td>
+                                <td class="govuk-table__cell" th:text="${grant.organisation.organisationType}">Organisation Type</td>
+                                <td class="govuk-table__cell" th:text="${grant.shortCode}">Reference code</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${grant.contact.email}">steve.smith@empire.com</td>
                             </tr>
                             </tbody>
                         </table>

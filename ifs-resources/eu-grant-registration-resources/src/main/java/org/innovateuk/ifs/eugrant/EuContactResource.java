@@ -16,8 +16,6 @@ public class EuContactResource {
 
     private String telephone;
 
-    private boolean notified;
-
     public EuContactResource() {
     }
 
@@ -27,7 +25,6 @@ public class EuContactResource {
         this.jobTitle = jobTitle;
         this.email = email;
         this.telephone = telephone;
-        this.notified = notified;
     }
 
     public EuContactResource(String name, String jobTitle, String email, String telephone) {
@@ -35,7 +32,6 @@ public class EuContactResource {
         this.jobTitle = jobTitle;
         this.email = email;
         this.telephone = telephone;
-        this.notified = false;
     }
 
     public Long getId() {
@@ -78,14 +74,6 @@ public class EuContactResource {
         this.telephone = telephone;
     }
 
-    public boolean getNotified() {
-        return notified;
-    }
-
-    public void setNotified(boolean notified) {
-        this.notified = notified;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,7 +88,6 @@ public class EuContactResource {
                 .append(email, that.email)
                 .append(jobTitle, that.jobTitle)
                 .append(telephone, that.telephone)
-                .append(notified, that.notified)
                 .isEquals();
     }
 
@@ -112,7 +99,6 @@ public class EuContactResource {
                 .append(email)
                 .append(jobTitle)
                 .append(telephone)
-                .append(notified)
                 .toHashCode();
     }
 }

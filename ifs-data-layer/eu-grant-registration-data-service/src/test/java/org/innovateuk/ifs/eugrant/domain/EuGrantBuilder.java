@@ -44,4 +44,7 @@ public class EuGrantBuilder extends BaseBuilder<EuGrant, EuGrantBuilder> {
         return withArray((funding, grant) -> grant.setFunding(funding), fundings);
     }
 
+    public EuGrantBuilder withNotified(Boolean... notifiedStatuses) {
+        return withArray((notifiedStatus, grant) -> grant.setNotified(notifiedStatus), notifiedStatuses);
+    }
 }
