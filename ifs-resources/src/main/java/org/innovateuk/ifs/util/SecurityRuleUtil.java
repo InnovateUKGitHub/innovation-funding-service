@@ -47,6 +47,10 @@ public final class SecurityRuleUtil {
         return user.hasRole(STAKEHOLDER);
     }
 
+    public static boolean isMonitoringOfficer(UserResource user) {
+        return user.hasRole(MONITORING_OFFICER);
+    }
+
     public static boolean isIFSAdmin(UserResource user) {
         return user.hasRole(IFS_ADMINISTRATOR);
     }
