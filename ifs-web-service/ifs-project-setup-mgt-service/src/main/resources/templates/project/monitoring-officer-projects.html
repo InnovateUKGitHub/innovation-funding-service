@@ -21,12 +21,12 @@
                 <form th:action="@{/monitoring-officer/{projectMonitoringOfficerId}/assign(projectMonitoringOfficerId=${model.projectMonitoringOfficerId})}"
                       method="POST">
                     <div class="govuk-form-group">
-                        <label class="govuk-label" th:for="${form.projectNumber}">
+                        <label class="govuk-label" for="select-project">
                             Select a project to assign
                         </label>
                         <select th:field="${form.projectNumber}"
                                 class="govuk-select"
-                                id="test"
+                                id="select-project"
                                 data-auto-complete="">
                             <option th:each="project : ${model.unassignedProjects}"
                                     th:value="${project.projectNumber}"

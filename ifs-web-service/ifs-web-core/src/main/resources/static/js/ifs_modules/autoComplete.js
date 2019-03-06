@@ -1,25 +1,19 @@
 IFS.core.autoComplete = (function () {
   'use strict'
-  // var s // private alias to settings
+  var s // private alias to settings
   return {
     settings: {
-      autoCompleteElement: '[data-auto-complete]'
+      autoCompleteElement: '[data-auto-complete]',
+      autoCompletePlugin: accessibleAutocomplete // eslint-disable-line
     },
     init: function () {
-      // s = this.settings
-      // var countries = [
-      //   'France',
-      //   'Germany',
-      //   'United Kingdom'
-      // ]
-      // accessibleAutocomplete({
-      //   element: jQuery(s.autoCompleteElement),
-      //   id: jQuery(s.autoCompleteElement).attr('id'), // To match it to the existing <label>.
-      //   source: countries
-      // })
+      s = this.settings
+      var autoCompleteElement = jQuery(s.autoCompleteElement)
+      if (autoCompleteElement) {
+        s.autoCompletePlugin.enhanceSelectElement({
+          selectElement: autoCompleteElement[0]
+        })
+      }
     }
   }
 })()
-// accessibleAutocomplete.enhanceSelectElement({
-//   selectElement: jQuery('#test')
-// })
