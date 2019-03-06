@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignProjectForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -13,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.function.Supplier;
 
 import static java.lang.String.format;
 
@@ -30,8 +33,12 @@ public class MonitoringOfficerController {
 
     private final MonitoringOfficerProjectsViewModelPopulator modelPopulator;
 
-    public MonitoringOfficerController(MonitoringOfficerProjectsViewModelPopulator modelPopulator) {
+    private final ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
+
+    public MonitoringOfficerController(MonitoringOfficerProjectsViewModelPopulator modelPopulator,
+                                       ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService) {
         this.modelPopulator = modelPopulator;
+        this.projectMonitoringOfficerRestService = projectMonitoringOfficerRestService;
     }
 
     @GetMapping("/projects")
@@ -41,10 +48,13 @@ public class MonitoringOfficerController {
         return "project/monitoring-officer-projects";
     }
 
-    @GetMapping("/unassign")
-    public String unassignProject(@PathVariable long monitoringOfficerId) {
-        // TODO
-        return monitoringOfficerProjectsRedirect(monitoringOfficerId);
+    @GetMapping("/unassign/{projectId}")
+    public String unassignProject(@PathVariable long monitoringOfficerId,
+                                  @PathVariable long projectId) {
+        return projectMonitoringOfficerRestService
+                .unassignMonitoringOfficerFromProject(monitoringOfficerId, projectId)
+                .andOnSuccessReturn(() -> monitoringOfficerProjectsRedirect(monitoringOfficerId))
+                .getSuccess();
     }
 
     @PostMapping("/assign")
@@ -52,9 +62,15 @@ public class MonitoringOfficerController {
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerAssignProjectForm form,
                                 BindingResult bindingResult,
                                 ValidationHandler validationHandler,
+                                Model model,
                                 UserResource user) {
-        // TODO
-        return monitoringOfficerProjectsRedirect(monitoringOfficerId);
+
+        Supplier<String> failureView = () -> viewProjects(monitoringOfficerId, model);
+        RestResult<Void> result = projectMonitoringOfficerRestService.assignMonitoringOfficerToProject(monitoringOfficerId, form.getProjectNumber());
+
+        return validationHandler
+                .addAnyErrors(result)
+                .failNowOrSucceedWith(failureView, () -> monitoringOfficerProjectsRedirect(monitoringOfficerId));
     }
 
     private static String monitoringOfficerProjectsRedirect(long monitoringOfficerId) {

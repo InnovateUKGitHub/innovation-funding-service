@@ -8,4 +8,10 @@ public interface ProjectMonitoringOfficerService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<ProjectMonitoringOfficerResource> getProjectMonitoringOfficer(long userId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<Void> unassignProjectFromMonitoringOfficer(long userId, long projectId);
 }

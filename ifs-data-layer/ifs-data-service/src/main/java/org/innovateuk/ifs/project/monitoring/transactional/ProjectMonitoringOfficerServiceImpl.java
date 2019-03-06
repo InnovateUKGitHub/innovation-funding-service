@@ -3,18 +3,15 @@ package org.innovateuk.ifs.project.monitoring.transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.mapper.MonitoringOfficerInviteMapper;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
+import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
-import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -34,21 +31,10 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
 
     private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteService.class);
 
+    // TODO move autowireds to constructor
 
     @Autowired
-    private MonitoringOfficerInviteRepository monitoringOfficerInviteRepository;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private LoggedInUserSupplier loggedInUserSupplier;
-
-    @Autowired
-    private MonitoringOfficerInviteMapper monitoringOfficerInviteMapper;
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -75,8 +61,30 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
                 );
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId) {
+       return getUser(userId)
+               .andOnSuccess(user -> getProject(projectId)
+                       .andOnSuccessReturnVoid(project ->
+                               projectMonitoringOfficerRepository.save(new ProjectMonitoringOfficer(user, project))
+                       )
+               );
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> unassignProjectFromMonitoringOfficer(long userId, long projectId) {
+        projectMonitoringOfficerRepository.deleteByUserIdAndProjectId(userId, projectId);
+        return serviceSuccess();
+    }
+
     private ServiceResult<User> getUser(long userId) {
         return find(userRepository.findById(userId), notFoundError(User.class, userId));
+    }
+
+    private ServiceResult<Project> getProject(long projectId) {
+        return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId));
     }
 
     private ServiceResult<List<MonitoringOfficerAssignedProjectResource>> getAssignedProjects(long userId) {
