@@ -64,7 +64,7 @@ public class GrantTransferDetailsSaverTest {
         assertEquals(grantTransferResource.getGrantAgreementNumber(), form.getGrantAgreementNumber());
         assertEquals(grantTransferResource.getActionType().getId(), form.getActionType());
         assertEquals(grantTransferResource.getFundingContribution(), form.getFundingContribution());
-        assertEquals(grantTransferResource.isProjectCoordinator(), form.getProjectCoordinator());
+        assertEquals(grantTransferResource.getProjectCoordinator(), form.getProjectCoordinator());
         assertEquals(grantTransferResource.getProjectStartDate().getMonth().getValue(), form.getStartDateMonth().intValue());
         assertEquals(grantTransferResource.getProjectStartDate().getYear(), form.getStartDateYear().intValue());
         assertEquals(grantTransferResource.getProjectEndDate().getMonth().getValue(), form.getEndDateMonth().intValue());

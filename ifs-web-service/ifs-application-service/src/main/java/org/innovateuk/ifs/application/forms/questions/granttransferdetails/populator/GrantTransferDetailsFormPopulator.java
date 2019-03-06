@@ -25,7 +25,7 @@ public class GrantTransferDetailsFormPopulator {
             fundingForm.setFundingContribution(euGrantResource.getFundingContribution());
             fundingForm.setGrantAgreementNumber(euGrantResource.getGrantAgreementNumber());
             fundingForm.setParticipantId(euGrantResource.getParticipantId());
-            fundingForm.setProjectCoordinator(euGrantResource.isProjectCoordinator());
+            fundingForm.setProjectCoordinator(euGrantResource.getProjectCoordinator());
             fundingForm.setProjectName(euGrantResource.getProjectName());
             if (euGrantResource.getProjectStartDate() != null) {
                 fundingForm.setStartDateMonth(euGrantResource.getProjectStartDate().getMonthValue());

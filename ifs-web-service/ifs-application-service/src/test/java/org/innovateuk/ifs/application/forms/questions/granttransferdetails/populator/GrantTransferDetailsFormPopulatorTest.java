@@ -53,7 +53,7 @@ public class GrantTransferDetailsFormPopulatorTest {
         assertEquals(euFundingResource.getGrantAgreementNumber(), grantTransferDetailsForm.getGrantAgreementNumber());
         assertEquals(euFundingResource.getActionType().getId(), grantTransferDetailsForm.getActionType());
         assertEquals(euFundingResource.getFundingContribution(), grantTransferDetailsForm.getFundingContribution());
-        assertEquals(euFundingResource.isProjectCoordinator(), grantTransferDetailsForm.getProjectCoordinator());
+        assertEquals(euFundingResource.getProjectCoordinator(), grantTransferDetailsForm.getProjectCoordinator());
         assertEquals(euFundingResource.getProjectStartDate().getMonth().getValue(), grantTransferDetailsForm.getStartDateMonth().intValue());
         assertEquals(euFundingResource.getProjectStartDate().getYear(), grantTransferDetailsForm.getStartDateYear().intValue());
         assertEquals(euFundingResource.getProjectEndDate().getMonth().getValue(), grantTransferDetailsForm.getEndDateMonth().intValue());

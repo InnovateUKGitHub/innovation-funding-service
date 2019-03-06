@@ -20,7 +20,7 @@ public class EuGrantTransferResource {
 
     private BigDecimal fundingContribution;
 
-    private boolean projectCoordinator;
+    private Boolean projectCoordinator;
 
     private EuActionTypeResource actionType;
 
@@ -33,7 +33,7 @@ public class EuGrantTransferResource {
                              LocalDate projectStartDate,
                              LocalDate projectEndDate,
                              BigDecimal fundingContribution,
-                             boolean projectCoordinator,
+                             Boolean projectCoordinator,
                              EuActionTypeResource actionType) {
         this.grantAgreementNumber = grantAgreementNumber;
         this.participantId = participantId;
@@ -93,11 +93,11 @@ public class EuGrantTransferResource {
         this.fundingContribution = fundingContribution;
     }
 
-    public boolean isProjectCoordinator() {
+    public Boolean getProjectCoordinator() {
         return projectCoordinator;
     }
 
-    public void setProjectCoordinator(boolean projectCoordinator) {
+    public void setProjectCoordinator(Boolean projectCoordinator) {
         this.projectCoordinator = projectCoordinator;
     }
 

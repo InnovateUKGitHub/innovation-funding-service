@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Action type rest service.
+ */
 @Service
 public class ActionTypeRestServiceImpl extends BaseRestService implements ActionTypeRestService {
     private static final String baseURL = "/action-type";

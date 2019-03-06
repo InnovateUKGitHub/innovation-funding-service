@@ -3,7 +3,6 @@ package org.innovateuk.ifs.granttransfer.transactional;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
@@ -33,6 +32,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
@@ -193,7 +193,7 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
                 .withProjectName("Project name")
                 .build();
 
-        Application application = ApplicationBuilder.newApplication().build();
+        Application application = newApplication().build();
         EuGrantTransfer grantTransfer = newEuGrantTransfer()
                 .withApplication(application)
                 .build();
@@ -210,7 +210,7 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
         assertEquals(grantTransfer.getParticipantId(), grantTransferResource.getParticipantId());
         assertEquals(grantTransfer.getProjectEndDate(), grantTransferResource.getProjectEndDate());
         assertEquals(grantTransfer.getProjectStartDate(), grantTransferResource.getProjectStartDate());
-        assertEquals(grantTransfer.isProjectCoordinator(), grantTransferResource.isProjectCoordinator());
+        assertEquals(grantTransfer.getProjectCoordinator(), grantTransferResource.getProjectCoordinator());
 
         assertEquals(application.getName(), grantTransferResource.getProjectName());
     }

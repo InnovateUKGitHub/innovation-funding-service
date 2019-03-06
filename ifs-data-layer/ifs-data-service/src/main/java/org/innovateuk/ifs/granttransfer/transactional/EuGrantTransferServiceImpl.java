@@ -110,7 +110,7 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
             domain.setProjectStartDate(euGrantTransferResource.getProjectStartDate());
             domain.setProjectEndDate(euGrantTransferResource.getProjectEndDate());
             domain.setFundingContribution(euGrantTransferResource.getFundingContribution());
-            domain.setProjectCoordinator(euGrantTransferResource.isProjectCoordinator());
+            domain.setProjectCoordinator(euGrantTransferResource.getProjectCoordinator());
 
             EuActionType type = new EuActionType();
             type.setId(euGrantTransferResource.getActionType().getId());

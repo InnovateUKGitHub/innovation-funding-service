@@ -7,6 +7,9 @@ import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class to save the GrantTransferDetailsForm.
+ */
 @Component
 public class GrantTransferDetailsSaver {
 

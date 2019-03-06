@@ -95,6 +95,7 @@
                         <legend id="startDate" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                             Project start date
                         </legend>
+                        <p class="govuk-hint">For example, 03 2018</p>
                         <th:block th:if="${#fields.hasErrors('startDate*')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('startDate*')}"
                                   th:text="${err}"></span>
@@ -158,6 +159,7 @@
                         <legend id="endDate" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                             Project end date
                         </legend>
+                        <p class="govuk-hint">For example, 09 2020</p>
                         <th:block th:if="${#fields.hasErrors('endDate*')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('endDate*')}"
                                   th:text="${err}"></span>
