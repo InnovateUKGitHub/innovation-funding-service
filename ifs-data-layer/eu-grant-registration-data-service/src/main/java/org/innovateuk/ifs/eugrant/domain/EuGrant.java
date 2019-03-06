@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import static java.time.ZonedDateTime.now;
+
 /**
  * Registers EU Grant funding for a UK Organisation.
  */
@@ -39,6 +41,8 @@ public class EuGrant {
     private boolean notified;
 
     private String shortCode;
+
+    private ZonedDateTime notifiedOn;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -127,7 +131,12 @@ public class EuGrant {
         return notified;
     }
 
-    public void setNotified(boolean notified) {
-        this.notified = notified;
+    public void markNotificationSent() {
+        this.notified = true;
+        this.notifiedOn = now();
+    }
+
+    public ZonedDateTime getNotifiedOn() {
+        return notifiedOn;
     }
 }

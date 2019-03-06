@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -43,7 +44,7 @@ public class EuInviteServiceImpl implements EuInviteService {
     public ServiceResult<Void> sendInvites(List<UUID> euGrantIds) {
         euGrantIds
                 .forEach(id -> sendInvite(id)
-                        .andOnSuccessReturnVoid(euGrant -> euGrant.setNotified(true))
+                        .andOnSuccessReturnVoid(EuGrant::markNotificationSent)
                 );
 
         return serviceSuccess();

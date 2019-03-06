@@ -3,6 +3,7 @@ package org.innovateuk.ifs.eugrant;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 /**
@@ -27,6 +28,8 @@ public class EuGrantResource {
     private String shortCode;
 
     private boolean notified;
+
+    private ZonedDateTime notifiedOn;
 
     public UUID getId() {
         return id;
@@ -100,6 +103,14 @@ public class EuGrantResource {
         this.notified = notified;
     }
 
+    public ZonedDateTime getNotifiedOn() {
+        return notifiedOn;
+    }
+
+    public void setNotifiedOn(ZonedDateTime notifiedOn) {
+        this.notifiedOn = notifiedOn;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -118,6 +129,7 @@ public class EuGrantResource {
                 .append(funding, that.funding)
                 .append(shortCode, that.shortCode)
                 .append(notified, that.notified)
+                .append(notifiedOn, that.notifiedOn)
                 .isEquals();
     }
 
@@ -133,6 +145,7 @@ public class EuGrantResource {
                 .append(fundingComplete)
                 .append(shortCode)
                 .append(notified)
+                .append(notifiedOn)
                 .toHashCode();
     }
 }
