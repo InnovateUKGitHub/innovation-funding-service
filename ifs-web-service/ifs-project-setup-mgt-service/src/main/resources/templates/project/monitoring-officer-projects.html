@@ -25,7 +25,9 @@
                             Select a project to assign
                         </label>
                         <select th:field="${form.projectNumber}"
-                                class="govuk-select">
+                                class="govuk-select"
+                                id="test"
+                                data-auto-complete="">
                             <option th:each="project : ${model.unassignedProjects}"
                                     th:value="${project.projectNumber}"
                                     th:text="|${project.projectNumber} - ${project.projectName}|"></option>

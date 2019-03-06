@@ -4,6 +4,15 @@ $(document).ready(function () {
 
 	// Initialise all GOVUK javascript components
 	window.GOVUKFrontend.initAll()
+  // accessibleAutocomplete.enhanceSelectElement({
+  //   selectElement: jQuery('[data-auto-complete]')
+  // })
+  if(document.querySelector('#test')) {
+    accessibleAutocomplete.enhanceSelectElement({
+      selectElement: document.querySelector('#test')
+    })
+  }
+
 })
 
 $(window).load(function () {

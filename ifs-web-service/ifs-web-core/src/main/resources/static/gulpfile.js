@@ -31,7 +31,7 @@ var vendorJsFiles = [
   nodeModulesPath + 'jquery-ui/ui/tabbable.js',
   nodeModulesPath + 'jquery-ui/ui/widget.js',
   nodeModulesPath + 'accessible-autocomplete/dist/accessible-autocomplete.min.js',
-	govukFrontendPath + 'all.js',
+  govukFrontendPath + 'all.js',
   __dirname + '/js/vendor/govuk/application.js',
   __dirname + '/js/vendor/govuk/govuk-cookies.js',
   __dirname + '/js/vendor/wysiwyg-editor/*.js',
