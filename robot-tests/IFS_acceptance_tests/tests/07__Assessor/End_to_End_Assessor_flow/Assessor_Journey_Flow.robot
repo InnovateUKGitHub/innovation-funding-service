@@ -172,7 +172,8 @@ comp admin navigate to manage applications
 
 comp admin allocate application to an assessor
     the user clicks the button/link        jQuery = tr:nth-child(1) a:contains("View progress")
-    the user clicks the button/link        link = 41 to 44
+    the user clicks the button/link        jQuery = a:contains("21")
+    the user clicks the button/link        jQuery = a:contains("41")
     the user clicks the button/link        jQuery = tr:contains("Tom Fister") button:contains("Assign")
     the user clicks the button/link        jQuery = a:contains("Allocate applications")
     the user clicks the button/link        jQuery = a:contains("Manage assessments")
