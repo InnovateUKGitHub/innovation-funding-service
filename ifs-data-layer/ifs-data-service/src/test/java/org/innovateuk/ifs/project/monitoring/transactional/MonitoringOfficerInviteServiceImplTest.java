@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest<MonitoringOfficerInviteServiceImpl> {
+public class MonitoringOfficerInviteServiceImplTest extends BaseServiceUnitTest<MonitoringOfficerInviteServiceImpl> {
 
     @Mock
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepositoryMock;

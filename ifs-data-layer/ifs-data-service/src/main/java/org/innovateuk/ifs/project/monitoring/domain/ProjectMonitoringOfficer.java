@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONI
 @DiscriminatorValue("PROJECT_MONITORING_OFFICER")
 public class ProjectMonitoringOfficer extends ProjectParticipant {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "projectId", referencedColumnName = "id")
     private Project project;
 

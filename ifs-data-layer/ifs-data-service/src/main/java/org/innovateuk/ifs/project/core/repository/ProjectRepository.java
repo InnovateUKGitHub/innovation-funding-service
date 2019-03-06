@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.Collection;
 import java.util.List;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+
 public interface ProjectRepository extends PagingAndSortingRepository<Project, Long>{
 
     String PROJECTS_BY_APP_ID_LIKE_AND_COMP_ID_AND_NOT_IN_STATE = "SELECT DISTINCT pp.target FROM ProjectProcess pp " +
@@ -26,5 +28,9 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
 
     List<Project> findByProjectMonitoringOfficerUserId(long userId);
 
-    List<Project> findByProjectMonitoringOfficerIsNull(); // TODO what are the rules for assignable projects?
+    List<Project> findByProjectMonitoringOfficerIdIsNull(); // TODO what are the rules for assignable projects?
+
+    default List<Project> findAssignable() {
+        return simpleFilter(findAll(), t -> !t.getProjectMonitoringOfficer().isPresent());
+    }
 }

@@ -84,9 +84,7 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
     }
 
     private ServiceResult<List<MonitoringOfficerUnassignedProjectResource>> getUnassignedProjects() {
-        // TODO fix this -- isn't returning unassign projects
-//        return ServiceResult.aggregate(simpleMap(projectRepository.findByProjectMonitoringOfficerIsNull(), this::mapToUnassignedProject));
-        return ServiceResult.aggregate(simpleMap(projectRepository.findAll(), this::mapToUnassignedProject));
+        return ServiceResult.aggregate(simpleMap(projectRepository.findByProjectMonitoringOfficerIdIsNull(), this::mapToUnassignedProject));
     }
 
     private ServiceResult<MonitoringOfficerAssignedProjectResource> mapToAssignedProject(Project project) {
