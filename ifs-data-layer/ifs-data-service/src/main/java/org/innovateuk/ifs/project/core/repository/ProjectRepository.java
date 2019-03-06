@@ -23,4 +23,8 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
 
     @Query(PROJECTS_BY_APP_ID_LIKE_AND_COMP_ID_AND_NOT_IN_STATE)
     List<Project> searchByCompetitionIdAndApplicationIdLikeAndProjectStateNotIn(@Param("compId") long competitionId, @Param("applicationSearchString") String applicationSearchString, @Param("states") Collection<ProjectState> projectStates);
+
+    List<Project> findByProjectMonitoringOfficerUserId(long userId);
+
+    List<Project> findByProjectMonitoringOfficerIsNull(); // TODO what are the rules for assignable projects?
 }

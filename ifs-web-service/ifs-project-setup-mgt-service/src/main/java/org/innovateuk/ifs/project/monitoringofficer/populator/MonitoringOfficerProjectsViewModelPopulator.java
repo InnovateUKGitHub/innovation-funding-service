@@ -26,7 +26,7 @@ public class MonitoringOfficerProjectsViewModelPopulator {
                 projectMonitoringOfficerRestService.getProjectMonitoringOfficer(monitoringOfficerId).getSuccess();
 
         return new MonitoringOfficerProjectsViewModel(
-                projectMonitoringOfficerResource.getId(),
+                projectMonitoringOfficerResource.getUserId(),
                 projectMonitoringOfficerResource.getFullName(),
                 1,
                 singletonList(new MonitoringOfficerAssignedProjectViewModel(
