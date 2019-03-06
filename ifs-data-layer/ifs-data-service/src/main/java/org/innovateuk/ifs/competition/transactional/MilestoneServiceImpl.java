@@ -39,7 +39,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS);
 
     private static final List<MilestoneType> HORIZON_PUBLIC_MILESTONES =
-            asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.SUBMISSION_DATE);
+            asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE);
 
     @Autowired
     private MilestoneRepository milestoneRepository;
