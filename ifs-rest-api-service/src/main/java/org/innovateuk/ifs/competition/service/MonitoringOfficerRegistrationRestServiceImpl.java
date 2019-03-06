@@ -11,7 +11,7 @@ import static java.lang.String.format;
 @Service
 public class MonitoringOfficerRegistrationRestServiceImpl extends BaseRestService implements MonitoringOfficerRegistrationRestService {
 
-    private static final String BASE_URL = "/monitoring-officer";
+    private static final String BASE_URL = "/monitoring-officer-registration";
 
     @Override
     public RestResult<MonitoringOfficerInviteResource> getMonitoringOfficerInvite(String inviteHash) {
