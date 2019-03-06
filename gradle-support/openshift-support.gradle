@@ -309,12 +309,6 @@ task createProject(dependsOn: deleteProject) {
             args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
         }
         
-        if (openshiftEnv.startsWith("ifs-zp-")) {
-            exec {
-                executable = 'setup-files/scripts/openshift/prep-dockerfile-for-at.sh'
-            }
-        }
-
         if (openshiftEnv.startsWith("ifs-at-")) {
 
             exec {
