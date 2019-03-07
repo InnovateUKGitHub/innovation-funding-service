@@ -14,6 +14,7 @@ import org.innovateuk.ifs.granttransfer.domain.EuActionType;
 import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
 import org.innovateuk.ifs.granttransfer.mapper.EuGrantTransferMapper;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
+import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
 import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -112,9 +113,13 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
             domain.setFundingContribution(euGrantTransferResource.getFundingContribution());
             domain.setProjectCoordinator(euGrantTransferResource.getProjectCoordinator());
 
-            EuActionType type = new EuActionType();
-            type.setId(euGrantTransferResource.getActionType().getId());
-            domain.setActionType(type);
+            ofNullable(euGrantTransferResource.getActionType())
+                    .map(EuActionTypeResource::getId)
+                    .ifPresent(id -> {
+                        EuActionType type = new EuActionType();
+                        type.setId(id);
+                        domain.setActionType(type);
+                    });
 
             domain.getApplication().setName(euGrantTransferResource.getProjectName());
         });
@@ -133,6 +138,7 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
             application.setId(applicationId);
             grantTransfer.setApplication(application);
             grantTransfer = euGrantTransferRepository.save(grantTransfer);
+            euGrantTransferRepository.refresh(grantTransfer);
         }
         return serviceSuccess(grantTransfer);
 
