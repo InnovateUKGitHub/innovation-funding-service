@@ -18,6 +18,8 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               IFS-1969 As a comp exec I am able to set a Funding type of Loan in Public content > Summary
 ...
 ...               IFS-4982 Move Funding type selection from front door to Initial details
+...
+...               IFS-5370 Public content review button is always redirecting to Dates page
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  MySQL
@@ -315,7 +317,7 @@ Publish public content: Publish once all sections are complete
     Then the user clicks the button/link                jQuery = a:contains("Public content")
 
 User can view the competition url for invite only competitions
-    [Documentation]    IFS-262
+    [Documentation]    IFS-262  IFS-5370
     [Tags]
     Given the user should not see the element           jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
     When the user clicks the button/link                jQuery = a:contains("${server}/competition/${competitionId}/overview")
@@ -325,7 +327,8 @@ User can view the competition url for invite only competitions
     When the user clicks the button/link                link = Competition information and search
     And the user clicks the button/link                 link = Edit
     Then the user selects the radio button              publishSetting  public
-    And the user clicks the button/link                 jQuery = button:contains("Publish and review")
+    When the user clicks the button/link                jQuery = button:contains("Publish and review")
+    Then the user should see the element                jQuery = h1:contains("Competition information and search")
     And the user clicks the button/link                 link = Return to public content
     Then the user should see the element                jQuery = .message-alert:contains("This information will be publicly viewable by prospective applicants.")
     And the user should not see the element             jQuery = p:contains("Competition URL:")
@@ -355,7 +358,7 @@ Guest user not find the invite only competition by Keywords
     Then the user should not see the element   jQuery = a:contains("${public_content_competition_name}")
 
 The user is able to make the competition public
-    [Documentation]  IFS-261, IFS-179
+    [Documentation]  IFS-261, IFS-179  IFS-5370
     [Tags]
     [Setup]  The user logs-in in new browser             &{Comp_admin1_credentials}
     Given the internal user navigates to public content  ${public_content_competition_name}
@@ -364,7 +367,8 @@ The user is able to make the competition public
     And the user clicks the button/link                  link = Edit
     Then the user selects the radio button               publishSetting  public
     And the user clicks the button/link                  jQuery = .govuk-button:contains("Publish and review")
-    And the user clicks the button/link                  link = Return to public content
+    When the user clicks the button/link                 link = Return to public content
+    And the user should redirect to the correct page after publish and review
     Then the user should see the element                 jQuery = .button-secondary:contains("Return to setup overview")
     [Teardown]  the user logs out if they are logged in
 
@@ -570,3 +574,19 @@ the user should see all sections completed
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+the user should redirect to the correct page after publish and review
+    the user able to see edit view for  Summary
+    the user able to see edit view for  Eligibility
+    the user able to see edit view for  Scope
+    the user able to see edit view for  Dates
+    the user able to see edit view for  How to apply
+    the user able to see edit view for  Supporting information
+
+the user able to see edit view for
+    [Arguments]  ${section_name}
+    the user clicks the button/link    link = ${section_name}
+    the user clicks the button/link    link = Edit
+    the user clicks the button/link    jQuery = button:contains("Publish and review")
+    the user should see the element    jQuery = h1:contains("${section_name}")
+    the user clicks the button/link    link = Return to public content
