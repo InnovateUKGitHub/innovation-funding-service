@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType.DATES;
+import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType.SUMMARY;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
 import static org.mockito.Mockito.*;
@@ -100,7 +102,7 @@ public class AbstractPublicContentSectionControllerTest extends
         TestPublicContentViewModel expectedViewModel = new TestPublicContentViewModel();
 
         PublicContentSectionResource publicContentSectionResource = newPublicContentSectionResource()
-                .withType(PublicContentSectionType.DATES)
+                .withType(DATES)
                 .build();
         expectedViewModel.setSection(publicContentSectionResource);
 
@@ -128,7 +130,7 @@ public class AbstractPublicContentSectionControllerTest extends
         TestPublicContentViewModel expectedViewModel = new TestPublicContentViewModel();
 
         PublicContentSectionResource publicContentSectionResource = newPublicContentSectionResource()
-                .withType(PublicContentSectionType.SUMMARY)
+                .withType(SUMMARY)
                 .build();
         expectedViewModel.setSection(publicContentSectionResource);
 
