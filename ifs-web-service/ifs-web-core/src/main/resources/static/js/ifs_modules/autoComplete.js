@@ -9,7 +9,7 @@ IFS.core.autoComplete = (function () {
     init: function () {
       s = this.settings
       var autoCompleteElement = jQuery(s.autoCompleteElement)
-      if (autoCompleteElement) {
+      if (autoCompleteElement.length > 0) {
         s.autoCompletePlugin.enhanceSelectElement({
           selectElement: autoCompleteElement[0]
         })
