@@ -52,7 +52,9 @@ public class EuGrant {
     private ZonedDateTime modifiedOn;
 
     public EuGrant() {
+
         this.submitted = false;
+        this.notified = false;
     }
 
     public EuGrant submit(String shortCode) {

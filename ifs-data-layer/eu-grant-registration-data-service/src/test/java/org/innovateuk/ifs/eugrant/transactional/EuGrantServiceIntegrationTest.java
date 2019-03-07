@@ -85,7 +85,6 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
                 .withContact(euContactOne)
                 .withOrganisation(euOrganisationOne)
                 .withFunding(euFundingOne)
-                .withNotified(false)
                 .build();
 
 
@@ -116,11 +115,11 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
                 .withContact(euContactTwo)
                 .withOrganisation(euOrganisationTwo)
                 .withFunding(euFundingTwo)
-                .withNotified(true)
                 .build();
 
         euGrantOne.submit("asdf");
         euGrantTwo.submit("hjkl");
+        euGrantTwo.markNotificationSent();
         euGrantRepository.save(euGrantOne);
         euGrantRepository.save(euGrantTwo);
     }

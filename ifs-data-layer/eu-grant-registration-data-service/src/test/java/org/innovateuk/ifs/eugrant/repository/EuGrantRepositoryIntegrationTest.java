@@ -90,10 +90,10 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
                 .withContact(euContact)
                 .withOrganisation(euOrganisation)
                 .withFunding(euFunding)
-                .withNotified(true)
                 .build();
 
         euGrant.submit("abcd");
+        euGrant.markNotificationSent();
         repository.save(euGrant);
         flushAndClearSession();
 
@@ -140,7 +140,6 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
                 .withContact(euContact)
                 .withOrganisation(euOrganisation)
                 .withFunding(euFunding)
-                .withNotified(false)
                 .build();
 
         euGrant.submit("ghijk");
