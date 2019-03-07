@@ -23,7 +23,6 @@
             <h2 class="govuk-tabs__title">
                 Registrants
             </h2>
-            <!--<span class="success-alert" th:if="${model.isEmailSuccessMessage()}" th:text="${'You have successfully sent ' + model.getNumEmailsSent() + ' messages.'}"/>-->
             <ul class="govuk-tabs__list">
                 <li class="govuk-tabs__list-item">
                     <a href="/management/eu-invite-non-notified" aria-selected="false" class="govuk-tabs__tab">Unsent (<span th:text="${model.totalNonNotified}"></span>)</a>
