@@ -14,8 +14,6 @@ import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassigne
 import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.transactional.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,22 +30,20 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
 
     private static final Log LOG = LogFactory.getLog(MonitoringOfficerInviteService.class);
 
-    // TODO move autowireds to constructor
-
-    @Autowired
     private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
-
-    @Autowired
     private ProjectRepository projectRepository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private OrganisationService organisationService;
+
+    public ProjectMonitoringOfficerServiceImpl(ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository,
+                                               ProjectRepository projectRepository,
+                                               UserRepository userRepository,
+                                               OrganisationService organisationService) {
+        this.projectMonitoringOfficerRepository = projectMonitoringOfficerRepository;
+        this.projectRepository = projectRepository;
+        this.userRepository = userRepository;
+        this.organisationService = organisationService;
+    }
 
     @Override
     @Transactional
@@ -61,7 +57,6 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
                     )
                 );
     }
-
 
     @Override
     @Transactional
@@ -108,8 +103,6 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
         );
     }
 
-    // TODO suspect we're mixing up project ids and application ids quite a bit
-
     private ServiceResult<MonitoringOfficerUnassignedProjectResource> mapToUnassignedProject(Project project) {
         return serviceSuccess(new MonitoringOfficerUnassignedProjectResource(project.getId(), project.getName()));
     }
@@ -117,5 +110,4 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
     private ServiceResult<OrganisationResource> getLeadOrganisationForProject(Project project) {
         return organisationService.findById(project.getApplication().getLeadOrganisationId());
     }
-
 }

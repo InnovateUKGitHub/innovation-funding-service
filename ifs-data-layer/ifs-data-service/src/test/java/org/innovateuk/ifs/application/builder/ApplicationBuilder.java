@@ -71,6 +71,10 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return with(application -> application.setProcessRoles(new ArrayList<>(asList(processRoles))));
     }
 
+    public ApplicationBuilder withProcessRole(ProcessRole... processRoles) {
+        return withArray((processRole, application) -> application.setProcessRoles(asList(processRole)), processRoles);
+    }
+
     public ApplicationBuilder withName(String... names) {
         return withArray((name, application) -> application.setName(name), names);
     }
