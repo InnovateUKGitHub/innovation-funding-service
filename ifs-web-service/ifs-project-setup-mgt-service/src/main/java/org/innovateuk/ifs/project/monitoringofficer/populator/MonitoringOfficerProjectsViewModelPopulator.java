@@ -15,7 +15,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class MonitoringOfficerProjectsViewModelPopulator {
 
-
     private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
 
     public MonitoringOfficerProjectsViewModelPopulator(ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService) {

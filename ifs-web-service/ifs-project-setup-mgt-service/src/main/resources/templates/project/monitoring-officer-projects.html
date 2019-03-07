@@ -71,7 +71,8 @@
                     <td class="govuk-table__cell" th:text="${project.leadOrganisationName}"></td>
                     <td class="govuk-table__cell alignright">
                         <a class="govuk-link"
-                           th:href="@{/monitoring-officer/{projectMonitoringOfficerId}/unassign(projectMonitoringOfficerId=${model.projectMonitoringOfficerId})}">Remove</a>
+                           th:href="@{/monitoring-officer/{projectMonitoringOfficerId}/unassign/{projectId}
+                                   (projectMonitoringOfficerId=${model.projectMonitoringOfficerId}, projectId=${project.projectNumber})}">Remove</a>
                     </td>
                 </tr>
                 </tbody>

@@ -14,4 +14,6 @@ public interface ProjectMonitoringOfficerRepository extends PagingAndSortingRepo
     boolean existsByProjectApplicationIdAndUserId(long applicationId, long userId);
 
     boolean existsByProjectApplicationCompetitionIdAndUserId(long competitionId, long userId);
+
+    void deleteByUserIdAndProjectId(long userId, long projectId);
 }
