@@ -13,10 +13,17 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Notify portal registrants',subTitle='Horizon 2020 grant transfer',size='govuk-heading-l'" />
 
+        <th:block th:if="${model.isEmailSuccessMessage()}">
+            <div class="success-alert">
+                <p class="govuk-body">You have successfully sent <span th:text="${model.getNumEmailsSent()}"></span> messages.</p>
+            </div>
+        </th:block>
+
         <div class="govuk-tabs">
             <h2 class="govuk-tabs__title">
                 Registrants
             </h2>
+            <!--<span class="success-alert" th:if="${model.isEmailSuccessMessage()}" th:text="${'You have successfully sent ' + model.getNumEmailsSent() + ' messages.'}"/>-->
             <ul class="govuk-tabs__list">
                 <li class="govuk-tabs__list-item">
                     <a href="/management/eu-invite-non-notified" aria-selected="false" class="govuk-tabs__tab">Unsent (<span th:text="${model.totalNonNotified}"></span>)</a>
@@ -27,7 +34,7 @@
             </ul>
             <section class="govuk-tabs__panel">
                 <form method="POST"
-                      th:action="@{/eu-send-invites}"
+                      th:action="@{/eu-send-invites/notified/true}"
                       th:object="${euGrantSelectionForm}"
                       data-select=""
                       autocomplete="off">
