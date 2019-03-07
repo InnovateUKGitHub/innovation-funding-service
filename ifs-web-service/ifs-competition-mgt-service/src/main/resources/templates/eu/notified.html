@@ -90,7 +90,7 @@
                                 <td class="govuk-table__cell" th:text="${grant.funding.projectName}">Project name</td>
                                 <td class="govuk-table__cell" th:text="${grant.organisation.name}">Organisation Name</td>
                                 <td class="govuk-table__cell" th:text="${grant.shortCode}">Reference code</td>
-                                <td class="govuk-table__cell" th:text="${grant.notifiedOn}">Timestamp</td>
+                                <td class="govuk-table__cell" th:text="${#temporals.format(grant.notifiedOn, 'd MMM yyyy h:mma')}">Timestamp</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${grant.contact.email}">steve.smith@empire.com</td>
                             </tr>
                             </tbody>
