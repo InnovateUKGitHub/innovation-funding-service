@@ -13,5 +13,4 @@ public class DataServiceSecurityAnnotationsTest extends AbstractDataServiceSecur
     protected List<Class<?>> additionalExcludedClasses() {
         return asList(StatelessAuthenticationFilter.class);
     }
-
 }
