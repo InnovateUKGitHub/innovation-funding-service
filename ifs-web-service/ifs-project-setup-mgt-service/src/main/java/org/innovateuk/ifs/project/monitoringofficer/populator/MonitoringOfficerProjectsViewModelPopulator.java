@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.monitoringofficer.populator;
 
 
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerAssignedProjectViewModel;
@@ -8,8 +10,7 @@ import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerP
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerUnassignedProjectViewModel;
 import org.springframework.stereotype.Component;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
 public class MonitoringOfficerProjectsViewModelPopulator {
@@ -28,17 +29,26 @@ public class MonitoringOfficerProjectsViewModelPopulator {
         return new MonitoringOfficerProjectsViewModel(
                 projectMonitoringOfficerResource.getUserId(),
                 projectMonitoringOfficerResource.getFullName(),
-                1,
-                singletonList(new MonitoringOfficerAssignedProjectViewModel(
-                        119,
-                        2,
-                        5,
-                        "Grade crossing manufacture and supply",
-                        "Vitruvius, Stonework Limited"
-                )),
-                asList( new MonitoringOfficerUnassignedProjectViewModel(1, "foo"),
-                        new MonitoringOfficerUnassignedProjectViewModel(2, "bar")
-                )
+                projectMonitoringOfficerResource.getAssignedProjects().size(),
+                simpleMap(projectMonitoringOfficerResource.getAssignedProjects(), MonitoringOfficerProjectsViewModelPopulator::map),
+                simpleMap(projectMonitoringOfficerResource.getUnassignedProjects(), MonitoringOfficerProjectsViewModelPopulator::map)
+        );
+    }
+
+    private static MonitoringOfficerAssignedProjectViewModel map(MonitoringOfficerAssignedProjectResource project) {
+        return new MonitoringOfficerAssignedProjectViewModel(
+                project.getProjectId(),
+                project.getApplicationId(),
+                project.getCompetitionId(),
+                project.getProjectName(),
+                project.getLeadOrganisationName()
+        );
+    }
+
+    private static MonitoringOfficerUnassignedProjectViewModel map(MonitoringOfficerUnassignedProjectResource project) {
+        return new MonitoringOfficerUnassignedProjectViewModel(
+                project.getProjectId(),
+                project.getProjectName()
         );
     }
 }
