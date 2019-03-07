@@ -88,11 +88,11 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
     }
 
     private ServiceResult<List<MonitoringOfficerAssignedProjectResource>> getAssignedProjects(long userId) {
-        return ServiceResult.aggregate(simpleMap(projectRepository.findByProjectMonitoringOfficerUserId(userId), this::mapToAssignedProject));
+        return ServiceResult.aggregate(simpleMap(projectRepository.findAssigned(userId), this::mapToAssignedProject));
     }
 
     private ServiceResult<List<MonitoringOfficerUnassignedProjectResource>> getUnassignedProjects() {
-        return ServiceResult.aggregate(simpleMap(projectRepository.findByProjectMonitoringOfficerIdIsNull(), this::mapToUnassignedProject));
+        return ServiceResult.aggregate(simpleMap(projectRepository.findAssignable(), this::mapToUnassignedProject));
     }
 
     private ServiceResult<MonitoringOfficerAssignedProjectResource> mapToAssignedProject(Project project) {
