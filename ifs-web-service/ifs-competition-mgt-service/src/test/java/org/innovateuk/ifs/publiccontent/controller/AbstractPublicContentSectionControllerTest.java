@@ -3,7 +3,6 @@ package org.innovateuk.ifs.publiccontent.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
@@ -94,7 +93,7 @@ public class AbstractPublicContentSectionControllerTest extends
     }
 
     @Test
-    public void markAsCompleteForDatesSection() throws Exception {
+    public void markAsComplete_DatesSection() throws Exception {
         CompetitionResource competition = newCompetitionResource().build();
         PublicContentResource publicContent = newPublicContentResource().build();
 
@@ -122,7 +121,7 @@ public class AbstractPublicContentSectionControllerTest extends
     }
 
     @Test
-    public void markAsCompleteForSectionsOtherThanDateSection() throws Exception {
+    public void markAsComplete_SectionsOtherThanDates() throws Exception {
         CompetitionResource competition = newCompetitionResource().build();
         PublicContentResource publicContent = newPublicContentResource().build();
 
