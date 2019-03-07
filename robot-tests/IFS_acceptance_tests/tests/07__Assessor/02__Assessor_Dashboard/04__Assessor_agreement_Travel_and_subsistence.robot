@@ -17,19 +17,14 @@ Resource          ../../../resources/defaultResources.robot
 Travel and subsistence rates
     [Documentation]    INFUND-7061
     [Tags]
-    Given The user should see the element  link = travel and subsistence rates
-    When the user clicks the button/link   jQuery = a:contains("travel and subsistence rates")
-    Then the user should see the element   jQuery = th:contains("Day subsistence")
-    And the user should see the element    jQuery = h2:contains("24 hour / overnight subsistence")
-    And the user should see the element    jQuery = h2:contains("Public transport")
-    And the user should see the element    jQuery = h2:contains("Mileage rates")
-    And the user should see the element    jQuery = p:contains("Please make sure your travel claims, receipts and tickets are all submitted.")
+    Given the user clicks the button/link  link = travel and subsistence rates
+    Then the user should see travel and subsistence rates
     [Teardown]   the user clicks the button/link    link = ${ASSESSOR_DASHBOARD_TITLE}
 
 Cancel returns you back to the dashboard
     [Documentation]    INFUND-8009
     [Tags]
-    Given The user should see the element                     link = your assessor agreement    #his checks the alert message on the top of the page
+    Given The user should see the element                     jQuery = .message-alert a:contains('your assessor agreement')    #his checks the alert message on the top of the page
     And the user clicks the button/link                       jQuery = a:contains("your assessor agreement")
     When the user clicks the button/link                      jQuery = a:contains("Cancel")
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
@@ -40,32 +35,19 @@ Back button takes you to the previous page
     [Tags]
     Given the user clicks the button/link                     link = ${ASSESSOR_DASHBOARD_TITLE}
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
-    [Teardown]    the user clicks the button/link             jQuery = a:contains("your assessor agreement")
 
 Assessor agreement
     [Documentation]    INFUND-1481
     [Tags]
-    When The user opens the link in new window  Download assessor agreement
-    Then the user should not see an error in the page
-    And the user closes the last opened tab
-
-Client-side validations and Submit
-    [Documentation]    INFUND-1481
-    ...
-    ...
-    ...    INFUND-5432
-    [Tags]
-    Given the user navigates to the page                      ${Server}/assessment/profile/agreement
-    When the user selects the checkbox                        agreesToTerms1
-    And the user should not see an error in the page
-    And the user clicks the button/link                       jQuery = button:contains("Save and return to assessments")
+    Given the user opens assessor agreement in new window
+    When the user clicks the button/link                      jQuery = button:contains("Save and return to assessments")
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
-    And The user should not see the element                   jQuery = .message-alert a:contains('your assessor agreement')    #his checks the alert message on the top od the page
+    And the user should not see the element                   jQuery = .message-alert a:contains('your assessor agreement')    #his checks the alert message on the top od the page
 
 Agreement Confirmation
     [Documentation]    INFUND-5628
-    Then the user clicks the button/link    jQuery = a:contains("your assessor agreement")
-    And the user should see the element     jQuery = p:contains("You signed the assessor agreement on")
+    Given the user clicks the button/link    jQuery = a:contains("your assessor agreement")
+    Then the user should see the element     jQuery = p:contains("You signed the assessor agreement on")
 
 Find out more about our travel and subsistence rates
     [Documentation]    INFUND-8806
@@ -76,3 +58,17 @@ Find out more about our travel and subsistence rates
     Then the user should be redirected to the correct page    ${Server}/assessment/profile/travel
     And The user goes back to the previous page
 
+*** Keywords ***
+the user should see travel and subsistence rates
+    the user should see the element    jQuery = th:contains("Day subsistence")
+    the user should see the element    jQuery = h2:contains("24 hour / overnight subsistence")
+    the user should see the element    jQuery = td:contains("London (bed and breakfast)") ~ td:contains("£125")
+    the user should see the element    jQuery = h2:contains("Public transport")
+    the user should see the element    jQuery = h2:contains("Mileage rates") ~ h3:contains("Up to 10,000 miles")
+    the user should see the element    jQuery = p:contains("Please make sure your travel claims, receipts and tickets are all submitted.")
+
+the user opens assessor agreement in new window
+    the user clicks the button/link             jQuery = a:contains("your assessor agreement")
+    The user opens the link in new window  Download assessor agreement
+    the user should not see an error in the page
+    the user closes the last opened tab
