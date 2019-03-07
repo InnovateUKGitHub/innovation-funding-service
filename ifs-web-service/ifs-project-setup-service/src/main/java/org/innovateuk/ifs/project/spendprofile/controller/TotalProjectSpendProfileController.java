@@ -47,7 +47,7 @@ public class TotalProjectSpendProfileController {
     @Autowired
     private SpendProfileTableCalculator spendProfileTableCalculator;
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_TOTAL_SPEND_PROFILE_SECTION')")
     @GetMapping
     public String totals(Model model, @PathVariable("projectId") final Long projectId) {
         model.addAttribute("model", buildTotalViewModel(projectId));

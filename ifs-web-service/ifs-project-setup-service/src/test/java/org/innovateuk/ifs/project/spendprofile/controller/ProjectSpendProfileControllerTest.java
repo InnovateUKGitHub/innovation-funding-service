@@ -741,6 +741,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 leadOrganisation,
                 projectResource.getSpendProfileSubmittedDate() != null,
                 editablePartners,
+                false,
                 false);
     }
 
