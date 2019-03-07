@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -51,7 +52,7 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
     @Override
     @Transactional
     public ServiceResult<ProjectMonitoringOfficerResource> getProjectMonitoringOfficer(long userId) {
-        return getUser(userId)
+        return getMonitoringOfficerUser(userId)
                 .andOnSuccess(user -> getAssignedProjects(userId)
                     .andOnSuccess(assignedProjects -> getUnassignedProjects()
                         .andOnSuccessReturn(unassignedProjects -> new ProjectMonitoringOfficerResource(
@@ -61,10 +62,11 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
                 );
     }
 
+
     @Override
     @Transactional
     public ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId) {
-        return getUser(userId)
+        return getMonitoringOfficerUser(userId)
                .andOnSuccess(user -> getProject(projectId)
                        .andOnSuccessReturnVoid(project ->
                                projectMonitoringOfficerRepository.save(new ProjectMonitoringOfficer(user, project))
@@ -79,8 +81,8 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
         return serviceSuccess();
     }
 
-    private ServiceResult<User> getUser(long userId) {
-        return find(userRepository.findById(userId), notFoundError(User.class, userId));
+    private ServiceResult<User> getMonitoringOfficerUser(long userId) {
+        return find(userRepository.findByIdAndRoles(userId, MONITORING_OFFICER), notFoundError(User.class, userId));
     }
 
     private ServiceResult<Project> getProject(long projectId) {
