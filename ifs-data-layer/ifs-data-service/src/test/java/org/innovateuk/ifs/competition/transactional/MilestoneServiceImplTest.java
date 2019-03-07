@@ -198,7 +198,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Test
     public void getAllPublicMilestones_horizon2020() {
         Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName("Horizon 2020").build()).build();
-        List<Milestone> milestones = newMilestone().withType(OPEN_DATE, REGISTRATION_DATE, SUBMISSION_DATE).build(3);
+        List<Milestone> milestones = newMilestone().withType(OPEN_DATE, REGISTRATION_DATE).build(3);
         when(milestoneRepository.findByCompetitionIdAndTypeIn(competition.getId(), asList(OPEN_DATE, REGISTRATION_DATE, SUBMISSION_DATE)))
                 .thenReturn(milestones);
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
