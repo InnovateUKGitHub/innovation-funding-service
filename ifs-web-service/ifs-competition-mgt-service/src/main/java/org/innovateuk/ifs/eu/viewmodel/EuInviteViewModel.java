@@ -2,7 +2,6 @@ package org.innovateuk.ifs.eu.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.eugrant.EuContactResource;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
@@ -18,14 +17,22 @@ public class EuInviteViewModel {
 
     private final long totalNonNotified;
 
+    private boolean emailSuccessMessage;
+
+    private long numEmailsSent;
+
     public EuInviteViewModel(List<EuGrantResource> grants,
                              Pagination pagination,
                              long totalNotified,
-                             long totalNonNotified) {
+                             long totalNonNotified,
+                             boolean emailSuccessMessage,
+                             long numEmailsSent) {
         this.grants = grants;
         this.pagination = pagination;
         this.totalNotified = totalNotified;
         this.totalNonNotified = totalNonNotified;
+        this.emailSuccessMessage = emailSuccessMessage;
+        this.numEmailsSent = numEmailsSent;
     }
 
     public List<EuGrantResource> getGrants() {
@@ -44,6 +51,14 @@ public class EuInviteViewModel {
         return totalNonNotified;
     }
 
+    public boolean isEmailSuccessMessage() {
+        return emailSuccessMessage;
+    }
+
+    public long getNumEmailsSent() {
+        return numEmailsSent;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -57,6 +72,8 @@ public class EuInviteViewModel {
                 .append(pagination, viewModel.pagination)
                 .append(totalNotified, viewModel.totalNotified)
                 .append(totalNonNotified, viewModel.totalNonNotified)
+                .append(emailSuccessMessage, viewModel.emailSuccessMessage)
+                .append(numEmailsSent, viewModel.numEmailsSent)
                 .isEquals();
     }
 
@@ -67,6 +84,8 @@ public class EuInviteViewModel {
                 .append(pagination)
                 .append(totalNotified)
                 .append(totalNonNotified)
+                .append(emailSuccessMessage)
+                .append(numEmailsSent)
                 .toHashCode();
     }
 }
