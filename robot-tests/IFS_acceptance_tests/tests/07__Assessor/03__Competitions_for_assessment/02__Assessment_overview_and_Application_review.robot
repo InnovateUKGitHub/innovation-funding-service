@@ -121,7 +121,7 @@ Scope: Word count
 Scope: Guidance
     [Documentation]    INFUND-4142  INFUND-6281
     [Tags]
-    When the user clicks the button/link          css = details summary
+    Given the user clicks the button/link          css = details summary
     Then the user should see the element          css = div[id^="details-content-"]
     And The user should see the element           jQuery = td:contains("One or more of the above requirements have not been satisfied.")
     And The user should see the element           jQuery = td:contains("Does it meet the scope of the competition as defined in the competition brief?")

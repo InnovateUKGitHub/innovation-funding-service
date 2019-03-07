@@ -33,19 +33,12 @@ User cannot accept/reject an invite to an application that has been withdrawn
     [Teardown]    the user clicks the button/link    jQuery = #navigation a:contains(Dashboard)
 
 Competition link should navigate to the applications
-    [Documentation]    INFUND-3716
+    [Documentation]    INFUND-3716 INFUND-6040 INFUND-3724 INFUND-3725 INFUND-3723
     [Tags]
     Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    Then the user should see the element    jQuery = h2:contains("Applications for assessment")
+    Then the user should see competition details
+    And The order of the applications should be correct according to the status
     And the total calculation in dashboard should be correct    Applications for assessment    //div/form/div/ul/li
-
-Details of the competition are visible
-    [Documentation]    INFUND-3723
-    [Tags]
-    Given the user should see the element  jQuery = dt:contains("Competition") + dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
-    And the user should see the element    jQuery = dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
-    And the user should see the element    jQuery = dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
-    And the user should see the element    jQuery = dt:contains("Submit applications deadline:") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DATE_LONG}")
 
 User can view the competition brief
     [Documentation]    INFUND-5494
@@ -53,10 +46,6 @@ User can view the competition brief
     Given The user opens the link in new window           View competition brief
     Then the user should get a competition brief window
     [Teardown]    the user closes the competition brief
-
-Applications should have correct status and order
-    [Documentation]  INFUND-6040 INFUND-3724 INFUND-3725 INFUND-6358
-    Given The order of the applications should be correct according to the status
 
 Accept an application for assessment
     [Documentation]    INFUND-1180  INFUND-4128
@@ -156,3 +145,10 @@ comp admin checks the assessor rejected the application for assessment
     the user should see the element    jQuery = h2:contains("Rejected (1)")
     the user should see the element    jQuery = .assessors-rejected td:contains("Not my area of expertise")
     the user should see the element    jQuery = .assessors-rejected td:contains("Unable to assess the application as i'm on holiday.")
+
+the user should see competition details
+    the user should see the element  jQuery = dt:contains("Competition") + dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    the user should see the element    jQuery = dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
+    the user should see the element    jQuery = dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
+    the user should see the element    jQuery = dt:contains("Submit applications deadline:") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DATE_LONG}")
+    the user should see the element    jQuery = h2:contains("Applications for assessment")
