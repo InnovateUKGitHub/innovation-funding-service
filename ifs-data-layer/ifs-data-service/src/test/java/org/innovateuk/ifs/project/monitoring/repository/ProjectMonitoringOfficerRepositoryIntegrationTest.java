@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.monitoring.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
 import static org.junit.Assert.assertEquals;
@@ -45,7 +46,7 @@ public class ProjectMonitoringOfficerRepositoryIntegrationTest extends BaseRepos
                         newProjectUser()
                                 .withId((Long) null)
                                 .withUser(getUserByEmail(getSteveSmith().getEmail()))
-                                .withRole(PROJECT_PARTNER)
+                                .withRole(PROJECT_PARTNER, PROJECT_FINANCE_CONTACT)
                                 .build(2)
                 )
                 .withProjectMonitoringOfficer(
