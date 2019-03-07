@@ -37,7 +37,7 @@ User can populate Funding information and Eligibility
     Given the user clicks the button/link          link = Funding information
     When the user completes funding information
     Then the user clicks the button/link           link = Return to setup overview
-    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}   3  false  single-or-collaborative
+    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}   3  false  single
 
 User can complete the Application
     [Documentation]  IFS-5158
