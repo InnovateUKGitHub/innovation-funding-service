@@ -640,6 +640,29 @@ public final class CollectionFunctions {
         return simpleAllMatch(asList(array), filterFn);
     }
 
+
+    /**
+     * A simple wrapper around a noneMatch function, to remove boilerplate from production code
+     */
+    public static <T> boolean simpleNoneMatch(Collection<T> list, Predicate<T> filterFn) {
+        if (list == null || list.isEmpty()) {
+            return true;
+        }
+        return list.stream().noneMatch(filterFn);
+    }
+
+    /**
+     * A simple wrapper around a noneMatch function that takes an array, to remove boilerplate from production code
+     */
+    public static <T> boolean simpleNoneMatch(T[] array, Predicate<T> filterFn) {
+
+        if (array == null || array.length == 0) {
+            return true;
+        }
+
+        return simpleNoneMatch(asList(array), filterFn);
+    }
+
     /**
      * A simple wrapper around a String joining function.  Returns a string of the given list, separated by the given
      * joinString
