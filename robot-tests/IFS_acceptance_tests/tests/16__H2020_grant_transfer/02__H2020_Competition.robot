@@ -194,8 +194,7 @@ The user is able to go to Application overview
      the user should see the element  link = Project details
      the user should see the element  link = Application team
      the user should see the element  link = Public description
-     the user should see the element  link = Project documents
-     the user should see the element  link = Finances overview
+     the user should see the element  link = Horizon 2020 grant agreement
 
 Custom teardown
     the user closes the browser

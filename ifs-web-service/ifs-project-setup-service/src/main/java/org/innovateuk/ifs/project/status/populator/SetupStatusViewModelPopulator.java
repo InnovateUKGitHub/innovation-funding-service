@@ -31,6 +31,8 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
  * Populator for creating the {@link SetupStatusViewModel}
@@ -60,8 +62,13 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                                      UserResource loggedInUser,
                                                                      String originQuery) {
 
+        boolean isMonitoringOfficer = isMonitoringOfficer(loggedInUser);
+
         CompletableFuture<ProjectResource> projectRequest = async(() -> projectService.getById(projectId));
-        CompletableFuture<OrganisationResource> organisationRequest = async(() -> projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
+
+        CompletableFuture<OrganisationResource> organisationRequest =
+                isMonitoringOfficer ? async(() -> projectService.getLeadOrganisation(projectId)) :
+                        async(() -> projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess());
 
         CompletableFuture<ApplicationResource> applicationRequest = awaitAll(projectRequest).thenApply(project -> applicationService.getById(project.getApplication()));
         CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application ->
@@ -88,7 +95,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                     monitoringOfficer,
                     isProjectManager,
                     partnerOrganisations,
-                    originQuery);
+                    originQuery,
+                    isMonitoringOfficer);
         });
     }
 
@@ -97,7 +105,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                          Optional<MonitoringOfficerResource> monitoringOfficer,
                                                          boolean isProjectManager,
                                                          List<OrganisationResource> partnerOrganisations,
-                                                         String originQuery) {
+                                                         String originQuery,
+                                                         boolean isMonitoringOfficer) {
 
         boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
 
@@ -121,7 +130,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 projectDocuments,
                 isProjectManager,
                 pendingQueries,
-                originQuery);
+                originQuery,
+                isMonitoringOfficer);
     }
 
     private SectionStatusList getSectionStatuses(BasicDetails basicDetails,

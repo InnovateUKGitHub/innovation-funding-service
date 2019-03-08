@@ -132,45 +132,47 @@
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${(model.monitoringOfficerAssigned || model.projectState.offline ? model.monitoringOfficerStatus.getSectionStatus() : 'awaiting-assignment')})" />
                 </li>
                 <!--/* ========================= Bank Details ========================= */-->
-                <li class="read-only" th:if="${model.bankDetailsSection.notAccessible}">
+                <li class="read-only" th:if="${model.bankDetailsSection.notAccessible || model.monitoringOfficer}">
                     <div class="task">
                         <h2 class="govuk-heading-s">Bank details</h2>
                         <p class="govuk-body govuk-!-margin-0">We need bank details for those partners eligible for funding.</p>
                     </div>
+                    <th:block th:if="${model.monitoringOfficer && !model.bankDetailsSection.notAccessible}" th:insert="project/fragments :: project-setup-status-indicator(${model.bankDetailsStatus.getSectionStatus()})"/>
                 </li>
 
-                <li th:if="${model.bankDetailsSection.accessibleOrNotRequired}"
+                <li th:if="${model.bankDetailsSection.accessibleOrNotRequired && !model.monitoringOfficer}"
                     th:classappend="${model.bankDetailsStatus.getSectionStatus()}">
                     <div class="task">
                         <h2 class="govuk-heading-s">
-                            <a th:if="${model.bankDetailsSection.accessible and not model.projectComplete}"
-                               th:href="@{/project/{id}/bank-details(id=${model.projectId})}"
-                               class="govuk-link">Bank details</a>
-                            <a th:if="${model.projectComplete}"
-                               th:href="@{/project/{id}/bank-details/readonly(id=${model.projectId})}"
-                               class="govuk-link">Bank details</a>
-                            <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
+                                <a th:if="${model.bankDetailsSection.accessible and not model.projectComplete}"
+                                   th:href="@{/project/{id}/bank-details(id=${model.projectId})}"
+                                   class="govuk-link"
+                                   th:classappend="${model.monitoringOfficer} ? 'disabled'">Bank details</a>
+                                <a th:if="${model.projectComplete}"
+                                   th:href="@{/project/{id}/bank-details/readonly(id=${model.projectId})}"
+                                   class="govuk-link">Bank details</a>
+                                <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
                         </h2>
                         <p class="govuk-body govuk-!-margin-0">We need bank details for those partners eligible for funding.</p>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.bankDetailsStatus.getSectionStatus()})"/>
                 </li>
                 <!--/* ========================= Finance Check ========================= */-->
-                <li th:class="${model.financeChecksSection.notAccessible} ? 'read-only'" th:classappend="${model.financeChecksStatus.getSectionStatus()}">
+                <li th:class="${model.financeChecksSection.notAccessible || model.monitoringOfficer} ? 'read-only'" th:classappend="${model.financeChecksStatus.getSectionStatus()}">
                     <div class="task">
                         <h2 class="govuk-heading-s">
-                            <a th:if="${model.financeChecksSection.accessible}"
+                            <a th:if="${!model.monitoringOfficer && model.financeChecksSection.accessible}"
                                th:href="@{/project/{id}/finance-checks(id=${model.projectId})}"
                                class="govuk-link">Finance
                                 checks</a>
-                            <th:block th:unless="${model.financeChecksSection.accessible}">Finance checks
+                            <th:block th:unless="${model.financeChecksSection.accessible && !model.monitoringOfficer}">Finance checks
                                 <th:block th:if="${model.financeChecksSection.notRequired}">(not required)</th:block>
                             </th:block>
                         </h2>
                         <p class="govuk-body govuk-!-margin-0">We will review your financial information.</p>
                     </div>
-                    <th:block th:if="${!model.showFinanceChecksPendingQueryWarning}" th:insert="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
-                    <div class="status" th:if="${model.showFinanceChecksPendingQueryWarning}">
+                    <th:block th:if="${!model.showFinanceChecksPendingQueryWarning || model.monitoringOfficer}" th:insert="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
+                    <div class="status" th:if="${model.showFinanceChecksPendingQueryWarning && !model.monitoringOfficer}">
                         <div class="status-msg msg-progress">
                             <span class="status-warning">Pending query</span>
                         </div>

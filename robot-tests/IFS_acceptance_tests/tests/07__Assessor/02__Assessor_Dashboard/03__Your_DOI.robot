@@ -18,84 +18,37 @@ ${assessor_id}          ${user_ids['${test_mailbox_one}+jeremy.alufson@gmail.com
 
 *** Test Cases ***
 Back to the dashboard link
-    [Documentation]    INFUND-3715
-    ...
-    ...    INFUND-5432
-    ...
-    ...    INFUND-7060  IFS-3942
-    Given The user should see the element  jQuery = ul li a:contains("your declaration of interest")    #this checks the alert message on the top of the page
+    [Documentation]    INFUND-3715  INFUND-5432  INFUND-7060  IFS-3942
+    Given The user should see the element  jQuery = .message-alert a:contains("your declaration of interest")    #this checks the alert message on the top of the page
     When the user clicks the button/link   link = your details
-    And the user clicks the button/link    link = DOI
-    And The user should see the element    jQuery = h2:contains("Principal employer and role") ~ p:contains("Not answered")
-    And The user should see the element    jQuery = h2:contains("Professional affiliations") ~ p:contains("Not answered")
-    And the user clicks the button/link    jQuery=a:contains(${ASSESSOR_DASHBOARD_TITLE})
-    Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
+    Then the user goes back to dashboard from DOI page
 
-Server-side validations when No selected at yes/no
-    [Documentation]    INFUND-3715  IFS-1947
-    ...
-    ...    INFUND-7060  IFS-3942
+Server-side validations: DOI
+    [Documentation]    INFUND-3715  IFS-1947  INFUND-7060  IFS-3942
     [Tags]
-    Given the user clicks the button/link    link = your details
-    And the user clicks the button/link      link = DOI
-    When the user clicks the button/link     id = editDOI
+    Given the user navigate to DOI page
     When the user clicks the button/link     jQuery = button:contains("Save and return to your declaration of interest")
     Then the user should see the proper validation messages triggered
 
-Server-side when Yes selected at yes/no
-    [Documentation]    INFUND-3715
+Server-side validations when Yes selected at yes/no
+    [Documentation]    INFUND-3715  IFS-1947  INFUND-7060  IFS-3942
     [Tags]
-    Given the user selects the radio button    hasAppointments    yes
+    Given the user select Yes radio button option
     When the user clicks the button/link       jQuery = button:contains("Save and return to your declaration of interest")
-    Then the user should see a field error     Please enter an organisation.
-    And the user should see a field error      Please enter a position.
-    And the user selects the radio button      hasAppointments    no
-    When the user selects the radio button     hasFinancialInterests    Yes
-    And the user selects the radio button      hasFamilyAffiliations    Yes
-    And the user selects the radio button      hasFamilyFinancialInterests    Yes
-    And the user clicks the button/link        jQuery=button:contains("Save and return to your declaration of interest")
-    Then the user should see a field error     Please enter a relation.
-    And the user should see a field error      Please enter an organisation.
-    And the user should see a field error      Please enter a position.
-    And the user should see a field error      Please enter your family's financial interests.
-    And the user should see a field error      Please enter your financial interests.
-    Then the user enters multiple strings into a text field    id = professionalAffiliations  a${SPACE}  101
-    And the user should see a field error      Maximum word count exceeded. Please reduce your word count to 100.
+    Then the user should see the proper validation messages
 
 Client-side validations
     [Documentation]    INFUND-3715
     [Tags]
-    When the user correctly fills out the role, principle employer and accurate fields
-    Then The user should not see the element    jQuery = span:contains("Please enter a principal employer.")
-    And The user should not see the element     jQuery = span:contains("Please enter your role with your principal employer.")
-    And The user should not see the element     jQuery = span:contains("Please enter your financial interests.")
-    And The user should not see the element     jQuery = span:contains("Please enter your family's financial interests.")
-    And The user should not see the element     jQuery = span:contains("Please tell us if any of your immediate family members have any appointments or directorships.")
-    And The user should not see the element     jQuery = span:contains("Please tell us if any of your immediate family members have any other financial interests.")
-    And The user should not see the element     jQuery = span:contains("You must agree that your account is accurate.")
-    And the user should not see the element     jQuery = span:contains("Maximum word count exceeded. Please reduce your word count to 100.")
+    Given the user correctly fills out the role, principle employer and accurate fields
+    Then the user should not see the validation messages
 
 Successful save for the DOI form
-    [Documentation]    INFUND-3715
-    ...
-    ...    INFUND-5432
+    [Documentation]    INFUND-3715  INFUND-5432
     [Tags]
-    When the user clicks the button/link    jQuery = button:contains("Save and return to your declaration of interest")
-    Then the user should be redirected to the correct page    ${assessment_declaration_url}
-    And the user should see the element    jQuery = h2:contains("Principal employer and role") ~ p:contains("University")
-    And the user should see the element    jQuery = h2:contains("Principal employer and role") ~ p:contains("Professor")
-    And the user should see the element    jQuery = h2:contains("Professional affiliations") ~ p:contains("Role x at Company y")
-    And the user should see the element    jQuery = h2:contains("Other financial interests") ~ p:contains("finance int")
-    And the user should see the element    jQuery = td:contains("Relation")
-    And the user should see the element    jQuery = td:contains("Innovate")
-    And the user should see the element    jQuery = td:contains("Director")
-    And the user should see the element    jQuery = p:contains("My interests")
-    When the user clicks the button/link   jQuery = a:contains(${ASSESSOR_DASHBOARD_TITLE})
-    Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
-    And the user should not see the element    jQuery = .message-alert a:contains('your declaration of interest')    #his checks the alert message on the top od the page
-    And the user clicks the button/link    link = your details
-    And the user clicks the button/link    link = DOI
-    When the user clicks the button/link   id = editDOI
+    Given the user clicks the button/link    jQuery = button:contains("Save and return to your declaration of interest")
+    When the user should be redirected to the correct page    ${assessment_declaration_url}
+    Then the user should see the correct DOI details saved
     And the user should see the correct inputs in the declaration form
 
 the user checks for the update DOI message
@@ -125,6 +78,9 @@ the user correctly fills out the role, principle employer and accurate fields
     Wait For Autosave
 
 the user should see the correct inputs in the declaration form
+    the user clicks the button/link        jQuery = a:contains(${ASSESSOR_DASHBOARD_TITLE})
+    the user should not see the element    jQuery = .message-alert a:contains('your declaration of interest')    #his checks the alert message on the top od the page
+    the user navigates to the page         ${server}/assessment/profile/declaration/edit
     Textfield Value Should Be    id = principalEmployer    University
     Textfield Value Should Be    id = role    Professor
     Textarea Value Should Be     id = professionalAffiliations    Role x at Company y
@@ -165,3 +121,53 @@ Custom suite setup
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+the user goes back to dashboard from DOI page
+    the user clicks the button/link    link = DOI
+    the user should see the element    jQuery = h2:contains("Principal employer and role") ~ p:contains("Not answered")
+    the user should see the element    jQuery = h2:contains("Professional affiliations") ~ p:contains("Not answered")
+    the user clicks the button/link    jQuery=a:contains(${ASSESSOR_DASHBOARD_TITLE})
+    the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
+
+the user navigate to DOI page
+    the user clicks the button/link    link = your details
+    the user clicks the button/link    link = DOI
+    the user clicks the button/link    id = editDOI
+
+the user should see the proper validation messages
+    the user should see a field and summary error      Please enter a relation.
+    the user should see a field and summary error      Please enter an organisation.
+    the user should see a field and summary error      Please enter a position.
+    the user should see a field and summary error      Please enter your financial interests.
+    the user enters multiple strings into a text field    id = professionalAffiliations  a${SPACE}  101
+    the user should see a field error      Maximum word count exceeded. Please reduce your word count to 100.
+
+the user select Yes radio button option
+    the user selects the radio button                hasAppointments    yes
+    the user clicks the button/link                  jQuery = button:contains("Save and return to your declaration of interest")
+    the user should see a field and summary error    Please enter an organisation.
+    the user should see a field and summary error    Please enter a position.
+    the user selects the radio button                hasAppointments    no
+    the user selects the radio button                hasFinancialInterests    Yes
+    the user selects the radio button                hasFamilyAffiliations    Yes
+    the user selects the radio button                hasFamilyFinancialInterests    Yes
+
+the user should not see the validation messages
+   the user should not see the element     jQuery = span:contains("Please enter a principal employer.")
+   the user should not see the element     jQuery = span:contains("Please enter your role with your principal employer.")
+   the user should not see the element     jQuery = span:contains("Please enter your financial interests.")
+   the user should not see the element     jQuery = span:contains("Please enter your family's financial interests.")
+   the user should not see the element     jQuery = span:contains("Please tell us if any of your immediate family members have any appointments or directorships.")
+   the user should not see the element     jQuery = span:contains("Please tell us if any of your immediate family members have any other financial interests.")
+   the user should not see the element     jQuery = span:contains("You must agree that your account is accurate.")
+   the user should not see the element     jQuery = span:contains("Maximum word count exceeded. Please reduce your word count to 100.")
+
+the user should see the correct DOI details saved
+    the user should see the element    jQuery = h2:contains("Principal employer and role") ~ p:contains("University")
+    the user should see the element    jQuery = h2:contains("Principal employer and role") ~ p:contains("Professor")
+    the user should see the element    jQuery = h2:contains("Professional affiliations") ~ p:contains("Role x at Company y")
+    the user should see the element    jQuery = h2:contains("Other financial interests") ~ p:contains("finance int")
+    the user should see the element    jQuery = td:contains("Relation")
+    the user should see the element    jQuery = td:contains("Innovate")
+    the user should see the element    jQuery = td:contains("Director")
+    the user should see the element    jQuery = p:contains("My interests")
