@@ -65,12 +65,20 @@ public class MonitoringOfficerController {
                                 Model model,
                                 UserResource user) {
 
-        Supplier<String> failureView = () -> viewProjects(monitoringOfficerId, model);
-        RestResult<Void> result = projectMonitoringOfficerRestService.assignMonitoringOfficerToProject(monitoringOfficerId, form.getProjectNumber());
+        Supplier<String> failureView = () -> {
+            model.addAttribute("model", modelPopulator.populate(monitoringOfficerId));
+            model.addAttribute(FORM_ATTR_NAME, form);
+            return "project/monitoring-officer-projects";
+        };
 
         return validationHandler
-                .addAnyErrors(result)
-                .failNowOrSucceedWith(failureView, () -> monitoringOfficerProjectsRedirect(monitoringOfficerId));
+                .failNowOrSucceedWith(failureView, () -> {
+                    RestResult<Void> result = projectMonitoringOfficerRestService.assignMonitoringOfficerToProject(monitoringOfficerId, form.getProjectNumber());
+                    return validationHandler
+                            .addAnyErrors(result)
+                            .failNowOrSucceedWith(failureView,
+                                    () ->  monitoringOfficerProjectsRedirect(monitoringOfficerId));
+                });
     }
 
     private static String monitoringOfficerProjectsRedirect(long monitoringOfficerId) {
