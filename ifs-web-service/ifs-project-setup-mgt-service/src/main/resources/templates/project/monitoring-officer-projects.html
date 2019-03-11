@@ -41,7 +41,7 @@
                         </select>
                     </div>
                     <div class="govuk-form-group">
-                        <button type="submit"
+                        <button type="submit" th:disabled="${ #lists.isEmpty(model.unassignedProjects) }"
                                 class="govuk-button">Assign</button>
                     </div>
                 </form>
