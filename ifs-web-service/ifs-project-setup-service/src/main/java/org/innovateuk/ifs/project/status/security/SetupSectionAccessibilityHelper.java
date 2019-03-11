@@ -293,6 +293,7 @@ public class SetupSectionAccessibilityHelper {
         }
 
         if (setupProgressChecker.isSpendProfileApproved() && documentsApproved()
+                && (isBankDetailsApproved(organisation))
                 && setupProgressChecker.isGrantOfferLetterAvailable()
                 && setupProgressChecker.isGrantOfferLetterSent()) {
             return ACCESSIBLE;
