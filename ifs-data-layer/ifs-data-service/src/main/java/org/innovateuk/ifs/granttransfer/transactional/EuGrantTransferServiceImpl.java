@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
@@ -34,6 +36,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 @Transactional(readOnly = true)
 public class EuGrantTransferServiceImpl implements EuGrantTransferService {
+
+    static final LocalDate HORIZON_2020_START_DATE = LocalDate.of(2019, 4, 1);
 
     @Value("${ifs.data.service.file.storage.eu.grant.transfer.agreement.max.filesize.bytes}")
     private Long maxFileSize;
@@ -112,6 +116,13 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
             domain.setProjectEndDate(euGrantTransferResource.getProjectEndDate());
             domain.setFundingContribution(euGrantTransferResource.getFundingContribution());
             domain.setProjectCoordinator(euGrantTransferResource.getProjectCoordinator());
+
+            ofNullable(euGrantTransferResource.getProjectEndDate()).ifPresent(endDate -> {
+                long duration = Period.between(HORIZON_2020_START_DATE, endDate).getMonths();
+                duration = duration > 0 ? duration : 1;
+                domain.getApplication().setDurationInMonths(duration);
+                domain.getApplication().setStartDate(HORIZON_2020_START_DATE);
+            });
 
             ofNullable(euGrantTransferResource.getActionType())
                     .map(EuActionTypeResource::getId)
