@@ -71,8 +71,14 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
                         .withCompetition(newCompetition().buildArray(assignedProjectsSize, Competition.class))
                         .buildArray(assignedProjectsSize, Application.class)
                 )
+                .withName("one", "two", "three")
                 .build(assignedProjectsSize);
-        List<Project> unassignedProjects = newProject().build(unassignedProjectsSize);
+        List<Project> unassignedProjects = newProject()
+                .withApplication(newApplication()
+                        .buildArray(unassignedProjectsSize, Application.class)
+                )
+                .withName("four", "five")
+                .build(unassignedProjectsSize);
 
         when(userRepositoryMock.findByIdAndRoles(moUser.getId(), Role.MONITORING_OFFICER)).thenReturn(Optional.of(moUser));
         when(projectRepositoryMock.findAssigned(moUser.getId())).thenReturn(assignedProjects);
@@ -102,6 +108,7 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
             Project unassignedProject = unassignedProjects.get(i);
             MonitoringOfficerUnassignedProjectResource unassignedProjectResource = projectMonitoringOfficer.getUnassignedProjects().get(i);
             assertEquals((long) unassignedProject.getId(), unassignedProjectResource.getProjectId());
+            assertEquals((long) unassignedProject.getApplication().getId(), unassignedProjectResource.getApplicationId());
             assertEquals(unassignedProject.getName(), unassignedProjectResource.getProjectName());
         }
 

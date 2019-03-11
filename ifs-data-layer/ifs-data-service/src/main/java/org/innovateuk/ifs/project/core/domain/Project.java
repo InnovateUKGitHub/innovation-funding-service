@@ -210,7 +210,7 @@ public class Project implements ProcessActivity {
         this.projectUsers.addAll(projectUsers);
     }
 
-    public void removeProjetcMonitoringOfficer() {
+    public void removeProjectMonitoringOfficer() {
         this.projectMonitoringOfficer = null;
     }
 

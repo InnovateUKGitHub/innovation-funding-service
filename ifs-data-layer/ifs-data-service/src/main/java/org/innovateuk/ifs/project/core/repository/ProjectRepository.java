@@ -26,15 +26,15 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
     @Query(PROJECTS_BY_APP_ID_LIKE_AND_COMP_ID_AND_NOT_IN_STATE)
     List<Project> searchByCompetitionIdAndApplicationIdLikeAndProjectStateNotIn(@Param("compId") long competitionId, @Param("applicationSearchString") String applicationSearchString, @Param("states") Collection<ProjectState> projectStates);
 
-    List<Project> findByProjectMonitoringOfficerUserIdAndProjectProcessActivityStateNotOrderById(long userId, ProjectState processState);
+    List<Project> findByProjectMonitoringOfficerUserIdAndProjectProcessActivityStateNotOrderByApplicationId(long userId, ProjectState processState);
 
-    List<Project> findByProjectMonitoringOfficerIdIsNullAndProjectProcessActivityStateNotOrderById(ProjectState processState);
+    List<Project> findByProjectMonitoringOfficerIdIsNullAndProjectProcessActivityStateNotOrderByApplicationId(ProjectState processState);
 
     default List<Project> findAssigned(long userId) {
-        return findByProjectMonitoringOfficerUserIdAndProjectProcessActivityStateNotOrderById(userId, WITHDRAWN);
+        return findByProjectMonitoringOfficerUserIdAndProjectProcessActivityStateNotOrderByApplicationId(userId, WITHDRAWN);
     }
 
     default List<Project> findAssignable() {
-        return findByProjectMonitoringOfficerIdIsNullAndProjectProcessActivityStateNotOrderById(WITHDRAWN);
+        return findByProjectMonitoringOfficerIdIsNullAndProjectProcessActivityStateNotOrderByApplicationId(WITHDRAWN);
     }
 }

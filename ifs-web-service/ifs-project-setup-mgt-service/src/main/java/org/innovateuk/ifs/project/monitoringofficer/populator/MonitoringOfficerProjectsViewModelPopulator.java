@@ -47,6 +47,7 @@ public class MonitoringOfficerProjectsViewModelPopulator {
     private static MonitoringOfficerUnassignedProjectViewModel map(MonitoringOfficerUnassignedProjectResource project) {
         return new MonitoringOfficerUnassignedProjectViewModel(
                 project.getProjectId(),
+                project.getApplicationId(),
                 project.getProjectName()
         );
     }
