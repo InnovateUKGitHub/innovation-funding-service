@@ -128,6 +128,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         Organisation leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId()).get();
 
         ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
+        ProjectActivityStates bankDetailsStatus = getBankDetailsStatus(project, process.getProcessState());
 
         return new ProjectStatusResource(
                 project.getName(),
@@ -138,13 +139,13 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 getProjectPartnerCount(project.getId()),
                 null != leadOrganisation ? leadOrganisation.getName() : "",
                 projectDetailsStatus,
-                getBankDetailsStatus(project, process.getProcessState()),
+                bankDetailsStatus,
                 financeChecksStatus,
                 getSpendProfileStatus(project, financeChecksStatus, process.getProcessState()),
                 getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus, process.getProcessState()),
                 getDocumentsStatus(project, process.getProcessState()),
                 getGrantOfferLetterStatus(project, process.getProcessState()),
-                getRoleSpecificGrantOfferLetterState(project, process.getProcessState()),
+                getRoleSpecificGrantOfferLetterState(project, process.getProcessState(), bankDetailsStatus),
                 golWorkflowHandler.isSent(project),
                 process.getProcessState());
     }
@@ -373,14 +374,17 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         return NOT_STARTED;
     }
 
-    private Map<Role, ProjectActivityStates> getRoleSpecificGrantOfferLetterState(Project project, ProjectState processState) {
+    private Map<Role, ProjectActivityStates> getRoleSpecificGrantOfferLetterState(Project project, ProjectState processState, ProjectActivityStates bankDetailsStatus) {
         Map<Role, ProjectActivityStates> roleSpecificGolStates = new HashMap<Role, ProjectActivityStates>();
         if (processState.isOffline()) {
             roleSpecificGolStates.put(COMP_ADMIN, NOT_REQUIRED);
         } else {
             ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project, processState);
             ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus, processState);
-            if (documentsApproved(project, processState) && COMPLETE.equals(spendProfileStatus)) {
+
+            if (documentsApproved(project, processState)
+                    && COMPLETE.equals(spendProfileStatus)
+                    && COMPLETE.equals(bankDetailsStatus)) {
                 if (golWorkflowHandler.isApproved(project)) {
                     roleSpecificGolStates.put(COMP_ADMIN, COMPLETE);
                 } else if (golWorkflowHandler.isRejected(project)) {
