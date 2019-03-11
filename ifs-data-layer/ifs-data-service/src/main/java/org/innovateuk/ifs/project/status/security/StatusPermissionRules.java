@@ -40,6 +40,13 @@ public class StatusPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "VIEW_TEAM_STATUS",
+            description = "Monitoring officers can see a team's status for a project")
+    public boolean monitoringOfficersCanViewTeamStatus(ProjectResource project, UserResource user) {
+        return userIsMonitoringOfficerInCompetition(project.getCompetition(), user.getId());
+    }
+
+    @PermissionRule(
             value = "VIEW_STATUS",
             description = "All partners can view the project status")
     public boolean partnersCanViewStatus(ProjectResource project, UserResource user) {
