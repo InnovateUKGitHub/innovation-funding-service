@@ -104,7 +104,7 @@ public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOff
     }
 
     private ServiceResult<MonitoringOfficerUnassignedProjectResource> mapToUnassignedProject(Project project) {
-        return serviceSuccess(new MonitoringOfficerUnassignedProjectResource(project.getId(), project.getName()));
+        return serviceSuccess(new MonitoringOfficerUnassignedProjectResource(project.getId(), project.getApplication().getId(), project.getName()));
     }
 
     private ServiceResult<OrganisationResource> getLeadOrganisationForProject(Project project) {

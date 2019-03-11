@@ -101,7 +101,7 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
         for (int i=0; i < unassignedProjectsSize; i++) {
             Project unassignedProject = unassignedProjects.get(i);
             MonitoringOfficerUnassignedProjectResource unassignedProjectResource = projectMonitoringOfficer.getUnassignedProjects().get(i);
-            assertEquals((long) unassignedProject.getId(), unassignedProjectResource.getProjectId());
+            assertEquals((long) unassignedProject.getId(), unassignedProjectResource.getApplicationId());
             assertEquals(unassignedProject.getName(), unassignedProjectResource.getProjectName());
         }
 

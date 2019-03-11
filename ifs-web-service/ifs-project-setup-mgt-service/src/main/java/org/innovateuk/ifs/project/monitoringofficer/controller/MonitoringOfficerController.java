@@ -48,15 +48,6 @@ public class MonitoringOfficerController {
         return "project/monitoring-officer-projects";
     }
 
-    @GetMapping("/unassign/{projectId}")
-    public String unassignProject(@PathVariable long monitoringOfficerId,
-                                  @PathVariable long projectId) {
-        return projectMonitoringOfficerRestService
-                .unassignMonitoringOfficerFromProject(monitoringOfficerId, projectId)
-                .andOnSuccessReturn(() -> monitoringOfficerProjectsRedirect(monitoringOfficerId))
-                .getSuccess();
-    }
-
     @PostMapping("/assign")
     public String assignProject(@PathVariable long monitoringOfficerId,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerAssignProjectForm form,
@@ -73,12 +64,21 @@ public class MonitoringOfficerController {
 
         return validationHandler
                 .failNowOrSucceedWith(failureView, () -> {
-                    RestResult<Void> result = projectMonitoringOfficerRestService.assignMonitoringOfficerToProject(monitoringOfficerId, form.getProjectNumber());
+                    RestResult<Void> result = projectMonitoringOfficerRestService.assignMonitoringOfficerToProject(monitoringOfficerId, form.getProjectId());
                     return validationHandler
                             .addAnyErrors(result)
                             .failNowOrSucceedWith(failureView,
                                     () ->  monitoringOfficerProjectsRedirect(monitoringOfficerId));
                 });
+    }
+
+    @GetMapping("/unassign/{projectId}")
+    public String unassignProject(@PathVariable long monitoringOfficerId,
+                                  @PathVariable long projectId) {
+        return projectMonitoringOfficerRestService
+                .unassignMonitoringOfficerFromProject(monitoringOfficerId, projectId)
+                .andOnSuccessReturn(() -> monitoringOfficerProjectsRedirect(monitoringOfficerId))
+                .getSuccess();
     }
 
     private static String monitoringOfficerProjectsRedirect(long monitoringOfficerId) {
