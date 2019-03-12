@@ -31,9 +31,13 @@ public class MonitoringOfficerController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    private final MonitoringOfficerProjectsViewModelPopulator modelPopulator;
+    private MonitoringOfficerProjectsViewModelPopulator modelPopulator;
 
-    private final ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
+    private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
+
+    public MonitoringOfficerController(){
+        // For security testing
+    }
 
     public MonitoringOfficerController(MonitoringOfficerProjectsViewModelPopulator modelPopulator,
                                        ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService) {
