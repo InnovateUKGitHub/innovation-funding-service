@@ -17,12 +17,14 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-5031 Assign an MO to a project
 Suite Setup       Custom suite setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
 *** Variables ***
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
+${Assign_Project}  Mobile Phone Data for Logistics Analytics
+${New_Mo}          tom@poly.io
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
@@ -239,18 +241,19 @@ Create account flow: MO
     When the user clicks the button/link      link = Sign into your account
     And Logging in and Error Checking         tom@poly.io  ${short_password}
     Then the user should see the element      jQuery = h1:contains("Applications")
+    [Teardown]  Get user id and set as suite variable  ${New_Mo}
 
 Comp admin assign project to new MO
     [Documentation]  IFS-5031
     [Tags]
     [Setup]  log in as a different user                        &{Comp_admin1_credentials}
-    Given the user navigates to the page                       ${server}/project-setup-management/monitoring-officer/308/projects
+    Given the user navigates to the page                       ${server}/project-setup-management/monitoring-officer/${userId}/projects
     When comp admin assign and remove project to MO
     And the user selects the option from the drop-down menu    2 - High Performance Gasoline Stratified  id = projectNumber
     And the user clicks the button/link                        jQuery = button:contains("Assign")
     Then the user should see the element                       jQuery = td:contains("High Performance Gasoline Stratified") ~ td:contains("Remove")
 
-New MO see the project setup veiw for assigned project
+New MO see the project setup view for assigned project
     [Documentation]  IFS-5031
     [Tags]
     [Setup]  log in as a different user    tom@poly.io  ${short_password}
@@ -293,6 +296,7 @@ the user can see the changed MO details
     Textfield Should Contain                    id = lastName    Harper
 
 Custom suite setup
+    Connect to database  @{database}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
 
@@ -345,8 +349,12 @@ comp admin assign and remove project to MO
     the user clicks the button/link     jQuery = button:contains("Assign")
     the user should not see assigned project in Select a project to assign drop down
     the user should see the element     jQuery = span:contains("1") ~ span:contains("assigned projects")
-    the user clicks the button/link     jQuery = td:contains("Mobile Phone Data for Logistics Analytics") ~ td a:contains("Remove")
+    the user clicks the button/link     jQuery = td:contains("${Assign_Project}") ~ td a:contains("Remove")
 
 the user should not see assigned project in Select a project to assign drop down
     the user clicks the button/link        css = .govuk-select
-    the user should not see the element    jQuery = .govuk-select option:contains("1 - Mobile Phone Data for Logistics Analytics")
+    the user should not see the element    jQuery = .govuk-select option:contains("${Assign_Project}")
+
+Custom suite teardown
+    the user closes the browser
+    Disconnect from database
