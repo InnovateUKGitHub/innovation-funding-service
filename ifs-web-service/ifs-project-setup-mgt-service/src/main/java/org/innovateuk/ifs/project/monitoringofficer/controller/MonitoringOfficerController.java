@@ -27,13 +27,15 @@ import static java.lang.String.format;
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class MonitoringOfficerController {
 
-    // TODO rename to ProjectMonitoringOfficerController? or MontoringOfficerAssignmentController?
-
     private static final String FORM_ATTR_NAME = "form";
 
-    private final MonitoringOfficerProjectsViewModelPopulator modelPopulator;
+    private MonitoringOfficerProjectsViewModelPopulator modelPopulator;
 
-    private final ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
+    private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
+
+    public MonitoringOfficerController(){
+        // For security testing
+    }
 
     public MonitoringOfficerController(MonitoringOfficerProjectsViewModelPopulator modelPopulator,
                                        ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService) {

@@ -36,11 +36,8 @@ public class ProjectRepositoryIntegrationTest extends BaseRepositoryIntegrationT
 
     @Test
     public void findByProjectMonitoringOfficerIsNull() {
-        List<Project> allProjects = repository.findAll();
-        assertFalse(allProjects.isEmpty());
-
         List<Project> assignableProjects = repository.findAssignable();
-        assertFalse(allProjects.isEmpty());
+        assertFalse(assignableProjects.isEmpty());
     }
 
     @Test
