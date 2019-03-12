@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,12 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "An internal user can see application finances for organisations")
     public boolean internalUserCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isInternal(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Monitoring officers can see application finances for organisations")
+    public boolean monitoringOfficersCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        Project project = projectRepository.findOneByApplicationId(applicationFinanceResource.getApplication());
+        return isMonitoringOfficer(project.getId(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "Stakeholders can see application finances for organisations on applications they are assigned to")

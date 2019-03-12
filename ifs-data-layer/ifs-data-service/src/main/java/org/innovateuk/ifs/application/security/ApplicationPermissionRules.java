@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -88,6 +89,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean internalUserCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
         return isInternal(user);
+    }
+
+    @PermissionRule(value = "READ_FINANCE_TOTALS",
+            description = "Monitoring officers can view the finance totals.")
+    public boolean monitoringOfficersCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
+        Project project = projectRepository.findOneByApplicationId(applicationResource.getId());
+        return isMonitoringOfficer(project.getId(), user.getId());
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",
