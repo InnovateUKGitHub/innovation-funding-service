@@ -14,7 +14,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
-public class MonitoringOfficerControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<LegacyMonitoringOfficerController> {
+public class LegacyMonitoringOfficerControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<LegacyMonitoringOfficerController> {
 
 
     private ProjectLookupStrategy projectLookupStrategy;
