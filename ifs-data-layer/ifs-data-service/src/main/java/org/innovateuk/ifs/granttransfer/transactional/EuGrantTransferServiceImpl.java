@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
+import static java.lang.Long.max;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -119,8 +120,7 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
 
             ofNullable(euGrantTransferResource.getProjectEndDate()).ifPresent(endDate -> {
                 long duration = Period.between(HORIZON_2020_START_DATE, endDate).getMonths();
-                duration = duration > 0 ? duration : 1;
-                domain.getApplication().setDurationInMonths(duration);
+                domain.getApplication().setDurationInMonths(max(duration, 1L));
                 domain.getApplication().setStartDate(HORIZON_2020_START_DATE);
             });
 
