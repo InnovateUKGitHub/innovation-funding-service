@@ -35,7 +35,7 @@ ${successMessage}         We are happy to inform you that your application is el
 Funding decision buttons should be disabled
     [Documentation]    INFUND-2601
     [Tags]
-    When the user navigates to the page    ${funders_panel_competition_url}/funding
+    Given the user navigates to the page    ${funders_panel_competition_url}/funding
     Then the user should see the options to make funding decisions disabled
 
 An application is selected and the buttons become enabled
@@ -55,18 +55,8 @@ Proj Finance user can send Fund Decision notification
     [Documentation]  INFUND-7376 INFUND-7377 INFUND-8813, IFS-3560
     [Tags]
     [Setup]  log in as a different user      &{internal_finance_credentials}
-    Given the user navigates to the page     ${funders_panel_competition_url}
-    When the user clicks the button/link     jQuery = a:contains("Manage funding notifications")
-    Then the user should see the element     jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    And the user should see the element      jQuery = button[disabled]:contains("Write and send email")
-    When the user selects the checkbox       app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
-    Then the user clicks the button/link     jQuery = button:contains("Write and send email")
-    And the user should see the element      css = #subject[value^="<competition name>: Notification regarding your application <application number>: <application title>"]
-    When the user clicks the button/link     jQuery = summary:contains("Review list of recipients")[aria-expanded="false"]
-    Then the user should see the element     jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    And the user should not see the element  jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
-    When the user clicks the button/link     css = button[data-js-modal="send-to-all-applicants-modal"]
-    When the user clicks the button/link     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    Given the user should see write and send email button is disabled
+    When the user send funding decision email for all applicant
     Then the user should see a field and summary error  Please enter the email message.
     And the user cancels the process and needs to re-select the recipients
     When the internal sends the descision notification email to all applicants  ${onHoldMessage}
@@ -76,32 +66,15 @@ Internal user can filter notified applications
     [Documentation]  INFUND-7376 INFUND-8065
     [Tags]
     Given the user navigates to the page       ${funders_panel_competition_url}/manage-funding-applications
-    When the user enters text to a text field  css = #stringFilter  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
-    And the user clicks the button/link        jQuery = button:contains("Filter")
-    Then the user should see the element       jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    When the user clicks the button/link       jQuery = a:contains("Clear all filters")
-    And the user selects the option from the drop-down menu  No  id = sendFilter
-    And the user clicks the button/link        jQuery = button:contains("Filter")
-    Then the user should not see the element   jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    When the user selects the option from the drop-down menu  All  id = sendFilter
-    And the user selects the option from the drop-down menu  On hold  id = fundingFilter
-    And the user clicks the button/link        jQuery = button:contains("Filter")
-    Then the user should see the element       jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+    Then the user filter applications by application number
+    And the user filter applications by sent email status
+    And the user filter applications by sent email status
 
-External lead applicant reads his email
-    [Documentation]  INFUND-7376
+External lead applicant and collaborators reads their funding decision emails
+    [Documentation]  INFUND-7376  IFS-360
     [Tags]
-    verify the user has received the on hold email  ${test_mailbox_one}+fundsuccess@gmail.com
-
-External collaborators read their email
-    [Documentation]  IFS-360
-    [Tags]
-    verify the user has received the on hold email    ${lead_applicant}
-    verify the user has received the on hold email    ${collaborator1_credentials["email"]}
-    verify the user has received the on hold email    ${collaborator2_credentials["email"]}
-    verify the user has received the on hold email    ${lead_applicant_alternative_user_credentials["email"]}
-    verify the user has received the on hold email    ${collaborator1_alternative_user_credentials["email"]}
-    verify the user has received the on hold email    ${collaborator2_alternative_user_credentials["email"]}
+    Given external lead applicant reads his email
+    And external collaborators read their email
 
 Unsuccessful Funding Decision
     [Documentation]  INFUND-7376 INFUND-7377
@@ -228,3 +201,41 @@ the user checks that the statuses are changing correctly
     the internal user changes the funding decision status    On hold  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
     the internal user changes the funding decision status    Unsuccessful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
     the internal user changes the funding decision status    Successful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
+
+the user should see write and send email button is disabled
+    the user navigates to the page      ${funders_panel_competition_url}
+    the user clicks the button/link     jQuery = a:contains("Manage funding notifications")
+    the user should see the element     jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+    the user should see the element     jQuery = button[disabled]:contains("Write and send email")
+
+the user send funding decision email for all applicant
+    the user selects the checkbox            app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
+    the user clicks the button/link     jQuery = button:contains("Write and send email")
+    the user should see the element      css = #subject[value^="<competition name>: Notification regarding your application <application number>: <application title>"]
+    the user clicks the button/link     jQuery = summary:contains("Review list of recipients")[aria-expanded="false"]
+    the user should see the element     jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+    the user should not see the element  jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
+    the user clicks the button/link     css = button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+
+the user filter applications by application number
+    the user enters text to a text field  css = #stringFilter  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    And the user clicks the button/link        jQuery = button:contains("Filter")
+    Then the user should see the element       jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+    When the user clicks the button/link       jQuery = a:contains("Clear all filters")
+
+the user filter applications by sent email status
+    the user selects the option from the drop-down menu  No  id = sendFilter
+    the user clicks the button/link                      jQuery = button:contains("Filter")
+    the user should not see the element                  jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+
+external lead applicant reads his email
+    verify the user has received the on hold email  ${test_mailbox_one}+fundsuccess@gmail.com
+
+external collaborators read their email
+    verify the user has received the on hold email    ${lead_applicant}
+    verify the user has received the on hold email    ${collaborator1_credentials["email"]}
+    verify the user has received the on hold email    ${collaborator2_credentials["email"]}
+    verify the user has received the on hold email    ${lead_applicant_alternative_user_credentials["email"]}
+    verify the user has received the on hold email    ${collaborator1_alternative_user_credentials["email"]}
+    verify the user has received the on hold email    ${collaborator2_alternative_user_credentials["email"]}
