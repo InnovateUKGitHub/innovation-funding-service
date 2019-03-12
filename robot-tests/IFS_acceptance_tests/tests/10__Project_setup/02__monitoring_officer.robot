@@ -23,7 +23,9 @@ Resource          PS_Common.robot
 
 *** Variables ***
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
-${Assign_Project}  Mobile Phone Data for Logistics Analytics
+${Assign_Project}   Mobile Phone Data for Logistics Analytics
+${Assign_Project2}  High Performance Gasoline Stratified
+${Assign_Project2_ID}  ${application_ids["${Assign_Project2}"]}
 ${New_Mo}          tom@poly.io
 
 *** Test Cases ***
@@ -231,8 +233,8 @@ MO create account: validations
     [Tags]
     Given the user navigates to the page     ${server}/management/monitoring-officer/hash123/register
     When the user checks for validations
-    Then the user should see client side validations triggred correctly
-    And the user should see server side validations triggred correctly
+    Then the user should see client side validations triggered correctly
+    And the user should see server side validations triggered correctly
 
 Create account flow: MO
     [Documentation]  IFS-5031
@@ -249,15 +251,21 @@ Comp admin assign project to new MO
     [Setup]  log in as a different user                        &{Comp_admin1_credentials}
     Given the user navigates to the page                       ${server}/project-setup-management/monitoring-officer/${userId}/projects
     When comp admin assign and remove project to MO
-    And the user selects the option from the drop-down menu    2 - High Performance Gasoline Stratified  id = projectNumber
+    And the user selects the option from the drop-down menu    ${Assign_Project2_ID} - ${Assign_Project2}  id = projectId
     And the user clicks the button/link                        jQuery = button:contains("Assign")
-    Then the user should see the element                       jQuery = td:contains("High Performance Gasoline Stratified") ~ td:contains("Remove")
+    Then the user should see the element                       jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
+
+Link to Application
+    [Documentation]  IFS-5031
+    [Tags]
+    Given the user clicks the button/link  link = ${Assign_Project2_ID}
+    Then the user should see the element    jQuery = h1:contains("Application overview") ~ form section dd:contains("${Assign_Project2}")
 
 New MO see the project setup view for assigned project
     [Documentation]  IFS-5031
     [Tags]
     [Setup]  log in as a different user    tom@poly.io  ${short_password}
-    Given the user clicks the button/link  link = High Performance Gasoline Stratified
+    Given the user clicks the button/link  link = ${Assign_Project2}
     Then the user should see the project set view
 
 *** Keywords ***
@@ -328,13 +336,13 @@ the user checks for validations
     the user enters text to a text field    id = phoneNumber  ${empty}
     the user enters text to a text field    id = password  ${empty}
 
-the user should see client side validations triggred correctly
+the user should see client side validations triggered correctly
     the user should see a field error    Please enter a first name.
     the user should see a field error    Please enter a last name.
     the user should see a field error    Please enter a phone number.
     the user should see a field error    Password must contain at least one lower case letter.
 
-the user should see server side validations triggred correctly
+the user should see server side validations triggered correctly
     the user clicks the button/link                  jQuery = button:contains("Create account")
     the user should see a field and summary error    Please enter a first name.
     the user should see a field and summary error    Your first name should have at least 2 characters.
