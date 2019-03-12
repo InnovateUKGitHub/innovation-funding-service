@@ -39,6 +39,7 @@ import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.granttransfer.builder.EuGrantTransferBuilder.newEuGrantTransfer;
 import static org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResourceBuilder.newEuGrantTransferResource;
+import static org.innovateuk.ifs.granttransfer.transactional.EuGrantTransferServiceImpl.HORIZON_2020_START_DATE;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -188,7 +189,7 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
                 .withGrantAgreementNumber("123456")
                 .withParticipantId("987654321")
                 .withProjectCoordinator(true)
-                .withProjectEndDate(LocalDate.now().plusDays(1))
+                .withProjectEndDate(HORIZON_2020_START_DATE.plusMonths(2))
                 .withProjectStartDate(LocalDate.now().minusDays(1))
                 .withProjectName("Project name")
                 .build();
@@ -213,6 +214,9 @@ public class EuGrantTransferServiceImplTest extends BaseServiceUnitTest<EuGrantT
         assertEquals(grantTransfer.getProjectCoordinator(), grantTransferResource.getProjectCoordinator());
 
         assertEquals(application.getName(), grantTransferResource.getProjectName());
+        assertEquals(application.getStartDate(), HORIZON_2020_START_DATE);
+        assertEquals(application.getDurationInMonths(), (Long) 2L);
+
     }
 
 }
