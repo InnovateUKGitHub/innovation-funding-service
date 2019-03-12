@@ -13,7 +13,7 @@ import javax.persistence.*;
 public abstract class ProcessOutcome<ProcessType extends Process> extends AuditableEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     protected String outcome;
     protected String description;

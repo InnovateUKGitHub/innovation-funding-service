@@ -31,7 +31,8 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckOverviewResourceBuilder.newFinanceCheckOverviewResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -80,7 +81,7 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
         assertEquals("test-project", financeCheckOverviewViewModel.getOverview().getProjectName());
 
         verify(financeCheckServiceMock).getFinanceCheckOverview(projectId);
-        verify(financeCheckServiceMock, Mockito.times(3)).getFinanceCheckEligibilityDetails(anyLong(), anyLong());
+        verify(financeCheckServiceMock, Mockito.times(3)).getFinanceCheckEligibilityDetails(anyLong(), isNull());
         verify(projectFinanceService).getProjectFinances(projectId);
     }
 

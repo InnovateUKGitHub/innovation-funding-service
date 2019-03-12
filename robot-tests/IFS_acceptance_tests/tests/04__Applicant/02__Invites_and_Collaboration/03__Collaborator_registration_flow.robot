@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list    #Invite flow without email. This test is using the old application
 Suite Setup       Custom Suite Setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
@@ -85,11 +85,11 @@ Research and technology organisations (RTO) search (accept invitation flow)
 Research and technology organisations (RTO) search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
     [Tags]  HappyPath
-    Given the user reads his email from the default mailbox and clicks the link  ${test_mailbox_one}+invite1@gmail.com    Please verify your email address    Once verified you can sign into your account
+    Given the user reads his email and clicks the link  ${test_mailbox_one}+invite1@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page                        ${REGISTRATION_VERIFIED}
     When the user clicks the button/link                                         jQuery = .govuk-button:contains("Sign in")
     And Logging in and Error Checking                                            ${test_mailbox_one}+invite1@gmail.com    ${correct_password}
-    Then the user should be redirected to the correct page                       ${DASHBOARD_URL}
+    Then the user should be redirected to the correct page                       ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                                          link = Climate science the history of Greenland's ice
     And the user clicks the button/link                                          link = Your finances
     And the user should see the element                                          jQuery = h1:contains("Your finances")
@@ -108,11 +108,12 @@ User is able to accept new terms and conditions
     Given the user selects the checkbox   agree
     And the user cannot see a validation error in the page
     When the user clicks the button/link  css = .govuk-button[type="submit"]
-    Then the user should see the element  jQuery = h1:contains("Dashboard")
+    Then the user should see the element  jQuery = h1:contains(${APPLICANT_DASHBOARD_TITLE})
 
 *** Keywords ***
 Custom Suite Setup
     The guest user opens the browser
+    Connect to database  @{database}
 
 the radio button should have the new selection
     [Arguments]    ${ORG_TYPE}
@@ -124,3 +125,7 @@ the user enters organisation details
     the user clicks the button/link            id = org-search
     the user clicks the button/link            link = INNOVATE LTD
     the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

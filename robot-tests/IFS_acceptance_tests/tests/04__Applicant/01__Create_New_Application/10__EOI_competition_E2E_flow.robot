@@ -11,7 +11,7 @@ Documentation     Suite description
 ...
 ...               IFS-4080 As an applicant I am able to confirm the Research category eligible for the competition
 Suite Setup       custom suite setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -33,9 +33,9 @@ Comp Admin Creates EOI type competition
 Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080
     [Tags]  MySQL
-    When the competition is open                 ${comp_name}
-    And Log in as a different user               &{assessor_bob_credentials}
-    Then logged in user applies to competition   ${comp_name}  1
+    [Setup]  get competition id and set open date to yesterday  ${comp_name}
+    Given Log in as a different user            &{assessor_bob_credentials}
+    Then logged in user applies to competition  ${comp_name}  1
 
 Applicant submits his application
     [Documentation]  IFS-2196  IFS-2941  IFS-4046
@@ -64,7 +64,7 @@ Invite a registered assessor
 Allocated assessor accepts invite to assess the competition
     [Documentation]  IFS-2376
     [Tags]
-    [Setup]  Milestones are updated in database to move competition to assessment state
+    [Setup]  update milestone to yesterday                  ${competitionId}  SUBMISSION_DATE
     Given Log in as a different user                        &{assessor_credentials}
     When The user clicks the button/link                    Link = ${comp_name}
     And the user selects the radio button                   acceptInvitation  true
@@ -117,6 +117,7 @@ the EOI comp moves to Previous tab
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+    Connect to database  @{database}
 
 the lead applicant fills all the questions and marks as complete(EOI comp type)
     the lead applicant marks every question as complete   Project summary
@@ -125,11 +126,6 @@ the lead applicant fills all the questions and marks as complete(EOI comp type)
     the user selects Research category   Feasibility studies
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
-
-Milestones are updated in database to move competition to assessment state
-    ${competitionId} =  get comp id from comp title  ${comp_name}
-    Set suite variable  ${competitionId}
-    the submission date changes in the db in the past   ${competitionId}
 
 the assessor submits the assessment
     the assessor adds score and feedback for every question    5   # value 5: is the number of questions to loop through to submit feedback
@@ -151,3 +147,7 @@ logged in user applies to competition
     the user clicks the button/link      jQuery = button:contains("Save and continue")
     the user selects the checkbox        agree
     the user clicks the button/link      css = .govuk-button[type="submit"]    #Continue
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

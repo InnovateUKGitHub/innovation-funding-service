@@ -62,7 +62,7 @@ function addTestFiles() {
     docker exec -d data-service mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
 
     echo "***********Creating file entry for each db entry***********"
-    max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
+    max_file_entry_id=$(docker exec ifs-database mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
     for i in `seq 1 ${max_file_entry_id}`;
     do
       if [ "${i}" != "8" ]

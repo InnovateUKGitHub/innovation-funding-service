@@ -16,13 +16,15 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.validation.Validator;
@@ -48,10 +50,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.*;
@@ -60,7 +62,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class RegistrationControllerTest extends AbstractInviteMockMVCTest<RegistrationController> {
 
@@ -87,6 +89,10 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
     @Mock
     private OrganisationRestService organisationRestService;
+
+    @Spy
+    @SuppressWarnings("unused")
+    private NavigationUtils navigationUtils;
 
     private Cookie inviteHashCookie;
     private Cookie usedInviteHashCookie;
@@ -356,7 +362,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.empty());
 
         Error error = Error.fieldError("password", "INVALID_PASSWORD", BAD_REQUEST.getReasonPhrase());
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(serviceFailure(error));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), nullable(String.class), anyString(), anyLong(), anyLong(), nullable(Boolean.class))).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -409,11 +415,11 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 eq(userResource.getLastName()),
                 eq(userResource.getPassword()),
                 eq(userResource.getEmail()),
-                anyString(),
+                nullable(String.class),
                 eq(userResource.getPhoneNumber()),
                 eq(1L),
                 eq(1L),
-                anyBoolean())).thenReturn(serviceSuccess(userResource));
+                nullable(Boolean.class))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail("test@test.test")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
@@ -452,11 +458,11 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 eq(userResource.getLastName()),
                 eq(userResource.getPassword()),
                 eq(userResource.getEmail()),
-                anyString(),
+                nullable(String.class),
                 eq(userResource.getPhoneNumber()),
                 eq(1L),
                 eq(1L),
-                anyBoolean())).thenReturn(serviceSuccess(userResource));
+                nullable(Boolean.class))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(Optional.empty());
         when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong(), anyLong())).thenReturn(restSuccess());
 
@@ -496,13 +502,12 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     @Test
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
 
-
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
 
         mockMvc.perform(get("/registration/register")
                 .cookie(organisationCookie)
         ).andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/" + Role.APPLICANT.getUrl()));
+                .andExpect(view().name("redirect:http://localhost:80"));
 
     }
 
@@ -513,7 +518,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         mockMvc.perform(post("/registration/register")
                 .cookie(organisationCookie)
         ).andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/" + Role.APPLICANT.getUrl()));
+                .andExpect(view().name("redirect:http://localhost:80"));
     }
 
     @Test

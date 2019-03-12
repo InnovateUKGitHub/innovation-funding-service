@@ -90,7 +90,7 @@ public class ApplicationInvitePermissionRules {
 
     private boolean isCollaboratorOnInvite(final ApplicationInviteResource invite, final UserResource user) {
         if (invite.getApplication() != null && invite.getInviteOrganisation() != null) {
-            final InviteOrganisation inviteOrganisation = inviteOrganisationRepository.findOne(invite.getInviteOrganisation());
+            final InviteOrganisation inviteOrganisation = inviteOrganisationRepository.findById(invite.getInviteOrganisation()).orElse(null);
             if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
                 return checkProcessRole(user, invite.getApplication(), inviteOrganisation.getOrganisation().getId(), COLLABORATOR, processRoleRepository);
             }
@@ -107,7 +107,7 @@ public class ApplicationInvitePermissionRules {
     }
 
     private boolean applicationIsEditableById(final Long applicationId) {
-        return applicationIsEditable(applicationRepository.findOne(applicationId));
+        return applicationIsEditable(applicationRepository.findById(applicationId).orElse(null));
     }
 
     private boolean applicationIsEditable(final Application application) {

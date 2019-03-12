@@ -41,7 +41,7 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "The consortium can see the input responses of the application when the response is shared between organisations")
     public boolean consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(final FormInputResponseResource response, final UserResource user) {
-        final FormInput formInput = formInputRepository.findOne(response.getFormInput());
+        final FormInput formInput = formInputRepository.findById(response.getFormInput()).get();
         final Question question = formInput.getQuestion();
         if (!question.getMultipleStatuses()) {
             final boolean isLeadApplicant = checkProcessRole(user, response.getApplication(), LEADAPPLICANT, processRoleRepository);
@@ -73,7 +73,7 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Stakeholders can see form input responses for applications they are assigned to")
     public boolean stakeholdersCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
-        Application application = applicationRepository.findById(response.getApplication());
+        Application application = applicationRepository.findById(response.getApplication()).get();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
@@ -107,7 +107,7 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
     }
 
     private List<QuestionStatus> getQuestionStatuses(FormInputResponseCommand responseCommand) {
-        FormInput formInput = formInputRepository.findOne(responseCommand.getFormInputId());
+        FormInput formInput = formInputRepository.findById(responseCommand.getFormInputId()).get();
         return questionStatusRepository.findByQuestionIdAndApplicationId(formInput.getQuestion().getId(), responseCommand.getApplicationId());
     }
 
@@ -136,7 +136,7 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
     }
 
     private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, Role userRoleType) {
-        final Long organisationId = processRoleRepository.findOne(response.getUpdatedBy()).getOrganisationId();
+        final Long organisationId = processRoleRepository.findById(response.getUpdatedBy()).get().getOrganisationId();
         final Long applicationId = response.getApplication();
         return checkProcessRole(user, applicationId, organisationId, userRoleType, processRoleRepository);
     }

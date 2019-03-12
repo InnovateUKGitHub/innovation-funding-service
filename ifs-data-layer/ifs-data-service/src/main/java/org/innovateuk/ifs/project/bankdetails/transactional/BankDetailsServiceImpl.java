@@ -27,7 +27,6 @@ import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusS
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.Address;
 import org.innovateuk.ifs.sil.experian.resource.Condition;
@@ -46,7 +45,6 @@ import java.util.stream.Collectors;
 
 import static java.lang.Short.parseShort;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -55,6 +53,7 @@ import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -102,7 +101,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Override
     public ServiceResult<BankDetailsResource> getById(Long id) {
-        return find(bankDetailsRepository.findOne(id), notFoundError(BankDetails.class, id)).
+        return find(bankDetailsRepository.findById(id), notFoundError(BankDetails.class, id)).
                 andOnSuccessReturn(bankDetailsMapper::mapToResource);
     }
 
@@ -134,9 +133,9 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Override
     public ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(Long projectId) {
-        Project project = projectRepository.findOne(projectId);
+        Project project = projectRepository.findById(projectId).get();
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+        Organisation leadOrganisation = organisationRepository.findById(leadProcessRole.getOrganisationId()).get();
         List<Organisation> sortedOrganisations = new PrioritySorting<>(projectUsersHelper.getPartnerOrganisations(projectId), leadOrganisation, Organisation::getName).unwrap();
         final List<BankDetailsStatusResource> bankDetailsStatusResources = simpleMap(sortedOrganisations, org -> getBankDetailsStatusForOrg(project, org));
 
@@ -194,7 +193,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     }
 
     private void updateAddressForExistingBankDetails(AddressResource addressResource, BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
-        AddressType addressType = addressTypeRepository.findOne(BANK_DETAILS.getOrdinal());
+        AddressType addressType = addressTypeRepository.findById(BANK_DETAILS.getOrdinal()).get();
         List<OrganisationAddress> bankOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(bankDetailsResource.getOrganisation(), addressType);
 
         OrganisationAddress newOrganisationAddress;
@@ -294,7 +293,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Override
     public ServiceResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals() {
 
-        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRepository.getPendingBankDetailsApprovalsForProjectStateNotIn(singleton(ProjectState.WITHDRAWN));
+        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRepository.getPendingBankDetailsApprovalsForProjectStateNotIn(asList(WITHDRAWN, HANDLED_OFFLINE, COMPLETED_OFFLINE));
 
         return serviceSuccess(pendingBankDetails);
     }
@@ -302,7 +301,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Override
     public ServiceResult<Long> countPendingBankDetailsApprovals() {
 
-        Long countBankDetails = bankDetailsRepository.countPendingBankDetailsApprovalsForProjectStateNotIn(singleton(ProjectState.WITHDRAWN));
+        Long countBankDetails = bankDetailsRepository.countPendingBankDetailsApprovalsForProjectStateNotIn(asList(WITHDRAWN, HANDLED_OFFLINE, COMPLETED_OFFLINE));
 
         return serviceSuccess(countBankDetails);
     }

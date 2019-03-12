@@ -144,7 +144,7 @@ the applicant clears the text area of the "Project Summary"
     wait for autosave
 
 Applicant goes to the application details page of the Robot application
-    Given the user navigates to the page    ${DASHBOARD_URL}
+    Given the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
     When the user clicks the button/link    link = ${applicationTitle}
     And the user clicks the button/link     link = Application details
 
@@ -154,4 +154,4 @@ the applicant should not see the validation error of the duration any more
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = .editor
     Set Focus To Element      css = .app-submit-btn
     wait for autosave
-    The user should not see the text in the page    Your project should last between 1 and 36 months
+    The user should not see the element   jQuery = .govuk-error-message:contains("Your project should last between 1 and 36 months")

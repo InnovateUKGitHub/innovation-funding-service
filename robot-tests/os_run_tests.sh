@@ -2,6 +2,8 @@
 
 # Define some functions for later use
 
+set -x
+
 function coloredEcho() {
     local exp=$1;
     local color=$2;
@@ -149,6 +151,8 @@ section "=> GETTING SCRIPT VARIABLES"
 #cd "$(dirname "$0")"
 scriptDir="/robot-tests"
 cd ${scriptDir}
+
+./openshift/fileForEachDBEntry.sh
 
 webBase="<<SHIB-ADDRESS>>"
 

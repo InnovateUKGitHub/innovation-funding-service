@@ -19,11 +19,6 @@ the user clicks the button twice
     the user clicks the button/link  ${element}
     the user clicks the button/link  ${element}
 
-The user should not see the text in the page
-    [Arguments]    ${NOT_VISIBLE_TEXT}
-    Wait Until Page Does Not Contain Without Screenshots    ${NOT_VISIBLE_TEXT}
-
-
 The user should see the element
     [Arguments]    ${ELEMENT}
     Wait Until Element Is Visible Without Screenshots    ${ELEMENT}
@@ -151,18 +146,11 @@ The user fills the empty assessment fields
     The user enters text to a text field    id=guidanceRows[0].justification    This is a justification
 
 The user checks the question fields
-    The user should see the text in the page    Test title
-    The user should see the text in the page    Subtitle test
-    The user should see the text in the page    Test guidance title
-    The user should see the text in the page    Guidance text test
-    The user should see the text in the page    150
-    The user should see the text in the page    No
-
-The user checks the assessment fields
-    The user should see the text in the page    Business opportunity guidance
-    The user should see the text in the page    30
-    The user should see the text in the page    35
-    The user should see the text in the page    This is  justification
+    The user should see the element    jQuery = dd:contains("Test title")
+    The user should see the element    jQuery = dd:contains("Subtitle test")
+    The user should see the element    jQuery = dd:contains("Test guidance title")
+    The user should see the element    jQuery = dd:contains("Guidance text test")
+    The user should see the element    jQuery = dd:contains("150")
 
 The user should see the text in the element
     [Arguments]    ${element}    ${text}

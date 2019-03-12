@@ -2,6 +2,8 @@
 
 SVC_ACCOUNT_CLAUSE=$1
 
+set -x
+
 # Define some functions for later use
 
 function coloredEcho() {
@@ -56,8 +58,8 @@ function addTestFiles() {
 
     DATA_SERVICE_POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | grep ^data-service | awk '{ print $1 }')
 
-    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} apt-get update 
-    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} apt-get install -yq rsync mysql-client
+    # oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} apt-get update 
+    # oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} apt-get install -yq rsync mysql-client
 
     clearDownFileRepository
     echo "***********Adding test files***************"
@@ -71,8 +73,8 @@ function addTestFiles() {
     echo "***********Adding standard file upload location ***********"
     oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} mkdir -p ${storedFileFolder}000000000_999999999/000000_999999/000_999
 
-    oc ${SVC_ACCOUNT_CLAUSE} rsync --include=fileForEachDBEntry.sh ${scriptDir}/ ${DATA_SERVICE_POD}:
-    oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} sh fileForEachDBEntry.sh ${storedFileFolder}
+    # oc ${SVC_ACCOUNT_CLAUSE} rsync --include=fileForEachDBEntry.sh ${scriptDir}/ ${DATA_SERVICE_POD}:
+    # oc ${SVC_ACCOUNT_CLAUSE} rsh ${DATA_SERVICE_POD} sh fileForEachDBEntry.sh ${storedFileFolder}
 }
 
 # ====================================
@@ -95,7 +97,7 @@ webBase="<<SHIB-ADDRESS>>"
 
 uploadFileDir="${scriptDir}/../upload_files"
 baseFileStorage="/mnt/ifs_storage"
-storedFileFolder="${baseFileStorage}/ifs/"
+storedFileFolder="${baseFileStorage}/ifs/.test"
 virusScanHoldingFolder="${baseFileStorage}/virus-scan-holding/"
 virusScanQuarantinedFolder="${baseFileStorage}/virus-scan-quarantined"
 virusScanScannedFolder="${baseFileStorage}/virus-scan-scanned"

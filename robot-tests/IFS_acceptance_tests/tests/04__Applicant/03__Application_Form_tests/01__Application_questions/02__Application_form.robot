@@ -15,7 +15,7 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...
 ...               INFUND-9154 Update 'Application details' > 'Innovation area' options to those set in 'Initial details' > 'Innovation area'
 Suite Setup       Custom Suite Setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -26,7 +26,7 @@ ${aeroApplication}  Aerospace test application
 *** Test Cases ***
 Application details: Previous submission
     [Documentation]    INFUND-4694
-    Given the user navigates to the page                ${DASHBOARD_URL}
+    Given the user navigates to the page                ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                 link = ${aeroApplication}
     And the user clicks the button/link                 link = Application details
     When the user clicks the button/link                id = application-question-complete
@@ -57,7 +57,7 @@ Application details: Innovation area section is visible
 Autosave in the form questions
     [Documentation]    INFUND-189
     [Tags]
-    Given the user navigates to the page  ${DASHBOARD_URL}
+    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${aeroApplication}
     When the user clicks the button/link  link = Application details
     Then the application details need to be autosaved
@@ -101,7 +101,7 @@ Mark a question as incomplete
 Review and submit button
     [Documentation]  IFS-751
     [Tags]
-    Given the user navigates to the page  ${DASHBOARD_URL}
+    Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${aeroApplication}
     When the user clicks the button/link  jQuery = .govuk-button:contains("Review and submit")
     Then the user should see the element  jQuery = h1:contains("Application summary")
@@ -146,7 +146,7 @@ Collaborator: read only view of Application details
     [Documentation]    INFUND-8251 , INFUND-8260
     [Tags]
     [Setup]    Log in as a different user           &{collaborator1_credentials}
-    Given the user navigates to the page            ${DASHBOARD_URL}
+    Given the user navigates to the page            ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link             link = ${Competition_E2E}
     When the user clicks the button/link            link = Application details
     Then the user should not see the element        css = input
@@ -162,6 +162,7 @@ Collaborator: read only view of research
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
+    Connect to database  @{database}
     Log in and create a new application for the Aerospace competition
     ${appId} =  get application id by name  ${aeroApplication}
     Set suite variable  ${appId}
@@ -213,3 +214,7 @@ the user should no longer see the Mark-as-complete-link
     [Arguments]  ${Section}
     the user navigates to the page       ${server}/application/${appId}/summary
     the user should see the element      jQuery = .collapsible:contains("${Section}") button:contains("Return and edit")
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

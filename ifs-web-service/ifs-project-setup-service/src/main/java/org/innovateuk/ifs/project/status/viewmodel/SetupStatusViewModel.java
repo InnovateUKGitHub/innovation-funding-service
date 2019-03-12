@@ -5,6 +5,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
 
@@ -34,6 +35,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private boolean projectManager;
     private boolean pendingQuery;
     private String originQuery;
+    private ProjectState projectState;
 
     public SetupStatusViewModel() {}
 
@@ -68,6 +70,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.projectManager = projectManager;
         this.pendingQuery = pendingQuery;
         this.originQuery = originQuery;
+        this.projectState = project.getProjectState();
     }
 
     public Long getProjectId() {
@@ -190,5 +193,9 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public String getOriginQuery() {
         return originQuery;
+    }
+
+    public ProjectState getProjectState() {
+        return projectState;
     }
 }

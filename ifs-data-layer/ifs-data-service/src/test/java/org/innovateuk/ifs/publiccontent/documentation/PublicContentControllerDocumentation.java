@@ -3,6 +3,9 @@ package org.innovateuk.ifs.publiccontent.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.documentation.ContentEventResourceDocs;
+import org.innovateuk.ifs.documentation.ContentGroupResourceDocs;
+import org.innovateuk.ifs.documentation.PublicContentSectionResourceDocs;
 import org.innovateuk.ifs.publiccontent.controller.PublicContentController;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.junit.Test;
@@ -12,7 +15,7 @@ import org.springframework.http.MediaType;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.PublicContentResourceDocs.publicContentResourceBuilder;
 import static org.innovateuk.ifs.documentation.PublicContentResourceDocs.publicContentResourceFields;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -46,6 +49,9 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                                 parameterWithName("competitionId").description("The competition id of the required public content")
                         ),
                         responseFields(publicContentResourceFields)
+                                .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
+                                .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
+                                .andWithPrefix("contentEvents[].", ContentEventResourceDocs.contentEventResourceFields)
                 ));
     }
 
@@ -82,6 +88,9 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                                 parameterWithName("section").description("The section of the public content to update")
                         ),
                         requestFields(publicContentResourceFields)
+                                .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
+                                .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
+                                .andWithPrefix("contentEvents[].", ContentEventResourceDocs.contentEventResourceFields)
                 ));
 
     }
@@ -103,6 +112,9 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                                 parameterWithName("section").description("The section of the public content to update")
                         ),
                         requestFields(publicContentResourceFields)
+                                .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
+                                .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
+                                .andWithPrefix("contentEvents[].", ContentEventResourceDocs.contentEventResourceFields)
                 ));
 
     }

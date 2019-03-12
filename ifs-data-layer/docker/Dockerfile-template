@@ -9,16 +9,20 @@ ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=
 
 VOLUME /mnt/ifs_storage
 
+RUN apt-get update && apt-get install rsync -y
+
 RUN groupadd -g @glusterGID@ gluster
 RUN useradd -p @glusterUserPassword@ -u @glusterUID@ -g @glusterGID@ gluster
 
 ADD newrelic.jar /
 ADD newrelic.yml /
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
-ADD set-umask0002-and-run-jar.sh entrypoint.sh
+ADD set-umask0002.sh set-umask0002.sh 
+
 ADD @app_name@-@version@.jar app.jar
 
 HEALTHCHECK --interval=15s --timeout=8s \
   CMD curl -f http://localhost:8080/monitoring/health || exit 1
 USER gluster
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["./set-umask0002.sh"] 
+CMD ["sh", "-c", "java -Dfile.encoding=UTF8 $JAVA_OPTS $JMX_OPTS -jar app.jar"]

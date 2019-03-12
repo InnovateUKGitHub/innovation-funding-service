@@ -21,12 +21,12 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@Order(SecurityProperties.BASIC_AUTH_ORDER - 2)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
 
-    @Value("management.contextPath")
+    @Value("${management.endpoints.web.base-path}")
     private String monitoringEndpoint;
 
     @Autowired
@@ -44,25 +44,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.
             csrf().disable().
-
-            anonymous().disable().
-
             exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint).and().
-
             servletApi().and().
-
             sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().
-
             authorizeRequests().
-
-                antMatchers(monitoringEndpoint+"/**").permitAll().
-
+                antMatchers(monitoringEndpoint+"/**").permitAll().and()
+            .authorizeRequests().
                 anyRequest().fullyAuthenticated().and().
-
             authenticationProvider(preAuthProvider()).
-
             addFilterBefore(preAuthHeaderFilter(), RequestHeaderAuthenticationFilter.class).
-
             headers().cacheControl();
     }
 

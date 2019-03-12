@@ -14,7 +14,7 @@
     <bean id="shibboleth.UnverifiedRelyingParty" parent="RelyingParty">
         <property name="profileConfigurations">
             <list>
-            <!-- <bean parent="SAML2.SSO" p:encryptAssertions="false" /> -->
+                <bean parent="SAML2.SSO" p:nameIDFormatPrecedence="urn:oasis:names:tc:SAML:1.1:nameid-format:persistent" />
             </list>
         </property>
     </bean>
@@ -23,7 +23,7 @@
         <property name="profileConfigurations">
             <list>
                 <ref bean="Shibboleth.SSO" />
-                <ref bean="SAML2.SSO" />
+                <bean parent="SAML2.SSO" p:nameIDFormatPrecedence="urn:oasis:names:tc:SAML:1.1:nameid-format:persistent" />
                 <ref bean="SAML2.ECP" />
                 <ref bean="SAML2.Logout" />
                 <ref bean="SAML2.AttributeQuery" />

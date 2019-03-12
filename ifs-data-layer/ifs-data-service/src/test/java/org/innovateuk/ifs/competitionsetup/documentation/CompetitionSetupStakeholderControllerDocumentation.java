@@ -35,6 +35,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
+
 public class CompetitionSetupStakeholderControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSetupStakeholderController> {
 
     private InviteUserResource inviteUserResource;
@@ -81,6 +83,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
                                 parameterWithName("competitionId").description("Id of the Competition to which the Stakeholder is being invited")
                         ),
                         requestFields(InviteUserResourceDocs.inviteUserResourceFields)
+                        .andWithPrefix("invitedUser.", userResourceFields)
                 ));
 
         verify(competitionSetupStakeholderService).inviteStakeholder(inviteUserResource.getInvitedUser(), competitionId);
@@ -105,7 +108,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of stakeholders assigned to the competition")
-                        )
+                        ).andWithPrefix("[].", userResourceFields)
                 ));
 
         verify(competitionSetupStakeholderService).findStakeholders(competitionId);
@@ -216,7 +219,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of pending stakeholder invites for the competition")
-                        )
+                        ).andWithPrefix("[].", userResourceFields)
                 ));
 
         verify(competitionSetupStakeholderService).findPendingStakeholderInvites(competitionId);

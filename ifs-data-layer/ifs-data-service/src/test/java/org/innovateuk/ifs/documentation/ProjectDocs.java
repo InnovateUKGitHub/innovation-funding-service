@@ -21,6 +21,7 @@ public class ProjectDocs {
             fieldWithPath("durationInMonths").description("Duration that the project is expected to last"),
             fieldWithPath("name").description("The Project's name"),
             fieldWithPath("projectUsers").description("The ids of users with Roles on the Project"),
+            fieldWithPath("projectMonitoringOfficer").description("The id of the project's ProjectMonitoringOfficer"),
             fieldWithPath("documentsSubmittedDate").description("Date that partner documents were submitted by the Project Manager. Null means the details have not yet been submitted"),
             fieldWithPath("offerSubmittedDate").description("Date that grant offer letter documents were submitted by the Lead partner or Project Manager. Null means the details have not yet been submitted"),
             fieldWithPath("signedGrantOfferLetter").description("Id of the File Entry that contains the Signed Grant Offer Letter"),
@@ -49,7 +50,8 @@ public class ProjectDocs {
             fieldWithPath("documentsStatus").description("Status of the project documents"),
             fieldWithPath("grantOfferLetterStatus").description("Status of the Grant Offer Letter status"),
             fieldWithPath("roleSpecificGrantOfferLetterState").description("Map of specific user role type to Grant Offer Letter status"),
-            fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent")
+            fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent"),
+            fieldWithPath("projectState").description("State of the project")
     };
 
     public static final FieldDescriptor[] grantOfferLetterStateResourceFields = {

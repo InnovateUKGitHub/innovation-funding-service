@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.invite.resource.ProjectInviteResource;
+import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -25,7 +25,7 @@ public class ProjectUserResource {
     	// no-arg constructor
     }
 
-    public ProjectUserResource(Long id, UserResource user, ProjectResource project, Role role, OrganisationResource organisation, ProjectInviteResource invite) {
+    public ProjectUserResource(Long id, UserResource user, ProjectResource project, Role role, OrganisationResource organisation, ProjectUserInviteResource invite) {
         this.id = id;
         this.user = user.getId();
         this.userName = user.getName();

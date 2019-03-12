@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -54,7 +54,7 @@ public class ProjectUsersHelper {
 
         SortedSet<Organisation> organisationSet = projectRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(PROJECT_PARTNER.getName()))
-                .map(uar -> organisationRepository.findOne(uar.getOrganisation()))
+                .map(uar -> organisationRepository.findById(uar.getOrganisation()).orElse(null))
                 .collect(Collectors.toCollection(supplier));
 
         return new ArrayList<>(organisationSet);

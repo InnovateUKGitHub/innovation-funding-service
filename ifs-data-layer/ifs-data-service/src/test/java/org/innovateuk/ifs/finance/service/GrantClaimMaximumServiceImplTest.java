@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -54,7 +55,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
         GrantClaimMaximumResource gcmResource = newGrantClaimMaximumResource()
                 .withMaximum(100).build();
 
-        when(grantClaimMaximumRepository.findOne(gcm.getId())).thenReturn(gcm);
+        when(grantClaimMaximumRepository.findById(gcm.getId())).thenReturn(Optional.of(gcm));
         when(grantClaimMaximumMapper.mapToResource(gcm)).thenReturn(gcmResource);
 
         ServiceResult<GrantClaimMaximumResource> result = service.getGrantClaimMaximumById(gcm.getId());
@@ -82,7 +83,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
                 .withTemplate(competition)
                 .build();
 
-        when(competitionTypeRepository.findOne(competitionType.getId())).thenReturn(competitionType);
+        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
 
         ServiceResult<Set<Long>> result = service.getGrantClaimMaximumsForCompetitionType(competitionType.getId());
         assertTrue(result.isSuccess());
@@ -122,7 +123,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
                 .withCompetitionType(competitionType)
                 .build();
 
-        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
 
         ServiceResult<Boolean> isMaximumFundingLevelOverridden = service.isMaximumFundingLevelOverridden(competition
                 .getId());
@@ -149,7 +150,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
                 .withCompetitionType(competitionType)
                 .build();
 
-        when(competitionRepository.findOne(competition.getId())).thenReturn(competition);
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
 
         ServiceResult<Boolean> isMaximumFundingLevelOverridden = service.isMaximumFundingLevelOverridden(competition
                 .getId());

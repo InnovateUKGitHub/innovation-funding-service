@@ -42,7 +42,7 @@ the user sees the correct read only view of the question
     the user should see the element    jQuery = dd p:contains("Business opportunity guidance")
     the user should see the element    jQuery = dt:contains("0-1") + dd:contains("This is a justification")
     the user should see the element    jQuery = dt:contains("Max word count") + dd:contains("10")
-    the user should not see the text in the page    The business opportunity is plausible
+    the user should not see the element      jQuery = dt:contains("5-6") ~ dd:contains("The business opportunity is plausible")
 
 the user fills in the CS Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
@@ -374,22 +374,9 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery = dt:contains("Max word count") + dd:contains("120")
     the user clicks the button/link  link = Return to application questions
 
-the competition moves to Open state
-    [Arguments]  ${competitionId}
-    ${yesterday} =  get yesterday
-    Connect to Database  @{database}
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `date` = '${yesterday}' WHERE `competition_id` = '${competitionId}' AND `type` = 'OPEN_DATE';
-
-# Note here we are passing the comp title not the comp ID to update the correct comp milestone
-the competition is open
-    [Arguments]  ${compTitle}
-    Connect to Database  @{database}
-    change the open date of the competition in the database to one day before  ${compTitle}
-
 moving competition to Closed
     [Arguments]  ${compID}
     ${yesterday} =  get yesterday
-    Connect to Database  @{database}
     execute sql string   UPDATE `${database_name}`.`milestone` SET `date` = '${yesterday}' WHERE `type` = 'SUBMISSION_DATE' AND `competition_id` = '${compID}';
 
 making the application a successful project

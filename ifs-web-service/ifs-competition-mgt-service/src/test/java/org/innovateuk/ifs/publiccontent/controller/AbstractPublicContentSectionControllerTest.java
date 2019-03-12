@@ -94,20 +94,17 @@ public class AbstractPublicContentSectionControllerTest extends
         PublicContentResource publicContent = newPublicContentResource().build();
 
         TestPublicContentForm expectedFormToSave = new TestPublicContentForm();
-        TestPublicContentViewModel expectedViewModel = new TestPublicContentViewModel();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())).thenReturn(true);
         when(publicContentService.getCompetitionById(competition.getId())).thenReturn(publicContent);
         when(formSaver.markAsComplete(expectedFormToSave, publicContent)).thenReturn(serviceSuccess());
-        when(modelPopulator.populate(publicContent, true)).thenReturn(expectedViewModel);
 
         mockMvc.perform(post("/competition/setup/public-content/test-content-section/{competitionId}/edit", competition
                 .getId()))
-                .andExpect(status().isOk())
+                .andExpect(status().isFound())
                 .andExpect(model().attribute("form", expectedFormToSave))
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("competition/public-content-form"));
+                .andExpect(view().name("redirect:/competition/setup/public-content/dates/" + competition.getId()));
 
         verify(formSaver, only()).markAsComplete(expectedFormToSave, publicContent);
     }

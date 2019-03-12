@@ -1,0 +1,36 @@
+<EntityDescriptor entityID="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}"
+                  xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                  xmlns:mdalg="urn:oasis:names:tc:SAML:metadata:algsupport" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
+                  xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <Extensions>
+            <init:RequestInitiator xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/Login"/>
+            <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/Login" index="1"/>
+        </Extensions>
+        <KeyDescriptor>
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>${CERTIFICATE}</ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </KeyDescriptor>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+                                   Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/Artifact/SOAP" index="2"/>
+        <AssertionConsumerService index="1" isDefault="true"
+                                  Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/POST"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/success" index="5"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/auth/success" index="6"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/sso" index="7"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/POST-SimpleSign" index="8"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/Artifact" index="9"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS"
+                                  Location="${PROTOCOL}://${DOMAIN}${PORT_POSTFIX}/Shibboleth.sso/SAML2/ECP" index="10"/>
+    </SPSSODescriptor>
+
+</EntityDescriptor>

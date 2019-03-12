@@ -1,29 +1,25 @@
 package org.innovateuk.ifs.project.core.builder;
 
-import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.BuilderAmendFunctions;
-import org.innovateuk.ifs.invite.domain.ProjectInvite;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.user.domain.User;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
  * Builder for {@link ProjectUser} entities.
  */
-public class ProjectUserBuilder extends BaseBuilder<ProjectUser, ProjectUserBuilder> {
+public class ProjectUserBuilder extends ProjectParticipantBuilder<ProjectUser, ProjectUserBuilder> {
 
     private ProjectUserBuilder(List<BiConsumer<Integer, ProjectUser>> multiActions) {
-        super(multiActions);
+        super(multiActions, ProjectParticipantRole.PROJECT_USER_ROLES);
     }
 
     public static ProjectUserBuilder newProjectUser() {
@@ -40,33 +36,21 @@ public class ProjectUserBuilder extends BaseBuilder<ProjectUser, ProjectUserBuil
         return new ProjectUser();
     }
 
-    public ProjectUserBuilder withId(Long... ids) {
-        return withArray((id, projectUser) -> projectUser.setId(id), ids);
-    }
-
     public ProjectUserBuilder withRole(ProjectParticipantRole... roles) {
-        return withArray((role, projectUser) -> setField("role", role, projectUser), roles);
+
+        return super.withRole(roles);
     }
 
-    public ProjectUserBuilder withProject(Project... project) {
-        return withArray((proj, projectUser) -> setField("project", proj, projectUser), project);
+    public ProjectUserBuilder withOrganisation(Organisation... organisations) {
+        return super.withOrganisation(organisations);
     }
 
-    public ProjectUserBuilder       withOrganisation(Organisation... organisations) {
-        return withArray((organisation, projectUser) -> setField("organisation", organisation, projectUser), organisations);
-    }
-
-    public ProjectUserBuilder  withInvite(ProjectInvite... projectInvites) {
-        return withArray((projectInvite, projectUser) -> setField("invite", projectInvite, projectUser), projectInvites);
-    }
-
-    public ProjectUserBuilder withUser(User... users) {
-        return withArray(BuilderAmendFunctions::setUser, users);
+    public ProjectUserBuilder withInvite(ProjectUserInvite... projectUserInvites) {
+        return withArraySetFieldByReflection("invite", projectUserInvites);
     }
 
     @Override
     public void postProcess(int index, ProjectUser projectUser) {
-
         Project project = projectUser.getProcess();
 
         if (project != null) {

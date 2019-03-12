@@ -38,10 +38,10 @@ public class MilestoneRepositoryIntegrationTest extends BaseRepositoryIntegratio
         flushAndClearSession();
 
         //Assert that the dates are read out of the database in the same timezone and are all equal.
-        Set<ZonedDateTime> uniqueSet = CollectionHelper.asSet(repository.findOne(utcId).getDate(),
-                repository.findOne(actId).getDate(),
-                repository.findOne(ectId).getDate(),
-                repository.findOne(betId).getDate());
+        Set<ZonedDateTime> uniqueSet = CollectionHelper.asSet(repository.findById(utcId).get().getDate(),
+                repository.findById(actId).get().getDate(),
+                repository.findById(ectId).get().getDate(),
+                repository.findById(betId).get().getDate());
 
         assertThat(uniqueSet.size(), equalTo(1));
 

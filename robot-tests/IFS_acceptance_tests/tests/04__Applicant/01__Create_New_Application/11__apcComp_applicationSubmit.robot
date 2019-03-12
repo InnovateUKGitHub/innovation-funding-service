@@ -8,7 +8,7 @@ Documentation     IFS-2284 Assign new Ts and Cs for APC competition type templat
 ...               IFS-4221  As an applicant I am only able to invite contributors to a single project type competition application
 ...
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -27,9 +27,9 @@ Comp Admin creates an APC competition
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286  IFS-4221  IFS-4222
     [Tags]  MySQL
-    When the competition is open                  ${apcCompetitionTitle}
-    And Log in as a different user                &{lead_applicant_credentials}
-    Then logged in user applies to competition    ${apccompetitionTitle}  1
+    [Setup]   get competition id and set open date to yesterday  ${apcCompetitionTitle}
+    Given Log in as a different user                        &{lead_applicant_credentials}
+    Then logged in user applies to competition              ${apcCompetitionTitle}  1
     And the applicant cannot add a collaborator to a single comp
     And the applicant sees single comp finance summary
     And the applicant sees state aid information
@@ -48,6 +48,7 @@ Applicant submits his application
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+    Connect to database  @{database}
 
 the lead applicant fills all the questions and marks as complete(APC)
     the user marks the project details as complete
@@ -72,3 +73,7 @@ the applicant sees state aid information
     the user should see the element      link = eligible for state aid
     the user clicks the button/link      link = Your finances
     the user clicks the button/link      link = Application overview
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

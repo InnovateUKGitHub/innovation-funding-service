@@ -8,7 +8,7 @@ Documentation     IFS-2396  ATI Competition type template
 ...               IFS-3421  As a Lead applicant I am unable submit an ineligible application to a Collaborative competition
 ...
 Suite Setup       Custom Suite Setup
-Suite Teardown    Close browser and delete emails
+Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -29,9 +29,9 @@ Comp Admin creates an ATI competition
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
     [Tags]  MySQL
-    When the competition is open                                 ${ATIcompetitionTitle}
-    And Log in as a different user            &{lead_applicant_credentials}
-    Then logged in user applies to competition                  ${ATIcompetitionTitle}  1
+    Given get competition id and set open date to yesterday  ${ATIcompetitionTitle}
+    When log in as a different user                          &{lead_applicant_credentials}
+    Then logged in user applies to competition               ${ATIcompetitionTitle}  1
 
 Single applicant cannot submit his application to a collaborative comp
     [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421
@@ -57,11 +57,10 @@ Invite a collaborator and check the application can the be submitted
 Moving ATI Competition to Project Setup
     [Documentation]  IFS-2332
     [Tags]
-    [Setup]  Requesting the ID of this Competition
-    When Log in as a different user    &{internal_finance_credentials}
-    Then moving competition to Closed                  ${atiCompId}
-    And making the application a successful project    ${atiCompId}  ${ATIapplicationTitle}
-    And moving competition to Project Setup            ${atiCompId}
+    When Log in as a different user                    &{internal_finance_credentials}
+    Then moving competition to Closed                  ${competitionId}
+    And making the application a successful project    ${competitionId}  ${ATIapplicationTitle}
+    And moving competition to Project Setup            ${competitionId}
 
 Applicant completes Project Details
     [Documentation]  IFS-2332
@@ -85,10 +84,7 @@ Project Finance is able to see the Overheads costs file
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
-
-Requesting the ID of this Competition
-    ${atiCompId} =  get comp id from comp title  ${ATIcompetitionTitle}
-    Set suite variable   ${atiCompId}
+    Connect to database  @{database}
 
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${ATIapplicationTitle}
@@ -144,3 +140,7 @@ the user does not see state aid information
     the user clicks the button/link      link = Your organisation
     the user should not see the element  link = eligible for state aid
     the user clicks the button/link      link = Your finances
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Applications'" />
 </head>
 
 <body class="govuk-template__body app-dashboard">
@@ -20,7 +20,7 @@
         </div>
 
         <div class="my-applications">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='govuk-heading-l'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Applications',size='govuk-heading-l'" />
             <section th:unless="${model.projects.empty}" class="projects-in-setup">
                 <div class="progress-list">
                     <h2 class="govuk-heading-m" th:text="${model.projectSetupContainerText}"/>
@@ -41,6 +41,39 @@
                                 <strong class="status-msg msg-progress">
                                     Project in setup
                                 </strong>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="h2020" th:unless="${model.euGrantTransfers.empty}">
+                <div class="progress-list">
+                    <h2 class="govuk-heading-m">Horizon 2020 grant transfers</h2>
+                    <ul>
+                        <li th:each="euGrantTransfer : ${model.euGrantTransfers}">
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <a th:href="${euGrantTransfer.linkUrl}" th:text="${euGrantTransfer.title}" class="govuk-link" />
+                                </h3>
+                                <ul class="application-details">
+                                    <li>Application number: <span th:text="${euGrantTransfer.applicationNumber}"></span></li>
+                                    <li>Competition: <span th:text="${euGrantTransfer.competitionTitle}">COMPETITION NAME</span></li>
+                                </ul>
+                            </div>
+                            <div class="status">
+                                <th:block th:if="${euGrantTransfer.inProgress}">
+                                    <span class="status-msg msg-progress" th:text="${euGrantTransfer.applicationProgress}+'% complete'">PERCENTAGE COMPLETE</span>
+                                </th:block>
+                                <th:block th:if="${euGrantTransfer.submitted}">
+                                    <span class="status-msg msg-progress">Application submitted</span>
+                                </th:block>
+                                <th:block th:if="${euGrantTransfer.successful}">
+                                    <span class="status-msg msg-progress">Project in setup</span>
+                                </th:block>
+                                <th:block th:if="${euGrantTransfer.ineligible}">
+                                    <span class="status-msg msg-progress">Ineligible</span>
+                                </th:block>
                             </div>
                         </li>
                     </ul>

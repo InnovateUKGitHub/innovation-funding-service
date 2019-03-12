@@ -25,6 +25,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -62,6 +63,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource leadOnApplication1;
     private UserResource innovationLeadOnApplication1;
     private UserResource stakeholderUserResourceOnCompetition;
+    private UserResource monitoringOfficerOnProjectForApplication1;
     private UserResource user2;
     private UserResource user3;
     private UserResource assessor;
@@ -96,6 +98,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(Role.STAKEHOLDER).build();
         Stakeholder stakeholder = StakeholderBuilder.newStakeholder().withUser(stakeholderUserOnCompetition).build();
 
+        monitoringOfficerOnProjectForApplication1 = newUserResource().build();
+
         leadOnApplication1 = newUserResource().build();
         user2 = newUserResource().build();
         user3 = newUserResource().build();
@@ -117,9 +121,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         applicantRoles.add(Role.LEADAPPLICANT);
         applicantRoles.add(Role.COLLABORATOR);
 
-        when(applicationRepositoryMock.exists(applicationResource1.getId())).thenReturn(true);
-        when(applicationRepositoryMock.exists(applicationResource2.getId())).thenReturn(true);
-        when(applicationRepositoryMock.exists(null)).thenReturn(false);
+        when(applicationRepositoryMock.existsById(applicationResource1.getId())).thenReturn(true);
+        when(applicationRepositoryMock.existsById(applicationResource2.getId())).thenReturn(true);
+        when(applicationRepositoryMock.existsById(null)).thenReturn(false);
 
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadOnApplication1.getId(), applicationResource1.getId(), Role.LEADAPPLICANT)).thenReturn(true);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(user2.getId(), applicationResource1.getId(), Role.COLLABORATOR)).thenReturn(true);
@@ -144,6 +148,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList
                 (innovationLead));
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
+        when(projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application1.getId(), monitoringOfficerOnProjectForApplication1.getId()))
+                .thenReturn(true);
     }
 
     @Test
@@ -180,7 +186,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void onlyStakeholdersAssignedToCompetitionForApplicationCanAccessApplication() {
         assertTrue(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, stakeholderUserResourceOnCompetition));
-        assertFalse(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, stakeholderUser()));
+        assertFalse(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, monitoringOfficerUser()));
+    }
+
+    @Test
+    public void monitoringOfficerAssignedToProjectCanViewApplications() {
+        assertTrue(rules.monitoringOfficerAssignedToProjectCanViewApplications(applicationResource1, monitoringOfficerOnProjectForApplication1));
+        assertFalse(rules.monitoringOfficerAssignedToProjectCanViewApplications(applicationResource1, stakeholderUser()));
     }
 
     @Test
@@ -488,7 +500,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     .withCompetitionType(newCompetitionType().withName("Sector").build())
                     .build();
             ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
-            when(competitionRepositoryMock.findOne(application.getCompetition())).thenReturn(competition);
+            when(competitionRepositoryMock.findById(application.getCompetition())).thenReturn(Optional.of(competition));
             if(!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) && user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD)){
                 assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
             } else {

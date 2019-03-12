@@ -9,6 +9,8 @@ import org.innovateuk.ifs.file.resource.FileTypeResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -38,7 +40,7 @@ public class FileTypeServiceImplTest extends BaseServiceUnitTest<FileTypeService
         FileType fileType = new FileType();
         FileTypeResource fileTypeResource = new FileTypeResource();
 
-        when(fileTypeRepositoryMock.findOne(fileTypeId)).thenReturn(fileType);
+        when(fileTypeRepositoryMock.findById(fileTypeId)).thenReturn(Optional.of(fileType));
         when(fileTypeMapperMock.mapToResource(fileType)).thenReturn(fileTypeResource);
 
         ServiceResult<FileTypeResource> result = service.findOne(fileTypeId);
@@ -46,7 +48,7 @@ public class FileTypeServiceImplTest extends BaseServiceUnitTest<FileTypeService
         assertTrue(result.isSuccess());
         assertEquals(fileTypeResource, result.getSuccess());
 
-        verify(fileTypeRepositoryMock).findOne(fileTypeId);
+        verify(fileTypeRepositoryMock).findById(fileTypeId);
     }
 
     @Test

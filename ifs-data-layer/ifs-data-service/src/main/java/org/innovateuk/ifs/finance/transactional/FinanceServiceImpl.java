@@ -111,7 +111,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
                 applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
 
         if(applicationFinance != null) {
-            OrganisationType organisationType = organisationRepository.findOne(organisationId).getOrganisationType();
+            OrganisationType organisationType = organisationRepository.findById(organisationId).get().getOrganisationType();
 
             if(isAcademic(organisationType)){   // Academic organisations will always be funded.
                 return serviceSuccess(true);
@@ -177,6 +177,6 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     }
 
     private ServiceResult<ApplicationFinance> getApplicationFinance(Long applicationFinanceId) {
-        return find(applicationFinanceRepository.findOne(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
+        return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
     }
 }

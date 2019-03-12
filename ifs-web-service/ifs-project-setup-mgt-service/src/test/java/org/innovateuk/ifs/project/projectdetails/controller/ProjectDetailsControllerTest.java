@@ -18,8 +18,10 @@ import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -40,7 +42,7 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -68,6 +70,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     @Mock
     private ApplicationRestService applicationRestService;
+
+    @Spy
+    @SuppressWarnings("unused")
+    private NavigationUtils navigationUtils;
 
     @Test
     public void viewProjectDetails() throws Exception {
@@ -289,7 +295,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         verify(projectDetailsService).updateProjectDuration(projectId, 18L);
     }
 
-
     @Test
     public void withdrawProject() throws Exception {
         long competitionId = 1L;
@@ -309,11 +314,56 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + project.getId() + "/withdraw"))
                 .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/previous"))
                 .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:http://localhost:80/management/competition/1/applications/previous"))
                 .andReturn();
 
         verify(projectRestService).withdrawProject(project.getId());
         verify(projectRestService).getProjectById(project.getId());
         verify(applicationRestService).withdrawApplication(applicationId);
+    }
+
+    @Test
+    public void handleProjectOffline() throws Exception {
+        long competitionId = 1L;
+        long applicationId = 3L;
+        ProjectResource project = newProjectResource()
+                .withApplication(applicationId)
+                .build();
+
+        setLoggedInUser(newUserResource()
+                .withRolesGlobal(singletonList(IFS_ADMINISTRATOR))
+                .build());
+
+        when(projectRestService.handleProjectOffline(project.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + project.getId() + "/handle-offline"))
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/details", competitionId, project.getId())))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+
+        verify(projectRestService).handleProjectOffline(project.getId());
+    }
+
+    @Test
+    public void completeProjectOffline() throws Exception {
+        long competitionId = 1L;
+        long applicationId = 3L;
+        ProjectResource project = newProjectResource()
+                .withApplication(applicationId)
+                .build();
+
+        setLoggedInUser(newUserResource()
+                .withRolesGlobal(singletonList(IFS_ADMINISTRATOR))
+                .build());
+
+        when(projectRestService.completeProjectOffline(project.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + project.getId() + "/complete-offline"))
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/details", competitionId, project.getId())))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+
+        verify(projectRestService).completeProjectOffline(project.getId());
     }
 
     private  List<ProjectUserResource> buildProjectUsers(OrganisationResource leadOrganisation, OrganisationResource partnerOrganisation) {

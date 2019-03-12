@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.*;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
@@ -57,7 +58,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
     @Test
     public void save() {
 
-        CompetitionDocumentResource competitionDocumentResource = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+        CompetitionDocumentResource competitionDocumentResource = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
                 .withFileType(singletonList(1L))
                 .build();
         CompetitionDocument competitionDocument = new CompetitionDocument();
@@ -76,7 +77,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
 
     @Test
     public void saveAllWhenNoFileTypeSelected() {
-        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
                 .withFileType(singletonList(1L), emptyList())
                 .build(2);
 
@@ -85,13 +86,13 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE));
 
-        verify(competitionDocumentConfigRepositoryMock, never()).save(any(List.class));
+        verify(competitionDocumentConfigRepositoryMock, never()).saveAll(any(List.class));
     }
 
     @Test
     public void saveAll() {
 
-        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
                 .withId(1L, 2L)
                 .withFileType(singletonList(1L))
                 .build(2);
@@ -105,7 +106,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
 
         when(competitionDocumentMapperMock.mapToDomain(competitionDocumentResources.get(0))).thenReturn(competitionDocument1);
         when(competitionDocumentMapperMock.mapToDomain(competitionDocumentResources.get(1))).thenReturn(competitionDocument2);
-        when(competitionDocumentConfigRepositoryMock.save(competitionDocuments)).thenReturn(competitionDocuments);
+        when(competitionDocumentConfigRepositoryMock.saveAll(competitionDocuments)).thenReturn(competitionDocuments);
         when(competitionDocumentMapperMock.mapToResource(competitionDocument1)).thenReturn(competitionDocumentResources.get(0));
         when(competitionDocumentMapperMock.mapToResource(competitionDocument2)).thenReturn(competitionDocumentResources.get(1));
 
@@ -115,7 +116,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         assertEquals(competitionDocumentResources.get(0), result.getSuccess().get(0));
         assertEquals(competitionDocumentResources.get(1), result.getSuccess().get(1));
 
-        verify(competitionDocumentConfigRepositoryMock).save(competitionDocuments);
+        verify(competitionDocumentConfigRepositoryMock).saveAll(competitionDocuments);
     }
 
     @Test
@@ -126,7 +127,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         CompetitionDocument competitionDocument = new CompetitionDocument();
         CompetitionDocumentResource competitionDocumentResource = new CompetitionDocumentResource();
 
-        when(competitionDocumentConfigRepositoryMock.findOne(projectDocumentId)).thenReturn(competitionDocument);
+        when(competitionDocumentConfigRepositoryMock.findById(projectDocumentId)).thenReturn(Optional.of(competitionDocument));
         when(competitionDocumentMapperMock.mapToResource(competitionDocument)).thenReturn(competitionDocumentResource);
 
         ServiceResult<CompetitionDocumentResource> result = service.findOne(projectDocumentId);
@@ -134,7 +135,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         assertTrue(result.isSuccess());
         assertEquals(competitionDocumentResource, result.getSuccess());
 
-        verify(competitionDocumentConfigRepositoryMock).findOne(projectDocumentId);
+        verify(competitionDocumentConfigRepositoryMock).findById(projectDocumentId);
     }
 
     @Test
@@ -177,7 +178,7 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         competitionDocument2.setCompetition(competition);
 
         // create 2 document resources with same title & competition but different Id
-        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.neCompetitionDocumentResource()
+        List<CompetitionDocumentResource> competitionDocumentResources = CompetitionDocumentResourceBuilder.newCompetitionDocumentResource()
                 .withCompetition(competition.getId())
                 .withTitle("Test1")
                 .withId(competitionDocument1.getId(), competitionDocument2.getId())
@@ -201,6 +202,6 @@ public class CompetitionSetupCompetitionDocumentServiceImplTest extends BaseServ
         ServiceResult<Void> result = service.delete(projectDocumentId);
 
         assertTrue(result.isSuccess());
-        verify(competitionDocumentConfigRepositoryMock).delete(projectDocumentId);
+        verify(competitionDocumentConfigRepositoryMock).deleteById(projectDocumentId);
     }
 }

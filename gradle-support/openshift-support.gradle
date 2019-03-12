@@ -308,18 +308,17 @@ task createProject(dependsOn: deleteProject) {
             executable 'oc'
             args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
         }
-        
-        if (openshiftEnv.startsWith("ifs-at-")) {
 
+        if (openshiftEnv.startsWith("ifs-at-")) {
             exec {
                 executable 'oc'
-                args 'patch', 'namespace', "${openshiftEnv}", "-p", '{\"metadata\":{\"annotations\":{\"openshift.io/node-selector\":\"purpose=perftesting\"}}}',  "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+                args 'patch', 'namespace', "${openshiftEnv}", "-p", '{\"metadata\":{\"annotations\":{\"openshift.io/node-selector\":\"purpose=perftesting\"}}}', "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
             }
 
             for( String user : System.env.bamboo_openshift_at_users.split(',') ) {
                 exec {
                     executable 'oc'
-                    args 'adm', 'policy', 'add-role-to-user', 'admin', "${user}", '-n', "${openshiftEnv}", "--token=${System.env.bamboo_openshift_svc_account_token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+                    args 'adm', 'policy', 'add-role-to-user', 'admin', "${user}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
                 }
             }
         } 

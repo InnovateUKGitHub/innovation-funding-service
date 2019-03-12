@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 public class ProjectTeamStatusResource {
     private List<ProjectPartnerStatusResource> partnerStatuses;
+    private ProjectState projectState;
 
     public List<ProjectPartnerStatusResource> getPartnerStatuses() {
         return partnerStatuses;
@@ -27,6 +29,14 @@ public class ProjectTeamStatusResource {
 
     public void setPartnerStatuses(List<ProjectPartnerStatusResource> partnerStatuses) {
         this.partnerStatuses = partnerStatuses;
+    }
+
+    public ProjectState getProjectState() {
+        return projectState;
+    }
+
+    public void setProjectState(ProjectState projectState) {
+        this.projectState = projectState;
     }
 
     @JsonIgnore

@@ -5,13 +5,10 @@ Documentation     INFUND-6794: As an applicant I will be invited to add funding 
 ...
 ...               IFS-2659: UJ - External - Finances - Able to submit without Other funding
 Suite Setup       Custom Suite Setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
-
-*** Variables ***
-${applicationName}  Hydrology the dynamics of Earth's surface water
 
 *** Test Cases ***
 Other funding validation message
@@ -62,8 +59,8 @@ If funding is complete. application details has a warning message
     ...
     ...    INFUND-6823
     [Tags]  HappyPath
-    Given the user navigates to the page   ${DASHBOARD_URL}
-    And the user clicks the button/link    link = ${applicationName}
+    Given the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
+    And the user clicks the button/link    link = ${openCompetitionRTOApplication1Name}
     When the user clicks the button/link   link = Research category
     And the user clicks the button/link    jQuery = button:contains(Edit)
     Then the user should see the element   jQuery = .message-alert p:contains("Changing the research category will reset the funding level for all business participants.")
@@ -73,7 +70,7 @@ Changing application details sets funding level to incomplete
     [Tags]  HappyPath
     Given the user clicks the button twice    css = label[for="researchCategory2"]
     And the user clicks the button/link       id = application-question-complete
-    And the user navigates to Your-finances page  ${applicationName}
+    And the user navigates to Your-finances page  ${openCompetitionRTOApplication1Name}
     Then the user should see the element      css = .task-list li:nth-of-type(4) .task-status-incomplete
 
 Funding level has been reset
@@ -89,7 +86,7 @@ Funding level can be re-entered, and this saves correctly
     [Documentation]  INFUND-6895
     [Tags]
     Given the user selects the radio button         requestingFunding   true
-    And the user enters text to a text field        css = [name^="grantClaimPercentage"]    43
+    And the user enters text to a text field        css = [name^="grantClaimPercentage"]    25
     When the user enters text to a text field       css = [name*=source]  Lottery funding
     Then the user enters text to a text field       css = [name*=date]  12-${nextyear}
     And the user enters text to a text field        css = [name*=fundingAmount]  20000
@@ -112,7 +109,7 @@ Read only view of the other funding
     [Documentation]    INFUND-6895, INFUND-8044
     [Tags]
     Given the user clicks the button/link  link = Your funding
-    Then the user should see the element   jQuery = dt:contains("Funding level") + dd:contains("43")
+    Then the user should see the element   jQuery = dt:contains("Funding level") + dd:contains("25")
     And the user clicks the button/link    jQuery = th:contains("uncle") ~ td:contains("£15,000")
     And the user clicks the button/link    jQuery = th:contains("grandma") ~ td:contains("£200,000")
     And the user should see the element    jQuery = button:contains("Edit")
@@ -121,12 +118,11 @@ Read only view of the other funding
 Custom Suite Setup
     Set predefined date variables
     the user logs-in in new browser                   &{lead_applicant_credentials}
-    ${applicationId} =  get application id by name    ${applicationName}
-    the user navigates to the page                    ${server}/application/${applicationId}
+    the user navigates to the page                    ${server}/application/${openCompetitionRTOApplication1Id}
     the user clicks the button/link                   link = Application details
-    the user fills in the Application details         ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}
+    the user fills in the Application details         ${openCompetitionRTOApplication1Name}   ${tomorrowday}  ${month}  ${nextyear}
     the user selects research category                Feasibility studies
-    Complete the org size section                     ${applicationName}
+    Complete the org size section                     ${openCompetitionRTOApplication1Name}
 
 the user provides invalid value as percentage then he should see the error
     [Arguments]  ${error}  ${value}
@@ -137,7 +133,7 @@ the user provides invalid value as percentage then he should see the error
 
 Complete the org size section
     [Arguments]  ${applicationName}
-    the user navigates to the page                      ${DASHBOARD_URL}
+    the user navigates to the page                      ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link                     link = ${applicationName}
     the user clicks the button/link                     link = Your finances
     the user clicks the button/link                     link = Your organisation
@@ -178,3 +174,6 @@ the user changes the research category
     [Documentation]    INFUND-8260
     the user clicks the button twice   css = label[for="researchCategory2"]
     the user clicks the button/link    jQuery = button:contains(Save)
+
+Custom suite teardown
+    The user closes the browser

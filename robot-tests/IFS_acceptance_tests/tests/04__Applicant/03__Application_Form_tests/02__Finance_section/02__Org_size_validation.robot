@@ -7,7 +7,7 @@ Documentation     INFUND-1110: As an applicant/partner applicant I want to add m
 ...
 ...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
 Suite Setup       Custom Suite Setup
-Suite Teardown    Mark application details as incomplete and the user closes the browser  Robot test application
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -123,6 +123,7 @@ Funding section can be completed with under 50%
 
 *** Keywords ***
 Custom Suite Setup
+    Connect to database  @{database}
     Set predefined date variables
     log in and create new application if there is not one already with complete application details  Robot test application  ${tomorrowday}  ${month}  ${nextyear}
 
@@ -159,3 +160,7 @@ the funding section has been reset including funding level
 the user marks the 'your funding' section as incomplete again
     the user clicks the button/link    link = Your funding
     the user clicks the button/link    jQuery = button:contains("Edit")
+
+Custom suite teardown
+    Mark application details as incomplete and the user closes the browser  Robot test application
+    Disconnect from database

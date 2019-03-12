@@ -76,7 +76,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         long userId = 456L;
         long organisationId = 789L;
         setLoggedInUser(newUserResource().withId(userId).withRolesGlobal(singletonList(APPLICANT)).build());
-        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(newCompetitionResource()
+        when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(newCompetitionResource()
                 .withId(competitionId).withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build());
         assertAccessDenied(
                 () -> classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application",
@@ -163,7 +163,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         Long competitionId = 1L;
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
 
-        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+        when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competitionResource);
 
         assertAccessDenied(() -> classUnderTest.findPreviousApplications(competitionId, 0, 0, "", "ALL"), () -> {
             verify(competitionRules).internalUsersAndIFSAdminCanViewPreviousApplications(any(CompetitionResource.class), any(UserResource.class));

@@ -19,7 +19,7 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       Custom Suite Setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
@@ -28,7 +28,7 @@ User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
     [Tags]
     When the user navigates to the page              ${server}/assessment/${WITHDRAWN_ASSESSMENT}/assignment
-    Then the user should see the text in the page    Invitation withdrawn
+    Then the user should see the element             jQuery = h1:contains("Invitation withdrawn")
     [Teardown]    the user clicks the button/link    jQuery = #navigation a:contains(Dashboard)
 
 Competition link should navigate to the applications
@@ -46,9 +46,7 @@ Details of the competition are visible
     Then the user should see the element   jQuery = dt:contains("Competition") + dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element    jQuery = dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
     And the user should see the element    jQuery = dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
-    ${date} =  request the date from the database
-    And the user should see the element    jQuery = dt:contains("Submit applications deadline:") + dd:contains("${date}")
-
+    And the user should see the element    jQuery = dt:contains("Submit applications deadline:") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DATE_LONG}")
 
 User can view the competition brief
     [Documentation]    INFUND-5494
@@ -56,7 +54,7 @@ User can view the competition brief
     When The user opens the link in new window           View competition brief
     Then the user should get a competition brief window
     And the user should not see an error in the page
-    And the user should see the text in the page         ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user should see the element                  jQuery = h1:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element                  jQuery = .govuk-list li:contains("Competition opens")
     And the user should see the element                  jQuery = .govuk-list li:contains("Competition closes")
     And the user should see the element                  jQuery = .govuk-button:contains("Start new application")
@@ -133,7 +131,7 @@ Custom Suite Setup
 
 the assessor fills all fields with valid inputs
     Select From List By Index                             id = rejectReasonValid    2
-    The user should not see the text in the page          Please enter a reason
+    The user should not see the element                   jQuery = .govuk-error-message:contains("Please enter a reason")
     the user enters multiple strings into a text field    id = rejectComment  a${SPACE}  102
     the user should see a field and summary error         Maximum word count exceeded. Please reduce your word count to 100.
     The user enters text to a text field                  id = rejectComment    Unable to assess the application as i'm on holiday.
@@ -156,11 +154,5 @@ The user closes the competition brief
     Close Window
     Select Window
 
-request the date from the database
-    Connect to Database  @{database}
-    log  ${IN_ASSESSMENT_COMPETITION}
-    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%e %M %Y') FROM `${database_name}`.`milestone` WHERE `competition_id` = '${IN_ASSESSMENT_COMPETITION}' AND type = 'ASSESSOR_DEADLINE';
-    log  ${result}
-    ${result} =  get from list  ${result}  0
-    ${assessorDeadline} =  get from list  ${result}  0
-    [Return]  ${assessorDeadline}
+Custom suite teardown
+    The user closes the browser

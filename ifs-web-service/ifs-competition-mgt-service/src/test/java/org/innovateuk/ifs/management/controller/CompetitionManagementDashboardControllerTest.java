@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Class for testing public functions of {@link CompetitionManagementDashboardController}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class CompetitionManagementDashboardControllerTest extends BaseControllerMockMVCTest<CompetitionManagementDashboardController> {
 
     private static final String INNOVATION_AREA_NAME_ONE = "one";
@@ -153,6 +153,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
         assertEquals(competitions.get(INNOVATION_AREA_NAME_ONE), viewModel.getCompetitions().get(PROJECT_SETUP));
         assertEquals(counts, viewModel.getCounts());
+        assertEquals(viewModel.getNonPrioritisedCompetitions().size(), 1);
         assertEquals(countBankDetails, viewModel.getCountBankDetails());
         assertFalse(viewModel.isProjectFinanceUser());
 

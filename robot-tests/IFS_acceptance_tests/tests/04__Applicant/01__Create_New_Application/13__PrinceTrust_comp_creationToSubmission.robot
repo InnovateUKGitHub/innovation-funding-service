@@ -2,8 +2,8 @@
 Documentation   IFS-2688 As a Portfolio manager I am able to create a Prince's Trust competition
 ...
 ...             IFS-3287 As a Portfolio Manager I am able to switch off requirement for Research category
-Suite Setup     custom suite setup
-Suite Teardown  Close browser and delete emails
+Suite Setup     Custom suite setup
+Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -24,9 +24,9 @@ Comp Admin creates The Prince's Trust type competition
 Applicant applies to newly created The Prince's Trust competition
     [Documentation]  IFS-2688
     [Tags]    MySQL
-    When the competition is open                      ${comp_name}
-        And Log in as a different user                &{RTO_lead_applicant_credentials}
-        Then logged in user applies to competition    ${comp_name}  3
+    Given get competition id and set open date to yesterday  ${comp_name}
+    And Log in as a different user                           &{RTO_lead_applicant_credentials}
+    Then logged in user applies to competition               ${comp_name}  3
 
 Applicant submits his application
     [Documentation]  IFS-2688 IFS-3287
@@ -42,6 +42,7 @@ Applicant submits his application
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+    Connect to database  @{database}
 
 The competition admin creates The Prince's Trust Comp
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
@@ -83,3 +84,7 @@ the lead applicant answers the four sections as complete
     the lead applicant marks every question as complete  2. Innovation
     the lead applicant marks every question as complete  3. Project team
     the lead applicant marks every question as complete  4. Funding and adding value
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database

@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     IFS-747 As a comp exec I am able to select a Competition type of Generic in Competition setup
 Suite Setup       Custom suite setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -24,14 +24,7 @@ CompAdmin creates a new Generic competition
     [Tags]  HappyPath
     [Setup]  log in as a different user                &{Comp_admin1_credentials}
     Given the competition admin creates competition      4  ${competitionName}  Generic  Generic  2  GRANT  project-setup-completion-stage  no  1  true  collaborative
-
-Requesting the id of this Competition and moving to Open
-    [Documentation]  IFS-3261
-    ...   retrieving the id of the competition so that we can use it in urls
-    [Tags]  MySQL  HappyPath
-    ${competitionId} =  get comp id from comp title  ${competitionName}
-    Set suite variable  ${competitionId}
-    The competition moves to Open state  ${competitionId}
+    Then get competition id and set open date to yesterday  ${competitionName}
 
 Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Documentation]  IFS-1012  IFS-2879
@@ -47,3 +40,8 @@ Applicant Applies to Generic competition and is able to see the Ts&Cs
 Custom suite setup
     Set predefined date variables
     The user logs-in in new browser  &{lead_applicant_credentials}
+    Connect to database  @{database}
+
+Custom suite teardown
+    The user closes the browser
+    Disconnect from database

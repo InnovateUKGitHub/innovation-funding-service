@@ -88,7 +88,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<String> generateCompetitionCode(Long id, ZonedDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMM");
-        Competition competition = competitionRepository.findById(id);
+        Competition competition = competitionRepository.findById(id).get();
         String datePart = formatter.format(dateTime);
         List<Competition> openingSameMonth = competitionRepository.findByCodeLike("%" + datePart + "%");
 
@@ -116,8 +116,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource) {
 
-        Competition existingCompetition = competitionRepository.findOne(competitionResource.getId());
-
+        Competition existingCompetition = competitionRepository.findById(competitionResource.getId()).orElse(null);
         Competition competition = competitionMapper.mapToDomain(competitionResource);
         competition = setCompetitionAuditableFields(competition, existingCompetition);
 
@@ -148,7 +147,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         // it is possible during autosave for this competition type to not yet be selected.  Therefore we need a null check
         // here
         if (competitionTypeId != null) {
-            CompetitionType competitionTypeSelected = competitionTypeRepository.findOne(competitionTypeId);
+            CompetitionType competitionTypeSelected = competitionTypeRepository.findById(competitionTypeId).orElse(null);
             GrantTermsAndConditions termsAndConditions = competitionTypeSelected.getTemplate().getTermsAndConditions();
             competitionResource.setTermsAndConditions(termsAndConditionsMapper.mapToResource(termsAndConditions));
         }
@@ -309,7 +308,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<Void> returnToSetup(Long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
         competition.setSetupComplete(false);
         return serviceSuccess();
     }
@@ -317,7 +316,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<Void> markAsSetup(Long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId);
+        Competition competition = competitionRepository.findById(competitionId).get();
         competition.setSetupComplete(true);
         return serviceSuccess();
     }

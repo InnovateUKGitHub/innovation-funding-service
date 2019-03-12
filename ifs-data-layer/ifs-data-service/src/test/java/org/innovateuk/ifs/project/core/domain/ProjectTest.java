@@ -13,38 +13,36 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.junit.Assert.*;
 
 public class ProjectTest {
-    Long id;
-    Application application;
-    Project project;
-    LocalDate startDate;
-    Address address;
-    Long durationInMonths;
-    String name;
-    ZonedDateTime documentsSubmittedDate;
+    private Application application;
+    private Project project;
+    private LocalDate startDate;
+    private Address address;
+    private Long durationInMonths;
+    private String name;
+    private ZonedDateTime documentsSubmittedDate;
 
     @Before
     public void setUp() throws Exception {
-        id = 0L;
         application = new Application();
         startDate = LocalDate.now();
         address = new Address();
         durationInMonths = 12L;
         name = "My Project";
+        documentsSubmittedDate = null;
 
-        project = new Project(id, application, startDate, address, durationInMonths, name, documentsSubmittedDate, ApprovalType.UNSET);
+        project = new Project(application, startDate, address, durationInMonths, name, documentsSubmittedDate, ApprovalType.UNSET);
     }
 
     @Test
-    public void applicationShouldReturnCorrectAttributeValues() throws Exception {
-        assertEquals(project.getId(), id);
+    public void applicationShouldReturnCorrectAttributeValues() {
         assertEquals(project.getApplication(), application);
         assertEquals(project.getTargetStartDate(), startDate);
         assertEquals(project.getAddress(), address);

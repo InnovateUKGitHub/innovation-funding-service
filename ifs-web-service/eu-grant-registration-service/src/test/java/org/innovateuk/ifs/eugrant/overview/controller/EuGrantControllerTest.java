@@ -2,7 +2,7 @@ package org.innovateuk.ifs.eugrant.overview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.innovateuk.ifs.eugrant.EuGrantRestService;
+import org.innovateuk.ifs.eu.grant.EuGrantRestService;
 import org.innovateuk.ifs.eugrant.overview.populator.EuGrantOverviewViewModelPopulator;
 import org.innovateuk.ifs.eugrant.overview.service.EuGrantCookieService;
 import org.junit.Test;

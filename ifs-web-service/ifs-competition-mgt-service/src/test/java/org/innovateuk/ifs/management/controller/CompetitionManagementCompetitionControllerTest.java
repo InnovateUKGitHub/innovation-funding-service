@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.hamcrest.core.IsInstanceOf;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
@@ -22,8 +23,7 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.internal.matchers.InstanceOf;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Class for testing public functions of {@link CompetitionManagementCompetitionController}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class CompetitionManagementCompetitionControllerTest extends BaseControllerMockMVCTest<CompetitionManagementCompetitionController> {
 
     @InjectMocks
@@ -143,6 +143,8 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         assertEquals(5, (int) model.getKeyStatistics().getStatFive());
         assertEquals(true, model.isAssessmentPanelEnabled());
         assertEquals(true, model.isInterviewPanelEnabled());
+        assertEquals(false, model.isFundingDecisionEnabled());
+        assertEquals(false, model.isFundingNotificationDisplayed());
         assertEquals(DETAILED, model.getAssessorFinanceView());
     }
 
@@ -161,7 +163,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
         mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}", competitionId))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(model().attribute("exception", new InstanceOf(ObjectNotFoundException.class)));
+                .andExpect(model().attribute("exception", new IsInstanceOf(ObjectNotFoundException.class)));
 
         InOrder inOrder = inOrder(competitionRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competitionId);
@@ -183,7 +185,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}", competitionId))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(model().attribute("exception", new InstanceOf(IncorrectStateForPageException.class)))
+                .andExpect(model().attribute("exception", new IsInstanceOf(IncorrectStateForPageException.class)))
                 .andReturn();
 
         IncorrectStateForPageException exception = (IncorrectStateForPageException) result.getModelAndView().getModel().get("exception");

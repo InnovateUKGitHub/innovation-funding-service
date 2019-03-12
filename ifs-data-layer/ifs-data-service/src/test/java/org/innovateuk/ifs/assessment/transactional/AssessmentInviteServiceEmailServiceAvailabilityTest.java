@@ -88,7 +88,7 @@ public class AssessmentInviteServiceEmailServiceAvailabilityTest extends Abstrac
 
             invite = testService.doWithinTransaction(() -> {
                 AssessmentInvite newInvite = new AssessmentInvite("Invite name", "asdf@example.com", "hash", competition, innovationArea);
-                User compAdmin = testService.doWithinTransaction(() -> userRepository.findOne(getCompAdmin().getId()));
+                User compAdmin = testService.doWithinTransaction(() -> userRepository.findById(getCompAdmin().getId()).orElse(null));
                 newInvite.send(compAdmin, ZonedDateTime.now());
 
                 AssessmentParticipant participant = new AssessmentParticipant(newInvite);
@@ -107,7 +107,7 @@ public class AssessmentInviteServiceEmailServiceAvailabilityTest extends Abstrac
 
             testService.doWithinTransaction(() -> {
                 List<AssessmentParticipant> participantRecords = assessmentParticipantRepository.getByCompetitionIdAndRole(compId, CompetitionParticipantRole.ASSESSOR);
-                assessmentParticipantRepository.delete(participantRecords);
+                assessmentParticipantRepository.deleteAll(participantRecords);
             });
 
             assessmentInviteRepository.delete(invite);
