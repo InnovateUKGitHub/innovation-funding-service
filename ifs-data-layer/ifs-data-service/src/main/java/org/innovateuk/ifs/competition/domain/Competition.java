@@ -664,6 +664,15 @@ public class Competition extends AuditableEntity implements ProcessActivity {
         return sections.stream().noneMatch(section -> SectionType.FINANCE.equals(section.getType()));
     }
 
+    public boolean isH2020() {
+        return CompetitionResource.H2020_TYPE_NAME.equals(competitionType.getName());
+    }
+
+    public boolean isFullyFunded() {
+        // Competitions which always have 100% funding level
+        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+    }
+
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
