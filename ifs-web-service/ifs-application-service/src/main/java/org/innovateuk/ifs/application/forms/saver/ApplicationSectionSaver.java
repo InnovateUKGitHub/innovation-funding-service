@@ -1,19 +1,16 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +34,6 @@ import static org.springframework.util.StringUtils.hasText;
 @Service
 public class ApplicationSectionSaver extends AbstractApplicationSaver {
 
-    private OrganisationService organisationService;
-    private FinanceViewHandlerProvider financeViewHandlerProvider;
     private UserRestService userRestService;
     private SectionService sectionService;
     private QuestionRestService questionRestService;
@@ -47,11 +42,8 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     private ApplicationSectionFinanceSaver financeSaver;
     private ApplicationQuestionFileSaver fileSaver;
     private ApplicationQuestionNonFileSaver nonFileSaver;
-    private CompetitionRestService competitionRestService;
 
-    public ApplicationSectionSaver(OrganisationService organisationService, FinanceViewHandlerProvider financeViewHandlerProvider, UserRestService userRestService, SectionService sectionService, QuestionRestService questionRestService, CookieFlashMessageFilter cookieFlashMessageFilter, OverheadFileSaver overheadFileSaver, ApplicationSectionFinanceSaver financeSaver, ApplicationQuestionFileSaver fileSaver, ApplicationQuestionNonFileSaver nonFileSaver, CompetitionRestService competitionRestService) {
-        this.organisationService = organisationService;
-        this.financeViewHandlerProvider = financeViewHandlerProvider;
+    public ApplicationSectionSaver(UserRestService userRestService, SectionService sectionService, QuestionRestService questionRestService, CookieFlashMessageFilter cookieFlashMessageFilter, OverheadFileSaver overheadFileSaver, ApplicationSectionFinanceSaver financeSaver, ApplicationQuestionFileSaver fileSaver, ApplicationQuestionNonFileSaver nonFileSaver) {
         this.userRestService = userRestService;
         this.sectionService = sectionService;
         this.questionRestService = questionRestService;
@@ -60,16 +52,14 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         this.financeSaver = financeSaver;
         this.fileSaver = fileSaver;
         this.nonFileSaver = nonFileSaver;
-        this.competitionRestService = competitionRestService;
     }
 
     public ValidationMessages saveApplicationForm(ApplicationResource application,
-                                                  Long competitionId,
                                                   ApplicationForm form,
                                                   Long sectionId,
                                                   Long userId,
                                                   HttpServletRequest request,
-                                                  HttpServletResponse response, Boolean validFinanceTerms) {
+                                                  HttpServletResponse response) {
 
         Long applicationId = application.getId();
         ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
@@ -88,18 +78,13 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
             errors.addAll(nonFileSaver.saveNonFileUploadQuestions(questions, request, userId, applicationId, ignoreEmpty));
             errors.addAll(fileSaver.saveFileUploadQuestionsIfAny(questions, request.getParameterMap(), request, applicationId, processRole.getId()));
 
-            Long organisationType = organisationService.getOrganisationType(userId, applicationId);
-            ValidationMessages saveErrors = financeViewHandlerProvider.getFinanceFormHandler(competitionRestService.getCompetitionById(competitionId).getSuccess(), organisationType).update(request, userId, applicationId, competitionId);
-
             if (overheadFileSaver.isOverheadFileRequest(request)) {
                 errors.addAll(overheadFileSaver.handleOverheadFileRequest(request));
-            } else {
-                errors.addAll(saveErrors);
             }
         }
 
         if (isMarkSectionRequest(params)) {
-            errors.addAll(handleMarkSectionRequest(application, selectedSection, params, processRole, errors, validFinanceTerms));
+            errors.addAll(handleMarkSectionRequest(application, selectedSection, params, processRole, errors));
             financeSaver.handleStateAid(params, application, form, selectedSection);
         }
 
@@ -109,13 +94,12 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     }
 
     private ValidationMessages handleMarkSectionRequest(ApplicationResource application, SectionResource selectedSection, Map<String, String[]> params,
-                                                        ProcessRoleResource processRole, ValidationMessages errorsSoFar, Boolean validFinanceTerms) {
+                                                        ProcessRoleResource processRole, ValidationMessages errorsSoFar) {
         ValidationMessages messages = new ValidationMessages();
 
         if (errorsSoFar.hasErrors()) {
             messages.addError(fieldError("formInput[cost]", "", MARKED_AS_COMPLETE_KEY));
-        } else if (isMarkSectionAsIncompleteRequest(params) ||
-                (isMarkSectionAsCompleteRequest(params) && validFinanceTerms)) {
+        } else if (isMarkSectionAsIncompleteRequest(params) || isMarkSectionAsCompleteRequest(params)) {
             List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), params);
 
             if (collectValidationMessages(financeErrorsMark).hasErrors()) {
