@@ -39,7 +39,7 @@ User can populate Funding information and Eligibility
     Given the user clicks the button/link          link = Funding information
     When the user completes funding information
     Then the user clicks the button/link           link = Return to setup overview
-    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}   3  false  single-or-collaborative
+    And the user fills in the Competition Setup Eligibility section       ${BUSINESS_TYPE_ID}  4
 
 User can complete the Application
     [Documentation]  IFS-5158
@@ -144,12 +144,12 @@ The user fills in the public content summary
     the user should see the element         jQuery = div:contains("Summary") ~ .task-status-complete
 
 The user fills in public content eligibility
-    the user clicks the button/link         link = Eligibility
-    the user enters text to a text field    id = contentGroups[0].heading  Heading 1
-    the user enters text to a text field    jQuery = div.editor:first-of-type  Content 1
-    the user clicks the button/link         jQuery = button:contains("Save and review")
-    the user clicks the button/link         link = Return to public content
-    the user should see the element         jQuery = div:contains("Eligibility") ~ .task-status-complete
+    the user clicks the button/link          link = Eligibility
+    the user enters text to a text field     id = contentGroups[0].heading  Heading 1
+    the user enters text to a text field     jQuery = div.editor:first-of-type  Content 1
+    the user clicks the button/link          jQuery = button:contains("Save and review")
+    the user clicks the button/link          link = Return to public content
+    the user should see the element          jQuery = div:contains("Eligibility") ~ .task-status-complete
 
 The user fills in public content scope
     the user clicks the button/link         link = Scope
@@ -196,9 +196,9 @@ The user completes the application proccess details
     the user clicks the button/link         jQuery = .govuk-button:contains("Done")
 
 The user completes grant transfer setup
-    the user clicks the button/link             jQuery = a:contains("Complete")
-    the user clicks the button/link             css = button[type="submit"]
-    the user navigates to the page              ${CA_UpcomingComp}
+    the user clicks the button/link         jQuery = a:contains("Complete")
+    the user clicks the button/link         css = button[type="submit"]
+    the user navigates to the page          ${CA_UpcomingComp}
 
 The user is able to go to Application overview
     the user clicks the button/link  jQuery = .govuk-button:contains("Save and continue")
@@ -206,6 +206,21 @@ The user is able to go to Application overview
     the user should see the element  link = Application team
     the user should see the element  link = Public description
     the user should see the element  link = Horizon 2020 grant agreement
+
+The user fills in the Competition Setup Eligibility section
+    [Arguments]  ${organisationType}  ${researchParticipation}
+    the user clicks the button/link                      link = Eligibility
+    the user clicks the button twice                     css = label[for="single-or-collaborative-single"]
+    the user selects the radio button                    researchCategoriesApplicable    false
+    the user selects the option from the drop-down menu  100%  fundingLevelPercentage
+    the user clicks the button twice                     css = label[for="lead-applicant-type-${organisationType}"]
+    the user selects the option from the drop-down menu  None     researchParticipation
+    the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
+    the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
+    the user clicks the button/link                      jQuery = button:contains("Done")
+    the user clicks the button/link                      link = Competition setup
+    the user should see the element                      jQuery = div:contains("Eligibility") ~ .task-status-complete
+    #Elements in this page need double clicking
 
 The user is able to complete Application details section
     [Arguments]  ${projectName}  ${month}  ${nextyear}  ${lastYear}

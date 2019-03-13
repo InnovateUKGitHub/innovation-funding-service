@@ -147,3 +147,4 @@ set @competition_type_id = (SELECT LAST_INSERT_ID());
 
 INSERT INTO assessor_count_option (competition_type_id, option_name, option_value, default_option) VALUES (@competition_type_id, '0', '1', 1);
 
+INSERT INTO grant_claim_maximum_competition (competition_id, grant_claim_maximum_id) values (@template_id,  1), (@template_id, 2), (@template_id, 3), (@template_id, 4), (@template_id, 5), (@template_id, 6), (@template_id, 7), (@template_id, 8), (@template_id, 9);
