@@ -3,16 +3,19 @@ package org.innovateuk.ifs.eugrant.transactional;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.euactiontype.repository.EuActionTypeRepository;
-import org.innovateuk.ifs.eugrant.EuContactResource;
-import org.innovateuk.ifs.eugrant.EuGrantResource;
-import org.innovateuk.ifs.eugrant.EuOrganisationResource;
-import org.innovateuk.ifs.eugrant.EuOrganisationType;
+import org.innovateuk.ifs.eugrant.*;
+import org.innovateuk.ifs.eugrant.domain.EuContact;
+import org.innovateuk.ifs.eugrant.domain.EuFunding;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
+import org.innovateuk.ifs.eugrant.domain.EuOrganisation;
 import org.innovateuk.ifs.eugrant.repository.EuGrantRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -155,5 +158,97 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
         euGrant = euGrantRepository.findById(euGrant.getId()).get();
         assertEquals(euGrant.getShortCode().length(), 5);
+    }
+
+    @Test
+    public void getByNotified() {
+
+        EuContact euContactOne = newEuContact()
+                .withName("Barry Venison")
+                .withEmail("barry@venison.com")
+                .withJobTitle("Rollercoaster operator")
+                .withTelephone("2468")
+                .build();
+
+        EuFunding euFundingOne = newEuFunding()
+                .withFundingContribution(BigDecimal.TEN)
+                .withGrantAgreementNumber("456")
+                .withParticipantId("123456789")
+                .withProjectName("projectName")
+                .withProjectStartDate(LocalDate.now())
+                .withProjectEndDate(LocalDate.now())
+                .withActionType(euActionTypeRepository.findAllByOrderByPriorityAsc().get(0))
+                .build();
+
+        EuOrganisation euOrganisationOne = newEuOrganisation()
+                .withName("orgName")
+                .withOrganisationType(EuOrganisationType.BUSINESS)
+                .build();
+
+        EuGrant euGrantOne = newEuGrant()
+                .withContact(euContactOne)
+                .withOrganisation(euOrganisationOne)
+                .withFunding(euFundingOne)
+                .withNotified(false)
+                .build();
+
+
+        EuContact euContactTwo = newEuContact()
+                .withName("Garry Owen")
+                .withEmail("garry@owen.com")
+                .withJobTitle("Secretary")
+                .withTelephone("1357")
+                .build();
+
+
+        EuFunding euFundingTwo = newEuFunding()
+                .withFundingContribution(BigDecimal.TEN)
+                .withGrantAgreementNumber("456")
+                .withParticipantId("123456789")
+                .withProjectName("projectName")
+                .withProjectStartDate(LocalDate.now())
+                .withProjectEndDate(LocalDate.now())
+                .withActionType(euActionTypeRepository.findAllByOrderByPriorityAsc().get(0))
+                .build();
+
+        EuOrganisation euOrganisationTwo = newEuOrganisation()
+                .withName("orgName")
+                .withOrganisationType(EuOrganisationType.BUSINESS)
+                .build();
+
+        EuGrant euGrantTwo = newEuGrant()
+                .withContact(euContactTwo)
+                .withOrganisation(euOrganisationTwo)
+                .withFunding(euFundingTwo)
+                .withNotified(true)
+                .build();
+
+        euGrantOne.submit("asdf");
+        euGrantTwo.submit("hjkl");
+        euGrantRepository.save(euGrantOne);
+        euGrantRepository.save(euGrantTwo);
+
+        Pageable pageable = new PageRequest(0, 100 , new Sort("contact.id"));
+
+        ServiceResult<EuGrantPageResource> resultOne = euGrantService.getEuGrantsByContactNotified(false, pageable);
+        ServiceResult<EuGrantPageResource> resultTwo = euGrantService.getEuGrantsByContactNotified(true, pageable);
+
+        assertTrue(resultOne.isSuccess());
+
+        assertEquals(1, resultOne.getSuccess().getContent().size());
+        EuContactResource resultingResource = resultOne.getSuccess().getContent().get(0).getContact();
+        assertEquals(euContactOne.getEmail(), resultingResource.getEmail());
+        assertEquals(euContactOne.getJobTitle(), resultingResource.getJobTitle());
+        assertEquals(euContactOne.getName(), resultingResource.getName());
+        assertEquals(euContactOne.getTelephone(), resultingResource.getTelephone());
+
+        assertTrue(resultTwo.isSuccess());
+
+        assertEquals(1, resultTwo.getSuccess().getContent().size());
+        EuContactResource resultingResourceTwo = resultTwo.getSuccess().getContent().get(0).getContact();
+        assertEquals(euContactTwo.getEmail(), resultingResourceTwo.getEmail());
+        assertEquals(euContactTwo.getJobTitle(), resultingResourceTwo.getJobTitle());
+        assertEquals(euContactTwo.getName(), resultingResourceTwo.getName());
+        assertEquals(euContactTwo.getTelephone(), resultingResourceTwo.getTelephone());
     }
 }

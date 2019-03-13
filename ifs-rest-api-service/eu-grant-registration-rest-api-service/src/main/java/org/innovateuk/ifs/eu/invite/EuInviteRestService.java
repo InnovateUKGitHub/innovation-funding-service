@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.eu.invite;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.eugrant.EuContactPageResource;
+import org.innovateuk.ifs.eugrant.EuGrantPageResource;
 
 import java.util.List;
+import java.util.UUID;
 
 
 public interface EuInviteRestService {
-    RestResult<EuContactPageResource> getEuContactsByNotified(boolean notified, Integer pageIndex, Integer pageSize);
-    RestResult<Void> sendInvites(List<Long> ids);
+    RestResult<EuGrantPageResource> getEuGrantsByNotified(boolean notified, Integer pageIndex, Integer pageSize);
+    RestResult<Void> sendInvites(List<UUID> ids);
 }

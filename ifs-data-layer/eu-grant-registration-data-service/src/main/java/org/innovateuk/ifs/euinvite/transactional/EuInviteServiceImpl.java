@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.euinvite;
+package org.innovateuk.ifs.euinvite.transactional;
 
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.eucontact.repository.EuContactRepository;
 import org.innovateuk.ifs.eugrant.domain.EuContact;
 import org.innovateuk.ifs.eugrant.domain.EuFunding;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
@@ -13,23 +13,21 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 
 @Service
 public class EuInviteServiceImpl implements EuInviteService {
-
-    @Autowired
-    private EuContactRepository euContactRepository;
 
     @Autowired
     private EuGrantRepository euGrantRepository;
@@ -42,21 +40,27 @@ public class EuInviteServiceImpl implements EuInviteService {
 
     @Override
     @Transactional
-    public ServiceResult<Void> sendInvites(List<Long> euContactIds) {
-        euContactIds
+    public ServiceResult<Void> sendInvites(List<UUID> euGrantIds) {
+        euGrantIds
                 .forEach(id -> sendInvite(id)
-                        .andOnSuccessReturnVoid(euContact -> euContact.setNotified(true))
+                        .andOnSuccessReturnVoid(euGrant -> euGrant.setNotified(true))
                 );
 
         return serviceSuccess();
     }
 
-    private ServiceResult<EuContact> sendInvite(long euContactId) {
+    private ServiceResult<EuGrant> sendInvite(UUID euGrantId) {
 
-        EuContact euContact = euContactRepository.getById(euContactId);
-        EuGrant euGrant = euGrantRepository.getByContact(euContact);
+        Optional<EuGrant> euGrantOpt = euGrantRepository.findById(euGrantId);
+
+        if(!euGrantOpt.isPresent()) {
+            return serviceFailure(new Error(GENERAL_NOT_FOUND));
+        }
+        
+        EuGrant euGrant = euGrantOpt.get();
         EuFunding euFunding = euGrant.getFunding();
         EuOrganisation euOrganisation = euGrant.getOrganisation();
+        EuContact euContact = euGrant.getContact();
         NotificationTarget recipient = new UserNotificationTarget(
                 euContact.getName(),
                 euContact.getEmail()
@@ -90,7 +94,7 @@ public class EuInviteServiceImpl implements EuInviteService {
         );
 
         return notificationService.sendNotificationWithFlush(notification, EMAIL)
-                .andOnSuccessReturn(() -> euContact);
+                .andOnSuccessReturn(() -> euGrant);
     }
 
     private enum Notifications {

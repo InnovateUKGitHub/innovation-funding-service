@@ -26,6 +26,8 @@ public class EuGrantResource {
 
     private String shortCode;
 
+    private boolean notified;
+
     public UUID getId() {
         return id;
     }
@@ -90,6 +92,14 @@ public class EuGrantResource {
         this.shortCode = shortCode;
     }
 
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,6 +117,7 @@ public class EuGrantResource {
                 .append(contact, that.contact)
                 .append(funding, that.funding)
                 .append(shortCode, that.shortCode)
+                .append(notified, that.notified)
                 .isEquals();
     }
 
@@ -121,6 +132,7 @@ public class EuGrantResource {
                 .append(contactComplete)
                 .append(fundingComplete)
                 .append(shortCode)
+                .append(notified)
                 .toHashCode();
     }
 }
