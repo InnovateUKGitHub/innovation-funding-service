@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -35,19 +36,27 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
         List<EuGrantResource> euGrantResources = singletonList(new EuGrantResource());
         EuGrantPageResource pageResource = new EuGrantPageResource();
         pageResource.setContent(euGrantResources);
+        pageResource.setTotalElements(1L);
 
         when(euInviteRestService.getEuGrantsByNotified(true, 0, 100))
                 .thenReturn(restSuccess(pageResource));
+        when(euInviteRestService.getTotalSubmittedEuGrants())
+                .thenReturn(restSuccess(5L));
 
-        MvcResult result = mockMvc.perform(get("/eu-invite-notified"))
+        MvcResult result = mockMvc.perform(get("/eu-invite-notified?numSentEmails=16"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("eu/notified"))
                 .andReturn();
 
         verify(euInviteRestService).getEuGrantsByNotified(true, 0, 100);
+        verify(euInviteRestService).getTotalSubmittedEuGrants();
 
         EuInviteViewModel model = (EuInviteViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(euGrantResources, model.getGrants());
+        assertEquals(1L, model.getTotalNotified());
+        assertEquals(4L, model.getTotalNonNotified());
+        assertEquals(true, model.isEmailSuccessMessage());
+        assertEquals(16L, model.getNumEmailsSent());
     }
 
     @Test
@@ -57,9 +66,12 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
 
         EuGrantPageResource pageResource = new EuGrantPageResource();
         pageResource.setContent(euGrantResources);
+        pageResource.setTotalElements(1L);
 
         when(euInviteRestService.getEuGrantsByNotified(false, 0, 100))
                 .thenReturn(restSuccess(pageResource));
+        when(euInviteRestService.getTotalSubmittedEuGrants())
+                .thenReturn(restSuccess(10L));
 
         MvcResult result = mockMvc.perform(get("/eu-invite-non-notified"))
                 .andExpect(status().isOk())
@@ -67,9 +79,14 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
                 .andReturn();
 
         verify(euInviteRestService).getEuGrantsByNotified(false, 0, 100);
+        verify(euInviteRestService).getTotalSubmittedEuGrants();
 
         EuInviteViewModel model = (EuInviteViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(euGrantResources, model.getGrants());
+        assertEquals(9L, model.getTotalNotified());
+        assertEquals(1L, model.getTotalNonNotified());
+        assertEquals(false, model.isEmailSuccessMessage());
+        assertEquals(0L, model.getNumEmailsSent());
     }
 
     @Test
@@ -82,12 +99,13 @@ public class EuInviteControllerTest extends BaseControllerMockMVCTest<EuInviteCo
         when(euInviteRestService.sendInvites(euGrantUuids))
                 .thenReturn(restSuccess());
 
-        mockMvc.perform(post("/eu-send-invites")
+        mockMvc.perform(post("/eu-send-invites/notified/true")
                                 .contentType(APPLICATION_FORM_URLENCODED)
                                 .param("euGrantIds[0]", euGrantUuids.get(1).toString())
                                 .param("euGrantIds[1]", euGrantUuids.get(1).toString())
                                 .param("euGrantIds[2]", euGrantUuids.get(1).toString()))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/eu-invite-notified?numSentEmails=" + euGrantUuids.size()));
 
         verify(euInviteRestService).sendInvites(euGrantUuids);
     }

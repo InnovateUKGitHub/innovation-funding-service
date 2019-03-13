@@ -13,7 +13,6 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +42,7 @@ public class EuInviteServiceImpl implements EuInviteService {
     public ServiceResult<Void> sendInvites(List<UUID> euGrantIds) {
         euGrantIds
                 .forEach(id -> sendInvite(id)
-                        .andOnSuccessReturnVoid(euGrant -> euGrant.setNotified(true))
+                        .andOnSuccessReturnVoid(EuGrant::markNotificationSent)
                 );
 
         return serviceSuccess();

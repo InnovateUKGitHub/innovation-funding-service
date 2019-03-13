@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.junit.Assert.assertEquals;
@@ -68,6 +67,18 @@ public class EuInviteRestServiceImplTest {
         when(anonymousRestTemplateAdaptor.postWithRestResult(baseUrl + "/eu-grants/send-invites", euGrantUuids, Void.class)).thenReturn(expected);
 
         RestResult<Void> result = euInviteRestService.sendInvites(euGrantUuids);
+
+        assertEquals(result, expected);
+    }
+
+    @Test
+    public void getTotalSubmittedEuGrants() {
+        RestResult<Long> expected = mock(RestResult.class);
+
+        when(anonymousRestTemplateAdaptor.getWithRestResult(baseUrl + "/eu-grants/total-submitted", Long.class))
+                .thenReturn(expected);
+
+        RestResult<Long> result = euInviteRestService.getTotalSubmittedEuGrants();
 
         assertEquals(result, expected);
     }
