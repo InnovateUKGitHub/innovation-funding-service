@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel;
+package org.innovateuk.ifs.application.forms.sections.common.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -17,35 +17,35 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class YourProjectLocationViewModelPopulatorTest {
+public class CommonYourFinancesViewModelPopulatorTest {
 
     private long applicationId = 9876L;
     private long organisationId = 5432L;
     private long sectionId = 1234L;
 
-    private Consumer<YourProjectLocationViewModel> expectViewModelIsComplete = model -> assertThat(model.isComplete()).isTrue();
-    private Consumer<YourProjectLocationViewModel> expectViewModelIsOpen = model -> assertThat(model.isOpen()).isTrue();
-    private Consumer<YourProjectLocationViewModel> expectViewModelIsReadonly = model -> assertThat(model.isReadOnly()).isTrue();
+    private Consumer<CommonYourFinancesViewModel> expectViewModelIsComplete = model -> assertThat(model.isComplete()).isTrue();
+    private Consumer<CommonYourFinancesViewModel> expectViewModelIsOpen = model -> assertThat(model.isOpen()).isTrue();
+    private Consumer<CommonYourFinancesViewModel> expectViewModelIsReadonly = model -> assertThat(model.isReadOnly()).isTrue();
 
-    private Consumer<YourProjectLocationViewModel> expectViewModelIsIncomplete = model -> assertThat(model.isComplete()).isFalse();
-    private Consumer<YourProjectLocationViewModel> expectViewModelIsClosed = model -> assertThat(model.isOpen()).isFalse();
-    private Consumer<YourProjectLocationViewModel> expectViewModelIsEditable = model -> assertThat(model.isReadOnly()).isFalse();
+    private Consumer<CommonYourFinancesViewModel> expectViewModelIsIncomplete = model -> assertThat(model.isComplete()).isFalse();
+    private Consumer<CommonYourFinancesViewModel> expectViewModelIsClosed = model -> assertThat(model.isOpen()).isFalse();
+    private Consumer<CommonYourFinancesViewModel> expectViewModelIsEditable = model -> assertThat(model.isReadOnly()).isFalse();
 
-    private Consumer<YourProjectLocationViewModel> expectedExternalUserFinanceUrl = model ->
+    private Consumer<CommonYourFinancesViewModel> expectedExternalUserFinanceUrl = model ->
             assertThat(model.getFinancesUrl()).isEqualTo("/application/" + applicationId + "/form/FINANCE");
 
-    private Consumer<YourProjectLocationViewModel> expectedInternalUserFinanceUrl = model ->
+    private Consumer<CommonYourFinancesViewModel> expectedInternalUserFinanceUrl = model ->
             assertThat(model.getFinancesUrl()).isEqualTo("/application/" + applicationId + "/form/FINANCE/" + organisationId);
 
     @InjectMocks
-    private YourProjectLocationViewModelPopulator populator;
+    private CommonYourFinancesViewModelPopulator populator;
 
     @Mock
     private ApplicationRestService applicationRestServiceMock;
@@ -157,7 +157,7 @@ public class YourProjectLocationViewModelPopulatorTest {
             List<Long> sectionsMarkedAsComplete,
             ApplicationState applicationState,
             CompetitionStatus competitionStatus,
-            Consumer<YourProjectLocationViewModel>... conditionalAssertions) {
+            Consumer<CommonYourFinancesViewModel>... conditionalAssertions) {
 
         CompetitionResource competition = newCompetitionResource().
                 withCompetitionStatus(competitionStatus).
@@ -174,7 +174,7 @@ public class YourProjectLocationViewModelPopulatorTest {
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(sectionServiceMock.getCompleted(application.getId(), organisationId)).thenReturn(sectionsMarkedAsComplete);
 
-        YourProjectLocationViewModel viewModel = populator.populate(organisationId, application.getId(), sectionId, internalUser);
+        CommonYourFinancesViewModel viewModel = populator.populate(organisationId, application.getId(), sectionId, internalUser);
 
         assertThat(viewModel.getApplicationId()).isEqualTo(application.getId());
         assertThat(viewModel.getApplicationName()).isEqualTo(application.getName());
