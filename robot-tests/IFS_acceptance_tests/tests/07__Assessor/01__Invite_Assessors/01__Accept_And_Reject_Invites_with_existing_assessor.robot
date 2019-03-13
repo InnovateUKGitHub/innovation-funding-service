@@ -58,20 +58,16 @@ Assessor dashboard contains the correct competitions
 User can view the competition brief
     [Documentation]    INFUND-5494
     [Tags]
-    When the user clicks the button/link        link = ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    And The user opens the link in new window  View competition brief
+    Given the user clicks the button/link        link = ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    When The user opens the link in new window   View competition brief
     Then The user should get a competition brief window
-    And the user should not see an error in the page
-    And the user should see the element         jQuery = h1:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
-    And the user should see the element         jQuery = li:contains("Competition opens")
-    And the user should see the element         jQuery = li:contains("Competition closes")
-    And the user should see the element         jQuery = .govuk-button:contains("Start new application")
+    And the user should see competition details
     And The user closes the competition brief
-    And the user clicks the button/link         link = ${ASSESSOR_DASHBOARD_TITLE}
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107  INFUND-6455
     [Tags]
+    Given the user clicks the button/link                      link = ${ASSESSOR_DASHBOARD_TITLE}
     Then the total calculation in dashboard should be correct  Upcoming competitions to assess    //*[@class = "upcoming-to-assess"]/div/ul/li
     And the total calculation in dashboard should be correct   Invitations to assess    //*[@class = "invite-to-assess"]/div/ul/li
 
@@ -79,16 +75,11 @@ Existing assessor: Reject invitation from Dashboard
     [Documentation]    INFUND-4631  INFUND-5157  INFUND-6455
     [Tags]
     Given the user clicks the button/link                   link = ${READY_TO_OPEN_COMPETITION_NAME}
-    And the user should see the element                     jQuery = h1:contains("Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'")
-    And the user should not see the element                 id = rejectComment
-    And the user selects the radio button                   acceptInvitation  false
-    And The user enters multiple strings into a text field  id = rejectComment  a${SPACE}  102
+    And the user checks for field validations
+    When the assessor fills all fields with valid inputs
     And The user clicks the button/link                     jQuery = button:contains("Confirm")
-    Then the user should see a field and summary error      The reason cannot be blank.
-    And the user should see a field and summary error       Maximum word count exceeded. Please reduce your word count to 100.
-    And the assessor fills all fields with valid inputs
-    And The user clicks the button/link                     jQuery = button:contains("Confirm")
-    And the user should see the element                     jQuery = p:contains("Thank you for letting us know you are unable to assess applications within this competition.")
+    Then the user should see the element                    jQuery = p:contains("Thank you for letting us know you are unable to assess applications within this competition.")
+    And the assessor shouldn't see Accepted and Rejected invites on dashboard    ${READY_TO_OPEN_COMPETITION_NAME}
 
 Existing Assessor tries to accept expired invitation in closed assessment
     [Documentation]    INFUND-943
@@ -101,29 +92,17 @@ Existing Assessor tries to accept expired invitation in closed assessment
     [Teardown]  Reset competition's milestone
 
 Existing assessor: Accept invitation from the invite link
-    [Documentation]    INFUND-228  INFUND-304  INFUND-3716  INFUND-5509  INFUND-6500
+    [Documentation]    INFUND-228  INFUND-304  INFUND-3716  INFUND-5509  INFUND-6500  INFUND-6455
     [Tags]
     [Setup]    Logout as user
-    Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
-    And the user should see the element     jQuery = h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
-    And the user should see the element     jQuery = h2:contains("${assessmentPeriod}")
-    And the user selects the radio button   acceptInvitation  true
-    And The user clicks the button/link     jQuery = button:contains("Confirm")
-    Then the user should see the element    jQuery = p:contains("Your email address is linked to an existing account.")
-    And the user clicks the button/link     jQuery = a:contains("Click here to sign in")
-    And Invited guest user log in           &{existing_assessor1_credentials}
-    And the user should see the element     link = ${IN_ASSESSMENT_COMPETITION_NAME}
-
-Accepted and Rejected invites are not visible
-    [Documentation]    INFUND-6455
-    [Tags]
-    Then the user should not see the element   link = ${READY_TO_OPEN_COMPETITION_NAME}
-    And the user should not see the element    jQuery = h2:contains("Invitations to assess")
+    Given the assessor accepts the invite
+    When the user clicks the button/link      jQuery = a:contains("Click here to sign in")
+    And Invited guest user log in             &{existing_assessor1_credentials}
+    Then the user should see the element      link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the assessor shouldn't see Accepted and Rejected invites on dashboard   ${IN_ASSESSMENT_COMPETITION_NAME}
 
 Upcoming competition should be visible
-    [Documentation]    INFUND-3718
-    ...
-    ...    INFUND-5001
+    [Documentation]    INFUND-3718  INFUND-5001
     [Tags]
     Given the user navigates to the page           ${ASSESSOR_DASHBOARD_URL}
     And the assessor should see the correct date
@@ -135,26 +114,18 @@ Upcoming competition should be visible
 The assessment period starts the comp moves to the comp for assessment
     [Documentation]  INFUND-3718  INFUND-3720
     [Tags]    MySQL
-    Given the assessment start period changes in the db in the past     ${UPCOMING_COMPETITION_TO_ASSESS_ID}
-    Then the user should not see the element   jQuery = h2:contains("Upcoming competitions to assess")
+    Given the assessment start period changes in the db in the past       ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    Then the assessor should see the date for submission of assessment    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    And the user should not see the element                               jQuery = h2:contains("Upcoming competitions to assess")
     [Teardown]  Reset milestones back to the original values
 
-Milestone date for assessment submission is visible
-    [Documentation]    INFUND-3720
-    [Tags]    MySQL
-    Then the assessor should see the date for submission of assessment    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
-
 Number of days remaining until assessment submission
-    [Documentation]    INFUND-3720
+    [Documentation]    INFUND-3720  INFUND-3716
     [Tags]    MySQL  Failing
     # TODO IFS-3176
-    Then the assessor should see the number of days remaining    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
-    And the calculation of the remaining days should be correct  ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
-
-Calculation of the Competitions for assessment should be correct
-    [Documentation]    INFUND-3716
-    [Tags]    MySQL
-    Then the total calculation in dashboard should be correct  Competitions for assessment   //*[@class = "my-applications"]/div/ul/li
+    Given the assessor should see the number of days remaining     ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    Then the calculation of the remaining days should be correct   ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    And the total calculation in dashboard should be correct       Competitions for assessment   //*[@class = "my-applications"]/div/ul/li
 
 Registered user should not allowed to accept other assessor invite
     [Documentation]    INFUND-4895
@@ -167,7 +138,7 @@ Registered user should not allowed to accept other assessor invite
 The user should not be able to accept or reject the same applications
     [Documentation]    INFUND-5165
     [Tags]
-    Then the assessor shouldn't be able to accept the rejected competition
+    Given the assessor shouldn't be able to accept the rejected competition
     And the assessor shouldn't be able to reject the rejected competition
     Then the assessor shouldn't be able to accept the accepted competition
     And the assessor shouldn't be able to reject the accepted competition
@@ -175,11 +146,11 @@ The user should not be able to accept or reject the same applications
 The Admin's invites overview should be updated for accepted invites
     [Documentation]    INFUND-6450
     [Tags]
-    [Setup]    log in as a different user  &{Comp_admin1_credentials}
-    Given The user clicks the button/link  link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link    jQuery = a:contains("Invite assessors to assess the competition")
-    And The user clicks the button/link    link = Accepted
-    And the user should see the element    jQuery = tr:contains("Alexis Colon")
+    [Setup]    log in as a different user   &{Comp_admin1_credentials}
+    Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    And The user clicks the button/link     jQuery = a:contains("Invite assessors to assess the competition")
+    When The user clicks the button/link    link = Accepted
+    Then the user should see the element    jQuery = tr:contains("Alexis Colon")
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
@@ -234,7 +205,6 @@ The user closes the competition brief
     Close Window
     Select Window
 
-*** Keywords ***
 Reset competition's milestone
     # That is to reset competition's milestone back to its original value, that was NUll before pressing the button "Close assessment"
     Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `type`='ASSESSMENT_CLOSED' AND `competition_id`='${IN_ASSESSMENT_COMPETITION}';
@@ -251,3 +221,31 @@ Custom suite setup
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+the user should see competition details
+    And the user should not see an error in the page
+    And the user should see the element         jQuery = h1:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
+    And the user should see the element         jQuery = li:contains("Competition opens")
+    And the user should see the element         jQuery = li:contains("Competition closes")
+    And the user should see the element         jQuery = .govuk-button:contains("Start new application")
+
+the user checks for field validations
+    the user should see the element                     jQuery = h1:contains("Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'")
+    the user should not see the element                 id = rejectComment
+    the user selects the radio button                   acceptInvitation  false
+    The user enters multiple strings into a text field  id = rejectComment  a${SPACE}  102
+    The user clicks the button/link                     jQuery = button:contains("Confirm")
+    the user should see a field and summary error       The reason cannot be blank.
+    the user should see a field and summary error       Maximum word count exceeded. Please reduce your word count to 100.
+
+the assessor accepts the invite
+    the user navigates to the page      ${Invitation_for_upcoming_comp_assessor1}
+    the user should see the element     jQuery = h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
+    the user should see the element     jQuery = h2:contains("${assessmentPeriod}")
+    the user selects the radio button   acceptInvitation  true
+    the user clicks the button/link     jQuery = button:contains("Confirm")
+    the user should see the element     jQuery = p:contains("Your email address is linked to an existing account.")
+
+the assessor shouldn't see Accepted and Rejected invites on dashboard
+    [Arguments]  ${competition_name}
+    the user should not see the element    jQuery = h2:contains("Invitations to assess") ~ ul li a:contains("${competition_name}")

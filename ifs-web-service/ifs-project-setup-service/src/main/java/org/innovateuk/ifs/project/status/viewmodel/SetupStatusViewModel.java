@@ -36,6 +36,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private boolean pendingQuery;
     private String originQuery;
     private ProjectState projectState;
+    private boolean monitoringOfficer;
 
     public SetupStatusViewModel() {}
 
@@ -50,7 +51,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 boolean competitionDocuments,
                                 boolean projectManager,
                                 boolean pendingQuery,
-                                String originQuery) {
+                                String originQuery,
+                                boolean monitoringOfficer) {
 
         this.projectId = project.getId();
         this.projectName = project.getName();
@@ -71,6 +73,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.pendingQuery = pendingQuery;
         this.originQuery = originQuery;
         this.projectState = project.getProjectState();
+        this.monitoringOfficer = monitoringOfficer;
     }
 
     public Long getProjectId() {
@@ -197,5 +200,13 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public ProjectState getProjectState() {
         return projectState;
+    }
+
+    public boolean isMonitoringOfficer() {
+        return monitoringOfficer;
+    }
+
+    public void setMonitoringOfficer(boolean monitoringOfficer) {
+        this.monitoringOfficer = monitoringOfficer;
     }
 }
