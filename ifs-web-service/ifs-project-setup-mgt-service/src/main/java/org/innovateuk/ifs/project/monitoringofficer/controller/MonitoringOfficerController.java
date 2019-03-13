@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRes
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignProjectForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,19 +30,11 @@ public class MonitoringOfficerController {
 
     private static final String FORM_ATTR_NAME = "form";
 
+    @Autowired
     private MonitoringOfficerProjectsViewModelPopulator modelPopulator;
 
+    @Autowired
     private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
-
-    public MonitoringOfficerController(){
-        // For security testing
-    }
-
-    public MonitoringOfficerController(MonitoringOfficerProjectsViewModelPopulator modelPopulator,
-                                       ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService) {
-        this.modelPopulator = modelPopulator;
-        this.projectMonitoringOfficerRestService = projectMonitoringOfficerRestService;
-    }
 
     @GetMapping("/projects")
     public String viewProjects(@PathVariable long monitoringOfficerId, Model model) {
