@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -50,7 +49,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.time.ZonedDateTime.now;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
 import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
@@ -137,38 +135,14 @@ public class ApplicationAjaxController {
     }
 
     private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) throws NumberFormatException {
-        Long organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
 
             // this does not need id
             List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
             return new StoreFieldResult(errors);
-        } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
-            financeViewHandlerProvider.getFinanceFormHandler(competitionRestService.getCompetitionById(competitionId).getSuccess(), organisationType).updateFinancePosition(userId, applicationId, fieldName, value, competitionId);
-            return new StoreFieldResult();
         } else if (inputIdentifier.startsWith("formInput[cost-") || fieldName.startsWith("cost-")) {
-            CompetitionResource competition = competitionRestService.getCompetitionById(applicationService.getById(applicationId).getCompetition()).getSuccess();
-            ValidationMessages validationMessages = financeViewHandlerProvider.getFinanceFormHandler(competition, organisationType).storeCost(userId, applicationId, fieldName, value, competitionId);
-
-            if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
-                LOG.debug("no errors");
-                if (validationMessages == null) {
-                    return new StoreFieldResult();
-                } else {
-                    return new StoreFieldResult(validationMessages.getObjectId());
-                }
-            } else {
-                String[] fieldNameParts = fieldName.split("-");
-                // fieldname = other_costs-description-34-219
-                List<String> errors = validationMessages.getErrors()
-                        .stream()
-                        .peek(e -> LOG.debug(String.format("Compare: %s => %s ", fieldName.toLowerCase(), e.getFieldName().toLowerCase())))
-                        .filter(e -> fieldNameParts[1].toLowerCase().contains(e.getFieldName().toLowerCase())) // filter out the messages that are related to other fields.
-                        .map(this::lookupErrorMessage)
-                        .collect(toList());
-                return new StoreFieldResult(validationMessages.getObjectId(), errors);
-            }
+            return new StoreFieldResult();
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             ValidationMessages saveErrors = formInputResponseRestService.saveQuestionResponse(userId, applicationId,
@@ -176,10 +150,6 @@ public class ApplicationAjaxController {
             List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
             return new StoreFieldResult(lookedUpErrorMessages);
         }
-    }
-
-    private String lookupErrorMessage(Error e) {
-        return lookupErrorMessageResourceBundleEntry(messageSource, e);
     }
 
     private ObjectNode createJsonObjectNode(boolean success, Long fieldId) {

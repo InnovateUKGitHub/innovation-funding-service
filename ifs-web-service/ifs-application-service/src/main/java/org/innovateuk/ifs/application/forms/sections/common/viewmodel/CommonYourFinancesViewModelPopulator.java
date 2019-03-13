@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel;
+package org.innovateuk.ifs.application.forms.sections.common.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -13,17 +13,17 @@ import java.util.List;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 /**
- * A populator to build a YourProjectLocationViewModel
+ * A populator to build a CommonYourFinancesViewModel
  */
 @Component
-public class YourProjectLocationViewModelPopulator {
+public class CommonYourFinancesViewModelPopulator {
 
     private ApplicationRestService applicationRestService;
     private CompetitionRestService competitionRestService;
     private SectionService sectionService;
 
     @Autowired
-    public YourProjectLocationViewModelPopulator(
+    public CommonYourFinancesViewModelPopulator(
             ApplicationRestService applicationRestService,
             CompetitionRestService competitionRestService,
             SectionService sectionService) {
@@ -33,7 +33,7 @@ public class YourProjectLocationViewModelPopulator {
         this.sectionService = sectionService;
     }
 
-    public YourProjectLocationViewModel populate(long organisationId, long applicationId, long sectionId, boolean internalUser) {
+    public CommonYourFinancesViewModel populate(long organisationId, long applicationId, long sectionId, boolean internalUser) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
@@ -45,14 +45,14 @@ public class YourProjectLocationViewModelPopulator {
 
         boolean open = !internalUser && application.isOpen() && competition.isOpen();
 
-        return new YourProjectLocationViewModel(
-                sectionMarkedAsComplete,
+        return new CommonYourFinancesViewModel(
                 getYourFinancesUrl(applicationId, organisationId, internalUser),
                 application.getName(),
                 applicationId,
                 sectionId,
                 open,
-                competition.isH2020());
+                competition.isH2020(),
+                sectionMarkedAsComplete);
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {
