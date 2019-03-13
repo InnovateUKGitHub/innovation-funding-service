@@ -94,8 +94,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_FINANCE_TOTALS",
             description = "Monitoring officers can view the finance totals.")
     public boolean monitoringOfficersCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
-        Project project = projectRepository.findOneByApplicationId(applicationResource.getId());
-        return isMonitoringOfficer(project.getId(), user.getId());
+        return monitoringOfficerCanViewApplication(applicationResource.getId(), user.getId());
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",

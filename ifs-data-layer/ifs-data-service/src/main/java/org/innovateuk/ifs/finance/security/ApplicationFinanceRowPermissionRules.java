@@ -48,8 +48,7 @@ public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Monitoring officers can read the cost for their application and organisation")
     public boolean monitoringOfficerCanReadACostForTheirApplicationAndOrganisation(final FinanceRow cost, final UserResource user) {
         final ApplicationFinance applicationFinance = (ApplicationFinance) cost.getTarget();
-        Project project = projectRepository.findOneByApplicationId(applicationFinance.getApplication().getId());
-        return isMonitoringOfficer(project.getId(), user.getId());
+        return monitoringOfficerCanViewApplication(applicationFinance.getApplication().getId(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")

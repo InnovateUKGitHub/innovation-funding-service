@@ -10,7 +10,6 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -59,8 +58,7 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Monitoring officers can see the input responses for the applications they are assigned to")
     public boolean monitoringOfficersCanSeeTheInputResponsesInApplicationsAssignedToThem(final FormInputResponseResource response, final UserResource user) {
-        Project project = projectRepository.findOneByApplicationId(response.getApplication());
-        return project != null && isMonitoringOfficer(project.getId(), user.getId());
+        return monitoringOfficerCanViewApplication(response.getApplication(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they review")
