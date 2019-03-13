@@ -223,15 +223,15 @@ the user fills the organisation details with Project growth table
     [Arguments]   ${Application}  ${org_size}
     the user navigates to Your-finances page                ${Application}
     the user clicks the button/link                         link = Your organisation
-    the user enters text to a text field                    css = input[name$="month"]    12
-    the user enters text to a text field                    css = input[name$="year"]    2016
-    the user selects the radio button                       financePosition-organisationSize  ${org_size}
-    the user enters text to a text field                    jQuery = td:contains("Annual turnover") + td input   5600
-    the user enters text to a text field                    jQuery = td:contains("Annual profit") + td input    3000
-    the user enters text to a text field                    jQuery = td:contains("Annual export") + td input    4000
-    the user enters text to a text field                    jQuery = td:contains("Research and development spend") + td input    5660
-    the user enters text to a text field                    jQuery = .govuk-hint:contains("employees") + input    0
-    the user selects the checkbox                           agree-state-aid
+    the user enters text to a text field                    css = #financialYearEndMonthValue    12
+    the user enters text to a text field                    css = #financialYearEndYearValue    2016
+    the user selects the radio button                       organisationSize  ${org_size}
+    the user enters text to a text field                    css = #annualTurnoverAtLastFinancialYear   5600
+    the user enters text to a text field                    css = #annualProfitsAtLastFinancialYear    3000
+    the user enters text to a text field                    css = #annualExportAtLastFinancialYear    4000
+    the user enters text to a text field                    css = #researchAndDevelopmentSpendAtLastFinancialYear    5660
+    the user enters text to a text field                    css = #headCountAtLastFinancialYear    0
+    the user selects the checkbox                           stateAidAgreed
     the user clicks the button/link                         jQuery = button:contains("Mark as complete")
 
 the user fills in the organisation information
@@ -240,10 +240,10 @@ the user fills in the organisation information
     the user clicks the button/link         link = Your organisation
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery = button:contains("Edit")
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery = button:contains("Edit")
-    the user selects the radio button       financePosition-organisationSize  ${org_size}
-    the user enters text to a text field    jQuery = .govuk-hint:contains("turnover") + input    150
-    the user enters text to a text field    jQuery = .govuk-hint:contains("employees") + input   3
-    the user selects the checkbox           agree-state-aid
+    the user selects the radio button       organisationSize  ${org_size}
+    the user enters text to a text field    css = #turnover    150
+    the user enters text to a text field    css = #headCount   3
+    the user selects the checkbox           stateAidAgreed
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
     the user clicks the button/link         link = Your organisation
     the user should see the element         jQuery = button:contains("Edit")
@@ -428,5 +428,5 @@ the user marks your funding section as complete
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
 
 the user selects medium organisation size
-    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
-    the user selects the radio button  financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+    the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+    the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
