@@ -111,16 +111,16 @@ public class GrantOfferLetterAcademicFinanceTablePopulatorTest {
     public void getAllocatedOtherCosts() {
         GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
 
-        assertEquals(BigDecimal.valueOf(13), grantOfferLetterAcademicFinanceTable.getAllocatedOtherCosts(ORGANISATION_1.getName()));
-        assertEquals(BigDecimal.valueOf(17), grantOfferLetterAcademicFinanceTable.getAllocatedOtherCosts(ORGANISATION_2.getName()));
+        assertEquals(BigDecimal.valueOf(37), grantOfferLetterAcademicFinanceTable.getAllocatedOtherCosts(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(31), grantOfferLetterAcademicFinanceTable.getAllocatedOtherCosts(ORGANISATION_2.getName()));
     }
 
     @Test
     public void getIndirectCosts() {
         GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
 
-        assertEquals(BigDecimal.valueOf(0), grantOfferLetterAcademicFinanceTable.getIndirectCosts(ORGANISATION_1.getName()));
-        assertEquals(BigDecimal.valueOf(71), grantOfferLetterAcademicFinanceTable.getIndirectCosts(ORGANISATION_2.getName()));
+        assertEquals(BigDecimal.valueOf(41), grantOfferLetterAcademicFinanceTable.getIndirectCosts(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(41), grantOfferLetterAcademicFinanceTable.getIndirectCosts(ORGANISATION_2.getName()));
     }
 
     @Test
@@ -165,8 +165,8 @@ public class GrantOfferLetterAcademicFinanceTablePopulatorTest {
         assertEquals(BigDecimal.valueOf(30), grantOfferLetterAcademicFinanceTable.getIncurredOtherCostsTotal());
         assertEquals(BigDecimal.valueOf(65), grantOfferLetterAcademicFinanceTable.getAllocatedInvestigatorsTotal());
         assertEquals(BigDecimal.valueOf(29), grantOfferLetterAcademicFinanceTable.getAllocatedEstateCostsTotal());
-        assertEquals(BigDecimal.valueOf(30), grantOfferLetterAcademicFinanceTable.getAllocatedOtherCostsTotal());
-        assertEquals(BigDecimal.valueOf(71), grantOfferLetterAcademicFinanceTable.getIndirectCostsTotal());
+        assertEquals(BigDecimal.valueOf(68), grantOfferLetterAcademicFinanceTable.getAllocatedOtherCostsTotal());
+        assertEquals(BigDecimal.valueOf(82), grantOfferLetterAcademicFinanceTable.getIndirectCostsTotal());
         assertEquals(BigDecimal.valueOf(90), grantOfferLetterAcademicFinanceTable.getExceptionsStaffTotal());
         assertEquals(BigDecimal.valueOf(112), grantOfferLetterAcademicFinanceTable.getExceptionsTravelSubsistenceTotal());
         assertEquals(BigDecimal.valueOf(128), grantOfferLetterAcademicFinanceTable.getExceptionsEquipmentTotal());

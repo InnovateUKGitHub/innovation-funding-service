@@ -66,13 +66,13 @@ public class GrantOfferLetterAcademicFinanceTablePopulator extends BaseGrantOffe
 
             Map<String, BigDecimal> allocatedOtherCosts =
                     sumByFinancialTypeAndLabel(academicFinances,
-                                               DIRECTLY_INCURRED_OTHER_COSTS.getName(),
-                                               DIRECTLY_INCURRED_OTHER_COSTS.getLabel());
+                                               DIRECTLY_ALLOCATED_OTHER_COSTS.getName(),
+                                               DIRECTLY_ALLOCATED_OTHER_COSTS.getLabel());
 
             Map<String, BigDecimal> indirectCosts =
                     sumByFinancialTypeAndLabel(academicFinances,
-                                               INDIRECT_COSTS_OTHER_COSTS.getName(),
-                                               INDIRECT_COSTS_OTHER_COSTS.getLabel());
+                                               INDIRECT_COSTS.getName(),
+                                               INDIRECT_COSTS.getLabel());
 
             Map<String, BigDecimal> exceptionsStaff =
                     sumByFinancialTypeAndLabel(academicFinances,
