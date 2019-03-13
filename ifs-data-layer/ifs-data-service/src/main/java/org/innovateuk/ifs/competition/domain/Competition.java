@@ -24,6 +24,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 
@@ -665,7 +667,10 @@ public class Competition extends AuditableEntity implements ProcessActivity {
     }
 
     public boolean isH2020() {
-        return CompetitionResource.H2020_TYPE_NAME.equals(competitionType.getName());
+        return ofNullable(competitionType)
+                .map(CompetitionType::getName)
+                .map(name -> name.equals(H2020_TYPE_NAME))
+                .orElse(false);
     }
 
     public boolean isFullyFunded() {
