@@ -36,5 +36,5 @@ public interface EuGrantService {
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "The system registrar can get the number of submitted grants")
-    ServiceResult<Long> getTotalSubmitted();
+    ServiceResult<Long> getTotalSubmittedExcludingResearch();
 }

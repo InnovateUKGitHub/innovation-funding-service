@@ -55,6 +55,6 @@ public class EuGrantController {
 
     @GetMapping("/eu-grants/total-submitted")
     public RestResult<Long> getTotalSubmitted() {
-        return euGrantService.getTotalSubmitted().toGetResponse();
+        return euGrantService.getTotalSubmittedExcludingResearch().toGetResponse();
     }
 }
