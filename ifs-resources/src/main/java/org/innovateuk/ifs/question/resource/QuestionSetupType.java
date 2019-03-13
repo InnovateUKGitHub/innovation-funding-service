@@ -1,9 +1,5 @@
 package org.innovateuk.ifs.question.resource;
 
-import org.innovateuk.ifs.util.CollectionFunctions;
-
-import java.util.Arrays;
-
 public enum QuestionSetupType {
 
     ASSESSED_QUESTION(""),
@@ -14,7 +10,7 @@ public enum QuestionSetupType {
     RESEARCH_CATEGORY("Research category"),
     APPLICATION_TEAM("Application team"),
     /* h2020 */
-    PROJECT_DETAILS("Project details"),
+    GRANT_TRANSFER_DETAILS("Application details"),
     GRANT_AGREEMENT("Horizon 2020 grant agreement");
 
     private String shortName;
@@ -27,10 +23,4 @@ public enum QuestionSetupType {
         return this.shortName;
     }
 
-    //TODO INFUND-6282 Remove this type and replace with an active, inactive, null checks on UI.
-    public static QuestionSetupType typeFromQuestionTitle(String questionTitle) {
-        return CollectionFunctions.simpleFindFirst(Arrays.asList(values()),
-                type -> questionTitle != null && questionTitle.equals(type.shortName))
-                .orElse(QuestionSetupType.ASSESSED_QUESTION);
-    }
 }
