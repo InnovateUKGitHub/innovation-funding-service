@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel;
+package org.innovateuk.ifs.application.forms.sections.common.viewmodel;
 
 /**
- * View model to support project location page
+ * A view model that captures attributes common to all of the Your finances sections.
  */
-public class YourProjectLocationViewModel {
+public class CommonYourFinancesViewModel {
 
     private final String financesUrl;
     private final String applicationName;
@@ -12,24 +12,13 @@ public class YourProjectLocationViewModel {
     private final boolean open;
     private final boolean complete;
 
-    public YourProjectLocationViewModel(
-            boolean complete,
-            String financesUrl,
-            String applicationName,
-            long applicationId,
-            long sectionId,
-            boolean open) {
-
-        this.complete = complete;
+    public CommonYourFinancesViewModel(String financesUrl, String applicationName, long applicationId, long sectionId, boolean open, boolean complete) {
         this.financesUrl = financesUrl;
         this.applicationName = applicationName;
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.open = open;
-    }
-
-    public boolean isComplete() {
-        return complete;
+        this.complete = complete;
     }
 
     public boolean isReadOnly() {
@@ -54,5 +43,9 @@ public class YourProjectLocationViewModel {
 
     public boolean isOpen() {
         return open;
+    }
+
+    public boolean isComplete() {
+        return complete;
     }
 }

@@ -42,9 +42,12 @@ public class PastMMYYYYValidator extends BaseValidator {
                         (date.get(YEAR) == now.get(YEAR) && date.get(MONTH_OF_YEAR) > now.get(MONTH_OF_YEAR))) {
                     rejectValue(errors, "value", "validation.standard.past.mm.yyyy.not.past.format");
                 }
+
+                if (date.get(YEAR) < 0) {
+                    rejectValue(errors, "value", "validation.standard.mm.yyyy.format");
+                }
             }
             catch (DateTimeException e) {
-                LOG.trace("invalid date time", e);
                 rejectValue(errors, "value", "validation.standard.mm.yyyy.format");
             }
         }
