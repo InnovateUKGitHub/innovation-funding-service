@@ -60,7 +60,7 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Monitoring officers can see the input responses for the applications they are assigned to")
     public boolean monitoringOfficersCanSeeTheInputResponsesInApplicationsAssignedToThem(final FormInputResponseResource response, final UserResource user) {
         Project project = projectRepository.findOneByApplicationId(response.getApplication());
-        return isMonitoringOfficer(project.getId(), user.getId());
+        return project != null && isMonitoringOfficer(project.getId(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they review")
