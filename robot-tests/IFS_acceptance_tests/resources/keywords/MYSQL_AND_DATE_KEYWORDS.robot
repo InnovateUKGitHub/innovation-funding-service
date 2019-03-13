@@ -159,6 +159,10 @@ get next year
     ${year} =    get time    year    NOW + 370d
     [Return]    ${year}
 
+get last year
+    ${year} =    get time    year    NOW - 370d
+    [Return]    ${year}
+
 get comp id from comp title
     [Arguments]  ${name}
     ${id} =   get table id by name  competition  ${name}
