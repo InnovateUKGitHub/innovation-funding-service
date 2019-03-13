@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerInviteController> {
@@ -77,7 +78,7 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
         when(registrationServiceMock.createMonitoringOfficer(hash, registrationResource)).thenReturn(serviceSuccess(user));
         when(crmServiceMock.syncCrmContact(user.getId())).thenReturn(serviceSuccess());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/monitoring-officer-registration/monitoring-officer/create/{hash}", hash)
+        mockMvc.perform(post("/monitoring-officer-registration/monitoring-officer/create/{hash}", hash)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(registrationResource)))
                 .andExpect(status().is2xxSuccessful());
@@ -106,7 +107,7 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
 
         when(projectMonitoringOfficerServiceMock.addMonitoringOfficerRole(hash)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/monitoring-officer-registration/monitoring-officer/add-monitoring-officer-role/{hash}", hash))
+        mockMvc.perform(post("/monitoring-officer-registration/monitoring-officer/add-monitoring-officer-role/{hash}", hash))
                 .andExpect(status().is2xxSuccessful());
 
         verify(projectMonitoringOfficerServiceMock, only()).addMonitoringOfficerRole(hash);
