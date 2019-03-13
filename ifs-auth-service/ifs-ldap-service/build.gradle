@@ -66,6 +66,6 @@ osStageLocal.tag = ldapVersion
 
 createContainer.containerName = "ldap"
 createContainer.containerId = "ldap"
-createContainer.env = ["LDAP_PORT=389"]
-createContainer.portBindings = ['389:389']
+createContainer.env = ["LDAP_PORT=8389"]
+createContainer.portBindings = ['8389:8389']
 createContainer.hostName = "ldap"

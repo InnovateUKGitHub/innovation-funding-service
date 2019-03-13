@@ -20,14 +20,17 @@ ENV PW=default
 RUN groupadd -g ${GID} gluster
 RUN useradd -p ${PW} -u ${UID} -g ${GID} gluster
 
+VOLUME /mnt/ifs_storage
+
 COPY robotPythonLibs-requirements.txt /tmp/
 RUN pip install -r /tmp/robotPythonLibs-requirements.txt
 COPY . /tmp/
-COPY ../setup-files/scripts/docker/set-umask0002.sh /robot-tests/set-umask0002.sh
+COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 
 WORKDIR robot-tests
 COPY ./ ./
 RUN find . -type d -exec chmod 777 {} +
+
 USER gluster
 
 ENTRYPOINT ["./set-umask0002.sh"]
