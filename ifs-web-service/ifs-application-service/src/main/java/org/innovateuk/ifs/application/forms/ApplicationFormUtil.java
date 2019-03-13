@@ -25,7 +25,6 @@ public final class ApplicationFormUtil {
     public static final String NOT_REQUESTING_FUNDING = "not_requesting_funding";
     public static final String UPLOAD_FILE = "upload_file";
     public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
-    public static final String ORGANISATION_SIZE_KEY = "organisationSize";
     public static final String APPLICATION_BASE_URL = "/application/";
     public static final String APPLICATION_START_DATE = "application.startDate";
     public static final String SAVE_AND_RETURN_KEY = "save-and-return";

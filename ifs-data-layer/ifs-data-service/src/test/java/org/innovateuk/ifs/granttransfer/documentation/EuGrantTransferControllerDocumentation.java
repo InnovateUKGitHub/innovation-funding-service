@@ -18,6 +18,8 @@ import java.util.function.Function;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.EuGrantTransferDocs.EU_GRANT_TRANSFER_RESOURCE;
+import static org.innovateuk.ifs.documentation.EuGrantTransferDocs.euGrantTransferResourceFields;
 import static org.innovateuk.ifs.documentation.FileEntryDocs.fileEntryResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -26,6 +28,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -107,6 +110,39 @@ public class EuGrantTransferControllerDocumentation extends BaseFileControllerMo
 
         verify(euGrantTransferService).uploadGrantAgreement(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
                 eq(applicationId), any(HttpServletRequest.class));
+    }
+
+    @Test
+    public void getGrantTransferByApplicationId() throws Exception {
+        final long applicationId = 22L;
+        when(euGrantTransferService.getGrantTransferByApplicationId(applicationId)).thenReturn(serviceSuccess(EU_GRANT_TRANSFER_RESOURCE));
+
+        mockMvc.perform(get("/eu-grant-transfer/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(EU_GRANT_TRANSFER_RESOURCE)))
+                .andDo(document("eu-grant-transfer/{method-name}",
+                        pathParameters(parameterWithName("applicationId").description("Id of the application the grant transfer details are attached to.")),
+                        responseFields(euGrantTransferResourceFields)));
+
+        verify(euGrantTransferService).getGrantTransferByApplicationId(applicationId);
+    }
+
+    @Test
+    public void updateGrantTransferByApplicationId() throws Exception {
+        final long applicationId = 22L;
+        when(euGrantTransferService.updateGrantTransferByApplicationId(EU_GRANT_TRANSFER_RESOURCE, applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/eu-grant-transfer/{applicationId}", applicationId)
+                .header("IFS_AUTH_TOKEN", "123abc")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(EU_GRANT_TRANSFER_RESOURCE)))
+                .andExpect(status().isOk())
+                .andDo(document("eu-grant-transfer/{method-name}",
+                        pathParameters(parameterWithName("applicationId").description("Id of the application the grant transfer details are attached to.")),
+                        requestFields(euGrantTransferResourceFields)));
+
+        verify(euGrantTransferService).updateGrantTransferByApplicationId(EU_GRANT_TRANSFER_RESOURCE, applicationId);
     }
 
     private HttpHeaders createFileUploadHeader(String contentType, long contentLength) {

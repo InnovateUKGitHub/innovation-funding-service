@@ -673,6 +673,11 @@ public class Competition extends AuditableEntity implements ProcessActivity {
                 .orElse(false);
     }
 
+    public boolean isFullyFunded() {
+        // Competitions which always have 100% funding level
+        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+    }
+
     public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
