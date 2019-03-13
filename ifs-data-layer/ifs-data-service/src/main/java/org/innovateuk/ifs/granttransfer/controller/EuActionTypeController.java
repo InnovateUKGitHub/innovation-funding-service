@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.euactiontype.controller;
+package org.innovateuk.ifs.granttransfer.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.euactiontype.transactional.EuActionTypeService;
-import org.innovateuk.ifs.eugrant.EuActionTypeResource;
+import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
+import org.innovateuk.ifs.granttransfer.transactional.EuActionTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
