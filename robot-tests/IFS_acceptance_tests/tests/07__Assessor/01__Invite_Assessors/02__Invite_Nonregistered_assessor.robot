@@ -27,9 +27,7 @@ ${openCompetitionAPC}                  Low-cost propulsion mechanisms for subson
 
 *** Test Cases ***
 Non-registered assessor: Accept invitation
-    [Documentation]    INFUND-228
-    ...
-    ...    INFUND-4145
+    [Documentation]    INFUND-228  INFUND-4145
     [Tags]
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     When the user selects the radio button  acceptInvitation  true
@@ -39,60 +37,41 @@ Non-registered assessor: Accept invitation
 User can navigate back to Become an Assessor page
     [Documentation]    INFUND-4145
     [Tags]
-    When the user clicks the button/link           jQuery = .govuk-button:contains("Create account")
-    Then the user should see the element           jQuery = .govuk-heading-s:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
-    And the user clicks the button/link            jQuery = .govuk-back-link:contains("Back")
-    And the user should see the element            jQuery = h1:contains("Become an assessor for Innovate UK")
+    Given the user clicks the button/link    jQuery = .govuk-button:contains("Create account")
+    And the user should see the element      jQuery = .govuk-heading-s:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
+    When the user clicks the button/link     jQuery = .govuk-back-link:contains("Back")
+    Then the user should see the element     jQuery = h1:contains("Become an assessor for Innovate UK")
 
 Create assessor account: server-side validations
     [Documentation]    INFUND-1478
     [Tags]
     Given the user clicks the button/link                   jQuery = .govuk-button:contains("Create account")
     When the user clicks the button/link                    jQuery = button:contains("Continue")
-    Then the user should see a field and summary error      ${enter_a_first_name}
-    And the user should see a field and summary error       ${enter_a_last_name}
-    And the user should see a field and summary error       ${enter_a_phone_number}
-    And the user should see a field and summary error       Please enter your password.
-    And the user should see a field and summary error       ${enter_a_phone_number_between_8_and_20_digits}
-    And the user should see a field and summary error       Your last name should have at least 2 characters.
-    And the user should see a field and summary error       Your first name should have at least 2 characters.
-    And the user should see a field and summary error       Password must be at least 8 characters.
+    Then the user should see the validation error in the create assessor form
 
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
     [Tags]
-    When The user enters text to a text field                                      id = firstName    Thomas
-    Then the user should not see the validation error in the create assessor form  ${enter_a_first_name}
-    When The user enters text to a text field                                      id = lastName    Fister
-    Then the user should not see the validation error in the create assessor form  ${enter_a_last_name}
-    When the user enters text to a text field                                      id = phoneNumber    123123123123
-    Then the user should not see the validation error in the create assessor form  ${enter_a_phone_number}
-    And the user should not see the validation error in the create assessor form   ${enter_a_phone_number_between_8_and_20_digits}
-    When The user enters text to a text field                                      id = password    ${correct_password}
-    Then the user should not see the validation error in the create assessor form  Please enter your password.
-    And the user should not see the validation error in the create assessor form   Password must be at least 8 characters.
+    Given the user should not see the error messages after entering valid values
     When the user clicks the button/link                                           id = postcode-lookup
-    And the user should see a field and summary error                              Enter a UK postcode    # empty postcode check
+    Then the user should see a field and summary error                             Enter a UK postcode    # empty postcode check
 
 Create assessor account: Postcode lookup and save
     [Documentation]    INFUND-1478
     [Tags]
-    When The user enters text to a text field               id = addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link                     id = postcode-lookup
-    And the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
-    And The user enters text to a text field                id = password    ${correct_password}
-    And the user clicks the button/link                     jQuery = button:contains("Continue")
-    Then the user should see the element                    jQuery = h1:contains("Your account has been created")
-    And the user clicks the button/link                     jQuery = a:contains("Sign into your account")
-    Then the user should be redirected to the correct page  ${LOGGED_OUT_URL_FRAGMENT}
+    Given the user enters the postcode and password to create account
+    When the user clicks the button/link                      jQuery = button:contains("Continue")
+    Then the user should see the element                      jQuery = h1:contains("Your account has been created")
+    When the user clicks the button/link                      jQuery = a:contains("Sign into your account")
+    Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4919
     [Tags]
-    When logging in and error checking                &{nonregistered_assessor3_credentials}
-    Then the user should see the element              link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link               link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user should see the element               jQuery = p:contains("There are currently no assessments for you to review.")
+    Given logging in and error checking               &{nonregistered_assessor3_credentials}
+    And the user should see the element               link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    When the user clicks the button/link              link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    Then the user should see the element              jQuery = p:contains("There are currently no assessments for you to review.")
     And the user reads his email and clicks the link  ${test_mailbox_one}+thomas.fister@gmail.com    Innovate UK assessor questionnaire    diversity survey
     [Teardown]    the user navigates to the page      ${LOGIN_URL}
 
@@ -110,12 +89,8 @@ Innovation area on assessor profile for invited user
 Non-registered assessor: Reject invitation
     [Documentation]    INFUND-4631  INFUND-4636  INFUND-5165
     [Tags]
-    When the user navigates to the page                    ${Invitation_nonregistered_assessor2}
-    Then the user should see the element                   jQuery = h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
-    And the user selects the radio button                  acceptInvitation  false
-    And The user clicks the button/link                    jQuery = button:contains("Confirm")
-    Then the user should see a field and summary error     The reason cannot be blank.
-    And the assessor fills in all fields
+    Given the user checks for validations on reject invitation page
+    When the assessor fills in all fields
     And The user clicks the button/link                    jQuery = button:contains("Confirm")
     Then the user should see the element                   jQuery = p:contains("Thank you for letting us know you are unable to assess applications within this competition.")
     And the assessor shouldn't be able to reject the rejected competition
@@ -123,14 +98,9 @@ Non-registered assessor: Reject invitation
 
 The internal user invites an applicant as an assessor
     [Tags]
-    Given the user logs-in in new browser          &{Comp_admin1_credentials}
-    And the user clicks the button/link            link = ${openCompetitionRTO_name}
-    And the user clicks the button/link            jQuery = a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link            jQuery = a:contains("Invite")
-    When The internal user invites a user as an assessor    Dave Adams  ${RTO_lead_applicant_credentials["email"]}
-    And the user cannot see a validation error in the page
-    And the user clicks the button/link            jQuery = a:contains("Review and send invites")
-    And the user clicks the button/link            jQuery = button:contains("Send invite")
+    Given the comp admin logs in and navigate to invite tab   ${openCompetitionRTO_name}
+    When The internal user invites a user as an assessor      Dave Adams  ${RTO_lead_applicant_credentials["email"]}
+    Then the internal user send invite
     [Teardown]    Logout as user
 
 The invited applicant accepts the invitation
@@ -142,12 +112,9 @@ The invited applicant accepts the invitation
 
 The internal user invites the applicant to assess another competition
     [Tags]
-    Given the user logs-in in new browser                   &{Comp_admin1_credentials}
-    And the user clicks the button/link                     link = ${openCompetitionAPC}
-    And the user clicks the button/link                     jQuery = a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link                     jQuery = a:contains("Invite")
-    When The internal user invites a user as an assessor    Dave Adams  ${RTO_lead_applicant_credentials["email"]}
-    Then the user should see a field and summary error      ${email_already_in_use}
+    Given the comp admin logs in and navigate to invite tab  ${openCompetitionAPC}
+    When The internal user invites a user as an assessor     Dave Adams  ${RTO_lead_applicant_credentials["email"]}
+    Then the user should see a field and summary error       ${email_already_in_use}
     [Teardown]    Logout as user
 
 *** Keywords ***
@@ -175,3 +142,50 @@ the assessor shouldn't be able to accept the rejected competition
 The assessor is unable to see the invitation
     the user should see the element   jQuery = h1:contains("This invitation is now closed")
     The user should see the element   jQuery = p:contains("You have already accepted or rejected this invitation.")
+
+the user should see the validation error in the create assessor form
+    the user should see a field and summary error      ${enter_a_first_name}
+    the user should see a field and summary error      ${enter_a_last_name}
+    the user should see a field and summary error      ${enter_a_phone_number}
+    the user should see a field and summary error      Please enter your password.
+    the user should see a field and summary error      ${enter_a_phone_number_between_8_and_20_digits}
+    the user should see a field and summary error      Your last name should have at least 2 characters.
+    the user should see a field and summary error      Your first name should have at least 2 characters.
+    the user should see a field and summary error      Password must be at least 8 characters.
+
+the user enters the postcode and password to create account
+    The user enters text to a text field                  id = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                       id = postcode-lookup
+    the user selects the index from the drop-down menu    1  id=addressForm.selectedPostcodeIndex
+    the user enters text to a text field                  id = password    ${correct_password}
+
+the user should not see the error messages after entering valid values
+    the user enters text to a text field                                       id = firstName    Thomas
+    the user should not see the validation error in the create assessor form   ${enter_a_first_name}
+    The user enters text to a text field                                       id = lastName    Fister
+    the user should not see the validation error in the create assessor form   ${enter_a_last_name}
+    the user enters text to a text field                                       id = phoneNumber    123123123123
+    the user should not see the validation error in the create assessor form   ${enter_a_phone_number}
+    the user should not see the validation error in the create assessor form   ${enter_a_phone_number_between_8_and_20_digits}
+    the user enters text to a text field                                       id = password    ${correct_password}
+    the user should not see the validation error in the create assessor form   Please enter your password.
+    the user should not see the validation error in the create assessor form   Password must be at least 8 characters.
+
+the user checks for validations on reject invitation page
+    the user navigates to the page                    ${Invitation_nonregistered_assessor2}
+    the user should see the element                   jQuery = h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
+    the user selects the radio button                 acceptInvitation  false
+    the user clicks the button/link                   jQuery = button:contains("Confirm")
+    the user should see a field and summary error     The reason cannot be blank.
+
+the comp admin logs in and navigate to invite tab
+    [Arguments]  ${competition_name}
+    the user logs-in in new browser       &{Comp_admin1_credentials}
+    the user clicks the button/link       link = ${competition_name}
+    the user clicks the button/link       jQuery = a:contains("Invite assessors to assess the competition")
+    the user clicks the button/link       jQuery = a:contains("Invite")
+
+the internal user send invite
+    the user cannot see a validation error in the page
+    the user clicks the button/link            jQuery = a:contains("Review and send invites")
+    the user clicks the button/link            jQuery = button:contains("Send invite")

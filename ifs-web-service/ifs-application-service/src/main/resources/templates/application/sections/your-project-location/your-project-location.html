@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your project location'" />
 </head>
-<body class="govuk-template__body your-project-location">
+<body class="govuk-template__body your-project-location app-form">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -11,7 +11,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${model.financesUrl}" />
+              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${commonFinancesModel.financesUrl}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -25,7 +25,7 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Your project location',subTitle=${model.applicationName},size='govuk-heading-xl'" />
+                  th:with="pageTitle='Your project location',subTitle=${commonFinancesModel.applicationName},size='govuk-heading-xl'" />
 
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
@@ -36,54 +36,38 @@
 
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
-            <th:block th:unless="${model.complete}" >
-                <div class="govuk-!-margin-top-6">
-                    <th:block th:unless="${model.readOnly}">
-                        <p class="govuk-body">Where will most of the project work take place?</p>
-                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'govuk-form-group--error'">
-                            <label class="govuk-label govuk-label--s" for="postcode">
-                                Postcode
-                            </label>
-                            <th:block th:if="${#fields.hasErrors('postcode')}">
-                                <span class="govuk-error-message" th:each="err : ${#fields.errors('postcode')}" th:text="${err}"></span>
-                            </th:block>
-                            <input class="govuk-input govuk-input--width-10" id="postcode"
-                                   th:attr="data-postcode-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
-                                   type="text" name="postcode" th:value="${form.postcode}" />
-                        </div>
-                    </th:block>
-                    <th:block th:if="${model.readOnly}">
-                        <!--/* view  */-->
-                        <dl class="govuk-list readonly-data">
-                            <dt>Postcode</dt>
-                            <dd th:if="${form.postcode != null}" th:text="${form.postcode}">Postcode</dd>
-                        </dl>
-                    </th:block>
-                </div>
-            </th:block>
-            <th:block th:if="${model.complete}">
-                <!--/* view  */-->
-                <dl class="govuk-list readonly-data">
-                    <dt>Postcode</dt>
-                    <dd th:if="${form.postcode != null}" th:text="${form.postcode}">Postcode</dd>
-                </dl>
-            </th:block>
-            <div class="form-footer" th:if="${model.open}">
+
+            <div class="govuk-!-margin-top-6">
+
+                <p class="govuk-body" th:if="${!commonFinancesModel.readOnly}">Where will most of the project work take place?</p>
+
+                <th:block th:insert="fragments/form-elements/textfield ::
+                    textfield(
+                        label='Postcode',
+                        id='postcode',
+                        value=${form.postcode},
+                        readOnly=${commonFinancesModel.readOnly},
+                        required=true,
+                        requiredMessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}
+                        )" />
+            </div>
+
+            <div class="form-footer" th:if="${commonFinancesModel.open}">
                 <div class="form-footer__actions">
-                    <button id="mark_as_complete" th:unless="${model.readOnly}" type="submit" name="mark-as-complete"
+                    <button id="mark_as_complete" th:unless="${commonFinancesModel.readOnly}" type="submit" name="mark-as-complete"
                             class="button-clear" value="true">Mark as complete
                     </button>
-                    <button id="mark_as_incomplete" th:if="${model.complete}" type="submit" name="mark-as-incomplete" class="button-clear" value="true"
+                    <button id="mark_as_incomplete" th:if="${commonFinancesModel.complete}" type="submit" name="mark-as-incomplete" class="button-clear" value="true"
                             th:text="${'Edit your project location'}">Edit
                     </button>
                 </div>
             </div>
             <div>
-                <a th:href="${model.financesUrl}"
-                   th:if="${model.readOnly}"
+                <a th:href="${commonFinancesModel.financesUrl}"
+                   th:if="${commonFinancesModel.readOnly}"
                    class="govuk-!-margin-top-6 button-secondary">Return to finances
                 </a>
-                <button type="submit" th:unless="${model.readOnly}"
+                <button type="submit" th:unless="${commonFinancesModel.readOnly}"
                         class="govuk-!-margin-top-6 govuk-button">
                     Save and return to finances
                 </button>

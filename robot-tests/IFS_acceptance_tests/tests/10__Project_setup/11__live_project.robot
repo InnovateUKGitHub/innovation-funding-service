@@ -212,6 +212,15 @@ Grant offer letter section is read-only for academic partner
     And the user should not see the element             jQuery = button:contains("Remove")
     And the user should not see the element             name = signedGrantOfferLetter
 
+PM should see project tab on dashboard once GOL is approved
+    [Documentation]  IFS-4959
+    Given the user clicks the button/link    link = Dashboard
+    And the user should not see the element  id = dashboard-link-LIVE_PROJECTS_USER
+    When the project is sent to acc
+    And log in as a different user           ${PS_LP_Application_Academic_Email}  ${short_password}
+    Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
+    And the user should see the element      jQuery = h2:contains("Projects")
+
 *** Keywords ***
 grant offer letter is sent to users
     the user logs-in in new browser    &{internal_finance_credentials}
@@ -252,3 +261,10 @@ the lead partner logs in and navigate to applications dashboard
     log in as a different user      ${PS_LP_Application_Lead_PM_Email}  ${short_password}
     ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  id = dashboard-link-APPLICANT
     Run Keyword If  '${status}' == 'PASS'  Run keyword   the user clicks the button/link    id = dashboard-link-APPLICANT
+
+the project is sent to acc
+    Connect to database  @{database}
+    execute sql string   UPDATE `${database_name}`.`grant_process` SET `pending`='1' WHERE `application_id`='${PS_LP_Application_No}';
+    #The sleep is necessary as the grant table is read as part of a cron job which runs every 1 min
+    sleep  60s
+    Disconnect from database

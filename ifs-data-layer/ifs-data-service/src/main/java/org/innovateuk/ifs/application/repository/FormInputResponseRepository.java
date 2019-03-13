@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -24,4 +26,8 @@ public interface FormInputResponseRepository extends PagingAndSortingRepository<
 
     @Override
     List<FormInputResponse> findAll();
+
+    Optional<FormInputResponse> findByApplicationIdAndFormInputQuestionIdAndUpdatedByOrganisationIdAndFormInputType(long applicationId, long questionId, long organisationId, FormInputType formInputType);
+
+    Optional<FormInputResponse> findByApplicationIdAndFormInputQuestionIdAndUpdatedByOrganisationIdAndFormInputTypeAndFormInputDescription(long applicationId, long questionId, long organisationId, FormInputType formInputType, String description);
 }

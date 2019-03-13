@@ -91,6 +91,13 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "VIEW_GRANT_OFFER",
+            description = "Monitoring officer can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract), of projects from competition assigned to them")
+    public boolean monitoringOfficerCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
+        return isMonitoringOfficer(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
             value = "UPLOAD_SIGNED_GRANT_OFFER",
             description = "Project manager or Lead partner can upload signed grant offer letter")
     public boolean leadPartnerCanUploadGrantOfferLetter(ProjectResource project, UserResource user) {
@@ -137,6 +144,13 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             description = "Internal users can view the send status of Grant Offer Letter for a project")
     public boolean internalAdminUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
         return isInternalAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Monitoring officers can view the send status of Grant Offer Letter for a project")
+    public boolean monitoringOfficerCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return isMonitoringOfficer(project.getId(), user.getId());
     }
 
     @PermissionRule(
