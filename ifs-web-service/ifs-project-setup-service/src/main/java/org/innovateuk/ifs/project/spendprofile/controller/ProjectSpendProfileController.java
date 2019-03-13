@@ -43,6 +43,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_C
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
  * This controller will handle all requests that are related to spend profile.
@@ -87,8 +88,10 @@ public class ProjectSpendProfileController {
                                    @PathVariable("organisationId") final Long organisationId,
                                    UserResource loggedInUser) {
 
-        if (isUserPartOfLeadOrganisation(projectId, loggedInUser)) {
-            return viewProjectManagerSpendProfile(model, projectId, loggedInUser);
+        boolean isMonitoringOfficer = isMonitoringOfficer(loggedInUser);
+
+        if (isMonitoringOfficer || isUserPartOfLeadOrganisation(projectId, loggedInUser)) {
+            return viewProjectManagerSpendProfile(model, projectId, loggedInUser, isMonitoringOfficer);
         }
         return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
     }
@@ -257,8 +260,8 @@ public class ProjectSpendProfileController {
         return BASE_DIR + "/spend-profile";
     }
 
-    private String viewProjectManagerSpendProfile(Model model, final Long projectId, final UserResource loggedInUser) {
-        model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId, loggedInUser));
+    private String viewProjectManagerSpendProfile(Model model, final Long projectId, final UserResource loggedInUser,  final boolean isMonitoringOfficer) {
+        model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId, loggedInUser, isMonitoringOfficer));
         return BASE_DIR + "/" + REVIEW_TEMPLATE_NAME;
     }
 
@@ -318,7 +321,8 @@ public class ProjectSpendProfileController {
     }
 
     private ProjectSpendProfileProjectSummaryViewModel populateSpendProfileProjectManagerViewModel(final Long projectId,
-                                                                                                   final UserResource loggedInUser) {
+                                                                                                   final UserResource loggedInUser,
+                                                                                                   final boolean isMonitoringOfficer) {
         ProjectResource projectResource = projectService.getById(projectId);
 
         final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -335,7 +339,8 @@ public class ProjectSpendProfileController {
                 leadOrganisation,
                 projectResource.getSpendProfileSubmittedDate() != null,
                 editablePartners,
-                isApproved(projectId));
+                isApproved(projectId),
+                isMonitoringOfficer);
     }
 
     private boolean isApproved(final Long projectId) {

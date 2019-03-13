@@ -45,7 +45,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     }
 
     @Test
-    public void testFindByApplicationId() {
+    public void findByApplicationId() {
         when(classUnderTestMock.findByApplicationId(1L))
                 .thenReturn(serviceSuccess(newOrganisationResource().buildSet(2)));
 
@@ -57,7 +57,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     }
 
     @Test
-    public void testFindById() {
+    public void findById() {
         when(classUnderTestMock.findById(1L))
                 .thenReturn(serviceSuccess(newOrganisationResource().build()));
 
@@ -81,11 +81,13 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
                 .usersCanViewOrganisationsTheyAreInvitedTo(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verify(rules, times(times))
                 .stakeholdersCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(rules, times(times))
+                .monitoringOfficersCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(rules);
     }
 
     @Test
-    public void testCreate() {
+    public void create() {
         assertAccessDenied(() -> classUnderTest.create(newOrganisationResource().build()), () -> {
             verify(rules).systemRegistrationUserCanCreateOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
@@ -93,7 +95,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     }
 
     @Test
-    public void testUpdate() {
+    public void update() {
         assertAccessDenied(() -> classUnderTest.update(newOrganisationResource().build()), () -> {
             verify(rules)
                     .systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
@@ -106,7 +108,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     }
 
     @Test
-    public void testAddAddress() {
+    public void addAddress() {
         when(lookup.findOrganisationById(123L)).thenReturn(newOrganisationResource().build());
 
         assertAccessDenied(() -> classUnderTest.addAddress(123L, REGISTERED, newAddressResource().build()), () -> {
@@ -121,7 +123,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     }
 
     @Test
-    public void testSearchAcademic() {
+    public void searchAcademic() {
         when(classUnderTestMock.searchAcademic("Univer", 10))
                 .thenReturn(serviceSuccess(new ArrayList<>(asList(new OrganisationSearchResult(), new OrganisationSearchResult()))));
 
@@ -133,7 +135,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     }
 
     @Test
-    public void testGetSearchOrganisation() {
+    public void getSearchOrganisation() {
         when(classUnderTestMock.getSearchOrganisation(1L))
                 .thenReturn(serviceSuccess(new OrganisationSearchResult()));
 

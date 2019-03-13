@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -15,7 +14,6 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,9 +49,6 @@ public class ApplicationSectionSaverTest {
     private ApplicationSectionSaver sectionSaver;
 
     @Mock
-    private OrganisationService organisationService;
-
-    @Mock
     private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Mock
@@ -61,9 +56,6 @@ public class ApplicationSectionSaverTest {
 
     @Mock
     private SectionService sectionService;
-
-    @Mock
-    private QuestionService questionService;
 
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -90,7 +82,6 @@ public class ApplicationSectionSaverTest {
     private final Long sectionId = 912509L;
     private final Long userId = 812482L;
     private final Long processRoleId = 2312412L;
-    private final Boolean validFinanceTerms = false;
 
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
@@ -102,9 +93,7 @@ public class ApplicationSectionSaverTest {
         when(userRestService.findProcessRole(userId, application.getId())).thenReturn(restSuccess(newProcessRoleResource().withId(processRoleId).build()));
         when(sectionService.getById(sectionId)).thenReturn(section);
 
-        when(organisationService.getOrganisationType(userId, application.getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getId());
         FinanceFormHandler defaultFinanceFormHandler = mock(DefaultFinanceFormHandler.class);
-        when(defaultFinanceFormHandler.update(request, userId, application.getId(), competitionId)).thenReturn(new ValidationMessages());
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(financeViewHandlerProvider.getFinanceFormHandler(competition, OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceFormHandler);
         when(overheadFileSaver.isOverheadFileRequest(request)).thenReturn(false);
@@ -115,10 +104,9 @@ public class ApplicationSectionSaverTest {
         Map<String, String[]> params = asMap();
         when(request.getParameterMap()).thenReturn(params);
 
-        ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
+        ValidationMessages result = sectionSaver.saveApplicationForm(application, form, sectionId, userId, request, response);
 
         assertFalse(result.hasErrors());
-        verify(organisationService, times(1)).getOrganisationType(userId, application.getId());
     }
 
     @Test
@@ -128,7 +116,7 @@ public class ApplicationSectionSaverTest {
         when(overheadFileSaver.isOverheadFileRequest(request)).thenReturn(true);
         when(overheadFileSaver.handleOverheadFileRequest(request)).thenReturn(new ValidationMessages());
 
-        ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
+        ValidationMessages result = sectionSaver.saveApplicationForm(application, form, sectionId, userId, request, response);
 
         assertFalse(result.hasErrors());
         verify(overheadFileSaver, times(1)).handleOverheadFileRequest(request);
@@ -144,7 +132,7 @@ public class ApplicationSectionSaverTest {
         messages.addError(new Error("Some error", BAD_REQUEST));
         when(overheadFileSaver.handleOverheadFileRequest(request)).thenReturn(messages);
 
-        ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
+        ValidationMessages result = sectionSaver.saveApplicationForm(application, form, sectionId, userId, request, response);
 
         assertTrue(result.hasErrors());
         verify(overheadFileSaver, times(1)).handleOverheadFileRequest(request);
@@ -155,7 +143,7 @@ public class ApplicationSectionSaverTest {
         Map<String, String[]> params = asMap(MARK_SECTION_AS_COMPLETE, new String[]{});
         when(request.getParameterMap()).thenReturn(params);
 
-        ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
+        ValidationMessages result = sectionSaver.saveApplicationForm(application, form, sectionId, userId, request, response);
 
         assertFalse(result.hasErrors());
         verify(financeSaver, times(1)).handleStateAid(params, application, form, section);
@@ -166,7 +154,7 @@ public class ApplicationSectionSaverTest {
         Map<String, String[]> params = asMap(MARK_SECTION_AS_INCOMPLETE, new String[]{});
         when(request.getParameterMap()).thenReturn(params);
 
-        ValidationMessages result = sectionSaver.saveApplicationForm(application, competitionId, form, sectionId, userId, request, response, validFinanceTerms);
+        ValidationMessages result = sectionSaver.saveApplicationForm(application, form, sectionId, userId, request, response);
 
         assertFalse(result.hasErrors());
         verify(financeSaver, times(1)).handleStateAid(params, application, form, section);

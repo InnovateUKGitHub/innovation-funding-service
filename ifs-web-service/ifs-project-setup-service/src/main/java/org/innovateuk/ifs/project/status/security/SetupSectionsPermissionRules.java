@@ -27,6 +27,7 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
  * Permission checker around the access to various sections within the Project Setup process
@@ -94,19 +95,19 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_PROJECT_MANAGER_PAGE", description = "A lead can access the Project Manager " +
             "page when their Companies House data is complete or not required, and the Grant Offer Letter has not yet been generated")
     public boolean leadCanAccessProjectManagerPage(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
+        return !isMonitoringOfficer(user) && doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_START_DATE_PAGE", description = "A lead can access the Project Start Date " +
             "page when their Companies House data is complete or not required, and the Spend Profile has not yet been generated")
     public boolean leadCanAccessProjectStartDatePage(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage);
+        return !isMonitoringOfficer(user) && doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage);
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_ADDRESS_PAGE", description = "A lead can access the Project Address " +
             "page when their Companies House data is complete or not required, and the Grant Offer Letter has not yet been generated")
     public boolean leadCanAccessProjectAddressPage(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
+        return !isMonitoringOfficer(user) && doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
     }
 
     @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "A partner can access the Monitoring Officer " +
@@ -121,13 +122,13 @@ public class SetupSectionsPermissionRules {
             "section when their Companies House details are complete or not required, and they have a Finance Contact " +
             "available for their Organisation")
     public boolean partnerCanAccessBankDetailsSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessBankDetailsSection);
+        return !isMonitoringOfficer(user) && doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessBankDetailsSection);
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL", description = "A partner can access the finance details " +
             " when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessFinanceChecksSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
+        return !isMonitoringOfficer(user) &&  doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A partner can access the Spend Profile " +
@@ -135,6 +136,13 @@ public class SetupSectionsPermissionRules {
             "and the Organisation's Bank Details have been approved or queried")
     public boolean partnerCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
+    }
+
+    @PermissionRule(value = "ACCESS_TOTAL_SPEND_PROFILE_SECTION", description = "Only the project manager can access the Spend Profile " +
+            "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
+            "and the Organisation's Bank Details have been approved or queried")
+    public boolean projectManagerCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isProjectManager(projectCompositeId.id(), user) && doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
     @PermissionRule(value = "SUBMIT_SPEND_PROFILE_SECTION", description = "A partner can attempt to submit the Spend Profile " +
@@ -199,9 +207,13 @@ public class SetupSectionsPermissionRules {
                 return false;
             }
 
-            long organisationId = projectService.getOrganisationIdFromUser(projectId, user);
+            boolean isMonitoringOfficer = isMonitoringOfficer(user);
 
-            ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
+            long organisationId = isMonitoringOfficer ?
+                    projectService.getLeadOrganisation(projectId).getId() : projectService.getOrganisationIdFromUser(projectId, user);
+
+            ProjectTeamStatusResource teamStatus = isMonitoringOfficer ?
+                    getProjectTeamStatusForMonitoringOfficer(projectId) : statusService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
 
             ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(organisationId).get();
 
@@ -215,6 +227,11 @@ public class SetupSectionsPermissionRules {
             LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup", e);
             return false;
         }
+    }
+
+    private ProjectTeamStatusResource getProjectTeamStatusForMonitoringOfficer(long projectId) {
+        ProjectUserResource leadProjectUser = projectService.getLeadPartners(projectId).stream().findFirst().get();
+        return statusService.getProjectTeamStatus(projectId, Optional.of(leadProjectUser.getUser()));
     }
 
     private boolean isProjectInViewableState(long projectId) {

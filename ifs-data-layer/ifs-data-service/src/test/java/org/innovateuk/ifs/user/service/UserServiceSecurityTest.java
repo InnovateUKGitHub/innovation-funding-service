@@ -44,7 +44,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testFindAssignableUsers() {
+    public void findAssignableUsers() {
         when(classUnderTestMock.findAssignableUsers(123L))
                 .thenReturn(serviceSuccess(newUserResource().buildSet(2)));
 
@@ -53,7 +53,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testFindByEmail() {
+    public void findByEmail() {
         String email = "asdf@example.com";
 
         when(classUnderTestMock.findByEmail(email))
@@ -63,7 +63,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testChangePassword() {
+    public void changePassword() {
         Token token = new Token();
         when(tokenLookupStrategies.getTokenByHash("hash")).thenReturn(token);
 
@@ -74,7 +74,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testSendPasswordResetNotification() {
+    public void sendPasswordResetNotification() {
 
         UserResource user = newUserResource().build();
         assertAccessDenied(() -> classUnderTest.sendPasswordResetNotification(user), () -> {
@@ -85,7 +85,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testFindRelatedUsers() {
+    public void findRelatedUsers() {
         when(classUnderTestMock.findRelatedUsers(123L))
                 .thenReturn(serviceSuccess(newUserResource().buildSet(2)));
 
@@ -115,6 +115,8 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
                 .systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
     }
 
@@ -134,7 +136,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testFindActiveByProcessRoles() {
+    public void findActiveByProcessRoles() {
         when(classUnderTestMock.findActiveByRoles(internalRoles(), new PageRequest(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
@@ -146,7 +148,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testFindInactiveByProcessRoles() {
+    public void findInactiveByProcessRoles() {
         when(classUnderTestMock.findInactiveByRoles(internalRoles(), new PageRequest(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
@@ -158,7 +160,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testFindByProcessRolesAndSearchCriteria() {
+    public void findByProcessRolesAndSearchCriteria() {
         when(classUnderTestMock.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), "%aar%", SearchCategory
                 .NAME))
                 .thenReturn(serviceSuccess(newUserOrganisationResource().build(2)));
@@ -171,7 +173,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testAgreeNewTermsAndConditions() {
+    public void agreeNewTermsAndConditions() {
         UserResource user = newUserResource().build();
 
         when(userLookupStrategies.findById(user.getId())).thenReturn(user);
