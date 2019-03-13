@@ -591,11 +591,12 @@ IFS.core.formValidation = (function () {
       var addWeekDay = dateGroup.find('.js-addWeekDay')
 
       var allFields = d.add(m).add(y)
-      var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'))
-      var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0))
-      var enabled = !d.is('[readonly]') || !m.is('[readonly]') || !y.is('[readonly]')
-      var required = (d.attr('required') && m.attr('required') && y.attr('required'))
-      var empty = ((d.val().length === 0) && (m.val().length === 0) && (y.val().length === 0))
+      var allFieldsArray = jQuery.makeArray(allFields)
+      var fieldsVisited = allFields.hasClass('js-visited')
+      var filledOut = allFieldsArray.every(function (element) { return jQuery(element).val().length > 0 })
+      var enabled = !allFields.is('[readonly]')
+      var required = allFields.is('[required]')
+      var empty = allFieldsArray.every(function (element) { return jQuery(element).val().length === 0 })
       var errorSummary = jQuery('.govuk-error-summary')
 
       // don't show the validation messages for numbers in dates but we do check it as part of the date check
@@ -604,14 +605,14 @@ IFS.core.formValidation = (function () {
         'data-min-showmessage': 'none',
         'data-max-showmessage': 'none'
       })
-      var validNumbers = IFS.core.formValidation.checkNumber(d) && IFS.core.formValidation.checkNumber(m) &&
-        IFS.core.formValidation.checkNumber(y) && IFS.core.formValidation.checkMin(y) &&
-        IFS.core.formValidation.checkMax(y)
+      var validNumbers = allFieldsArray.every(function (element) { return IFS.core.formValidation.checkNumber(jQuery(element)) }) &&
+        IFS.core.formValidation.checkMin(y) && IFS.core.formValidation.checkMax(y)
+
       var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup, 'date-invalid')
 
       if (validNumbers && filledOut) {
+        var day = d.length ? parseInt(d.val(), 10) : 1
         var month = parseInt(m.val(), 10)
-        var day = parseInt(d.val(), 10)
         var year = parseInt(y.val(), 10)
         var date = new Date(year, month - 1, day) // parse as date to check if it is a valid date
         if (h !== undefined) {
@@ -649,9 +650,17 @@ IFS.core.formValidation = (function () {
             valid = false
           }
         }
-      } else if (empty && required !== 'required') {
-        valid = true
-        IFS.core.formValidation.setValid(allFields, invalidErrorMessage, displayValidationMessages)
+      } else if (empty) {
+        if (enabled) {
+          field.trigger('ifsAutosave')
+          if (!required) {
+            valid = true
+            IFS.core.formValidation.setValid(allFields, invalidErrorMessage, displayValidationMessages)
+          } else {
+            valid = false
+            IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
+          }
+        }
       } else if ((filledOut || fieldsVisited) && enabled) {
         IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
         allFields.attr({'data-date': ''})

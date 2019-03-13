@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your organisation'" />
+</head>
+<body class="govuk-template__body your-organisation app-form">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${commonFinancesModel.financesUrl}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Your organisation',subTitle=${commonFinancesModel.applicationName},size='govuk-heading-xl'" />
+
+        <form th:object="${form}"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              th:attr="data-autosave='autosaveFormPost'"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              method="POST">
+
+            <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+            <input type="hidden" id="cacheTest" value=""/>
+
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.showOrganisationSizeAlert}">
+                <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
+                <p class="govuk-body">The organisation size is used to calculate your funding level in the application.</p>
+                <p class="govuk-body">Changing this selection will reset your funding level.</p>
+            </div>
+
+            <th:block th:insert="fragments/form-elements/radiofield ::
+                radiofield(
+                    legend='Size',
+                    id='organisationSize',
+                    value=${form.organisationSize},
+                    optionDescriptionsAndValues=${model.organisationSizeOptions},
+                    hint='To determine the level of funding you are eligible to receive please provide your
+                          business size using the <a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
+                          target=&quot;_blank&quot;> EU definition (opens in a new window)</a> for guidance.',
+                    required=true,
+                    requiredMessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED},
+                    readOnly=${commonFinancesModel.readOnly},
+                    valueDescription=${form.organisationSize != null ? form.organisationSize.description : null},
+                    )" />
+
+            <th:block th:insert="fragments/form-elements/textfield ::
+                textfield-integer(
+                    label='Turnover (£)',
+                    hint='Your turnover from the last financial year.',
+                    id='turnover',
+                    value=${commonFinancesModel.readOnly ? ('£' + (form.turnover != null ? #numbers.formatInteger(form.turnover, 0, 'DEFAULT') : '0')) : form.turnover},
+                    required=true,
+                    readOnly=${commonFinancesModel.readOnly},
+                    )" />
+
+            <th:block th:insert="fragments/form-elements/textfield ::
+                textfield-integer(
+                    label='Full time employees',
+                    hint='Number of full time employees at your organisation.',
+                    id='headCount',
+                    value=${form.headCount},
+                    required=true,
+                    readOnly=${commonFinancesModel.readOnly},
+                    )" />
+
+            <th:block th:if="${!commonFinancesModel.readOnly && model.showStateAidAgreement}">
+
+                <div class="agree-to-terms-container">
+
+                    <th:block th:insert="fragments/form-elements/checkbox ::
+                    checkbox(
+                        legend='<h2 class=&quot;govuk-fieldset__heading&quot;>Terms and conditions</h2>',
+                        label='I confirm that by submitting my application my organisation will be <a href=&quot;https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid&quot; target=&quot;_blank&quot; class=&quot;govuk-link&quot;>eligible for state aid</a> (opens in a new window) within 90 days of any offer being made.',
+                        id='stateAidAgreed',
+                        value='true',
+                        checked=${form.stateAidAgreed},
+                        switchesButtonStatus='#mark_as_complete'
+                    )" />
+                </div>
+
+                <div class="message-alert">
+                    <p class="govuk-body">If you are found to be ineligible for state aid, we have the right to withdraw any offer.</p>
+                </div>
+
+            </th:block>
+
+            <div class="form-footer" th:if="${commonFinancesModel.open}">
+                <div class="form-footer__actions">
+                    <button id="mark_as_complete" th:unless="${commonFinancesModel.readOnly}" type="submit" name="mark-as-complete"
+                            class="button-clear" value="true">Mark as complete
+                    </button>
+                    <button id="mark_as_incomplete" th:if="${commonFinancesModel.complete}" type="submit" name="mark-as-incomplete" class="button-clear" value="true"
+                            th:text="${'Edit your organisation'}">Edit
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <a th:href="${commonFinancesModel.financesUrl}"
+                   th:if="${commonFinancesModel.readOnly}"
+                   class="govuk-!-margin-top-6 button-secondary">Return to finances
+                </a>
+                <button type="submit" th:unless="${commonFinancesModel.readOnly}"
+                        class="govuk-!-margin-top-6 govuk-button">
+                    Save and return to finances
+                </button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>
