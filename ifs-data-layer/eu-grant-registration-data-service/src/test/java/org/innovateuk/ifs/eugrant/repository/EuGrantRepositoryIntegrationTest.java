@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
     }
 
     @Test
+    @Rollback
     public void findAll() {
         repository.saveAll(asList(new EuGrant(), new EuGrant()));
         flushAndClearSession();
@@ -29,6 +31,7 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
     }
 
     @Test
+    @Rollback
     public void save() {
         EuGrant grant = new EuGrant();
         repository.save(grant);
