@@ -49,9 +49,12 @@
                     id='organisationSize',
                     value=${form.organisationSize},
                     optionDescriptionsAndValues=${model.organisationSizeOptions},
-                    hint='To determine the level of funding you are eligible to receive please provide your
+                    hint=${model.isH2020() ? 'Please provide your
                           business size using the <a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
-                          target=&quot;_blank&quot;> EU definition (opens in a new window)</a> for guidance.',
+                          target=&quot;_blank&quot;> EU definition (opens in a new window)</a> for guidance.'
+                          : 'To determine the level of funding you are eligible to receive please provide your
+                          business size using the <a href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
+                          target=&quot;_blank&quot;> EU definition (opens in a new window)</a> for guidance.'},
                     required=true,
                     requiredMessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED},
                     readOnly=${commonFinancesModel.readOnly},

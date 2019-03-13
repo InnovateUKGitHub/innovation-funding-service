@@ -14,10 +14,12 @@ public class YourOrganisationViewModel {
 
     private boolean showStateAidAgreement;
     private boolean fundingSectionComplete;
+    private boolean h2020;
 
-    public YourOrganisationViewModel(boolean showStateAidAgreement, boolean fundingSectionComplete) {
+    public YourOrganisationViewModel(boolean showStateAidAgreement, boolean fundingSectionComplete, boolean h2020) {
         this.showStateAidAgreement = showStateAidAgreement;
         this.fundingSectionComplete = fundingSectionComplete;
+        this.h2020 = h2020;
     }
 
     public List<FormOption> getOrganisationSizeOptions() {
@@ -30,5 +32,9 @@ public class YourOrganisationViewModel {
 
     public boolean isShowOrganisationSizeAlert() {
         return fundingSectionComplete;
+    }
+
+    public boolean isH2020() {
+        return h2020;
     }
 }
