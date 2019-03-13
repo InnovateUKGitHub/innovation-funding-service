@@ -7,7 +7,6 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaValueResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -45,8 +44,8 @@ public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
         return isCollaborator(cost, user);
     }
 
-    @PermissionRule(value = "READ", description = "Monitoring officers can read the cost for their application and organisation")
-    public boolean monitoringOfficerCanReadACostForTheirApplicationAndOrganisation(final FinanceRow cost, final UserResource user) {
+    @PermissionRule(value = "READ", description = "Monitoring officers can read the cost for an application they are assigned to")
+    public boolean monitoringOfficerCanReadACostForTheApplication(final FinanceRow cost, final UserResource user) {
         final ApplicationFinance applicationFinance = (ApplicationFinance) cost.getTarget();
         return monitoringOfficerCanViewApplication(applicationFinance.getApplication().getId(), user.getId());
     }
