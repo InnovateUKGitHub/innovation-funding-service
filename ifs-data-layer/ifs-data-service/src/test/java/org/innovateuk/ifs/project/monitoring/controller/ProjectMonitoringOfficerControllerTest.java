@@ -26,7 +26,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         when(projectMonitoringOfficerServiceMock.getProjectMonitoringOfficer(userId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/project-monitoring-officer/{userId}", userId))
+        mockMvc.perform(get("/monitoring-officer/{userId}", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 
@@ -40,7 +40,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         when(projectMonitoringOfficerServiceMock.assignProjectToMonitoringOfficer(userId, projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/project-monitoring-officer/{userId}/assign/{projectId}", userId, projectId))
+        mockMvc.perform(MockMvcRequestBuilders.post("/monitoring-officer/{userId}/assign/{projectId}", userId, projectId))
                 .andExpect(status().is2xxSuccessful());
 
         verify(projectMonitoringOfficerServiceMock, only()).assignProjectToMonitoringOfficer(userId, projectId);
@@ -53,7 +53,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         when(projectMonitoringOfficerServiceMock.unassignProjectFromMonitoringOfficer(userId, projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/project-monitoring-officer/{userId}/unassign/{projectId}", userId, projectId))
+        mockMvc.perform(MockMvcRequestBuilders.post("/monitoring-officer/{userId}/unassign/{projectId}", userId, projectId))
                 .andExpect(status().is2xxSuccessful());
 
         verify(projectMonitoringOfficerServiceMock, only()).unassignProjectFromMonitoringOfficer(userId, projectId);

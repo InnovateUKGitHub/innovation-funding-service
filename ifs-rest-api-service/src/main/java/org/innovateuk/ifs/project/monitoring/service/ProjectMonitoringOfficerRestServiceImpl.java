@@ -10,7 +10,7 @@ import static java.lang.String.format;
 @Service
 public class ProjectMonitoringOfficerRestServiceImpl extends BaseRestService implements ProjectMonitoringOfficerRestService {
 
-    private static final String PROJECT_MONITORING_OFFICER_REST_URL = "/project-monitoring-officer";
+    private static final String PROJECT_MONITORING_OFFICER_REST_URL = "/monitoring-officer";
 
     @Override
     public RestResult<ProjectMonitoringOfficerResource> getProjectMonitoringOfficer(long projectMonitoringOfficerId) {

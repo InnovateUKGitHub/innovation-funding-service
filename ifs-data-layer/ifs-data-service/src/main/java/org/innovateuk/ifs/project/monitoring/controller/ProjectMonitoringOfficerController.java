@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller to handle RESTful services related to inviting project monitoring officers
  */
 @RestController
-@RequestMapping("/project-monitoring-officer/{userId}")
+@RequestMapping("/monitoring-officer/{userId}")
 public class ProjectMonitoringOfficerController {
 
     private ProjectMonitoringOfficerService projectMonitoringOfficerService;

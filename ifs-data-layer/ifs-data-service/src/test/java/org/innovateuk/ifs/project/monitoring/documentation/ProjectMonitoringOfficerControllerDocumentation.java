@@ -40,9 +40,9 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
 
         when(projectMonitoringOfficerServiceMock.getProjectMonitoringOfficer(userId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/project-monitoring-officer/{userId}", userId))
+        mockMvc.perform(get("/monitoring-officer/{userId}", userId))
                 .andExpect(status().isOk())
-                .andDo(document("project-monitoring-officer/{method-name}",
+                .andDo(document("monitoring-officer/{method-name}",
                         pathParameters(
                                 parameterWithName("userId").description("Id of the monitoring officer user")
                         ),
@@ -61,9 +61,9 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
 
         when(projectMonitoringOfficerServiceMock.assignProjectToMonitoringOfficer(userId, projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project-monitoring-officer/{userId}/assign/{projectId}", userId, projectId))
+        mockMvc.perform(post("/monitoring-officer/{userId}/assign/{projectId}", userId, projectId))
                 .andExpect(status().is2xxSuccessful())
-                .andDo(document("project-monitoring-officer/{method-name}",
+                .andDo(document("monitoring-officer/{method-name}",
                         pathParameters(
                                 parameterWithName("userId").description("Id of the monitoring officer user"),
                                 parameterWithName("projectId").description("Id of the project to assign ")
@@ -80,9 +80,9 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
 
         when(projectMonitoringOfficerServiceMock.unassignProjectFromMonitoringOfficer(userId, projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project-monitoring-officer/{userId}/unassign/{projectId}", userId, projectId))
+        mockMvc.perform(post("/monitoring-officer/{userId}/unassign/{projectId}", userId, projectId))
                 .andExpect(status().is2xxSuccessful())
-                .andDo(document("project-monitoring-officer/{method-name}",
+                .andDo(document("monitoring-officer/{method-name}",
                         pathParameters(
                                 parameterWithName("userId").description("Id of the monitoring officer user"),
                                 parameterWithName("projectId").description("Id of the project to unassign ")
