@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--/*
+
+A fragment to render a standard radiofield within a form.
+
+Available parameters:
+
+  Mandatory
+
+    * legend
+    * id
+    * value
+    * optionDescriptionsAndValues - a list of description / value pairs with getDescription() and getName() methods
+                                    e.g. the FormOption class
+
+  Optional
+
+    * hint - additional guidance text to explain the textfield - defaults to not showing a hint
+    * required - true|false
+    * requiredMessage
+    * readOnly - whether or not this radiofield is displayed as a definition list
+    * valueDescription - the pretty string value of the selected value
+
+*/-->
+<th:block th:fragment="radiofield(legend, id, value, optionDescriptionsAndValues)">
+
+    <div class="govuk-form-group" th:classappend="${#fields.hasErrors(id)} ? 'govuk-form-group--error'">
+
+        <th:block th:unless="${readOnly}">
+
+            <fieldset class="govuk-fieldset">
+
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" th:id="${id}" th:utext="${legend}">Legend text</legend>
+
+                <span th:if="${hint != null}" th:utext="${hint}" class="govuk-hint">Hint text.</span>
+
+                <th:block th:if="${#fields.hasErrors(id)}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors(id)}" th:text="${err}"></span>
+                </th:block>
+
+                <div class="govuk-radios">
+
+                    <div class="govuk-radios__item" th:each="option : ${optionDescriptionsAndValues}">
+
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               th:id="${id + '-' + option.value}"
+                               th:name="${id}"
+                               th:value="${option.value}"
+                               th:checked="${value == null ? false : (value.toString().equals(option.value.toString()))}"
+                               th:attrappend="
+                                    required=${required ? 'required' : null},
+                                    data-required-errormessage=${requiredMessage ?: null}
+                               "/>
+
+                        <label th:for="${id + '-' + option.value}"
+                               th:text="${option.description}"
+                               class="govuk-label govuk-radios__label">Option description</label>
+                    </div>
+                </div>
+
+            </fieldset>
+
+        </th:block>
+
+        <th:block th:if="${readOnly}" th:insert="fragments/form-elements/definition-list ::
+            definition-list(
+                label=${legend},
+                value=${valueDescription},
+            )" />
+
+
+    </div>
+
+</th:block>
+
+</html>
