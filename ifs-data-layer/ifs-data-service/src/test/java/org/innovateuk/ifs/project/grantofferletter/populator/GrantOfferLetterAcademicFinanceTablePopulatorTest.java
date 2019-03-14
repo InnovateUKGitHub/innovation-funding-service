@@ -5,7 +5,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterAcademicFinanceTable;
 import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterAcademicFinanceTablePopulator;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -30,252 +30,147 @@ public class GrantOfferLetterAcademicFinanceTablePopulatorTest {
     @InjectMocks
     private GrantOfferLetterAcademicFinanceTablePopulator populator;
 
-    private Organisation organisation1;
-    private Organisation organisation2;
-    private Cost cost1;
-    private Cost cost2;
-    private Cost cost3;
-    private Cost cost4;
-    private Cost cost5;
-    private Cost cost6;
-    private Cost cost7;
-    private Cost cost8;
-    private Cost cost9;
-    private Cost cost10;
-    private Cost cost11;
-    private Cost cost12;
-    private Cost cost13;
-    private Cost cost14;
-    private Cost cost15;
-    private Cost cost16;
-    private Cost cost17;
-    private Cost cost18;
-    private Cost cost19;
-    private Cost cost20;
+    private static Organisation ORGANISATION_1;
+    private static Organisation ORGANISATION_2;
+    private static Cost DIRECTLY_INCURRED_STAFF_2;
+    private static Cost DIRECTLY_INCURRED_STAFF_3;
+    private static Cost DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE_5;
+    private static Cost DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE_7;
+    private static Cost DIRECTLY_INCURRED_EQUIPMENT_11;
+    private static Cost DIRECTLY_INCURRED_OTHER_COSTS_13;
+    private static Cost DIRECTLY_INCURRED_OTHER_COSTS_17;
+    private static Cost DIRECTLY_ALLOCATED_INVESTIGATORS_19;
+    private static Cost DIRECTLY_ALLOCATED_INVESTIGATORS_23;
+    private static Cost DIRECTLY_ALLOCATED_ESTATES_COSTS_29;
+    private static Cost DIRECTLY_ALLOCATED_OTHER_COSTS_31;
+    private static Cost DIRECTLY_ALLOCATED_OTHER_COSTS_37;
+    private static Cost INDIRECT_COSTS_41;
+    private static Cost INDIRECT_COSTS_STAFF_43;
+    private static Cost INDIRECT_COSTS_STAFF_47;
+    private static Cost INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE_53;
+    private static Cost INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE_59;
+    private static Cost INDIRECT_COSTS_EQUIPMENT_61;
+    private static Cost INDIRECT_COSTS_EQUIPMENT_67;
+    private static Cost INDIRECT_COSTS_OTHER_COSTS_71;
+    private static Map<Organisation, List<Cost>> FINANCES = new HashMap<>();
 
-    @Before
-    public void setUp() {
-        organisation1 = newOrganisation()
-                .withOrganisationType(OrganisationTypeEnum.RESEARCH)
-                .withName("org1")
-                .build();
-
-        organisation2 = newOrganisation()
-                .withOrganisationType(OrganisationTypeEnum.RESEARCH)
-                .withName("org2")
-                .build();
-
-        cost1 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_INCURRED_STAFF.getName())
-                                          .withLabel(DIRECTLY_INCURRED_STAFF.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(11))
-                .build();
-
-        cost2 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_INCURRED_STAFF.getName())
-                                          .withLabel(DIRECTLY_INCURRED_STAFF.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(31))
-                .build();
-
-
-        cost3 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getName())
-                                          .withLabel(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(45))
-                .build();
-
-        cost4 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getName())
-                                          .withLabel(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(22))
-                .build();
-
-        cost5 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_INCURRED_EQUIPMENT.getName())
-                                          .withLabel(DIRECTLY_INCURRED_EQUIPMENT.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(54))
-                .build();
-
-        cost6 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_INCURRED_OTHER_COSTS.getName())
-                                          .withLabel(DIRECTLY_INCURRED_OTHER_COSTS.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(34))
-                .build();
-
-        cost7 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_INCURRED_OTHER_COSTS.getName())
-                                          .withLabel(DIRECTLY_INCURRED_OTHER_COSTS.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(58))
-                .build();
-
-        cost8 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_ALLOCATED_INVESTIGATORS.getName())
-                                          .withLabel(DIRECTLY_ALLOCATED_INVESTIGATORS.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(106))
-                .build();
-
-        cost9 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_ALLOCATED_INVESTIGATORS.getName())
-                                          .withLabel(DIRECTLY_ALLOCATED_INVESTIGATORS.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(306))
-                .build();
-
-
-        cost10 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_ALLOCATED_ESTATES_COSTS.getName())
-                                          .withLabel(DIRECTLY_ALLOCATED_ESTATES_COSTS.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(456))
-                .build();
-
-        cost11 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_ALLOCATED_OTHER_COSTS.getName())
-                                          .withLabel(DIRECTLY_ALLOCATED_OTHER_COSTS.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(45))
-                .build();
-
-        cost12 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(DIRECTLY_ALLOCATED_OTHER_COSTS.getName())
-                                          .withLabel(DIRECTLY_ALLOCATED_OTHER_COSTS.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(3))
-                .build();
-
-        cost13 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(INDIRECT_COSTS.getName())
-                                          .withLabel(INDIRECT_COSTS.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(44))
-                .build();
-
-        cost14 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(INDIRECT_COSTS_STAFF.getName())
-                                          .withLabel(INDIRECT_COSTS_STAFF.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(39))
-                .build();
-
-        cost15 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(INDIRECT_COSTS_STAFF.getName())
-                                          .withLabel(INDIRECT_COSTS_STAFF.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(905))
-                .build();
-
-        cost16 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getName())
-                                          .withLabel(INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(78))
-                .build();
-
-        cost17 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getName())
-                                          .withLabel(INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(43))
-                .build();
-
-        cost18 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(INDIRECT_COSTS_EQUIPMENT.getName())
-                                          .withLabel(INDIRECT_COSTS_EQUIPMENT.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(432))
-                .build();
-
-        cost19 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(INDIRECT_COSTS_EQUIPMENT.getName())
-                                          .withLabel(INDIRECT_COSTS_EQUIPMENT.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(234))
-                .build();
-
-        cost20 = newCost()
-                .withCostCategory(newCostCategory()
-                                          .withName(INDIRECT_COSTS_OTHER_COSTS.getName())
-                                          .withLabel(INDIRECT_COSTS_OTHER_COSTS.getLabel())
-                                          .build())
-                .withValue(BigDecimal.valueOf(82))
-                .build();
+    @BeforeClass
+    public static void setUp() {
+        doSetUp();
     }
 
     @Test
-    public void createTable() {
-        Map<Organisation, List<Cost>> finances = new HashMap<>();
-        finances.put(organisation1, asList(cost1, cost2, cost3, cost4, cost5, cost6, cost8, cost9, cost10, cost12, cost13, cost15, cost17, cost19));
-        finances.put(organisation2, asList(cost1, cost2, cost4, cost7, cost9, cost11, cost13, cost14, cost16, cost18, cost20));
+    public void getIncurredStaff() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
 
-        GrantOfferLetterAcademicFinanceTable table = populator.createTable(finances);
+        assertEquals(BigDecimal.valueOf(5), grantOfferLetterAcademicFinanceTable.getIncurredStaff(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(5), grantOfferLetterAcademicFinanceTable.getIncurredStaff(ORGANISATION_2.getName()));
+    }
 
-        assertEquals(BigDecimal.valueOf(42), table.getIncurredStaff(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(42), table.getIncurredStaff(organisation2.getName()));
-        assertEquals(BigDecimal.valueOf(67), table.getIncurredTravelSubsistence(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(22), table.getIncurredTravelSubsistence(organisation2.getName()));
-        assertEquals(BigDecimal.valueOf(54), table.getIncurredEquipment(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(0), table.getIncurredEquipment(organisation2.getName()));
-        assertEquals(BigDecimal.valueOf(34), table.getIncurredOtherCosts(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(58), table.getIncurredOtherCosts(organisation2.getName()));
-        assertEquals(BigDecimal.valueOf(412), table.getAllocatedInvestigators(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(306), table.getAllocatedInvestigators(organisation2.getName()));
-        assertEquals(BigDecimal.valueOf(456), table.getAllocatedEstateCosts(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(0), table.getAllocatedEstateCosts(organisation2.getName()));
-        assertEquals(BigDecimal.valueOf(34), table.getAllocatedOtherCosts(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(58), table.getAllocatedOtherCosts(organisation2.getName()));
-        assertEquals(BigDecimal.valueOf(0), table.getIndirectCosts(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(82), table.getIndirectCosts(organisation2.getName()));
-        assertEquals(BigDecimal.valueOf(905), table.getExceptionsStaff(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(39), table.getExceptionsStaff(organisation2.getName()));
-        assertEquals(BigDecimal.valueOf(43), table.getExceptionsTravelSubsistence(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(78), table.getExceptionsTravelSubsistence(organisation2.getName()));
-        assertEquals(BigDecimal.valueOf(234), table.getExceptionsEquipment(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(432), table.getExceptionsEquipment(organisation2.getName()));
-        assertEquals(BigDecimal.valueOf(0), table.getExceptionsOtherCosts(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(82), table.getExceptionsOtherCosts(organisation2.getName()));
+    @Test
+    public void getIncurredTravelSubsistence() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
 
-        assertEquals(BigDecimal.valueOf(84), table.getIncurredStaffTotal());
-        assertEquals(BigDecimal.valueOf(89), table.getIncurredTravelSubsistenceTotal());
-        assertEquals(BigDecimal.valueOf(54), table.getIncurredEquipmentTotal());
-        assertEquals(BigDecimal.valueOf(92), table.getIncurredOtherCostsTotal());
-        assertEquals(BigDecimal.valueOf(718), table.getAllocatedInvestigatorsTotal());
-        assertEquals(BigDecimal.valueOf(456), table.getAllocatedEstateCostsTotal());
-        assertEquals(BigDecimal.valueOf(92), table.getAllocatedOtherCostsTotal());
-        assertEquals(BigDecimal.valueOf(82), table.getIndirectCostsTotal());
-        assertEquals(BigDecimal.valueOf(944), table.getExceptionsStaffTotal());
-        assertEquals(BigDecimal.valueOf(121), table.getExceptionsTravelSubsistenceTotal());
-        assertEquals(BigDecimal.valueOf(666), table.getExceptionsEquipmentTotal());
-        assertEquals(BigDecimal.valueOf(82), table.getExceptionsOtherCostsTotal());
+        assertEquals(BigDecimal.valueOf(12), grantOfferLetterAcademicFinanceTable.getIncurredTravelSubsistence(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(7), grantOfferLetterAcademicFinanceTable.getIncurredTravelSubsistence(ORGANISATION_2.getName()));
+    }
 
-        assertTrue(table.getOrganisations().contains(organisation1.getName()));
-        assertTrue(table.getOrganisations().contains(organisation2.getName()));
+    @Test
+    public void getIncurredEquipment() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
+
+        assertEquals(BigDecimal.valueOf(11), grantOfferLetterAcademicFinanceTable.getIncurredEquipment(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(0), grantOfferLetterAcademicFinanceTable.getIncurredEquipment(ORGANISATION_2.getName()));
+    }
+
+    @Test
+    public void getIncurredOtherCosts() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
+
+        assertEquals(BigDecimal.valueOf(13), grantOfferLetterAcademicFinanceTable.getIncurredOtherCosts(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(17), grantOfferLetterAcademicFinanceTable.getIncurredOtherCosts(ORGANISATION_2.getName()));
+    }
+
+    @Test
+    public void getAllocatedInvestigators() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
+
+        assertEquals(BigDecimal.valueOf(42), grantOfferLetterAcademicFinanceTable.getAllocatedInvestigators(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(23), grantOfferLetterAcademicFinanceTable.getAllocatedInvestigators(ORGANISATION_2.getName()));
+    }
+
+    @Test
+    public void getAllocatedEstateCosts() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
+
+        assertEquals(BigDecimal.valueOf(29), grantOfferLetterAcademicFinanceTable.getAllocatedEstateCosts(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(0), grantOfferLetterAcademicFinanceTable.getAllocatedEstateCosts(ORGANISATION_2.getName()));
+    }
+
+    @Test
+    public void getAllocatedOtherCosts() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
+
+        assertEquals(BigDecimal.valueOf(13), grantOfferLetterAcademicFinanceTable.getAllocatedOtherCosts(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(17), grantOfferLetterAcademicFinanceTable.getAllocatedOtherCosts(ORGANISATION_2.getName()));
+    }
+
+    @Test
+    public void getIndirectCosts() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
+
+        assertEquals(BigDecimal.valueOf(0), grantOfferLetterAcademicFinanceTable.getIndirectCosts(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(71), grantOfferLetterAcademicFinanceTable.getIndirectCosts(ORGANISATION_2.getName()));
+    }
+
+    @Test
+    public void getExceptionsStaff() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
+
+        assertEquals(BigDecimal.valueOf(47), grantOfferLetterAcademicFinanceTable.getExceptionsStaff(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(43), grantOfferLetterAcademicFinanceTable.getExceptionsStaff(ORGANISATION_2.getName()));
+    }
+
+    @Test
+    public void getExceptionsTravelSubsistence() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
+
+        assertEquals(BigDecimal.valueOf(59), grantOfferLetterAcademicFinanceTable.getExceptionsTravelSubsistence(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(53), grantOfferLetterAcademicFinanceTable.getExceptionsTravelSubsistence(ORGANISATION_2.getName()));
+    }
+
+    @Test
+    public void getExceptionsOtherCosts() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
+
+        assertEquals(BigDecimal.valueOf(0), grantOfferLetterAcademicFinanceTable.getExceptionsOtherCosts(ORGANISATION_1.getName()));
+        assertEquals(BigDecimal.valueOf(71), grantOfferLetterAcademicFinanceTable.getExceptionsOtherCosts(ORGANISATION_2.getName()));
+    }
+
+    @Test
+    public void getOrganisations() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
+
+        assertTrue(grantOfferLetterAcademicFinanceTable.getOrganisations().contains(ORGANISATION_1.getName()));
+        assertTrue(grantOfferLetterAcademicFinanceTable.getOrganisations().contains(ORGANISATION_2.getName()));
+    }
+
+    @Test
+    public void getTotals() {
+        GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable = populator.createTable(FINANCES);
+
+        assertEquals(BigDecimal.valueOf(10), grantOfferLetterAcademicFinanceTable.getIncurredStaffTotal());
+        assertEquals(BigDecimal.valueOf(19), grantOfferLetterAcademicFinanceTable.getIncurredTravelSubsistenceTotal());
+        assertEquals(BigDecimal.valueOf(11), grantOfferLetterAcademicFinanceTable.getIncurredEquipmentTotal());
+        assertEquals(BigDecimal.valueOf(30), grantOfferLetterAcademicFinanceTable.getIncurredOtherCostsTotal());
+        assertEquals(BigDecimal.valueOf(65), grantOfferLetterAcademicFinanceTable.getAllocatedInvestigatorsTotal());
+        assertEquals(BigDecimal.valueOf(29), grantOfferLetterAcademicFinanceTable.getAllocatedEstateCostsTotal());
+        assertEquals(BigDecimal.valueOf(30), grantOfferLetterAcademicFinanceTable.getAllocatedOtherCostsTotal());
+        assertEquals(BigDecimal.valueOf(71), grantOfferLetterAcademicFinanceTable.getIndirectCostsTotal());
+        assertEquals(BigDecimal.valueOf(90), grantOfferLetterAcademicFinanceTable.getExceptionsStaffTotal());
+        assertEquals(BigDecimal.valueOf(112), grantOfferLetterAcademicFinanceTable.getExceptionsTravelSubsistenceTotal());
+        assertEquals(BigDecimal.valueOf(128), grantOfferLetterAcademicFinanceTable.getExceptionsEquipmentTotal());
+        assertEquals(BigDecimal.valueOf(71), grantOfferLetterAcademicFinanceTable.getExceptionsOtherCostsTotal());
     }
 
     @Test
@@ -290,7 +185,7 @@ public class GrantOfferLetterAcademicFinanceTablePopulatorTest {
         Map<Organisation, List<Cost>> finances = new HashMap<>();
 
         BigDecimal nullTest = null;
-        cost1 = newCost()
+        DIRECTLY_INCURRED_STAFF_2 = newCost()
                 .withCostCategory(newCostCategory()
                                           .withName(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getName())
                                           .withLabel(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getLabel())
@@ -298,7 +193,7 @@ public class GrantOfferLetterAcademicFinanceTablePopulatorTest {
                 .withValue(nullTest)
                 .build();
 
-        cost2 = newCost()
+        DIRECTLY_INCURRED_STAFF_3 = newCost()
                 .withCostCategory(newCostCategory()
                                           .withName(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getName())
                                           .withLabel(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getLabel())
@@ -306,11 +201,211 @@ public class GrantOfferLetterAcademicFinanceTablePopulatorTest {
                 .withValue(BigDecimal.valueOf(58))
                 .build();
 
-        finances.put(organisation1, asList(cost1, cost2));
+        finances.put(ORGANISATION_1, asList(DIRECTLY_INCURRED_STAFF_2, DIRECTLY_INCURRED_STAFF_3));
         GrantOfferLetterAcademicFinanceTable table = populator.createTable(finances);
 
-        assertEquals(BigDecimal.valueOf(58), table.getIncurredTravelSubsistence(organisation1.getName()));
+        assertEquals(BigDecimal.valueOf(58), table.getIncurredTravelSubsistence(ORGANISATION_1.getName()));
         assertEquals(BigDecimal.valueOf(58), table.getIncurredTravelSubsistenceTotal());
+    }
+
+    private static void doSetUp() {
+        ORGANISATION_1 = newOrganisation()
+                .withOrganisationType(OrganisationTypeEnum.RESEARCH)
+                .withName("org1")
+                .build();
+
+        ORGANISATION_2 = newOrganisation()
+                .withOrganisationType(OrganisationTypeEnum.RESEARCH)
+                .withName("org2")
+                .build();
+
+        DIRECTLY_INCURRED_STAFF_2 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_INCURRED_STAFF.getName())
+                        .withLabel(DIRECTLY_INCURRED_STAFF.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(2))
+                .build();
+
+        DIRECTLY_INCURRED_STAFF_3 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_INCURRED_STAFF.getName())
+                        .withLabel(DIRECTLY_INCURRED_STAFF.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(3))
+                .build();
+
+
+        DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE_5 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getName())
+                        .withLabel(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(5))
+                .build();
+
+        DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE_7 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getName())
+                        .withLabel(DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(7))
+                .build();
+
+        DIRECTLY_INCURRED_EQUIPMENT_11 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_INCURRED_EQUIPMENT.getName())
+                        .withLabel(DIRECTLY_INCURRED_EQUIPMENT.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(11))
+                .build();
+
+        DIRECTLY_INCURRED_OTHER_COSTS_13 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_INCURRED_OTHER_COSTS.getName())
+                        .withLabel(DIRECTLY_INCURRED_OTHER_COSTS.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(13))
+                .build();
+
+        DIRECTLY_INCURRED_OTHER_COSTS_17 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_INCURRED_OTHER_COSTS.getName())
+                        .withLabel(DIRECTLY_INCURRED_OTHER_COSTS.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(17))
+                .build();
+
+        DIRECTLY_ALLOCATED_INVESTIGATORS_19 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_ALLOCATED_INVESTIGATORS.getName())
+                        .withLabel(DIRECTLY_ALLOCATED_INVESTIGATORS.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(19))
+                .build();
+
+        DIRECTLY_ALLOCATED_INVESTIGATORS_23 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_ALLOCATED_INVESTIGATORS.getName())
+                        .withLabel(DIRECTLY_ALLOCATED_INVESTIGATORS.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(23))
+                .build();
+
+
+        DIRECTLY_ALLOCATED_ESTATES_COSTS_29 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_ALLOCATED_ESTATES_COSTS.getName())
+                        .withLabel(DIRECTLY_ALLOCATED_ESTATES_COSTS.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(29))
+                .build();
+
+        DIRECTLY_ALLOCATED_OTHER_COSTS_31 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_ALLOCATED_OTHER_COSTS.getName())
+                        .withLabel(DIRECTLY_ALLOCATED_OTHER_COSTS.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(31))
+                .build();
+
+        DIRECTLY_ALLOCATED_OTHER_COSTS_37 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(DIRECTLY_ALLOCATED_OTHER_COSTS.getName())
+                        .withLabel(DIRECTLY_ALLOCATED_OTHER_COSTS.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(37))
+                .build();
+
+        INDIRECT_COSTS_41 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(INDIRECT_COSTS.getName())
+                        .withLabel(INDIRECT_COSTS.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(41))
+                .build();
+
+        INDIRECT_COSTS_STAFF_43 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(INDIRECT_COSTS_STAFF.getName())
+                        .withLabel(INDIRECT_COSTS_STAFF.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(43))
+                .build();
+
+        INDIRECT_COSTS_STAFF_47 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(INDIRECT_COSTS_STAFF.getName())
+                        .withLabel(INDIRECT_COSTS_STAFF.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(47))
+                .build();
+
+        INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE_53 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getName())
+                        .withLabel(INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(53))
+                .build();
+
+        INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE_59 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getName())
+                        .withLabel(INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(59))
+                .build();
+
+        INDIRECT_COSTS_EQUIPMENT_61 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(INDIRECT_COSTS_EQUIPMENT.getName())
+                        .withLabel(INDIRECT_COSTS_EQUIPMENT.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(61))
+                .build();
+
+        INDIRECT_COSTS_EQUIPMENT_67 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(INDIRECT_COSTS_EQUIPMENT.getName())
+                        .withLabel(INDIRECT_COSTS_EQUIPMENT.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(67))
+                .build();
+
+        INDIRECT_COSTS_OTHER_COSTS_71 = newCost()
+                .withCostCategory(newCostCategory()
+                        .withName(INDIRECT_COSTS_OTHER_COSTS.getName())
+                        .withLabel(INDIRECT_COSTS_OTHER_COSTS.getLabel())
+                        .build())
+                .withValue(BigDecimal.valueOf(71))
+                .build();
+
+        FINANCES.put(ORGANISATION_1, asList(DIRECTLY_INCURRED_STAFF_2,
+                DIRECTLY_INCURRED_STAFF_3,
+                DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE_5,
+                DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE_7,
+                DIRECTLY_INCURRED_EQUIPMENT_11,
+                DIRECTLY_INCURRED_OTHER_COSTS_13,
+                DIRECTLY_ALLOCATED_INVESTIGATORS_19,
+                DIRECTLY_ALLOCATED_INVESTIGATORS_23,
+                DIRECTLY_ALLOCATED_ESTATES_COSTS_29,
+                DIRECTLY_ALLOCATED_OTHER_COSTS_37,
+                INDIRECT_COSTS_41,
+                INDIRECT_COSTS_STAFF_47,
+                INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE_59,
+                INDIRECT_COSTS_EQUIPMENT_67));
+        FINANCES.put(ORGANISATION_2, asList(DIRECTLY_INCURRED_STAFF_2,
+                DIRECTLY_INCURRED_STAFF_3,
+                DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE_7,
+                DIRECTLY_INCURRED_OTHER_COSTS_17,
+                DIRECTLY_ALLOCATED_INVESTIGATORS_23,
+                DIRECTLY_ALLOCATED_OTHER_COSTS_31,
+                INDIRECT_COSTS_41,
+                INDIRECT_COSTS_STAFF_43,
+                INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE_53,
+                INDIRECT_COSTS_EQUIPMENT_61,
+                INDIRECT_COSTS_OTHER_COSTS_71));
     }
 
 }
