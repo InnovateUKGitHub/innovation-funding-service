@@ -29,6 +29,11 @@ public class DocumentPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "DOWNLOAD_DOCUMENT", description = "Monitoring officer can download Document")
+    public boolean monitoringOfficerCanDownloadDocument(ProjectResource project, UserResource user) {
+        return isMonitoringOfficer(project.getId(), user.getId());
+    }
+
     @PermissionRule(value = "DELETE_DOCUMENT", description = "Project Manager can delete document for their Project")
     public boolean projectManagerCanDeleteDocument(ProjectResource project, UserResource user) {
         return isProjectManager(project.getId(), user.getId());
