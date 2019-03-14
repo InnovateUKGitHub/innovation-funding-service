@@ -14,13 +14,19 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-3553 Email subject for Monitoring Officer to include competition name and application ID
 ...
 ...               IFS-4209 MO view of project
+...
+...               IFS-5031 Assign an MO to a project
 Suite Setup       Custom suite setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
 *** Variables ***
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
+${Assign_Project}   Mobile Phone Data for Logistics Analytics
+${Assign_Project2}  High Performance Gasoline Stratified
+${Assign_Project2_ID}  ${application_ids["${Assign_Project2}"]}
+${New_Mo}          tom@poly.io
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
@@ -39,7 +45,6 @@ Before Monitoring Officer is assigned
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
-    [Tags]
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the user should see the element   css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1)                               # Project details
@@ -85,7 +90,6 @@ Project finance user can view MO page, and go on to assign MO
 
 MO server-side validation
     [Documentation]    INFUND-2630
-    [Tags]
     Given the user navigates to the page                ${Successful_Monitoring_Officer_Page}
     When the user clicks the button/link                jQuery = .govuk-button:contains("Assign Monitoring Officer")
     And the user clicks the button/link                 jQuery = [role = "dialog"] .govuk-button:contains("Assign Monitoring Officer")
@@ -160,7 +164,6 @@ MO details can be edited and viewed in the Set up your project page
 
 MO details edit(email step)
     [Documentation]    INFUND-2630, INFUND-2634, IFS-3553
-    [Tags]
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
     And the user reads his email     ${Grade_Crossing_Lead_Partner_Email}    ${PS_Competition_Name}: Your Monitoring Officer for project ${Grade_Crossing_Applicaiton_No}    has now been assigned a Monitoring Officer
@@ -193,15 +196,11 @@ MO details accessible/seen by all partners
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
-    [Tags]
     [Setup]    Log in as a different user      &{collaborator1_credentials_bd}
     When the user navigates to the page        ${server}/project-setup/project/${Grade_Crossing_Project_Id}
     Then the user should see the element       link = Monitoring Officer
     And the user should not see the element    link = Spend profile
     And the user should not see the element    link = Grant offer letter
-
-# Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
-# When adding new test cases here please make sure that anything unneccessary is removed from above.
 
 Existing Monitoring Officer can sign in and see projects that they are assigned to
     [Documentation]    IFS-3977  IFS-3978
@@ -211,15 +210,52 @@ Existing Monitoring Officer can sign in and see projects that they are assigned 
 
 Monitoring officer see the project setup veiw for assigned project
     [Documentation]  IFS-4209
-    [Tags]
     Given the user clicks the button/link    link = Magic material
     Then the user should see the project set view
 
 Monitoring Officer cannot see projects if they are not assigned to them
     [Documentation]    IFS-3978
-    [Tags]
     Given log in as a different user            &{monitoring_officer_two_credentials}
     Then the user should not see the element    .projects-in-setup
+    [Teardown]  logout as user
+
+# Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
+# When adding new test cases here please make sure that anything unneccessary is removed from above.
+
+MO create account: validations
+    [Documentation]  IFS-5031
+    Given the user navigates to the page     ${server}/management/monitoring-officer/hash123/register
+    When the user checks for validations
+    Then the user should see client side validations triggered correctly
+    And the user should see server side validations triggered correctly
+
+Create account flow: MO
+    [Documentation]  IFS-5031
+    Given MO enter details and create account
+    When the user clicks the button/link      link = Sign into your account
+    And Logging in and Error Checking         tom@poly.io  ${short_password}
+    Then the user should see the element      jQuery = h1:contains("Applications")
+    [Teardown]  Get user id and set as suite variable  ${New_Mo}
+
+Comp admin assign project to new MO
+    [Documentation]  IFS-5031
+    [Setup]  log in as a different user                        &{Comp_admin1_credentials}
+    Given the user navigates to the page                       ${server}/project-setup-management/monitoring-officer/${userId}/projects
+    When comp admin assign and remove project to MO
+    And the user selects the option from the drop-down menu    ${Assign_Project2_ID} - ${Assign_Project2}  id = projectId
+    And the user clicks the button/link                        jQuery = button:contains("Assign")
+    Then the user should see the element                       jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
+
+Link to Application
+    [Documentation]  IFS-5031
+    Given the user clicks the button/link  link = ${Assign_Project2_ID}
+    Then the user should see the element    jQuery = h1:contains("Application overview") ~ form section dd:contains("${Assign_Project2}")
+
+New MO see the project setup view for assigned project
+    [Documentation]  IFS-5031
+    [Setup]  log in as a different user    tom@poly.io  ${short_password}
+    Given the user clicks the button/link  link = ${Assign_Project2}
+    Then the user should see the project set view
 
 *** Keywords ***
 standard verification for email address follows
@@ -257,6 +293,7 @@ the user can see the changed MO details
     Textfield Should Contain                    id = lastName    Harper
 
 Custom suite setup
+    Connect to database  @{database}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
 
@@ -273,3 +310,48 @@ the user should see the project set view
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Finance checks")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Spend profile")
     the user should see the element    jQuery = .progress-list .read-only h2:contains("Grant offer letter")
+
+MO enter details and create account
+    the user enters text to a text field    id = firstName  Tom
+    the user enters text to a text field    id = lastName   Poly
+    the user enters text to a text field    id = phoneNumber  123456789
+    the user enters text to a text field    id = password  ${short_password}
+    the user should not see an error in the page
+    the user clicks the button/link         jQuery = button:contains("Create account")
+
+the user checks for validations
+    the user enters text to a text field    id = firstName  ${empty}
+    the user enters text to a text field    id = lastName   ${empty}
+    the user enters text to a text field    id = phoneNumber  ${empty}
+    the user enters text to a text field    id = password  ${empty}
+
+the user should see client side validations triggered correctly
+    the user should see a field error    Please enter a first name.
+    the user should see a field error    Please enter a last name.
+    the user should see a field error    Please enter a phone number.
+    the user should see a field error    Password must contain at least one lower case letter.
+
+the user should see server side validations triggered correctly
+    the user clicks the button/link                  jQuery = button:contains("Create account")
+    the user should see a field and summary error    Please enter a first name.
+    the user should see a field and summary error    Your first name should have at least 2 characters.
+    the user should see a field and summary error    Please enter a last name.
+    the user should see a field and summary error    Your last name should have at least 2 characters.
+    the user should see a field and summary error    Please enter a phone number.
+    the user should see a field and summary error    Please enter a valid phone number between 8 and 20 digits.
+    the user should see a field and summary error    Password must be at least 8 characters.
+    the user should see a field and summary error    Please enter your password.
+
+comp admin assign and remove project to MO
+    the user clicks the button/link     jQuery = button:contains("Assign")
+    the user should not see assigned project in Select a project to assign drop down
+    the user should see the element     jQuery = span:contains("1") ~ span:contains("assigned projects")
+    the user clicks the button/link     jQuery = td:contains("${Assign_Project}") ~ td a:contains("Remove")
+
+the user should not see assigned project in Select a project to assign drop down
+    the user clicks the button/link        css = .govuk-select
+    the user should not see the element    jQuery = .govuk-select option:contains("${Assign_Project}")
+
+Custom suite teardown
+    the user closes the browser
+    Disconnect from database
