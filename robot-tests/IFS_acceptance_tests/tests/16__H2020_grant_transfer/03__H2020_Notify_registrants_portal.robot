@@ -5,8 +5,8 @@ Documentation    IFS-5208 EU registrants email list
 ...
 ...              IFS-5266 EU registrants email list - add additional columns and filter out research
 ...
-Suite Setup  Custom Setup
-Suite Teardown  Custom Teardown
+Suite Setup     Custom Suite Setup
+Suite Teardown  Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
 
 
@@ -52,10 +52,10 @@ Send an email invite to a Business
     Then the user reads his email                          test@test.com  	Invite to register Horizon 2020 grant transfer of (IA) Innovation action   You have been contacted as a result of your registration on the Horizon 2020 registration portal
 
 *** Keywords ***
-Custom Setup
+Custom Suite Setup
     The guest user opens the browser
 
-Custom Teardown
+Custom Suite Teardown
     The user closes the browser
 
 The user registers for the underwrite guarantee

@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation  IFS-5158 - Competition Template
-Suite Setup       Custom setup
-Suite Teardown    Custom teardown
+Suite Setup       Custom Suite Setup
+Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
@@ -59,7 +59,7 @@ Applicant user start a grant transfer
     Then the user is able to go to Application overview
 
 *** Keywords ***
-Custom setup
+Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
@@ -196,6 +196,6 @@ The user is able to go to Application overview
      the user should see the element  link = Public description
      the user should see the element  link = Horizon 2020 grant agreement
 
-Custom teardown
+Custom Suite Teardown
     the user closes the browser
     disconnect from database
