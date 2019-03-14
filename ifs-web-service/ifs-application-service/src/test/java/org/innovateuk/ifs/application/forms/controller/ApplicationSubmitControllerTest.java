@@ -74,14 +74,6 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
     @InjectMocks
     private ApplicationModelPopulator applicationModelPopulator;
 
-    @Spy
-    @InjectMocks
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
-
     @Mock
     private ApplicantRestService applicantRestService;
 
@@ -224,7 +216,33 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
 
         assertFalse(submitForm.isAgreeTerms());
         assertEquals("validation.application.procurement.terms.required", bindingResult.getFieldError("agreeTerms").getCode());
+    }
 
+    @Test
+    public void applicationSummaryH2020SubmitAgreeToTerms() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionTypeName("Horizon 2020")
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        MvcResult result = mockMvc.perform(post("/application/" + application.getId() + "/summary")
+                                                   .param("agreeTerms", "false")
+                                                   .param("submit-application", ""))
+                .andExpect(redirectedUrl("/application/" + application.getId() + "/summary"))
+                .andReturn();
+
+        BindingResult bindingResult = (BindingResult) result.getFlashMap().get(BindingResult.class.getCanonicalName() + "." + APPLICATION_SUBMIT_FROM_ATTR_NAME);
+        ApplicationSubmitForm submitForm = (ApplicationSubmitForm) result.getFlashMap().get(APPLICATION_SUBMIT_FROM_ATTR_NAME);
+
+        assertFalse(submitForm.isAgreeTerms());
+        assertEquals("validation.application.h2020.terms.required", bindingResult.getFieldError("agreeTerms").getCode());
     }
 
     @Test

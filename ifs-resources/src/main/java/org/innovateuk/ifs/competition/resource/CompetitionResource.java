@@ -26,7 +26,7 @@ public class CompetitionResource {
     private static final int CLOSING_SOON_AMOUNT = 3;
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
-    private static final String H2020_TYPE_NAME = "Horizon 2020";
+    public static final String H2020_TYPE_NAME = "Horizon 2020";
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
 
     private Long id;
@@ -162,6 +162,18 @@ public class CompetitionResource {
     public boolean isSetupAndAfterNotifications() {
         return Boolean.TRUE.equals(setupComplete) && (fundersPanelDate != null && fundersPanelDate.isBefore(
                 ZonedDateTime.now()));
+    }
+
+    @JsonIgnore
+    public boolean isFullyFunded() {
+        // Competitions which always have 100% funding level
+        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
+    }
+
+    @JsonIgnore
+
+    public boolean onlyOneOrgAllowedPerApplication() {
+        return isH2020() || FundingType.PROCUREMENT.equals(fundingType);
     }
 
     public CompetitionStatus getCompetitionStatus() {

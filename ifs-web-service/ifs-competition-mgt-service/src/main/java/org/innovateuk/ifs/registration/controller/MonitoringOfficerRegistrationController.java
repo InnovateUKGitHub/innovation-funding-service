@@ -2,7 +2,7 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.service.CompetitionSetupMonitoringOfficerRestService;
+import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
@@ -38,12 +38,12 @@ public class MonitoringOfficerRegistrationController {
     private static final String FORM_ATTR_NAME = "form";
 
     private MonitoringOfficerRegistrationModelPopulator monitoringOfficerRegistrationModelPopulator;
-    private CompetitionSetupMonitoringOfficerRestService competitionSetupMonitoringOfficerRestService;
+    private MonitoringOfficerRegistrationRestService competitionSetupMonitoringOfficerRestService;
     private MonitoringOfficerService monitoringOfficerService;
     private NavigationUtils navigationUtils;
 
     public MonitoringOfficerRegistrationController(MonitoringOfficerRegistrationModelPopulator monitoringOfficerRegistrationModelPopulator,
-                                                   CompetitionSetupMonitoringOfficerRestService competitionSetupMonitoringOfficerRestService,
+                                                   MonitoringOfficerRegistrationRestService competitionSetupMonitoringOfficerRestService,
                                                    MonitoringOfficerService monitoringOfficerService,
                                                    NavigationUtils navigationUtils) {
         this.monitoringOfficerRegistrationModelPopulator = monitoringOfficerRegistrationModelPopulator;

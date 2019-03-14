@@ -155,6 +155,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
                     .getLoaded()
                     .newInstance();
         } catch (Exception e) {
+            // This happens if there is not a no args constructor.
             throw new RuntimeException("Could not delegate method calls to target class through target instance.", e);
         }
     }
