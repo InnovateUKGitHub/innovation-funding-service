@@ -6,7 +6,6 @@ import org.innovateuk.ifs.eucontact.repository.EuContactRepository;
 import org.innovateuk.ifs.eugrant.EuContactPageResource;
 import org.innovateuk.ifs.eugrant.EuContactResource;
 import org.innovateuk.ifs.eugrant.domain.EuContact;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
