@@ -43,9 +43,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.GRANT_AGREEMENT;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
@@ -220,6 +218,8 @@ public class ApplicationQuestionController {
 
         if (GRANT_AGREEMENT.equals(question.getQuestion().getQuestionSetupType())) {
             return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
+        } else if (GRANT_TRANSFER_DETAILS.equals(question.getQuestion().getQuestionSetupType())) {
+            return String.format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
         }
 
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);

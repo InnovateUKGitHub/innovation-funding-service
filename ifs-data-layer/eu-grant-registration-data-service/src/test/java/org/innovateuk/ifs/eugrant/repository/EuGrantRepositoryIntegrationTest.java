@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -41,27 +42,7 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
     private EuActionTypeRepository euActionTypeRepository;
 
     @Test
-    public void findAll() {
-        repository.saveAll(asList(new EuGrant(), new EuGrant()));
-        flushAndClearSession();
-
-        assertEquals(2, repository.count());
-    }
-
-    @Test
-    public void save() {
-        EuGrant grant = new EuGrant();
-        repository.save(grant);
-        flushAndClearSession();
-
-        Optional<EuGrant> savedGrant = repository.findById(grant.getId());
-        assertTrue(savedGrant.isPresent());
-        assertNotNull(savedGrant.get().getCreatedOn());
-        assertNotNull(savedGrant.get().getModifiedOn());
-    }
-
-
-    @Test
+    @Rollback
     public void findByNotifiedForNotifiedUsers() {
         Pageable pageable = new PageRequest(0, 20, new Sort("id"));
         EuContact euContact = newEuContact()
@@ -90,10 +71,10 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
                 .withContact(euContact)
                 .withOrganisation(euOrganisation)
                 .withFunding(euFunding)
-                .withNotified(true)
                 .build();
 
         euGrant.submit("abcd");
+        euGrant.markNotificationSent();
         repository.save(euGrant);
         flushAndClearSession();
 
@@ -112,6 +93,7 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
     }
 
     @Test
+    @Rollback
     public void findByNotifiedForNonNotifiedUsers() {
         Pageable pageable = new PageRequest(0, 20, new Sort("id"));
         EuContact euContact = newEuContact()
@@ -140,7 +122,6 @@ public class EuGrantRepositoryIntegrationTest extends BaseRepositoryIntegrationT
                 .withContact(euContact)
                 .withOrganisation(euOrganisation)
                 .withFunding(euFunding)
-                .withNotified(false)
                 .build();
 
         euGrant.submit("ghijk");

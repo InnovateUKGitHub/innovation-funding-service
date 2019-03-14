@@ -19,7 +19,6 @@ public class EuGrantController {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
     private static final String DEFAULT_PAGE_SIZE = "100";
-    private static final Sort sort = new Sort("contact.id");
 
     @Autowired
     private EuGrantService euGrantService;
@@ -50,6 +49,12 @@ public class EuGrantController {
                                                                         @RequestParam(value = "page",defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                         @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
 
+        Sort sort = notified ? new Sort("organisation.name", "contact.name") : new Sort("contact.id");
         return euGrantService.getEuGrantsByContactNotified(notified, new PageRequest(pageIndex, pageSize, sort)).toGetResponse();
+    }
+
+    @GetMapping("/eu-grants/total-submitted")
+    public RestResult<Long> getTotalSubmitted() {
+        return euGrantService.getTotalSubmitted().toGetResponse();
     }
 }

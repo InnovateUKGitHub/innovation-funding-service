@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.handler.item;
 
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
@@ -93,7 +92,7 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
 
         Long id = null;
         String otherPublicFunding;
-        if (applicationFinance.getApplication().getCompetition().getFundingType() == FundingType.PROCUREMENT) {
+        if (applicationFinance.getApplication().getCompetition().isFullyFunded()) {
             otherPublicFunding = "No";
         } else {
             otherPublicFunding = "";

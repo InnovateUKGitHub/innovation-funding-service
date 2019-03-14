@@ -11,13 +11,13 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
     private String projectRestURL = "/project";
 
     @Override
-    public RestResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber) {
+    public RestResult<Void> updateMonitoringOfficer(long projectId, String firstName, String lastName, String emailAddress, String phoneNumber) {
         MonitoringOfficerResource monitoringOfficerData = new MonitoringOfficerResource(firstName, lastName, emailAddress, phoneNumber, projectId);
         return putWithRestResult(projectRestURL + "/" + projectId + "/monitoring-officer", monitoringOfficerData, Void.class);
     }
 
     @Override
-    public RestResult<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId) {
+    public RestResult<MonitoringOfficerResource> getMonitoringOfficerForProject(long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/monitoring-officer", MonitoringOfficerResource.class);
     }
 }

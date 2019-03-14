@@ -15,7 +15,7 @@ import java.util.UUID;
 public class EuInviteController {
 
     @Autowired
-    EuInviteService euInviteService;
+    private EuInviteService euInviteService;
 
     @PostMapping("/eu-grants/send-invites")
     public RestResult<Void> sendInvites(@RequestBody List<UUID> ids) {

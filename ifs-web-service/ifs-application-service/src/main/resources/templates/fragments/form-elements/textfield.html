@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--/*
+
+A fragment to render a standard textfield within a form.
+
+Available parameters:
+
+  Mandatory
+
+    * id
+    * value
+
+  Optional
+
+    * label
+    * hint - additional guidance text to explain the textfield - defaults to not showing a hint
+    * type - the "type" attribute of input - default value of type="text"
+    * preventInputRegex - a regex of the input that is not allowed, for the attribute "data-prevent-input-regex" - defaults to no regex
+    * pattern - a regex for the allowed input, to be used in the "pattern" attribute - defaults to no pattern
+    * min - the minimum numerical value, if this is an input of type="number"
+    * max - the maximum numerical value, if this is an input of type="number"
+    * readOnly - whether this field is displayed as a definition list or not
+    * required - whether this field is required - defaults to false
+    * requiredMessage - a custom message to display if this textfield is required and is not filled in
+*/-->
+<th:block th:fragment="textfield(id, value)">
+
+    <div class="govuk-form-group"
+         th:id="${id + '-form-group'}"
+         th:classappend="${#fields.hasErrors(id)} ? 'govuk-form-group--error'">
+
+        <th:block th:unless="${readOnly}">
+
+            <label class="govuk-label govuk-label--s"
+                   th:if="${label}"
+                   th:for="${id}"
+                   th:text="${label}">
+                Label text
+            </label>
+
+            <span class="govuk-hint"
+                  th:if="${hint != null}"
+                  th:utext="${hint}">
+                Hint text.
+            </span>
+
+            <th:block th:if="${#fields.hasErrors(id)}">
+                <span class="govuk-error-message" th:each="err : ${#fields.errors(id)}" th:text="${err}"></span>
+            </th:block>
+
+            <input class="govuk-input govuk-input--width-10"
+                   th:type="${type ?: 'text'}"
+                   th:id="${id}"
+                   th:name="${id}"
+                   th:value="${value}"
+                   th:attrappend="
+                        pattern=${pattern ?: null},
+                        data-prevent-input-regex=${preventInputRegex ?: null},
+                        min=${min ?: null},
+                        max=${max ?: null},
+                        required=${#bools.isTrue(required) ? 'required' : null},
+                        data-required-errormessage=${requiredMessage ?: null}
+                   " />
+
+        </th:block>
+
+        <th:block th:if="${readOnly}"
+                  th:insert="fragments/form-elements/definition-list ::
+            definition-list(
+                label=${label},
+                value=${value},
+            )" />
+
+    </div>
+
+</th:block>
+
+
+
+
+<!--/*
+
+A fragment to render an integer-capturing input textfield within a form.
+
+Includes the following attribute values:
+
+    * type="number"
+    * pattern="[0-9]"
+    * data-prevent-input-regex="[^0-9]"
+    * min="0" - unless overridden
+    * max="2147483647" - unless overridden
+
+Other mandatory and optional values can be seen on the "textfield" fragment.
+
+*/-->
+<th:block th:fragment="textfield-integer(label, id, value)"
+          th:include="::
+          textfield(
+            label=${label},
+            id=${id},
+            value=${value},
+            readOnly=${readOnly},
+            disabled=${disabled},
+            required=${required},
+            requiredMessage=${requiredMessage},
+            hint=${hint},
+            type='number',
+            pattern='[0-9]',
+            preventInputRegex='[^0-9]',
+            min=${min ?: 0},
+            max=${max ?: 2147483647},
+          )" />
+
+</html>

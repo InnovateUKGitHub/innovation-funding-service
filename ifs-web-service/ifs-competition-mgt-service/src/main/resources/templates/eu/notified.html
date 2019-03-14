@@ -13,6 +13,12 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Notify portal registrants',subTitle='Horizon 2020 grant transfer',size='govuk-heading-l'" />
 
+        <th:block th:if="${model.isEmailSuccessMessage()}">
+            <div class="success-alert">
+                <p class="govuk-body">You have successfully sent <span th:text="${model.getNumEmailsSent()}"></span> messages.</p>
+            </div>
+        </th:block>
+
         <div class="govuk-tabs">
             <h2 class="govuk-tabs__title">
                 Registrants
@@ -27,7 +33,7 @@
             </ul>
             <section class="govuk-tabs__panel">
                 <form method="POST"
-                      th:action="@{/eu-send-invites}"
+                      th:action="@{/eu-send-invites/notified/true}"
                       th:object="${euGrantSelectionForm}"
                       data-select=""
                       autocomplete="off">
@@ -63,8 +69,9 @@
                                 <th class="govuk-table__header width-150" scope="col"><span class="visually-hidden">Selected</span></th>
                                 <th class="govuk-table__header" scope="col">Name</th>
                                 <th class="govuk-table__header" scope="col">Project name</th>
-                                <th class="govuk-table__header" scope="col">Organisation Type</th>
-                                <th class="govuk-table__header" scope="col">Short code</th>
+                                <th class="govuk-table__header" scope="col">Organisation Name</th>
+                                <th class="govuk-table__header" scope="col">Reference code</th>
+                                <th class="govuk-table__header" scope="col">Timestamp</th>
                                 <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Email</th>
                             </tr>
                             </thead>
@@ -87,8 +94,9 @@
                                 </td>
                                 <td class="govuk-table__cell" th:text="${grant.contact.name}">Steve Smith</td>
                                 <td class="govuk-table__cell" th:text="${grant.funding.projectName}">Project name</td>
-                                <td class="govuk-table__cell" th:text="${grant.organisation.organisationType}">Organisation Type</td>
-                                <td class="govuk-table__cell" th:text="${grant.shortCode}">Short code</td>
+                                <td class="govuk-table__cell" th:text="${grant.organisation.name}">Organisation Name</td>
+                                <td class="govuk-table__cell" th:text="${grant.shortCode}">Reference code</td>
+                                <td class="govuk-table__cell" th:text="${#temporals.format(grant.notifiedOn, 'd MMM yyyy h:mma')}">Timestamp</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${grant.contact.email}">steve.smith@empire.com</td>
                             </tr>
                             </tbody>

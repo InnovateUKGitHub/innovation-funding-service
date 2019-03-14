@@ -18,8 +18,8 @@ import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGener
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;

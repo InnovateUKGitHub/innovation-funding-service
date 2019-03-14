@@ -2,7 +2,7 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.service.CompetitionSetupMonitoringOfficerRestService;
+import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.registration.form.MonitoringOfficerRegistrationForm;
@@ -37,7 +37,7 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
     private MonitoringOfficerRegistrationModelPopulator monitoringOfficerRegistrationModelPopulatorMock;
 
     @Mock
-    private CompetitionSetupMonitoringOfficerRestService competitionSetupMonitoringOfficerRestServiceMock;
+    private MonitoringOfficerRegistrationRestService competitionSetupMonitoringOfficerRestServiceMock;
 
     @Mock
     private MonitoringOfficerService monitoringOfficerServiceMock;

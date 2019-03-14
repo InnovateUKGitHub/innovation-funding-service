@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -126,7 +126,7 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     private void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
         when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId()))
             .thenReturn(userIsMonitoringOfficer);
-}
+    }
 
     protected void setupUserAsLeadPartner(ProjectResource project, UserResource user) {
         setupLeadPartnerExpectations(project, user, true);

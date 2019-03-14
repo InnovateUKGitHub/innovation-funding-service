@@ -46,9 +46,82 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private EuActionTypeRepository euActionTypeRepository;
 
+    private EuContact euContactOne;
+    private EuContact euContactTwo;
+    private EuFunding euFundingOne;
+    private EuFunding euFundingTwo;
+    private EuOrganisation euOrganisationOne;
+    private EuOrganisation euOrganisationTwo;
+    private EuGrant euGrantOne;
+    private EuGrant euGrantTwo;
+
     @Before
     public void cleanRepository() {
         euGrantRepository.deleteAll();
+
+        euContactOne = newEuContact()
+                .withName("Barry Venison")
+                .withEmail("barry@venison.com")
+                .withJobTitle("Rollercoaster operator")
+                .withTelephone("2468")
+                .build();
+
+        euFundingOne = newEuFunding()
+                .withFundingContribution(BigDecimal.TEN)
+                .withGrantAgreementNumber("456")
+                .withParticipantId("123456789")
+                .withProjectName("projectName")
+                .withProjectStartDate(LocalDate.now())
+                .withProjectEndDate(LocalDate.now())
+                .withActionType(euActionTypeRepository.findAllByOrderByPriorityAsc().get(0))
+                .build();
+
+        euOrganisationOne = newEuOrganisation()
+                .withName("orgName")
+                .withOrganisationType(EuOrganisationType.BUSINESS)
+                .build();
+
+        euGrantOne = newEuGrant()
+                .withContact(euContactOne)
+                .withOrganisation(euOrganisationOne)
+                .withFunding(euFundingOne)
+                .build();
+
+
+        euContactTwo = newEuContact()
+                .withName("Garry Owen")
+                .withEmail("garry@owen.com")
+                .withJobTitle("Secretary")
+                .withTelephone("1357")
+                .build();
+
+
+        euFundingTwo = newEuFunding()
+                .withFundingContribution(BigDecimal.TEN)
+                .withGrantAgreementNumber("456")
+                .withParticipantId("123456789")
+                .withProjectName("projectName")
+                .withProjectStartDate(LocalDate.now())
+                .withProjectEndDate(LocalDate.now())
+                .withActionType(euActionTypeRepository.findAllByOrderByPriorityAsc().get(0))
+                .build();
+
+        euOrganisationTwo = newEuOrganisation()
+                .withName("orgName")
+                .withOrganisationType(EuOrganisationType.BUSINESS)
+                .build();
+
+        euGrantTwo = newEuGrant()
+                .withContact(euContactTwo)
+                .withOrganisation(euOrganisationTwo)
+                .withFunding(euFundingTwo)
+                .build();
+
+        euGrantOne.submit("asdf");
+        euGrantTwo.submit("hjkl");
+        euGrantTwo.markNotificationSent();
+        euGrantRepository.save(euGrantOne);
+        euGrantRepository.save(euGrantTwo);
     }
 
     private UserResource webUser = newUserResource().withRoleGlobal(SYSTEM_REGISTRATION_USER).build();
@@ -85,9 +158,9 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
         List<EuGrant> grants = newArrayList(euGrantRepository.findAll());
 
-        assertEquals(grants.size(), 1);
+        assertEquals(grants.size(), 3);
 
-        EuGrant grant = grants.get(0);
+        EuGrant grant = grants.get(2);
 
         assertEquals(grant.getContact().getName(), euGrantResource.getContact().getName());
         assertEquals(grant.getContact().getJobTitle(), euGrantResource.getContact().getJobTitle());
@@ -163,71 +236,6 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void getByNotified() {
 
-        EuContact euContactOne = newEuContact()
-                .withName("Barry Venison")
-                .withEmail("barry@venison.com")
-                .withJobTitle("Rollercoaster operator")
-                .withTelephone("2468")
-                .build();
-
-        EuFunding euFundingOne = newEuFunding()
-                .withFundingContribution(BigDecimal.TEN)
-                .withGrantAgreementNumber("456")
-                .withParticipantId("123456789")
-                .withProjectName("projectName")
-                .withProjectStartDate(LocalDate.now())
-                .withProjectEndDate(LocalDate.now())
-                .withActionType(euActionTypeRepository.findAllByOrderByPriorityAsc().get(0))
-                .build();
-
-        EuOrganisation euOrganisationOne = newEuOrganisation()
-                .withName("orgName")
-                .withOrganisationType(EuOrganisationType.BUSINESS)
-                .build();
-
-        EuGrant euGrantOne = newEuGrant()
-                .withContact(euContactOne)
-                .withOrganisation(euOrganisationOne)
-                .withFunding(euFundingOne)
-                .withNotified(false)
-                .build();
-
-
-        EuContact euContactTwo = newEuContact()
-                .withName("Garry Owen")
-                .withEmail("garry@owen.com")
-                .withJobTitle("Secretary")
-                .withTelephone("1357")
-                .build();
-
-
-        EuFunding euFundingTwo = newEuFunding()
-                .withFundingContribution(BigDecimal.TEN)
-                .withGrantAgreementNumber("456")
-                .withParticipantId("123456789")
-                .withProjectName("projectName")
-                .withProjectStartDate(LocalDate.now())
-                .withProjectEndDate(LocalDate.now())
-                .withActionType(euActionTypeRepository.findAllByOrderByPriorityAsc().get(0))
-                .build();
-
-        EuOrganisation euOrganisationTwo = newEuOrganisation()
-                .withName("orgName")
-                .withOrganisationType(EuOrganisationType.BUSINESS)
-                .build();
-
-        EuGrant euGrantTwo = newEuGrant()
-                .withContact(euContactTwo)
-                .withOrganisation(euOrganisationTwo)
-                .withFunding(euFundingTwo)
-                .withNotified(true)
-                .build();
-
-        euGrantOne.submit("asdf");
-        euGrantTwo.submit("hjkl");
-        euGrantRepository.save(euGrantOne);
-        euGrantRepository.save(euGrantTwo);
-
         Pageable pageable = new PageRequest(0, 100 , new Sort("contact.id"));
 
         ServiceResult<EuGrantPageResource> resultOne = euGrantService.getEuGrantsByContactNotified(false, pageable);
@@ -250,5 +258,13 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
         assertEquals(euContactTwo.getJobTitle(), resultingResourceTwo.getJobTitle());
         assertEquals(euContactTwo.getName(), resultingResourceTwo.getName());
         assertEquals(euContactTwo.getTelephone(), resultingResourceTwo.getTelephone());
+    }
+
+    @Test
+    public void getTotalSubmitted() {
+        ServiceResult<Long> result = euGrantService.getTotalSubmitted();
+
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccess().equals(2L));
     }
 }

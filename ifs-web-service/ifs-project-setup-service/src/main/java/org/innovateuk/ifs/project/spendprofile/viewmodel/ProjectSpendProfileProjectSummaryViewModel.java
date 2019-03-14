@@ -21,12 +21,14 @@ public class ProjectSpendProfileProjectSummaryViewModel {
     private OrganisationResource leadOrganisation;
     private boolean submitted;
     private boolean approved;
+    private boolean monitoringOfficer;
 
     public ProjectSpendProfileProjectSummaryViewModel(Long projectId, Long applicationId, String projectName,
                                                       List<OrganisationResource> partnerOrganisations,
                                                       OrganisationResource leadOrganisation, boolean submitted,
                                                       Map<Long, OrganisationReviewDetails> editablePartners,
-                                                      boolean approved) {
+                                                      boolean approved,
+                                                      boolean monitoringOfficer) {
         this.projectId = projectId;
         this.applicationId = applicationId;
         this.projectName = projectName;
@@ -35,6 +37,7 @@ public class ProjectSpendProfileProjectSummaryViewModel {
         this.submitted = submitted;
         this.editablePartners = editablePartners;
         this.approved = approved;
+        this.monitoringOfficer = monitoringOfficer;
     }
 
     public Long getProjectId() {
@@ -84,6 +87,14 @@ public class ProjectSpendProfileProjectSummaryViewModel {
 
     public Long getApplicationId() {
         return applicationId;
+    }
+
+    public boolean isMonitoringOfficer() {
+        return monitoringOfficer;
+    }
+
+    public void setMonitoringOfficer(boolean monitoringOfficer) {
+        this.monitoringOfficer = monitoringOfficer;
     }
 
     @Override

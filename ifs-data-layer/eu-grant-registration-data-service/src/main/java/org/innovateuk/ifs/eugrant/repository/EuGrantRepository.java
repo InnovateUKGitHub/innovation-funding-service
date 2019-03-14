@@ -13,4 +13,5 @@ public interface EuGrantRepository extends PagingAndSortingRepository<EuGrant, U
     boolean existsByShortCode(String shortCode);
     Page<EuGrant> findBySubmittedTrueAndNotifiedTrueAndOrganisationOrganisationTypeNot(EuOrganisationType type, Pageable pageable);
     Page<EuGrant> findBySubmittedTrueAndNotifiedFalseAndOrganisationOrganisationTypeNot(EuOrganisationType type, Pageable pageable);
+    long countBySubmittedTrue();
 }

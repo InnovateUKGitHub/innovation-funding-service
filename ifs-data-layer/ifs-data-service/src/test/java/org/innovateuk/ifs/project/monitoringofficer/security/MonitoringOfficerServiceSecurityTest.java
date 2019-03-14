@@ -27,7 +27,7 @@ public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void testGetMonitoringOfficer() {
+    public void getMonitoringOfficer() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -36,12 +36,13 @@ public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTes
             verify(permissionRules).internalUsersCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verify(permissionRules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
             verify(permissionRules).stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, getLoggedInUser());
+            verify(permissionRules).monitoringOfficersCanViewThemselves(project, getLoggedInUser());
             verifyNoMoreInteractions(permissionRules);
         });
     }
 
     @Test
-    public void testSaveMonitoringOfficer() {
+    public void saveMonitoringOfficer() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -53,7 +54,7 @@ public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void testNotifyMonitoringOfficer() {
+    public void notifyMonitoringOfficer() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
