@@ -1,8 +1,14 @@
 *** Settings ***
 Documentation    IFS-5208 EU registrants email list
+...
 ...              IFS-5265 EU registrants DB - automated email send to systematic applicants
+...
 ...              IFS-5266 EU registrants email list - add additional columns and filter out research
+...
+Suite Setup  Custom Setup
+Suite Teardown  Custom Teardown
 Resource          ../../resources/defaultResources.robot
+
 
 *** Variables ***
 ${notifyPortalRegistrantsPage}   ${server}/management/eu-invite-non-notified
@@ -11,7 +17,6 @@ ${underwriteGuaranteePage}       ${server}/eu-grant/overview
 *** Test Cases ***
 Business organisation registers for underwrite guarantee
     [Documentation]  IFS-5266
-    [Setup]  the guest user opens the browser
     Given the user navigates to the page                   ${underwriteGuaranteePage}
     Then the user registers for the underwrite guarantee   Business   INNOVATE   Business Name
 
@@ -29,7 +34,7 @@ Research organisation registers for underwrite guarantee
     [Documentation]  IFS-5266  IFS-5266
     Given the user navigates to the page                   ${underwriteGuaranteePage}
     Then the user registers for the underwrite guarantee   Research   RECOFTC    Research Name
-    [Teardown]  the user closes the browser
+    [Teardown]  The user closes the browser
 
 Registration details of all organisation types except for Research appear on the Notify Registrants Portal page
     [Documentation]  IFS-5208
@@ -46,19 +51,13 @@ Send an email invite to a Business
     When the user clicks the button/link                   jQuery = button:contains("Send email to selected")
     Then the user reads his email                          test@test.com  	Invite to register Horizon 2020 grant transfer of (IA) Innovation action   You have been contacted as a result of your registration on the Horizon 2020 registration portal
 
-Send an email invite to Research and technology organisation (RTO)
-    [Documentation]  IFS-5266
-    Given the user clicks the button/link                  jQuery = tr:contains("ResearchTech Name") :checkbox ~ label
-    When the user clicks the button/link                   jQuery = button:contains("Send email to selected")
-    Then the user reads his email                          test@test.com  	Invite to register Horizon 2020 grant transfer of (IA) Innovation action   You have been contacted as a result of your registration on the Horizon 2020 registration portal
-
-Send an email invite to Public sector, charity or non Je-S registered research organisation
-    [Documentation]  IFS-5266
-    Given the user clicks the button/link                  jQuery = tr:contains("Jes Name") :checkbox ~ label
-    When the user clicks the button/link                   jQuery = button:contains("Send email to selected")
-    Then the user reads his email                          test@test.com  	Invite to register Horizon 2020 grant transfer of (IA) Innovation action   You have been contacted as a result of your registration on the Horizon 2020 registration portal
-
 *** Keywords ***
+Custom Setup
+    The guest user opens the browser
+
+Custom Teardown
+    The user closes the browser
+
 The user registers for the underwrite guarantee
     [Arguments]  ${orgType}  ${orgName}  ${contactName}
     The user completes your organisation section       ${orgType}  ${orgName}
