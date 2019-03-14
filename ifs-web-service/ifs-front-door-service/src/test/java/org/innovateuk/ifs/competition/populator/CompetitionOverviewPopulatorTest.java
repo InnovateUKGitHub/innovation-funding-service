@@ -4,6 +4,7 @@ import org.innovateuk.ifs.competition.populator.publiccontent.section.*;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.*;
 import org.junit.Before;
@@ -98,6 +99,7 @@ public class CompetitionOverviewPopulatorTest {
         assertEquals(nonIfsUrl, viewModel.getNonIfsUrl());
         assertEquals(true, viewModel.isUserIsLoggedIn());
         assertEquals(true, viewModel.isCompetitionSetupComplete());
+        assertEquals(true, viewModel.isH2020());
     }
 
     @Test
@@ -214,6 +216,7 @@ public class CompetitionOverviewPopulatorTest {
                 .withNonIfsUrl(nonIfsUrl)
                 .withNonIfs(Boolean.FALSE)
                 .withSetupComplete(Boolean.TRUE)
+                .withCompetitionType(CompetitionResource.H2020_TYPE_NAME)
                 .build();
 
         return publicContentItem;

@@ -51,4 +51,8 @@ public class EuGrantResourceBuilder extends BaseBuilder<EuGrantResource, EuGrant
     public EuGrantResourceBuilder withShortCode(String... shortCodes) {
         return withArray((shortCode, grant) -> grant.setShortCode(shortCode), shortCodes);
     }
+
+    public EuGrantResourceBuilder withNotified(Boolean... notifiedStatuses) {
+        return withArray((notifiedStatus, grant) -> grant.setNotified(notifiedStatus), notifiedStatuses);
+    }
 }

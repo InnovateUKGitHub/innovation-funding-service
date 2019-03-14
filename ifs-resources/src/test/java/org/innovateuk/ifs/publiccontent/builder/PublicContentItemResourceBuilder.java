@@ -58,6 +58,10 @@ public class PublicContentItemResourceBuilder extends BaseBuilder<PublicContentI
         return with(publicContent -> setField("fundingType", fundingType, publicContent));
     }
 
+    public PublicContentItemResourceBuilder withCompetitionType(String competitionType) {
+        return with(publicContent -> setField("competitionType", competitionType, publicContent));
+    }
+
     @Override
     protected PublicContentItemResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, PublicContentItemResource>> actions) {
         return new PublicContentItemResourceBuilder(actions);
@@ -67,4 +71,5 @@ public class PublicContentItemResourceBuilder extends BaseBuilder<PublicContentI
     protected PublicContentItemResource createInitial() {
         return new PublicContentItemResource();
     }
+
 }

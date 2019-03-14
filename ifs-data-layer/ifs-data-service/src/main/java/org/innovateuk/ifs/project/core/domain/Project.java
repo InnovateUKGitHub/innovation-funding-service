@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
-import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
@@ -88,6 +88,10 @@ public class Project implements ProcessActivity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = {CascadeType.REMOVE})
     private List<ProjectDocument> projectDocuments = new ArrayList<>();
+
+    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=true)
+    private ProjectProcess projectProcess;
+
 
     public Project() {}
 
@@ -206,7 +210,7 @@ public class Project implements ProcessActivity {
         this.projectUsers.addAll(projectUsers);
     }
 
-    public void removeProjetMonitoringOfficer() {
+    public void removeProjectMonitoringOfficer() {
         this.projectMonitoringOfficer = null;
     }
 
@@ -312,5 +316,9 @@ public class Project implements ProcessActivity {
 
     public Optional<ProjectMonitoringOfficer> getProjectMonitoringOfficer() {
         return Optional.ofNullable(projectMonitoringOfficer);
+    }
+
+    public ProjectProcess getProjectProcess() {
+        return projectProcess;
     }
 }

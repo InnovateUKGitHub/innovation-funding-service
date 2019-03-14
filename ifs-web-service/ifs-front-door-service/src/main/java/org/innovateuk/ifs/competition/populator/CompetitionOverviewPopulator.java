@@ -41,6 +41,7 @@ public class CompetitionOverviewPopulator {
         viewModel.setNonIfs(publicContentItemResource.getNonIfs());
         viewModel.setUserIsLoggedIn(userIsLoggedIn);
         viewModel.setCompetitionSetupComplete(publicContentItemResource.getSetupComplete());
+        viewModel.setH2020(publicContentItemResource.isH2020());
 
         if(null != publicContentItemResource.getPublicContentResource()) {
             viewModel.setShortDescription(publicContentItemResource.getPublicContentResource().getShortDescription());
