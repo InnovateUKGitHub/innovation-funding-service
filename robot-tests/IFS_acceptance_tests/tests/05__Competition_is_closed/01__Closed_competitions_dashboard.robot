@@ -18,36 +18,20 @@ Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Test Cases ***
 Competition dashboard
-    [Documentation]    INFUND-6599
-    ...
-    ...    INFUND-7362
-    When The user clicks the button/link            link = ${CLOSED_COMPETITION_NAME}
-    Then The user should see the element            jQuery = .govuk-caption-l:contains("Machine learning for transport infrastructure")
-    And The user should see the element             jQuery = h1:contains("Closed")
-    And The user should see the element             jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
-    And The user should see the element             jQuery = dt:contains("Innovation sector") ~ dd:contains("Infrastructure systems")
-    And The user should see the element             jQuery = dt:contains("Innovation area") ~ dd:contains("Smart infrastructure")
-    And the user should see the element             link = View and update competition setup
-    #The following checks test if the correct buttons are disabled
-    And the user should see the element             jQuery = .disabled[aria-disabled = "true"]:contains("Input and review funding decision")
-
-Milestones for the closed competitions
-    [Documentation]    INFUND-7561
-    Then the user should see the element   jQuery = button:contains("Notify assessors")
-    And the user should see the element    css = li:nth-child(5).done    #this keyword verifies that the 5.Assessor briefing is done
-    And the user should see the element    css = li:nth-child(7).not-done    #this keyword verifies that the 6.Assessor accepts is not done
+    [Documentation]    INFUND-6599  INFUND-7362  INFUND-7561
+    Given The user clicks the button/link            link = ${CLOSED_COMPETITION_NAME}
+    Then the user should see the competition details
+    And the use should see the milestones for the closed competitions
 
 Key Statistics for Closed competitions
     [Documentation]    INFUND-7560
-    [Setup]    Get The expected values from the invite page
+    Given Get The expected values from the invite page
     Then the counts of the key statistics of the closed competition should be correct
 
 Invite Assessors
-    [Documentation]    INFUND-6604
-    ...
-    ...    INFUND-7362
+    [Documentation]    INFUND-6604  INFUND-7362
     [Tags]
-    When the user clicks the button/Link    link = Invite assessors to assess the competition
+    Given the user clicks the button/Link   link = Invite assessors to assess the competition
     Then The user should see the element    link = Pending and declined
     And the user should see the element     link = Find
     And the user should see the element     link = Invite
@@ -56,7 +40,7 @@ Invite Assessors
 Notify Assessors
     [Documentation]  INFUND-6458 INFUND-7362
     [Tags]
-    When The user clicks the button/link             jQuery = .govuk-button:contains("Notify assessors")
+    Given The user clicks the button/link             jQuery = .govuk-button:contains("Notify assessors")
     Then the user should see the element             jQuery = h1:contains("In assessment")
     [Teardown]  Reset competition's milestone
 
@@ -96,3 +80,18 @@ Reset competition's milestone
 Custom suite teardown
     Disconnect from database
     The user closes the browser
+
+the user should see the competition details
+    The user should see the element             jQuery = .govuk-caption-l:contains("Machine learning for transport infrastructure")
+    The user should see the element             jQuery = h1:contains("Closed")
+    The user should see the element             jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
+    The user should see the element             jQuery = dt:contains("Innovation sector") ~ dd:contains("Infrastructure systems")
+    The user should see the element             jQuery = dt:contains("Innovation area") ~ dd:contains("Smart infrastructure")
+    the user should see the element             link = View and update competition setup
+    #The following checks test if the correct buttons are disabled
+    the user should see the element             jQuery = .disabled[aria-disabled = "true"]:contains("Input and review funding decision")
+
+the use should see the milestones for the closed competitions
+    the user should see the element    jQuery = button:contains("Notify assessors")
+    the user should see the element    css = li:nth-child(5).done    #this keyword verifies that the 5.Assessor briefing is done
+    the user should see the element    css = li:nth-child(7).not-done    #this keyword verifies that the 6.Assessor accepts is not done
