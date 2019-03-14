@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -24,6 +25,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a ServiceFailure, and a
@@ -132,6 +134,26 @@ public class ServiceResult<T> extends BaseFailingOrSucceedingResult<T, ServiceFa
     @Override
     protected <R> BaseFailingOrSucceedingResult<R, ServiceFailure> createFailure(FailingOrSucceedingResult<R, ServiceFailure> failure) {
         return failure != null ? serviceFailure(failure.getFailure()) : serviceFailure(internalServerErrorError());
+    }
+
+    /**
+     * Switches this ServiceResult to be a success case if we encountered a Not Found that was an acceptable case.
+     * Additionally the result is returned as an Optional T rather than a T as the calling code will be assuming that
+     * they may or may not be getting a result back from this call.
+     *
+     * If this ServiceResult is a failure for another reason, the returned ServiceResult will contain the same failures.
+     */
+    public ServiceResult<Optional<T>> toOptionalIfNotFound() {
+        return handleSuccessOrFailure(
+                failure -> {
+                    if (simpleAllMatch(failure.getErrors(), e -> NOT_FOUND.equals(e.getStatusCode()))) {
+                        return serviceSuccess(Optional.empty());
+                    } else {
+                        return (ServiceResult<Optional<T>>) this;
+                    }
+                },
+                success -> serviceSuccess(getOptionalSuccessObject())
+        );
     }
 
     /**

@@ -251,13 +251,13 @@
 
                 <div class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('fundingContribution')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label govuk-label--s" for="projectName">
+                    <label class="govuk-label govuk-label--s" for="fundingContribution">
                         EU funding contribution for above project (EUR)
                         <span id="funding-committed-hint" class="govuk-hint">
                             The total amount in euros granted to your organisation at the point of the award for your project.
                         </span>
                     </label>
-                        <th:block th:if="${#fields.hasErrors('projectName')}">
+                        <th:block th:if="${#fields.hasErrors('fundingContribution')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('fundingContribution')}" th:text="${err}"></span>
                         </th:block>
                         <span class="govuk-body govuk-!-padding-right-1">€</span>

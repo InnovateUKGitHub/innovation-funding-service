@@ -39,7 +39,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testSignedGetGrantOfferLetterFileEntryDetails() {
+    public void signedGetGrantOfferLetterFileEntryDetails() {
 
         final Long projectId = 1L;
 
@@ -57,6 +57,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).stakeholdersCanViewGrantOfferLetter(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -64,7 +66,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testGetGrantOfferLetterFileEntryDetails() {
+    public void getGrantOfferLetterFileEntryDetails() {
 
         final Long projectId = 1L;
 
@@ -82,6 +84,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).stakeholdersCanViewGrantOfferLetter(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -89,7 +93,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testGetAdditionalContractFileEntryDetails() {
+    public void getAdditionalContractFileEntryDetails() {
 
         final Long projectId = 1L;
 
@@ -108,12 +112,14 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).stakeholdersCanViewGrantOfferLetter(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
 
     @Test
-    public void testCreateSignedGrantOfferLetterFileEntry() {
+    public void createSignedGrantOfferLetterFileEntry() {
 
         final Long projectId = 1L;
 
@@ -129,7 +135,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testGetGrantOfferLetterFileEntryContents() {
+    public void getGrantOfferLetterFileEntryContents() {
 
         final Long projectId = 1L;
 
@@ -155,7 +161,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testGetSignedGrantOfferLetterFileEntryContents() {
+    public void getSignedGrantOfferLetterFileEntryContents() {
 
         final Long projectId = 1L;
 
@@ -181,7 +187,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testGetAdditionalContractFileEntryContents() {
+    public void getAdditionalContractFileEntryContents() {
 
         final Long projectId = 1L;
 
@@ -206,7 +212,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testSubmitGrantOfferLetter() {
+    public void submitGrantOfferLetter() {
         final ProjectCompositeId projectId = ProjectCompositeId.id(1L);
         when(projectLookupStrategy.getProjectCompositeId(projectId.id())).thenReturn(projectId);
         assertAccessDenied(() -> classUnderTest.submitGrantOfferLetter(projectId.id()), () -> {
@@ -216,7 +222,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testGenerateGrantOfferLetterDeniedIfNotCorrectGlobalRoles() {
+    public void generateGrantOfferLetterDeniedIfNotCorrectGlobalRoles() {
 
         final Long projectId = 1L;
 
@@ -237,7 +243,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testGenerateGrantOfferLetterIfReadyDeniedIfNotCorrectGlobalRoles() {
+    public void generateGrantOfferLetterIfReadyDeniedIfNotCorrectGlobalRoles() {
         final Long projectId = 1L;
 
         NON_COMP_ADMIN_ROLES.forEach(role -> {
@@ -255,7 +261,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testDeleteSignedGrantOfferLetterFileEntry() {
+    public void deleteSignedGrantOfferLetterFileEntry() {
 
         final Long projectId = 1L;
 
@@ -270,7 +276,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testSendGrantOfferLetter() {
+    public void sendGrantOfferLetter() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -281,7 +287,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testApproveSignedGrantOfferLetter() {
+    public void approveSignedGrantOfferLetter() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -294,7 +300,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testGetGrantOfferLetterState() {
+    public void getGrantOfferLetterState() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -308,6 +314,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).stakeholdersCanViewSendGrantOfferLetterStatus(project,
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewSendGrantOfferLetterStatus(project,
                     getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });

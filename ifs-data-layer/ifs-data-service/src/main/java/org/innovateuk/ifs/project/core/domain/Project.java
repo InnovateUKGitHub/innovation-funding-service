@@ -89,6 +89,10 @@ public class Project implements ProcessActivity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = {CascadeType.REMOVE})
     private List<ProjectDocument> projectDocuments = new ArrayList<>();
 
+    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=true)
+    private ProjectProcess projectProcess;
+
+
     public Project() {}
 
     public Project(Application application, LocalDate targetStartDate, Address address,
@@ -206,7 +210,7 @@ public class Project implements ProcessActivity {
         this.projectUsers.addAll(projectUsers);
     }
 
-    public void removeProjetMonitoringOfficer() {
+    public void removeProjectMonitoringOfficer() {
         this.projectMonitoringOfficer = null;
     }
 
@@ -312,5 +316,9 @@ public class Project implements ProcessActivity {
 
     public Optional<ProjectMonitoringOfficer> getProjectMonitoringOfficer() {
         return Optional.ofNullable(projectMonitoringOfficer);
+    }
+
+    public ProjectProcess getProjectProcess() {
+        return projectProcess;
     }
 }

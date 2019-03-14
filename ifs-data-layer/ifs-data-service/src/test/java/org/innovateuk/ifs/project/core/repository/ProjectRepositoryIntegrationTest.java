@@ -11,9 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.monitoring.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -33,14 +36,8 @@ public class ProjectRepositoryIntegrationTest extends BaseRepositoryIntegrationT
 
     @Test
     public void findByProjectMonitoringOfficerIsNull() {
-        List<Project> allProjects = repository.findAll();
-        assertFalse(allProjects.isEmpty());
-
         List<Project> assignableProjects = repository.findAssignable();
-        assertFalse(allProjects.isEmpty());
-
-        List<Project> projects = repository.findByProjectMonitoringOfficerIdIsNull();
-        assertFalse(projects.isEmpty());
+        assertFalse(assignableProjects.isEmpty());
     }
 
     @Test
@@ -59,7 +56,7 @@ public class ProjectRepositoryIntegrationTest extends BaseRepositoryIntegrationT
                         newProjectUser()
                                 .withId((Long) null)
                                 .withUser(getUserByEmail(getSteveSmith().getEmail()))
-                                .withRole(PROJECT_PARTNER)
+                                .withRole(PROJECT_PARTNER, PROJECT_FINANCE_CONTACT)
                                 .build(2)
                 )
                 .withProjectMonitoringOfficer(
@@ -68,14 +65,13 @@ public class ProjectRepositoryIntegrationTest extends BaseRepositoryIntegrationT
                                 .withUser(felixWilson)
                                 .build()
                 )
+                .withProjectProcess(newProjectProcess().withId((Long) null).withActivityState(LIVE).build())
                 .build();
         projectRepository.save(p);
 
         flushAndClearSession();
 
-        // TODO check that assignable projects u unassigned = all
-
-        List<Project> assignedProjects = repository.findByProjectMonitoringOfficerUserId(felixWilson.getId());
+        List<Project> assignedProjects = repository.findAssigned(felixWilson.getId());
         assertEquals(1, assignedProjects.size());
     }
 }

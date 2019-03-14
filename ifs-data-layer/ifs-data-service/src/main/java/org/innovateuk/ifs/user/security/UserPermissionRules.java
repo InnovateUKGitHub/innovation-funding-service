@@ -8,9 +8,11 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -21,12 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.disjoint;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -51,6 +53,9 @@ public class UserPermissionRules {
 
     @Autowired
     private StakeholderRepository stakeholderRepository;
+
+    @Autowired
+    private ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     private static List<Role> CONSORTIUM_ROLES = asList(LEADAPPLICANT, COLLABORATOR);
 
@@ -93,6 +98,11 @@ public class UserPermissionRules {
     @PermissionRule(value = "READ", description = "Stakeholders can view users in competitions they are assigned to")
     public boolean stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
         return userIsInCompetitionAssignedToStakeholder(userToView, user);
+    }
+
+    @PermissionRule(value = "READ", description = "Monitoring officers can view users in projects they are assigned to")
+    public boolean monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
+        return userIsInProjectAssignedToMonitoringOfficer(userToView, user);
     }
 
     @PermissionRule(value = "READ_USER_ORGANISATION", description = "Internal support users can view all users and associated organisations")
@@ -258,7 +268,18 @@ public class UserPermissionRules {
 
         List<Competition> userCompetitions = getUserCompetitions(applicationsWhereThisUserIsInConsortium, projectsThisUserIsAMemberOf);
 
-        return !Collections.disjoint(stakeholderCompetitions, userCompetitions);
+        return !disjoint(stakeholderCompetitions, userCompetitions);
+    }
+
+    private boolean userIsInProjectAssignedToMonitoringOfficer(UserResource userToView, UserResource monitoringOfficer) {
+        List<Project> projectsThisUserIsAMemberOf =
+                simpleMap(getFilteredProjectUsers(userToView, projectUserFilter), ProjectUser::getProject);
+
+        List<ProjectMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(monitoringOfficer.getId());
+
+        List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, ProjectMonitoringOfficer::getProject);
+
+        return !disjoint(monitoringOfficerProjects, projectsThisUserIsAMemberOf);
     }
 
     private List<Competition> getUserCompetitions(List<Application> userApplications, List<Project> userProjects) {

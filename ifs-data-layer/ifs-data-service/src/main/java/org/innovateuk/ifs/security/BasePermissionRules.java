@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 
 /**
@@ -111,6 +113,16 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     protected boolean userIsStakeholderInCompetition(long competitionId, long loggedInUserId) {
         List<Stakeholder> competitionParticipants = stakeholderRepository.findStakeholders(competitionId);
         return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
+    }
+
+    protected boolean userIsMonitoringOfficerInCompetition(long competitionId, long loggedInUserId) {
+        List<ProjectMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(loggedInUserId);
+        List<Long> monitoringOfficerCompetitionIds = projectMonitoringOfficers.stream()
+                .map(pmo -> pmo.getProject())
+                .map(project -> project.getApplication().getCompetition().getId())
+                .collect(toList());
+
+        return monitoringOfficerCompetitionIds.contains(competitionId);
     }
 
     protected boolean isProjectInSetup(long projectId) {

@@ -6,8 +6,10 @@ import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -27,9 +29,11 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.monitoring.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertFalse;
@@ -74,6 +78,38 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
                 assertTrue(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
                 assertFalse(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void monitoringOfficersCanSeeAllOrganisations() {
+
+        long organisationId = 1L;
+
+        Organisation organisation = newOrganisation()
+                .withId(organisationId)
+                .build();
+
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation()
+                .withOrganisation(organisation)
+                .build(1);
+
+        Project project = newProject()
+                .withPartnerOrganisations(partnerOrganisations)
+                .build();
+
+        List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer()
+                .withProject(project)
+                .build(1);
+
+        when(projectMonitoringOfficerRepository.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(MONITORING_OFFICER)) {
+                assertTrue(rules.monitoringOfficersCanSeeAllOrganisations(newOrganisationResource().withId(organisationId).build(), monitoringOfficerUser()));
+            } else {
+                assertFalse(rules.monitoringOfficersCanSeeAllOrganisations(newOrganisationResource().withId(organisationId).build(), user));
             }
         });
     }

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRes
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignProjectForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,34 +28,19 @@ import static java.lang.String.format;
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class MonitoringOfficerController {
 
-    // TODO rename to ProjectMonitoringOfficerController? or MontoringOfficerAssignmentController?
-
     private static final String FORM_ATTR_NAME = "form";
 
-    private final MonitoringOfficerProjectsViewModelPopulator modelPopulator;
+    @Autowired
+    private MonitoringOfficerProjectsViewModelPopulator modelPopulator;
 
-    private final ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
-
-    public MonitoringOfficerController(MonitoringOfficerProjectsViewModelPopulator modelPopulator,
-                                       ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService) {
-        this.modelPopulator = modelPopulator;
-        this.projectMonitoringOfficerRestService = projectMonitoringOfficerRestService;
-    }
+    @Autowired
+    private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
 
     @GetMapping("/projects")
     public String viewProjects(@PathVariable long monitoringOfficerId, Model model) {
         model.addAttribute("model", modelPopulator.populate(monitoringOfficerId));
         model.addAttribute(FORM_ATTR_NAME, new MonitoringOfficerAssignProjectForm());
         return "project/monitoring-officer-projects";
-    }
-
-    @GetMapping("/unassign/{projectId}")
-    public String unassignProject(@PathVariable long monitoringOfficerId,
-                                  @PathVariable long projectId) {
-        return projectMonitoringOfficerRestService
-                .unassignMonitoringOfficerFromProject(monitoringOfficerId, projectId)
-                .andOnSuccessReturn(() -> monitoringOfficerProjectsRedirect(monitoringOfficerId))
-                .getSuccess();
     }
 
     @PostMapping("/assign")
@@ -65,12 +51,29 @@ public class MonitoringOfficerController {
                                 Model model,
                                 UserResource user) {
 
-        Supplier<String> failureView = () -> viewProjects(monitoringOfficerId, model);
-        RestResult<Void> result = projectMonitoringOfficerRestService.assignMonitoringOfficerToProject(monitoringOfficerId, form.getProjectNumber());
+        Supplier<String> failureView = () -> {
+            model.addAttribute("model", modelPopulator.populate(monitoringOfficerId));
+            model.addAttribute(FORM_ATTR_NAME, form);
+            return "project/monitoring-officer-projects";
+        };
 
         return validationHandler
-                .addAnyErrors(result)
-                .failNowOrSucceedWith(failureView, () -> monitoringOfficerProjectsRedirect(monitoringOfficerId));
+                .failNowOrSucceedWith(failureView, () -> {
+                    RestResult<Void> result = projectMonitoringOfficerRestService.assignMonitoringOfficerToProject(monitoringOfficerId, form.getProjectId());
+                    return validationHandler
+                            .addAnyErrors(result)
+                            .failNowOrSucceedWith(failureView,
+                                    () ->  monitoringOfficerProjectsRedirect(monitoringOfficerId));
+                });
+    }
+
+    @GetMapping("/unassign/{projectId}")
+    public String unassignProject(@PathVariable long monitoringOfficerId,
+                                  @PathVariable long projectId) {
+        return projectMonitoringOfficerRestService
+                .unassignMonitoringOfficerFromProject(monitoringOfficerId, projectId)
+                .andOnSuccessReturn(() -> monitoringOfficerProjectsRedirect(monitoringOfficerId))
+                .getSuccess();
     }
 
     private static String monitoringOfficerProjectsRedirect(long monitoringOfficerId) {

@@ -6,17 +6,17 @@ import javax.validation.constraints.NotNull;
 
 public class MonitoringOfficerAssignProjectForm extends BaseBindingResultTarget {
 
-    @NotNull
-    private Long projectNumber;
+    @NotNull(message = "{validation.monitoring-officer.assign.required}")
+    private Long projectId;
 
     public MonitoringOfficerAssignProjectForm() {
     }
 
-    public Long getProjectNumber() {
-        return projectNumber;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setProjectNumber(long projectNumber) {
-        this.projectNumber = projectNumber;
+    public void setProjectId(long projectId) {
+        this.projectId = projectId;
     }
 }

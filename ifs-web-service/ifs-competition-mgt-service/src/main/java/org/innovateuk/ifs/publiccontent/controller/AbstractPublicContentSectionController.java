@@ -22,6 +22,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType.DATES;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
 
 /**
@@ -94,10 +95,22 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         if (isIFSAndCompetitionNotSetup(competitionId)) {
             return redirectTo(COMPETITION_SETUP_PATH + competitionId);
         }
-        Supplier<String> successView = () -> redirectTo(COMPETITION_SETUP_PUBLIC_CONTENT_DATES_PATH + competitionId);
-        Supplier<String> failureView = () -> getPage(competitionId, model, Optional.of(form), false);
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
+        M populatedViewModel = modelPopulator().populate(publicContent, true);
+        Supplier<String> successView = getSuccessView(competitionId, model, form, populatedViewModel);
+        Supplier<String> failureView = () -> getPage(competitionId, model, Optional.of(form), false);
+
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().markAsComplete(form, publicContent));
+    }
+
+    private Supplier<String> getSuccessView(long competitionId, Model model, F form, M populatedViewModel) {
+        return isInDatesSection(populatedViewModel) ?
+                (() -> redirectTo(COMPETITION_SETUP_PUBLIC_CONTENT_DATES_PATH + competitionId)) :
+                (() -> getPage(competitionId, model, Optional.of(form), true));
+    }
+
+    private boolean isInDatesSection(M populatedViewModel) {
+        return DATES == populatedViewModel.getSection().getType();
     }
 
     private String redirectTo(String path) {

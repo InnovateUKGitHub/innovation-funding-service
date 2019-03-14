@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
@@ -14,6 +15,7 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -108,6 +110,10 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((projectMonitoringOfficer, project) -> project.setProjectMonitoringOfficer(projectMonitoringOfficer), projectMonitoringOfficers);
     }
 
+    public ProjectBuilder withProjectProcess(ProjectProcess... projectProcesses) {
+        return withArraySetFieldByReflection("projectProcess", projectProcesses);
+    }
+
     @Override
     protected void postProcess(int index, Project project) {
 
@@ -117,5 +123,7 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         project.getPartnerOrganisations().forEach(org -> setField("project", project, org));
 
         project.getProjectMonitoringOfficer().ifPresent(mo -> setField("project", project, mo));
+
+        Optional.ofNullable(project.getProjectProcess()).ifPresent(projectProcess -> projectProcess.setTarget(project));
     }
 }

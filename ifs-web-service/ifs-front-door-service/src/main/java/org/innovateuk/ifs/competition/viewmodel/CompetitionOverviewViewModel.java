@@ -20,6 +20,7 @@ public class CompetitionOverviewViewModel {
     private List<AbstractPublicSectionContentViewModel> allSections;
     private boolean userIsLoggedIn = false;
     private boolean competitionSetupComplete;
+    private boolean h2020;
 
     public String getCompetitionTitle() {
         return competitionTitle;
@@ -99,6 +100,14 @@ public class CompetitionOverviewViewModel {
 
     public void setUserIsLoggedIn(boolean userIsLoggedIn) {
         this.userIsLoggedIn = userIsLoggedIn;
+    }
+
+    public boolean isH2020() {
+        return h2020;
+    }
+
+    public void setH2020(boolean h2020) {
+        this.h2020 = h2020;
     }
 
     public boolean isShowNotOpenYetMessage() {

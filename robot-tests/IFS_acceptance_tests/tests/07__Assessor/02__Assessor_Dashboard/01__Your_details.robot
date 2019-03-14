@@ -31,19 +31,8 @@ Validations for invalid inputs
     [Tags]
     Given the user should see the element        jQuery = h1:contains("Edit your details")
     And the user should see the element          jQuery = h3:contains("Email") ~ p:contains("bob.malone@gmail.com")
-    When The user enters text to a text field    id = firstName    Joy12
-    And The user enters text to a text field     id = lastName    Archer12
-    And the user enters text to a text field     id = phoneNumber    18549731414test
-    And the user enters text to a text field     id = addressForm.addressLine1    ${EMPTY}
-    And the user enters text to a text field     id = addressForm.town    ${EMPTY}
-    And the user enters text to a text field     id = addressForm.postcode    ${EMPTY}
-    And the user clicks the button/link          jQuery = button:contains("Save and return to your details")
-    Then the user should see a field and summary error    Invalid first name.
-    And the user should see a field and summary error     Invalid last name.
-    And the user should see a field and summary error     ${enter_a_phone_number_between_8_and_20_digits}
-    And the user should see a field and summary error     The first line of the address cannot be blank.
-    And the user should see a field and summary error     The postcode cannot be blank.
-    And the user should see a field and summary error     The town cannot be blank.
+    When the user enters the invalid details
+    Then the user should see the validation messages
 
 Valid Profile Update
     [Documentation]    INFUND-1480
@@ -82,3 +71,20 @@ the assessor logs-in
    The guest user opens the browser
    The guest user inserts user email and password   &{assessor_bob_credentials}
    The guest user clicks the log-in button
+
+the user enters the invalid details
+    the user enters text to a text field     id = firstName    Joy12
+    the user enters text to a text field     id = lastName    Archer12
+    the user enters text to a text field     id = phoneNumber    18549731414test
+    the user enters text to a text field     id = addressForm.addressLine1    ${EMPTY}
+    the user enters text to a text field     id = addressForm.town    ${EMPTY}
+    the user enters text to a text field     id = addressForm.postcode    ${EMPTY}
+    the user clicks the button/link          jQuery = button:contains("Save and return to your details")
+
+the user should see the validation messages
+    the user should see a field and summary error     Invalid first name.
+    the user should see a field and summary error     Invalid last name.
+    the user should see a field and summary error     ${enter_a_phone_number_between_8_and_20_digits}
+    the user should see a field and summary error     The first line of the address cannot be blank.
+    the user should see a field and summary error     The postcode cannot be blank.
+    the user should see a field and summary error     The town cannot be blank.

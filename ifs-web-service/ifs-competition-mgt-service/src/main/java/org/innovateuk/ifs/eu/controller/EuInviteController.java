@@ -2,20 +2,25 @@ package org.innovateuk.ifs.eu.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 
-import org.innovateuk.ifs.eu.form.EuContactSelectionForm;
+import org.innovateuk.ifs.eu.form.EuGrantSelectionForm;
 import org.innovateuk.ifs.eu.invite.EuInviteRestService;
-import org.innovateuk.ifs.eugrant.EuContactPageResource;
 import org.innovateuk.ifs.eu.viewmodel.EuInviteViewModel;
+import org.innovateuk.ifs.eugrant.EuGrantPageResource;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 
 /**
  * This controller will handle all requests related to inviting eu registrants onto the main IFS platform
@@ -36,39 +41,60 @@ public class EuInviteController {
 
     @GetMapping("/eu-invite-non-notified")
     public String viewNonNotifiedEuRegistrants(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
-                                               EuContactSelectionForm form,
+                                               @RequestParam(value = "numSentEmails", required = false) Optional<Long> successfulEmailsSent,
+                                               EuGrantSelectionForm form,
                                                Model model) {
-        EuContactPageResource euRegistrants = euInviteRestService.getEuContactsByNotified(false,
-                                                                                          pageIndex,
-                                                                                          DEFAULT_PAGE_SIZE).getSuccess();
+        EuGrantPageResource euRegistrants = euInviteRestService.getEuGrantsByNotified(false,
+                                                                                      pageIndex,
+                                                                                      DEFAULT_PAGE_SIZE).getSuccess();
+        long totalSubmitted = euInviteRestService.getTotalSubmittedEuGrants().getSuccess();
+        long totalNonNotified = euRegistrants.getTotalElements();
+
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
                                                             new Pagination(euRegistrants, ""),
-                                                            1200,
-                                                            2100);
+                                                            totalSubmitted - totalNonNotified,
+                                                            totalNonNotified,
+                                                            successfulEmailsSent.isPresent(),
+                                                            successfulEmailsSent.orElse(0L));
         model.addAttribute("model", viewModel);
         return "eu/non-notified";
     }
 
     @GetMapping("/eu-invite-notified")
     public String viewNotifiedEuRegistrants(@RequestParam(value = "page", defaultValue = "0") int pageIndex,
-                                            EuContactSelectionForm form,
+                                            @RequestParam(value = "numSentEmails", required = false) Optional<Long> successfulEmailsSent,
+                                            EuGrantSelectionForm form,
                                             Model model) {
-        EuContactPageResource euRegistrants = euInviteRestService.getEuContactsByNotified(true,
+        EuGrantPageResource euRegistrants = euInviteRestService.getEuGrantsByNotified(true,
                                                                                       pageIndex,
                                                                                       DEFAULT_PAGE_SIZE).getSuccess();
+
+        long totalSubmitted = euInviteRestService.getTotalSubmittedEuGrants().getSuccess();
+        long totalNotified = euRegistrants.getTotalElements();
         EuInviteViewModel viewModel = new EuInviteViewModel(euRegistrants.getContent(),
                                                             new Pagination(euRegistrants, ""),
-                                                            1200,
-                                                            2100);
+                                                            totalNotified,
+                                                            totalSubmitted - totalNotified,
+                                                            successfulEmailsSent.isPresent(),
+                                                            successfulEmailsSent.orElse(0L));
         model.addAttribute("model", viewModel);
         return "eu/notified";
     }
 
-    @PostMapping("/eu-send-invites")
-    public String sendEuInvites(EuContactSelectionForm euContactSelectionForm) {
-        List<Long> ids = euContactSelectionForm.getEuContactIds();
+    @PostMapping("/eu-send-invites/notified/{notified}")
+    public String sendEuInvites(@PathVariable("notified") boolean notified,
+                                EuGrantSelectionForm euGrantSelectionForm) {
+        List<UUID> ids = euGrantSelectionForm.getEuGrantIds();
         euInviteRestService.sendInvites(ids).getSuccess();
 
-        return "redirect:/dashboard";
+        return redirectWithEmailParams(notified, ids.size());
+    }
+
+    private String redirectWithEmailParams(boolean notified, long numEmails) {
+
+        String baseUrl = notified? "/eu-invite-notified" : "/eu-invite-non-notified";
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+        builder.queryParam("numSentEmails", numEmails);
+        return "redirect:" + builder.toUriString();
     }
 }
