@@ -20,6 +20,9 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='govuk-heading-xl'" />
         </th:block>
 
+        <th:block th:if="${model.currentCompetition.isH2020()}"
+                  th:insert="fragments/elements :: h2020-information-panel" />
+
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list govuk-!-font-size-16">

@@ -256,9 +256,15 @@
     </th:block>
 </th:block>
 
-</html>
+<!-- =========================== Element: H2020 Information panel ================ -->
+<th:block th:fragment="h2020-information-panel">
+    <div class="message-alert govuk-!-margin-bottom-8">
+        <p class="govuk-body">This is a grant transfer service for existing EU funded Horizon 2020 projects only. Your submission will go through our application system.</p>
+    </div>
+</th:block>
 
-<!-- global pagination -->
+
+<!-- =========================== Element: global pagination ================ -->
 <th:block th:fragment="general-pagination(pagination)">
     <ul class="pagination" th:if="${pagination.totalPages > 1}">
         <li class="prev" th:if="${pagination.hasPrevious}">
@@ -294,3 +300,7 @@
         </ul>
     </div>
 </th:block>
+
+</html>
+
+
