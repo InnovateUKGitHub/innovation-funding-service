@@ -10,8 +10,10 @@ IFS.core.autoComplete = (function () {
       s = this.settings
       var autoCompleteElement = jQuery(s.autoCompleteElement)
       if (autoCompleteElement.length > 0) {
+        var showAllValues = autoCompleteElement.children('option').length <= 20
         s.autoCompletePlugin.enhanceSelectElement({
-          selectElement: autoCompleteElement[0]
+          selectElement: autoCompleteElement[0],
+          showAllValues: showAllValues
         })
       }
     }

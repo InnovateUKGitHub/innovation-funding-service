@@ -1,3 +1,8 @@
 .autocomplete__option {
   @include govuk-font(19)
 }
+
+.autocomplete__hint {
+  color: $govuk-border-colour !important;
+  padding: 6px !important;
+}
