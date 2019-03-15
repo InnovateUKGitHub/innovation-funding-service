@@ -248,6 +248,22 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications() {
+        Project project = newProject().build();
+        when(projectRepositoryMock.findOneByApplicationId(any())).thenReturn(project);
+        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(MONITORING_OFFICER)) {
+                assertTrue(rules.monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, monitoringOfficerUser()));
+            } else {
+                assertFalse(rules.monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user));
+            }
+        });
+    }
+
+    @Test
     public void stakeholdersCanSeeApplicationFinancesTotals() {
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competition.getId())

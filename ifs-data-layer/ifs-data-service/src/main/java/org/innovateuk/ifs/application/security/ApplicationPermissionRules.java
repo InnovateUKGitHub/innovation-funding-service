@@ -62,6 +62,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return userIsStakeholderInCompetition(applicationResource.getCompetition(), user.getId());
     }
 
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "Monitoring officers can see the participation percentage for applications they are assigned to")
+    public boolean monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
+        return monitoringOfficerCanViewApplication(applicationResource.getId(), user.getId());
+    }
+
     @PermissionRule(value = "READ_FINANCE_DETAILS",
             description = "The consortium can see the application finance details",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
