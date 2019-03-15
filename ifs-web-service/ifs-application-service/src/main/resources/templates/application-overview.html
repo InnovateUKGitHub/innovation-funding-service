@@ -56,8 +56,7 @@
                     <p class="govuk-body"><a href="/files/draft-procurement-contract.pdf" target="_blank" class="govuk-link govuk-!-font-size-19">View the draft contract</a> (opens in new window).</p>
                 </th:block>
                 <th:block th:unless="${procurementCompetition}">
-                    <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19"
-                       th:text="${model.currentCompetition.isH2020()? 'View the grant terms and conditions' : 'View the competition terms and conditions'}"></a>
+                    <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link govuk-!-font-size-19">View the grant terms and conditions</a>
                 </th:block>
             </div>
         </div>
