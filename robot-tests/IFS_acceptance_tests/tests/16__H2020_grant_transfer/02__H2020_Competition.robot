@@ -2,8 +2,8 @@
 Documentation  IFS-5158 - Competition Template
 ...
 ...            IFS-5247 - Application details page
-Suite Setup       Custom setup
-Suite Teardown    Custom teardown
+Suite Setup       Custom Suite Setup
+Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
@@ -66,7 +66,7 @@ Applicant user can complete Application details section
      Then the user is able to complete Application details section  Project name  ${month}  ${nextyear}  ${lastYear}
 
 *** Keywords ***
-Custom setup
+Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
@@ -239,6 +239,6 @@ The user is able to complete Application details section
     the user clicks the button/link                      id = mark-as-complete
     the user should see the element                      jQuery = li:contains("Application details") > .task-status-complete
 
-Custom teardown
+Custom Suite Teardown
     the user closes the browser
     disconnect from database
