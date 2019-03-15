@@ -2,6 +2,7 @@ package org.innovateuk.ifs.granttransfer.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.springframework.core.io.ByteArrayResource;
 
 /**
@@ -17,4 +18,7 @@ public interface EuGrantTransferRestService {
 
     RestResult<FileEntryResource> findGrantAgreement(long applicationId);
 
+    RestResult<EuGrantTransferResource> findDetailsByApplicationId(long applicationId);
+
+    RestResult<Void> updateGrantTransferDetails(EuGrantTransferResource euGrantResource, long applicationId);
 }

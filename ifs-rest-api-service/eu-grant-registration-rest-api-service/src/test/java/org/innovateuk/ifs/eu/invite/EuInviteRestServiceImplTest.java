@@ -3,8 +3,7 @@ package org.innovateuk.ifs.eu.invite;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.RootAnonymousUserRestTemplateAdaptor;
 import org.innovateuk.ifs.eugrant.EuContactPageResource;
-import org.innovateuk.ifs.eugrant.EuContactResource;
-import org.innovateuk.ifs.eugrant.EuGrantResource;
+import org.innovateuk.ifs.eugrant.EuGrantPageResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,12 +13,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
-import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
-import static org.innovateuk.ifs.eugrant.builder.EuContactResourceBuilder.newEuContactResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -46,13 +45,13 @@ public class EuInviteRestServiceImplTest {
     @Test
     public void getEuContactsByNotified() {
 
-        RestResult<EuContactPageResource> expected = mock(RestResult.class);
+        RestResult<EuGrantPageResource> expected = mock(RestResult.class);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String uriWithParams = buildPaginationUri(format("%s/notified/%s", "/eu-contacts", NOTIFIED), PAGE_INDEX, PAGE_SIZE, null, params);
+        String uriWithParams = buildPaginationUri(format("%s/notified/%s", "/eu-grants", NOTIFIED), PAGE_INDEX, PAGE_SIZE, null, params);
 
-        when(anonymousRestTemplateAdaptor.getWithRestResult(baseUrl + uriWithParams, EuContactPageResource.class)).thenReturn(expected);
-        RestResult<EuContactPageResource> result = euInviteRestService.getEuContactsByNotified(NOTIFIED, PAGE_INDEX, PAGE_SIZE);
+        when(anonymousRestTemplateAdaptor.getWithRestResult(baseUrl + uriWithParams, EuGrantPageResource.class)).thenReturn(expected);
+        RestResult<EuGrantPageResource> result = euInviteRestService.getEuGrantsByNotified(NOTIFIED, PAGE_INDEX, PAGE_SIZE);
         assertEquals(expected, result);
     }
 
@@ -60,10 +59,26 @@ public class EuInviteRestServiceImplTest {
     public void sendInvites() {
         RestResult<Void> expected = mock(RestResult.class);
 
-        List<Long> euContactIds = asList(1L, 11L, 111L);
-        when(anonymousRestTemplateAdaptor.postWithRestResult(baseUrl + "/eu-contacts/send-invites", euContactIds, Void.class)).thenReturn(expected);
+        UUID uuid1 = new UUID(1L, 1L);
+        UUID uuid2 = new UUID(1L, 1L);
+        UUID uuid3 = new UUID(1L, 1L);
+        List<UUID> euGrantUuids = Arrays.asList(uuid1, uuid2, uuid3);
 
-        RestResult<Void> result = euInviteRestService.sendInvites(euContactIds);
+        when(anonymousRestTemplateAdaptor.postWithRestResult(baseUrl + "/eu-grants/send-invites", euGrantUuids, Void.class)).thenReturn(expected);
+
+        RestResult<Void> result = euInviteRestService.sendInvites(euGrantUuids);
+
+        assertEquals(result, expected);
+    }
+
+    @Test
+    public void getTotalSubmittedEuGrants() {
+        RestResult<Long> expected = mock(RestResult.class);
+
+        when(anonymousRestTemplateAdaptor.getWithRestResult(baseUrl + "/eu-grants/total-submitted", Long.class))
+                .thenReturn(expected);
+
+        RestResult<Long> result = euInviteRestService.getTotalSubmittedEuGrants();
 
         assertEquals(result, expected);
     }

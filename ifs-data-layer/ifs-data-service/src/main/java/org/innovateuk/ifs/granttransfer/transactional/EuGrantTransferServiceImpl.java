@@ -10,8 +10,12 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.granttransfer.domain.EuActionType;
 import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
+import org.innovateuk.ifs.granttransfer.mapper.EuGrantTransferMapper;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
+import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
+import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +23,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
+import static java.lang.Long.max;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -30,6 +37,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 @Transactional(readOnly = true)
 public class EuGrantTransferServiceImpl implements EuGrantTransferService {
+
+    static final LocalDate HORIZON_2020_START_DATE = LocalDate.of(2019, 4, 1);
 
     @Value("${ifs.data.service.file.storage.eu.grant.transfer.agreement.max.filesize.bytes}")
     private Long maxFileSize;
@@ -49,6 +58,9 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
     @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
     private FilesizeAndTypeFileValidator<List<String>> fileValidator;
+
+    @Autowired
+    private EuGrantTransferMapper mapper;
 
     private FileControllerUtils fileControllerUtils = new FileControllerUtils();
 
@@ -90,6 +102,40 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
                         .orElse(serviceFailure(notFoundError(FileEntryResource.class, applicationId))));
     }
 
+    @Override
+    public ServiceResult<EuGrantTransferResource> getGrantTransferByApplicationId(long applicationId) {
+        return findGrantTransferByApplicationId(applicationId).andOnSuccessReturn(mapper::mapToResource);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateGrantTransferByApplicationId(EuGrantTransferResource euGrantTransferResource, long applicationId) {
+        return findGrantTransferByApplicationIdCreateIfNotExists(applicationId).andOnSuccessReturnVoid(domain -> {
+            domain.setGrantAgreementNumber(euGrantTransferResource.getGrantAgreementNumber());
+            domain.setParticipantId(euGrantTransferResource.getParticipantId());
+            domain.setProjectStartDate(euGrantTransferResource.getProjectStartDate());
+            domain.setProjectEndDate(euGrantTransferResource.getProjectEndDate());
+            domain.setFundingContribution(euGrantTransferResource.getFundingContribution());
+            domain.setProjectCoordinator(euGrantTransferResource.getProjectCoordinator());
+
+            ofNullable(euGrantTransferResource.getProjectEndDate()).ifPresent(endDate -> {
+                long duration = Period.between(HORIZON_2020_START_DATE, endDate).getMonths();
+                domain.getApplication().setDurationInMonths(max(duration, 1L));
+                domain.getApplication().setStartDate(HORIZON_2020_START_DATE);
+            });
+
+            ofNullable(euGrantTransferResource.getActionType())
+                    .map(EuActionTypeResource::getId)
+                    .ifPresent(id -> {
+                        EuActionType type = new EuActionType();
+                        type.setId(id);
+                        domain.setActionType(type);
+                    });
+
+            domain.getApplication().setName(euGrantTransferResource.getProjectName());
+        });
+    }
+
     private ServiceResult<FileAndContents> getFileAndContents(FileEntryResource fileEntry) {
         return fileService.getFileByFileEntryId(fileEntry.getId())
                 .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntry, inputStream));
@@ -102,11 +148,13 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
             Application application = new Application();
             application.setId(applicationId);
             grantTransfer.setApplication(application);
-            euGrantTransferRepository.save(grantTransfer);
+            grantTransfer = euGrantTransferRepository.save(grantTransfer);
+            euGrantTransferRepository.refresh(grantTransfer);
         }
         return serviceSuccess(grantTransfer);
 
     }
+
     private ServiceResult<EuGrantTransfer> findGrantTransferByApplicationId(long applicationId) {
         return find(euGrantTransferRepository.findByApplicationId(applicationId), notFoundError(EuGrantTransfer.class, applicationId));
     }

@@ -11,13 +11,16 @@ public class CommonYourFinancesViewModel {
     private final long sectionId;
     private final boolean open;
     private final boolean complete;
+    private final boolean h2020;
 
-    public CommonYourFinancesViewModel(String financesUrl, String applicationName, long applicationId, long sectionId, boolean open, boolean complete) {
+
+    public CommonYourFinancesViewModel(String financesUrl, String applicationName, long applicationId, long sectionId, boolean open, boolean h2020, boolean complete) {
         this.financesUrl = financesUrl;
         this.applicationName = applicationName;
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.open = open;
+        this.h2020 = h2020;
         this.complete = complete;
     }
 
@@ -44,6 +47,9 @@ public class CommonYourFinancesViewModel {
     public boolean isOpen() {
         return open;
     }
+
+    public boolean isH2020() {
+            return h2020; }
 
     public boolean isComplete() {
         return complete;
