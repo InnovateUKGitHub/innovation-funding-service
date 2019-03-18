@@ -149,7 +149,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview.get(), organisation.get().getName(), project.getName(),
                     project.getApplication(), isLeadPartnerOrganisation, project.getId(), organisation.get().getId(),
                     eligibilityApproved, eligibility.get().getEligibilityRagStatus(), eligibility.get().getEligibilityApprovalUserFirstName(),
-                    eligibility.get().getEligibilityApprovalUserLastName(), eligibility.get().getEligibilityApprovalDate(), false, isUsingJesFinances, jesFileDetailsViewModel));
+                    eligibility.get().getEligibilityApprovalUserLastName(), eligibility.get().getEligibilityApprovalDate(), false, isUsingJesFinances, jesFileDetailsViewModel, competition.get().isH2020()));
 
             model.addAttribute("eligibilityForm", eligibilityForm);
             future.get();

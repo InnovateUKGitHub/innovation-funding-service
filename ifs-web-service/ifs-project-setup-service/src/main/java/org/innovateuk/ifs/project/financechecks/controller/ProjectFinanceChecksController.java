@@ -469,13 +469,16 @@ public class ProjectFinanceChecksController {
 
         boolean eligibilityApproved = eligibility.getEligibility() == EligibilityState.APPROVED;
 
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+
         model.addAttribute("model", new FinanceChecksProjectCostsViewModel());
         model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
 
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
                 application.getId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
                 eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
-                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(), true, false, null));
+                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(),
+                true, false, null, competition.isH2020()));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 
