@@ -18,5 +18,5 @@ We will aim to get back to you as soon as we can but regret that we are unable t
 If you have any queries, please ring 0300 321 4357 or email EUGrantsFunding@ukri.org.
 
 Yours sincerely,
-<@layout.senderPlainText />
+<@layout.h2020SenderPlainText />
 </@layout.defaultPlainText>
