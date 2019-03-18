@@ -273,6 +273,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
 
         assertTrue(viewModel.isExternalView());
+        assertFalse(viewModel.isH2020());
     }
 
     private void setUpViewEligibilityMocking(EligibilityResource eligibility) {
