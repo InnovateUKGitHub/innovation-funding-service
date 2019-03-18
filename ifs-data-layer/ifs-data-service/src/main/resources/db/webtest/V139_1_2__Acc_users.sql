@@ -7,7 +7,7 @@ SET @live_project_user =
 SET @applicant_user =
 (SELECT id FROM role WHERE name = 'applicant');
 
-SET @max_before_id = (SELECT max(id) from user) - 1;
+SET @max_before_id = (SELECT max(id) from user);
 
 INSERT INTO `ifs`.`user`
 (`email`, `first_name`, `last_name`, `status`, `uid`, `system_user`, `allow_marketing_emails`, `created_by`, `created_on`, `modified_by`, `modified_on`)
@@ -157,30 +157,8 @@ VALUES
 
 SET @max_after_id = (SELECT max(id) from user);
 
-DELIMITER //
+INSERT INTO user_role (user_id, role_id)
+SELECT id, @live_project_user FROM user WHERE id > @max_before_id AND id <= @max_after_id;
 
-CREATE PROCEDURE insert_user_roles()
-BEGIN
-
-  REPEAT
-
-    SET @max_before_id = @max_before_id + 1;
-
-    INSERT INTO user_role
-        (user_id, role_id)
-    VALUES
-    (@max_before_id, @live_project_user);
-
-    INSERT INTO user_role
-        (user_id, role_id)
-    VALUES
-    (@max_before_id, @applicant_user);
-
-  UNTIL @max_before_id = @max_after_id END REPEAT;
-
-END //
-
-CALL insert_user_roles() //
-
-DROP PROCEDURE insert_user_roles //
-
+INSERT INTO user_role (user_id, role_id)
+SELECT id, @applicant_user FROM user WHERE id > @max_before_id AND id <= @max_after_id;
