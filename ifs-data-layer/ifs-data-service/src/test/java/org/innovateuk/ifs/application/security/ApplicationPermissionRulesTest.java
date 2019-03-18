@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -37,6 +38,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -148,7 +150,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList
                 (innovationLead));
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
-        when(projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application1.getId(), monitoringOfficerOnProjectForApplication1.getId()))
+        when(projectMonitoringOfficerRepositoryMock.existsByProjectApplicationIdAndUserId(application1.getId(), monitoringOfficerOnProjectForApplication1.getId()))
                 .thenReturn(true);
     }
 
@@ -220,6 +222,22 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void monitoringOfficerCanSeeApplicationFinanceTotals() {
+        Project project = newProject().build();
+        when(projectRepositoryMock.findOneByApplicationId(any())).thenReturn(project);
+        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(MONITORING_OFFICER)) {
+                assertTrue(rules.monitoringOfficersCanSeeApplicationFinancesTotals(applicationResource, monitoringOfficerUser()));
+            } else {
+                assertFalse(rules.monitoringOfficersCanSeeApplicationFinancesTotals(applicationResource, user));
+            }
+        });
+    }
+
+    @Test
     public void stakeholdersCanSeeTheResearchParticipantPercentageInApplications() {
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -227,6 +245,22 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, stakeholderUserResourceOnCompetition));
         assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user2));
         assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user3));
+    }
+
+    @Test
+    public void monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications() {
+        Project project = newProject().build();
+        when(projectRepositoryMock.findOneByApplicationId(any())).thenReturn(project);
+        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(MONITORING_OFFICER)) {
+                assertTrue(rules.monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, monitoringOfficerUser()));
+            } else {
+                assertFalse(rules.monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user));
+            }
+        });
     }
 
     @Test
