@@ -1,3 +1,6 @@
+-- IFS-5489 This is to allow for ACC users to be added to the ldap on environment reset, this is a temporary
+-- solution and should be removed once ACC find a way to automatically add the users
+
 SET @live_project_user =
 (SELECT id FROM role WHERE name = 'live_projects_user');
 
