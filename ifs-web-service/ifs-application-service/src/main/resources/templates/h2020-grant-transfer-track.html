@@ -22,7 +22,7 @@
             <h2 class="govuk-panel__title">Grant transfer submission complete</h2>
             <div class="govuk-panel__body govuk-!-font-size-19">
                 Submission number: <span th:text="${currentApplication.id}" /><br/>
-                We have received your submission for funding on <span th:text="${applicationName}" />
+                We have received your submission for funding
                 <th:block th:if="${currentApplication.submittedDate}">
                     on
                     <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
