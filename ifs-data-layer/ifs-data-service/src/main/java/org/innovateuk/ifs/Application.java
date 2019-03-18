@@ -2,12 +2,14 @@ package org.innovateuk.ifs;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.config.repository.RefreshableCrudRepositoryImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -18,6 +20,7 @@ import javax.servlet.ServletException;
 @SpringBootApplication
 @EnableScheduling
 @EnableSpringDataWebSupport
+@EnableJpaRepositories(repositoryBaseClass = RefreshableCrudRepositoryImpl.class)
 public class Application extends SpringBootServletInitializer {
     private static final Log LOG = LogFactory.getLog(Application.class);
 

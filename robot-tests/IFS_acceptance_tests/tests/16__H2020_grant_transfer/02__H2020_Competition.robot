@@ -1,7 +1,9 @@
 *** Settings ***
 Documentation  IFS-5158 - Competition Template
-Suite Setup       Custom setup
-Suite Teardown    Custom teardown
+...
+...            IFS-5247 - Application details page
+Suite Setup       Custom Suite Setup
+Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
@@ -37,7 +39,7 @@ User can populate Funding information and Eligibility
     Given the user clicks the button/link          link = Funding information
     When the user completes funding information
     Then the user clicks the button/link           link = Return to setup overview
-    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}   3  false  single-or-collaborative
+    And the user fills in the Competition Setup Eligibility section       ${BUSINESS_TYPE_ID}  4
 
 User can complete the Application
     [Documentation]  IFS-5158
@@ -51,18 +53,27 @@ User can finish setting up the grant transfer
     Then the user should see the element             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competitionTitle}")
     [Teardown]  Get competition id and set open date to yesterday  ${competitionTitle}
 
-Applicant user start a grant transfer
+Applicant user can start a grant transfer
     [Documentation]  IFS-5158
     [Setup]  log in as a different user    &{collaborator1_credentials}
     Given the user navigates to the page   ${server}/competition/${competitionId}/overview
     When the user clicks the button/link   jQuery = a:contains("Start new application")
     Then the user is able to go to Application overview
 
+Applicant user can complete Application details section
+     [Documentation]  IFS-5158
+     Given the user clicks the button/link                          jQuery = a:contains("Application details")
+     Then the user is able to complete Application details section  Project name  ${month}  ${nextyear}  ${lastYear}
+
 *** Keywords ***
-Custom setup
+Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
+    ${month} =  get next month
+    Set suite variable  ${month}
+    ${lastYear} =  get last year
+    Set suite variable  ${lastYear}
     Connect to database  @{database}
 
 A user starts a new competition
@@ -94,13 +105,13 @@ The user should see the read-only view of the initial details
     the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
 
 The user completes funding information
-     the user enters text to a text field    id = funders[0].funder    FunderName
-     the user enters text to a text field    id = funders[0].funderBudget    20000
-     the user enters text to a text field    id = pafNumber    2016
-     the user enters text to a text field    id = budgetCode    2004
-     the user enters text to a text field    id = activityCode    4242
-     the user clicks the button/link         id = generate-code
-     the user clicks the button/link         jQuery = button:contains("Done")
+    the user enters text to a text field    id = funders[0].funder    FunderName
+    the user enters text to a text field    id = funders[0].funderBudget    20000
+    the user enters text to a text field    id = pafNumber    2016
+    the user enters text to a text field    id = budgetCode    2004
+    the user enters text to a text field    id = activityCode    4242
+    the user clicks the button/link         id = generate-code
+    the user clicks the button/link         jQuery = button:contains("Done")
 
 The user completes Public content for H2020 registration and publishes
     the user fills in the public content competition inforation and search
@@ -133,12 +144,12 @@ The user fills in the public content summary
     the user should see the element         jQuery = div:contains("Summary") ~ .task-status-complete
 
 The user fills in public content eligibility
-    the user clicks the button/link         link = Eligibility
-    the user enters text to a text field    id = contentGroups[0].heading  Heading 1
-    the user enters text to a text field    jQuery = div.editor:first-of-type  Content 1
-    the user clicks the button/link         jQuery = button:contains("Save and review")
-    the user clicks the button/link         link = Return to public content
-    the user should see the element         jQuery = div:contains("Eligibility") ~ .task-status-complete
+    the user clicks the button/link          link = Eligibility
+    the user enters text to a text field     id = contentGroups[0].heading  Heading 1
+    the user enters text to a text field     jQuery = div.editor:first-of-type  Content 1
+    the user clicks the button/link          jQuery = button:contains("Save and review")
+    the user clicks the button/link          link = Return to public content
+    the user should see the element          jQuery = div:contains("Eligibility") ~ .task-status-complete
 
 The user fills in public content scope
     the user clicks the button/link         link = Scope
@@ -185,17 +196,49 @@ The user completes the application proccess details
     the user clicks the button/link         jQuery = .govuk-button:contains("Done")
 
 The user completes grant transfer setup
-    the user clicks the button/link             jQuery = a:contains("Complete")
-    the user clicks the button/link             css = button[type="submit"]
-    the user navigates to the page              ${CA_UpcomingComp}
+    the user clicks the button/link         jQuery = a:contains("Complete")
+    the user clicks the button/link         css = button[type="submit"]
+    the user navigates to the page          ${CA_UpcomingComp}
 
 The user is able to go to Application overview
-     the user clicks the button/link  jQuery = .govuk-button:contains("Save and continue")
-     the user should see the element  link = Project details
-     the user should see the element  link = Application team
-     the user should see the element  link = Public description
-     the user should see the element  link = Horizon 2020 grant agreement
+    the user clicks the button/link  jQuery = .govuk-button:contains("Save and continue")
+    the user should see the element  link = Application details
+    the user should see the element  link = Application team
+    the user should see the element  link = Public description
+    the user should see the element  link = Horizon 2020 grant agreement
 
-Custom teardown
+The user fills in the Competition Setup Eligibility section
+    [Arguments]  ${organisationType}  ${researchParticipation}
+    the user clicks the button/link                      link = Eligibility
+    the user clicks the button twice                     css = label[for="single-or-collaborative-single"]
+    the user selects the radio button                    researchCategoriesApplicable    false
+    the user selects the option from the drop-down menu  100%  fundingLevelPercentage
+    the user clicks the button twice                     css = label[for="lead-applicant-type-${organisationType}"]
+    the user selects the option from the drop-down menu  None     researchParticipation
+    the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
+    the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
+    the user clicks the button/link                      jQuery = button:contains("Done")
+    the user clicks the button/link                      link = Competition setup
+    the user should see the element                      jQuery = div:contains("Eligibility") ~ .task-status-complete
+    #Elements in this page need double clicking
+
+The user is able to complete Application details section
+    [Arguments]  ${projectName}  ${month}  ${nextyear}  ${lastYear}
+    the user should see the element                      jQuery = h1:contains("Application details")
+    the user enters text to a text field                 id = projectName   ${projectName}
+    the user enters text to a text field                 id = startDateMonth  ${month}
+    the user enters text to a text field                 id = startDateYear  ${lastYear}
+    the user enters text to a text field                 id = endDateMonth  ${month}
+    the user enters text to a text field                 id = endDateYear  ${nextyear}
+    the user enters text to a text field                 id = grantAgreementNumber            123456
+    the user enters text to a text field                 id = participantId                   123456789
+    the user selects the index from the drop-down menu   12  id=actionType  #(IA) Innovation action
+    the user enters text to a text field                 id = fundingContribution             123456
+    the user clicks the button/link                      jQuery = label:contains("No")
+    the user clicks the button/link                      jQuery = label:contains("No")
+    the user clicks the button/link                      id = mark-as-complete
+    the user should see the element                      jQuery = li:contains("Application details") > .task-status-complete
+
+Custom Suite Teardown
     the user closes the browser
     disconnect from database

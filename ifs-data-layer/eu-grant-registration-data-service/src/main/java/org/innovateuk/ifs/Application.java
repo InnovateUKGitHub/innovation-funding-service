@@ -9,11 +9,13 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.format.support.DefaultFormattingConversionService;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 @SpringBootApplication
+@EnableScheduling
 public class Application extends SpringBootServletInitializer {
     private static final Log LOG = LogFactory.getLog(Application.class);
 
