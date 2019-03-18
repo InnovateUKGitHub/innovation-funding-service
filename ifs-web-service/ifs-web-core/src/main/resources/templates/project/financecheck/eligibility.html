@@ -30,8 +30,8 @@
             </th:block>
         </th:block>
 
-        <h2 class="govuk-heading-m">Finances overview</h2>
-        <div class="table-overflow">
+        <h2 th:unless="${summaryModel.isH2020()}" class="govuk-heading-m">Finances overview</h2>
+        <div th:unless="${summaryModel.isH2020()}" class="table-overflow">
             <table class="govuk-table table-overview">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -68,18 +68,35 @@
             </th:block>
 
             <th:block th:unless="${summaryModel.isExternalView()}">
-                <th:block th:unless="${summaryModel.isApproved()}">
-                    <h2 class="govuk-heading-m">Project finance overview</h2>
-                    <p class="govuk-body">These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
-                    <p class="govuk-body">All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
-                    <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">Review all changes to project finances</a></p>
+                <th:block th:if="${summaryModel.isH2020()}">
+                    <th:block th:unless="${summaryModel.isApproved()}">
+                        <h2 class="govuk-heading-m">Project finance overview</h2>
+                        <p class="govuk-body">These finances were initially submitted during the request for a Horizon 2020 grant transfer.</p>
+                        <p class="govuk-body">The applicant will be able to see all saved changes. You must discuss all changes with them by raising queries through IFS.</p>
+                        <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">Review all changes to project finances</a></p>
+                    </th:block>
+
+                    <th:block th:if="${summaryModel.isApproved()}">
+                        <h2 class="govuk-heading-m">Detailed finances</h2>
+                        <p class="govuk-body">TODO</p>
+                        <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">View changes to finances</a></p></th:block>
+                    </th:block>
+
+                <th:block th:unless="${summaryModel.isH2020()}">
+                    <th:block th:unless="${summaryModel.isApproved()}">
+                        <h2 class="govuk-heading-m">Project finance overview</h2>
+                        <p class="govuk-body">These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
+                        <p class="govuk-body">All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
+                        <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">Review all changes to project finances</a></p>
+                    </th:block>
+
+                    <th:block th:if="${summaryModel.isApproved()}">
+                        <h2 class="govuk-heading-m">Detailed finances</h2>
+                        <p class="govuk-body">These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
+                        <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">View changes to finances</a></p>
+                    </th:block>
                 </th:block>
 
-                <th:block th:if="${summaryModel.isApproved()}">
-                    <h2 class="govuk-heading-m">Detailed finances</h2>
-                    <p class="govuk-body">These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
-                    <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">View changes to finances</a></p>
-                </th:block>
             </th:block>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data"
@@ -135,7 +152,7 @@
             <th:block th:unless="${summaryModel.isApproved()}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>
                 <p class="govuk-body">After making any necessary changes, the eligible costs should be approved.</p>
-                <p class="govuk-body">Make sure the partner has reviewed and understood all changes before you approve.</p>
+                <p th:unless="${summaryModel.isH2020()}" class="govuk-body">Make sure the partner has reviewed and understood all changes before you approve.</p>
                 <div class="govuk-form-group">
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item" data-target="add-rag-rating">
@@ -145,8 +162,11 @@
                                    th:field="*{confirmEligibilityChecked}"
                                    data-switches-button-status="#confirm-button" />
                             <label for="project-eligible"
-                                   class="govuk-label govuk-checkboxes__label">
-                                These funding costs have been reviewed and are acceptable
+                                   class="govuk-label govuk-checkboxes__label"
+                                   th:text="${summaryModel.isH2020()?
+                                   'These funding costs have been reviewed against the EU Reconciliation report and are acceptable' :
+                                   'These funding costs have been reviewed and are acceptable'}">
+
                             </label>
                         </div>
                     </div>
