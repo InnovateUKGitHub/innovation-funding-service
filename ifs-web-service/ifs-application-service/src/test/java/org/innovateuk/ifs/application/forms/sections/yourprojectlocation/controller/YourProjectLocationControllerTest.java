@@ -62,7 +62,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
     private CommonYourFinancesViewModel commonFinancesViewModel =
-            new CommonYourFinancesViewModel("/finances", "Application name", 1L, 2L, false, true);
+            new CommonYourFinancesViewModel("/finances", "Application name", 1L, 2L, false, false, true);
 
     @Test
     public void viewPage() throws Exception {
@@ -250,7 +250,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     }
 
     private void assertPostcodeValidationErrorsWhenMarkingAsComplete(String invalidPostcode) throws Exception {
-
+        
         YourProjectLocationForm form = new YourProjectLocationForm(invalidPostcode.trim());
 
         when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, false)).thenReturn(commonFinancesViewModel);

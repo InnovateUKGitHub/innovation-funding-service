@@ -1,0 +1,27 @@
+=== Get project monitoring officer by id
+==== Request
+include::{snippets}/monitoring-officer/get-project-monitoring-officer/http-request.adoc[]
+include::{snippets}/monitoring-officer/get-project-monitoring-officer/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/monitoring-officer/get-project-monitoring-officer/http-response.adoc[]
+include::{snippets}/monitoring-officer/get-project-monitoring-officer/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/monitoring-officer/get-project-monitoring-officer/curl-request.adoc[]
+
+=== Assign project monitoring officer
+==== Request
+include::{snippets}/monitoring-officer/assign-project-to-monitoring-officer/http-request.adoc[]
+include::{snippets}/monitoring-officer/assign-project-to-monitoring-officer/path-parameters.adoc[]
+
+==== Curl Example
+include::{snippets}/monitoring-officer/assign-project-to-monitoring-officer/curl-request.adoc[]
+
+=== Unassign project monitoring officer
+==== Request
+include::{snippets}/monitoring-officer/unassign-project-from-monitoring-officer/http-request.adoc[]
+include::{snippets}/monitoring-officer/unassign-project-from-monitoring-officer/path-parameters.adoc[]
+
+==== Curl Example
+include::{snippets}/monitoring-officer/unassign-project-from-monitoring-officer/curl-request.adoc[]

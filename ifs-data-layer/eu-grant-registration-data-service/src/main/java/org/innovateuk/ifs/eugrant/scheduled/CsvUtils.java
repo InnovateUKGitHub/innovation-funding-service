@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.eugrant.scheduled.ScheduledEuGrantFileImporter.createServiceFailureFromIoException;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -32,7 +33,7 @@ public class CsvUtils {
 
                 try {
                     List<String[]> data = reader.readAll();
-                    List<List<String>> dataInLists = simpleMap(data, Arrays::asList);
+                    List<List<String>> dataInLists = simpleMap(data, CsvUtils::trim);
                     return serviceSuccess(dataInLists);
                 } catch (IOException e) {
                     return createServiceFailureFromIoException(e);
@@ -42,6 +43,10 @@ public class CsvUtils {
         } catch (IOException e) {
             return createServiceFailureFromIoException(e);
         }
+    }
+
+    private static List<String> trim(String[] data) {
+        return Arrays.stream(data).map(String::trim).collect(toList());
     }
 
     /**

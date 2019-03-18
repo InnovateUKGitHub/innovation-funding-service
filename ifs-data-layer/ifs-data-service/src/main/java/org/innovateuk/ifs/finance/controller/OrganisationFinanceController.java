@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.transactional.SectionStatusService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -304,7 +303,7 @@ public class OrganisationFinanceController {
 
     public void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
         CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
-        if (competition.getFundingType() != FundingType.PROCUREMENT) {
+        if (!competition.isFullyFunded()) {
 
             final ProcessRoleResource processRole =
                     usersRolesService.getAssignableProcessRolesByApplicationId(applicationFinance.getApplication()).getSuccess().stream()

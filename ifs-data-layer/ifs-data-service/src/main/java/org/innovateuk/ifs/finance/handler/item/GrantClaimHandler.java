@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
@@ -70,7 +69,7 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
 
     private ApplicationFinanceRow initializeFundingLevel(Competition competition) {
         GrantClaim costItem = new GrantClaim();
-        if (competition.getFundingType() == FundingType.PROCUREMENT) {
+        if (competition.isFullyFunded()) {
             costItem.setGrantClaimPercentage(100);
         } else {
             costItem.setGrantClaimPercentage(null);
