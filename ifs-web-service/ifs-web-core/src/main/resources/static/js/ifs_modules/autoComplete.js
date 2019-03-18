@@ -13,7 +13,9 @@ IFS.core.autoComplete = (function () {
         var showAllValues = autoCompleteElement.children('option').length <= 20
         s.autoCompletePlugin.enhanceSelectElement({
           selectElement: autoCompleteElement[0],
-          showAllValues: showAllValues
+          showAllValues: showAllValues,
+          defaultValue: '',
+          confirmOnBlur: false
         })
       }
     }
