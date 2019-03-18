@@ -35,8 +35,6 @@
     </dl>
     <div th:unless="${model.closed}"
          th:class="${(model.complete and !model.summary) or (!model.complete and model.canMarkAsComplete) or (model.canMarkAsComplete) ? 'form-footer govuk-!-margin-top-6' : ''}">
-        <!--/* 'Mark as complete' / 'Edit' links */-->
-        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
         <!--/* 'Return and edit' link */-->
         <th:block th:if="${model.canMarkAsComplete}"
                   th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
@@ -45,8 +43,8 @@
 
 <th:block th:fragment="grant_agreement(model)">
     <th:block th:if="${model.filename != null}">
-        <a th:href="@{/application/{applicationId}/grant-agreement(applicationId=${model.applicationId})}"
-           th:text="${model.filename}"
+    <!--/* don't use @{...} so that URL is always pointing to application service */-->
+    <a th:href="${'/application/' + model.applicationId +'/grant-agreement'}" th:text="${model.filename}"
            target="_blank"
            class="govuk-link">File</a>
     </th:block>
@@ -55,8 +53,6 @@
     </th:block>
     <div th:unless="${model.closed}"
          th:class="${(model.complete and !model.summary) or (!model.complete and model.canMarkAsComplete) or (model.canMarkAsComplete) ? 'form-footer govuk-!-margin-top-6' : ''}">
-        <!--/* 'Mark as complete' / 'Edit' links */-->
-        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
         <!--/* 'Return and edit' link */-->
         <th:block th:if="${model.canMarkAsComplete}"
                   th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
