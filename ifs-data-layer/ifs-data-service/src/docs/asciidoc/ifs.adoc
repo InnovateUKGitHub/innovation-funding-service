@@ -244,6 +244,7 @@ include::project-finance.adoc[]
 include::project-finance-queries.adoc[]
 include::project-finance-attachments.adoc[]
 include::project-invite.adoc[]
+include::project-monitoring-officer.adoc[]
 
 [[applicationCountSummary]]
 == ApplicationCountSummary

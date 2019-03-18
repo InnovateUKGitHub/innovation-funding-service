@@ -16,7 +16,7 @@ public class EuGrantTransfer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="application_id", referencedColumnName="id")
     private Application application;
 
@@ -30,7 +30,7 @@ public class EuGrantTransfer {
 
     private BigDecimal fundingContribution;
 
-    private boolean projectCoordinator;
+    private Boolean projectCoordinator;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eu_action_type_id")
@@ -88,11 +88,11 @@ public class EuGrantTransfer {
         this.fundingContribution = fundingContribution;
     }
 
-    public boolean isProjectCoordinator() {
+    public Boolean getProjectCoordinator() {
         return projectCoordinator;
     }
 
-    public void setProjectCoordinator(boolean projectCoordinator) {
+    public void setProjectCoordinator(Boolean projectCoordinator) {
         this.projectCoordinator = projectCoordinator;
     }
 

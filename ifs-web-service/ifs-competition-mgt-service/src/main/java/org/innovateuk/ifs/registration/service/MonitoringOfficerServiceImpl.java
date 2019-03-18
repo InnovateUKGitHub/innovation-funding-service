@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.service.CompetitionSetupMonitoringOfficerRestService;
+import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 import org.innovateuk.ifs.registration.form.MonitoringOfficerRegistrationForm;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
 
     @Autowired
-    private CompetitionSetupMonitoringOfficerRestService competitionSetupMonitoringOfficerRestService;
+    private MonitoringOfficerRegistrationRestService competitionSetupMonitoringOfficerRestService;
 
     @Override
     public ServiceResult<Void> createMonitoringOfficer(String inviteHash, MonitoringOfficerRegistrationForm monitoringOfficerRegistrationForm) {

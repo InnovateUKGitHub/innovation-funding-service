@@ -39,7 +39,8 @@
 
             <div class="govuk-!-margin-top-6">
 
-                <p class="govuk-body" th:if="${!commonFinancesModel.readOnly}">Where will most of the project work take place?</p>
+                <p class="govuk-body" th:if="${!commonFinancesModel.readOnly}"
+                   th:text="${commonFinancesModel.isH2020()? 'Provide us with the postcode of the primary project location.' : 'Where will most of the project work take place?'}"> </p>
 
                 <th:block th:insert="fragments/form-elements/textfield ::
                     textfield(
