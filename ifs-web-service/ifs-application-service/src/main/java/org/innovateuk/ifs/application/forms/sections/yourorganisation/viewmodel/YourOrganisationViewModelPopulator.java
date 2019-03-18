@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.stereotype.Component;
@@ -16,16 +18,21 @@ public class YourOrganisationViewModelPopulator {
 
     private YourOrganisationRestService yourOrganisationRestService;
     private SectionService sectionService;
+    private CompetitionRestService competitionRestService;
 
     public YourOrganisationViewModelPopulator(
             YourOrganisationRestService yourOrganisationRestService,
-            SectionService sectionService) {
+            SectionService sectionService,
+            CompetitionRestService competitionRestService) {
 
         this.yourOrganisationRestService = yourOrganisationRestService;
         this.sectionService = sectionService;
+        this.competitionRestService = competitionRestService;
     }
 
     public YourOrganisationViewModel populate(long applicationId, long competitionId, long organisationId) {
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         boolean showStateAidAgreement =
                 yourOrganisationRestService.isShowStateAidAgreement(applicationId, organisationId).getSuccess();
@@ -37,6 +44,6 @@ public class YourOrganisationViewModelPopulator {
             return completedSectionIds.contains(fundingSection.getId());
         }).orElse(false);
 
-        return new YourOrganisationViewModel(showStateAidAgreement, fundingSectionComplete);
+        return new YourOrganisationViewModel(showStateAidAgreement, fundingSectionComplete, competition.isH2020());
     }
 }
