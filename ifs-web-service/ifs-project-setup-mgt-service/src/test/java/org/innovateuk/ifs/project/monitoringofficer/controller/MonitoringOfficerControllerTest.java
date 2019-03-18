@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
@@ -14,16 +13,16 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Optional;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,7 +42,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
     @Before
     public void logInCompAdminUser() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
     }
 
     @Test
@@ -67,9 +66,12 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
     @Test
     public void testMonitoringOfficerCreateUrlWhenUserIsFoundButIsNotMonitoringOfficer() throws Exception {
-        Optional<UserResource> userResourceOptional = of(newUserResource().withEmail("123@test.com").withId(999L).build());
+        Optional<UserResource> userResourceOptional = of(newUserResource()
+                .withEmail("123@test.com")
+                .withId(999L)
+                .withRoleGlobal(COMP_ADMIN)
+                .build());
         when(userService.findUserByEmail(anyString())).thenReturn(userResourceOptional);
-        when(userService.existsAndHasRole(anyLong(), any(Role.class))).thenReturn(FALSE);
         MvcResult mvcResult = mockMvc.perform(post("/monitoring-officer/create")
                 .param("emailAddress", "123@test.com"))
                 .andReturn();
@@ -79,9 +81,12 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
     @Test
     public void testMonitoringOfficerCreateUrlWhenUserIsFoundAndIsMonitoringOfficer() throws Exception {
-        Optional<UserResource> userResourceOptional = of(newUserResource().withEmail("123@test.com").withId(999L).build());
+        Optional<UserResource> userResourceOptional = of(newUserResource()
+                .withEmail("123@test.com")
+                .withId(999L)
+                .withRoleGlobal(MONITORING_OFFICER)
+                .build());
         when(userService.findUserByEmail(anyString())).thenReturn(userResourceOptional);
-        when(userService.existsAndHasRole(anyLong(), any(Role.class))).thenReturn(TRUE);
         MvcResult mvcResult = mockMvc.perform(post("/monitoring-officer/create")
                 .param("emailAddress", "123@test.com"))
                 .andReturn();

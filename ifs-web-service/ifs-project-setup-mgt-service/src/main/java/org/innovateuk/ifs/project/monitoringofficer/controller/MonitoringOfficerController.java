@@ -50,12 +50,18 @@ public class MonitoringOfficerController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute(FORM) MonitoringOfficerSearchByEmailForm form, Model model) {
+    public String create(@Valid @ModelAttribute(FORM) MonitoringOfficerSearchByEmailForm form,
+                         BindingResult bindingResult,
+                         ValidationHandler validationHandler,
+                         Model model) {
+        if (validationHandler.hasErrors()) {
+            return "project/monitoring-officer/search-by-email";
+        }
         Optional<UserResource> userByEmail = userService.findUserByEmail(form.getEmailAddress());
         if (userByEmail.isPresent()) {
-            Long userId = userByEmail.get().getId();
-            if (userService.existsAndHasRole(userId, MONITORING_OFFICER)) {
-                return monitoringOfficerProjectsRedirect(userId);
+            UserResource userResource = userByEmail.get();
+            if (userResource.hasRole(MONITORING_OFFICER)) {
+                return monitoringOfficerProjectsRedirect(userResource.getId());
             }
             return "project/monitoring-officer/assign-role";
         }
