@@ -1,33 +1,53 @@
 package org.innovateuk.ifs.application.populator.granttransfer;
 
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.populator.researchCategory.AbstractLeadOnlyModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantAgreementSummaryViewModel;
 import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantTransferDetailsSummaryViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.innovateuk.ifs.granttransfer.service.ActionTypeRestService;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
-public class GrantTransferSummaryPopulator {
+public class GrantTransferSummaryPopulator extends AbstractLeadOnlyModelPopulator {
 
     private final EuGrantTransferRestService grantTransferRestService;
     private final ActionTypeRestService actionTypeRestService;
+    private final QuestionRestService questionRestService;
 
-    public GrantTransferSummaryPopulator(EuGrantTransferRestService grantTransferRestService, ActionTypeRestService actionTypeRestService) {
+    public GrantTransferSummaryPopulator(ApplicantRestService applicantRestService, QuestionRestService questionRestService, EuGrantTransferRestService grantTransferRestService, ActionTypeRestService actionTypeRestService, QuestionRestService questionRestService1) {
+        super(applicantRestService, questionRestService);
         this.grantTransferRestService = grantTransferRestService;
         this.actionTypeRestService = actionTypeRestService;
+        this.questionRestService = questionRestService1;
     }
 
-    public GrantTransferDetailsSummaryViewModel populateDetails(ApplicationResource application) {
+    public GrantTransferDetailsSummaryViewModel populateDetails(ApplicationResource application,
+                                                                long loggedInUserId,
+                                                                boolean userIsLeadApplicant) {
         Optional<EuGrantTransferResource> grantTransferResource = grantTransferRestService.findDetailsByApplicationId(application.getId()).getOptionalSuccessObject();
+
+        QuestionResource question = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(application.getCompetition(), QuestionSetupType.GRANT_TRANSFER_DETAILS).getSuccess();
+
+        boolean isComplete = isComplete(application, loggedInUserId, QuestionSetupType.GRANT_TRANSFER_DETAILS);
+        boolean allReadOnly = !userIsLeadApplicant || isComplete;
 
         if (grantTransferResource.isPresent()) {
             return new GrantTransferDetailsSummaryViewModel(
+                    question.getId(),
+                    application.getId(),
+                    isApplicationSubmitted(application) || !isCompetitionOpen(application),
+                    isComplete,
+                    userIsLeadApplicant,
+                    allReadOnly,
                     grantTransferResource.get().getGrantAgreementNumber(),
                     grantTransferResource.get().getParticipantId(),
                     grantTransferResource.get().getProjectName(),
@@ -37,15 +57,35 @@ public class GrantTransferSummaryPopulator {
                     grantTransferResource.get().getProjectCoordinator(),
                     grantTransferResource
                             .map(EuGrantTransferResource::getActionType)
-                            .map(EuActionTypeResource::getName)
                             .orElse(null)
             );
         }
-        return GrantTransferDetailsSummaryViewModel.empty();
+        return new GrantTransferDetailsSummaryViewModel(
+                question.getId(),
+                application.getId(),
+                isApplicationSubmitted(application) || !isCompetitionOpen(application),
+                isComplete,
+                userIsLeadApplicant,
+                allReadOnly);
     }
 
-    public GrantAgreementSummaryViewModel populateAgreement(ApplicationResource application) {
+    public GrantAgreementSummaryViewModel populateAgreement(ApplicationResource application,
+                                                            long loggedInUserId,
+                                                            boolean userIsLeadApplicant) {
+        QuestionResource question = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(application.getCompetition(), QuestionSetupType.GRANT_TRANSFER_DETAILS).getSuccess();
+
+        boolean isComplete = isComplete(application, loggedInUserId, QuestionSetupType.GRANT_AGREEMENT);
+        boolean allReadOnly = !userIsLeadApplicant || isComplete;
+
+
         Optional<FileEntryResource> grantAgreement = grantTransferRestService.findGrantAgreement(application.getId()).getOptionalSuccessObject();
-        return new GrantAgreementSummaryViewModel(grantAgreement.map(FileEntryResource::getName).orElse(null));
+        return new GrantAgreementSummaryViewModel(
+                question.getId(),
+                application.getId(),
+                isApplicationSubmitted(application) || !isCompetitionOpen(application),
+                isComplete,
+                userIsLeadApplicant,
+                allReadOnly,
+                grantAgreement.map(FileEntryResource::getName).orElse(null));
     }
 }

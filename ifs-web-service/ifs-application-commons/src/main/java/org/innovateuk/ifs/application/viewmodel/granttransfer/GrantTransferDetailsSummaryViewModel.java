@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.application.viewmodel.granttransfer;
 
+import org.innovateuk.ifs.application.viewmodel.AbstractLeadOnlyViewModel;
+import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class GrantTransferDetailsSummaryViewModel {
+public class GrantTransferDetailsSummaryViewModel extends AbstractLeadOnlyViewModel {
 
     private final String grantAgreementNumber;
 
@@ -19,13 +22,14 @@ public class GrantTransferDetailsSummaryViewModel {
 
     private final  Boolean projectCoordinator;
 
-    private final  String actionType;
+    private final EuActionTypeResource actionType;
 
-    private GrantTransferDetailsSummaryViewModel() {
-        this(null, null, null, null, null, null, null, null);
+    public GrantTransferDetailsSummaryViewModel(Long questionId, Long applicationId, boolean closed, boolean complete, boolean canMarkAsComplete, boolean allReadOnly) {
+        this(questionId, applicationId, closed, complete, canMarkAsComplete, allReadOnly,null, null, null, null, null, null, null, null);
     }
 
-    public GrantTransferDetailsSummaryViewModel(String grantAgreementNumber, String participantId, String projectName, LocalDate startDate, LocalDate endDate, BigDecimal fundingContribution, Boolean projectCoordinator, String actionType) {
+    public GrantTransferDetailsSummaryViewModel(Long questionId, Long applicationId, boolean closed, boolean complete, boolean canMarkAsComplete, boolean allReadOnly, String grantAgreementNumber, String participantId, String projectName, LocalDate startDate, LocalDate endDate, BigDecimal fundingContribution, Boolean projectCoordinator, EuActionTypeResource actionType) {
+        super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadOnly);
         this.grantAgreementNumber = grantAgreementNumber;
         this.participantId = participantId;
         this.projectName = projectName;
@@ -64,11 +68,12 @@ public class GrantTransferDetailsSummaryViewModel {
         return projectCoordinator;
     }
 
-    public String getActionType() {
+    public EuActionTypeResource getActionType() {
         return actionType;
     }
 
-    public static GrantTransferDetailsSummaryViewModel empty() {
-        return new GrantTransferDetailsSummaryViewModel();
+    @Override
+    public boolean isSummary() {
+        return true;
     }
 }

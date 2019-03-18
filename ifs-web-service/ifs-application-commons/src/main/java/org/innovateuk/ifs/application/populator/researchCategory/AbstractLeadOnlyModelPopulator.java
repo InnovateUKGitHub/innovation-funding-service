@@ -5,6 +5,7 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
@@ -27,9 +28,9 @@ public abstract class AbstractLeadOnlyModelPopulator {
         return applicationResource.isSubmitted();
     }
 
-    protected boolean isComplete(ApplicationResource applicationResource, long loggedInUserId) {
+    protected boolean isComplete(ApplicationResource applicationResource, long loggedInUserId, QuestionSetupType questionSetupType) {
         return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(
-                applicationResource.getCompetition(), RESEARCH_CATEGORY).handleSuccessOrFailure(
+                applicationResource.getCompetition(), questionSetupType).handleSuccessOrFailure(
                 failure -> false,
                 success -> {
                     ApplicantQuestionResource question = applicantRestService.getQuestion(loggedInUserId,

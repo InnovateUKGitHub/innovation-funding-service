@@ -69,8 +69,8 @@ public class ApplicationSummaryViewModelPopulator {
         GrantAgreementSummaryViewModel grantAgreementSummaryViewModel = null;
 
         if (competition.isH2020()) {
-            grantTransferDetailsSummaryViewModel = grantTransferSummaryPopulator.populateDetails(application);
-            grantAgreementSummaryViewModel = grantTransferSummaryPopulator.populateAgreement(application);
+            grantTransferDetailsSummaryViewModel = grantTransferSummaryPopulator.populateDetails(application, user.getId(), userIsLeadApplicant);
+            grantAgreementSummaryViewModel = grantTransferSummaryPopulator.populateAgreement(application, user.getId(), userIsLeadApplicant);
         }
 
         return new ApplicationSummaryViewModel(

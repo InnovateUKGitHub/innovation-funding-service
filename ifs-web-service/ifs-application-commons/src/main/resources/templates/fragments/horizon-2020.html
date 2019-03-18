@@ -2,38 +2,63 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="grant_transfer_details(model)">
-    <!--/* <dl class="govuk-list">
+    <dl class="govuk-list">
         <dt>Project name</dt>
         <dd th:text="${model.projectName}">My EU project name</dd>
         <dt>Project start date</dt>
-        <dd th:text="${#temporals.format(model.startDate, 'MMMM yyyy')}">
+        <dd th:if="${model.startDate != null}" th:text="${#temporals.format(model.startDate, 'MMMM yyyy')}">
             March 2017
         </dd>
+        <dd th:unless="${model.startDate != null}"></dd>
         <dt>Project end date</dt>
-        <dd th:text="${#temporals.format(model.endDate, 'MMMM yyyy')}">
+        <dd th:if="${model.endDate != null}" th:text="${#temporals.format(model.endDate, 'MMMM yyyy')}">
             March 2019
         </dd>
+        <dd th:unless="${model.endDate != null}"></dd>
         <dt>Grant agreement number</dt>
         <dd th:text="${model.grantAgreementNumber}">123456</dd>
         <dt>Participant identification code (PIC)</dt>
         <dd th:text="${model.participantId}">12345689</dd>
         <dt>Type of action</dt>
-        <dd th:text="${'(' + model.actionType.name + ') ' + model.actionType.description}">(COFUND-EJP) COFUND (European
+        <dd th:if="${model.actionType != null}" th:text="${'(' + model.actionType.name + ') ' + model.actionType.description}">(COFUND-EJP) COFUND (European
             Joint Programme)
         </dd>
+        <dd th:unless="${model.actionType != null}"></dd>
         <dt>EU funding contribution for above project (EUR)</dt>
         <dd th:text="${model.fundingContribution}">€100</dd>
         <dt>Is your organisation the project co-ordinator on this project?</dt>
-        <dd th:if="${model.projectCoordinator}">Yes</dd>
-        <dd th:unless="${model.projectCoordinator}">No</dd>
+        <th:block th:if="${model.fundingContribution != null}">
+            <dd th:if="${model.projectCoordinator}">Yes</dd>
+            <dd th:unless="${model.projectCoordinator}">No</dd>
+        </th:block>
+        <dd th:unless="${model.fundingContribution != null}"></dd>
     </dl>
-    */-->
+    <div th:unless="${model.closed}"
+         th:class="${(model.complete and !model.summary) or (!model.complete and model.canMarkAsComplete) or (model.canMarkAsComplete) ? 'form-footer govuk-!-margin-top-6' : ''}">
+        <!--/* 'Mark as complete' / 'Edit' links */-->
+        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
+        <!--/* 'Return and edit' link */-->
+        <th:block th:if="${model.canMarkAsComplete}"
+                  th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
+    </div>
 </th:block>
 
 <th:block th:fragment="grant_agreement(model)">
-    <!--/* <a th:href="@{/application/{applicationId}/form/question/{questionId}/grant-agreement/download(applicationId=${model.applicationId},questionId=${model.questionId})}"
-       th:text="${model.filename}"
-       target="_blank"
-       class="govuk-link">File</a>
-       */-->
+    <th:block th:if="${model.filename != null}">
+        <a th:href="@{/application/{applicationId}/grant-agreement(applicationId=${model.applicationId})}"
+           th:text="${model.filename}"
+           target="_blank"
+           class="govuk-link">File</a>
+    </th:block>
+    <th:block th:unless="${model.filename != null}">
+        <p class="govuk-body">No file uploaded</p>
+    </th:block>
+    <div th:unless="${model.closed}"
+         th:class="${(model.complete and !model.summary) or (!model.complete and model.canMarkAsComplete) or (model.canMarkAsComplete) ? 'form-footer govuk-!-margin-top-6' : ''}">
+        <!--/* 'Mark as complete' / 'Edit' links */-->
+        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
+        <!--/* 'Return and edit' link */-->
+        <th:block th:if="${model.canMarkAsComplete}"
+                  th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
+    </div>
 </th:block>
