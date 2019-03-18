@@ -93,7 +93,7 @@ public class EuGrantControllerTest extends MockMvcTest<EuGrantController> {
 
         long totalSubmitted = 987L;
 
-        when(euGrantService.getTotalSubmitted())
+        when(euGrantService.getTotalSubmittedExcludingResearch())
                 .thenReturn(serviceSuccess(totalSubmitted));
 
         mockMvc.perform(
@@ -101,6 +101,6 @@ public class EuGrantControllerTest extends MockMvcTest<EuGrantController> {
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(totalSubmitted)));
 
-        verify(euGrantService).getTotalSubmitted();
+        verify(euGrantService).getTotalSubmittedExcludingResearch();
     }
 }
