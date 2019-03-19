@@ -9,6 +9,7 @@ import org.junit.Test;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -70,6 +71,21 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
                 assertTrue(rules.internalUserCanDownloadDocument(project, user));
             } else {
                 assertFalse(rules.internalUserCanDownloadDocument(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void monitoringOfficerCanDownloadDocument() {
+        ProjectResource project = newProjectResource().build();
+
+        setupMonitoringOfficerExpectations(project, monitoringOfficerUser(), true);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isMonitoringOfficer(user)) {
+                assertTrue(rules.monitoringOfficerCanDownloadDocument(project, monitoringOfficerUser()));
+            } else {
+                assertFalse(rules.monitoringOfficerCanDownloadDocument(project, user));
             }
         });
     }

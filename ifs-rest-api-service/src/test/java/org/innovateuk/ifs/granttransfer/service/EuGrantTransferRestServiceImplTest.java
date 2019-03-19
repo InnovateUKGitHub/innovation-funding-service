@@ -3,10 +3,12 @@ package org.innovateuk.ifs.granttransfer.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResourceBuilder.newEuGrantTransferResource;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -54,10 +56,32 @@ public class EuGrantTransferRestServiceImplTest extends BaseRestServiceUnitTest<
 
     @Test
     public void downloadGrantAgreement() {
-        final long applicationId= 912L;
+        final long applicationId = 912L;
         ByteArrayResource expected = new ByteArrayResource("1u6536748".getBytes());
         setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "grant-agreement", applicationId), ByteArrayResource.class, expected, OK);
         final ByteArrayResource response = service.downloadGrantAgreement(applicationId).getSuccess();
         assertSame(expected, response);
+    }
+
+    @Test
+    public void findDetailsByApplicationId() {
+        final long applicationId = 912L;
+        EuGrantTransferResource euGrantTransferResource = newEuGrantTransferResource().build();
+        setupGetWithRestResultExpectations(format("%s/%s", REST_URL, applicationId), EuGrantTransferResource.class, euGrantTransferResource, OK);
+
+        RestResult<EuGrantTransferResource> result = service.findDetailsByApplicationId(applicationId);
+
+        assertSame(euGrantTransferResource, result.getSuccess());
+    }
+
+    @Test
+    public void updateGrantTransferDetails() {
+        final long applicationId = 912L;
+        EuGrantTransferResource euGrantTransferResource = newEuGrantTransferResource().build();
+        setupPostWithRestResultExpectations(format("%s/%s", REST_URL, applicationId), euGrantTransferResource, OK);
+
+        RestResult<Void> result = service.updateGrantTransferDetails(euGrantTransferResource, applicationId);
+
+        assertTrue(result.isSuccess());
     }
 }

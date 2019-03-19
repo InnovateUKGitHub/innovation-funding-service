@@ -46,6 +46,7 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
         assertAccessDenied(() -> classUnderTest.getFileContents(123L, 2L), () -> {
             verify(documentPermissionRules).partnersCanDownloadDocument(project, getLoggedInUser());
             verify(documentPermissionRules).internalUserCanDownloadDocument(project, getLoggedInUser());
+            verify(documentPermissionRules).monitoringOfficerCanDownloadDocument(project, getLoggedInUser());
             verifyNoMoreInteractions(documentPermissionRules);
         });
     }
@@ -60,6 +61,7 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
         assertAccessDenied(() -> classUnderTest.getFileEntryDetails(123L, 2L), () -> {
             verify(documentPermissionRules).partnersCanDownloadDocument(project, getLoggedInUser());
             verify(documentPermissionRules).internalUserCanDownloadDocument(project, getLoggedInUser());
+            verify(documentPermissionRules).monitoringOfficerCanDownloadDocument(project, getLoggedInUser());
             verifyNoMoreInteractions(documentPermissionRules);
         });
     }

@@ -33,6 +33,7 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -90,7 +91,10 @@ public class OrganisationFinanceHandlerTest {
         MockitoAnnotations.initMocks(this);
         when(financeRowRepositoryMock.saveAll(anyList())).then(returnsFirstArg());
 
-        competition = newCompetition().withFundingType(FundingType.GRANT).build();
+        competition = newCompetition()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionType(newCompetitionType().withName("Horizon 2020").build())
+                .build();
         application = newApplication().withCompetition(competition).build();
         applicationFinance = newApplicationFinance().withApplication(application).build();
         costTypeQuestion = new HashMap<>();

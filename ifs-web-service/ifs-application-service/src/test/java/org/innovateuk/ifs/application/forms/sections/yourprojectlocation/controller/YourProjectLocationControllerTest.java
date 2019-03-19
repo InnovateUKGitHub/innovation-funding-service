@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.controller;
 
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModel;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationFormPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel.YourProjectLocationViewModel;
-import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.viewmodel.YourProjectLocationViewModelPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCTest<YourProjectLocationController> {
 
     @Mock
-    private YourProjectLocationViewModelPopulator viewModelPopulatorMock;
+    private CommonYourFinancesViewModelPopulator commonYourFinancesViewModelPopulatorMock;
 
     @Mock
     private YourProjectLocationFormPopulator formPopulatorMock;
@@ -61,6 +61,9 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
+    private CommonYourFinancesViewModel commonFinancesViewModel =
+            new CommonYourFinancesViewModel("/finances", "Application name", 1L, 2L, false, false, true);
+
     @Test
     public void viewPage() throws Exception {
         assertViewPageSuccessful(false);
@@ -74,12 +77,9 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
     private void assertViewPageSuccessful(boolean internalUser) throws Exception {
 
-        YourProjectLocationViewModel viewModel =
-                new YourProjectLocationViewModel(false, "", "", applicationId, sectionId, true);
-
         YourProjectLocationForm form = new YourProjectLocationForm("S2 5AB");
 
-        when(viewModelPopulatorMock.populate(organisationId, applicationId, sectionId, internalUser)).thenReturn(viewModel);
+        when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, internalUser)).thenReturn(commonFinancesViewModel);
         when(formPopulatorMock.populate(applicationId, organisationId)).thenReturn(form);
 
         MvcResult result = mockMvc.perform(get("/application/{applicationId}/form/your-project-location/" +
@@ -90,10 +90,10 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
         Map<String, Object> model = result.getModelAndView().getModel();
 
-        assertThat(model.get("model")).matches(futureMatcher(viewModel));
+        assertThat(model.get("commonFinancesModel")).matches(futureMatcher(commonFinancesViewModel));
         assertThat(model.get("form")).matches(futureMatcher(form));
 
-        verify(viewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, internalUser);
+        verify(commonYourFinancesViewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, internalUser);
         verify(formPopulatorMock, times(1)).populate(applicationId, organisationId);
 
         verifyNoMoreInteractionsWithMocks();
@@ -250,13 +250,10 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     }
 
     private void assertPostcodeValidationErrorsWhenMarkingAsComplete(String invalidPostcode) throws Exception {
-
-        YourProjectLocationViewModel viewModel =
-                new YourProjectLocationViewModel(false, "", "", applicationId, sectionId, true);
-
+        
         YourProjectLocationForm form = new YourProjectLocationForm(invalidPostcode.trim());
 
-        when(viewModelPopulatorMock.populate(organisationId, applicationId, sectionId, false)).thenReturn(viewModel);
+        when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, false)).thenReturn(commonFinancesViewModel);
 
         mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
@@ -264,12 +261,11 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
                 .param("mark-as-complete", ""))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("application/sections/your-project-location/your-project-location"))
-                .andExpect(model().attribute("model", viewModel))
+                .andExpect(model().attribute("commonFinancesModel", commonFinancesViewModel))
                 .andExpect(model().attribute("form", form))
                 .andExpect(model().attributeHasFieldErrorCode("form", "postcode", "APPLICATION_PROJECT_LOCATION_REQUIRED"));
 
-        verify(viewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, false);
-
+        verify(commonYourFinancesViewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, false);
         verifyNoMoreInteractionsWithMocks();
     }
 
@@ -296,7 +292,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     }
 
     private void verifyNoMoreInteractionsWithMocks() {
-        verifyNoMoreInteractions(viewModelPopulatorMock, formPopulatorMock, applicationFinanceRestServiceMock,
+        verifyNoMoreInteractions(formPopulatorMock, applicationFinanceRestServiceMock,
                 sectionServiceMock, userRestServiceMock);
     }
 
@@ -322,7 +318,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     protected YourProjectLocationController supplyControllerUnderTest() {
 
         return new YourProjectLocationController(
-                viewModelPopulatorMock,
+                commonYourFinancesViewModelPopulatorMock,
                 formPopulatorMock,
                 applicationFinanceRestServiceMock,
                 sectionServiceMock,

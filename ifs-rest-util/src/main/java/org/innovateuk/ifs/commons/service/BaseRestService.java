@@ -246,4 +246,3 @@ public abstract class BaseRestService {
         return buildPaginationUri(url, pageNumber, pageSize, null, new LinkedMultiValueMap<>(), uriParameters);
     }
 }
-

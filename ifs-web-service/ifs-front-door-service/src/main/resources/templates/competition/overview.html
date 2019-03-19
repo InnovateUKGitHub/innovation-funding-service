@@ -11,11 +11,11 @@
         <th:block th:insert="fragments/layout :: phase-banner" />
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkUrl='/competition/search'" />
         <main class="govuk-main-wrapper" id="main-content" role="main">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},subTitle='Funding competition',size='govuk-heading-l'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},subTitle=${model.h2020 ? '' : 'Funding competition'},size='govuk-heading-l'" />
 
             <p class="govuk-body wysiwyg-styles" ifs:utext="${model.shortDescription}"></p>
 
-            <ul class="govuk-list">
+            <ul th:unless="${model.h2020}" class="govuk-list">
                 <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMMM yyyy')}"></span></li>
 
                 <li th:unless="${model.nonIfs}" th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},

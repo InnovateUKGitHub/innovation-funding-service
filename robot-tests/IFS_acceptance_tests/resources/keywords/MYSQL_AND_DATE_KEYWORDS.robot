@@ -80,6 +80,11 @@ Get competitions id and set it as suite variable
     ${competitionId} =  get comp id from comp title  ${competitionTitle}
     Set suite variable  ${competitionId}
 
+Get user id and set as suite variable
+    [Arguments]  ${user}
+    ${userId} =   get user id from user email  ${user}
+    Set suite variable  ${userId}
+
 Return the competition's milestones to their initial values
     [Arguments]  ${competitionId}  ${openDate}  ${submissionDate}
     Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
@@ -159,6 +164,15 @@ get next year
     ${year} =    get time    year    NOW + 370d
     [Return]    ${year}
 
+get user id from user email
+    [Arguments]  ${name}
+    ${id}  get table id by email  user  ${name}
+    [Return]  ${id}
+
+get last year
+    ${year} =    get time    year    NOW - 370d
+    [Return]    ${year}
+
 get comp id from comp title
     [Arguments]  ${name}
     ${id} =   get table id by name  competition  ${name}
@@ -182,6 +196,14 @@ get organisation id by name
 get table id by name
     [Arguments]  ${table}  ${name}
     ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `name`="${name}";
+    # the result of this query looks like ((13,),) so you need get the value array[0][0]
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    [Return]  ${id}
+
+get table id by email
+    [Arguments]  ${table}  ${name}
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `email`="${name}";
     # the result of this query looks like ((13,),) so you need get the value array[0][0]
     ${result} =  get from list  ${result}  0
     ${id} =      get from list  ${result}  0

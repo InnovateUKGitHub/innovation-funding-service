@@ -462,6 +462,18 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
+    public void monitoringOfficersCanViewGrantOfferLetterOnTheirProjects() {
+        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(projectResource1.getId(), monitoringOfficerUser().getId())).thenReturn(true);
+        assertTrue(rules.monitoringOfficerCanViewGrantOfferLetter(projectResource1, monitoringOfficerUser()));
+    }
+
+    @Test
+    public void monitoringOfficersCanViewSendGrantOfferLetterOnTheirProjects() {
+        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(projectResource1.getId(), monitoringOfficerUser().getId())).thenReturn(true);
+        assertTrue(rules.monitoringOfficerCanViewSendGrantOfferLetterStatus(projectResource1, monitoringOfficerUser()));
+    }
+
+    @Test
     public void testSupportUsersCanViewGrantOfferLetter() {
 
         ProjectResource project = newProjectResource().build();

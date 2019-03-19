@@ -8,10 +8,12 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
+import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -29,10 +31,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -40,12 +42,12 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -77,6 +79,9 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     private SectionMapper sectionMapperMock;
+
+    @Mock
+    private FormInputRepository formInputRepositoryMock;
 
     @Test
     public void getNextQuestionTest() throws Exception {
@@ -401,35 +406,21 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
     public void testGetQuestionByCompetitionIdAndFormInputTypeSuccess() {
         long competitionId = 1L;
 
-        Question matchingQuestion = newQuestion().withFormInputs(asList(
-                newFormInput().withType(FormInputType.TEXTAREA).build())
-        ).build();
+        Question question = newQuestion().build();
 
-        Question notMatchingQuestion = newQuestion().withFormInputs(asList(
-                newFormInput().withActive(false).withType(FormInputType.TEXTAREA).build())
-        ).build();
+        FormInput formInput = newFormInput().
+                withType(FormInputType.TEXTAREA).
+                withQuestion(question).
+                build();
 
-        when(questionRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(matchingQuestion, notMatchingQuestion));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, singletonList(FormInputType.TEXTAREA))).
+                thenReturn(singletonList(formInput));
 
-        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.TEXTAREA);
+        ServiceResult<Question> result =
+                questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.TEXTAREA);
 
-        assertThat(question.isSuccess(), is(equalTo(true)));
-        assertThat(question.getSuccess(), is(equalTo(matchingQuestion)));
-    }
-
-    @Test
-    public void testGetQuestionByCompetitionIdAndFormInputTypeFailure() {
-        long competitionId = 1L;
-
-        Question notMatchingQuestion = newQuestion().withFormInputs(asList(
-                newFormInput().withActive(false).withType(FormInputType.TEXTAREA).build())
-        ).build();
-
-        when(questionRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(notMatchingQuestion));
-
-        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.TEXTAREA);
-
-        assertThat(question.isFailure(), is(equalTo(true)));
+        assertThat(result.isSuccess(), equalTo(true));
+        assertThat(result.getSuccess(), equalTo(question));
     }
 
     @Test

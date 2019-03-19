@@ -20,7 +20,10 @@
 ## custom - arbitrary object injected by deployer
 ##
 #set ($rpContext = $profileRequestContext.getSubcontext('net.shibboleth.idp.profile.context.RelyingPartyContext'))
-#set ($resourcesDomain = $rpContext.getRelyingPartyId())
+#set ($resourcesDomain = "#springMessageText('ifs.resources.domain', '')")
+#if ($resourcesDomain.isEmpty())
+    #set ($resourcesDomain = $rpContext.getRelyingPartyId())
+#end
 #set ($username = $authenticationContext.getSubcontext('net.shibboleth.idp.authn.context.UsernamePasswordContext', true).getUsername())
 #set ($passwordEnabled = false)
 #if (!$passwordPrincipals or $passwordPrincipals.isEmpty() or $authenticationContext.isAcceptable($passwordPrincipals))

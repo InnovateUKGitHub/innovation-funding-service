@@ -5,7 +5,7 @@ import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerRe
 
 public interface MonitoringOfficerRestService {
 
-    RestResult<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId);
+    RestResult<MonitoringOfficerResource> getMonitoringOfficerForProject(long projectId);
 
-    RestResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);
+    RestResult<Void> updateMonitoringOfficer(long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);
 }
