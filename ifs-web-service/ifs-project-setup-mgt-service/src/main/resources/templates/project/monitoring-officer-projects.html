@@ -31,9 +31,11 @@
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('form.projectId')}" th:text="${err}"></span>
                         </th:block>
                         <select id="projectId"
-                            th:field="${form.projectId}"
+                                th:field="${form.projectId}"
                                 th:errorclass="govuk-input--error"
-                                class="govuk-select">
+                                class="govuk-select"
+                                data-auto-complete="">
+                            <option value="">Select project</option>
                             <option th:each="project : ${model.unassignedProjects}"
                                     th:value="${project.projectId}"
                                     th:text="|${project.applicationId} - ${project.projectName}|"></option>

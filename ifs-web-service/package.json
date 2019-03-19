@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "accessible-autocomplete": "^1.6.2",
     "compass-importer": "^0.4.1",
     "cryptiles": "^4.1.2",
     "eslint": "^4.19.1",
