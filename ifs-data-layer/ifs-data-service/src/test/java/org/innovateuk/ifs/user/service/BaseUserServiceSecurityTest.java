@@ -33,7 +33,7 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
     }
 
     @Test
-    public void testFindAll() {
+    public void findAll() {
         when(classUnderTestMock.findAll())
                 .thenReturn(serviceSuccess(newUserResource().build(2)));
 
@@ -42,7 +42,7 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
     }
 
     @Test
-    public void testGetUserById() {
+    public void getUserById() {
         when(classUnderTestMock.getUserById(123L))
                 .thenReturn(serviceSuccess(newUserResource().build()));
 
@@ -50,7 +50,7 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
     }
 
     @Test
-    public void testGetUserByUid() {
+    public void getUserByUid() {
         when(classUnderTestMock.getUserResourceByUid("asdf"))
                 .thenReturn(serviceSuccess(newUserResource().build()));
 
@@ -82,6 +82,8 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
                 .consortiumMembersCanViewOtherConsortiumMembers(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
     }
 

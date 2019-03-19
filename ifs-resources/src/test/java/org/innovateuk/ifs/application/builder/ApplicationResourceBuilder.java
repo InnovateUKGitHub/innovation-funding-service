@@ -104,4 +104,8 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((collaborativeProject, application) -> application.setCollaborativeProject(collaborativeProject),
                 collaborativeProjectArray);
     }
+
+    public ApplicationResourceBuilder withStateAidAgreed(Boolean... stateAidAgreeds) {
+        return withArray((stateAidAgreed, application) -> application.setStateAidAgreed(stateAidAgreed), stateAidAgreeds);
+    }
 }

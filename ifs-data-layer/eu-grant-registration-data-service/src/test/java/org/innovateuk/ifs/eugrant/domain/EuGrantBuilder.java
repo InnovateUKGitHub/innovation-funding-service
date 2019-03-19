@@ -43,5 +43,4 @@ public class EuGrantBuilder extends BaseBuilder<EuGrant, EuGrantBuilder> {
     public EuGrantBuilder withFunding(EuFunding... fundings) {
         return withArray((funding, grant) -> grant.setFunding(funding), fundings);
     }
-
 }

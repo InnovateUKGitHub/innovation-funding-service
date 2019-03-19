@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -23,6 +22,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType.DATES;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
 
 /**
@@ -32,6 +32,9 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
 
     protected static final String TEMPLATE_FOLDER = "competition/";
     protected static final String FORM_ATTR_NAME = "form";
+    private static final String COMPETITION_SETUP_PATH = "/competition/setup/";
+    private static final String COMPETITION_SETUP_PUBLIC_CONTENT_DATES_PATH = COMPETITION_SETUP_PATH + "public-content/dates/";
+    private static final String REDIRECT = "redirect:";
 
     @Autowired
     protected PublicContentService publicContentService;
@@ -65,6 +68,16 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         return markAsComplete(competitionId, model, form, validationHandler);
     }
 
+    protected String getPage(long competitionId, Model model, Optional<F> form, boolean readOnly) {
+        if (isIFSAndCompetitionNotSetup(competitionId)) {
+            return redirectTo(COMPETITION_SETUP_PATH + competitionId);
+        }
+        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
+        model.addAttribute("model", modelPopulator().populate(publicContent, readOnly));
+        model.addAttribute("form", form.orElseGet(() -> formPopulator().populate(publicContent)));
+        return TEMPLATE_FOLDER + "public-content-form";
+    }
+
     private String readOnly(long competitionId, Model model, Optional<F> form) {
         return getPage(competitionId, model, form, true);
     }
@@ -73,37 +86,35 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         return getPage(competitionId, model, form, false);
     }
 
-    protected String getPage(long competitionId, Model model, Optional<F> form, boolean readOnly) {
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-
-        if (!competition.isNonIfs() && !competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())) {
-            return "redirect:/competition/setup/" + competition.getId();
-        }
-
-        model.addAttribute("model", modelPopulator().populate(publicContent, readOnly));
-        if(form.isPresent()) {
-            model.addAttribute("form", form.get());
-        } else {
-            model.addAttribute("form", formPopulator().populate(publicContent));
-        }
-        return TEMPLATE_FOLDER + "public-content-form";
+    private boolean isIFSAndCompetitionNotSetup(long competitionId) {
+        return !competitionRestService.getCompetitionById(competitionId).getSuccess().isNonIfs() &&
+                !competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId);
     }
 
     private String markAsComplete(long competitionId, Model model, F form, ValidationHandler validationHandler) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
-                .getSuccess();
-
-        if (!competition.isNonIfs() && !competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
-            return "redirect:/competition/setup/" + competition.getId();
+        if (isIFSAndCompetitionNotSetup(competitionId)) {
+            return redirectTo(COMPETITION_SETUP_PATH + competitionId);
         }
-
-        Supplier<String> successView = () -> getPage(competitionId, model, Optional.of(form), true);
+        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
+        M populatedViewModel = modelPopulator().populate(publicContent, true);
+        Supplier<String> successView = getSuccessView(competitionId, model, form, populatedViewModel);
         Supplier<String> failureView = () -> getPage(competitionId, model, Optional.of(form), false);
 
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().markAsComplete(form, publicContent));
+    }
+
+    private Supplier<String> getSuccessView(long competitionId, Model model, F form, M populatedViewModel) {
+        return isInDatesSection(populatedViewModel) ?
+                (() -> redirectTo(COMPETITION_SETUP_PUBLIC_CONTENT_DATES_PATH + competitionId)) :
+                (() -> getPage(competitionId, model, Optional.of(form), true));
+    }
+
+    private boolean isInDatesSection(M populatedViewModel) {
+        return DATES == populatedViewModel.getSection().getType();
+    }
+
+    private String redirectTo(String path) {
+        return REDIRECT + path;
     }
 
 }

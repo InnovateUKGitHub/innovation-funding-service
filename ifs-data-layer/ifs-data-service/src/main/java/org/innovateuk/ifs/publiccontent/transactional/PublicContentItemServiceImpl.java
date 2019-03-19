@@ -7,6 +7,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
@@ -23,11 +24,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -173,6 +174,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         publicContentItemResource.setNonIfsUrl(competition.getNonIfsUrl());
         publicContentItemResource.setSetupComplete(competition.isNonIfs() ? Boolean.TRUE : competition.getSetupComplete());
         publicContentItemResource.setFundingType(competition.getFundingType());
+        publicContentItemResource.setCompetitionType(ofNullable(competition.getCompetitionType()).map(CompetitionType::getName).orElse(null));
 
         return publicContentItemResource;
     }

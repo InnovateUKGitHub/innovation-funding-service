@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -54,11 +53,11 @@ public class YourProjectCostsCompleter {
         OrganisationResource organisation = organisationRestService.getOrganisationById(processRole.getOrganisationId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         handleMarkAcademicFinancesAsNotRequired(organisation.getOrganisationType(), processRole.getApplicationId(), processRole.getId(), competition);
-        handleMarkProcurementYourFundingAsNotRequired(application.getCompetition(), application.getId(), processRole.getId(), competition);
+        handleMarkFullyFundedCompYourFundingAsNotRequired(application.getCompetition(), application.getId(), processRole.getId(), competition);
     }
 
-    private void handleMarkProcurementYourFundingAsNotRequired(long competitionId, long applicationId, long processRoleId, CompetitionResource competition) {
-        if (competition.getFundingType() == FundingType.PROCUREMENT) {
+    private void handleMarkFullyFundedCompYourFundingAsNotRequired(long competitionId, long applicationId, long processRoleId, CompetitionResource competition) {
+        if (competition.isFullyFunded()) {
             SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
             sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
         }

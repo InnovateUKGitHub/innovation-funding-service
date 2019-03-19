@@ -31,7 +31,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
-    public void testGetProjectPartnerOrganisationsIsNotOpenToAll() {
+    public void getProjectPartnerOrganisationsIsNotOpenToAll() {
         when(classUnderTestMock.getProjectPartnerOrganisations(123L))
                 .thenReturn(serviceSuccess(partnerOrganisations));
 
@@ -40,12 +40,14 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
                     .partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
             verify(partnerOrganisationPermissionRules, times(3))
                     .internalUsersCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+            verify(partnerOrganisationPermissionRules, times(3))
+                    .monitoringOfficersUsersCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
             verifyNoMoreInteractions(partnerOrganisationPermissionRules);
         });
     }
 
     @Test
-    public void testCompAdminCanSeeAllPartnerOrganisationsForAnyProject() {
+    public void compAdminCanSeeAllPartnerOrganisationsForAnyProject() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
 
         when(classUnderTestMock.getProjectPartnerOrganisations(123L))
@@ -58,6 +60,8 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
                 .partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
         verify(partnerOrganisationPermissionRules, times(3))
                 .internalUsersCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+        verify(partnerOrganisationPermissionRules, times(3))
+                .monitoringOfficersUsersCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
 
         verifyNoMoreInteractions(partnerOrganisationPermissionRules);
 
@@ -65,7 +69,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
-    public void testGetPartnerOrganisationIsNotOpenToAll() {
+    public void getPartnerOrganisationIsNotOpenToAll() {
 
         when(classUnderTestMock.getPartnerOrganisation(123L, 234L))
                 .thenReturn(serviceSuccess(partnerOrganisations.get(0)));
@@ -84,7 +88,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
-    public void testCompAdminCanSeePartnerOrganisation() {
+    public void compAdminCanSeePartnerOrganisation() {
         UserResource internalUser = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
         setLoggedInUser(internalUser);
 
@@ -109,7 +113,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
-    public void testPartnerCanSeeOwnPartnerOrganisation() {
+    public void partnerCanSeeOwnPartnerOrganisation() {
 
         UserResource partnerUser = newUserResource().build();
         setLoggedInUser(partnerUser);

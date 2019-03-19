@@ -95,6 +95,19 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
+    public void monitoringOfficersCanViewThemselves() {
+
+        UserResource user = newUserResource().build();
+        ProjectResource project = newProjectResource().build();
+
+        setupUserAsMonitoringOfficer(project, user);
+
+        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), user.getId())).thenReturn(true);
+
+        assertTrue(rules.monitoringOfficersCanViewThemselves(project, user));
+    }
+
+    @Test
     public void partnersCanViewMonitoringOfficersOnTheirOwnProjectsButUserNotPartner() {
 
         UserResource user = newUserResource().build();

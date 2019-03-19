@@ -3,9 +3,9 @@ package org.innovateuk.ifs.application.forms.controller;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
-import org.innovateuk.ifs.application.forms.researchcategory.form.ResearchCategoryForm;
-import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
-import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.form.ResearchCategoryForm;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
+import org.innovateuk.ifs.application.forms.questions.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.forms.viewmodel.QuestionViewModel;
@@ -22,7 +22,6 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.slf4j.Logger;
@@ -44,8 +43,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
@@ -128,8 +126,7 @@ public class ApplicationQuestionController {
             }
         });
 
-        model = populateShowQuestion(user, applicationId, questionId, model, form);
-        return getQuestionViewForModel(model);
+        return viewQuestion(user, applicationId, questionId, model, form);
     }
 
     @PostMapping(value = {
@@ -164,8 +161,7 @@ public class ApplicationQuestionController {
             if (hasErrors(request, errors, bindingResult)) {
                 // Add any validated fields back in invalid entries are displayed on re-render
                 validationHandler.addAnyErrors(errors);
-                model = populateShowQuestion(user, applicationId, questionId, model, form);
-                return getQuestionViewForModel(model);
+                return viewQuestion(user, applicationId, questionId, model, form);
             } else {
                 return applicationRedirectionService.getRedirectUrl(request, applicationId, Optional.empty());
             }
@@ -211,7 +207,7 @@ public class ApplicationQuestionController {
                 || isMarkAsCompleteRequestWithValidationErrors(request.getParameterMap(), errors, bindingResult);
     }
 
-    private Model populateShowQuestion(
+    private String viewQuestion(
             UserResource user,
             Long applicationId,
             Long questionId,
@@ -219,6 +215,12 @@ public class ApplicationQuestionController {
             ApplicationForm form
     ) {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
+
+        if (GRANT_AGREEMENT.equals(question.getQuestion().getQuestionSetupType())) {
+            return String.format("redirect:/application/%d/form/question/%d/grant-agreement", applicationId, questionId);
+        } else if (GRANT_TRANSFER_DETAILS.equals(question.getQuestion().getQuestionSetupType())) {
+            return String.format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
+        }
 
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, form);
 
@@ -238,8 +240,18 @@ public class ApplicationQuestionController {
         }
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
 
-        return model;
-    }
+        QuestionSetupType questionType = question.getQuestion().getQuestionSetupType();
+        if (questionType == null) {
+            return APPLICATION_FORM;
+        }
+        switch (questionType) {
+            case APPLICATION_DETAILS:
+            case APPLICATION_TEAM:
+            case RESEARCH_CATEGORY:
+                return APPLICATION_FORM_LEAD;
+            default:
+                return APPLICATION_FORM;
+        }    }
 
     private String handleEditQuestion(
             ApplicationForm form,
@@ -255,8 +267,7 @@ public class ApplicationQuestionController {
             LOG.error("Not able to find process role for user {} for application id ", user.getName(), applicationId);
         }
 
-        model = populateShowQuestion(user, applicationId, questionId, model, form);
-        return getQuestionViewForModel(model);
+        return viewQuestion(user, applicationId, questionId, model, form);
     }
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params,
@@ -280,25 +291,5 @@ public class ApplicationQuestionController {
                         && (questionStatusResource.getMarkedAsComplete() == null
                                 || !questionStatusResource.getMarkedAsComplete())
                 );
-    }
-
-    private QuestionSetupType getQuestionType(Model model) {
-        QuestionViewModel questionViewModel = (QuestionViewModel) model.asMap().get(MODEL_ATTRIBUTE_MODEL);
-        return questionViewModel.getApplicantResource().getQuestion().getQuestionSetupType();
-    }
-
-    private String getQuestionViewForModel(Model model) {
-        QuestionSetupType questionType = getQuestionType(model);
-        if (questionType == null) {
-            return APPLICATION_FORM;
-        }
-        switch (questionType) {
-            case APPLICATION_DETAILS:
-            case APPLICATION_TEAM:
-            case RESEARCH_CATEGORY:
-                return APPLICATION_FORM_LEAD;
-            default:
-                return APPLICATION_FORM;
-        }
     }
 }
