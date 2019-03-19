@@ -369,7 +369,7 @@ the user should not see assigned project in Select a project to assign serach fi
 
 comp admin assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
-    input text                          id = projectId    ${search_ID}
+    input text                          id = projectId    1
     the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
     the user clicks the button/link     jQuery = button:contains("Assign")
 
