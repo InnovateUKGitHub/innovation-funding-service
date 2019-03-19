@@ -262,7 +262,7 @@ public class EuGrantServiceIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void getTotalSubmitted() {
-        ServiceResult<Long> result = euGrantService.getTotalSubmitted();
+        ServiceResult<Long> result = euGrantService.getTotalSubmittedExcludingResearch();
 
         assertTrue(result.isSuccess());
         assertTrue(result.getSuccess().equals(2L));

@@ -130,7 +130,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 .build(1);
 
         when(projectUserRepositoryMock.findByUserId(userResource.getId())).thenReturn(projectUsers);
-        when(projectMonitoringOfficerRepository.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
+        when(projectMonitoringOfficerRepositoryMock.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
 
         allGlobalRoleUsers.forEach(user -> {
             if (isMonitoringOfficer(user)) {
@@ -649,7 +649,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer().withUser(newUser().withId(userId).build()).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build(1);
 
-        when(projectMonitoringOfficerRepository.findByUserId(userId)).thenReturn(projectMonitoringOfficers);
+        when(projectMonitoringOfficerRepositoryMock.findByUserId(userId)).thenReturn(projectMonitoringOfficers);
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withApplication(applicationId).build();
 

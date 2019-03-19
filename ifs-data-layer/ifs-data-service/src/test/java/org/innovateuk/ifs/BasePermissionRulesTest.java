@@ -43,7 +43,7 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     protected ProjectUserRepository projectUserRepositoryMock;
 
     @Mock
-    protected ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    protected ProjectMonitoringOfficerRepository projectMonitoringOfficerRepositoryMock;
 
     @Mock
     protected ProjectRepository projectRepositoryMock;
@@ -123,8 +123,8 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : null);
     }
 
-    private void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
-        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId()))
+    protected void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
+        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), user.getId()))
             .thenReturn(userIsMonitoringOfficer);
     }
 

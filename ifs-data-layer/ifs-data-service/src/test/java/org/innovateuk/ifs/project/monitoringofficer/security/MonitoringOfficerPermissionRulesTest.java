@@ -102,7 +102,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
 
         setupUserAsMonitoringOfficer(project, user);
 
-        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId())).thenReturn(true);
+        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), user.getId())).thenReturn(true);
 
         assertTrue(rules.monitoringOfficersCanViewThemselves(project, user));
     }

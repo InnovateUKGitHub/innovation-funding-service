@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 
 @Component
@@ -142,7 +143,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private OrganisationResource getUserOrganisation(UserResource user, Long applicationId) {
         OrganisationResource userOrganisation = null;
 
-        if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR, Role.STAKEHOLDER)) {
+        if (!user.isInternalUser() && !user.hasAnyRoles(ASSESSOR, INTERVIEW_ASSESSOR, STAKEHOLDER, MONITORING_OFFICER)) {
             ProcessRoleResource userProcessRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
             userOrganisation = organisationRestService.getOrganisationById(userProcessRole.getOrganisationId()).getSuccess();
         }
