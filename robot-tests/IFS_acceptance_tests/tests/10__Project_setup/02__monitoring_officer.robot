@@ -264,11 +264,6 @@ New MO see the project setup view for assigned project
     Given the user clicks the button/link  link = ${Assign_Project2}
     Then the user should see the project set view
 
-New MO sees the application feedback
-    [Documentation]  IFS-5298
-    Given the user clicks the button/link  link = view application feedback
-    Then the user should see the element   jQuery = h1:contains("Application overview")
-
 *** Keywords ***
 standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}
