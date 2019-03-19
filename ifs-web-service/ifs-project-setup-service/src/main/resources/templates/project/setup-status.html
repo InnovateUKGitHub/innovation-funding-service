@@ -184,8 +184,7 @@
                         <h2 class="govuk-heading-s">
                             <a th:if="${model.spendProfileSection.accessible}"
                                th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile(id=${model.projectId}, organisationId=${model.getOrganisationId()})}"
-                               class="govuk-link">Spend
-                                profile</a>
+                               class="govuk-link">Spend profile</a>
                             <th:block th:if="${model.spendProfileSection.notAccessible}">Spend profile</th:block>
                         </h2>
                         <p class="govuk-body govuk-!-margin-0">Once we have approved your finances you can change your project spend profile.</p>

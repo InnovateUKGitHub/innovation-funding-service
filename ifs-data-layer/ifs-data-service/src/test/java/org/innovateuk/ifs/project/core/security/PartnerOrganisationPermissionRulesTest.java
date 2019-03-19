@@ -125,7 +125,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
         Project project = newProject().build();
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
-        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId())).thenReturn(true);
+        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), user.getId())).thenReturn(true);
 
         assertTrue(rules.monitoringOfficersUsersCanView(partnerOrg, user));
     }
