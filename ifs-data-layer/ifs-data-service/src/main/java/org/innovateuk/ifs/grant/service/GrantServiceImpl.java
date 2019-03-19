@@ -30,13 +30,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 public class GrantServiceImpl implements GrantService {
     private static final Log LOG = LogFactory.getLog(GrantServiceImpl.class);
 
-    /**
-     * Feature flag to allow early release of the new multi-role dashboard without giving access to Live Projects
-     * immediately.
-     **/
-    @Value("${ifs.data.service.allocate.live.projects.role}")
-    private boolean allocateLiveProjectsRole;
-
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -74,16 +67,11 @@ public class GrantServiceImpl implements GrantService {
 
         grantEndpoint.send(grant)
                 .andOnSuccess(() -> grantProcessService.sendSucceeded(applicationId))
-                .andOnSuccess(() -> addLiveProjectsRoleToUsers(applicationId))
+                .andOnSuccess(() -> addLiveProjectsRoleToProjectTeamUsers(projectRepository.findOneByApplicationId(applicationId)))
                 .andOnFailure((ServiceFailure serviceFailure) ->
                         grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString()));
 
         return serviceSuccess();
-    }
-
-    private ServiceResult<Void> addLiveProjectsRoleToUsers(long applicationId) {
-        return !allocateLiveProjectsRole ?
-                serviceSuccess() : addLiveProjectsRoleToProjectTeamUsers(projectRepository.findOneByApplicationId(applicationId));
     }
 
     private ServiceResult<Void> addLiveProjectsRoleToProjectTeamUsers(Project project) {
