@@ -18,6 +18,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-5031 Assign an MO to a project
 ...
 ...               IFS-5298 MO permissions to view an application
+...
+...               IFS-5088 Use auto-complete search to improve the assign Assessors/ Monitoring Officers/ Stakeholders journey
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -25,8 +27,9 @@ Resource          PS_Common.robot
 
 *** Variables ***
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
-${Assign_Project}   Mobile Phone Data for Logistics Analytics
-${Assign_Project2}  High Performance Gasoline Stratified
+${Assign_Project}      Climate control solution
+${Assign_Project_ID}   ${application_ids["${Assign_Project}"]}
+${Assign_Project2}     High Performance Gasoline Stratified
 ${Assign_Project2_ID}  ${application_ids["${Assign_Project2}"]}
 ${New_Mo}          tom@poly.io
 
@@ -245,17 +248,17 @@ Create account flow: MO
     [Teardown]  Get user id and set as suite variable  ${New_Mo}
 
 Comp admin assign project to new MO
-    [Documentation]  IFS-5031
-    [Setup]  log in as a different user                        &{Comp_admin1_credentials}
-    Given the user navigates to the page                       ${server}/project-setup-management/monitoring-officer/${userId}/projects
+    [Documentation]  IFS-5031  IFS-5088
+    [Setup]  log in as a different user               &{Comp_admin1_credentials}
+    Given the user navigates to the page              ${server}/project-setup-management/monitoring-officer/${userId}/projects
     When comp admin assign and remove project to MO
-    And the user selects the option from the drop-down menu    ${Assign_Project2_ID} - ${Assign_Project2}  id = projectId
-    And the user clicks the button/link                        jQuery = button:contains("Assign")
-    Then the user should see the element                       jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
+    And comp admin assign project to MO               ${Assign_Project2_ID}  ${Assign_Project2}
+    And the user clicks the button/link               jQuery = button:contains("Assign")
+    Then the user should see the element              jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
 
 Link to Application
     [Documentation]  IFS-5031
-    Given the user clicks the button/link  link = ${Assign_Project2_ID}
+    Given the user clicks the button/link   link = ${Assign_Project2_ID}
     Then the user should see the element    jQuery = h1:contains("Application overview") ~ form section dd:contains("${Assign_Project2}")
 
 New MO see the project setup view for assigned project
@@ -354,15 +357,25 @@ the user should see server side validations triggered correctly
     the user should see a field and summary error    Password must be at least 8 characters.
     the user should see a field and summary error    Please enter your password.
 
-comp admin assign and remove project to MO
-    the user clicks the button/link     jQuery = button:contains("Assign")
-    the user should not see assigned project in Select a project to assign drop down
+comp admin remove project assigned to MO
+    [Arguments]  ${project_name}
+    the user should not see assigned project in Select a project to assign serach field
     the user should see the element     jQuery = span:contains("1") ~ span:contains("assigned projects")
-    the user clicks the button/link     jQuery = td:contains("${Assign_Project}") ~ td a:contains("Remove")
+    the user clicks the button/link     jQuery = td:contains("${project_name}") ~ td a:contains("Remove")
 
-the user should not see assigned project in Select a project to assign drop down
-    the user clicks the button/link        css = .govuk-select
-    the user should not see the element    jQuery = .govuk-select option:contains("${Assign_Project}")
+the user should not see assigned project in Select a project to assign serach field
+    input text                             id = projectId    ${Assign_Project_ID}
+    the user should not see the element    jQuery = ul li:contains("${Assign_Project_ID} - ${Assign_Project}")
+
+comp admin assign project to MO
+    [Arguments]  ${search_ID}  ${project_name}
+    input text                          id = projectId    ${search_ID}
+    the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
+    the user clicks the button/link     jQuery = button:contains("Assign")
+
+comp admin assign and remove project to MO
+    comp admin assign project to MO               ${Assign_Project_ID}  ${Assign_Project}
+    comp admin remove project assigned to MO      ${Assign_Project}
 
 Custom suite teardown
     the user closes the browser
