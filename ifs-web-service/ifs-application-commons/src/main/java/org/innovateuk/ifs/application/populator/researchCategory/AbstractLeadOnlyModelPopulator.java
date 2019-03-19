@@ -7,12 +7,10 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
-
 public abstract class AbstractLeadOnlyModelPopulator {
 
     private ApplicantRestService applicantRestService;
-    private QuestionRestService questionRestService;
+    protected QuestionRestService questionRestService;
 
     public AbstractLeadOnlyModelPopulator(final ApplicantRestService applicantRestService,
                                          final QuestionRestService questionRestService) {

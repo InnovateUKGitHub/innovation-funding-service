@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantTransferDetai
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
-import org.innovateuk.ifs.granttransfer.service.ActionTypeRestService;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.stereotype.Component;
@@ -20,14 +19,10 @@ import java.util.Optional;
 public class GrantTransferSummaryPopulator extends AbstractLeadOnlyModelPopulator {
 
     private final EuGrantTransferRestService grantTransferRestService;
-    private final ActionTypeRestService actionTypeRestService;
-    private final QuestionRestService questionRestService;
 
-    public GrantTransferSummaryPopulator(ApplicantRestService applicantRestService, QuestionRestService questionRestService, EuGrantTransferRestService grantTransferRestService, ActionTypeRestService actionTypeRestService, QuestionRestService questionRestService1) {
+    public GrantTransferSummaryPopulator(ApplicantRestService applicantRestService, QuestionRestService questionRestService, EuGrantTransferRestService grantTransferRestService) {
         super(applicantRestService, questionRestService);
         this.grantTransferRestService = grantTransferRestService;
-        this.actionTypeRestService = actionTypeRestService;
-        this.questionRestService = questionRestService1;
     }
 
     public GrantTransferDetailsSummaryViewModel populateDetails(ApplicationResource application,
@@ -72,7 +67,7 @@ public class GrantTransferSummaryPopulator extends AbstractLeadOnlyModelPopulato
     public GrantAgreementSummaryViewModel populateAgreement(ApplicationResource application,
                                                             long loggedInUserId,
                                                             boolean userIsLeadApplicant) {
-        QuestionResource question = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(application.getCompetition(), QuestionSetupType.GRANT_TRANSFER_DETAILS).getSuccess();
+        QuestionResource question = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(application.getCompetition(), QuestionSetupType.GRANT_AGREEMENT).getSuccess();
 
         boolean isComplete = isComplete(application, loggedInUserId, QuestionSetupType.GRANT_AGREEMENT);
         boolean allReadOnly = !userIsLeadApplicant || isComplete;
