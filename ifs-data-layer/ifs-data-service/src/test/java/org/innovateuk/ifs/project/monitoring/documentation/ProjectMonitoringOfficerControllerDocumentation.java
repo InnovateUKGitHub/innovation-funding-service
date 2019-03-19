@@ -9,16 +9,21 @@ import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOffi
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.List;
+
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProjectMonitoringOfficerResourceDocs.*;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectMonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
@@ -29,6 +34,40 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
     @Override
     protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
         return new ProjectMonitoringOfficerController(projectMonitoringOfficerServiceMock);
+    }
+
+    @Test
+    public void findAll() throws Exception {
+        List<MonitoringOfficerUnassignedProjectResource> unassignedProjects =
+                singletonList(new MonitoringOfficerUnassignedProjectResource(1,
+                                                                             1,
+                                                                             "projectName"));
+        List<MonitoringOfficerAssignedProjectResource> assignedProjects =
+                singletonList(new MonitoringOfficerAssignedProjectResource(1,
+                                                                           1,
+                                                                           1,
+                                                                           "projectName",
+                                                                           "leadOrganisationName"));
+
+        List<ProjectMonitoringOfficerResource> expected =
+                singletonList(new ProjectMonitoringOfficerResource(1L,
+                                                                   "firstName",
+                                                                   "lastName",
+                                                                   unassignedProjects,
+                                                                   assignedProjects));
+
+        when(projectMonitoringOfficerServiceMock.findAll()).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/monitoring-officer/find-all"))
+                .andExpect(status().isOk())
+                .andDo(document("monitoring-officer/{method-name}",
+                                responseFields(fieldWithPath("[]").description("List of monitoring officers"))
+                                        .andWithPrefix("[].", projectMonitoringOfficerResourceFields)
+                                        .andWithPrefix("[].unassignedProjects[].", monitoringOfficerUnassignedProjectResourceFields)
+                                        .andWithPrefix("[].assignedProjects[].", monitoringOfficerAssignedProjectResourceFields)
+                ));
+
+        verify(projectMonitoringOfficerServiceMock).findAll();
     }
 
     @Test

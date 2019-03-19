@@ -4,9 +4,11 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerServiceImpl;
 import org.junit.Test;
+import org.springframework.test.context.TestPropertySource;
 
 
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
@@ -14,28 +16,33 @@ import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
  */
 public class ProjectMonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTest<ProjectMonitoringOfficerService> {
 
-
     @Test
-    public void testGetProjectMonitoringOfficerOnlyIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
-        final long userId = 1;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getProjectMonitoringOfficer(userId), COMP_ADMIN,
-                PROJECT_FINANCE);
+    public void findAllProjectMonitoringOfficersOnlyIfGlobaLCompAdminOrProjectFinanceOrIfsAdminRole() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findAll(),
+                                                COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
     }
 
     @Test
-    public void testAssignProjectToMonitoringOfficerOnlyIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
+    public void getProjectMonitoringOfficerOnlyIfGlobalCompAdminOrProjectFinanceOrIfsAdminRole() {
         final long userId = 1;
-        final long projectId = 1;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.assignProjectToMonitoringOfficer(userId, projectId), COMP_ADMIN,
-                PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getProjectMonitoringOfficer(userId),
+                                                COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
     }
 
     @Test
-    public void testUnassignProjectToMonitoringOfficerOnlyIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
+    public void assignProjectToMonitoringOfficerOnlyIfGlobalCompAdminOrProjectFinanceOrIfsAdminRole() {
         final long userId = 1;
         final long projectId = 1;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.unassignProjectFromMonitoringOfficer(userId, projectId), COMP_ADMIN,
-                PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.assignProjectToMonitoringOfficer(userId, projectId),
+                                                COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
+    }
+
+    @Test
+    public void unassignProjectToMonitoringOfficerOnlyIfGlobalCompAdminOrProjectFinanceOrIfsAdminRole() {
+        final long userId = 1;
+        final long projectId = 1;
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.unassignProjectFromMonitoringOfficer(userId, projectId),
+                                                COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
     }
 
     @Override
