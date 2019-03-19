@@ -215,6 +215,11 @@ Monitoring officer see the project setup veiw for assigned project
     Given the user clicks the button/link    link = Magic material
     Then the user should see the project set view
 
+MO sees the application feedback
+    [Documentation]  IFS-5298
+    Given the user clicks the button/link  link = view application feedback
+    Then the user should see the element   jQuery = h1:contains("Feedback overview")
+
 Monitoring Officer cannot see projects if they are not assigned to them
     [Documentation]    IFS-3978
     Given log in as a different user            &{monitoring_officer_two_credentials}
