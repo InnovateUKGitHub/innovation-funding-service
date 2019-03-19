@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
-
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignProjectForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
@@ -16,16 +16,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 
 @Controller
-@RequestMapping("/monitoring-officer/{monitoringOfficerId}")
+@RequestMapping("/monitoring-officer")
 @SecuredBySpring(value = "Controller",
         description = "Comp Admin and Project Finance can view and assign projects to Monitoring Officers",
         securedType = MonitoringOfficerController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
 public class MonitoringOfficerController {
 
     private static final String FORM_ATTR_NAME = "form";
@@ -36,14 +37,15 @@ public class MonitoringOfficerController {
     @Autowired
     private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;
 
-    @GetMapping("/projects")
+
+    @GetMapping("/{monitoringOfficerId}/projects")
     public String viewProjects(@PathVariable long monitoringOfficerId, Model model) {
         model.addAttribute("model", modelPopulator.populate(monitoringOfficerId));
         model.addAttribute(FORM_ATTR_NAME, new MonitoringOfficerAssignProjectForm());
         return "project/monitoring-officer-projects";
     }
 
-    @PostMapping("/assign")
+    @PostMapping("/{monitoringOfficerId}/assign")
     public String assignProject(@PathVariable long monitoringOfficerId,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerAssignProjectForm form,
                                 BindingResult bindingResult,
@@ -67,13 +69,20 @@ public class MonitoringOfficerController {
                 });
     }
 
-    @GetMapping("/unassign/{projectId}")
+    @GetMapping("/{monitoringOfficerId}/unassign/{projectId}")
     public String unassignProject(@PathVariable long monitoringOfficerId,
                                   @PathVariable long projectId) {
         return projectMonitoringOfficerRestService
                 .unassignMonitoringOfficerFromProject(monitoringOfficerId, projectId)
                 .andOnSuccessReturn(() -> monitoringOfficerProjectsRedirect(monitoringOfficerId))
                 .getSuccess();
+    }
+
+    @GetMapping("/view-all")
+    public String viewAll(Model model) {
+        List<ProjectMonitoringOfficerResource> monitoringOfficers = projectMonitoringOfficerRestService.findAll().getSuccess();
+        model.addAttribute("monitoringOfficers", monitoringOfficers);
+        return "project/view-all-monitoring-officers";
     }
 
     private static String monitoringOfficerProjectsRedirect(long monitoringOfficerId) {
