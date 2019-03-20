@@ -25,7 +25,7 @@
                       method="POST">
                     <div class="govuk-form-group">
                         <label class="govuk-label" th:for="${form.projectId}">
-                            Select a project to assign
+                            Enter a project number or project name
                         </label>
                         <th:block th:if="${#fields.hasErrors('form.projectId')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('form.projectId')}" th:text="${err}"></span>
@@ -35,7 +35,6 @@
                                 th:errorclass="govuk-input--error"
                                 class="govuk-select"
                                 data-auto-complete="">
-                            <option value="">Select project</option>
                             <option th:each="project : ${model.unassignedProjects}"
                                     th:value="${project.projectId}"
                                     th:text="|${project.applicationId} - ${project.projectName}|"></option>
@@ -43,6 +42,7 @@
                     </div>
                     <div class="govuk-form-group">
                         <button type="submit" th:disabled="${ #lists.isEmpty(model.unassignedProjects) }"
+                                data-auto-complete-submit=""
                                 class="govuk-button">Assign</button>
                     </div>
                 </form>
