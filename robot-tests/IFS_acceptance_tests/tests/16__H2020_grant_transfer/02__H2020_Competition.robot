@@ -62,8 +62,9 @@ Applicant user can start a grant transfer
 
 Applicant user can complete Application details section
      [Documentation]  IFS-5158
-     Given the user clicks the button/link                          jQuery = a:contains("Application details")
-     Then the user is able to complete Application details section  Project name  ${month}  ${nextyear}  ${lastYear}
+     Given the user should see the element                                     jQuery = h1:contains("Application overview")
+     Then the user is able to complete Horizon 2020 Grant transfer application
+
 
 *** Keywords ***
 Custom Suite Setup
@@ -220,10 +221,16 @@ The user fills in the Competition Setup Eligibility section
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Competition setup
     the user should see the element                      jQuery = div:contains("Eligibility") ~ .task-status-complete
-    #Elements in this page need double clicking
+
+The user is able to complete Horizon 2020 Grant transfer application
+    the user is able to complete Application details section  Project name  ${month}  ${nextyear}  ${lastYear}
+    the user is able to complete Application team section
+    the user is able to complete Public description section
+    the user is able to complete Horizon 2020 grant agreement section
 
 The user is able to complete Application details section
     [Arguments]  ${projectName}  ${month}  ${nextyear}  ${lastYear}
+    the user clicks the button/link                      jQuery = a:contains("Application details")
     the user should see the element                      jQuery = h1:contains("Application details")
     the user enters text to a text field                 id = projectName   ${projectName}
     the user enters text to a text field                 id = startDateMonth  ${month}
@@ -239,6 +246,26 @@ The user is able to complete Application details section
     the user clicks the button/link                      id = mark-as-complete
     the user should see the element                      jQuery = li:contains("Application details") > .task-status-complete
 
+The user is able to complete Application team section
+     the user clicks the button/link           jQuery = a:contains("Application team")
+     the user should see the element           jQuery = h1:contains("Application team")
+     the user clicks the button/link           id = application-question-complete
+     the user clicks the button/link           jQuery = a:contains("Return to application overview")
+     the user should see the element           jQuery = li:contains("Application team") > .task-status-complete
+
+The user is able to complete Public description section
+    the user clicks the button/link           jQuery = a:contains("Public description")
+    the user should see the element           jQuery = h1:contains("Public description")
+    input Text                                css=.textarea-wrapped .editor    This is some random text
+    the user clicks the button/link           id = application-question-complete
+    the user clicks the button/link           jQuery = a:contains("Return to application overview")
+    the user should see the element           jQuery = li:contains("Public description") > .task-status-complete
+
+The user is able to complete Horizon 2020 grant agreement section
+    the user clicks the button/link           jQuery = a:contains("Horizon 2020 grant agreement")
+    the user should see the element           jQuery = h1:contains("Horizon 2020 grant agreement")
+    the user uploads the file                 name = contentGroups[0].attachment  ${valid_pdf}
+
 Custom Suite Teardown
-    the user closes the browser
-    disconnect from database
+    #the user closes the browser
+    #disconnect from database
