@@ -16,9 +16,11 @@ docker run --name anonymised-data-service --net ifs -d \
   -e DB_PASS='password' \
   -e DB_HOST='ifs-database' \
   -e DB_PORT='3306' \
+  -e DB_ANON_PASS='password' \
   innovateuk/db-anonymised-data
 
-sleep 3
+# Sleep in order to allow time to establish a connection with the database
+sleep 10
 
 docker exec -it anonymised-data-service /dump/make-mysqldump.sh
 

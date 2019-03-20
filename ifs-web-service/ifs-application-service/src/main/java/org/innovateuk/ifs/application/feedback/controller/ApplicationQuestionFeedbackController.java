@@ -38,8 +38,8 @@ public class ApplicationQuestionFeedbackController {
     }
 
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
-    @SecuredBySpring(value = "READ", description = "Applicants and Assessors, Comp execs, Innovation leads and Stakeholders can view question feedback for an application")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(value = "READ", description = "Applicants, Assessors, Comp execs, Innovation leads, Stakeholders and Monitoring Officers can view question feedback for an application")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                                       @PathVariable("questionId") long questionId,
                                                       UserResource user,
