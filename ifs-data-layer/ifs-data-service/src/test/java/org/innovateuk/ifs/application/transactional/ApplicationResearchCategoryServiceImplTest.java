@@ -10,6 +10,7 @@ import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
@@ -19,10 +20,10 @@ import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
+
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Collections;
 import java.util.Optional;
 
 import static java.util.Collections.EMPTY_LIST;
@@ -30,6 +31,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
@@ -75,7 +77,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void setApplicationResearchCategoryWithNoResearchCategoryChange() throws Exception {
+    public void setApplicationResearchCategoryWithNoResearchCategoryChange() {
         Long applicationId = 1L;
         Long researchCategoryId = 1L;
 
@@ -97,15 +99,16 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void setApplicationResearchCategoryWithResearchCategoryChange() throws Exception {
+    public void setApplicationResearchCategoryWithResearchCategoryChange() {
 
         Long researchCategoryId = 1L;
         Long origResearchCategoryId = 2L;
 
         ResearchCategory researchCategory = newResearchCategory().withId(researchCategoryId).build();
         ResearchCategory origResearchCategory = newResearchCategory().withId(origResearchCategoryId).build();
+        CompetitionType compType = newCompetitionType().withName("Programme").build();
 
-        Competition competition = newCompetition().withFundingType(FundingType.GRANT).build();
+        Competition competition = newCompetition().withFundingType(FundingType.GRANT).withCompetitionType(compType).build();
         Question financeQuestion = newQuestion().build();
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build();
         Application application = newApplication()
@@ -134,7 +137,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void setApplicationResearchCategory_nonExistingApplicationShouldResultInError() throws Exception {
+    public void setApplicationResearchCategory_nonExistingApplicationShouldResultInError() {
         Long applicationId = 1L;
         Long researchCategoryId = 2L;
 
@@ -149,7 +152,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void setApplicationResearchCategory_nonExistingResearchCategoryShouldResultInError() throws Exception {
+    public void setApplicationResearchCategory_nonExistingResearchCategoryShouldResultInError()  {
         Long applicationId = 1L;
         Long researchCategoryId = 2L;
 

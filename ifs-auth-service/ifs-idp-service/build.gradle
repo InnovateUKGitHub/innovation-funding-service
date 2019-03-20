@@ -63,6 +63,8 @@ task prepareDockerFile {
 
         def buildTimestamp = new Date().format("yyyyMMddHHmmssSSS")
 
+        def resource_domain  = project.hasProperty('resource_domain') ? project.properties['resource_domain'] : '';
+
         copy {
             from 'src/main/docker/'
             into inputDir
@@ -79,6 +81,7 @@ task prepareDockerFile {
                                            auth_ldap_encryption_certificate: ldapEncryptionCertificate,
                                            java_keystore_password          : javaKeystorePassword,
                                            build_timestamp                 : buildTimestamp,
+                                           resource_domain                 : resource_domain,
                                            version                         : project.properties['version']])
         }
 

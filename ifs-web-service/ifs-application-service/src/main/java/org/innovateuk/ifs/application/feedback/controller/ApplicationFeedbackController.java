@@ -60,7 +60,7 @@ public class ApplicationFeedbackController {
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view the application summary page")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
     @GetMapping("/{applicationId}/feedback")
     public String feedback(@ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
                            BindingResult bindingResult,

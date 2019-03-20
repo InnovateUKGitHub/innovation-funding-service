@@ -15,12 +15,13 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
-import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -73,6 +74,11 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     protected boolean isMonitoringOfficer(long projectId, long userId) {
         return projectMonitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId);
+    }
+
+    protected boolean monitoringOfficerCanViewApplication(long applicationId, long userId) {
+        Project project = projectRepository.findOneByApplicationId(applicationId);
+        return project != null && isMonitoringOfficer(project.getId(), userId);
     }
 
     protected boolean isSpecificProjectPartnerByProjectId(long projectId, long organisationId, long userId) {

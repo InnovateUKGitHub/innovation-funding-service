@@ -17,6 +17,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.invite.resource.*;
@@ -320,4 +321,9 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<CompetitionResearchCategoryLinkResource>> competitionResearchCategoryLinkList() {
         return new ParameterizedTypeReference<List<CompetitionResearchCategoryLinkResource>>() {};
     }
+
+    public static ParameterizedTypeReference<List<EuActionTypeResource>> euActionTypeResourceListType() {
+        return new ParameterizedTypeReference<List<EuActionTypeResource>>() {};
+    }
+
 }

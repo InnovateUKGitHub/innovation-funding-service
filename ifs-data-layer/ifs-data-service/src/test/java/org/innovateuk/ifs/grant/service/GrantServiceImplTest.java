@@ -61,9 +61,6 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
 
     @Test
     public void sendReadyProjects() {
-
-        ReflectionTestUtils.setField(service, "allocateLiveProjectsRole", true);
-
         User user = newUser()
                 .withFirstName("A")
                 .withLastName("B")

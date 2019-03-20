@@ -3,12 +3,13 @@ package org.innovateuk.ifs.euinvite;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.euactiontype.repository.EuActionTypeRepository;
-import org.innovateuk.ifs.eucontact.repository.EuContactRepository;
+import org.innovateuk.ifs.eugrant.repository.EuContactRepository;
 import org.innovateuk.ifs.eugrant.EuOrganisationType;
 import org.innovateuk.ifs.eugrant.domain.EuContact;
 import org.innovateuk.ifs.eugrant.domain.EuGrant;
 import org.innovateuk.ifs.eugrant.repository.EuGrantRepository;
 import org.innovateuk.ifs.eugrant.transactional.EuGrantService;
+import org.innovateuk.ifs.euinvite.transactional.EuInviteService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,11 +81,12 @@ public class EuInviteServiceIntegrationTest extends BaseIntegrationTest {
 
         euGrant = euGrantRepository.save(euGrant);
         euGrantService.submit(euGrant.getId(), true);
-        long euContactId = euGrant.getContact().getId();
 
-        ServiceResult<Void> result = euInviteService.sendInvites(singletonList(euContactId));
+        ServiceResult<Void> result = euInviteService.sendInvites(singletonList(euGrant.getId()));
+
         assertTrue(result.isSuccess());
-        EuContact euContact = euContactRepository.getById(euContactId);
-        assertTrue(euContact.getNotified());
+
+        EuGrant savedEuGrant = euGrantRepository.findById(euGrant.getId()).get();
+        assertTrue(savedEuGrant.isNotified());
     }
 }

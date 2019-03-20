@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.mapper.MilestoneMapper;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -37,17 +38,25 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private static final List<MilestoneType> PUBLIC_MILESTONES =
             asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS);
 
+    private static final List<MilestoneType> HORIZON_PUBLIC_MILESTONES =
+            asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE);
+
     @Autowired
     private MilestoneRepository milestoneRepository;
 
     @Autowired
     private MilestoneMapper milestoneMapper;
 
+    @Autowired
+    private CompetitionRepository competitionRepository;
+
     @Override
     public ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(Long id) {
-        return serviceSuccess((List<MilestoneResource>)
-                milestoneMapper.mapToResource(milestoneRepository
-                        .findByCompetitionIdAndTypeIn(id, PUBLIC_MILESTONES)));
+        return find(competitionRepository.findById(id), notFoundError(Competition.class, id)).andOnSuccessReturn(competition ->
+            (List<MilestoneResource>)
+                    milestoneMapper.mapToResource(milestoneRepository
+                            .findByCompetitionIdAndTypeIn(id, competition.isH2020() ? HORIZON_PUBLIC_MILESTONES : PUBLIC_MILESTONES))
+        );
     }
 
     @Override

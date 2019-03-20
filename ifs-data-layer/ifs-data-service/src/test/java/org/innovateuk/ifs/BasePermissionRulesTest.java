@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.monitor.repository.ProjectMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -43,7 +43,7 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     protected ProjectUserRepository projectUserRepositoryMock;
 
     @Mock
-    protected ProjectMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    protected ProjectMonitoringOfficerRepository projectMonitoringOfficerRepositoryMock;
 
     @Mock
     protected ProjectRepository projectRepositoryMock;
@@ -123,8 +123,8 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : null);
     }
 
-    private void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
-        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId()))
+    protected void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
+        when(projectMonitoringOfficerRepositoryMock.existsByProjectIdAndUserId(project.getId(), user.getId()))
             .thenReturn(userIsMonitoringOfficer);
     }
 

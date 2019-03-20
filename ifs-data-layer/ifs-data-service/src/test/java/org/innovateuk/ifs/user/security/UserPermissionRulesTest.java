@@ -9,7 +9,8 @@ import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.monitor.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.domain.ProjectMonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.ProjectMonitoringOfficerRepository;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
@@ -30,7 +31,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.monitor.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
+import static org.innovateuk.ifs.project.monitoring.builder.ProjectMonitoringOfficerBuilder.newProjectMonitoringOfficer;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -129,7 +130,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 .build(1);
 
         when(projectUserRepositoryMock.findByUserId(userResource.getId())).thenReturn(projectUsers);
-        when(projectMonitoringOfficerRepository.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
+        when(projectMonitoringOfficerRepositoryMock.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
 
         allGlobalRoleUsers.forEach(user -> {
             if (isMonitoringOfficer(user)) {
@@ -648,7 +649,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         List<ProjectMonitoringOfficer> projectMonitoringOfficers = newProjectMonitoringOfficer().withUser(newUser().withId(userId).build()).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build(1);
 
-        when(projectMonitoringOfficerRepository.findByUserId(userId)).thenReturn(projectMonitoringOfficers);
+        when(projectMonitoringOfficerRepositoryMock.findByUserId(userId)).thenReturn(projectMonitoringOfficers);
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withApplication(applicationId).build();
 
