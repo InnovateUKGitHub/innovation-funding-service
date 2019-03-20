@@ -232,15 +232,15 @@ Monitoring Officer cannot see projects if they are not assigned to them
 Add MO client validations
     [Documentation]  IFS-5428
     [Setup]  Login as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page  ${server}/project-setup-management/monitoring-officer/search-by-email
-    When the user enters text to a text field   id = emailAddress  ${EMPTY}
-    Then the user should see a field error  Please enter an email address.
+    Given the user navigates to the page       ${server}/project-setup-management/monitoring-officer/search-by-email
+    When the user enters text to a text field  id = emailAddress  ${EMPTY}
+    Then the user should see a field error     Please enter an email address.
 
 Add MO server validations
     [Documentation]  IFS-5428
-    Given the user enters text to a text field  id = emailAddress  ${invalid_email_plain}
-    When the user clicks the button/link        jQuery = button[type="submit"]
-    Then The user should see a field and summary error  ${enter_a_valid_email}
+    Given the user enters text to a text field          id = emailAddress  ${invalid_email_plain}
+    When the user clicks the button/link                jQuery = button[type="submit"]
+    Then the user should see a field and summary error  ${enter_a_valid_email}
 
 Add MO - existing MO
     [Documentation]  IFS-5428
