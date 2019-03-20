@@ -19,6 +19,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-5298 MO permissions to view an application
 ...
+...               IFS-5428 Search by email for Monitoring Officer - Existing MOs
+...
 ...               IFS-5088 Use auto-complete search to improve the assign Assessors/ Monitoring Officers/ Stakeholders journey
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -227,10 +229,29 @@ Monitoring Officer cannot see projects if they are not assigned to them
     [Documentation]    IFS-3978
     Given log in as a different user            &{monitoring_officer_two_credentials}
     Then the user should not see the element    .projects-in-setup
-    [Teardown]  logout as user
 
 # Please note that the below test cases refer to the new Monitoring Officer role functionality so the test cases above may become deprecated
 # When adding new test cases here please make sure that anything unneccessary is removed from above.
+Add MO client validations
+    [Documentation]  IFS-5428
+    [Setup]  Login as a different user         &{Comp_admin1_credentials}
+    Given the user navigates to the page       ${server}/project-setup-management/monitoring-officer/search-by-email
+    When the user enters text to a text field  id = emailAddress  ${EMPTY}
+    Then the user should see a field error     Please enter an email address.
+
+Add MO server validations
+    [Documentation]  IFS-5428
+    Given the user enters text to a text field          id = emailAddress  ${invalid_email_plain}
+    When the user clicks the button/link                jQuery = button[type="submit"]
+    Then the user should see a field and summary error  ${enter_a_valid_email}
+
+Add MO - existing MO
+    [Documentation]  IFS-5428
+    Given the user enters text to a text field  id = emailAddress  ${monitoring_officer_one_credentials["email"]}
+    And the user cannot see a validation error in the page
+    When the user clicks the button/link        jQuery = button[type="submit"]
+    Then the user should see the element        jQuery = span:contains("Assign projects to Monitoring Officer")
+    [Teardown]  Logout as user
 
 MO create account: validations
     [Documentation]  IFS-5031
@@ -253,7 +274,6 @@ Comp admin assign project to new MO
     Given the user navigates to the page              ${server}/project-setup-management/monitoring-officer/${userId}/projects
     When comp admin assign and remove project to MO
     And comp admin assign project to MO               ${Assign_Project2_ID}  ${Assign_Project2}
-    And the user clicks the button/link               jQuery = button:contains("Assign")
     Then the user should see the element              jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
 
 Link to Application
@@ -266,11 +286,6 @@ New MO see the project setup view for assigned project
     [Setup]  log in as a different user    tom@poly.io  ${short_password}
     Given the user clicks the button/link  link = ${Assign_Project2}
     Then the user should see the project set view
-
-New MO sees the application feedback
-    [Documentation]  IFS-5298
-    Given the user clicks the button/link  link = view application feedback
-    Then the user should see the element   jQuery = h1:contains("Application overview")
 
 *** Keywords ***
 standard verification for email address follows
@@ -359,16 +374,17 @@ the user should see server side validations triggered correctly
 
 comp admin remove project assigned to MO
     [Arguments]  ${project_name}
-    the user should not see assigned project in Select a project to assign serach field
+    the user should not see assigned project in Select a project to assign search field
     the user should see the element     jQuery = span:contains("1") ~ span:contains("assigned projects")
     the user clicks the button/link     jQuery = td:contains("${project_name}") ~ td a:contains("Remove")
 
-the user should not see assigned project in Select a project to assign serach field
+the user should not see assigned project in Select a project to assign search field
     input text                             id = projectId    ${Assign_Project_ID}
     the user should not see the element    jQuery = ul li:contains("${Assign_Project_ID} - ${Assign_Project}")
 
 comp admin assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
+    the element should be disabled      jQuery = button:contains("Assign")
     input text                          id = projectId    1
     the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
     the user clicks the button/link     jQuery = button:contains("Assign")
