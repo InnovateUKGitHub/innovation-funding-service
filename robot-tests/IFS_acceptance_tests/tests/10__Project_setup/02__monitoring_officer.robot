@@ -374,11 +374,11 @@ the user should see server side validations triggered correctly
 
 comp admin remove project assigned to MO
     [Arguments]  ${project_name}
-    the user should not see assigned project in Select a project to assign serach field
+    the user should not see assigned project in Select a project to assign search field
     the user should see the element     jQuery = span:contains("1") ~ span:contains("assigned projects")
     the user clicks the button/link     jQuery = td:contains("${project_name}") ~ td a:contains("Remove")
 
-the user should not see assigned project in Select a project to assign serach field
+the user should not see assigned project in Select a project to assign search field
     input text                             id = projectId    ${Assign_Project_ID}
     the user should not see the element    jQuery = ul li:contains("${Assign_Project_ID} - ${Assign_Project}")
 
