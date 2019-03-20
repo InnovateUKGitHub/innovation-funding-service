@@ -274,7 +274,6 @@ Comp admin assign project to new MO
     Given the user navigates to the page              ${server}/project-setup-management/monitoring-officer/${userId}/projects
     When comp admin assign and remove project to MO
     And comp admin assign project to MO               ${Assign_Project2_ID}  ${Assign_Project2}
-    And the user clicks the button/link               jQuery = button:contains("Assign")
     Then the user should see the element              jQuery = td:contains("${Assign_Project2_ID}") ~ td:contains("Remove")
 
 Link to Application
@@ -385,6 +384,7 @@ the user should not see assigned project in Select a project to assign serach fi
 
 comp admin assign project to MO
     [Arguments]  ${search_ID}  ${project_name}
+    the element should be disabled      jQuery = button:contains("Assign")
     input text                          id = projectId    1
     the user clicks the button/link     jQuery = ul li:contains("${search_ID} - ${project_name}")
     the user clicks the button/link     jQuery = button:contains("Assign")
