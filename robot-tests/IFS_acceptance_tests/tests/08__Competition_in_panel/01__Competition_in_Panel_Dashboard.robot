@@ -21,7 +21,7 @@ Internal user can see grant terms and conditions
     Given The user clicks the button/link  link = Applications: All, submitted, ineligible
     And The user clicks the button/link    link = All applications
     When the user clicks the button/link   link = ${application_ids["SISM - Smart Internet Security Monitor"]}
-    And the user clicks the button/link    link = view the grant terms and conditions
+    And the user clicks the button/link    link = view the award terms and conditions
     Then the user should see the element   jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
 
 *** Keywords ***
