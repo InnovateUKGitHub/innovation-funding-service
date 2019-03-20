@@ -71,7 +71,7 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
     public void isApplicationAssigned() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.isApplicationAssigned(1L),
-                APPLICANT, ASSESSOR, COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD, STAKEHOLDER, SUPPORT
+                APPLICANT, ASSESSOR, COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD, STAKEHOLDER, SUPPORT, MONITORING_OFFICER
         );
     }
 
