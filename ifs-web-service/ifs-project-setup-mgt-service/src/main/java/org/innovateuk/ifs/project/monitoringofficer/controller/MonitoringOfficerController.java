@@ -82,7 +82,7 @@ public class MonitoringOfficerController {
     public String viewAll(Model model) {
         List<ProjectMonitoringOfficerResource> monitoringOfficers = projectMonitoringOfficerRestService.findAll().getSuccess();
         model.addAttribute("monitoringOfficers", monitoringOfficers);
-        return "project/view-all-monitoring-officers";
+        return "project/monitoring-officer-view-all";
     }
 
     private static String monitoringOfficerProjectsRedirect(long monitoringOfficerId) {
