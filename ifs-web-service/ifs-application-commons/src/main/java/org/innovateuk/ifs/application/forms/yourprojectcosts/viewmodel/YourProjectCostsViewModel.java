@@ -27,6 +27,8 @@ public class YourProjectCostsViewModel {
 
     private final boolean procurementCompetition;
 
+    private final boolean h2020;
+
     public YourProjectCostsViewModel(long applicationId,
                                      long sectionId,
                                      long competitionId,
@@ -37,7 +39,8 @@ public class YourProjectCostsViewModel {
                                      String applicationName,
                                      String organisationName,
                                      String financesUrl,
-                                     boolean procurementCompetition) {
+                                     boolean procurementCompetition,
+                                     boolean h2020) {
         this.internal = false;
 
         this.organisationId = organisationId;
@@ -51,6 +54,7 @@ public class YourProjectCostsViewModel {
         this.financesUrl = financesUrl;
         this.includeVat = includeVat;
         this.procurementCompetition = procurementCompetition;
+        this.h2020 = h2020;
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition) {
@@ -67,6 +71,7 @@ public class YourProjectCostsViewModel {
         this.sectionId = null;
         this.competitionId = null;
         this.includeVat = false;
+        this.h2020 = false;
     }
 
     public Long getApplicationId() {
@@ -111,6 +116,10 @@ public class YourProjectCostsViewModel {
 
     public boolean isIncludeVat() {
         return includeVat;
+    }
+
+    public boolean isH2020() {
+        return h2020;
     }
 
     /* view logic */

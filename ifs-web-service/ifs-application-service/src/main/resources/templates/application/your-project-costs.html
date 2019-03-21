@@ -47,13 +47,25 @@
                 organisation can access and edit your finances. We recommend assigning completion of your finances
                 to one member of your team.</p>
 
-            <th:block th:insert="application/your-project-costs-fragments :: labour" />
-            <th:block th:insert="application/your-project-costs-fragments :: overheads" />
-            <th:block th:insert="application/your-project-costs-fragments :: materials" />
-            <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
-            <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
-            <th:block th:insert="application/your-project-costs-fragments :: travel" />
-            <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.h2020}">
+                <p class="govuk-body">Complete your project costs using the information in your <a href="https://www.ukri.org/research/international/ukri-eu-exit/">funding conversion spreadsheet</a>.
+                    This will convert your EU Horizon 2020 spend details to use for your project costs in the finance section.
+                    It is vital that you keep a copy of the spreadsheet. You will need it to finish setting up your project.</p>
+            </div>
+
+            <th:block th:unless="${model.h2020}">
+                <th:block th:insert="application/your-project-costs-fragments :: labour" />
+                <th:block th:insert="application/your-project-costs-fragments :: overheads" />
+                <th:block th:insert="application/your-project-costs-fragments :: materials" />
+                <th:block th:insert="application/your-project-costs-fragments :: capital_usage" />
+                <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs" />
+                <th:block th:insert="application/your-project-costs-fragments :: travel" />
+                <th:block th:insert="application/your-project-costs-fragments :: other_costs" />
+            </th:block>
+
+            <th:block th:if="${model.h2020}">
+                <th:block th:insert="application/your-project-costs-fragments :: costs_horizon_2020" />
+            </th:block>
 
             <div class="govuk-grid-row total-cost">
                 <div class="govuk-grid-column-one-half">
@@ -70,7 +82,7 @@
                 </div>
             </div>
 
-            <div th:unless="${model.readOnly}" class="govuk-form-group" th:classappend="${#fields.hasErrors('eligibleAgreement')} ? 'govuk-form-group--error': ''">
+            <div th:unless="${model.readOnly or model.h2020}" class="govuk-form-group" th:classappend="${#fields.hasErrors('eligibleAgreement')} ? 'govuk-form-group--error': ''">
                 <th:block th:if="${#fields.hasErrors('eligibleAgreement')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('eligibleAgreement')}" th:text="${err}" />
                 </th:block>

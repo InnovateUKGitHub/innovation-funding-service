@@ -63,7 +63,8 @@ public class YourProjectCostsViewModelPopulator {
                 application.getName(),
                 organisation.getName(),
                 getYourFinancesUrl(applicationId, organisationId, internalUser, originQuery),
-                procurementCompetition);
+                procurementCompetition,
+                competition.isH2020());
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser, String originQuery) {
