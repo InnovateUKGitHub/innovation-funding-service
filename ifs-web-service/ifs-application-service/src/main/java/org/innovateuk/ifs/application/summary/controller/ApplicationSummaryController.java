@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -15,6 +16,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.innovateuk.ifs.application.forms.controller.ApplicationSubmitController.APPLICATION_SUBMIT_FROM_ATTR_NAME;
+import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
@@ -39,23 +43,24 @@ public class ApplicationSummaryController {
     private CompetitionRestService competitionRestService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
+    private EuGrantTransferRestService euGrantTransferRestService;
 
     public ApplicationSummaryController() {
     }
 
     @Autowired
-    public ApplicationSummaryController(ApplicationService applicationService,
-                                        UserService userService,
-                                        UserRestService userRestService,
-                                        CompetitionRestService competitionRestService,
+    public ApplicationSummaryController(ApplicationService applicationService, UserService userService,
+                                        UserRestService userRestService, CompetitionRestService competitionRestService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
-                                        ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
+                                        ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator,
+                                        EuGrantTransferRestService euGrantTransferRestService) {
         this.applicationService = applicationService;
         this.userService = userService;
         this.userRestService = userRestService;
         this.competitionRestService = competitionRestService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
+        this.euGrantTransferRestService = euGrantTransferRestService;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the application summary page")
@@ -68,7 +73,7 @@ public class ApplicationSummaryController {
                                      @RequestParam(value = "origin", defaultValue = "APPLICATION") String origin,
                                      @RequestParam MultiValueMap<String, String> queryParams) {
 
-        if(!model.containsAttribute(APPLICATION_SUBMIT_FROM_ATTR_NAME)){
+        if (!model.containsAttribute(APPLICATION_SUBMIT_FROM_ATTR_NAME)) {
             model.addAttribute(APPLICATION_SUBMIT_FROM_ATTR_NAME, new ApplicationSubmitForm());
         }
 
@@ -96,6 +101,16 @@ public class ApplicationSummaryController {
         model.addAttribute("model", applicationSummaryViewModelPopulator.populate(application, competition, userForModel, form, isSupport));
         return "application-summary";
     }
+
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the horizon 2020 grant agreement")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder', 'comp_admin', 'project_finance')")
+    @GetMapping("/{applicationId}/grant-agreement")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadGrantAgreement(@PathVariable long applicationId) {
+        return getFileResponseEntity(euGrantTransferRestService.downloadGrantAgreement(applicationId).getSuccess(),
+                euGrantTransferRestService.findGrantAgreement(applicationId).getSuccess());
+    }
+
 
     private boolean isSupport(UserResource user) {
         return user.hasRole(SUPPORT);
