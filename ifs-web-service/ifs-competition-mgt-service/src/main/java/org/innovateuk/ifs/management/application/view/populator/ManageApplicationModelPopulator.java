@@ -2,9 +2,12 @@ package org.innovateuk.ifs.management.application.view.populator;
 
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
+import org.innovateuk.ifs.application.populator.granttransfer.GrantTransferSummaryPopulator;
 import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantAgreementSummaryViewModel;
+import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantTransferDetailsSummaryViewModel;
 import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.ApplicationForm;
@@ -25,13 +28,16 @@ public class ManageApplicationModelPopulator {
     private SummaryViewModelFragmentPopulator summaryPopulator;
     private ApplicationOverviewIneligibilityModelPopulator applicationOverviewIneligibilityModelPopulator;
     private ApplicationResearchCategorySummaryModelPopulator applicationResearchCategorySummaryModelPopulator;
+    private GrantTransferSummaryPopulator grantTransferSummaryPopulator;
 
     public ManageApplicationModelPopulator(SummaryViewModelFragmentPopulator summaryPopulator,
                                            ApplicationOverviewIneligibilityModelPopulator applicationOverviewIneligibilityModelPopulator,
-                                           ApplicationResearchCategorySummaryModelPopulator applicationResearchCategorySummaryModelPopulator) {
+                                           ApplicationResearchCategorySummaryModelPopulator applicationResearchCategorySummaryModelPopulator,
+                                           GrantTransferSummaryPopulator grantTransferSummaryPopulator) {
         this.summaryPopulator = summaryPopulator;
         this.applicationOverviewIneligibilityModelPopulator = applicationOverviewIneligibilityModelPopulator;
         this.applicationResearchCategorySummaryModelPopulator = applicationResearchCategorySummaryModelPopulator;
+        this.grantTransferSummaryPopulator = grantTransferSummaryPopulator;
     }
 
     public ManageApplicationViewModel populate(ApplicationResource application,
@@ -49,6 +55,14 @@ public class ManageApplicationModelPopulator {
         SummaryViewModel summaryViewModel = summaryPopulator.populate(application.getId(), user, form);
         ResearchCategorySummaryViewModel researchCategorySummaryViewModel = applicationResearchCategorySummaryModelPopulator.populate(application, user.getId(), false);
 
+        GrantTransferDetailsSummaryViewModel grantTransferDetailsSummaryViewModel = null;
+        GrantAgreementSummaryViewModel grantAgreementSummaryViewModel = null;
+
+        if (competition.isH2020()) {
+            grantTransferDetailsSummaryViewModel = grantTransferSummaryPopulator.populateDetails(application, user.getId(), false);
+            grantAgreementSummaryViewModel = grantTransferSummaryPopulator.populateAgreement(application, user.getId(), false);
+        }
+
         return new ManageApplicationViewModel(
                 summaryViewModel,
                 backUrl,
@@ -58,6 +72,8 @@ public class ManageApplicationModelPopulator {
                 user.hasRole(STAKEHOLDER),
                 ineligibilityViewModel,
                 researchCategorySummaryViewModel,
+                grantTransferDetailsSummaryViewModel,
+                grantAgreementSummaryViewModel,
                 appendices,
                 application.isCollaborativeProject(),
                 competition);
