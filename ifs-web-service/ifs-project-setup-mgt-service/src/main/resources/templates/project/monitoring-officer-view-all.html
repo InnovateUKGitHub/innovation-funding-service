@@ -11,6 +11,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/management/dashboard/project-setup'" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -18,25 +19,26 @@
             <div class="govuk-grid-column-two-thirds">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign monitoring officers',size='govuk-heading-xl'" />
                 <a class="button-secondary"
-                   th:href="@{/monitoring-officer/search-by-email">project-setup-management/monitoring-officer/search-by-email</a>
-                <form
-                      method="POST">
+                   href="/project-setup-management/monitoring-officer/search-by-email">Add a monitoring officer</a>
+                <form th:action="@{/monitoring-officer/171/projects}"
+                      method="GET">
                     <div class="govuk-form-group">
-                        <label class="govuk-label" th:for="${form.projectId}">
+                        <label class="govuk-label" for="monitoring-officer-search">
                             Search for a first name or surname
                         </label>
                         <select id="monitoring-officer-search"
                                 class="govuk-select"
                                 data-auto-complete="">
                             <option value="">Select monitoring officer</option>
-                            <!--<option th:each="project : ${model.unassignedProjects}"-->
-                                    <!--th:value="${project.projectId}"-->
-                                    <!--th:text="|${project.applicationId} - ${project.projectName}|"></option>-->
+                            <option th:each="monitoringOfficer : ${monitoringOfficers}"
+                                    th:value="${monitoringOfficer.getUserId()}"
+                                    th:text="|${monitoringOfficer.getFullName()}|"></option>
                         </select>
                     </div>
                     <div class="govuk-form-group">
                         <button type="submit"
-                                class="govuk-button">Assign</button>
+                                class="govuk-button"
+                                data-auto-complete-submit="">View monitoring officer</button>
                     </div>
                 </form>
             </div>
