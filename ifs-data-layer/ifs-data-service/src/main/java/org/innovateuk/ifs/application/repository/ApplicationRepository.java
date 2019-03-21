@@ -81,6 +81,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     Page<Application> findByCompetitionId(long competitionId, Pageable pageable);
 
+    List<Application> findByIdIn(List<Long> applicationIds);
+
     @Query(SEARCH_BY_ID_LIKE)
     Page<Application> searchByIdLike(@Param("searchString") String searchString, Pageable pageable);
 
