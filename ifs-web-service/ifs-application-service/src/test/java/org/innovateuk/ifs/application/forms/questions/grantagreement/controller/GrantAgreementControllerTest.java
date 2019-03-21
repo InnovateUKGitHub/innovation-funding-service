@@ -66,7 +66,7 @@ public class GrantAgreementControllerTest extends BaseControllerMockMVCTest<Gran
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/grant-agreement", applicationId, questionId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/grant-agreement", applicationId, questionId)))
+                .andExpect(redirectedUrl(String.format("/application/%d", applicationId)))
                 .andReturn();
     }
 
@@ -84,7 +84,7 @@ public class GrantAgreementControllerTest extends BaseControllerMockMVCTest<Gran
                 post("/application/{applicationId}/form/question/{questionId}/grant-agreement", applicationId, questionId)
                 .param("complete", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/application/%d", applicationId)))
+                .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/grant-agreement", applicationId, questionId)))
                 .andReturn();
 
         verify(questionStatusRestService).markAsComplete(questionId, applicationId, role.getId());
