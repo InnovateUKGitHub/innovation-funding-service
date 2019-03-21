@@ -225,7 +225,7 @@
                      th:classappend="${#fields.hasErrors('grantAgreementNumber')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-label--s" for="grantAgreementNumber">Grant agreement number
                         <span id="grant-agreement-number-hint" class="govuk-hint">
-                            This 6-digit number might also be referred to as your project ID, agreement number or proposal ID.
+                            This might also be referred to as your project ID, agreement number or proposal ID.
                         </span>
                     </label>
                     <th:block th:if="${#fields.hasErrors('grantAgreementNumber')}">
@@ -237,10 +237,9 @@
                            type="text"
                            required="required"
                            th:field="*{grantAgreementNumber}"
-                           pattern="[0-9]{6}"
-                           th:attr="
-                           data-required-errormessage=#{validation.fundingForm.grant.agreement.number},
-                           data-pattern-errormessage=#{validation.fundingForm.grant.agreement.format.invalid}">
+                           maxlength="255"
+                           th:attr="data-maxlength-errormessage=#{validation.fundingForm.grant.agreement.format.invalid},
+                           data-required-errormessage=#{validation.fundingForm.grant.agreement.number}">
                 </div>
 
                 <div class="govuk-form-group"
