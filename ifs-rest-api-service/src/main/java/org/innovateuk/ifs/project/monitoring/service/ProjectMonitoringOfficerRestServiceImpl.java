@@ -32,6 +32,6 @@ public class ProjectMonitoringOfficerRestServiceImpl extends BaseRestService imp
 
     @Override
     public RestResult<List<ProjectMonitoringOfficerResource>> findAll() {
-        return getWithRestResult(format("%s%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all"), projectMonitoringOfficerResourceListType());
+        return getWithRestResult(format("%s/%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all"), projectMonitoringOfficerResourceListType());
     }
 }
