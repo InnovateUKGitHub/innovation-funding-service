@@ -197,7 +197,9 @@ public class ApplicationSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
-        return "application-track";
+
+        return competition.isH2020() ?
+                "h2020-grant-transfer-track" : "application-track";
     }
 
     private boolean isResearchCategoryQuestion(Long questionId) {

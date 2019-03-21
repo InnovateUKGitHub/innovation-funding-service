@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResearchCategoryLinkResource;
 import org.innovateuk.ifs.competition.service.CompetitionResearchCategoryRestService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -51,7 +52,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
 
         boolean userIsLeadApplicant = userService.isLeadApplicant(loggedInUserId, applicationResource);
-        boolean complete = isComplete(applicationResource, loggedInUserId);
+        boolean complete = isComplete(applicationResource, loggedInUserId, QuestionSetupType.RESEARCH_CATEGORY);
         boolean allReadonly = !userIsLeadApplicant || complete;
 
         String researchCategoryName = Optional.of(applicationResource.getResearchCategory())
