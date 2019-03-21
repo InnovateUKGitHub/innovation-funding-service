@@ -37,7 +37,7 @@ public class InformIneligibleModelPopulator {
         }
 
         if (form.getSubject() == null) {
-            form.setSubject(String.format("Notification regarding your application %s: %s", applicationResource.getId(), applicationResource.getName()));
+            form.setSubject(String.format("Notification regarding your submission %s: %s", applicationResource.getId(), applicationResource.getName()));
         }
 
         return new InformIneligibleViewModel(
