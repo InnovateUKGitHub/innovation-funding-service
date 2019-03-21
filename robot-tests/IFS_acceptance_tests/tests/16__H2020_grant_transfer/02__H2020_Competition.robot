@@ -23,10 +23,10 @@ User can select H2020 Competition Template and complete Initial details
 
 User can populate the Completion Stage, Milestones and Public content
     [Documentation]  IFS-5158
-     Given the user fills in the CS Milestones                                      release-feedback-completion-stage  1  ${nextyear}
-     When the user clicks the button/link                                           link = Public content
-     Then The user completes Public content for H2020 registration and publishes
-     [Teardown]  the user clicks the button/link                                    link = Return to setup overview
+    Given the user fills in the CS Milestones                                      release-feedback-completion-stage  1  ${nextyear}
+    When the user clicks the button/link                                           link = Public content
+    Then The user completes Public content for H2020 registration and publishes
+    [Teardown]  the user clicks the button/link                                    link = Return to setup overview
 
 User can populate Terms and Conditions
     [Documentation]  IFS-5158
@@ -61,10 +61,9 @@ Applicant user can start a grant transfer
     Then the user is able to go to Application overview
 
 Applicant user can complete Application details section
-     [Documentation]  IFS-5158
-     Given the user should see the element                                     jQuery = h1:contains("Application overview")
-     Then the user is able to complete Horizon 2020 Grant transfer application
-
+    [Documentation]  IFS-5158
+    Given the user should see the element                                     jQuery = h1:contains("Application overview")
+    Then the user is able to complete Horizon 2020 Grant transfer application
 
 *** Keywords ***
 Custom Suite Setup
@@ -227,6 +226,7 @@ The user is able to complete Horizon 2020 Grant transfer application
     the user is able to complete Application team section
     the user is able to complete Public description section
     the user is able to complete Horizon 2020 grant agreement section
+    the user is able to complete finance details section
 
 The user is able to complete Application details section
     [Arguments]  ${projectName}  ${month}  ${nextyear}  ${lastYear}
@@ -256,7 +256,7 @@ The user is able to complete Application team section
 The user is able to complete Public description section
     the user clicks the button/link           jQuery = a:contains("Public description")
     the user should see the element           jQuery = h1:contains("Public description")
-    input Text                                css=.textarea-wrapped .editor    This is some random text
+    input text                                css=.textarea-wrapped .editor    This is some random text
     the user clicks the button/link           id = application-question-complete
     the user clicks the button/link           jQuery = a:contains("Return to application overview")
     the user should see the element           jQuery = li:contains("Public description") > .task-status-complete
@@ -264,8 +264,32 @@ The user is able to complete Public description section
 The user is able to complete Horizon 2020 grant agreement section
     the user clicks the button/link           jQuery = a:contains("Horizon 2020 grant agreement")
     the user should see the element           jQuery = h1:contains("Horizon 2020 grant agreement")
-    the user uploads the file                 name = contentGroups[0].attachment  ${valid_pdf}
+    the user uploads the file                 id = grant-agreement  ${valid_pdf}
+    the user clicks the button/link           id = mark-as-complete
+    the user should see the element           jQuery = li:contains("Horizon 2020 grant agreement") > .task-status-complete
+
+The user is able to complete Finance details section
+    the user clicks the button/link           jQuery = a:contains("Your finances")
+    the user should see the element           jQuery = h1:contains("Your finances")
+    the user is able to complete your project location section
+    the user is able to complete your organisation section
+
+The user is able to complete Your project location section
+     the user clicks the button/link           jQuery = a:contains("Your project location")
+     the user should see the element           jQuery = h1:contains("Your project location")
+     input text                                id = postcode   SE1 9HB
+     the user clicks the button/link           jQuery = button:contains("Mark as complete")
+     the user should see the element           jQuery = li:contains("Your project location") > .task-status-complete
+
+The user is able to complete Your organisation section
+     the user clicks the button/link           jQuery = a:contains("Your organisation")
+     the user should see the element           jQuery = h1:contains("Your organisation")
+     the user selects the radio button         organisationSize   MEDIUM
+     input text                                id = turnover   500000
+     input text                                id = headCount  100
+     the user clicks the button/link           jQuery = button:contains("Mark as complete")
+     the user should see the element           jQuery = li:contains("Your organisation") > .task-status-complete
 
 Custom Suite Teardown
-    #the user closes the browser
-    #disconnect from database
+     the user closes the browser
+     disconnect from database
