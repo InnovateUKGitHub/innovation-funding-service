@@ -26,11 +26,16 @@ UPDATE `eu_action_type` SET `priority` = 7 WHERE `name` = 'ERC-ADG';
 UPDATE `eu_action_type` SET `priority` = 6 WHERE `name` = 'ERA-NET-Cofund';
 UPDATE `eu_action_type` SET `priority` = 3 WHERE `name` = 'CSA';
 
+
 --Update existing records
 UPDATE `eu_action_type` SET `description` = 'Coordination and Support Actions' WHERE `name` = 'CSA';
 UPDATE `eu_action_type` SET `description` = 'European Research Agency-NET Cofund' WHERE `name` = 'ERA-NET-Cofund';
 UPDATE `eu_action_type` SET `description` = 'Fast Track to Innovation' WHERE `name` = 'FTI';
 UPDATE `eu_action_type` SET `description` = 'Research and Innovation Actions' WHERE `name` = 'RIA';
+UPDATE `eu_action_type` SET `description` = 'Marie Sklodowska-Curie actions Cofund' WHERE `name` = 'MSCA-Cofund';
+UPDATE `eu_action_type` SET `description` = 'Marie Sklodowska-Curie actions Individual Fellowships' WHERE `name` = 'MSCA-IF';
+UPDATE `eu_action_type` SET `description` = 'Marie Sklodowska-Curie actions Innovative Training Networks' WHERE `name` = 'MSCA-ITN';
+UPDATE `eu_action_type` SET `description` = 'Marie Sklodowska-Curie actions Research and Innovation Staff Exchange' WHERE `name` = 'MSCA-RISE';
 
 
 --Include new action types
@@ -42,5 +47,3 @@ INSERT INTO `eu_action_type` (`id`, `name`, `description`, `priority`) VALUES
 (30, 'JTI',  'Joint Technology Initiatives',                                18),
 (31, 'MSCA-Night',  'Marie Sklodowska-Curie actions',                       20),
 (32, 'SFS',   'Sustainable Food Security',                                  30);
-
-
