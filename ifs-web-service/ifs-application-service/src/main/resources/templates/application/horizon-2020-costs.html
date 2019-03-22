@@ -60,7 +60,7 @@
                 <div>
                     <input type="number"
                            data-prevent-input-non-number
-                           class="govuk-input"
+                           class="govuk-input cost-total"
                            th:field="*{labour}"
                            min="0"
                            th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -81,7 +81,7 @@
                 <div>
                     <input type="number"
                            data-prevent-input-non-number
-                           class="govuk-input"
+                           class="govuk-input cost-total"
                            th:field="*{overhead}"
                            min="0"
                            th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -102,7 +102,7 @@
                 <div>
                     <input type="number"
                            data-prevent-input-non-number
-                           class="govuk-input"
+                           class="govuk-input cost-total"
                            th:field="*{material}"
                            min="0"
                            th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -123,7 +123,7 @@
                 <div>
                     <input type="number"
                            data-prevent-input-non-number
-                           class="govuk-input"
+                           class="govuk-input cost-total"
                            th:field="*{capital}"
                            min="0"
                            th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -137,14 +137,14 @@
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('subcontracting')} ? 'govuk-form-group--error'">
                 <label class="govuk-label" th:for="subcontracting">
-                    <span>Materials</span>
+                    <span>Subcontracting</span>
                 </label>
                 <th:block
                     th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=subcontracting)"/>
                 <div>
                     <input type="number"
                            data-prevent-input-non-number
-                           class="govuk-input"
+                           class="govuk-input cost-total"
                            th:field="*{subcontracting}"
                            min="0"
                            th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -158,14 +158,14 @@
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('travel')} ? 'govuk-form-group--error'">
                 <label class="govuk-label" th:for="travel">
-                    <span>Materials</span>
+                    <span>Travel</span>
                 </label>
                 <th:block
                     th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=travel)"/>
                 <div>
                     <input type="number"
                            data-prevent-input-non-number
-                           class="govuk-input"
+                           class="govuk-input cost-total"
                            th:field="*{travel}"
                            min="0"
                            th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -179,14 +179,14 @@
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('other')} ? 'govuk-form-group--error'">
                 <label class="govuk-label" th:for="other">
-                    <span>Materials</span>
+                    <span>Other</span>
                 </label>
                 <th:block
                     th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=other)"/>
                 <div>
                     <input type="number"
                            data-prevent-input-non-number
-                           class="govuk-input"
+                           class="govuk-input cost-total"
                            th:field="*{other}"
                            min="0"
                            th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
@@ -206,7 +206,7 @@
                            id="total-cost"
                            readonly="readonly"
                            class="govuk-heading-m alignright"
-                           data-calculation-fields="[id*=section-total]"
+                           data-calculation-fields=".cost-total"
                            data-calculation-operations="+"
                            th:value="'£' + ${#numbers.formatInteger(form.organisationFinanceTotal, 0, 'DEFAULT')}"/>
                 </div>

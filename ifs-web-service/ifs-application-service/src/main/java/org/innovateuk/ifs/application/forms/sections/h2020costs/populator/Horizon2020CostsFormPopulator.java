@@ -20,13 +20,13 @@ public class Horizon2020CostsFormPopulator {
 
         Horizon2020CostsForm form = new Horizon2020CostsForm();
 
-        form.setLabour(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal());
-        form.setOverhead(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal());
-        form.setMaterial(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal());
-        form.setCapital(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal());
-        form.setSubcontracting(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal());
-        form.setTravel(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal());
-        form.setOther(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal());
+        form.setLabour(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.LABOUR).getTotal().toBigInteger());
+        form.setOverhead(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.OVERHEADS).getTotal().toBigInteger());
+        form.setMaterial(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.MATERIALS).getTotal().toBigInteger());
+        form.setCapital(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.CAPITAL_USAGE).getTotal().toBigInteger());
+        form.setSubcontracting(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.SUBCONTRACTING_COSTS).getTotal().toBigInteger());
+        form.setTravel(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.TRAVEL).getTotal().toBigInteger());
+        form.setOther(applicationFinance.getFinanceOrganisationDetails().get(FinanceRowType.OTHER_COSTS).getTotal().toBigInteger());
 
         return form;
     }

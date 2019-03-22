@@ -82,7 +82,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.isInternal());
         assertTrue(viewModel.isReadOnly());
         assertTrue(viewModel.isProcurementCompetition());
-        assertFalse(viewModel.isH2020());
     }
 
     @Test

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.forms.sections.h2020costs.controller;
 import org.innovateuk.ifs.application.forms.sections.h2020costs.form.Horizon2020CostsForm;
 import org.innovateuk.ifs.application.forms.sections.h2020costs.populator.Horizon2020CostsFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.h2020costs.saver.Horizon2020CostsSaver;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
@@ -106,8 +105,8 @@ public class Horizon2020CostsController extends AsyncAdaptor {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                validationHandler.addAnyErrors(completeSectionAction.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId())));
-                return validationHandler.failNowOrSucceedWith(failureView, successView);
+                completeSectionAction.markAsCompleteNotValidated(sectionId, applicationId, getProcessRole(applicationId, user.getId()));
+                return successView.get();
             });
         });
     }
@@ -117,10 +116,9 @@ public class Horizon2020CostsController extends AsyncAdaptor {
                        UserResource user,
                        @PathVariable long applicationId,
                        @PathVariable long organisationId,
-                       @PathVariable long sectionId,
-                       @ModelAttribute("form") YourProjectCostsForm form) {
+                       @PathVariable long sectionId) {
         sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
-        return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId);
+        return String.format("redirect:/application/%d/form/horizon-2020-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId);
     }
 //
 //    @PostMapping("auto-save")
