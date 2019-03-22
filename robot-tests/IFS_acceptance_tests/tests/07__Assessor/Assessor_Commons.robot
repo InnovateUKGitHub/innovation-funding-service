@@ -92,3 +92,20 @@ The internal user invites a user as an assessor
     the user selects the option from the drop-down menu  Emerging and enabling  css = .js-progressive-group-select
     the user selects the option from the drop-down menu  Emerging technology    id = grouped-innovation-area
     the user clicks the button/link                      jQuery = .govuk-button:contains("Add assessors to list")
+
+the user should see the competition details
+    [Arguments]  ${comp_name}  ${comp_status}  ${sector}  ${area}  ${link}  ${link2}
+    the user should see the element      jQuery =.govuk-caption-l:contains("${comp_name}")
+    the user should see the element      jQuery =h1:contains("${comp_status}")
+    the user should see the element      jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
+    the user should see the element      jQuery = dt:contains("Innovation sector") ~ dd:contains("${sector}")
+    the user should see the element      jQuery = dt:contains("Innovation area") ~ dd:contains("${area}")
+    #The following checks test if the correct buttons are disabled
+    the user should see the element      jQuery = .disabled:contains("${link}")
+    the user should see the element      jQuery = a:contains("Manage assessments")
+    the user should see the element      jQuery = a:contains("${link2}")
+
+comp admin navigate to manage applications
+    the user clicks the button/link       link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    the user clicks the button/link       jQuery = a:contains("Manage assessments")
+    the user clicks the button/link       jQuery = a:contains("Manage applications")

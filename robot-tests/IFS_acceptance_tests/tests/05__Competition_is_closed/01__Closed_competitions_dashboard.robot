@@ -19,8 +19,9 @@ Resource          ../07__Assessor/Assessor_Commons.robot
 *** Test Cases ***
 Competition dashboard
     [Documentation]    INFUND-6599  INFUND-7362  INFUND-7561
-    Given The user clicks the button/link            link = ${CLOSED_COMPETITION_NAME}
-    Then the user should see the competition details
+    Given The user clicks the button/link              link = ${CLOSED_COMPETITION_NAME}
+    Then the user should see the competition details   ${CLOSED_COMPETITION_NAME}   Closed  Infrastructure systems  Smart infrastructure  Input and review funding decision  Invite assessors to assess the competition
+    And the user should see the element                link = View and update competition setup
     And the use should see the milestones for the closed competitions
 
 Key Statistics for Closed competitions
@@ -80,16 +81,6 @@ Reset competition's milestone
 Custom suite teardown
     Disconnect from database
     The user closes the browser
-
-the user should see the competition details
-    The user should see the element             jQuery = .govuk-caption-l:contains("Machine learning for transport infrastructure")
-    The user should see the element             jQuery = h1:contains("Closed")
-    The user should see the element             jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
-    The user should see the element             jQuery = dt:contains("Innovation sector") ~ dd:contains("Infrastructure systems")
-    The user should see the element             jQuery = dt:contains("Innovation area") ~ dd:contains("Smart infrastructure")
-    the user should see the element             link = View and update competition setup
-    #The following checks test if the correct buttons are disabled
-    the user should see the element             jQuery = .disabled[aria-disabled = "true"]:contains("Input and review funding decision")
 
 the use should see the milestones for the closed competitions
     the user should see the element    jQuery = button:contains("Notify assessors")

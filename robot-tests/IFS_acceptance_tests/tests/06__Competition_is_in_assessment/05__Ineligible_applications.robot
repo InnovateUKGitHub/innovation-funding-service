@@ -61,12 +61,7 @@ Clicking the ineligible button
     [Tags]  InnovationLead
     [Setup]  log in as a different user     &{innovation_lead_one}
     Given the user navigates to the page    ${ineligibleApplicationOverview}
-    When the user clicks the button/link    jQuery = h2 button:contains("Mark application as ineligible")
-    #There are 2 buttons with the same name so we need to be careful
-    Then the user should see the element    css = [aria-hidden = "false"] [id = "ineligibleReason"]
-    And browser validations have been disabled
-    When the user clicks the button/link    css = button[name = "markAsIneligible"]
-    Then the user should see a field and summary error  ${empty_field_warning_message}
+    Then the user checks for serve side validation
 
 Cancel marking the application as ineligible
     [Documentation]  INFUND-7370 IFS-986
@@ -86,9 +81,7 @@ Client side validation - mark an application as ineligible
 Marking an application as ineligible moves it to the ineligible view
     [Documentation]  INFUND-7370 IFS-986
     [Tags]  InnovationLead
-    Given the user clicks the button/link       jQuery = h2 button:contains("Mark application as ineligible")
-    Then the user enters text to a text field   id = ineligibleReason  This is the reason of why this application is ineligible
-    When the user clicks the button/link        jQuery = .govuk-button:contains("Mark application as ineligible")
+    Given the user marks an application as ineligible
     Then the user should be redirected to the correct page  ${ineligibleApplications}
     And the user should see the element         jQuery = td:contains("${ineligibleApplication}")
     And the user should not see the element     jQuery = td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
@@ -104,12 +97,7 @@ Filter ineligible applications
     [Tags]
     [Setup]  log in as a different user        &{Comp_admin1_credentials}
     Given the user navigates to the page       ${ineligibleApplications}
-    When the user selects the option from the drop-down menu  No  id = filterInform
-    When the user clicks the button/link       jQuery = .govuk-button:contains("Filter")
-    Then the user should see the element       jQuery = td:contains("${ineligibleApplication}") ~ td .govuk-button:contains("Inform applicant")
-    And the user should not see the element    jQuery = td:contains("Informed ineligible application") ~ td span:contains("Informed")
-    When the user clicks the button/link       jQuery = a:contains("Clear all filters")
-    Then the user should see the element       jQuery = td:contains("Informed ineligible application") ~ td span:contains("Informed")
+    Then the user filters ineligible applications
 
 The Administrator should see the ineligible applications in unsuccessful list but he cannot reinstate it
     [Documentation]  IFS-1458 IFS-1459 IFS-50
@@ -124,17 +112,12 @@ Inform a user their application is ineligible
     [Tags]  Applicant
     [Setup]  log in as a different user       &{internal_finance_credentials}
     Given the user navigates to the page      ${ineligibleApplications}
-    And the user clicks the button/link       jQuery = td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
-    And the user clicks the button/link       jQuery = a:contains("Cancel")
-    When the user clicks the button/link      jQuery = td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
-    And the user should see the element       jQuery = p:contains("${ineligibleMessage}")
-    And the user clicks the button/link       jQuery = button:contains("Send")
-    Then the user should see the element      jQuery = td:contains("${ineligibleApplication}") ~ td span:contains("Informed")
+    Then the user inform applicant their application is ineligible
 
 Applicant is informed that his application is not eligible
     [Documentation]  INFUND-7374  IFS-3132
     [Tags]  Applicant
-    When the applicant can see his application in the right section    Previous applications
+    Given the applicant can see his application in the right section    Previous applications
     Then the user reads his email  ${Ineligible_user["email"]}         Notification regarding your application  ${ineligibleMessage}
 
 Innovation Lead is not able to reinstate an application
@@ -191,3 +174,32 @@ the user is required to enter a subject/message
     the user clicks the button/link         jQuery = button:contains("Send")
     the user should see a field error       ${fieldValidation}
     the user enters text to a text field    id = ${field}  ${fieldContent}
+
+the user checks for serve side validation
+    the user clicks the button/link                jQuery = h2 button:contains("Mark application as ineligible")
+    #There are 2 buttons with the same name so we need to be careful
+    the user should see the element                css = [aria-hidden = "false"] [id = "ineligibleReason"]
+    browser validations have been disabled
+    the user clicks the button/link                css = button[name = "markAsIneligible"]
+    the user should see a field and summary error  ${empty_field_warning_message}
+
+the user marks an application as ineligible
+    the user clicks the button/link        jQuery = h2 button:contains("Mark application as ineligible")
+    the user enters text to a text field   id = ineligibleReason  This is the reason of why this application is ineligible
+    the user clicks the button/link        jQuery = .govuk-button:contains("Mark application as ineligible")
+
+the user filters ineligible applications
+    the user selects the option from the drop-down menu  No  id = filterInform
+    the user clicks the button/link        jQuery = .govuk-button:contains("Filter")
+    the user should see the element        jQuery = td:contains("${ineligibleApplication}") ~ td .govuk-button:contains("Inform applicant")
+    the user should not see the element    jQuery = td:contains("Informed ineligible application") ~ td span:contains("Informed")
+    the user clicks the button/link        jQuery = a:contains("Clear all filters")
+    the user should see the element        jQuery = td:contains("Informed ineligible application") ~ td span:contains("Informed")
+
+the user inform applicant their application is ineligible
+    the user clicks the button/link           jQuery = td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
+    And the user clicks the button/link       jQuery = a:contains("Cancel")
+    When the user clicks the button/link      jQuery = td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
+    And the user should see the element       jQuery = p:contains("${ineligibleMessage}")
+    And the user clicks the button/link       jQuery = button:contains("Send")
+    Then the user should see the element      jQuery = td:contains("${ineligibleApplication}") ~ td span:contains("Informed")
