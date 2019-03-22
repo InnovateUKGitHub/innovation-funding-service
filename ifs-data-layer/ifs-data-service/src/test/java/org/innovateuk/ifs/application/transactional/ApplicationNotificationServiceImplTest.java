@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -34,11 +35,13 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.transactional.ApplicationNotificationServiceImpl.Notifications.APPLICATION_SUBMITTED;
+import static org.innovateuk.ifs.application.transactional.ApplicationNotificationServiceImpl.Notifications.HORIZON_2020_APPLICATION_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -98,6 +101,27 @@ public class ApplicationNotificationServiceImplTest {
             assertEquals(leadUser.getEmail(), notification.getTo().get(0).getEmailAddress());
             assertEquals(leadUser.getName(), notification.getTo().get(0).getName());
             assertEquals(APPLICATION_SUBMITTED, notification.getMessageKey());
+        }), eq(EMAIL));
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void sendNotificationApplicationSubmitted_horizon2020() {
+        User leadUser = newUser().withEmailAddress("leadapplicant@example.com").build();
+        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(Role.LEADAPPLICANT).build();
+        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(CompetitionResource.H2020_TYPE_NAME).build()).build();
+        Application application = newApplication().withProcessRoles(leadProcessRole).withCompetition(competition).build();
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
+        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+
+        ServiceResult<Void> result = service.sendNotificationApplicationSubmitted(application.getId());
+
+        verify(notificationServiceMock).sendNotificationWithFlush(createLambdaMatcher(notification -> {
+            assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
+            assertEquals(1, notification.getTo().size());
+            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getEmailAddress());
+            assertEquals(leadUser.getName(), notification.getTo().get(0).getName());
+            assertEquals(HORIZON_2020_APPLICATION_SUBMITTED, notification.getMessageKey());
         }), eq(EMAIL));
         assertTrue(result.isSuccess());
     }

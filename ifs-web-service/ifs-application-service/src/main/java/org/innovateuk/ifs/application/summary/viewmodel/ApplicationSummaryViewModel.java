@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.summary.viewmodel;
 
+import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantAgreementSummaryViewModel;
+import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantTransferDetailsSummaryViewModel;
 import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -14,6 +16,8 @@ public class ApplicationSummaryViewModel {
     private final SummaryViewModel summaryViewModel;
     private final ApplicationTeamViewModel applicationTeamViewModel;
     private final ResearchCategorySummaryViewModel researchCategorySummaryViewModel;
+    private final GrantTransferDetailsSummaryViewModel grantTransferDetailsSummaryViewModel;
+    private final GrantAgreementSummaryViewModel grantAgreementSummaryViewModel;
     private final boolean userIsLeadApplicant;
     private final boolean projectWithdrawn;
     private final boolean support;
@@ -28,7 +32,9 @@ public class ApplicationSummaryViewModel {
                                        boolean userIsLeadApplicant,
                                        boolean projectWithdrawn,
                                        boolean support,
-                                       boolean collaborativeProject) {
+                                       boolean collaborativeProject,
+                                       GrantTransferDetailsSummaryViewModel grantTransferDetailsSummaryViewModel,
+                                       GrantAgreementSummaryViewModel grantAgreementSummaryViewModel) {
         this.currentApplication = currentApplication;
         this.currentCompetition = currentCompetition;
         this.applicationReadyForSubmit = applicationReadyForSubmit;
@@ -39,6 +45,8 @@ public class ApplicationSummaryViewModel {
         this.projectWithdrawn = projectWithdrawn;
         this.support = support;
         this.collaborativeProject = collaborativeProject;
+        this.grantTransferDetailsSummaryViewModel = grantTransferDetailsSummaryViewModel;
+        this.grantAgreementSummaryViewModel = grantAgreementSummaryViewModel;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -77,15 +85,24 @@ public class ApplicationSummaryViewModel {
         return support;
     }
 
+    public boolean isCollaborativeProject() {
+        return collaborativeProject;
+    }
+
+    public GrantTransferDetailsSummaryViewModel getGrantTransferDetailsSummaryViewModel() {
+        return grantTransferDetailsSummaryViewModel;
+    }
+
+    public GrantAgreementSummaryViewModel getGrantAgreementSummaryViewModel() {
+        return grantAgreementSummaryViewModel;
+    }
+
+    /* view logic. */
     public boolean getApplicationIsClosed() {
         return !currentCompetition.isOpen() || !currentApplication.isOpen();
     }
 
     public boolean getApplicationIsReadOnly() {
         return !currentCompetition.isOpen() || !currentApplication.isOpen();
-    }
-
-    public boolean isCollaborativeProject() {
-        return collaborativeProject;
     }
 }
