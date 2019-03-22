@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
-import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.H2020_GRANT_FUNDING;
+import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.HORIZON_2020_FUNDING;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
@@ -70,7 +70,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private String webBaseUrl;
 
     public enum Notifications {
-        APPLICATION_FUNDING, H2020_GRANT_FUNDING
+        APPLICATION_FUNDING, HORIZON_2020_FUNDING
     }
 
     @Override
@@ -121,7 +121,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private List<Application> getFundingApplications(Map<Long, FundingDecision> applicationFundingDecisions) {
 
         List<Long> applicationIds = new ArrayList<>(applicationFundingDecisions.keySet());
-        return applicationRepository.findByIdIn(applicationIds);
+        return (List) applicationRepository.findAllById(applicationIds);
     }
 
     private void setApplicationState(Map<Long, FundingDecision> applicationFundingDecisions, List<Application> applications) {
@@ -183,7 +183,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
             FundingNotificationResource fundingNotificationResource,
             List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId
     ) {
-        Notifications notificationType = isH2020Competition(applications) ? H2020_GRANT_FUNDING : APPLICATION_FUNDING;
+        Notifications notificationType = isH2020Competition(applications) ? HORIZON_2020_FUNDING : APPLICATION_FUNDING;
         Map<String, Object> globalArguments = new HashMap<>();
 
         List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(
@@ -221,9 +221,6 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     }
 
     private boolean isH2020Competition(List<Application> applications) {
-        if(applications.isEmpty()) {
-            return false;
-        }
         return applications.get(0).getCompetition().isH2020();
     }
 
