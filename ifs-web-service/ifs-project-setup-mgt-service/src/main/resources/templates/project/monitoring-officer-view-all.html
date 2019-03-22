@@ -20,14 +20,16 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign monitoring officers',size='govuk-heading-xl'" />
                 <a class="button-secondary"
                    href="/project-setup-management/monitoring-officer/search-by-email">Add a monitoring officer</a>
-                <form th:action="@{/monitoring-officer/171/projects}"
-                      method="GET">
+                <form th:action="@{/monitoring-officer/view-monitoring-officer}"
+                      method="POST"
+                      th:object="${form}">
                     <div class="govuk-form-group">
-                        <label class="govuk-label" for="monitoring-officer-search">
+                        <label class="govuk-label" for="userId">
                             Search for a first name or surname
                         </label>
-                        <select id="monitoring-officer-search"
+                        <select id="userId"
                                 class="govuk-select"
+                                th:field="*{userId}"
                                 data-auto-complete="">
                             <option value="">Select monitoring officer</option>
                             <option th:each="monitoringOfficer : ${monitoringOfficers}"
@@ -41,6 +43,7 @@
                                 data-auto-complete-submit="">View monitoring officer</button>
                     </div>
                 </form>
+
             </div>
         </div>
 

@@ -116,6 +116,7 @@ public class MonitoringOfficerController {
                           MonitoringOfficerViewForm form) {
         List<ProjectMonitoringOfficerResource> monitoringOfficers = projectMonitoringOfficerRestService.findAll().getSuccess();
         model.addAttribute("monitoringOfficers", monitoringOfficers);
+        model.addAttribute(FORM, form);
         return "project/monitoring-officer-view-all";
     }
 
