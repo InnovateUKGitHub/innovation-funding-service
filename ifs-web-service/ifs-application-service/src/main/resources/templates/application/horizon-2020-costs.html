@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your project costs'"/>
+</head>
+<body class="govuk-template__body finance-row-form overheads">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Your finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Your project costs',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
+
+        <form th:object="${form}"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
+                       data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              method="POST">
+            <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+            <input type="hidden" id="cacheTest" value=""/>
+
+
+            <h2 class="govuk-heading-m govuk-!-margin-0"
+                th:text="|Provide the project costs for '${model.organisationName}'|"></h2>
+            <p class="govuk-body">Only your organisation can see this level of detail. All members of your
+                organisation can access and edit your finances. We recommend assigning completion of your finances
+                to one member of your team.</p>
+
+            <div class="message-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">Complete your project costs using the information in your <a href="https://www.ukri.org/research/international/ukri-eu-exit/">funding conversion spreadsheet</a>.
+                    This will convert your EU Horizon 2020 spend details to use for your project costs in the finance section.
+                    It is vital that you keep a copy of the spreadsheet. You will need it to finish setting up your project.</p>
+            </div>
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('labour')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="labour">
+                    <span>Labour</span>
+                </label>
+                <th:block
+                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=labour)"/>
+                <div>
+                    <input type="number"
+                           data-prevent-input-non-number
+                           class="govuk-input"
+                           th:field="*{labour}"
+                           min="0"
+                           th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                           placeholder="0"
+                           step="1"
+                           th:readonly="${model.readOnly}"
+                           th:errorclass="govuk-input--error"/>
+                </div>
+            </div>
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('overhead')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="overhead">
+                    <span>Overhead</span>
+                </label>
+                <th:block
+                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead)"/>
+                <div>
+                    <input type="number"
+                           data-prevent-input-non-number
+                           class="govuk-input"
+                           th:field="*{overhead}"
+                           min="0"
+                           th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                           placeholder="0"
+                           step="1"
+                           th:readonly="${model.readOnly}"
+                           th:errorclass="govuk-input--error"/>
+                </div>
+            </div>
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('material')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="material">
+                    <span>Materials</span>
+                </label>
+                <th:block
+                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=material)"/>
+                <div>
+                    <input type="number"
+                           data-prevent-input-non-number
+                           class="govuk-input"
+                           th:field="*{material}"
+                           min="0"
+                           th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                           placeholder="0"
+                           step="1"
+                           th:readonly="${model.readOnly}"
+                           th:errorclass="govuk-input--error"/>
+                </div>
+            </div>
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('capital')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="capital">
+                    <span>Materials</span>
+                </label>
+                <th:block
+                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=capital)"/>
+                <div>
+                    <input type="number"
+                           data-prevent-input-non-number
+                           class="govuk-input"
+                           th:field="*{capital}"
+                           min="0"
+                           th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                           placeholder="0"
+                           step="1"
+                           th:readonly="${model.readOnly}"
+                           th:errorclass="govuk-input--error"/>
+                </div>
+            </div>
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('subcontracting')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="subcontracting">
+                    <span>Materials</span>
+                </label>
+                <th:block
+                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=subcontracting)"/>
+                <div>
+                    <input type="number"
+                           data-prevent-input-non-number
+                           class="govuk-input"
+                           th:field="*{subcontracting}"
+                           min="0"
+                           th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                           placeholder="0"
+                           step="1"
+                           th:readonly="${model.readOnly}"
+                           th:errorclass="govuk-input--error"/>
+                </div>
+            </div>
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('travel')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="travel">
+                    <span>Materials</span>
+                </label>
+                <th:block
+                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=travel)"/>
+                <div>
+                    <input type="number"
+                           data-prevent-input-non-number
+                           class="govuk-input"
+                           th:field="*{travel}"
+                           min="0"
+                           th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                           placeholder="0"
+                           step="1"
+                           th:readonly="${model.readOnly}"
+                           th:errorclass="govuk-input--error"/>
+                </div>
+            </div>
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('other')} ? 'govuk-form-group--error'">
+                <label class="govuk-label" th:for="other">
+                    <span>Materials</span>
+                </label>
+                <th:block
+                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=other)"/>
+                <div>
+                    <input type="number"
+                           data-prevent-input-non-number
+                           class="govuk-input"
+                           th:field="*{other}"
+                           min="0"
+                           th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
+                           placeholder="0"
+                           step="1"
+                           th:readonly="${model.readOnly}"
+                           th:errorclass="govuk-input--error"/>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row total-cost">
+                <div class="govuk-grid-column-one-half">
+                    <label for="total-cost" class="govuk-heading-m" th:text="|'${model.organisationName}' Total project costs|">'Bobs' Total project costs</label>
+                </div>
+                <div class="govuk-grid-column-one-half alignright">
+                    <input type="text"
+                           id="total-cost"
+                           readonly="readonly"
+                           class="govuk-heading-m alignright"
+                           data-calculation-fields="[id*=section-total]"
+                           data-calculation-operations="+"
+                           th:value="'£' + ${#numbers.formatInteger(form.organisationFinanceTotal, 0, 'DEFAULT')}"/>
+                </div>
+            </div>
+
+            <div class="form-footer" th:if="${model.open}">
+                <div class="form-footer__actions">
+                    <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="complete"
+                            class="button-clear" value="true">Mark as complete
+                    </button>
+                    <button th:if="${model.complete}" type="submit" name="edit" class="button-clear" value="true">
+                        Edit your project costs
+                    </button>
+                </div>
+            </div>
+            <div>
+                <a th:href="${model.financesUrl}"
+                   th:if="${model.readOnly}"
+                   class="govuk-!-margin-top-6 button-secondary">Return to finances
+                </a>
+                <button type="submit" th:unless="${model.readOnly}"
+                        class="govuk-!-margin-top-6 govuk-button">
+                    Save and return to finances
+                </button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+</body>
+</html>
