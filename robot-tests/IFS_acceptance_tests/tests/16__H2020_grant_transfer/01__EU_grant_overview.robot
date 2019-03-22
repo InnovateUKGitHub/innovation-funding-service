@@ -140,7 +140,6 @@ Register another project
 *** Keywords ***
 the user should see the validation messages for the funding details
     And the user should see a field and summary error    Enter a grant agreement number.
-    And the user should see a field and summary error    Enter a valid grant agreement number.
     And the user should see a field and summary error    Enter a valid PIC.
     And the user should see a field and summary error    Select a type of action.
     And the user should see a field and summary error    Enter a project name.
