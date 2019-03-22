@@ -369,9 +369,9 @@
             </div>
 
             <div class="govuk-!-margin-top-6">
-                <button th:if="${model.readonly}" type="submit"
+                <a th:if="${model.readonly}" th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
                         class="govuk-button">Return to application overview
-                </button>
+                </a>
                 <button th:unless="${model.readonly}" type="submit"
                         class="govuk-button">Save and return to application overview
                 </button>
