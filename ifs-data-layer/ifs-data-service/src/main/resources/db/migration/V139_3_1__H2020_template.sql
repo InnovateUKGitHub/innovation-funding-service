@@ -1,3 +1,5 @@
+-- IFS-5446 horizon 2020 template
+
 INSERT INTO competition (name, max_research_ratio, academic_grant_percentage, multi_stream, assessor_count, assessor_pay, has_assessment_panel, has_interview_stage, assessor_finance_view, template, use_resubmission_question, min_project_duration, max_project_duration, non_ifs, terms_and_conditions_id, location_per_partner, state_aid, include_project_growth_table, include_your_organisation_section, created_by, created_on, modified_on, modified_by)
 VALUES ('Template for the Horizon 2020 competition type', '0', '100', '0', '0', '0', 0, 0, 'OVERVIEW', 1, 1, '1', '36', 0, '6', 0, 1, '0', '0', '15', '1970-01-01 00:00:01', '1970-01-01 00:00:01', '15');
 set @template_id = (SELECT LAST_INSERT_ID());
