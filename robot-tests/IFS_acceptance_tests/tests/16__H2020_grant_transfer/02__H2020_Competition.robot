@@ -237,6 +237,7 @@ The user is able to complete Application details section
     the user clicks the button/link                      jQuery = label:contains("No")
     the user clicks the button/link                      jQuery = label:contains("No")
     the user clicks the button/link                      id = mark-as-complete
+    the user clicks the button/link                      link = Return to application overview
     the user should see the element                      jQuery = li:contains("Application details") > .task-status-complete
 
 Custom Suite Teardown
