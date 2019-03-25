@@ -10,6 +10,9 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
+/**
+ * Populator for the View all monitoring officers page
+ */
 @Component
 public class MonitoringOfficerViewAllViewModelPopulator {
 

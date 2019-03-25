@@ -16,6 +16,6 @@ public class MonitoringOfficerViewForm {
     }
 
     public void setUserId(Long userId) {
-        this.userId= userId;
+        this.userId = userId;
     }
 }

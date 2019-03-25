@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
+/**
+ * Holder of values for each row on the View all monitoring officers page
+ */
 public class MonitoringOfficerViewRow {
 
     private final String firstName;
