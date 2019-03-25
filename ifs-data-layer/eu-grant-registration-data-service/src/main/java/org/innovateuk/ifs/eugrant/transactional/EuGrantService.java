@@ -35,6 +35,6 @@ public interface EuGrantService {
     ServiceResult<EuGrantPageResource> getEuGrantsByContactNotified(boolean notified, Pageable pageable);
 
     @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "The system registrar can get the number of submitted grants")
-    ServiceResult<Long> getTotalSubmitted();
+    @SecuredBySpring(value = "EU_GRANT_ANONYMOUS_USER", description = "The system registrar can get the number of non-research submitted grants")
+    ServiceResult<Long> getTotalSubmittedExcludingResearch();
 }
