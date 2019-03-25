@@ -105,8 +105,8 @@ public class Horizon2020CostsController extends AsyncAdaptor {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                completeSectionAction.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId()));
-                return successView.get();
+                validationHandler.addAnyErrors(completeSectionAction.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId())));
+                return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });
     }
@@ -120,19 +120,6 @@ public class Horizon2020CostsController extends AsyncAdaptor {
         sectionStatusRestService.markAsInComplete(sectionId, applicationId, getProcessRoleId(applicationId, user.getId())).getSuccess();
         return String.format("redirect:/application/%d/form/horizon-2020-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId);
     }
-//
-//    @PostMapping("auto-save")
-//    public @ResponseBody
-//    JsonNode ajaxAutoSave(UserResource user,
-//                          @PathVariable long applicationId,
-//                          @RequestParam String field,
-//                          @RequestParam String value) {
-//        Optional<Long> fieldId = autosaver.autoSave(field, value, applicationId, user);
-//        ObjectMapper mapper = new ObjectMapper();
-//        ObjectNode node = mapper.createObjectNode();
-//        fieldId.ifPresent(id -> node.put("fieldId", id));
-//        return node;
-//    }
 
     private String redirectToYourFinances(long applicationId) {
         return String.format("redirect:/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
