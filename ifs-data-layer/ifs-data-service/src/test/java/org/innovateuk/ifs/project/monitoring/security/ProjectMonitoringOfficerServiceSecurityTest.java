@@ -4,8 +4,6 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoring.transactional.ProjectMonitoringOfficerServiceImpl;
 import org.junit.Test;
-import org.springframework.test.context.TestPropertySource;
-
 
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;

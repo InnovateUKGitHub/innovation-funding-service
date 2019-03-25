@@ -2,6 +2,9 @@ package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
 import java.util.List;
 
+/**
+ * View model for the View all monitoring officers page
+ */
 public class MonitoringOfficerViewAllViewModel {
 
     private final List<MonitoringOfficerViewRow> monitoringOfficers;
