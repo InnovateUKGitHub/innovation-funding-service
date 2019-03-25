@@ -83,7 +83,7 @@ public class EuInviteServiceImpl implements EuInviteService {
         notificationArguments.put("startDate", euFunding.getProjectStartDate().format(formatter));
         notificationArguments.put("endDate", euFunding.getProjectEndDate().format(formatter));
         notificationArguments.put("fundingAmount", euFunding.getFundingContribution());
-        notificationArguments.put("inviteUrl", "http://change.me");
+        notificationArguments.put("inviteUrl", "https://apply-for-innovation-funding.service.gov.uk/competition/339/overview");
 
         Notification notification = new Notification(
                 systemNotificationSource,

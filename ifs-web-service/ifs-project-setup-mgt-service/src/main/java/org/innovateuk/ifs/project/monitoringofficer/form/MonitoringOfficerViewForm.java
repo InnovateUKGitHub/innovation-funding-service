@@ -1,20 +1,16 @@
 package org.innovateuk.ifs.project.monitoringofficer.form;
 
-import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
-
+/**
+ * Form to capture the posted details of the monitoring officer to view
+ */
 public class MonitoringOfficerViewForm {
 
-    Long userId;
+
+    private Long userId;
 
     public MonitoringOfficerViewForm() {
 
     }
-
-    public MonitoringOfficerViewForm(Long userId) {
-        this.userId = userId;
-    }
-
-
     public Long getUserId() {
         return userId;
     }
