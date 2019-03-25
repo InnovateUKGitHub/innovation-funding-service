@@ -73,8 +73,9 @@ Collaborator should see the terms and conditions from the overview page
     Given the user clicks the button/link          link = Application overview
     When The user clicks the button/link           link = View the award terms and conditions
     Then the user should see the element           jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
-    # TODO update once fomate fixed on the IFS-5518
-    #And the user should see the element            jQuery = h2:contains("Entire agreement")
+    # checking new Innovate UK terms and conditions
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = li:contains("Background")
+    Run Keyword If  '${status}' == 'PASS'  the user should see the element     jQuery = li:contains("Entire agreement") .ifs-list--number
 
 Collaborator should see the review button instead of the review and submit
     [Documentation]  INFUND-2451
