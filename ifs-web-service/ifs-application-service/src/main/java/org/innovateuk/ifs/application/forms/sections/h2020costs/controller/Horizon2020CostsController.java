@@ -105,7 +105,7 @@ public class Horizon2020CostsController extends AsyncAdaptor {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                completeSectionAction.markAsCompleteNotValidated(sectionId, applicationId, getProcessRole(applicationId, user.getId()));
+                completeSectionAction.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId()));
                 return successView.get();
             });
         });

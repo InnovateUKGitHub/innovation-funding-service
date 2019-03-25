@@ -39,11 +39,6 @@ public class YourProjectCostsCompleter {
         this.competitionRestService = competitionRestService;
     }
 
-    public void markAsCompleteNotValidated(long sectionId, long applicationId, ProcessRoleResource role) {
-        sectionService.markAsNotRequired(sectionId, applicationId, role.getId());
-        handleMarkProjectCostsAsComplete(role);
-    }
-
     public ValidationMessages markAsComplete(long sectionId, long applicationId, ProcessRoleResource role) {
         ValidationMessages messages = new ValidationMessages();
         sectionService.markAsComplete(sectionId, applicationId, role.getId()).forEach(messages::addAll);
