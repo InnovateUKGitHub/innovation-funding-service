@@ -1,7 +1,7 @@
 <#import "layout/default.html" as layout>
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
-Innovate UK, as part of UK Research and Innovation
+Innovate UK, part of UK Research and Innovation
 ${competitionName}
 ${applicationName}
 
