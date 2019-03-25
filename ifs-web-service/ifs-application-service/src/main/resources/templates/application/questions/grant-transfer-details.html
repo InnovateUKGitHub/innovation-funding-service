@@ -55,7 +55,9 @@
                             <dd th:text="${form.participantId}">12345689</dd>
                             <dt>Type of action</dt>
                             <th:block th:each="actionType : ${model.actionTypes}">
-                                <dd th:if="${form.actionType == actionType.id}" th:text="${'(' + actionType.name + ') ' + actionType.description}">(COFUND-EJP) COFUND (European
+                                <dd th:if="${form.actionType == actionType.id}"
+                                    th:text="${'(' + actionType.name + ') ' + actionType.description}">(COFUND-EJP)
+                                    COFUND (European
                                     Joint Programme)
                                 </dd>
                             </th:block>
@@ -68,7 +70,8 @@
                     </th:block>
 
                     <th:block th:unless="${model.readonly}">
-                        <p class="govuk-body govuk-!-margin-bottom-6">Make sure you have your grant agreement to hand before you
+                        <p class="govuk-body govuk-!-margin-bottom-6">Make sure you have your grant agreement to hand
+                            before you
                             start.</p>
 
                         <div class="govuk-form-group"
@@ -247,7 +250,8 @@
 
                         <div class="govuk-form-group"
                              th:classappend="${#fields.hasErrors('participantId')} ? 'govuk-form-group--error'">
-                            <label class="govuk-label govuk-label--s" for="participantId">Participant identification code (PIC)
+                            <label class="govuk-label govuk-label--s" for="participantId">Participant identification
+                                code (PIC)
                                 <span id="pic-number-hint" class="govuk-hint govuk-!-width-two-thirds">
                             The 9-digit number unique to your organisation that you can find in the Horizon 2020 <a
                                     href="http://ec.europa.eu/research/participants/portal/desktop/en/organisations/register_sec.html"
@@ -322,7 +326,8 @@
                         <div class="govuk-form-group"
                              th:classappend="${#fields.hasErrors('projectCoordinator')} ? 'govuk-form-group--error'">
                             <fieldset class="govuk-fieldset">
-                                <legend id="projectCoordinator" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <legend id="projectCoordinator"
+                                        class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                     Is your organisation the project co-ordinator on this project?
                                 </legend>
                                 <th:block th:if="${#fields.hasErrors('projectCoordinator')}">
@@ -369,13 +374,15 @@
                         <button th:unless="${model.complete}" id="mark-as-complete" type="submit" name="complete"
                                 class="button-clear">Mark as complete
                         </button>
-                        <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear">Edit</button>
-                    </div>
-
-                    <div class="govuk-!-margin-top-6">
-                        <button th:if="${model.readonly}" type="submit"
-                                class="govuk-button">Return to application overview
+                        <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear">
+                            Edit
                         </button>
+                    </div>
+                    <div class="govuk-!-margin-top-6">
+                        <a th:if="${model.readonly}"
+                           th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
+                           class="govuk-button">Return to application overview
+                        </a>
                         <button th:unless="${model.readonly}" type="submit"
                                 class="govuk-button">Save and return to application overview
                         </button>
