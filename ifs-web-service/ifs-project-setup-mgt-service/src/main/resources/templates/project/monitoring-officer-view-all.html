@@ -32,7 +32,7 @@
                                 th:field="*{userId}"
                                 data-auto-complete="">
                             <option value="">Select monitoring officer</option>
-                            <option th:each="monitoringOfficer : ${monitoringOfficers}"
+                            <option th:each="monitoringOfficer : ${model.monitoringOfficers}"
                                     th:value="${monitoringOfficer.getUserId()}"
                                     th:text="|${monitoringOfficer.getFullName()}|"></option>
                         </select>
