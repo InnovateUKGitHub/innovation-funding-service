@@ -61,7 +61,7 @@ Clicking the ineligible button
     [Tags]  InnovationLead
     [Setup]  log in as a different user     &{innovation_lead_one}
     Given the user navigates to the page    ${ineligibleApplicationOverview}
-    Then the user checks for serve side validation
+    Then the user checks for server side validation
 
 Cancel marking the application as ineligible
     [Documentation]  INFUND-7370 IFS-986
@@ -175,7 +175,7 @@ the user is required to enter a subject/message
     the user should see a field error       ${fieldValidation}
     the user enters text to a text field    id = ${field}  ${fieldContent}
 
-the user checks for serve side validation
+the user checks for server side validation
     the user clicks the button/link                jQuery = h2 button:contains("Mark application as ineligible")
     #There are 2 buttons with the same name so we need to be careful
     the user should see the element                css = [aria-hidden = "false"] [id = "ineligibleReason"]

@@ -147,7 +147,7 @@ Assesor is able to accept the invitation from dashboard
 Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
     [Tags]
-    Given Assessor rejects the invitation from email
+    Given assessor rejects the invitation from email
     Then the user clicks the button/link              link = Sign in
     And Logging in and Error Checking                 ${assessor_joel_email}  ${short_password}
     And the user should not see the element           jQuery = h2:contains("Invitations to attend panel")
@@ -310,7 +310,7 @@ Assessor logs in and accepts the invitation
     the user selects the radio button    acceptInvitation  true
     The user clicks the button/link      css = button[type="submit"]  # Confirm
 
-Assessor rejects the invitation from email
+assessor rejects the invitation from email
     the user reads his email and clicks the link   ${assessor_joel_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
     the user selects the radio button              acceptInvitation  false
     The user clicks the button/link                jQuery = button:contains("Confirm")

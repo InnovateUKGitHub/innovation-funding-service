@@ -22,11 +22,11 @@ Competition dashboard
     Given The user clicks the button/link              link = ${CLOSED_COMPETITION_NAME}
     Then the user should see the competition details   ${CLOSED_COMPETITION_NAME}   Closed  Infrastructure systems  Smart infrastructure  Input and review funding decision  Invite assessors to assess the competition
     And the user should see the element                link = View and update competition setup
-    And the use should see the milestones for the closed competitions
+    And the user should see the milestones for the closed competitions
 
 Key Statistics for Closed competitions
     [Documentation]    INFUND-7560
-    Given Get The expected values from the invite page
+    Given get the expected values from the invite page
     Then the counts of the key statistics of the closed competition should be correct
 
 Invite Assessors
@@ -41,7 +41,7 @@ Invite Assessors
 Notify Assessors
     [Documentation]  INFUND-6458 INFUND-7362
     [Tags]
-    Given The user clicks the button/link             jQuery = .govuk-button:contains("Notify assessors")
+    Given The user clicks the button/link            jQuery = .govuk-button:contains("Notify assessors")
     Then the user should see the element             jQuery = h1:contains("In assessment")
     [Teardown]  Reset competition's milestone
 
@@ -50,7 +50,7 @@ Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     Connect to database  @{database}
 
-Get The expected values from the invite page
+get the expected values from the invite page
     The user clicks the button/link    jQuery=a:contains(Invite assessors)
     ${Invited}=    Get text    css = div:nth-child(1) > div > span
     Set Test Variable    ${Invited}
@@ -82,7 +82,7 @@ Custom suite teardown
     Disconnect from database
     The user closes the browser
 
-the use should see the milestones for the closed competitions
+the user should see the milestones for the closed competitions
     the user should see the element    jQuery = button:contains("Notify assessors")
-    the user should see the element    css = li:nth-child(5).done    #this keyword verifies that the 5.Assessor briefing is done
-    the user should see the element    css = li:nth-child(7).not-done    #this keyword verifies that the 6.Assessor accepts is not done
+    the user should see the element    jQuery = li:contains("Assessor briefing").done
+    the user should see the element    jQuery = li:contains("Assessor accepts").not-done
