@@ -27,8 +27,8 @@ IFS.core.autoComplete = (function () {
           defaultValue: '',
           confirmOnBlur: false,
           onConfirm: function (confirmed) {
-            autoCompleteElement.children('option').attr('selected', false)
-            autoCompleteElement.children('option:contains(' + confirmed + ')').attr('selected', 'selected')
+            var selectedUserId = autoCompleteElement.children('option:contains(' + confirmed + ')').val()
+            autoCompleteElement.val(selectedUserId)
             autoCompleteSubmitElement.prop('disabled', false)
           }
         })
