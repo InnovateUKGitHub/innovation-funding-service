@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.util.Either;
+import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,11 +48,11 @@ public class RestGrantEndpoint implements GrantEndpoint {
 
         return response.mapLeftOrRight(
                 failure -> {
-                    LOG.debug("Sent grant NOK : " + grant);
+                    LOG.debug("Sent grant NOK : " + JsonMappingUtil.toJson(grant));
                     return serviceFailure(new Error(GRANT_PROCESS_SEND_FAILED, failure.getStatusCode()));
                 },
                 success -> {
-                    LOG.debug("Sent grant OK : " + grant);
+                    LOG.debug("Sent grant OK : " + JsonMappingUtil.toJson(grant));
                     return serviceSuccess();
                 }
         );
