@@ -26,6 +26,7 @@ IFS.core.autoComplete = (function () {
           showAllValues: showAllValues,
           defaultValue: '',
           confirmOnBlur: false,
+          displayMenu: 'overlay',
           onConfirm: function (confirmed) {
             var selectedUserId = autoCompleteElement.children('option:contains(' + confirmed + ')').val()
             autoCompleteElement.val(selectedUserId)
