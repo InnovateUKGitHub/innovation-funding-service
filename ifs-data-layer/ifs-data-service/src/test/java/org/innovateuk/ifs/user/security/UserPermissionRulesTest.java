@@ -772,7 +772,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void systemMaintenanceUserCanUpdateExternalUserEmailAddress() {
+    public void systemMaintenanceUserCanUpdateUsersEmailAddress() {
 
         UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
 

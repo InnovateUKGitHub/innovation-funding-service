@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.summary.populator;
 
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
+import org.innovateuk.ifs.application.populator.granttransfer.GrantTransferSummaryPopulator;
 import org.innovateuk.ifs.application.populator.researchCategory.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -8,6 +9,8 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantAgreementSummaryViewModel;
+import org.innovateuk.ifs.application.viewmodel.granttransfer.GrantTransferDetailsSummaryViewModel;
 import org.innovateuk.ifs.application.viewmodel.researchCategory.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -29,6 +32,7 @@ public class ApplicationSummaryViewModelPopulator {
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
     private ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator;
     private ProjectService projectService;
+    private GrantTransferSummaryPopulator grantTransferSummaryPopulator;
 
     public ApplicationSummaryViewModelPopulator(ApplicationService applicationService,
                                                 ApplicationRestService applicationRestService,
@@ -37,7 +41,8 @@ public class ApplicationSummaryViewModelPopulator {
                                                 SummaryViewModelFragmentPopulator summaryViewModelPopulator,
                                                 ApplicationTeamModelPopulator applicationTeamModelPopulator,
                                                 ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator,
-                                                ProjectService projectService) {
+                                                ProjectService projectService,
+                                                GrantTransferSummaryPopulator grantTransferSummaryPopulator) {
         this.applicationService = applicationService;
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
@@ -46,6 +51,7 @@ public class ApplicationSummaryViewModelPopulator {
         this.applicationTeamModelPopulator = applicationTeamModelPopulator;
         this.researchCategorySummaryModelPopulator = researchCategorySummaryModelPopulator;
         this.projectService = projectService;
+        this.grantTransferSummaryPopulator = grantTransferSummaryPopulator;
     }
 
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user, ApplicationForm form, boolean isSupport) {
@@ -59,6 +65,14 @@ public class ApplicationSummaryViewModelPopulator {
         ResearchCategorySummaryViewModel researchCategorySummaryViewModel =
                 researchCategorySummaryModelPopulator.populate(application, user.getId(), userIsLeadApplicant);
 
+        GrantTransferDetailsSummaryViewModel grantTransferDetailsSummaryViewModel = null;
+        GrantAgreementSummaryViewModel grantAgreementSummaryViewModel = null;
+
+        if (competition.isH2020()) {
+            grantTransferDetailsSummaryViewModel = grantTransferSummaryPopulator.populateDetails(application, user.getId(), userIsLeadApplicant);
+            grantAgreementSummaryViewModel = grantTransferSummaryPopulator.populateAgreement(application, user.getId(), userIsLeadApplicant);
+        }
+
         return new ApplicationSummaryViewModel(
                 application,
                 competition,
@@ -69,7 +83,9 @@ public class ApplicationSummaryViewModelPopulator {
                 userService.isLeadApplicant(user.getId(), application),
                 isProjectWithdrawn(applicationId),
                 isSupport,
-                application.isCollaborativeProject());
+                application.isCollaborativeProject(),
+                grantTransferDetailsSummaryViewModel,
+                grantAgreementSummaryViewModel);
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {
