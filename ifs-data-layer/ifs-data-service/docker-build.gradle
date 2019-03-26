@@ -6,7 +6,6 @@ ext.ifsDatasourcePassword="password"
 ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
-ext.ifsDataServiceSpecificClassLogLevel="INFO"
 
 project.ext['flyway.url']='jdbc:mysql://ifs-database:3306?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs,ifs_test'
