@@ -29,8 +29,6 @@
 
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
-                       data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">
@@ -46,7 +44,7 @@
 
             <div class="message-alert govuk-!-margin-bottom-6">
                 <p class="govuk-body">Complete your project costs using the information in your <a
-                    href="https://www.ukri.org/research/international/ukri-eu-exit/">funding conversion spreadsheet</a>.
+                    href="https://www.ukri.org/research/international/ukri-eu-exit/horizon-2020/currency/">funding conversion spreadsheet</a>.
                     This will convert your EU Horizon 2020 spend details to use for your project costs in the finance
                     section.
                     It is vital that you keep a copy of the spreadsheet. You will need it to finish setting up your
