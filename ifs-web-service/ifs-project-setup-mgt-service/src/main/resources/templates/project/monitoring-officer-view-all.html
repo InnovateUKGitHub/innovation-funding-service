@@ -31,7 +31,7 @@
                                 class="govuk-select"
                                 th:field="*{userId}"
                                 data-auto-complete="">
-                            <option value="">Select monitoring officer</option>
+                            <option value="">Select Monitoring Officer</option>
                             <option th:each="monitoringOfficer : ${model.monitoringOfficers}"
                                     th:value="${monitoringOfficer.getUserId()}"
                                     th:text="|${monitoringOfficer.getFullName()}|"></option>
@@ -40,7 +40,7 @@
                     <div class="govuk-form-group">
                         <button type="submit"
                                 class="govuk-button"
-                                data-auto-complete-submit="">View monitoring officer</button>
+                                data-auto-complete-submit="">View Monitoring Officer</button>
                     </div>
                 </form>
 

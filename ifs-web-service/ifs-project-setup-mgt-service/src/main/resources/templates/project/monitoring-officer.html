@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assign a monitoring officer',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assign a Monitoring Officer',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body competition-management project-management assign-mo">
     <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -15,13 +15,13 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-                <h2 class="govuk-error-summary__title"  id="error-summary-title">We are unable to assign a monitoring officer.</h2>
+                <h2 class="govuk-error-summary__title"  id="error-summary-title">We are unable to assign a Monitoring Officer.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Monitoring officer',subTitle=|${model.applicationId}: ${model.projectTitle}|,size='govuk-heading-xl'" />
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='',subTitle=|${model.applicationId}: ${model.projectTitle}|,size='govuk-heading-xl'" />
                 </div>
                 <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
                     <th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />
@@ -32,12 +32,12 @@
 
             <th:block th:if="${model.displayMonitoringOfficerAssignedMessage}">
                 <div class="success-alert">
-                    <h2 class="govuk-heading-s govuk-!-margin-top-0">A monitoring officer has been assigned.</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-top-0">A Monitoring Officer has been assigned.</h2>
                 </div>
             </th:block>
 
             <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-l">Monitoring officer</h2>
+                <h2 class="govuk-heading-l">Monitoring Officer</h2>
                 <form th:action="@{/project/{projectId}/monitoring-officer/confirm(projectId=${model.projectId})}" th:object="${form}" method="post" th:with="readonly=${model.readOnly}" novalidate="novalidate">
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
@@ -114,11 +114,11 @@
                     </div>
 
                     <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}" class="govuk-link">
-                        Change monitoring officer
+                        Change Monitoring Officer
                     </a>
                     <div class="govuk-form-group">
                         <button data-js-modal="modal-assign-mo" type="submit" class="govuk-button govuk-!-margin-top-6" th:if="${model.displayAssignMonitoringOfficerButton}">
-                            Assign monitoring officer
+                            Assign Monitoring Officer
                         </button>
                     </div>
                     <th:block th:insert="fragments/modals :: modal-assign-mo" />
