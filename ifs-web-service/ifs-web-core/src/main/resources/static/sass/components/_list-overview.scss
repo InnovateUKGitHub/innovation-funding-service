@@ -238,9 +238,7 @@ ol {
       margin-left:-45px;
     }
   }
-}
 
-ol {
   &.ifs-list--number {
     list-style-type: none;
     counter-reset: item;
@@ -276,11 +274,9 @@ ol {
           }
         }
       }
-
     }
   }
 }
-
 
 %definition-list {
   @include govuk-font(19);

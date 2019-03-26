@@ -25,19 +25,9 @@ ${availableApp}  Machine learning for driverless cars
 Filtering the Assessors in the Allocate Applications page
     [Documentation]    INFUND-7042  INFUND-7729  INFUND-8062
     [Tags]
-    Given The user clicks the button/link                     link = ${CLOSED_COMPETITION_NAME}
-    And the user clicks the button/Link                       link = Manage assessments
-    And the user clicks the button/link                       link = Allocate applications
-    When the user clicks the button/Link                      jQuery = td:contains("Neural Industries") ~ td a
-    And the user should see the element                       jQuery = h3:contains("Innovation area") ~ span:contains("Smart infrastructure")
-    Then the user should see the element                      jQuery = tr:nth-child(1) td:contains("Benjamin Nixon")    #this check verfies that the list of assessors in alphabetical order
-    When the user selects the option from the drop-down menu  Materials, process and manufacturing design technologies    id = filterInnovationArea
-    And the user clicks the button/link                       jQuery = button:contains(Filter)
-    Then the user should see the element                      jQuery = td:contains("Benjamin Nixon")
-    And the user should see the element                       jQuery = td:contains("Paige Godfrey")
-    And the user should not see the element                   jQuery = td:contains("Riley Butler")
-    And the user clicks the button/link                       jQuery = a:contains("Clear all filters")
-    And the user should see the element                       jQuery = td:contains("Riley Butler")
+    Given the user navigates to allocate applications page
+    When the user verfies that the list of assessors in alphabetical order
+    Then the user filters the applications by Innovation area
 
 Filtering Assessors in the Assign assessors page
     [Documentation]    INFUND-8062
@@ -97,3 +87,22 @@ Assessor removal
 *** Keywords ***
 the assessor list is correct before changes
     the user should see the element    jQuery = td:contains("Madeleine Martin") ~ td:contains("2") ~ td:contains("2")
+
+the user navigates to allocate applications page
+    the user clicks the button/link      link = ${CLOSED_COMPETITION_NAME}
+    the user clicks the button/Link      link = Manage assessments
+    the user clicks the button/link      link = Allocate applications
+
+the user verfies that the list of assessors in alphabetical order
+    the user clicks the button/Link     jQuery = td:contains("Neural Industries") ~ td a
+    the user should see the element     jQuery = h3:contains("Innovation area") ~ span:contains("Smart infrastructure")
+    the user should see the element     jQuery = tr:nth-child(1) td:contains("Benjamin Nixon")    #this check verfies that the list of assessors in alphabetical order
+
+the user filters the applications by Innovation area
+    the user selects the option from the drop-down menu   Materials, process and manufacturing design technologies    id = filterInnovationArea
+    the user clicks the button/link                       jQuery = button:contains(Filter)
+    the user should see the element                       jQuery = td:contains("Benjamin Nixon")
+    the user should see the element                       jQuery = td:contains("Paige Godfrey")
+    the user should not see the element                   jQuery = td:contains("Riley Butler")
+    the user clicks the button/link                       jQuery = a:contains("Clear all filters")
+    the user should see the element                       jQuery = td:contains("Riley Butler")
