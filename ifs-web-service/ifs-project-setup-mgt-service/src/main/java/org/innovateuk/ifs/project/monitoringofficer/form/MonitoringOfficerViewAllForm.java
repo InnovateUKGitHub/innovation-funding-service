@@ -3,12 +3,12 @@ package org.innovateuk.ifs.project.monitoringofficer.form;
 /**
  * Form to capture the posted details of the monitoring officer to view
  */
-public class MonitoringOfficerViewForm {
+public class MonitoringOfficerViewAllForm {
 
 
     private Long userId;
 
-    public MonitoringOfficerViewForm() {
+    public MonitoringOfficerViewAllForm() {
 
     }
     public Long getUserId() {

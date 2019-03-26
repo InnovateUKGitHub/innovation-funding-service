@@ -6,7 +6,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.monitoring.resource.ProjectMonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.ProjectMonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignProjectForm;
-import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerViewForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerViewAllForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerProjectsViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerViewAllViewModelPopulator;
@@ -119,12 +119,12 @@ public class MonitoringOfficerController {
     public String viewAll(Model model) {
         List<ProjectMonitoringOfficerResource> monitoringOfficers = projectMonitoringOfficerRestService.findAll().getSuccess();
         model.addAttribute(MODEL, monitoringOfficerViewAllViewModelPopulator.populate(monitoringOfficers));
-        model.addAttribute(FORM, new MonitoringOfficerViewForm());
+        model.addAttribute(FORM, new MonitoringOfficerViewAllForm());
         return "project/monitoring-officer-view-all";
     }
 
     @PostMapping("/view-monitoring-officer")
-    public String redirectToMoProjectPage(@ModelAttribute("form") MonitoringOfficerViewForm form) {
+    public String redirectToMoProjectPage(@ModelAttribute("form") MonitoringOfficerViewAllForm form) {
         // required to allow auto complete to send back the data about the selection
         if(form == null || form.getUserId() == null) {
             return "redirect://monitoring-officer/view-all";
